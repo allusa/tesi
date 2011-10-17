@@ -1,0 +1,107 @@
+%--------------------
+% document principal
+%--------------------
+% cal compilar amb `pdflatex -shell-escape main.tex`
+%--------------------
+\documentclass[a4paper,12pt,twoside,parskip=half,BCOR12mm]{scrartcl}
+%%%%BCOR12mm  factor de correcció per enquadernació
+
+%------------- capçalera ----------------------
+\input{capçalera}
+%\graphicspath{{../imatges/}} %{{imatges/}{imatges/model/}}
+%---------- Mode esborrany --------------------
+%\includeonly{resum}
+\usepackage{todonotes} %%ús: \todo{text} \missingfigure{text}
+\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{--- esborrany article \today\ ---}\lhead{}\rhead{}\renewcommand{\headrulewidth}{0pt}
+%----------------------------------------------
+
+
+%------------- format -------------------------
+%%ús coma decimal sense espais:  2{,}5
+\bibparsep 0.2cm
+\bibhang 0.25cm
+
+
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
+    pdftitle={Model dels SGBD Round Robin pel tractament de sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    %pdfcreator={},
+    pdfsubject={SGBD RRD},
+    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
+    pdflang=ca,
+    ]{hyperref}
+\title{Model dels SGBD Round Robin}
+\author{Aleix Llusà Serra}
+%----------------------------------------------
+
+
+\begin{document}
+
+
+%------------- Pàgina de títol ------------
+\maketitle
+%\input{portada}
+%----------------------------------------------
+
+%------------- Abstract ------------
+%\begin{abstract}
+%\include{resum}
+%\end{abstract}
+%----------------------------------------------
+
+%------------- Índexs ------------
+%\listoftodos
+%\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
+%\addtocontents{toc}{\protect\enlargethispage{1cm}}
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%----------------------------------------------
+
+
+
+%------------- Cos ------------
+%\frontmatter
+%\mainmatter
+\input{model}
+
+
+
+%------- Annexos ------
+%\appendix
+
+%\include{}
+
+
+%------- Bibliografia ------
+%\cleardoublepage
+%\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+\pdfbookmark{\bibname}{bookmark:bibliografia}
+\printbibliography
+%----------------------------------------------
+
+%\backmatter
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Copyright (C) 2011 Aleix Llusà Serra.
+% 
+% Aquesta obra està subjecta a una llicència de Reconeixement-CompartirIgual 3.0 No adaptada de Creative Commons. Per veure una còpia de la llicència, visiteu http://creativecommons.org/licenses/by-sa/3.0/ o envieu una carta a Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+% 
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a http://diposits.cpl.upc.edu/projects/roundrobinson/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+

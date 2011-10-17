@@ -1,0 +1,541 @@
+\begin{abstract}
+  A time series is a collection of data measured in different instants
+  in time. Thanks to the facility of designing monitoring hardware,
+  the measurement of data has increased the last decade and there is
+  not enough capacity to store nor process all the time
+  series. Therefore, we need to design database management systems
+  capable of storing and processing efficiently the time
+  series. Moreover, this systems have to cope with the measurements
+  not happening at regular time intervals as it is a restriction
+  imposed by some time series treatment algorithms.
+
+  In this paper a formal model for a time series database management
+  system is designed.  It is called Round Robin databases model (RRD)
+  \todo{pensar nom: multiresoltion and bounded} as the concepts are
+  inspired by the database management system RRDtool. Time series are
+  compactly stored in the database and the information is summarised
+  by different interpolation functions.
+\end{abstract}
+
+\section{Introduction}
+
+Monitoring sensor data and processing the data to achieve diagnosis,
+prognosis and prediction is a common task in many fields such as
+prognosis in degradation models \parencite{yu11}, navy
+vessels \parencite{palmer07} or water distribution
+networks \parencite{quevedo10}.  A monitoring system recollects a
+large amount of data so only a little can be observed online and the
+data stored is also too big to process \parencite{keogh97}.
+
+In this context, the data collected can be considered as a time
+series. Consequently, the research in time series data mining has
+increased last decade \parencite{fu11}.  The key to success is
+reducing the dimension of time series in order to be able process the
+data in a reasonable time.
+
+Some database management systems have taken into account the
+specialities of time series.  Time Series Data Server (TSDS) from
+\cite{weigel10} allows to select a data range from a time series and
+to apply a filter when the data is retrieved.  RRDtool from
+\cite{rrdtool} applies filters and stores different data ranges when
+data is stored. Then it has in mind that the sampling times can not be
+equally spaced, the temporal order is essential and the value and time
+must be stored together. 
+
+Database management systems are based from formal models that define
+the objects and operations of the abstract machine to which users
+interact, such is the relational model \parencite{date}. In this paper
+a model is proposed for an storage system that will keep a time series
+in a multiresolution and bounded way.  In this first proposal there
+are six definitions that are related to the data storage mechanism:
+measure, time series, buffer, disc, Round Robin disc, and Round Robin
+database. All this concepts have been abstracted from the RRDtool
+operating mode.
+
+
+
+
+\section{Model definitions}
+
+\subsection{Measure}
+
+\begin{definition}[Measure]
+  \label{def:measure}
+  A \emph{measure} is a tuple $(v,t)$ where $v\in{\mathbb{R}}$ is the
+  value of the measure and $t \in \mathbb{R}$ is the instant in time
+  of measurement.
+\end{definition}
+
+Let $m=(v,t)$ be a measure, $v$ is written as $V(m)$ and $t$
+is written as $T(m)$.
+
+% \begin{definition}[Time]
+%   \label{def:time}
+%   Let $t^i_i$ and $t^i_j$ be two instants in time, we define the
+%   amount of time or duration $t^d$ as the value $t^d \in\mathbb{R}$
+%   measuring the distance in time units between the two instants $t^d =
+%   t^i_i - t^i_j$.
+
+%   Let $t^d$ be a duration and $t^{R}$ an instant in time of reference,
+%   we define the instant in time $t^i$ as the value $t^i \in\mathbb{R}$
+%   measuring the amount of time from the time of reference $t^i= t^{R}
+%   + t^d$. The value of the time of reference is also an instant in
+%   time but it can define exactly the position of any other instant in
+%   time.
+
+%   This definition is coherent with the one given in coordinate
+%   systems, \cite{wiki:coordinate}.  Time is treated as universal and
+%   constant. Time values are expressed in time units, that is seconds
+%   in the international system.
+% \end{definition}
+
+The time value defines the order between measures.
+
+\begin{definition}
+  \label{def:order-relation}
+  Let $m=(v_m,t_m)$ and $n=(v_n,t_n)$ be two measures, then $m\geq n$
+  if and only if $t_m\geq t_n$.
+\end{definition}
+
+\subsection{Time series}
+
+Time series are sequences of measures that are ordered in time. They
+are also called time sequences such as in chapter two in \cite{last}.
+
+\begin{definition}[Time series]
+  A \emph{time series} $S$ is defined as a set of measures
+  $S=\{m_0,\ldots,m_k\}$ without repeated time values $\forall i,j:
+  i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$. We will refer to the
+  number of measures of the time series as the cardinality of the set
+  $|S|$.
+\end{definition}
+
+The order defined in \ref{def:order-relation} implies a total order in
+a time series. As a time series is a finite set, if it is not empty it
+has a maximum and a minimum. 
+
+\begin{definition}
+  Let $S=\{m_0,\ldots,m_k\}$ be a time series and $n\in S$ be a
+  measure. The time series' maximum is $n=\max(S)$ if and only if
+  $\forall m \in S: n \geq m $.  Similarly, the time series' minimum
+  is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
+\end{definition}
+
+Given the order defined by time in a time series, we define the
+sequence interval similarly as it is done in chapters 1 and 2 in \cite{last}.
+
+\begin{definition}
+  Let $S=\{m_0, \ldots, m_k\}$ be a time series. We define the subset
+  $S(r,t] \subseteq S$ as the time series $S(r,t]=\{m\in S |
+  r<T(m)\leq t\}$, where $r$ and $t$ are two instants in time.
+
+  We also define the subset $S(r,+\infty)\subseteq S$ as the time
+  series $S(r,+\infty) = \{m\in S | r< T(m) \leq T(\max(S))\}$ and the
+  subset $S(-\infty,t)\subseteq S$ as the time series $S(-\infty,t) =
+  \{m\in S | T(\min(S))\leq T(m) < t\}$.
+\end{definition}
+
+The time order in time series also implies the sequence concept of
+next and previous measure.
+
+\begin{definition}
+  Let $S=\{m_0, \ldots, m_k\}$ be a time series and $l\in S$ and $n$
+  two measures. We define the next measure of $n$ in $S$ as
+  $\nex\limits_S(n) = \min(S(T(n),+\infty))$. We define the previous
+  measure of $n$ in $S$ as $\prev\limits_S(n) =
+  \max(S(-\infty,T(n)))$.
+\end{definition}
+
+
+
+
+\subsubsection{Regularity of time series} 
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an instant in temps
+and $\delta$ a duration of time, the time series' measures can be
+situated in the time interval $i_0=[t,t+\delta]$ and its multiples
+$i_j=[t+j\delta \,,\, t+(j+1)\delta]: j=0,1,2,\ldots$. When the
+measures are equally spaced the time series is called regular.
+
+\begin{definition}[Regular time series]
+  Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an instant in time
+  and $\delta$ a duration of time. We define $S$ as regular if and
+  only if $\forall m \in S(T(\min(S),+\infty):T(m) - T(\prev(m)) =
+  \delta$ and $T(\min(S))=t$.
+\end{definition}
+
+In signal processing, these time intervals are called sampling
+intervals, $\delta$ is called sampling period and $t$ is called
+sampling initial time.  
+
+
+\subsection{Buffer}\label{sec:model:buffer}
+
+A buffer is a container for a regular or a no-regular time series. The
+buffer regularises the time series with a function to a constant
+sampling period. We call consolidation to this action. In the context
+of buffers, the constant sampling period is called consolidation step
+and the function is called interpolation.
+
+\begin{definition}[Buffer]
+  A \emph{buffer} is defined as the tuple $(S,\tau,\delta,f)$ where
+  $S$ is a time series, $\tau$ is the last consolidation instant in
+  time, $\delta$ is the duration of the consolidation step and $f$ is
+  an interpolation.
+\end{definition}
+
+An empty buffer, or the initial buffer, $B_{\emptyset} =
+(\emptyset,t_0, \delta_0, f)$ is a buffer that has an empty time
+series, the initial time of consolidation a duration indicating the
+consolidation step and an interpolation. From the empty buffer all the
+instants in time of consolidation can be calculated as $t_0+k\delta,
+k\in\mathbb{N}$. Before the consolidation the buffer needs measures.
+
+\begin{definition}
+  The operator \emph{add} adds a measure to the time series of a buffer:
+  \[
+  \text{add}: \text{Buffer} \times \text{Measure} \longrightarrow \text{Buffer}
+  \]
+  \[
+   B = (S,\tau,\delta,f)  \times m = (v,t) \mapsto B'= (S',\tau,\delta,f),
+   S' = S \cup \{m\}
+   \] 
+\end{definition}
+
+\begin{definition}
+  We say the buffer is ready to consolidate when a time of a measure
+  is bigger than the buffer's next instant in time of consolidation.
+  Let $B=(S,\tau,\delta,f)$ be a buffer and $m=\max(S)$ the maximum
+  measure, $B$ is ready to consolidate if and only if $T(m) \geq
+  \tau+\delta$.
+\end{definition}
+
+Let $S$ be a time series and $t_0$ and $t_f$ two instants in time, an
+interpolation function $f$ calculates a measure that is a summary of
+$S$ in the time interval $i=[T_0,T_f]$:
+\[
+f: \text{Time series} \times \text{time interval} \longrightarrow
+\text{Measure}
+\]
+
+\todo{en direm representació?}
+
+In the design of the interpolation function we can interpret a time
+series in different ways. Keogh at chapter 1 in \cite{last}, cites
+some possible representations for time series such as \emph{Fourier
+  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
+\emph{Piecewise Linear Representation} (PLR), remarking this last as
+the most used. The most common representation is with linear
+functions \parencite{keogh01}.
+
+It is also possible to represent a time series with staircase
+function, that is with a piecewise constant representation. In signal
+theory it is widely used in digital-to-analog converter and the model
+is known as \emph{zero-order hold}, which consists in holding each
+value until the following value. Extending this model we define a new
+interpretation for time series called \emph{zero-order hold backwards}
+that is the representation used by RRDtool \parencite{lisa98:oetiker}.
+
+\emph{Zero-order hold backwards} consists in holding each value until
+the preceding value. Next, it is exemplified with a continuous
+definition of a time series using left-continuous step functions.
+
+\begin{definition}[zero-order hold backwards]
+  Let $S=\{m_0,\ldots,m_k\}$ be a time series, $S(t)$ is the
+  continuous representations along time $t$:
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t) =  
+\begin{cases}
+  \text{not defined} & \text{if } t > T(\max S) \\
+  V(m) & \text{if }  t\in (T(\prev m),T(m)]
+\end{cases}
+\]
+\end{definition}
+
+
+There can be different interpolation functions in order to summarise a
+time series. The representation of the time series can also make
+differences to the same interpolation functions. Below are some
+examples for time series represented by \emph{zero-order hold
+  backwards}, where the time interval of consolidation is interpreted
+left-continuous $(T_0,T_f]$.
+
+
+
+\begin{definition}[Interpolation examples]
+  Let $S=\{m_0,\ldots,m_k\}$ be a time series interpreted
+  \emph{zero-order hold backwards} and $i=[T_0,T_f]$ be a time
+  interval, the interpolation function summarises $S$ with a measure
+  that is calculated from the measure values belonging to the subset
+  $S(T_0,T_f]$:
+  \[
+  f: \text{Time series} \times \text{time interval}
+  \longrightarrow \text{Measure}
+  \]
+  \[
+  S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'=(v',T_f)
+  \]
+
+  The resulting value $v'$ depends on the interpolation function:
+
+\begin{itemize}
+
+\item \emph{Arithmetic mean interpolation} function summarises $S$
+  with the mean of the measure values
+  \[
+  S'=S(T_0:T_f]:
+  v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
+  \]
+
+\item \emph{Maximum interpolation} function summarises $S$ with the
+  maximum of the measure values
+  \[
+  S'=S(T_0:T_f]:
+  v' = \max_{\forall m \in S'}(V(m))
+  \]
+
+\item \emph{Last interpolation} function summarises $S$ with the
+  maximum measure.
+  \[
+  S'=S(T_0:T_f]:
+  v' = \max(S')
+  \]
+
+\item \emph{Area interpolation} function summarises $S$ keeping the
+  area of the region.
+  \[
+  o=\min(S(T_0:T_f]),
+  S'= S(T_0:T_f] - \{o\},
+  n=\nex\limits_S \max(S'): 
+  \]
+  \[
+  \begin{split}
+  :v'  = & \frac{1}{T_f-T_0} 
+  \big[ (T(o)-T_0)V(o) +( T_f- T(\prev\limits_S n) )V(n) \\
+    & {}+\sum\limits_{\forall m \in S'}( T(m)- T(\prev\limits_S m) )V(m) \big]   
+   \end{split}
+  \]
+  
+  Note: if we consider the continuous definition of $S$ we can see the
+  interpolation function as $v' = \frac{\int_{T_0}^{T_f} S(t) dt}{T_f
+    - T_0}$
+
+\end{itemize}
+
+\end{definition}
+
+
+Let $B=(S,\tau,\delta,f)$ be a buffer ready to consolidate, the
+consolidation from $B$ in the time interval $i=[\tau,\tau+\delta]$
+results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$ and $f$ is
+an interpolation function.
+
+\begin{definition}
+  The operator \emph{consolidate} calculates the measure of
+  consolidation and reduces the consolidated part of the time series
+  from the buffer. In a simplified, the \emph{consolidate} is only
+  applied to the present consolidation interval.
+  \[
+  \text{consolidate}: \text{Buffer} \longrightarrow \text{Buffer}
+  \times \text{Measure}
+  \]
+  \[
+  B=(S,\tau,\delta,f) \mapsto B' \times m'
+  \]
+  \[
+  B'= (S',\tau+\delta,\delta,f)
+  \]
+  \[
+  S' = S(\tau+\delta,\infty)
+  \]
+  \[
+  m' = f(S,[\tau,\tau+\delta]): f \text{ is an interpolation}
+  \]
+\end{definition}
+
+
+
+\subsection{Disc}\label{sec:model:disc}
+
+A disc is a container for a regular time series and furthermore its
+cardinal is bounded. 
+
+\begin{definition}[Disc]
+  A \emph{disc} is defined as the tuple $(S,k)$ where $S$ is a time
+  series and $k\in\mathbb{N}$ is the maximum cardinal of $S$.
+\end{definition}
+
+An empty disc $D_{\emptyset} = (\emptyset,k)$ is a disc with an empty
+time series and the $k$ maximum cardinal that $S$ is allowed to take.
+
+\begin{definition}
+  The operator \emph{add} add a measure to the time series of the disc.
+  \[
+  \text{add}: \text{Disc} \times \text{Measure} \longrightarrow \text{Disc}
+  \]
+  \[
+  D=(S,k) \times m \mapsto D'= (S',k)
+  \]
+  \[
+  S' =  
+  \begin{cases}
+      S\cup\{m\} &\text{if }  |S|<k\\
+      (S-\{\min(S)\}) \cup \{m\} 
+    \end{cases}  \
+  \]
+\end{definition}
+
+
+\subsection{Round Robin disc}\label{sec:model:discroundrobin}
+
+\todo{disc round robin o disc multiresolution?}
+
+A Round Robin Disc is a disc with a regular time series and a buffer
+with a time series pending regularisation.
+
+\begin{definition}[Round Robin Disc]
+  A \emph{Round Robin disc} is a tuple $(B,D)$ where $B$
+  is a buffer and $D$ is a disc.
+\end{definition}
+ 
+On the one hand, the definitions of empty buffer and empty disc imply
+an empty Round Robin disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
+
+On the other hand, the operators of a Round Robin disc are related to
+the buffer and disc ones.
+
+\begin{definition}
+  Operator \emph{add} adds a measure  to the buffer of the Round Robin disc:
+  \[
+  \text{add}: \text{Round Robin disc} \times \text{Measure}
+  \longrightarrow \text{Round Robin disc}
+  \]
+  \[
+  R=(B,D) \times m \mapsto R'= (B',D)
+  \]
+  \[
+  B'= B \text{ add } m
+  \]
+\end{definition}
+
+\begin{definition}
+  Let $R=(B,D)$ be a Round Robin disc, $R$ is ready to consolidate if
+  and only if $B$ is ready to consolidate.
+\end{definition}
+
+\begin{definition}
+  Operator \emph{consolidate} calculates a consolidation measure from
+  the buffer and adds it to the disc.
+  \[
+  \text{consolidate}: \text{Round Robin disc} \longrightarrow
+  \text{Round Robin disc}
+  \]
+  \[
+  R=(B,D) \mapsto R'= (B',D')
+  \]
+  \[
+  B' \times m'= \text{ consolidate } B 
+  \]
+  \[
+  D'= D \text{ add } m'
+  \]
+\end{definition}
+
+
+
+\subsection{Round Robin Database}\label{sec:model:rrd}
+
+\begin{definition}[Round Robin Database]
+  A \emph{Round Robin Database} is a set of Round Robin discs
+  $A=\{R_0,\ldots,R_d\}$.
+\end{definition}
+
+
+\begin{figure}[htp]
+\centering
+\setlength{\unitlength}{0.4mm}
+\input{../imatges/model/arxiurrd.tex}
+\caption{Esquema del model de dades Round Robin}
+\label{fig:model:esquemarrd}
+\end{figure}
+  
+Generally, in a Round Robin Database there are not two Round Robin discs
+with the same information. That is, let $R_a = (B_a, D_a)$ and $R_b =
+(B_b, D_b)$ be two Round Robin discs, its buffers
+$B_a=(S_a,\tau_a,\delta_a,f_a)$ and $B_b=(S_b,\tau_b,\delta_b,f_b)$
+have different consolidation interval and interpolation function
+$\delta_a \neq \delta_b \wedge f_a \neq f_b$.
+
+
+With reference to the operators, the add and consolidate in a Round
+Robin Database are applied for every Round Robin disc it contains.
+
+
+\section{Implementation}
+
+The six basic model definitions -- measure, time series, buffer, disc,
+round robin disc, and round robin database -- have been implemented
+with Python in an object-oriented programming paradigm. It pretends to
+be a reference implementation to other productive time series data
+base management systems. This implementation is yet in a primary
+development and experimental examples will be shown in the future.
+
+RRDtool \parencite{rrdtool} is a productive data base
+management system and widely used in the OpenSource industry. For
+instance, the performance in large systems and improvement methods can
+be seen in \cite{lisa07:plonka}. Now, it can be seen as a
+productive implementation of the basic model definitions presented in
+this paper and much more definitions not yet described such as the
+fetch operations. However, it imposes some restrictions. For example a
+reduced set of interpolation functions or a special treatment of
+gauges and counters inherited from the past.
+
+
+\section{Conclusions}
+
+A Round Robin database is an storage system for one time series, that
+is a collection of data measured in different instants in time.  The
+time series is compactly stored in the database as has been shown in
+figure \ref{fig:model:esquemarrd}. The principal part of a Round Robin
+database is the set of Round Robin discs where the time series is
+stored distributed by the different interpolation functions and
+sampling periods. Each disc Round Robin uses its buffer to interpolate
+the measures and uses its disc to consolidate the result. 
+
+This system allows to reduce the storage space and the analysis time
+needed for large collections of times series.  With the compactness of
+the time series we have in mind the scalability for large monitoring
+systems.
+
+Summarising, interpolation functions and sampling periods are degrees
+of freedom for each application. Giving different values a Round Robin
+database is capable to keep the desired information from a time series.
+
+
+\section{Future work}
+
+In future work the retrieval operations will be defined. Mainly, how a
+time series can be restored from joining the information stored
+distributed in the Round Robin discs. And it also will be important
+how data fusion can be obtained from two time series databases.
+
+Then it will be possible to check the database management system with
+experimental data such as the proposed by \cite{keogh02}.
+
+          
+\section{Acknowledgements}
+
+Supported by Universitat Politècnica de Catalunya (UPC).
+
+
+%%% Local Variables:
+%%% TeX-master: "article"
+%%% ispell-local-dictionary: "british"
+%%% End:
+% LocalWords:  Round  buffer buffers RRDtool
+
+
+
+
+

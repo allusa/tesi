@@ -1,0 +1,141 @@
+%--------------------
+% document principal
+%--------------------
+% cal compilar amb `pdflatex -shell-escape memoria.tex`
+%--------------------
+\documentclass[a4paper,12pt,twoside,BCOR12mm]{scrbook}
+%%%%BCOR12mm  factor de correcció per enquadernació
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+
+ 
+%---------- Mode esborrany --------------------
+%\includeonly{resum}
+%\usepackage{fancyhdr}
+%\pagestyle{fancyplain}
+%\chead{\fancyplain{--- esborrany \today\ ---}{}}
+%%\renewcommand{\headrulewidth}{0pt}
+%----------------------------------------------
+
+
+
+%---------- Bibliografia -------------------
+\usepackage[style=numeric,sortcites=true]{biblatex}
+\bibliography{bibliografia}
+%---------- Gràfics ------------------------
+\usepackage[final]{graphicx}
+% \graphicspath{{imatges/}}
+\usepackage{epstopdf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+%\usepackage[off]{auto-pst-pdf}
+\usepackage{epic,color,multicol}
+%---------- Símbols ------------------------
+\usepackage{url} %\url i \path
+\usepackage{eurosym}
+\usepackage{amsmath,amssymb,amsthm}
+\numberwithin{equation}{chapter}
+\newtheorem{definition}{Definició}
+\DeclareMathOperator*{\seg}{seg}
+\DeclareMathOperator*{\ant}{ant}
+%\usepackage{numprint} %%aleshores \numprint{2,5} sinó es pot utilitzar 2{,}5
+%---------- Codi ---------------------------
+\usepackage{upquote} %perquè en verbatim surtin les cometes `
+\usepackage{listings}
+\lstloadlanguages{bash,C,HTML,Python,XML}
+\lstset{frame=single,frameround=tttt,escapechar=@,
+        breaklines=true,breakindent=0pt,numberstyle=\tiny,
+        prebreak=\mbox{{\color{blue}\tiny$\searrow$}},
+        postbreak=\mbox{{\color{blue}\tiny$\rightarrow$}},
+        columns=fullflexible,
+        extendedchars=true,literate={à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1 {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1 {l·l}{{\l.l}}1
+{À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1 {Ï}{{\"\I}}1 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1 {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+      }
+
+\lstdefinestyle{sh} 
+    {language=sh, frame=none, prebreak =\textbackslash, postbreak ={},basicstyle=\ttfamily,showspaces=false,keepspaces=true}
+
+%% ÚS del lstlisting
+%%\begin{lstlisting}[language=C,caption=Plantilla de NagiosGrapher pels missatges,label=NGmis,numbers=left]
+%%\lstinline[style=sh]!for i:integer;!
+%--------------------------------------------
+
+
+
+
+
+%------------- format -------------------------
+\parindent0cm 
+\parskip0.2cm
+
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
+    pdftitle={Estudi i modelització dels SGBD Round Robin pel tractament de sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    pdfsubject={SGBD RRD},
+    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
+    ]{hyperref}
+%----------------------------------------------
+
+
+
+\begin{document}
+
+%------------- Pàgina de títol ------------
+\input{portada_master}
+%----------------------------------------------
+
+
+%------------- Abstract ------------
+\include{resum}
+%----------------------------------------------
+
+
+%------------- Índexs ------------
+\tableofcontents
+%\addtocontents{toc}{\protect\enlargethispage{1cm}}
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%----------------------------------------------
+
+
+
+%------------- Cos ------------
+
+%\mainmatter
+
+\include{intro}
+
+\include{estat}
+
+\include{velocitats}
+
+\include{rrd}
+
+\include{rrdtool}
+
+\include{model}
+
+\include{implementacio}
+
+\include{conclusions}
+
+
+%------- Annexos ------
+%\appendix
+
+%\include{}
+
+
+%------- Bibliografia ------
+%\addcontentsline{toc}{chapter}{Bibliografia}
+\printbibliography
+
+
+
+%----------------------------------------------
+
+
+\end{document}
+

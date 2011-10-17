@@ -1,0 +1,185 @@
+\chapter{RRD-Predicció}
+
+
+\section{Bàsica}
+
+\begin{lstlisting}
+rrdtool create velocitat.rrd --start 1262304000 --step 10 \
+        DS:mps:GAUGE:600:U:U      RRA:AVERAGE:0:1:100     
+\end{lstlisting}
+
+
+\begin{lstlisting}
+rrdtool updatev velocitat.rrd 1262304010:0 1262304020:1 1262304030:2 1262304040:1  1262304050:0 1262304060:1 1262304070:2 1262304080:1  1262304090:0 1262304100:1 1262304110:2 1262304120:1  1262304130:0 1262304140:1 1262304150:2 1262304160:1  1262304170:0 1262304180:1  1262304190:2 1262304200:1 1262304210:0 1262304220:1  1262304230:2 1262304240:1 1262304250:0 1262304260:1  1262304270:2  1262304280:1  1262304290:0 1262304300:1 1262304310:2 1262304320:1  1262304330:0 1262304340:1 1262304350:2 1262304360:1  1262304370:0  1262304380:1  1262304390:2 1262304400:1 1262304410:0 1262304420:1  1262304430:2 1262304440:1 1262304450:0 1262304460:1  1262304470:2 1262304480:1  1262304490:0
+\end{lstlisting}
+
+\begin{lstlisting}
+rrdtool graph velocitat.eps --imgformat EPS \
+
+rrdtool graphv - --imgformat EPS \
+
+rrdtool graph velocitat.eps --imgformat EPS \
+        --start 1262303999 --end 1262304500 \
+        -v "m/s" \
+        --x-grid SECOND:10:SECOND:10:SECOND:10:0:%X \
+        DEF:vel=velocitat.rrd:mps:AVERAGE \
+        VDEF:vvel=vel,AVERAGE \
+        CDEF:prev1=PREV\(vel\) \
+        CDEF:prev2=PREV\(prev1\) \
+        CDEF:prev3=PREV\(prev2\) \
+        CDEF:moving=prev2,prev1,vel,+,+,3,/ \
+        VDEF:vlast=moving,LAST \
+        LINE2:vel#0000ff:"Velocitat" \
+        LINE2:moving#ff0000:"Velocitat predida" 
+
+        PRINT:vvel:%2.2le \
+        PRINT:vlast:%2.2le 
+
+-------------------------
+
+        DEF:pred=
+
+
+
+
+velocitat.rrd:mps:HWPREDICT \
+        DEF:dev=velocitat.rrd:mps:DEVPREDICT \
+        DEF:fail=velocitat.rrd:mps:FAILURES \
+        TICK:fail#808080:1.0:"Errors" \
+        CDEF:upper=pred,dev,2,\*,+ \
+        CDEF:lower=pred,dev,2,\*,- \
+        LINE2:vel#0000ff:"Velocitat" \
+        LINE2:pred#ff0000:"Velocitat predida" \
+        LINE1:upper#00ff00:"Límit superior" \
+        LINE1:lower#00ff00:"Límit inferior" 
+\end{lstlisting}
+
+
+
+
+
+\subsection{Naive}
+
+Increment anterior
+
+\subsection{Moving average}
+
+$$
+F_i = \frac{D_{i-1} + D_{i-2} + \cdots + D_{i-n}}{n}
+$$
+
+
+
+
+\subsection{Weighted moving average}
+
+$$
+F_i = \frac{f_1D_{i-1} + f_2D_{i-2} + \cdots + f_nD_{i-n}}{n}
+$$
+$$
+f_1+f_2+\cdots+f_n = 1
+$$
+
+
+
+
+
+\section{Holt Winters}
+Problemes de xarxa segons Brutlag:
+
+aberrant behavior: canvis inconsistents en les dades recents. Els canvis a llarg termini no són d'interès; de fet ja s'espera que canviïn perquè els entorns són dinàmics.
+
+Identificar aberrant behavior. Normalment s'utilitzen criteris estàtics per la detecció d'aberracions (p.ex. llindars) i solen ser suficients. Però no poden detectar canvis més subtils pels quals calen criteris dinàmics. 
+
+aberrant behavior respecte a un model estadístic: hi poden haver falsos positius o no detectar-los quan hi són.
+
+evitar falsos positius: referit com \emph{selectivity}, \emph{specificity} o \emph{precision}
+
+trobar els positius certs: referit com \emph{sensitivity} o \emph{recall}
+
+Se suposa que cada sèrie temporal és independent de les altres.
+
+
+RRA:HWPREDICT:<row count>:<alpha>:<beta>:<period>
+
+\begin{lstlisting}
+rrdtool create velocitat.rrd --start 1262304000 --step 10 \
+        DS:mps:GAUGE:600:U:U      RRA:AVERAGE:0:1:100     \
+        RRA:HWPREDICT:100:0.1:0.0035:10
+\end{lstlisting}
+
+
+\begin{lstlisting}
+rrdtool updatev velocitat.rrd 1262304010:0 1262304020:1 1262304030:2 1262304040:1  1262304050:0 1262304060:1 1262304070:2 1262304080:1  1262304090:0 1262304100:1 1262304110:2 1262304120:1  1262304130:0 1262304140:1 1262304150:2 1262304160:1  1262304170:0 1262304180:1  1262304190:2 1262304200:1 1262304210:0 1262304220:1  1262304230:2 1262304240:1 1262304250:0 1262304260:1  1262304270:2  1262304280:1  1262304290:0 1262304300:1 1262304310:2 1262304320:1  1262304330:0 1262304340:1 1262304350:2 1262304360:1  1262304370:0  1262304380:1  1262304390:2 1262304400:1 1262304410:0 1262304420:1  1262304430:2 1262304440:1 1262304450:0 1262304460:1  1262304470:2 1262304480:1  1262304490:0
+\end{lstlisting}
+
+\begin{lstlisting}
+rrdtool graph velocitat.eps --imgformat EPS \
+        --start 1262303999 --end 1262304500 \
+        -v "m/s" \
+        --x-grid SECOND:10:SECOND:10:SECOND:10:0:%X \
+        DEF:vel=velocitat.rrd:mps:AVERAGE \
+        DEF:pred=velocitat.rrd:mps:HWPREDICT \
+        DEF:dev=velocitat.rrd:mps:DEVPREDICT \
+        DEF:fail=velocitat.rrd:mps:FAILURES \
+        TICK:fail#808080:1.0:"Errors" \
+        CDEF:upper=pred,dev,2,\*,+ \
+        CDEF:lower=pred,dev,2,\*,- \
+        LINE2:vel#0000ff:"Velocitat" \
+        LINE2:pred#ff0000:"Velocitat predida" \
+        LINE1:upper#00ff00:"Límit superior" \
+        LINE1:lower#00ff00:"Límit inferior" 
+\end{lstlisting}
+
+
+
+Gràfic itic
+\begin{lstlisting}
+rrdtool xport \
+          --start 1279843200 --end 1298887400 \
+          --maxrows 2000 --step 300           \
+          DEF:xx=itic.rrd:http_res:AVERAGE    \
+          XPORT:xx:"http_itic" 
+\end{lstlisting}
+
+\begin{lstlisting}
+rrdtool graph itic.eps --imgformat EPS \
+        --start 1279843200 --end 1298887400 \
+        -v "m/s" \
+        DEF:vel=itic.rrd:http_res:AVERAGE \
+        LINE2:vel#0000ff:"Velocitat" 
+\end{lstlisting}
+
+\begin{lstlisting}
+rrdtool create velocitat.rrd  --start 1266753300       \
+--step=300 DS:http_res:GAUGE:900:U:U                              \
+RRA:AVERAGE:0.5:1:300 RRA:MAX:0.5:1:300 RRA:MIN:0.5:1:300         \
+RRA:AVERAGE:0.5:2:1010 RRA:MAX:0.5:2:1010 RRA:MIN:0.5:2:1010      \
+RRA:AVERAGE:0.5:12:770 RRA:MAX:0.5:12:770 RRA:MIN:0.5:12:770      \
+RRA:AVERAGE:0.5:72:1488 RRA:MAX:0.5:72:1488 RRA:MIN:0.5:72:1488   \
+RRA:AVERAGE:0.5:288:744 RRA:MAX:0.5:288:744 RRA:MIN:0.5:288:744   \
+RRA:HWPREDICT:100:0.1:0.0035:10
+\end{lstlisting}
+
+\begin{lstlisting}
+rrdtool graph velocitat.eps --imgformat EPS \
+        --start 1279843200 --end 1298887400 \
+        -v "m/s" \
+        --x-grid SECOND:10:SECOND:10:SECOND:10:0:%X \
+        DEF:vel=velocitat.rrd:http_res:AVERAGE \
+        DEF:pred=velocitat.rrd:http_res:HWPREDICT \
+        DEF:dev=velocitat.rrd:http_res:DEVPREDICT \
+        DEF:fail=velocitat.rrd:http_res:FAILURES \
+        TICK:fail#808080:1.0:"Errors" \
+        CDEF:upper=pred,dev,2,\*,+ \
+        CDEF:lower=pred,dev,2,\*,- \
+        LINE2:vel#0000ff:"Velocitat" \
+        LINE2:pred#ff0000:"Velocitat predida" \
+        LINE1:upper#00ff00:"Límit superior" \
+        LINE1:lower#00ff00:"Límit inferior" 
+\end{lstlisting}
+
+
+%%% Local Variables:
+%%% TeX-master: "memoria"
+%%% End:
