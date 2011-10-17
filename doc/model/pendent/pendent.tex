@@ -1,0 +1,226 @@
+\section{Pendent}
+
+
+* Tractament dels desconeguts
+
+
+* Llista de paràmetres que cal configurar en una RRD, p.ex. per cada buffer $\delta,\tau\ldots$
+
+* Definir operacions de consulta (fetch). Obtenir una resolució adequada.
+
+* Taula de símbols matemàtics utilitzats
+
+
+* Es podria definir una estructura sense buffer d'entrada, vista com un buffer d'entrada amb interpolador x i període de mostreig y?
+
+
+* Es pot comparar dues RRD segons els paràmetres. P.ex. dir quina té més informació
+
+
+
+* Fusió de dues RRD, per exemple fer càlculs amb dues RRD.
+
+* Típicament a les sèries temporals els fan segmentació, classificació, clustering i indexing; en general basats en cerca de similaritat entre dues sèries temporals. Com es fa això a les RRD?, dóna bons resultats? Mirar keogh02~\cite{keogh02} 
+
+* A part del model Round Robin, hi ha altres tècniques que proposen solucions d'emmagatzematge per a les sèries temporals, com per exemple T-Time, ~\cite{assfalg08:ttime}, o iSAX,~\cite{isax}. Caldria comparar-les amb el model Round Robin (avantatges i inconvenients) i mirar si T-Time o iSAX tenen alguna cosa aprofitable pel model Round Robin
+
+* Wavelet packages
+
+* De les JPL: Hadoop fa map i reduce: és semblant al cdef i vdef de RRDtool.
+
+
+% Preguntes Sebastià
+
+% - Perquè les dades a dins de la base de dades es guarden en velocitat i no com a comptador? Al final tant és perquè el tm és constant i per tant v=e/tm: es pot passar d'un a l'altre sense problemes ...
+
+% El gràfic de velocitats és continu en el temps i el gràfic de comptadors també (atenció que un comptador ha de ser continu: sempre llegeixo el valor actual del comptador, no pot ser discret: no pot ser un gràfic de barres). Això fa que matemàticament guardar en velocitats i pintar-les en intervals constants sigui cert (té pinta de gràfic de barres però no ho és). En canvi per comptadors s'haurien de pintar punts discrets i interpolar (pintar els pendents de velocitat) en els intervals. I què veuries en un gràfic de comptadors? El valor total és millor pintar-lo numèricament i el creixement del comptador es veu millor en el gràfic de velocitats.
+
+%pensar en el cas 'espai recorregut'/'posició actual'. En funció contínua: l'espai recorregut (comptaquilòmetres és un comptador monòton) i no em permet saber la posició actual si s'ha fet marxa enrere, la posició actual em permet saber on sóc i calcular l'espai recorregut.  Però en funció discreta (si he pres mostres), l'espai recorregut continua sabent exactament l'espai recorregut però la posició actual només permet saber on sóc en les mostres i ja no pot calcular espai recorregut, a excepció que es compleixi Nyquist. 
+
+
+
+% - Però si guardo les velocitats perdo la referència; és a dir no sé l'estat actual. 
+
+% És cert. Només veig increments. 
+
+% - Per tant seria millor guardar les dades a l'espai de comptadors amb el valor absolut
+
+% Doncs potser sí ... així tindria les referències però quan fes càlculs sempre hauria de convertir a velocitat per poder tenir la línia de temps contínua. I a més compte perill! sí que es pot guardar el valor absolut en el cas de temperatures però en el cas de comptadors sempre són creixents per tant el número cada cop seria més gros.
+
+% - Desant com a velocitats perdo les referències.
+
+% És veritat, si és un comptaquilòmetres no puc saber on sóc ara, només veig increments.
+
+% Resum: cal alguna manera que RRD guardi l'últim valor absolut i poder fer calculs enrera a partir d'aquí.
+
+
+% - Cal dir bé en quins casos RRD no va bé. Per exemple, què passa quan jo guardo les temperatures. 
+
+% Al final es fa un resum de temperatures per mitjanes. És això cert o no? bé és una aproximació lineal ... en la teoria de sèries temporals segur que hi ha mètodes més bons d'aproximar (sèries de Fourier ...).
+
+% - Per comptadors ens referim a sèries monòtones creixents.
+
+% - La normalització de l'interval és una interpolació?
+
+% Sí, però no és la interpolació que es fa normalment a les sèries temporals.  A RRD és centrada en l'interval ($[t^N_{i-1},t^N_i]$):  $\frac{t_a*x_a+t_b*x_b}{(t_a+t_b)=t_m}$ i en interpolació lineal de sèries temporals (y=ax+b) se centra en el punt d'interpolació (interval $[t_a,t_b]$)
+
+
+
+% - RRD molt orientat 1) a comptadors i 2) a fer gràfics
+
+
+% pensant en el PFC de nagios i costos... pot ser que hi hagi relació entre comptador -> mesura energia ,  magnitud -> mesura potència
+
+% La mesura d'una Mesura: 3 trossos de sucre (x) són molt comparats amb 16 tasses(y)? Fem la mitjana de x, la mitjana de y i comparem segons y/x o x/y.
+
+% - Cal dir què no es pot fer amb RRD
+
+% No pot fer càlculs amb les mesures més petites que l'interval: no es guarden per tant no se'n poden fer càlculs. Per exemple: faig control de qualitat i mesuro la mida de les peces. En el CQ caldira recalcular a cada nova peça els límits però a RRD es fa cada temps de mostreig fent la mitjana de les peces que hi hagut (potser sí que ja és suficient ja que al cap d'un cert temps els límits poden ser estables i per tant la mitjana d'unes quantes peces ja és acceptable?). Ara el que no pot fer és mirar si les tres últimes peces estan per sobre de la mitjana (potser amb un compute sí que es pot fer ...?)
+
+% No pot calcular desbordaments de comptadors que no siguin de 32 o 64 bits. Caldria que en els tipus counter es pogués definir el valor de fons d'escala.
+
+
+
+%%més coses que s'haurien de resoldre
+
+% es diu que els comptadors són una cosa contínua, què passa si són discrets? de fet què és un comptador continu i què és un comptador discret?
+
+%el comptador pot ser digital (quantitzat perquè el temps és continu) o analògic; és a dir que l'amplitud pot ser contínua o discreta. A RRDtool l'amplitud es recupera de manera contínua?
+
+%Un comptador és una funció monòtona, i una funció monòtona és un comptador?
+
+%\item Fer un capítol on es parla de com s'obté informació d'una base de dades a RRDtool, és a dir com es fa l'operació de consulta i com representa les sèries temporals. A més, en les operacions de consulta també es poden demanar prediccions.
+
+
+
+
+
+
+COMPUTE : el cinquè tipus junt amb gauge,absolute,derive i counter. 
+is for storing the result of a formula applied to other data sources in the RRD. This data source is not supplied a value on update, but rather its Primary Data Points (PDPs) are computed from the PDPs of the data sources according to the rpn-expression that defines the formula. Consolidation functions are then applied normally to the PDPs of the COMPUTE data source (that is the rpn-expression is only applied to generate PDPs). In database software, such data sets are referred to as "virtual" or "computed" columns.
+
+
+\hrule
+
+
+fetch
+
+>I understand the examples but what RRA does rrdtool use? I mean, the line
+>     DEF:myspeed=test.rrd:speed:AVERAGE
+>specifies the Data Source but not the RRA; and in this case, we have two.
+
+It will use the highest resolution data that "best" fills the graph.
+
+Example 1. You have RRAs at 5min and 15 min resolutions. You graph a 
+period from <something on the hour> to <something else on the hour>. 
+If the 5 minute RRA will supply data for the whole period then it 
+will be used (highest resolution), otherwise the 15 minute one will 
+be used (assuming it goes back further.
+
+Example 2.
+You have RRAs at 2minute and 15 minute resolutions. You graph from 
+<something on the hour> to <15 minutes past something>. In this case, 
+the 15 minute RRA provides more data so will be used. The trick here 
+would be to graph until 14 or 16 minutes past the hour so that the 2 
+minute RRA will fill the graph.
+
+The best way to select your start and end times is to always pick an 
+end time that is an integer multiple of the consolidation period you 
+want RRA Graph to use, and a start time that is <width> times the RRA 
+consolidation period. In other words, make your graph an integer 
+number of Consolidated Data Points (CDPs) wide, and have it start and 
+end on a CDP boundary.
+
+Eg something like this :
+Step=300
+Width=400
+End=$Now - ( $Now mod $Step)
+Start=$End - ( $Width * $Step )
+
+
+
+\hrule
+
+
+\url{http://en.wikipedia.org/wiki/Non_uniform_sampling}
+
+unequally-sampled time series?
+
+
+\section{Demostracions}
+
+
+Quan una sèrie temporal és regular, l'interpolador mitjana i l'àrea valen el mateix en l'interval $[T_0,n\delta]$.
+
+\[
+mitjana(S(T_0,T_f] ) = \frac{v_0+v_1+v_2}{3}
+\]
+
+\[
+area(S(T_0,T_f] ) = \frac{(t_0-T_0)v_0+(t_1-t_0)v_1+(T_f-t_1)v_2}{T_f-T_0} 
+\]
+per ser regular $t_0 -T_0 = t_1 -t_0 = T_f - t_1 = \delta$
+\[
+area(S(T_0,T_f] ) = \frac{\delta v_0 + \delta v_1 + \delta v_2}{3\delta}
+=\frac{v_0+v_1+v_2}{3} = mitjana(S(T_0,T_f] )
+\]
+
+
+
+
+\section{Casos pràctics}
+
+
+* Explorar relacions entre variables: per exemple tenim dos sensors de temperatura en una mateixa habitació per tant han de llegir valors similars. per exemple sensors de cabal en un riu hi ha relació entre les aigües amunt i les aigües avall.
+
+
+
+
+
+\section{Convencions utilitzades}
+
+%Format d'ordre bash que s'ha d'entrar a la línia d'ordres
+
+%Format de sortida per pantalla o de tros de llenguatge de programació
+
+
+%\subsubsection{Vocabulari}
+
+%S'han seguit les guies lingüístiques del SLT de la UPC. Pel vocabulari s'ha utilitzat el DIEC i la seva edició web, pels nous termes es té com a referència el Termcat. A continuació es detallen els termes utilitzats que poden generar més disputes entre els lectors.
+
+%Monitorar i monitoratge
+
+%Traducció de rate, s'aclareix per tal que velocitat no creiï confusions amb les magnituds físiques espai i velocitat mesurades en metres i metres per segon respectivament
+% Discussions de llengua: com traduir rate: velocitat? ràtio magnitud per segon?
+
+% definició de velocitat a enciclopedia.cat:
+
+% Relació entre la variació que experimenta un paràmetre s característic d'un sistema físic i el temps t transcorregut per a la producció d'aquesta variació.
+
+
+%Traducció de ultramostreig i inframostreig
+%\marginpar{Compte que al Termcat hi ha supermostreig (resampling a més freqüència) i sobremostreig(Supermostreig al doble de freqüència màxima) però a wikipedia upsampling en romanès és ultramostreig }
+
+%http://en.wikipedia.org/wiki/Downsampling -> inframostreig (Infraesantionare en romanès)
+
+%http://en.wikipedia.org/wiki/Upsampling -> ultramostreig  (Ultraesantionare en romanès) 
+
+%ultra [DIEC] :  De més de, en addició a 
+%ultra- [DIEC] : Prefix que significa ‘més enllà’, ‘en grau excessiu’
+
+%però també 
+%hiper- [DIEC] Prefix que significa ‘sobre’, ‘ultra mesura’. 
+
+
+
+
+
+Have a look here : 
+
+http://www.codedread.com/displayWebStats.svg
+
+This could be really nice to have for rrd graph / interaction.
+
+--
+View this message in context: http://rrd-mailinglists.937164.n2.nabble.com/SVG-interaction-on-RRDs-graphs-tp6750442p6753680.html
+Sent from the RRDtool Users Mailinglist mailing list archive at Nabble.com.

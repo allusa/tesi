@@ -1,0 +1,460 @@
+\chapter{Implementació  de referència del model RRD}
+\label{cap:roundrobinson}
+
+En aquest capítol es dissenya, a nivell acadèmic, amb llenguatge de programació Python un sistema de gestió de bases de dades (SGBD) que implementa el model de dades Round Robin (RRD) tal com s'ha definit al capítol~\ref{cap:model-rrd}.
+
+Aquest capítol s'estructura de manera semblant al capítol anterior, amb les mateixes seccions de la \ref{sec:model:mesura} a la \ref{sec:model:rrd}, de manera que una secció d'aquest capítol és la implementació en Python de la definició del model en la mateixa secció del capítol anterior.
+ 
+Al final s'experimenta amb un exemple de funcionament de la base de dades RRD completa i s'extreuen unes conclusions breus d'aquesta implementació en Python.
+
+En aquest capítol se suposen coneixements bàsics de Python per a poder entendre la implementació en aquest llenguatge.
+
+\section{Introducció}
+
+Python és un llenguatge d'alt nivell i això permet que la implementació sigui quasi bé idèntica a les definicions del model.
+Python té una sintaxi senzilla que fa que sigui molt llegible, fins i tot per a qui no coneix Python. Tot i així, calen uns coneixements bàsics de programació.
+
+Python és un llenguatge orientat a objectes. El model s'implementa utilitzant el paradigma de programació d'orientació a objectes. És a dir, cada objecte del model s'implementa en una classe, amb els atributs i mètodes corresponents. Hi ha un ús intens de mètodes especials de Python, com a referència es pot consultar la documentació de Python~\cite{pythondoc}.
+A les classes s'implementa el mètode especial de representació per poder obtenir una visualització en text de les instàncies, no s'ha de confondre amb  la representació de sèries temporals descrita al model.
+
+
+El temps està implementat com a temps relatiu, per a més completesa s'hauria de dissenyar un objecte \verb+Temps+. Com a conseqüència d'aquesta simplificació, el SGBD resultant inicialitza la base de dades  al temps zero i els temps es consideren relatius a aquest instant d'inicialització. 
+
+
+\section{Mesura}
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de la classe Mesura,label=lst:implementacio:mesura,numbers=left]
+class Mesura(object):
+    """
+    Mesura m = (v,t) on v és el valor en el temps t. 
+    """
+    def __init__(self,v,t):
+        """
+        Constructor d'una mesura
+        """        
+        self.v = v
+        self.t = t
+
+    def __gt__(self,other):
+        """
+        Relació d'ordre induïda pel temps
+        """
+        return self.t > other.t 
+    
+    def __eq__(self,other):        
+        """
+        Relació d'ordre induïda pel temps
+        """
+        return isinstance(other,Mesura) and self.t == other.t
+
+    def __ne__(self,other):
+        """
+        Relació d'ordre induïda pel temps
+        """
+        return not self == other
+
+    def __hash__(self):
+        """
+        Retorna el hash d'una mesura, necessari per poder pertànyer a objectes col·leccions com per exemple els sets
+        """
+        return hash(self.t)
+    
+    def __repr__(self):
+        return 'm({0},{1})'.format(self.v,self.t)
+
+\end{lstlisting}
+
+La mesura s'ha implementat a la classe \verb+Mesura+ (Listing~\ref{lst:implementacio:mesura}). 
+
+Una \verb+Mesura+  té els atributs \verb+v+ pel valor de la mesura i \verb+t+ pel temps. Donada una mesura \verb+m+ es pot accedir als atributs de manera que \verb+m.v+ correspon a la notació  $V(m)$ i \verb+m.t+ correspon a $T(m)$, com es pot veure a l'exemple següent:
+\begin{lstlisting}[language=Python]
+>>> m = Mesura(1,2)
+>>> m.v
+1
+>>> m.t
+2
+\end{lstlisting}
+
+
+
+Per implementar la relació d'ordre induïda pel temps s'utilitzen els mètodes especials  pels operadors d'igualtat i desigualtat. Concretament, per tenir la relació d'ordre completa cal implementar la igualtat, la no igualtat i el major.
+
+Aleshores es poden comparar dues mesures:
+\begin{lstlisting}[language=Python]
+>>> m1 = Mesura(1,2)
+>>> m2 = Mesura(1,3)
+>>> m2 > m1
+True
+\end{lstlisting}
+
+
+
+\section{Sèrie temporal}
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de la classe SerieTemporal,label=lst:implementacio:serietemporal,numbers=left]
+class SerieTemporal(set):
+    """
+    Sèrie temporal s = {m0,...,mk} com una seqüència de mesures ordenades en el temps
+    """
+    def __getitem__(self,key):
+        """
+        Definició d'element i interval d'elements en una sèrie temporal.
+        """
+        #mesura màxima i mínima de la sèrie temporal
+        minm = min(self)
+        maxm = max(self)
+
+        #interval d'elements
+        if isinstance(key,slice):    
+            l = key.start
+            g = key.stop
+            p = key.step
+ 
+            #Per definició, S(r,infinit) és S(r,T(max(S))]
+            if g is None:
+                g = maxm.t
+
+            s = SerieTemporal()
+            for m in self:
+                if m.t > l and m.t <= g:
+                    s.add(m)
+            return s
+
+        #element
+        else:
+            l = key
+            g = key
+
+            if l < minm.t or g > maxm.t:
+                raise IndexError
+            for m in self:
+                if m.t == key:
+                    return m
+          
+        raise KeyError
+\end{lstlisting}                
+
+La sèrie temporal s'ha implementat a la classe \verb+SerieTemporal+ (Listing~\ref{lst:implementacio:serietemporal}). Aquesta classe només té un mètode ja que es defineix com una subclasse de \verb+set+ , d'on hereta la resta d'atributs i mètodes.
+
+Els \verb+set+ són un dels tipus de dades bàsics que té Python.  
+A la documentació de \verb+set+,~\cite{pythondoc}, es defineixen com una co\l.lecció desordenada d'elements no repetits. 
+
+Les sèries temporals s'implementen com a subclasse de \verb+set+ perquè aquests ja tenen implementades les operacions matemàtiques habituals de conjunts: pertinença, unió, intersecció, diferència o diferència simètrica.
+
+No obstant, els \verb+set+ no tenen ordre i en canvi les sèries temporals sí que en tenen  i per tant es voldrien implementar com a seqüències. Els tipus amb ordre a Python s'anomenen \emph{sequence} però aquests tipus no són conjunts. 
+
+En resum, es voldria un \verb+OrderedSet+ però oficialment a Python (v2.7) no existeix. Així doncs, s'ha optat per mantenir les sèries temporals com a subclasse de \verb+set+ i implementar els mètodes que tenen les seqüències. Pel que fa a l'ordre, tot i que els \verb+set+ no en tenen les mesures sí i per tant les operacions de màxim i mínim retornaran el valor correcte del conjunt.
+
+Així doncs, l'única definició que cal implementar és la d'interval sobre la seqüència. S'utilitza el mètode especial de les seqüències d'accés a elements, en el que també es pot so\l.licitar intervals de la seqüència (anomenats \emph{slices} a Python).
+
+Donada una sèrie temporal \verb+s+, es pot escriure l'\emph{slice} \verb+s[r:t]+ que correspon a la definició $S(r,t]$ on $r$ i $t$ són dos temps. 
+
+Els \emph{slice} també permeten les sintaxis \verb+s[r:]+, \verb+s[:t]+ i \verb+s[:]+  que respectivament es fan correspondre a les definicions $S(r,\infty)$, $S(\infty,t]$ i $S(\infty,\infty)$.
+
+
+Per altra banda, per a la implementació a Python de l'accés a element cal definir com s'obté un element en concret, el qual s'escriu amb la sintaxi \verb+s[i]+ on \verb+i+ és un enter. Aquest accés a element s'ha fet correspondre amb donada una sèrie temporal $S$ i un temps $i$, $s(i) = m \in S : T(m) = i$; tot i que no encaixa bé amb el concepte de Python on $i$ és un enter que indica la posició dins la seqüència. 
+
+  
+
+
+\section{Buffer}
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de la classe Buffer,label=lst:implementacio:buffer,numbers=left]            
+class Buffer(object):
+    """
+    Buffer B = (S,tau,delta,f) on S és una sèrie temporal, tau el darrer temps de consolidació, delta el pas de consolidació i f un interpolador
+    """
+    def __init__(self,delta,f):
+        """
+        Constructor d'un Buffer buit
+        """
+        self.s = SerieTemporal(); self.tau = 0; self.delta = delta; self.f = f
+
+    def afegeix(self,m):
+        """
+        Definició de l'operació afegeix
+        """
+        self.s.add(m)
+
+    def consolidable(self):
+        """
+        Definició del predicat consolidable
+        """
+        if self.s:
+            m = max(self.s)
+            return m.t >= (self.tau + self.delta)
+        return False
+
+    def consolida(self):
+        """
+        Definició de l'operació consolida
+        """
+        noutau = self.tau + self.delta       
+        interval = (self.tau,noutau)
+        interpola = self.f(self.s, interval)
+
+        self.s = self.s[noutau:]
+        self.tau = noutau
+        self.delta = self.delta
+        return interpola
+
+    def __repr__(self):
+        return 'Buffer({0},{1},{2})'.format(self.s,self.tau,self.delta)       
+\end{lstlisting}
+
+Un buffer s'ha implementat a la classe \verb+Buffer+ (Listing~\ref{lst:implementacio:buffer}). Aquesta classe té quatre atributs que es corresponen amb \verb+s+ és una sèrie temporal, \verb+tau+ és el darrer temps de consolidació,  \verb+delta+ és el pas de consolidació i  \verb+f+  és un interpolador. Tot seguit es detalla l'ús d'aquests atributs.
+
+Per a construir un buffer buit es necessita com a mínim dos paràmetres: \verb+delta+, el pas de consolidació, i \verb+f+, l'interpolador associat al buffer. És a dir, aquests atributs són els que caracteritzen a un buffer i estan pensats per a ser constants un cop s'ha construït un buffer. 
+
+Pel que fa als dos altres atributs, la sèrie temporal \verb+s+ s'inicia com un conjunt buit i el darrer temps de consolidació \verb+tau+ correspon al temps inicial, de moment implementat com a relatiu i per tant temps zero.
+
+Aleshores es defineixen els tres mètodes que es corresponen amb les operacions que tenen els buffers: \emph{afegeix}, \emph{consolidable} i \emph{consolida}.
+
+El mètode \verb+afegeix+ necessita una mesura com a paràmetre per tal d'afegir-la a la sèrie temporal.
+
+En el mètode \verb+consolidable+ primer es comprova que s'hagi afegit algun valor a la sèrie temporal i en cas afirmatiu es cerca si la mesura més recent ha superat l'interval de consolidació, calculat com el pas de consolidació des del darrer temps de consolidació del buffer. En aquest cas es considera que el buffer pot ser consolidat.
+
+Aleshores es pot cridar el mètode \verb+consolida+ per a consolidar el buffer. Aquest extreu de la sèrie temporal les mesures que cauen dins de l'interval de consolidació, situa el nou interval de consolidació i retorna una mesura que resumeix l'interval consolidat calculada per l'interpolador associat al buffer.
+
+
+\subsection{Interpolador mitjana}
+
+Un interpolador s'implementa com una funció que com a paràmetres necessita una sèrie temporal i l'interval en el que es vol interpolar. Aquest interval s'implementa com una tupla de dos elements. 
+
+L'interpolador opera amb aquests dos paràmetres, de la manera que creu convenient, i retorna un objecte \verb+Mesura+ que resumeix la sèrie temporal a l'interval demanat.
+
+És a dir, hi pot haver més d'un interpolador diferent on cadascun es caracteritza per la manera d'operar amb la sèrie temporal. Com a exemple s'implementa l'interpolador mitjana, el qual resumeix la sèrie temporal amb la mesura mitjana en l'interval demanat.
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de l'interpolador mitjana,label=lst:implementacio:mitjana,numbers=left]
+def mitjana(s,i):
+    """
+    Interpolador mitjana d'una sèrie temporal s en l'interval i.
+    """
+    sp = s[i[0]:i[1]]
+    v = 0
+    for m in sp:
+        v += m.v 
+    v /= float(len(sp))
+    return Mesura(v,i[1])
+\end{lstlisting}
+
+L'interpolador mitjana (Listing~\ref{lst:implementacio:mitjana}) s'ha implementat com una funció que calcula les mesures que cauen dins de l'interval \verb+i+ i en fa la mitjana dels seus valors. 
+
+En aquesta implementació no s'ha tingut en compte que les mesures siguin multivaluades, però es podria modificar per tal que s'admetessin. Aleshores la funció retornaria una mesura multivaluada amb una mitjana per cada multivalor.
+
+
+
+\section{Disc}
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de la classe Disc,label=lst:implementacio:disc,numbers=left]
+class Disc(object):
+    """
+    Disc D = (S,k) on S és una sèrie temporal i k és el cardinal màxim de S
+    """
+    def __init__(self,k):
+        """
+        Constructor d'un Disc buit
+        """
+        self.s = SerieTemporal()
+        self.k = k
+
+    def afegeix(self,m):
+        """
+        Definició de l'operació `afegeix`
+        """
+        if len(self.s) < self.k:
+            self.s.add(m)
+        else:
+            smin = SerieTemporal()
+            smin.add( min(self.s) )
+            
+            self.s -= smin
+            self.s.add(m)
+
+    def __repr__(self):
+        return 'Disc({0}, |{1}|)'.format(self.s,self.k)
+\end{lstlisting}
+
+Un disc s'ha implementat a la classe \verb+Disc+ (Listing~\ref{lst:implementacio:disc}). Aquesta classe té dos atributs: \verb+s+ és una sèrie temporal i \verb+k+ és el cardinal màxim que pot prendre la sèrie temporal.
+
+Així doncs, el cardinal màxim és el paràmetre que caracteritza cada disc i es necessita en construir un disc buit. La sèrie temporal s'inicialitza com un conjunt buit.
+
+Un disc només té el mètode \verb+afegeix+ que necessita una mesura com a paràmetre per tal d'afegir-la a la sèrie temporal. En aquest mètode es té en compte que si el cardinal de la sèrie temporal és igual a l'atribut \verb+k+ llavors per afegir una nova mesura abans cal treure la mesura mínima. 
+
+Per a operar amb la sèrie temporal s'utilitzen les operacions de conjunt. Concretament s'utilitza el mètode \verb+add+ per afegir objectes al conjunt i l'operador diferència. el qual necessita que la mesura que es vol treure formi part d'un conjunt que en aquest cas s'anomena \verb+smin+. 
+
+
+\section{Disc Round Robin}
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de la classe DiscRoundRobin,label=lst:implementacio:discroundrobin,numbers=left]
+class DiscRoundRobin(object):
+    """
+    Disc Round Robin R = (B,D) on B és un buffer i D és un disc
+    """
+    def __init__(self,delta,k,f):
+        """
+        Constructor d'un Disc Round Robin buit
+        """
+        self.B = Buffer(delta,f)
+        self.D = Disc(k)
+
+    def afegeix(self,m):
+        """
+        Definició de l'operació `afegeix`
+        """
+        self.B.afegeix(m)
+
+    def consolidable(self):
+        """
+        Definició del predicat `consolidable`
+        """
+        return self.B.consolidable()
+
+    def consolida(self):
+        """
+        Definició de l'operació `consolida`
+        """
+        m = self.B.consolida()
+        self.D.afegeix(m)
+
+    def __repr__(self):
+        return 'Disc({0}, |{1}|)'.format(self.s,self.k)
+\end{lstlisting}
+
+
+Un disc Round Robin s'ha implementat a la classe \verb+DiscRoundRobin+ (Listing~\ref{lst:implementacio:discroundrobin}). Aquesta classe té dos atributs: \verb+B+ és un buffer i \verb+D+ és un disc.
+
+A l'hora de construir un disc round robin cal crear un buffer i un disc buit, per tant aquests dos últims marquen els paràmetres necessaris pel constructor. Són tres paràmetres: el pas de consolidació \verb+delta+ i la funció d'interpolació \verb+f+ del buffer, i el cardinal màxim \verb+k+ del disc. Així doncs, els disc round robin estan caracteritzats per aquests tres paràmetres, els quals estan pensats per ser constants des de la creació.
+
+Els mètodes implementats per un \verb+DiscRoundRobin+ també recorden als buffers i discs: \emph{afegeix} que afegeix una mesura al buffer, \emph{consolidable} que consulta si el buffer és consolidable i \emph{consolida} que consolida el buffer i afegeix la mesura interpolada del buffer al disc.
+
+
+
+\begin{lstlisting}[float,language=Python,caption=Implementació de la classe RRD,label=lst:implementacio:rrd,numbers=left]
+class RRD(object):
+    """
+    M = (B,A) una base de dades Round Robin on B és un buffer i A és un conjunt de discs Round Robin
+    """
+    def __init__(self,delta,f):
+        self.B = Buffer(delta,f)
+        self.A = []
+
+    def afegeix_disc(self,delta,k,f):
+        self.A.append( DiscRoundRobin(delta,k,f) )
+
+    def update(self,m):
+        self.B.afegeix(m)
+
+    def consolidable(self):
+        return self.B.consolidable()
+
+    def consolidar(self):
+        m = self.B.consolida()
+        for R in self.A:
+            R.afegeix(m)
+
+    def rodable(self):
+        for R in self.A:
+            if R.consolidable():
+                return True
+        return False
+
+    def roda(self):
+        for R in self.A:
+            if R.consolidable():
+                R.consolida()
+
+\end{lstlisting}
+
+\section[RRD]{Base de dades Round Robin (RRD)}
+
+Una base de dades Round Robin (RRD) s'ha implementat a la classe \verb+RRD+ (Listing~\ref{lst:implementacio:rrd}). Aquesta classe té dos atributs: \verb+B+ és un buffer i \verb+A+ és un arxiu dels \verb+DiscRoundRobin+ implementat com una llista (co\l.lecció d'elements).
+
+Una RRD es crea amb un buffer i amb un arxiu buit de discs Round Robin. Per tant, els paràmetres necessaris del constructor corresponen a a aquest buffer i són el pas de consolidació \verb+delta+ i la funció d'interpolació \verb+f+.
+
+Per tal de poder afegir els \verb+DiscRoundRobin+ a la RRD, s'implementa el mètode \verb+afegeix_disc+ que donats els paràmetres que caracteritzen a un \verb+DiscRoundRobin+ en crea un i l'afegeix a l'arxiu.
+
+Aleshores, la RRD es caracteritza pels paràmetres del buffer i dels \verb+DiscRoundRobin+ que té. Per a treballar amb aquests buffers i disc, la \verb+RRD+ implementa mètodes semblants als de buffers i discs.
+
+Per una banda, \verb+consolidable+ consulta si el buffer de la \verb+RRD+ és consolidable i en cas afirmatiu es pot cridar el mètode \verb+consolidar+, el qual consolida aquest buffer i afegeix la mesura resultant de la consolidació del buffer a tots els \verb+DiscRoundRobin+ que hi ha a l'arxiu.
+
+Per altra banda, \verb+rodable+ consulta si hi ha algun \verb+DiscRoundRobin+ que sigui consolidable i en cas afirmatiu es pot cridar el mètode \verb+roda+, el qual consolida tots els \verb+DiscRoundRobin+ de l'arxiu que siguin consolidables.
+
+
+\section[Funcionament]{Experiment de funcionament}
+
+A continuació es detalla un exemple de funcionament del SGBD Round Robin dissenyat. En un intèrpret de Python es treballa amb una base de dades RRD.
+
+\begin{lstlisting}[float,language=Python,caption=Exemple de funcionament de la implementació en Python de la RRD,label=lst:implementacio:funcionament,numbers=left]
+>>> M = RRD(5,mitjana)
+>>> M.afegeix_disc(10,2,mitjana)
+>>>
+>>> m1 = Mesura(10,1)
+>>> m2 = Mesura(10,2)
+>>> m3 = Mesura(40,5) 
+>>> m4 = Mesura(50,10)
+>>>
+>>> M.update(m1)
+>>> M.consolidable()
+False
+>>> M.update(m2)
+>>> M.consolidable()
+False
+>>> M.update(m3)
+>>> M.consolidable()
+True
+>>> M.update(m4)
+>>> M.consolidable()
+True
+>>> M.consolidar()
+>>> M.rodable()
+False
+>>> M.consolidable()
+True
+>>> M.consolidar()
+>>> M.rodable()
+True
+>>> M.consolidable()
+False
+>>> M.roda()
+>>> M.rodable()
+False
+>>> M.consolidable()
+False
+>>> M.A
+[DRR:Buffer(SerieTemporal([]),10,10),Disc(SerieTemporal([m(35.0,10)]), |2|)]
+\end{lstlisting}
+
+A l'exemple del Listing~\ref{lst:implementacio:funcionament} es pot veure un exemple d'ús de tots els mètodes d'una \verb+RRD+. 
+
+En primer lloc es crea una base de dades RRD, amb el buffer d'entrada amb període de mostreig de 5 i interpolador mitjana. En segon lloc es crea un disc Round Robin amb període de mostreig 10, cardinal màxim 2 i interpolador mitjana.
+En tercer lloc es creen quatre mesures que s'utilitzaran més endavant, aquestes mesures simulen valors en els temps 1, 2, 5 i 10.
+
+En quart lloc, s'insereix la primera mesura i s'observa que la base de dades encara no és consolidable. A continuació, s'insereix la segona mesura i la base de dades encara no és consolidable. Quan s'insereix la tercera mesura, la base de dades ja és consolidable perquè s'ha completat el primer interval de consolidació $(0,5]$. S'insereix la quarta mesura i la base de dades segueix sent consolidable ja que encara hi ha pendent de consolidar l'interval $(0,5]$.
+
+En cinquè lloc, es consolida la base de dades amb la mesura calculada per l'interpolador mitjana: $\frac{10+10+40}{3}=20$. La base de dades no és rodable però segueix sent consolidable, ara en l'interval $(5,10]$ degut a la quarta mesura inserida.
+
+En sisè lloc, es torna a consolidar la base de dades, ara en l'interval $(5,10]$ amb la mesura calculada per l'interpolador mitjana: $\frac{50}{1}=50$. La base de dades ja no és consolidable però si que és rodable perquè s'ha completat el primer interval de consolidació $(0,10]$ del disc Round Robin. La mesura de consolidació que en resulta és calculada per l'interpolador mitjana: $\frac{ 20+50 }{2} = 35$.
+
+En setè lloc i finalment, es mostre el contingut de l'arxiu de discs Round Robin, només n'hi ha un, de la base de dades. Es pot veure com el buffer està buit i com el disc conté una mesura consolidada en el temps 10 i amb valor 35, el calculat a l'operació roda anterior.
+
+
+\section[Resum]{Conclusions de la implementació}
+
+Amb aquesta implementació amb Python del model RRD s'ha provat que el model dissenyat té un funcionament correcte. En la implementació hi ha detalls del llenguatge que dificulten la comprensió de l'estructura i funcionament dels SGBD RRD, i això que Python permet definir el programa amb sintaxi molt propera a la del model matemàtic.
+
+Per treballar amb una \verb+RRD+, l'usuari només ha de conèixer la classe \verb+RRD+ i la classe \verb+Mesura+. No li cal usar SerieTemporal, Buffer, Disc ni tampoc DiscRoundRobin, ja que aquestes classes s'usen internament.
+
+Aquesta, és una implementació bàsica i no hi ha tota la potencialitat del model RRD. Només s'ha provat la implementació amb l'interpolador mitjana, els temps es consideren relatius, no hi ha les operacions de representació de sèries temporals, etc.
+En aquesta primera implementació s'ha implementat un temps de manera senzilla, de la manera relativa. En una segona implementació caldrà millorar aquest aspecte ja que ara no és possible comparar dues bases de dades RRD.
+
+Pel que fa a les mesures no s'ha definit si són multivaluades o només admeten un valor per mesura. Podrien ser perfectament un objecte co\l.lecció, per exemple una llista de mesures, i només caldria que els interpoladors en fossin conscients per tal de tenir l'estructura i el comportament per mesures multivaluades.
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "memoria"
+%%% End: 
+
+% LocalWords:  Round SGBD Python RRD

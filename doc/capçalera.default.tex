@@ -1,0 +1,132 @@
+%--------------------
+% capçalera del document 
+%--------------------
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+
+
+%---------- Bibliografia -------------------
+\usepackage[style=numeric,sortcites=true]{biblatex}%style=authoryear
+\bibliography{bibliografia}
+%---------- Gràfics ------------------------
+\usepackage[final]{graphicx}
+\usepackage{epstopdf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{epic,xcolor,multicol}
+%---------- Símbols ------------------------
+\usepackage{cclicenses}%\usepackage{ccicons}
+\usepackage{url} %\url i \path
+\usepackage{eurosym}
+\usepackage{amsmath,amssymb,amsthm}
+\numberwithin{equation}{chapter}
+\newtheorem{definition}{Definició}
+%---------- Codi ---------------------------
+\usepackage{upquote} %perquè en verbatim surtin les cometes `
+\usepackage{listings}
+\lstloadlanguages{bash,C,HTML,Python,XML}
+\lstset{escapechar=@,numberstyle=\tiny,frame=single,frameround=tttt,
+        breaklines=true,breakindent=0pt,
+        prebreak=\mbox{{\color{blue}\tiny$\searrow$}},
+        postbreak=\mbox{{\color{blue}\tiny$\hookrightarrow$}},
+        columns=[l]fullflexible,
+        xleftmargin=1em,
+        extendedchars=true,
+        literate={à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1
+                 {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1
+                 {ç}{{\c{c}}}1 {l·l}{{\l.l}}1
+                 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1 {Ï}{{\"\I}}1
+                 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1
+                 {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+        }
+
+\lstdefinestyle{py}{
+  style=pynocolor
+}
+
+\lstdefinestyle{pynocolor}{
+  language=python,
+  frame=none,
+  inputencoding=utf8,
+  backgroundcolor=\color[gray]{0.95},
+}
+
+\lstdefinestyle{pycolor}{
+  style=py,
+        basicstyle=\sffamily\footnotesize,
+        stringstyle=\color{green},
+        showstringspaces=false,
+        alsoletter={1234567890},
+        otherkeywords={\ , \}, \{},
+        keywordstyle=\color{blue},
+        emph={access,and,as,break,class,continue,def,del,elif,else,%
+          except,exec,finally,for,from,global,if,import,in,is,%
+          lambda,not,or,pass,print,raise,return,try,while,assert},
+        emphstyle=\color{orange}\bfseries,
+        emph={[2]self},
+        emphstyle=[2]\color{gray},
+        emph={[4]ArithmeticError,AssertionError,AttributeError,BaseException,%
+          DeprecationWarning,EOFError,Ellipsis,EnvironmentError,Exception,%
+          False,FloatingPointError,FutureWarning,GeneratorExit,IOError,%
+          ImportError,ImportWarning,IndentationError,IndexError,KeyError,%
+          KeyboardInterrupt,LookupError,MemoryError,NameError,None,%
+          NotImplemented,NotImplementedError,OSError,OverflowError,%
+          PendingDeprecationWarning,ReferenceError,RuntimeError,RuntimeWarning,%
+          StandardError,StopIteration,SyntaxError,SyntaxWarning,SystemError,%
+          SystemExit,TabError,True,TypeError,UnboundLocalError,UnicodeDecodeError,%
+          UnicodeEncodeError,UnicodeError,UnicodeTranslateError,UnicodeWarning,%
+          UserWarning,ValueError,Warning,ZeroDivisionError,abs,all,any,apply,%
+          basestring,bool,buffer,callable,chr,classmethod,cmp,coerce,compile,%
+          complex,copyright,credits,delattr,dict,dir,divmod,enumerate,eval,%
+          execfile,exit,file,filter,float,frozenset,getattr,globals,hasattr,%
+          hash,help,hex,id,input,int,intern,isinstance,issubclass,iter,len,%
+          license,list,locals,long,map,max,min,object,oct,open,ord,pow,property,%
+          quit,range,raw_input,reduce,reload,repr,reversed,round,set,setattr,%
+          slice,sorted,staticmethod,str,sum,super,tuple,type,unichr,unicode,%
+          vars,xrange,zip},
+        emphstyle=[4]\color{purple}\bfseries,
+        morecomment=[s][\color{lightgreen}]{"""}{"""},
+        commentstyle=\color{red}\slshape,
+        literate=
+          {>>>}{\textbf{\textcolor{red}{$>$\kern-.5ex$>$\kern-.5ex$>$}~}}3%
+          {...}{{\textcolor{gray}{...}}}3%
+          {à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1%
+          {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1%
+          {l·l}{{\l.l}}1 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1%
+          {Ï}{{\"\I}}1 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1%
+          {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+        rulesepcolor=\color{blue},
+} 
+
+\lstdefinestyle{sh}{
+  language=bash,
+  frame=none,
+  prebreak =\textbackslash,
+  postbreak ={},
+  basicstyle=\ttfamily,
+  showspaces=false,
+  keepspaces=true,
+}
+\lstdefinestyle{file}{
+  frame=none,
+  showspaces=false,
+  keepspaces=true,
+  backgroundcolor=\color{yellow!20!white}
+}
+
+\lstdefinestyle{stdout}{
+}
+
+%% ÚS del lstlisting
+%%\begin{lstlisting}[language=C,caption=Plantilla de NagiosGrapher pels missatges,label=NGmis,numbers=left]
+%%\lstinline[style=sh]!for i:integer;!
+%--------------------------------------------
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main.default"
+%%% End: 
