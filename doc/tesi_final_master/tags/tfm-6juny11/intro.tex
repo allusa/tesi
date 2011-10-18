@@ -1,0 +1,190 @@
+\chapter{Introducció}
+
+
+En el camp de l'automàtica, hi ha un àmbit dedicat a construir
+sistemes per a la interactuació i el control de l'entorn; són coneguts
+com els sistemes SCADA (\emph{Supervisory Control And Data
+  Acquisition}).  Una de les parts importants dels SCADA és la
+reco\l.lecció de dades, a la qual també se l'anomena adquisició de
+dades o monitoratge.
+
+Monitorar o supervisar significa estar alerta de l'estat d'un sistema.
+Aquesta tasca és duta a terme pels monitors, els quals recullen dades
+d'uns sensors i gestionen alarmes quan hi ha problemes en les
+variables mesurades.
+
+Un monitor pot arribar a recollir un gran nombre de dades, ja que se
+solen monitorar molts sensors amb una freqüència elevada. No és rar
+trobar sistemes que monitoren centenars de sensors cada segon. Amb
+aquestes característiques, només una petita part de les dades pot ser
+observada en línia amb el procés (\emph{online}).
+Això no obstant, l'anàlisi d'aquestes dades aporta informació
+important per diagnosticar el sistema, detectar errors o fer
+predicció i per tant cal emmagatzemar-les. 
+
+Els monitors usen sistemes especialitzats per gestionar l'emmagatzemat
+de les dades. Aquests sistemes han de facilitar consulta les dades,
+operar-hi o presentar-les gràficament fins i tot quan el volum de
+dades arxivades és molt gran.
+
+En aquest context de monitoratge, és útil considerar que les dades
+recollides són sèries temporals. Aleshores es pot aplicar la teoria
+sobre les sèries temporals en els diferents procediments de tractament
+de dades.
+
+Aquest document s'estructura al voltant dels sistemes
+d'emmagatzemament i tractament de dades com a sèries temporals.
+Concretament se centra en els sistemes de gestió de bases de dades
+(SGBD) que s'ocupen de sèries temporals.  Els SGBD habituals, com per
+exemple els de model relacional, no són adequats per aquests casos ja
+que no disposen de les funcionalitats adequades per gestionar i
+explotar correctament la informació de les sèries temporals.
+%
+Existeixen, però, SGBD's especialitzats en la gestió de dades
+provinents de sèries temporals.  Entre aquests destaca RRDtool
+per haver-se convertit en l'estàndard \emph{de facto} a nivell
+productiu.  RRDtool està basat en uns conceptes que es poden
+agrupar sota un model anomenat model de dades Round Robin (RRD). El
+model RRD està específicament pensat per a les sèries
+temporals. RRDtool, doncs, és un SGBD molt adequat per a ser usant en
+l'àmbit de monitoratge.
+
+Segons Date, \cite{Date}, ``una base de dades és un contenidor
+informàtic per a una co\l.lecció de dades''. En el context dels SGBD's
+cal diferenciar:
+\begin{itemize}
+\item El model d'una bases de dades, que és el model matemàtic a on es
+  descriu teòricament l'estructura de les dades, per exemple el model
+  relacional o model Round Robin.
+
+\item El sistema de gestió de bases de dades, que és la implementació
+  d'un model de dades, per exemple postgresql o
+  RRDtool. 
+
+\item La base de dades, que és una instància d'un sistema de gestió de
+  bases de dades, per exemple la base de dades dels estudiants o la
+  base de dades de la temperatura de l'escola.
+\end{itemize}
+
+Fins  on coneixem,  RRDtool és  l'únic SGBD  que  implementa el
+model  RRD. En  aquest projecte  s'estudia RRDtool  per  tal de
+proposar,  per primera vegada,  una descripció  formal del  seu model.
+L'existència d'aquest  model obre les  portes a un  millor coneixement
+d'aquests tipus d'SGBD's, facilita noves implementacions i, finalment,
+permet avançar en el seu estudi.
+
+
+\section{Motivació}
+
+Actualment, els sistemes de telecontrol són complexos i hi ha una gran
+quantitat d'informació a gestionar. En aquests grans sistemes de
+telecontrol apareixen problemes en la reco\l.lecció de dades, com per
+exemple els forats, descrits per Puig \emph{et al.},~\cite{puig10}, o
+el tractament de reco\l.leccions massives que descriuen Camerra i
+Keogh,~\cite{keogh10:isax}. Aquestes reco\l.leccions de dades
+s'estudien com a sèries temporals degut a la seva naturalesa de
+seqüència de valors, però en l'emmagatzematge a les bases de dades no
+es té en compte aquesta estructura.
+
+Com s'ha dit a l'apartat anterior, els SGBD's que han de gestionar
+aquesta informació haurien de poder tractar convenientment la
+informació que prové de sèries temporals. En aquest sentit, actualment
+s'estan investigant en algunes tècniques, com iSAX,~\cite{isax}, o
+T-Time,~\cite{assfalg08:ttime}. En aquest context l'SGBD anomenat
+RRDtool destaca per ser l'estàndard \emph{de facto} en
+l'emmagatzematge i tractament de sèries temporals,~\cite{rrdtool}.
+
+RRDtool no disposa de cap model matemàtic que en descrigui el
+comportament. Disposar d'un model matemàtic és una fita important com
+demostra l'experiència històrica en l'àmbit dels SGBD's relacionals,
+\cite{Date}.  Disposar d'un model per a RRDtool, permetrà aprofundir
+en aquests tipus de SGBD's i estudiar com poden ajudar, per exemple,
+en l'aplicació de mètodes de validació i predicció com els que proposa
+Puig \emph{et al.} o les reduccions de dimensió que proposen Camerra i
+Keogh.
+
+La recerca en l'àmbit de la mineria de dades de sèries temporals,
+àmbit en el que se situa l'emmagatzematge i tractament de sèries
+temporals, ha experimentat un important increment darrera dècada. En
+fan esment Tak-chung Fu, \cite{fu11}, que el considera un problema no
+solucionat, i Yang i Wu, \cite{yangwu06}, que el qualifiquen com un
+dels deu reptes a resoldre en la mineria de dades.
+
+
+\section{Objectius}
+
+En aquest projecte es plantegen els objectius següents:
+
+\begin{itemize}
+
+\item Situar l'estat actual de l'emmagatzematge i del tractament de
+  sèries temporals.
+
+\item Estudiar el sistema de gestió de bases de dades RRDtool.
+
+\item Dissenyar un model de dades que descrigui l'estructura i el
+  comportament dels SGBD per a sèries temporals.
+
+\item Proposar una implementació de referència del model dissenyat.
+
+\item Proposar millores i treballs futurs al voltant del model
+  dissenyat.
+
+\end{itemize}
+
+
+
+
+\section{Estructura del document}
+
+A continuació d'aquest primer capítol d'introducció als sistemes de
+gestió de bases de dades de sèries temporals i de definició dels
+objectius del projecte, aquest document s'estructura en els capítols
+següents.
+
+En el capítol~\ref{cap:estat}, complementant al capítol d'introducció,
+s'exposa l'estat actual de la mineria de dades de sèries temporals. En
+aquest context se situen els sistemes de gestió de bases de dades
+que emmagatzemen i tracten sèries temporals.
+
+A continuació el cos principal del document se centra en els SGBD
+Round Robin.  En una primera part es descriu el SGBD RRDtool.
+
+En el capítol~\ref{cap:velocitats} s'aclareix perquè RRDtool, en el
+context de sèries temporals, està pensat per velocitats mitjanes de
+comptadors i com es poden tractar variables que són magnituds.
+
+En el capítol~\ref{cap:rrdtool} s'introdueix un concepte bàsic de base
+de SGBD RRD a partir del que es pot observar a
+RRDtool. S'expliquen algunes particularitats que tenen les
+bases de dades gestionades per RRDtool, com per exemple que no creixen
+en mida un cop creades o que són capaces de representar les dades
+gràficament.
+
+En el capítol~\ref{cap:rrdtool-etapes} es detalla el funcionament
+intern de RRDtool, tot seguint les etapes per les quals passa una dada
+des de que s'ha mesurat fins que queda desada.
+
+En una segona part, a partir dels conceptes observats a RRDtool, es
+proposa el model RRD.
+
+El capítol~\ref{cap:model-rrd} correspon a la definició d'aquest model
+de dades.  En el capítol~\ref{cap:roundrobinson}, s'implementa el
+model utilitzant el llenguatge de programació Python. S'exposa un
+exemple de funcionament.
+
+Finalment en el capítol~\ref{cap:conclusions}, es tanca el document
+amb un resum de l'exposat i les conclusions que es poden extreure del
+model de dades per a sèries temporals que s'ha dissenyat.  També es
+proposen els treballs futurs que es poden dur a terme a partir del
+model dissenyat.
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "memoria"
+%%% End:
+
+% LocalWords:  monitoratge monitorar SGBD RRDtool RRD Round
