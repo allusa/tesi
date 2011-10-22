@@ -672,7 +672,7 @@ Una base de dades Round Robin és un arxiu de discs Round Robin que comparteixen
 \begin{figure}[htp]
 \centering
 \setlength{\unitlength}{0.4mm}
-\input{imatges/model/arxiurrd.tex}
+\input{../../imatges/model/arxiurrd.tex}
 \caption{Esquema del model de dades Round Robin}
 \label{fig:model:esquemarrd}
 \end{figure}
@@ -892,7 +892,7 @@ Observeu que, sigui $t$ un instant de temps, la selecció de $S$ en $[t,t]$ és 
 
 \subsection{Unió temporal de sèries temporals}
 
-$S_1 \cup^r S_2$
+$S_1 \cup^r S_2$. En principi per la unió les sèries temporals han de tenir la mateixa dimensió pel que fa a mesures multivaluades.
 
 \begin{definition}[Unió temporal de $S_1$ i $S_2$ amb representació
   $r$]
@@ -901,7 +901,7 @@ $S_1 \cup^r S_2$
   \times \text{representació} \longrightarrow \text{Sèrie Temporal}
   \]
   \[
-  S_1 = \{m_0^1 , \ldots , m_k^1\}  \times S_2 = \{m_0^2 , \ldots , m_k^2\} \times r \longrightarrow S'
+  S_1 = \{m_0^1 , \ldots , m_{k1}^1\}  \times S_2 = \{m_0^2 , \ldots , m_{k2}^2\} \times r \longrightarrow S'
   \]
   \[
   t_1=T(\inf S_1), t_2=T(\sup S_1):
@@ -910,13 +910,14 @@ $S_1 \cup^r S_2$
   S' = S_1 \cup  ( S_2 - S_2[t_1,t_2]^r )
   \] 
 
-  Nota: la unió temporal no és commutativa.
+  Nota: la unió temporal no és commutativa. 
+  % Però, $(S_1 \cup^r S_2) \cup $(S_2 \cup^r S_1) = S_1 \cup S_2$?
 \end{definition}
 
 
 \subsection{Consulta temporal d'una RRD}
 
-Abans pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
+Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
 
 
 \begin{definition}[Consulta temporal de $RRD$ amb representació $r$]
@@ -951,8 +952,29 @@ Abans pot fer falta fer una selecció dels discs Round Robin amb el mateix inter
 \end{definition}
 
 
+\subsection{Fusió temporal de dues sèries temporals}
+
+Fusió (join) de dues sèries temporals.
 
 
+\begin{definition}[Fusió temporal de $S1$ i $S2$ amb representació $r$]
+  \[
+  \text{fusió}: \text{Sèrie Temporal} \times
+  \text{Sèrie Temporal} \times \text{representació} \longrightarrow
+  \text{Sèrie Temporal}
+  \]
+  \[
+  S_1 = \{m_0^1 , \ldots , m_{k1}^1\} \times S_2 = \{m_0^2 , \ldots ,
+  m_{k2}^2\} \times r \longrightarrow S'
+  \]
+  \[
+  S' = \{m_0' , \ldots , m_{k'}'\} : k' <= k1 + k2 : m' = (v',t'):
+  \]
+  \[
+  \forall m^1 \in 
+  \]
+
+\end{definition}
 
 %%% Local Variables:
 %%% TeX-master: "main"
