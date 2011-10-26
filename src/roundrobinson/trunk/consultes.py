@@ -11,6 +11,8 @@ Operacions de consulta
 Implementació de les operacions de consulta
 """
 
+import copy
+
 from serietemporal import Mesura,SerieTemporal
 from roundrobinson import RRD, DiscRoundRobin
 from interpoladors import mitjana
@@ -107,6 +109,46 @@ def seleccio(s,i):
 
     return (s.union(sm))[t0:tf]
 
+def _sup(s):
+    """
+    Suprem d'un conjunt discret finit
+    """
+    if len(s):
+        return max(s)
+    return -float("inf")
+
+def _inf(s):
+    """
+    Ínfim d'un conjunt discret finit
+    """
+    if len(s):
+        return min(s)
+    return float("inf")
+
+def resolucio(s,i):
+    """
+    Selecció de la resolució de S en i amb representació zohe
+
+    >>> s = _s1test()
+    >>> resolucio(s, set([4]) )
+    SerieTemporal([m(10,1), m(10,2), m(40,4)])
+    >>> resolucio(s, set([6]) )
+    SerieTemporal([m(10,1), m(10,2), m(40,5), m(inf,6)])
+    >>> resolucio(s, set([0]) )
+    SerieTemporal([m(10,0)])
+    >>> resolucio(s, set([-2,2,4,10]) )
+    SerieTemporal([m(10,-2), m(10,1), m(10,2), m(40,4), m(40,5), m(inf,10)])
+    """
+    tf = _sup(i)
+    inext = i - set([tf])
+    ta = _sup(inext)
+
+    if len(i) == 0:
+        return SerieTemporal()
+    else:
+        return resolucio(s,inext).union( seleccio(s,(ta,tf)) )
+        
+
 
 def unio(s1,s2):
     """
@@ -163,8 +205,62 @@ def consulta(m):
     mr0 = RRD(); mr0.add(r0)
     return unio(sd0, consulta(m-mr0) )
 
+
+def fusio(s1,s2):
+    """
+    Fusió temporal de s1 i s2 amb representació zohe
+
+    >>> s1 = _s1test()
+    >>> s2 = _s2test()
+    >>> fusio(s1,s2)
+    SerieTemporal([m((10, 60),0), m((10, 70),1), m((10, 70),2), m((40, 70),4), m((40, 50),5), m((inf, 30),10)])
+    >>> fusio(s2,s1)
+    SerieTemporal([m((60, 10),0), m((70, 10),1), m((70, 10),2), m((70, 40),4), m((50, 40),5), m((30, inf),10)])
+    """
+    t = set()
+    for m1 in s1:
+        t1 = m1.t
+        t.add(t1)
+    for m2 in s2:
+        t2 = m2.t
+        t.add(t2)
     
-        
-    
+    rs1 = resolucio(s1,t)
+    rs2 = resolucio(s2,t)
+
+    s = SerieTemporal()
+    for tp in t:
+        v1 = rs1[tp].v
+        v2 = rs2[tp].v
+        mp = Mesura( (v1,v2), tp)
+        s.add(mp)
+    return s
 
 
+
+def opera(s,f):
+    """
+    Aplica una funció f( (m0,m1,...,mn) ,t) a una sèrie temporal 
+    """
+    ss = copy.copy(s)
+    for m in ss:
+        m.v = f(m.v,m.t)
+    return ss
+
+def mitjana(v,t):
+    """
+    Calcula la mitjana per cada mesura d'una sèrie temporal multivaluada
+
+    >>> s1 = _s1test()
+    >>> s2 = _s2test()   
+    >>> opera(s1,mitjana)
+    SerieTemporal([m(10,1), m(10,2), m(40,5)])
+    >>> opera(fusio(s1,s2),mitjana)
+    SerieTemporal([m(35.0,0), m(40.0,1), m(40.0,2), m(55.0,4), m(45.0,5), m(inf,10)])
+    """
+    try:
+        len(v)
+    except TypeError:
+        return v 
+    else:
+        return sum(v) / float(len(v))
