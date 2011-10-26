@@ -1,5 +1,11 @@
-\chapter{Estat actual}
-\label{cap:estat}
+\section{State of the art}
+
+
+\todo{
+  * Sèries temporals (històrics, predicció, diagnosis, prognosis, etc.)
+  * Mostreig: docs quan període de mostreig no regular
+  * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
+}
 
 En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) per sèries temporals en el context de la mineria de dades de sèries temporals (\emph{time series data mining}), el qual també es considerat com mineria de dades per  detectar automàticament coneixement (\emph{knowledge discovery databases}). Els SGBD de model Round Robin (RRD) pertanyen a aquest context ja que  emmagatzemen sèries temporals  de les quals es vol aconseguir informació rellevant.
 
@@ -8,15 +14,20 @@ El capítol comença resumint l'estat de les sèries temporals en aquest camp de
 
 
 
-\section{Mineria de sèries temporals}
+\subsection{Time series data mining}
 
-L'anàlisi de sèries temporals abasta camps molt diferents com ara la predicció econòmica, la medicina, la meteorologia, la qualitat industrial, etc. En aquest context,  la mineria de sèries temporals tracta de gestionar co\l.leccions cronològiques de dades que tenen una mida gran i contínuament estan en creixement. 
-Aquest apartat se centra en  l'estat actual de la mineria de sèries temporals, àmbit que, en la darrera dècada, ha experimentat un important increment de la recerca.
+The analysis of time series includes different activities such as prediction in economics, weather forecasts, quality control in business, etc. In this context, time series data mining is the study and management of large collections of chronological data. Moreover, this data is continually increasing in size as time goes on.
+
+Mining research in time series has increased the last decade as shown in \textcite{fu11}. Fu summarises exhaustively the current state of the art in time series data mining  and concludes that there is still room for us to further investigate and develop'. Mining tasks have had intensively research but the problem of  time series representation needs better solutions because of high dimensionality of time data. Furthermore, it is said to be one of the ten challenging problems in data mining \parencite{yangwu06}.
+ 
+Time series data mining research  is given at mainly four tasks \parencite{keogh02}: indexing, clustering, classification and segmentation. In order to solve these tasks, lots of experimental algorithms have been proposed by different authors. \textcite{keogh02} compare and evaluate some of these algorithms with the same datasets and they recommend the time series data mining community to follow the same benchmark when evaluating the performance of similar algorithms. 
+
+Representation of time series is a common step before the last four tasks. 
+\emph{Piecewise Linear Representation} (PLR) \parencite{keogh97,keogh98}  is one representation widely used as it is said that human vision segments curvatures into lineal segments.
 
 
-En un article molt recent de Tak-chung Fu,~\cite{fu11}, es fa esment d'aquest increment de recerca i es resumeix l'estat actual de forma exhaustiva. Fu conclou que la recerca s'ha centrat en tasques de mineria però no s'ha resolt del tot el problema de la representació de sèries temporals.
 
-Segons Keogh i Kasetty,~\cite{keogh02}, les quatre tasques que centren l'atenció de la recerca actual de sèries temporals són l'indexat, l'agrupament, la classificació i la segmentació. A més, Keogh compara els experiments duts a terme en aquests camps.
+
 Un pas comú previ a aquestes quatre tasques és el de representació de la sèrie temporal. 
 Keogh \emph{et al.},~\cite{keogh97,keogh98}, investiguen la representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise Linear Representation}). Keogh fa notar que la representació PLR és l'habitual degut a que la visió de l'ésser humà segmenta les corbes en línies rectes.
 Més tard, Keogh,~\cite{keogh00,keogh01}, explora la representació de sèries temporals per tal de reduir la dimensió d'una sèrie temporal i poder-la indexar més fàcilment  i proposa dues tècniques eficients en el càlcul: la PAA (\emph{Piecewise Aggregate Aproximation}) i  la APCA (\emph{Adaptive Piecewise Constant Approximation}), ambdues basades en la representació a trossos constants de la sèrie temporal. 
@@ -24,6 +35,7 @@ D'aquestes dues tècniques Keogh conclou que mantenen una bona aproximació a la
 
 
 
+\subsection{Monitoring}
 Tal com expliquen Quevedo \emph{et al.},~\cite{quevedo10}, en un sistema complex de telecontrol hi ha una gran quantitat d'informació a manipular que s'obté de diversos sensors distribuïts pel camp de mesura, aquesta informació s'anomena variables mesurades. Un SCADA (\emph{Supervisory Control And Data Acquisition})  és el sistema encarregat de recollir i centralitzar les variables de manera periòdica en el temps. En el moment de reco\l.lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos. Les tècniques de bases de dades no poden emmagatzemar les dades amb aquests dos tipus de problema ja que aleshores els registres històrics quedarien falsejats. Així doncs, cal comprovar que les dades emmagatzemades són correctes, segons un procés de validació, i modificar-les en el cas que siguin falses, segons un procés de reconstrucció. Quevedo,~\cite{quevedo10}, aplica aquests processos a xarxes de distribució d'aigua.
 
 Els mètodes de validació i reconstrucció es poden basar en anàlisis senzilles del senyal o en comparacions del valor real amb models de predicció de dades. Quan les dades es tracten com a sèries temporals, hi ha mètodes de predicció específics.
@@ -32,7 +44,7 @@ Per tal d'aplicar aquests mètodes a les sèries temporals de manera eficient, e
 
 
 
-\section{SGBD per sèries temporals}
+\subsection{SGBD per sèries temporals}
 
 
 Per poder analitzar les dades de manera eficient cal disposar de bases de dades específiques, a més cada cop el volum de dades a tractar és més crític degut a que hi ha més facilitat a capturar-les i més capacitat per emmagatzemar-les. 
@@ -66,7 +78,7 @@ Les bases de dades RRDtool tenen en compte aquests problemes intermitjos entre e
 
 
 
-\section{Base de dades RRDtool}
+\subsection{Base de dades RRDtool}
 
 En aquest apartat es presenta el TSDS anomenat RRDtool. Aquest sistema, que serà objecte d'un estudi acurat en els capítols \ref{cap:rrdtool} i~\ref{cap:rrdtool-etapes}, s'ha pres com a referència en aquest treball.
 
@@ -92,9 +104,7 @@ En el cas de RRDtool no existeix  cap model que descrigui el sistema i es object
 
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-master: "memoria"
+%%% TeX-master: "article"
+%%% ispell-local-dictionary: "british"
 %%% End: 
 
-% LocalWords:  monitoratge RRDtool SGBD RRD Round databases mining SCADA And
-% LocalWords:  Supervisory Acquisition bitemporal Time Database Systems TSDS
-% LocalWords:  Nagios Icinga Grapher Holt-Winters
