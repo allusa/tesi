@@ -14,51 +14,63 @@ El capítol comença resumint l'estat de les sèries temporals en aquest camp de
 
 
 
+
+
+\subsection{Monitoring}
+
+Monitoring sensor data and processing the data to achieve diagnosis,
+prognosis and prediction is a common task in many fields such as
+prognosis in degradation models \parencite{yu11}, navy
+vessels \parencite{palmer07} or water distribution
+networks \parencite{quevedo10}.  A monitoring system recollects a
+large amount of data so only a little can be observed online and the
+data stored is also too big to process \parencite{keogh97}.
+
+\textcite{quevedo10} shows the enormous information residing in complex remote systems. This information comes from many sensors that are distributed in the area. A SCADA (\emph{Supervisory Control And Data Acquisition}) is the periodically recollecting system responsible for the centralisation of the sensing values. During the recollection time two problems may appear: some values that have not been obtained and values that are erroneous. The database managers can not cope with such data as the historical information would be inconsistent. Therefore, a validation process must be taken in order to assure that stored data is correct. If data is invalid, a reconstruction process may take place in order to modify values to estimated ones. In \cite{quevedo10} validation and reconstruction techniques are applied to water distribution networks. 
+
+
+
+In the monitoring context, the data collected can be considered as a time
+series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
+
+
+
 \subsection{Time series data mining}
 
-The analysis of time series includes different activities such as prediction in economics, weather forecasts, quality control in business, etc. In this context, time series data mining is the study and management of large collections of chronological data. Moreover, this data is continually increasing in size as time goes on.
+The analysis of time series includes different activities such as prediction in economics, weather forecasts, quality control in business, etc. In this context, time series data mining is the study and management of large collections of chronological data. Furthermore, this data is continually increasing in size as time goes on.
 
 Mining research in time series has increased the last decade as shown in \textcite{fu11}. Fu summarises exhaustively the current state of the art in time series data mining  and concludes that there is still room for us to further investigate and develop'. Mining tasks have had intensively research but the problem of  time series representation needs better solutions because of high dimensionality of time data. Furthermore, it is said to be one of the ten challenging problems in data mining \parencite{yangwu06}.
  
 Time series data mining research  is given at mainly four tasks \parencite{keogh02}: indexing, clustering, classification and segmentation. In order to solve these tasks, lots of experimental algorithms have been proposed by different authors. \textcite{keogh02} compare and evaluate some of these algorithms with the same datasets and they recommend the time series data mining community to follow the same benchmark when evaluating the performance of similar algorithms. 
 
-Representation of time series is a common step before the last four tasks. 
-\emph{Piecewise Linear Representation} (PLR) \parencite{keogh97,keogh98}  is one representation widely used as it is said that human vision segments curvatures into lineal segments.
+Representation of time series is a common step done before the above four tasks.
+\emph{Piecewise Linear Representation} (PLR) \parencite{keogh97,keogh98}  is one representation widely used as it is noted that human vision segments curvatures into lineal segments. In \textcite{keogh00,keogh01} time series representation is studied in order to reduce the high dimension component and to index more efficiently. Two representation based on PLR are proposed: \emph{Piecewise Aggregate Aproximation} (PAA) and \emph{Adaptive Piecewise Constant Approximation} (APCA). Keogh concludes that both approximations are closer to the original time series and they have better computing time than other complicated techniques such as \emph{Discrete Fourier Transform} (DFT), \emph{Singular Value Decomposition} (SVD), or \emph{Discrete Wavelet Transform} (DWT).
 
 
 
+\subsection{Database management systems}
 
-Un pas comú previ a aquestes quatre tasques és el de representació de la sèrie temporal. 
-Keogh \emph{et al.},~\cite{keogh97,keogh98}, investiguen la representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise Linear Representation}). Keogh fa notar que la representació PLR és l'habitual degut a que la visió de l'ésser humà segmenta les corbes en línies rectes.
-Més tard, Keogh,~\cite{keogh00,keogh01}, explora la representació de sèries temporals per tal de reduir la dimensió d'una sèrie temporal i poder-la indexar més fàcilment  i proposa dues tècniques eficients en el càlcul: la PAA (\emph{Piecewise Aggregate Aproximation}) i  la APCA (\emph{Adaptive Piecewise Constant Approximation}), ambdues basades en la representació a trossos constants de la sèrie temporal. 
-D'aquestes dues tècniques Keogh conclou que mantenen una bona aproximació a la sèrie temporal i que a més  tenen molt menys cost de càlcul que altres de més complicades, com ara la \emph{Discrete Fourier Transform} (DFT),  la  \emph{Singular Value Decomposition} (SVD) o la \emph{Discrete Wavelet Transform} (DWT).
+Database management systems (DBMS)\todo{intro general als DBMS, explicant que els relacionals són els típics}
 
 
+\subsubsection{Time series DBMS}
 
-\subsection{Monitoring}
-Tal com expliquen Quevedo \emph{et al.},~\cite{quevedo10}, en un sistema complex de telecontrol hi ha una gran quantitat d'informació a manipular que s'obté de diversos sensors distribuïts pel camp de mesura, aquesta informació s'anomena variables mesurades. Un SCADA (\emph{Supervisory Control And Data Acquisition})  és el sistema encarregat de recollir i centralitzar les variables de manera periòdica en el temps. En el moment de reco\l.lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos. Les tècniques de bases de dades no poden emmagatzemar les dades amb aquests dos tipus de problema ja que aleshores els registres històrics quedarien falsejats. Així doncs, cal comprovar que les dades emmagatzemades són correctes, segons un procés de validació, i modificar-les en el cas que siguin falses, segons un procés de reconstrucció. Quevedo,~\cite{quevedo10}, aplica aquests processos a xarxes de distribució d'aigua.
-
-Els mètodes de validació i reconstrucció es poden basar en anàlisis senzilles del senyal o en comparacions del valor real amb models de predicció de dades. Quan les dades es tracten com a sèries temporals, hi ha mètodes de predicció específics.
-Tot i que la teoria de sèries temporals permet establir aquests mètodes de predicció i reconstrucció, els SGBD habituals, com ara els de model relacional, no ho faciliten.  
-Per tal d'aplicar aquests mètodes a les sèries temporals de manera eficient, els SGBD s'han d'especialitzar en el tractament de sèries temporals.
+Time series analysis techniques must be computed in specific DBMS in order to process data efficiently. Moreover, the amount of data is increasing as data acquisition becomes easier and there is more storage capacity. 
+Mainly, time series data is different from other data types in the sense that the series values are dependent from another variable: the time. Consequently, DBMS can not process independently values and times; it can be generally stated that they must keep the temporal coherence. 
 
 
+As said in \textcite{assfalg08:thesis}, the temporal coherence can be divided in two types. Firstly, there is  \emph{bitemporal data} which consists in storing the valid time during which an event is true and storing the transaction time in which the event is stored in the database. That is, tho states -- true or false -- are annotated for each observation.  Secondly, there is \emph{time series data} which consists in describing a collection of data that depends from time. He also says that the first type can be expressed in terms of second type.
 
-\subsection{SGBD per sèries temporals}
+Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
 
 
-Per poder analitzar les dades de manera eficient cal disposar de bases de dades específiques, a més cada cop el volum de dades a tractar és més crític degut a que hi ha més facilitat a capturar-les i més capacitat per emmagatzemar-les. 
-La diferència principal de les sèries temporals amb altres tipus de dades és que els valors són dependents d'una variable: el temps. Com a conseqüència, qualsevol base de dades que hi vulgui tractar no ho pot fer de manera independent pels valors i pel temps; ha de conservar la coherència temporal.
-
-Tal com diu A{\ss}falg,~\cite{assfalg08:_advan_analy_temp}, la coherència temporal pot ser vista des de dues vessants. La primera, a la qual anomena \emph{bitemporal data}, consisteix en expressar el temps vàlid durant el qual un esdeveniment és cert i el temps de transacció durant el qual l'esdeveniment és guardat a la base de dades, és a dir consisteix a descriure dos estats, cert o fals, per cada observació. La segona, a la qual anomena \emph{time series data}, consisteix a descriure co\l.leccions de dades en funció del temps. A més diu que les primeres poden ser expressades amb les segones.
-
-Els SGBD relacionals són capaços d'implementar el primer tipus de coherència, les \emph{bitemporal data}; llavors es classifiquen sota el nom de bases de dades temporals, \cite{date,wiki:temporal_database}. Però el model relacional no és suficient pel segon tipus: les sèries temporals. Tot i que en principi no hi hauria cap problema a utilitzar una base de dades relacional per a sèries temporals, enteses com a dades històriques, la pròpia naturalesa dels sistemes relacionals  dificulta les operacions necessàries. 
-Aquestes operacions per sèries temporals es basen en rangs de temps i precisen conversions de fusos horaris i rotacions dels registres de les taules, sinó el nombre de files creixeria de forma indefinida. 
 
 Els SGBD que implementen operacions per a sèries temporals es poden anomenar \emph{Time Series Database Systems} (TSDS),~\cite{tsds}. Les TSDS Estan optimitzades per gestionar les dades segons les operacions de temps i rotació, les quals són molt comunes en la gestió de les sèries temporals.  A més també cal controlar el creixement de la base de dades i la consulta ha de ser flexible i d'alta velocitat,~\cite{keogh10:isax}. Per exemple, s'han de poder visualitzar les evolucions tant d'una setmana com d'un any sense haver de fer càlculs complicats amb els valors emmagatzemats. 
-A continuació es llisten dues bases de dades optimitzades per a sèries temporals.
 
-A{\ss}falg,~\cite{assfalg08:_advan_analy_temp}, presenta un TSDS que és capaç de
+
+A continuació es llisten  bases de dades optimitzades per a sèries temporals.
+
+A{\ss}falg,~\cite{assfalg08:thesis}, presenta un TSDS que és capaç de
 cercar similituds, també anomenades distàncies, entre sèries temporals. Principalment utilitza llindars per comparar en cada interval si les dues sèries temporals s'assemblen. A partir d'aquest mètode desenvolupa algoritmes que calculen de manera eficient per a les sèries temporals i en concret els implementa en una aplicació anomenada T-Time, la qual descriu a~\cite{assfalg08:ttime}.
 
 Keogh i Camerra~\cite{keogh08:isax,keogh10:isax}, 
@@ -76,11 +88,12 @@ Les bases de dades RRDtool tenen en compte aquests problemes intermitjos entre e
 
 
 
+%\subsection{Base de dades RRDtool}
 
+RRDtool és un SGBD per sèries temporals més. \todo{sap tractar molt bé les sèries temporals però està molt afitat a un tipus de dades concrets i no permet operacions tant generals com els altres SGBD}
 
-\subsection{Base de dades RRDtool}
+RRDtool ha inspirat aquest treball
 
-En aquest apartat es presenta el TSDS anomenat RRDtool. Aquest sistema, que serà objecte d'un estudi acurat en els capítols \ref{cap:rrdtool} i~\ref{cap:rrdtool-etapes}, s'ha pres com a referència en aquest treball.
 
 RRDtool és un SGBD per a sèries temporals que despunta en l'àmbit de programari lliure. Hi ha una llista de projectes que utilitzen RRDtool que poden trobar-se indicats a l'apartat \emph{Projects using RRDtool} de~\cite{rrdtool}.
 Entre d'altres, s'utilitza en sistemes de monitoratge professionals com per exemple Nagios,~\cite{nagios}, o Icinga,~\cite{icinga}, també populars dins del programari lliure, o en el montior MRTG (The Multi Router Traffic Grapher),~\cite{mrtg}, del mateix creador que RRDtool. Aquests monitors fan un ús complet de les possibilitats de RRDtool i li cedeixen tot el control de l'emmagatzematge de mesures i el posterior tractament i representació gràfica de les dades. 
@@ -95,7 +108,7 @@ L'evolució actual de RRDtool se centra en aspectes informàtics i consisteix a 
   
 
 En l'àmbit dels SGBD els sistemes relacionals van fixar una fita que ha tingut una transcendència posterior de  primer ordre. En bona part aquest èxit dels SGBD relacionals es deu al fet que es basen en un model matemàtic sòlid,~\cite{date}.
-En el cas de RRDtool no existeix  cap model que descrigui el sistema i es objectiu d'aquest treball proposar-ne un. El model per a SGBD Round Robin es dissenya  al capítol~\ref{cap:model-rrd}.
+En el cas de RRDtool no existeix  cap model que descrigui el sistema i es objectiu d'aquest treball proposar-ne un. El model per a SGBD Round Robin es dissenya  al capítol
 
 
 
