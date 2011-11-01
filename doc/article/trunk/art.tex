@@ -7,6 +7,8 @@
   * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
 }
 
+\todo{esquema defensa}
+
 En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) per sèries temporals en el context de la mineria de dades de sèries temporals (\emph{time series data mining}), el qual també es considerat com mineria de dades per  detectar automàticament coneixement (\emph{knowledge discovery databases}). Els SGBD de model Round Robin (RRD) pertanyen a aquest context ja que  emmagatzemen sèries temporals  de les quals es vol aconseguir informació rellevant.
 
 
@@ -29,6 +31,7 @@ data stored is also too big to process \parencite{keogh97}.
 \textcite{quevedo10} shows the enormous information residing in complex remote systems. This information comes from many sensors that are distributed in the area. A SCADA (\emph{Supervisory Control And Data Acquisition}) is the periodically recollecting system responsible for the centralisation of the sensing values. During the recollection time two problems may appear: some values that have not been obtained and values that are erroneous. The database managers can not cope with such data as the historical information would be inconsistent. Therefore, a validation process must be taken in order to assure that stored data is correct. If data is invalid, a reconstruction process may take place in order to modify values to estimated ones. In \cite{quevedo10} validation and reconstruction techniques are applied to water distribution networks. 
 
 
+\todo{docs quan període de mostreig no és regular}
 
 In the monitoring context, the data collected can be considered as a time
 series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
@@ -52,6 +55,7 @@ Representation of time series is a common step done before the above four tasks.
 
 Database management systems (DBMS)\todo{intro general als DBMS, explicant que els relacionals són els típics}
 
+En l'àmbit dels SGBD els sistemes relacionals van fixar una fita que ha tingut una transcendència posterior de  primer ordre. En bona part aquest èxit dels SGBD relacionals es deu al fet que es basen en un model matemàtic sòlid,~\cite{date}.
 
 \subsubsection{Time series DBMS}
 
@@ -64,51 +68,40 @@ As said in \textcite{assfalg08:thesis}, the temporal coherence can be divided in
 Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
 
 
+When a DBMS implements especial operations for time series they can be called \emph{Time Series Database Management Systems} (TSDB). TSDB are optimised to process data with time and rotation operations, which are very common in time series management. Moreover the growth of the data must be under control and the fetch operations must be flexible and fast \parencite{keogh10:isax}. As instance, the temporal changes either for a week or for a year must be processed and it can not take very long.
 
-Els SGBD que implementen operacions per a sèries temporals es poden anomenar \emph{Time Series Database Systems} (TSDS),~\cite{tsds}. Les TSDS Estan optimitzades per gestionar les dades segons les operacions de temps i rotació, les quals són molt comunes en la gestió de les sèries temporals.  A més també cal controlar el creixement de la base de dades i la consulta ha de ser flexible i d'alta velocitat,~\cite{keogh10:isax}. Per exemple, s'han de poder visualitzar les evolucions tant d'una setmana com d'un any sense haver de fer càlculs complicats amb els valors emmagatzemats. 
+\paragraph{Similar systems} Next, we summarise some current TSDB.
 
+\textcite{assfalg08:thesis} shows a TSDB that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
 
-A continuació es llisten  bases de dades optimitzades per a sèries temporals.
-
-A{\ss}falg,~\cite{assfalg08:thesis}, presenta un TSDS que és capaç de
-cercar similituds, també anomenades distàncies, entre sèries temporals. Principalment utilitza llindars per comparar en cada interval si les dues sèries temporals s'assemblen. A partir d'aquest mètode desenvolupa algoritmes que calculen de manera eficient per a les sèries temporals i en concret els implementa en una aplicació anomenada T-Time, la qual descriu a~\cite{assfalg08:ttime}.
-
-Keogh i Camerra~\cite{keogh08:isax,keogh10:isax}, 
-estudien l'anàlisi i l'indexat de co\l.lecions massives de sèries temporals. Descriuen que el problema principal del tractament rau en l'indexat de les sèries temporals i proposen mètodes per calcular-lo de manera eficient. El mètode principal que desenvolupen està basat en l'aproximació a trossos constants de la sèrie temporal (PAA,~\cite{keogh00}) i ho implementen en una estructura de dades que anomenen iSAX (\emph{indexable Symbolic Aggregate approXimation}),~\cite{isax}. Amb aquesta eina s'obtenen representacions de sèries temporals que permeten reduir l'espai emmagatzemat i indexar tant bé com altres mètodes de representació més complexos.
+ 
+\textcite{keogh08:isax,keogh10:isax} analyse and index massive collections of time series. They describe that the main problem is in the indexing of time series and they propose methods that process efficiently. The first method proposed is based on the constant piecewise approximation, the PAA \parencite{keogh00}. It is implemented in a data management structure called \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. The time series representation obtained with this tool allows to reduce the stored space and to index faster and with the same quality as other more complex representation methods.
+ 
 
 
-
-
-En resum, aquests SGBD per sèries temporals bàsicament resolen els problemes d'anàlisis de sèries temporals.
-Però cap d'aquestes sol atendre la relació entre la base de dades i el sistema de monitoratge, és a dir la manera com s'adquireixen les dades. En aquest pas intermig hi ha un sèrie de problemes, com per exemple forats, dades falses, irregularitat en els temps de mostreig, que cal gestionar correctament. Concretament un dels problemes que no s'atén és el de mostreig irregular ja que es considera que les mostres estan a intervals regulars (equi-espaiades) encara que els sistemes de monitoratge informàtics sovint no són capaços de complir-ho amb exactitud sinó que presenten una certa variació en els temps de mesura. 
-
-Així doncs, quan es prenen mesures d'un sistema productiu, aquests problemes apareixen i són de difícil solució.
-Les bases de dades RRDtool tenen en compte aquests problemes intermitjos entre el sistema de monitoratge i el sistema d'emmagatzematge i tractament. 
+\todo{tsds}
 
 
 
 
-%\subsection{Base de dades RRDtool}
-
-RRDtool és un SGBD per sèries temporals més. \todo{sap tractar molt bé les sèries temporals però està molt afitat a un tipus de dades concrets i no permet operacions tant generals com els altres SGBD}
-
-RRDtool ha inspirat aquest treball
+RRDtool from \textcite{rrdtool} is a professional TSDB extremely used by the free software community. \emph{Projects using RRDtool} in \cite{rrdtool} lists some projects that are currently using RRDtool in different fields. Among others, it is used in professional monitoring systems such as Nagios \parencite{nagios} or Icinga \parencite{icinga}, both also popular in the free software community, or  in the Multi Router Traffic Grapher (MRTG) \parencite{mrtg}, which is a monitor from the same creator of RRDtool. 
+These monitors explore the possibilities of RRDtool to its limits and they transfer to RRDtool the data storing and operations of the data stored . 
+Using RRDtool allow the monitors to focus on the data acquisition and warnings management. RRDTool has also an adaptation into Java called \emph{JRobin} \parencite{jrobin}.
 
 
-RRDtool és un SGBD per a sèries temporals que despunta en l'àmbit de programari lliure. Hi ha una llista de projectes que utilitzen RRDtool que poden trobar-se indicats a l'apartat \emph{Projects using RRDtool} de~\cite{rrdtool}.
-Entre d'altres, s'utilitza en sistemes de monitoratge professionals com per exemple Nagios,~\cite{nagios}, o Icinga,~\cite{icinga}, també populars dins del programari lliure, o en el montior MRTG (The Multi Router Traffic Grapher),~\cite{mrtg}, del mateix creador que RRDtool. Aquests monitors fan un ús complet de les possibilitats de RRDtool i li cedeixen tot el control de l'emmagatzematge de mesures i el posterior tractament i representació gràfica de les dades. 
-L'ús de RRDtool permets a aquestes aplicacions centrar-se plenament en la problemàtica de l'adquisició de dades i la gestió d'alarmes.
-
-En l'evolució de RRDtool destaquen dues millores significatives.
-La primera, descrita per Oetiker a~\cite{lisa98:oetiker}, va consistir en independitzar la base de dades RRDtool del sistema de monitoratge MRTG i dissenyar-la amb l'estructura Round Robin que la caracteritza. La segona, feta per Brutlag,~\cite{lisa00:brutlag}, ha aportat la possibilitat de fer prediccions i detecció de comportaments aberrants basant-se en algoritmes de predicció exponencials i de Holt-Winters. 
+In the evolution of RRDtool there are two improvements that must be noticed.
+Firstly, the RRDtool management system was separated from MRTG monitoring system by \textcite{lisa98:oetiker} and designed with his characteristically Round Robin structure. Secondly, \textcite{lisa00:brutlag} extended RRDtool with smoothing and Holt-Winters algorithms which allows RRDtool to predict and detect aberrant behaviour in data.  
+Nowadays, RRDtool efficiency and speed when processing time series is being improved. \textcite{carder:rrdcached} have designed \emph{rrdcached}, an apllication to improve RRDtool's performance, which in \cite{lisa07:plonka} is shown  in systems with large amount of databases working simultaneously.
+It is noticeable the emerging use of RRDtool in testing environments. As instance, \textcite{zhang07} and \textcite{chilingaryan10} use RRDtool for storing experimental data and then predicting or validating the data.
 
 
-L'evolució actual de RRDtool se centra en aspectes informàtics i consisteix a millorar la rapidesa i eficiència en el processament de les sèries temporals. És el cas de Plonka i Carder que a~\cite{carder:rrdcached,lisa07:plonka} dissenyen l'aplicació \verb+rrdcached+ per incrementar el rendiment de RRDtool, la qual demostren en un sistema de monitoratge amb moltes bases de dades funcionant simultàniament.  També \verb+JRobin+,~\cite{jrobin}, que és una implementació en Java de RRDtool que millora els accessos de lectura i escriptura a la base de dades i té una eina de gràfics més perfeccionada.
-És significatiu l'ús incipient d'aquest sistema en experimentació. Zhang,~\cite{zhang07}, i Chilingaryan,~\cite{chilingaryan10}, per exemple, usen RRDtool per emmagatzemar de dades experimentals i posteriorment fer predicció o validació.
-  
+\subsubsection{Overview}
 
-En l'àmbit dels SGBD els sistemes relacionals van fixar una fita que ha tingut una transcendència posterior de  primer ordre. En bona part aquest èxit dels SGBD relacionals es deu al fet que es basen en un model matemàtic sòlid,~\cite{date}.
-En el cas de RRDtool no existeix  cap model que descrigui el sistema i es objectiu d'aquest treball proposar-ne un. El model per a SGBD Round Robin es dissenya  al capítol
+TSDB are mainly concerned with the time series analysis problems. However, the relation between database and monitoring system are not addressed. That is mainly speaking of the problems inferred from data acquisition which  must be treated properly, such as holes in data, false data or sampling time irregularities. 
+The latter is one of the most overlooked problem by TSDB as samples are typically considered equi-spaced, although computer monitoring systems present some variation and delays in sampling times. 
+
+RRDtool is an exception as being a productive system makes its data processing and storing closer to monitoring systems. Nevertheless, it is focused to a particular kind of data, gauges and counters, and it has not so general time series operations as the others TSDB.
+
 
 
 
@@ -121,3 +114,5 @@ En el cas de RRDtool no existeix  cap model que descrigui el sistema i es object
 %%% ispell-local-dictionary: "british"
 %%% End: 
 
+
+% LocalWords:  RRDtool
