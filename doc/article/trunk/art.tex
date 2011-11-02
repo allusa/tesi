@@ -7,14 +7,49 @@
   * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
 }
 
-\todo{esquema defensa}
-
 En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) per sèries temporals en el context de la mineria de dades de sèries temporals (\emph{time series data mining}), el qual també es considerat com mineria de dades per  detectar automàticament coneixement (\emph{knowledge discovery databases}). Els SGBD de model Round Robin (RRD) pertanyen a aquest context ja que  emmagatzemen sèries temporals  de les quals es vol aconseguir informació rellevant.
 
 
 El capítol comença resumint l'estat de les sèries temporals en aquest camp de mineria; és a dir d'emmagatzematge i tractament. A continuació es llisten algunes aplicacions informàtiques que han implementat models de la mineria de sèries temporals. Finalment, es descriu l'estat actual de l'aplicació RRDtool, la qual també es classifica en aquest camp.
 
+\todo{esquema defensa: potser millor a la intro?}
 
+
+
+  % \begin{center}
+  %   \scriptsize 
+  %   \begin{tikzpicture}[node distance=0.5cm]  
+  %     \tikzset{
+  %       mynode/.style={rectangle,rounded corners,draw=black, 
+  %         very thick, inner sep=1em, minimum size=3em, text centered,
+  %         groc},
+  %       myarrow/.style={->, >=latex', shorten >=1pt, thick},
+  %       mylabel/.style={text width=7em, text centered},
+  %       groc/.style={top color=white, bottom color=yellow!50},
+  %       verd/.style={top color=white, bottom color=green!50},
+  %       roig/.style={top color=white, bottom color=red!50},
+  %     }  
+
+  %     \node[mynode]                                       (monitor)   {Sistema de monitoratge};  
+  %     \node[mynode, below right=2cm and -2cm of monitor]  (bd)        {Base dades}; 
+  %     \node[mynode, below=2cm of monitor, left=of bd]     (control)   {Sistema de control}; 
+  %     \node[mynode, roig, below right=0.5cm and 1.5cm of monitor] (usuari)    {Usuari};  
+  %     \node[mynode, verd, left=2cm of control]            (actuador)  {Actuadors};
+  %     \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
+      
+      
+  %     \draw[myarrow] (monitor.east) --   (usuari.north);	
+  %     \draw[myarrow] (bd.east) --   (usuari.south);
+  %     \draw[myarrow] (sensor.east) --   (monitor.west) 
+  %        node [above,midway] {Mesures}
+  %        node [below,midway] {Esdeveniments};
+  %     \draw[myarrow] (control.west) -- (actuador.east);
+  %     \draw[myarrow] (monitor.south) -- (bd.north);
+  %     \draw[myarrow] (monitor.south) -- (control.north)
+  %        node [above,sloped,midway] {Llaç de control};
+      
+  %   \end{tikzpicture} 
+  % \end{center}
 
 
 
@@ -57,6 +92,24 @@ Database management systems (DBMS)\todo{intro general als DBMS, explicant que el
 
 En l'àmbit dels SGBD els sistemes relacionals van fixar una fita que ha tingut una transcendència posterior de  primer ordre. En bona part aquest èxit dels SGBD relacionals es deu al fet que es basen en un model matemàtic sòlid,~\cite{date}.
 
+Els SGBD habituals són els relacionals,  disposen d'un model matemàtic consolidat.
+
+%\section{Introducció}
+
+Segons Date,~\cite{date}, ``una base de dades és un contenidor informàtic per a una co\l.lecció de dades''. El sistemes informàtics que tracten amb bases de dades s'anomenen sistemes de gestió de bases de dades (SGBD) i tenen l'objectiu d'emmagatzemar informació i permetre consultar i afegir aquesta informació  per part dels usuaris.
+Per complir aquests objectius, els SGBD ofereixen a l'usuari diferents operacions a fer amb la base de dades, com per exemple crear-la, afegir dades o consultar informació a partir de les dades emmagatzemades.
+
+Els SGBD es basen en teories matemàtiques que reben el nom de model de dades, un SGBD és una implementació d'un model de dades.
+Segons Date, ``un model de dades és una definició abstracta, auto continguda i lògica dels objectes, de les operacions i  de la resta que conjuntament constitueixen la màquina abstracta amb la que els usuaris interactuen. Els objectes permeten modelar l'estructura de les dades. Les operacions permeten modelar el comportament''.
+
+Les bases de dades Round Robin són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
+El model de dades Round Robin és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
+
+
+Extensió de tipus i operacions \parencite{stonebraker86}
+
+\todo{docs quan la memòria és finita}
+
 \subsubsection{Time series DBMS}
 
 Time series analysis techniques must be computed in specific DBMS in order to process data efficiently. Moreover, the amount of data is increasing as data acquisition becomes easier and there is more storage capacity. 
@@ -67,24 +120,24 @@ As said in \textcite{assfalg08:thesis}, the temporal coherence can be divided in
 
 Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
 
-
 When a DBMS implements especial operations for time series they can be called \emph{Time Series Database Management Systems} (TSDB). TSDB are optimised to process data with time and rotation operations, which are very common in time series management. Moreover the growth of the data must be under control and the fetch operations must be flexible and fast \parencite{keogh10:isax}. As instance, the temporal changes either for a week or for a year must be processed and it can not take very long.
+
+
+
 
 \paragraph{Similar systems} Next, we summarise some current TSDB.
 
-\textcite{assfalg08:thesis} shows a TSDB that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
+\paragraph{T-Time}  \textcite{assfalg08:thesis} shows a TSDB that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
 
  
-\textcite{keogh08:isax,keogh10:isax} analyse and index massive collections of time series. They describe that the main problem is in the indexing of time series and they propose methods that process efficiently. The first method proposed is based on the constant piecewise approximation, the PAA \parencite{keogh00}. It is implemented in a data management structure called \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. The time series representation obtained with this tool allows to reduce the stored space and to index faster and with the same quality as other more complex representation methods.
+\paragraph{iSAX} \textcite{keogh08:isax,keogh10:isax} analyse and index massive collections of time series. They describe that the main problem is in the indexing of time series and they propose methods that process efficiently. The first method proposed is based on the constant piecewise approximation, the PAA \parencite{keogh00}. It is implemented in a data management structure called \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. The time series representation obtained with this tool allows to reduce the stored space and to index faster and with the same quality as other more complex representation methods.
  
 
-
-\todo{tsds}
-
-
+\paragraph{TSDS} \textcite{weigel10} notice the necessity to show the data over its full time range and not only subsets of data as it is usually provided. 
+They develop  the software package \emph{Time Series Data Server} (TSDS) \parencite{tsds} where time series data can be entered and then requested by date ranges or by applying different filters and operations to the time series data.
 
 
-RRDtool from \textcite{rrdtool} is a professional TSDB extremely used by the free software community. \emph{Projects using RRDtool} in \cite{rrdtool} lists some projects that are currently using RRDtool in different fields. Among others, it is used in professional monitoring systems such as Nagios \parencite{nagios} or Icinga \parencite{icinga}, both also popular in the free software community, or  in the Multi Router Traffic Grapher (MRTG) \parencite{mrtg}, which is a monitor from the same creator of RRDtool. 
+\paragraph{RRDtool} RRDtool from \textcite{rrdtool} is a professional TSDB extremely used by the free software community. \emph{Projects using RRDtool} in \cite{rrdtool} lists some projects that are currently using RRDtool in different fields. Among others, it is used in professional monitoring systems such as Nagios \parencite{nagios} or Icinga \parencite{icinga}, both also popular in the free software community, or  in the Multi Router Traffic Grapher (MRTG) \parencite{mrtg}, which is a monitor from the same creator of RRDtool. 
 These monitors explore the possibilities of RRDtool to its limits and they transfer to RRDtool the data storing and operations of the data stored . 
 Using RRDtool allow the monitors to focus on the data acquisition and warnings management. RRDTool has also an adaptation into Java called \emph{JRobin} \parencite{jrobin}.
 
