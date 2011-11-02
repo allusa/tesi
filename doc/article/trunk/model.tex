@@ -1,5 +1,30 @@
 \section{Multiresolution TSDB model definition}
 
+
+En aquest capítol es dissenya un model matemàtic per a les bases de dades Round Robin (RRD). Aquest model està inspirat en el sistema de gestió de bases de dades RRDtool i és el resultat de l'abstracció dels conceptes que s'han exposat als capítols% \ref{cap:rrdtool} i \ref{cap:rrdtool-etapes}. 
+
+A l'inici del capítol, s'introdueix el concepte de model matemàtic per a les bases de dades. 
+A continuació, es defineixen els conceptes necessaris per a finalment definir una base de dades Round Robin. 
+Al final del capítol, es resumeix breument la informació exposada.
+
+
+Les bases de dades Round Robin són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
+El model de dades Round Robin és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
+
+El model de dades Round Robin es dissenya per primera vegada en aquest capítol. 
+Actualment existeix un SGBD, RRDtool, que implementa conceptes susceptibles d'esdevenir un model de dades però enlloc s'ha recollit com a tal. A partir de l'anàlisi i l'abstracció profunda dels conceptes de RRDtool s'ha dissenyat el model de dades Round Robin, batejat segons el nom que té a RRDtool (\emph{Round Robin Database tool}). Els conceptes de RRDtool s'han exposat detalladament als capítols %\ref{cap:rrdtool} i \ref{cap:rrdtool-etapes}. 
+
+
+Així doncs, a continuació es presenta el model de dades Round Robin. 
+Es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les \emph{mesures} són dades mesurades en un instant de temps i les \emph{sèries temporals} són co\l.leccions de mesures, a cada base de dades Round Robin hi ha emmagatzemada una sèrie temporal. 
+
+El model de dades Round Robin s'estructura a partir de \emph{discs Round Robin}, els quals  acumulen temporalment les \emph{mesures} en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre \emph{mesures} amb l'objectiu de compactar la informació de la sèrie temporal.
+Així doncs, la sèrie temporal queda emmagatzemada en intervals de temps diferents, repartits en els \emph{discs Round Robin}. 
+
+Pel que fa a les operacions, és indispensable que el model Round Robin pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{interpolació} i \emph{consolidació}. En el model de dades Round Robin d'aquest capítol també es defineixen operacions per crear una base de dades Round Robin, per inserir-hi mesures i per representar sèries temporals.
+
+
+
 \subsection{Measure}
 
 \begin{definition}[Measure]
