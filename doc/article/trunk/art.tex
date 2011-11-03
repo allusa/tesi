@@ -12,46 +12,6 @@ En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) pe
 
 El capítol comença resumint l'estat de les sèries temporals en aquest camp de mineria; és a dir d'emmagatzematge i tractament. A continuació es llisten algunes aplicacions informàtiques que han implementat models de la mineria de sèries temporals. Finalment, es descriu l'estat actual de l'aplicació RRDtool, la qual també es classifica en aquest camp.
 
-\todo{esquema defensa: potser millor a la intro?}
-
-
-
-  % \begin{center}
-  %   \scriptsize 
-  %   \begin{tikzpicture}[node distance=0.5cm]  
-  %     \tikzset{
-  %       mynode/.style={rectangle,rounded corners,draw=black, 
-  %         very thick, inner sep=1em, minimum size=3em, text centered,
-  %         groc},
-  %       myarrow/.style={->, >=latex', shorten >=1pt, thick},
-  %       mylabel/.style={text width=7em, text centered},
-  %       groc/.style={top color=white, bottom color=yellow!50},
-  %       verd/.style={top color=white, bottom color=green!50},
-  %       roig/.style={top color=white, bottom color=red!50},
-  %     }  
-
-  %     \node[mynode]                                       (monitor)   {Sistema de monitoratge};  
-  %     \node[mynode, below right=2cm and -2cm of monitor]  (bd)        {Base dades}; 
-  %     \node[mynode, below=2cm of monitor, left=of bd]     (control)   {Sistema de control}; 
-  %     \node[mynode, roig, below right=0.5cm and 1.5cm of monitor] (usuari)    {Usuari};  
-  %     \node[mynode, verd, left=2cm of control]            (actuador)  {Actuadors};
-  %     \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
-      
-      
-  %     \draw[myarrow] (monitor.east) --   (usuari.north);	
-  %     \draw[myarrow] (bd.east) --   (usuari.south);
-  %     \draw[myarrow] (sensor.east) --   (monitor.west) 
-  %        node [above,midway] {Mesures}
-  %        node [below,midway] {Esdeveniments};
-  %     \draw[myarrow] (control.west) -- (actuador.east);
-  %     \draw[myarrow] (monitor.south) -- (bd.north);
-  %     \draw[myarrow] (monitor.south) -- (control.north)
-  %        node [above,sloped,midway] {Llaç de control};
-      
-  %   \end{tikzpicture} 
-  % \end{center}
-
-
 
 \subsection{Monitoring}
 
@@ -104,6 +64,23 @@ Segons Date, ``un model de dades és una definició abstracta, auto continguda i
 
 Les bases de dades Round Robin són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
 El model de dades Round Robin és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
+
+Segons Date, \cite{date}, ``una base de dades és un contenidor
+informàtic per a una co\l.lecció de dades''. En el context dels SGBD's
+cal diferenciar:
+\begin{itemize}
+\item El model d'una bases de dades, que és el model matemàtic a on es
+  descriu teòricament l'estructura de les dades, per exemple el model
+  relacional o model Round Robin.
+
+\item El sistema de gestió de bases de dades, que és la implementació
+  d'un model de dades, per exemple postgresql o
+  RRDtool. %Segons l'esquema de comunicació, també es poden anomenar com a sistema servidor de bases de dades, per exemple postgresql.
+
+\item La base de dades, que és una instància d'un sistema de gestió de
+  bases de dades, per exemple la base de dades dels estudiants o la
+  base de dades de la temperatura de l'escola.
+\end{itemize}
 
 
 Extensió de tipus i operacions \parencite{stonebraker86}
