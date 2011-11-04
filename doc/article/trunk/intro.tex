@@ -16,10 +16,9 @@
   \todo{pensar nom: multiresoltion and bounded} as the concepts are
   inspired by the database management system RRDtool. Time series are
   compactly stored in the database and the information is summarised
-  by different interpolation functions.
-L'existència d'aquest  model obre les  portes a un  millor coneixement
-d'aquests tipus d'SGBD's, facilita noves implementacions i, finalment,
-permet avançar en el seu estudi.
+  by different interpolation functions. From this model this kind of
+  DBMS will be better understood, new implementations will be possible
+  and we will be able to enhance its potential.
 \end{abstract}
 
 \section{Introduction}
@@ -44,36 +43,58 @@ Monitoring systems are an important part of control and interaction with process
       }  
 
       \node[mynode]                                       (monitor)   {Monitoring system};  
-      \node[mynode, below right=2cm and -0.5cm of monitor]  (bd)        {DBMS}; 
-      \node[mynode, below=2cm of monitor, left=2cm and 2cm of bd]     (control)   {Controllers}; 
-      \node[mynode, roig, below right=0.5cm and 2.5cm of monitor] (usuari)    {User};  
-      \node[mynode, verd, left=2cm of control]            (actuador)  {Drives};
-      \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
-      
-      
-      \draw[myarrow] (monitor.east) --   (usuari.north)	
-         node [above,sloped,midway] {Alarms}
-         node [below,sloped,midway] {Current state};
-      \draw[myarrow] (bd.east) --   (usuari.south)
-         node [above,sloped,midway] {Historic}
-         node [below,sloped,midway] {Information retrieval};
+      \node[mynode, below right=0.5cm and 1cm of monitor]  (bd)        {DBMS};
+
+      \node[mynode, groc, below right=2cm and -2cm of monitor] (supervisor)    {Supervisor};   
+
+      \node[mynode, below=2cm of monitor, left=2cm and 2cm of supervisor]     (control)   {Controllers}; 
+
+
+      \node[mynode, roig, below right=0.5cm and 4cm of monitor] (usuari)    {User};  
+      \node[mynode, verd, left=1.2cm of control]            (actuador)  {Drives};
+      \node[mynode, verd, left=4cm of monitor]            (sensor)    {Sensors}; 
+
+ 
       \draw[myarrow] (sensor.east) --   (monitor.west) 
          node [above,midway] {Measures}
          node [below,midway] {Events};
-      \draw[myarrow] (control.west) -- (actuador.east)
-         node [above,midway] {Input};
-      \draw[myarrow] (monitor.south) -- (bd.north)
-         node [above,sloped,midway] {Storage};
+      
+      \draw[myarrow] (monitor.south) --   (supervisor.north)	
+         node [above,sloped,midway] {Current state};
+      \draw[myarrow] (monitor.east) --   (usuari.north)	
+         node [above,sloped,midway] {Current state};
       \draw[myarrow] (monitor.south) -- (control.north)
          node [above,sloped,midway] {Control loops};
+      \draw[myarrow] (monitor.south) -- (bd.north)
+         node [above,sloped,midway] {Storage};
+
+
+      \draw[myarrow] (bd.south) --   (supervisor.north)	
+         node [below,sloped,midway] {Retrieval};
+
+
+      \draw[myarrow] (bd.east) --   (usuari.west)
+         node [above,sloped,midway] {Historic}
+         node [below,sloped,midway] {Information retrieval};
+
+      \draw[myarrow] (supervisor.west) --   (control.east)	
+         node [above,sloped,midway] {Set points}
+         node [below,sloped,midway] {Parameters};
+      \draw[myarrow] (control.west) -- (actuador.east)
+         node [above,midway] {Input};
+
+
+
+    \draw[myarrow] (usuari.south) --   (supervisor.east)	
+         node [above,sloped,midway] {Reference};
       
     \end{tikzpicture} 
   \end{center}
-  \caption{Monitoring system: from data acquisition to user information}
+  \caption{Monitoring system: from data acquisition to user information and back to control set points}
   \label{fig:monitoring_system}
 \end{figure}
 
-\todo{possible esquema from user to control: reference set points and parameters}
+
 
 The main parts involved in monitoring can be seen in figure \ref{fig:monitoring_system}. A monitor acquires data from sensors. Data can be either measures values or process states acquired as events. 
 On the one hand, data is used as the process output for the controllers, which will calculate the input values for drives. Control loops do not need to be so centralised and normally they reside distributed nearer its process.
