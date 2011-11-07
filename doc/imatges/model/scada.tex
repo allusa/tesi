@@ -1,0 +1,68 @@
+\begin{figure}[tp]
+  \begin{center}
+    \scriptsize 
+    \begin{tikzpicture}[node distance=0.5cm]  
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, >=latex', shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+      \node[mynode]                                       (monitor)   {Monitoring system};  
+      \node[mynode, right=1.75cm of monitor]  (bd)        {DBMS};
+
+      \node[mynode, groc, below right=2cm and 1.5cm of monitor] (supervisor)    {Supervisor};   
+
+      \node[mynode, left=2.5cm and 2cm of supervisor]     (control)   {Controllers}; 
+
+
+      \node[mynode, roig, below right=0.5cm and 2.5cm of bd] (usuari)    {User};  
+
+      \node[mynode, verd, left=2cm of monitor]            (sensor)    {Sensors}; 
+      \node[mynode, verd, below=2cm of sensor]            (actuador)  {Drives};
+
+ 
+      \draw[myarrow] (sensor.east) --   (monitor.west) 
+         node [above,midway] {Measures}
+         node [below,midway] {Events};
+      
+      \draw[myarrow] (monitor.south) --   (supervisor.north)	
+         node [above,sloped,midway] {Current state};
+      \draw[myarrow] (monitor.south) -- (control.north)
+         node [below,sloped,midway] {Control loops};
+      \draw[myarrow] (monitor.east) -- (bd.west)
+         node [above,sloped,midway] {Storage};
+
+     \draw[myarrow] (bd.south) --   (supervisor.north)	
+         node [below,sloped,midway] {Retrieval};
+
+
+      \draw[myarrow] (supervisor.east) --   (usuari.south)	
+         node [above,sloped,midway] {Current state};
+         node [below,sloped,midway] {Alarms};
+      \draw[myarrow] (bd.east) --   (usuari.north)
+         node [above,sloped,midway] {Information retrieval}
+         node [below,sloped,midway] {Historic};
+
+    \draw[myarrow] (usuari.west) --   (supervisor.north)	
+         node [above,sloped,midway] {Reference};
+      
+
+      \draw[myarrow] (supervisor.west) --   (control.east)	
+         node [above,sloped,midway] {Set points}
+         node [below,sloped,midway] {Parameters};
+      \draw[myarrow] (control.west) -- (actuador.east)
+         node [above,midway] {Input};
+
+
+    \end{tikzpicture} 
+  \end{center}
+  \caption{Monitoring system: from data acquisition to user information and back to control set points}
+  \label{fig:monitoring_system}
+\end{figure}
+

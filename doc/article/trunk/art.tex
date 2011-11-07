@@ -1,19 +1,22 @@
+  % * Sèries temporals (històrics, predicció, diagnosis, prognosis, etc.)
+  % * Mostreig: docs quan període de mostreig no regular
+  % * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
+
 \section{State of the art}
 
-
-\todo{
-  * Sèries temporals (històrics, predicció, diagnosis, prognosis, etc.)
-  * Mostreig: docs quan període de mostreig no regular
-  * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
-}
-
-En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) per sèries temporals en el context de la mineria de dades de sèries temporals (\emph{time series data mining}), el qual també es considerat com mineria de dades per  detectar automàticament coneixement (\emph{knowledge discovery databases}). Els SGBD de model Round Robin (RRD) pertanyen a aquest context ja que  emmagatzemen sèries temporals  de les quals es vol aconseguir informació rellevant.
+Obtaining information from environment is a complex task that has a user, either human or machine, as the final target as stated in figure \ref{fig:monitoring_system}. Mainly, the processes between data acquisition and user information can be divided into three focus.
 
 
-El capítol comença resumint l'estat de les sèries temporals en aquest camp de mineria; és a dir d'emmagatzematge i tractament. A continuació es llisten algunes aplicacions informàtiques que han implementat models de la mineria de sèries temporals. Finalment, es descriu l'estat actual de l'aplicació RRDtool, la qual també es classifica en aquest camp.
+Monitoring systems recollect data from sensors eventually from events and periodically from measures, in the latter case some problems arise when monitoring can not be done at regular intervals. Then the recollected data is used in different application fields. There is intensive research in applying techniques to obtain information from this data.
+
+Time series data mining analyses the storage of chronological data from which relevant information want to be retrieved. Sometimes, this extraction of information is also referred as knowledge discovery or artificial intelligence.
+In the monitoring context, the data collected can be considered as a time series.
+
+Database management systems are the computer systems implementing storage and retrieval of information. Time series data mining techniques must be implemented in these systems paying attention to their especial needs. Then, they are known as time series database management systems.
 
 
-\subsection{Monitoring}
+
+\subsection{Monitoring and applications}
 
 Monitoring sensor data and processing the data to achieve diagnosis,
 prognosis and prediction is a common task in many fields such as
@@ -25,11 +28,14 @@ data stored is also too big to process \parencite{keogh97}.
 
 \textcite{quevedo10} shows the enormous information residing in complex remote systems. This information comes from many sensors that are distributed in the area. A SCADA (\emph{Supervisory Control And Data Acquisition}) is the periodically recollecting system responsible for the centralisation of the sensing values. During the recollection time two problems may appear: some values that have not been obtained and values that are erroneous. The database managers can not cope with such data as the historical information would be inconsistent. Therefore, a validation process must be taken in order to assure that stored data is correct. If data is invalid, a reconstruction process may take place in order to modify values to estimated ones. In \cite{quevedo10} validation and reconstruction techniques are applied to water distribution networks. 
 
+In the monitoring context, the data collected can be considered as a time
+series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
+
+
 
 \todo{docs quan període de mostreig no és regular}
 
-In the monitoring context, the data collected can be considered as a time
-series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
+
 
 
 
