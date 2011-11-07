@@ -15,6 +15,14 @@ El model de dades Round Robin es dissenya per primera vegada en aquest capítol.
 Actualment existeix un SGBD, RRDtool, que implementa conceptes susceptibles d'esdevenir un model de dades però enlloc s'ha recollit com a tal. A partir de l'anàlisi i l'abstracció profunda dels conceptes de RRDtool s'ha dissenyat el model de dades Round Robin, batejat segons el nom que té a RRDtool (\emph{Round Robin Database tool}). Els conceptes de RRDtool s'han exposat detalladament als capítols %\ref{cap:rrdtool} i \ref{cap:rrdtool-etapes}. 
 
 
+\begin{figure}[htp]
+\centering
+\setlength{\unitlength}{0.4mm}
+\input{../../imatges/model/arxiurrd.tex}
+\caption{Internal architecture of RRD database model}
+\label{fig:model:esquemarrd}
+\end{figure}
+
 Així doncs, a continuació es presenta el model de dades Round Robin. 
 Es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les \emph{mesures} són dades mesurades en un instant de temps i les \emph{sèries temporals} són co\l.leccions de mesures, a cada base de dades Round Robin hi ha emmagatzemada una sèrie temporal. 
 
@@ -357,8 +365,6 @@ time series and the $k$ maximum cardinal that $S$ is allowed to take.
 
 \subsection{Round Robin disc}\label{sec:model:discroundrobin}
 
-\todo{disc round robin o disc multiresolution?}
-
 A Round Robin Disc is a disc with a regular time series and a buffer
 with a time series pending regularisation.
 
@@ -419,15 +425,7 @@ the buffer and disc ones.
   $A=\{R_0,\ldots,R_d\}$.
 \end{definition}
 
-
-\begin{figure}[htp]
-\centering
-\setlength{\unitlength}{0.4mm}
-\input{../../imatges/model/arxiurrd.tex}
-\caption{Esquema del model de dades Round Robin}%Internal architecture of database model
-\label{fig:model:esquemarrd}
-\end{figure}
-  
+ 
 Generally, in a Round Robin Database there are not two Round Robin discs
 with the same information. That is, let $R_a = (B_a, D_a)$ and $R_b =
 (B_b, D_b)$ be two Round Robin discs, its buffers
@@ -475,7 +473,7 @@ needed for large collections of times series.  With the compactness of
 the time series we have in mind the scalability for large monitoring
 systems.
 
-Summarising, interpolation functions and sampling periods are degrees
+Interpolation functions and sampling periods are degrees
 of freedom for each application. Giving different values a Round Robin
 database is capable to keep the desired information from a time series.
 
@@ -489,6 +487,9 @@ how data fusion can be obtained from two time series databases.
 
 Then it will be possible to check the database management system with
 experimental data such as the proposed by \cite{keogh02}.
+
+The Round Robin DBMS imply a data information selection and the information not considered important is discarded.  Therefore, this systems are not adequate when all the monitored data must be kept as acquired. This happens either when it is not known a priori which interpolation functions will work better with the future data monitored or when detailed questions must be retrieved such as at what hour exactly an event triggered. This may be overcome with dual DBMS: one a TSDB for the common information retrieval and the other a large size database (VLDB) that is only consulted in occasional cases. 
+However, the applications when a TSDB is not appropriate are to be better understood. 
 
           
 \section{Acknowledgements}
