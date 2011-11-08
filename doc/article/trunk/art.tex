@@ -54,42 +54,14 @@ Representation of time series is a common step done before the above four tasks.
 
 \subsection{Database management systems}
 
-Database management systems (DBMS)\todo{intro general als DBMS, explicant que els relacionals són els típics}
+According to \textcite{date}, a database is a computer container for a data collection. The computer systems that manage databases are called database management systems (DBMS). Their objective is to storage information and allow an user to add and retrieve this information. DBMS implement several operations such as create a database, add data, consult information, etc.
 
-En l'àmbit dels SGBD els sistemes relacionals van fixar una fita que ha tingut una transcendència posterior de  primer ordre. En bona part aquest èxit dels SGBD relacionals es deu al fet que es basen en un model matemàtic sòlid,~\cite{date}.
+DBMS rely on formal theories called DBMS model, so a DBMS is an implementation of a model an a database can be seen as an instance of a DBMS. According to Date, ``a data model is an abstract definition, self contained and logical of the objects, operations and the rest that together constitutes the abstract machine where users interact. The objects allow modelling the data structure. The operations allow modelling the behaviour''.
 
-Els SGBD habituals són els relacionals,  disposen d'un model matemàtic consolidat.
+A common DBMS are the ones based on the relational model, which is a consolidated mathematical model. In the context of DBMS, the relational systems set a goal that has had an important subsequent relevance. Mainly, the success of relational systems comes from having a consolidated mathematical model \parencite{date}.
 
-%\section{Introducció}
-
-Segons Date,~\cite{date}, ``una base de dades és un contenidor informàtic per a una co\l.lecció de dades''. El sistemes informàtics que tracten amb bases de dades s'anomenen sistemes de gestió de bases de dades (SGBD) i tenen l'objectiu d'emmagatzemar informació i permetre consultar i afegir aquesta informació  per part dels usuaris.
-Per complir aquests objectius, els SGBD ofereixen a l'usuari diferents operacions a fer amb la base de dades, com per exemple crear-la, afegir dades o consultar informació a partir de les dades emmagatzemades.
-
-Els SGBD es basen en teories matemàtiques que reben el nom de model de dades, un SGBD és una implementació d'un model de dades.
-Segons Date, ``un model de dades és una definició abstracta, auto continguda i lògica dels objectes, de les operacions i  de la resta que conjuntament constitueixen la màquina abstracta amb la que els usuaris interactuen. Els objectes permeten modelar l'estructura de les dades. Les operacions permeten modelar el comportament''.
-
-Les bases de dades Round Robin són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
-El model de dades Round Robin és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
-
-Segons Date, \cite{date}, ``una base de dades és un contenidor
-informàtic per a una co\l.lecció de dades''. En el context dels SGBD's
-cal diferenciar:
-\begin{itemize}
-\item El model d'una bases de dades, que és el model matemàtic a on es
-  descriu teòricament l'estructura de les dades, per exemple el model
-  relacional o model Round Robin.
-
-\item El sistema de gestió de bases de dades, que és la implementació
-  d'un model de dades, per exemple postgresql o
-  RRDtool. %Segons l'esquema de comunicació, també es poden anomenar com a sistema servidor de bases de dades, per exemple postgresql.
-
-\item La base de dades, que és una instància d'un sistema de gestió de
-  bases de dades, per exemple la base de dades dels estudiants o la
-  base de dades de la temperatura de l'escola.
-\end{itemize}
-
-
-Extensió de tipus i operacions \parencite{stonebraker86}
+Time series, as a collection of data measured in different instants in time, need an adequate management by the DBMS. The special need of time series is mainly caused by its high dimension and that the time is a principal component that must be always taken into account. 
+ 
 
 \todo{docs quan la memòria és finita}
 
@@ -105,10 +77,11 @@ Relational DBMS can implement \emph{bitemporal data}. Then they are known as tem
 
 When a DBMS implements especial operations for time series they can be called \emph{Time Series Database Management Systems} (TSDB). TSDB are optimised to process data with time and rotation operations, which are very common in time series management. Moreover the growth of the data must be under control and the fetch operations must be flexible and fast \parencite{keogh10:isax}. As instance, the temporal changes either for a week or for a year must be processed and it can not take very long.
 
+A TSDB could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no data model  for time series. 
 
 
-
-\paragraph{Similar systems} Next, we summarise some current TSDB.
+\subsubsection{Similar systems}
+Next, we summarise some current TSDB.
 
 \paragraph{T-Time}  \textcite{assfalg08:thesis} shows a TSDB that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
 
@@ -151,4 +124,4 @@ RRDtool is an exception as being a productive system makes its data processing a
 %%% End: 
 
 
-% LocalWords:  RRDtool
+% LocalWords:  RRDtool TSDB DBMS
