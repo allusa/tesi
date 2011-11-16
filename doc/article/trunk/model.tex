@@ -23,12 +23,12 @@ The general schema of the MTSDB model can be seen in figure \ref{fig:model:mtsdb
 
 \begin{figure}[tp]
 \centering
-\input{../../imatges/rrd/finestra.tex}
+\input{imatges/mtsdb-time_window.tex}
 \caption{Example of different resolutions for a time series in a MTSDB}
 \label{fig:model:window}
 \end{figure}
 
-Putting resolution and 'time subseries' together, in a multiresolution database a time series is stored in different resolution pieces. For example, we could have a time series stored with high resolution at recent times and with low resolution at older times. This example is illustrated in figure \ref{fig:model:window}. At the top there are three \emph{discs} with different number of \emph{measures} and at the bottom there is a timeline showing the time series chopped along time. For recent times, every 5 minutes a \emph{measure} is stored in the third \emph{disc} which has a capacity of 576 \emph{measures} so that results in a 2 day piece. For mid times, every 1 day a  \emph{measure} is stored in the second \emph{disc} which has a capacity of 12 \emph{measures} so that results in a 12 days piece. For old times, every 5 days a  \emph{measure} is stored in the first \emph{disc} which has a capacity of 6 \emph{measures} so that results in a 30 days piece. 
+Putting resolution and 'time subseries' together, in a multiresolution database a time series is stored in different resolution pieces. For example, we could have a time series stored with high resolution at recent times and with low resolution at older times. This example is illustrated in figure \ref{fig:model:window}. At the top there are three \emph{discs} with different number of \emph{measures} and at the bottom there is a timeline showing the time series chopped along time. For recent times, every 2 hours a \emph{measure} is stored in the third \emph{disc} which has a capacity of 24 \emph{measures} so that results in a 2 day piece. For mid times, every 1 day a  \emph{measure} is stored in the second \emph{disc} which has a capacity of 12 \emph{measures} so that results in a 12 days piece. For old times, every 5 days a  \emph{measure} is stored in the first \emph{disc} which has a capacity of 6 \emph{measures} so that results in a 30 days piece. 
 
 
 Regarding operations, MTSDB model needs operators to change the time intervals between measures. Mainly, these operators are \emph{interpolation} functions and \emph{consolidation} actions. In this section we design the basic MTSDB model, that is six basic data model definitions -- \emph{measure}, \emph{time series}, \emph{buffer}, \emph{disc}, \emph{resolution disc}, and \emph{multiresolution database} -- and the operations to create a \emph{multiresolution database}, to add \emph{measures} and to \emph{interpolate} and \emph{consolidate} time series.
@@ -364,27 +364,27 @@ time series and the $k$ maximum cardinal that $S$ is allowed to take.
 \end{definition}
 
 
-\subsection{Round Robin disc}\label{sec:model:discroundrobin}
+\subsection{Resolution disc}
 
-A Round Robin Disc is a disc with a regular time series and a buffer
+A resolution disc is a disc with a regular time series and a buffer
 with a time series pending regularisation.
 
-\begin{definition}[Round Robin Disc]
-  A \emph{Round Robin disc} is a tuple $(B,D)$ where $B$
+\begin{definition}[Resolution disc]
+  A \emph{resolution disc} is a tuple $(B,D)$ where $B$
   is a buffer and $D$ is a disc.
 \end{definition}
  
 On the one hand, the definitions of empty buffer and empty disc imply
 an empty Round Robin disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
 
-On the other hand, the operators of a Round Robin disc are related to
+On the other hand, the operators of a resolution disc are related to
 the buffer and disc ones.
 
 \begin{definition}
-  Operator \emph{add} adds a measure  to the buffer of the Round Robin disc:
+  Operator \emph{add} adds a measure  to the buffer of the resolution disc:
   \[
-  \text{add}: \text{Round Robin disc} \times \text{Measure}
-  \longrightarrow \text{Round Robin disc}
+  \text{add}: \text{resolution disc} \times \text{Measure}
+  \longrightarrow \text{resolution disc}
   \]
   \[
   R=(B,D) \times m \mapsto R'= (B',D)
@@ -395,7 +395,7 @@ the buffer and disc ones.
 \end{definition}
 
 \begin{definition}
-  Let $R=(B,D)$ be a Round Robin disc, $R$ is ready to consolidate if
+  Let $R=(B,D)$ be a resolution disc, $R$ is ready to consolidate if
   and only if $B$ is ready to consolidate.
 \end{definition}
 
@@ -403,8 +403,8 @@ the buffer and disc ones.
   Operator \emph{consolidate} calculates a consolidation measure from
   the buffer and adds it to the disc.
   \[
-  \text{consolidate}: \text{Round Robin disc} \longrightarrow
-  \text{Round Robin disc}
+  \text{consolidate}: \text{resolution disc} \longrightarrow
+  \text{resolution disc}
   \]
   \[
   R=(B,D) \mapsto R'= (B',D')
@@ -419,30 +419,29 @@ the buffer and disc ones.
 
 
 
-\subsection{Round Robin Database}\label{sec:model:rrd}
+\subsection{Multiresolution Database}\label{sec:model:rrd}
 
-\begin{definition}[Round Robin Database]
-  A \emph{Round Robin Database} is a set of Round Robin discs
+\begin{definition}[Multiresolution Database]
+  A \emph{Multiresolution Database} is a set of resolution discs
   $A=\{R_0,\ldots,R_d\}$.
 \end{definition}
 
  
-Generally, in a Round Robin Database there are not two Round Robin discs
+Generally, in a multiresolution database there are not two resolution discs
 with the same information. That is, let $R_a = (B_a, D_a)$ and $R_b =
-(B_b, D_b)$ be two Round Robin discs, its buffers
+(B_b, D_b)$ be two resolution discs, its buffers
 $B_a=(S_a,\tau_a,\delta_a,f_a)$ and $B_b=(S_b,\tau_b,\delta_b,f_b)$
 have different consolidation interval and interpolation function
 $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
-With reference to the operators, the add and consolidate in a Round
-Robin Database are applied for every Round Robin disc it contains.
+With reference to the operators, the add and consolidate in a multiresolution database are applied for every resolution disc it contains.
 
 
 \section{Implementation}
 
 The six basic model definitions -- measure, time series, buffer, disc,
-round robin disc, and round robin database -- have been implemented
+resolution disc, and multiresolution database -- have been implemented
 with Python in an object-oriented programming paradigm. It pretends to
 be a reference implementation to other productive time series data
 base management systems. This implementation is yet in a primary
@@ -460,13 +459,13 @@ gauges and counters inherited from the past.
 
 \section{Conclusions}
 
-A Round Robin database is an storage system for one time series, that
+A multiresolution database is an storage system for one time series, that
 is a collection of data measured in different instants in time.  The
 time series is compactly stored in the database as has been shown in
-figure \ref{fig:model:mtsdb}. The principal part of a Round Robin
-database is the set of Round Robin discs where the time series is
+figure \ref{fig:model:mtsdb}. The principal part of a multiresolution
+database is the set of resolution discs where the time series is
 stored distributed by the different interpolation functions and
-sampling periods. Each disc Round Robin uses its buffer to interpolate
+sampling periods. Each resolution disc uses its buffer to interpolate
 the measures and uses its disc to consolidate the result. 
 
 This system allows to reduce the storage space and the analysis time
@@ -475,7 +474,7 @@ the time series we have in mind the scalability for large monitoring
 systems.
 
 Interpolation functions and sampling periods are degrees
-of freedom for each application. Giving different values a Round Robin
+of freedom for each application. Giving different values a multiresolution
 database is capable to keep the desired information from a time series.
 
 
@@ -483,13 +482,13 @@ database is capable to keep the desired information from a time series.
 
 In future work the retrieval operations will be defined. Mainly, how a
 time series can be restored from joining the information stored
-distributed in the Round Robin discs. And it also will be important
+distributed in the resolution discs. And it also will be important
 how data fusion can be obtained from two time series databases.
 
 Then it will be possible to check the database management system with
 experimental data such as the proposed by \cite{keogh02}.
 
-The Round Robin DBMS imply a data information selection and the information not considered important is discarded.  Therefore, this systems are not adequate when all the monitored data must be kept as acquired. This happens either when it is not known a priori which interpolation functions will work better with the future data monitored or when detailed questions must be retrieved such as at what hour exactly an event triggered. This may be overcome with dual DBMS: one a TSDB for the common information retrieval and the other a large size database (VLDB) that is only consulted in occasional cases. 
+The MTSDB imply a data information selection and the information not considered important is discarded.  Therefore, this systems are not adequate when all the monitored data must be kept as acquired. This happens either when it is not known a priori which interpolation functions will work better with the future data monitored or when detailed questions must be retrieved such as at what hour exactly an event triggered. This may be overcome with dual DBMS: one a TSDB for the common information retrieval and the other a large size database (VLDB) that is only consulted in occasional cases. 
 However, the applications when a TSDB is not appropriate are to be better understood. 
 
           
