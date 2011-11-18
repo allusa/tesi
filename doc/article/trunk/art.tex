@@ -28,18 +28,21 @@ data stored is also too big to process \parencite{keogh97}.
 
 \textcite{quevedo10} shows the enormous information residing in complex remote systems. This information comes from many sensors that are distributed in the area. A SCADA (\emph{Supervisory Control And Data Acquisition}) is the periodically recollecting system responsible for the centralisation of the sensing values. During the recollection time two problems may appear: some values that have not been obtained and values that are erroneous. The database managers can not cope with such data as the historical information would be inconsistent. Therefore, a validation process must be taken in order to assure that stored data is correct. If data is invalid, a reconstruction process may take place in order to modify values to estimated ones. In \cite{quevedo10} validation and reconstruction techniques are applied to water distribution networks. 
 
-In the monitoring context, the data collected can be considered as a time
-series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
 
 
 
-\todo{docs quan període de mostreig no és regular}
 
+%docs quan període de mostreig no és regular
+ 
+%Data acquisition comes from the processes. However, processes can be controlled by control system, which take control of the data acquisition process. That is, the monitoring system must obey to the time requirements of control loops. This is especially critical in real-time embedded control systems. Then, the monitoring system cannot impose time constraints different that the ones that have been calculated for the control loops. \textcite{lozoya08} show that care must be taken with input and output at periodic tasks in real time systems. Control system performance degrades if it is not considered that input and output operations are subject to sampling and latency jitter. This problem affects monitoring systems in two ways. On the one hand, monitoring systems  have an acquisition part controlled by real time control applications so the resulting sampling period seen by the monitor is not regular. On the other hand, monitoring data analysis applications can suffer performance degradation if they do not consider that data acquisition can be irregular, which would be similar to the drawback stated in \cite{lozoya08} that discrete control design approach considers to periodically sample and actuate but real time can violate this mandated periodicity.
 
 
 
 
 \subsection{Time series data mining}
+
+In the monitoring context, the data collected can be considered as a time
+series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
 
 The analysis of time series includes different activities such as prediction in economics, weather forecasts, quality control in business, etc. In this context, time series data mining is the study and management of large collections of chronological data. Furthermore, this data is continually increasing in size as time goes on.
 
@@ -64,6 +67,22 @@ Time series, as a collection of data measured in different instants in time, nee
  
 
 \todo{docs quan la memòria és finita}
+
+%wiki: A very large database, or VLDB, is a database that contains an extremely high number of tuples (database rows), or occupies an extremely large physical filesystem storage space. The most common definition of VLDB is a database that occupies more than 1 terabyte or contains several billion rows, although naturally this definition changes over time.
+
+\cite{mylopoulos96}%diverse areas such as CAD, software engineering, real-time process control, corporate repositories and digital libraries require the construction, efficient access and management of large, shared knowledge bases. 
+
+
+\cite{deligiannakis07}
+
+
+\cite{ogras06}                      ``time series, which are usu-
+ally continuous and unbounded in nature.''                                      ``          Since the data
+points arrive sequentially, storing each data point and per-
+forming an offline analysis is prohibitive and random access
+to the data is not allowed, unlike the traditional approaches.''
+
+
 
 \subsubsection{Time series DBMS}
 
