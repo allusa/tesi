@@ -34,7 +34,7 @@ data stored is also too big to process \parencite{keogh97}.
 
 %docs quan període de mostreig no és regular
  
-%Data acquisition comes from the processes. However, processes can be controlled by control system, which take control of the data acquisition process. That is, the monitoring system must obey to the time requirements of control loops. This is especially critical in real-time embedded control systems. Then, the monitoring system cannot impose time constraints different that the ones that have been calculated for the control loops. \textcite{lozoya08} show that care must be taken with input and output at periodic tasks in real time systems. Control system performance degrades if it is not considered that input and output operations are subject to sampling and latency jitter. This problem affects monitoring systems in two ways. On the one hand, monitoring systems  have an acquisition part controlled by real time control applications so the resulting sampling period seen by the monitor is not regular. On the other hand, monitoring data analysis applications can suffer performance degradation if they do not consider that data acquisition can be irregular, which would be similar to the drawback stated in \cite{lozoya08} that discrete control design approach considers to periodically sample and actuate but real time can violate this mandated periodicity.
+Data acquisition comes from the processes. However, processes can be controlled by control system, which take control of the data acquisition process. That is, the monitoring system must obey to the time requirements of control loops. This is especially critical in real-time embedded control systems. Then, the monitoring system cannot impose time constraints different that the ones that have been calculated for the control loops. \textcite{lozoya08} show that care must be taken with input and output at periodic tasks in real time systems. Control system performance degrades if it is not considered that input and output operations are subject to sampling and latency jitter. This problem affects monitoring systems in two ways. On the one hand, monitoring systems  have an acquisition part controlled by real time control applications so the resulting sampling period seen by the monitor is not regular. On the other hand, monitoring data analysis applications can suffer performance degradation if they do not consider that data acquisition can be irregular, which would be similar to the drawback stated in \cite{lozoya08} that discrete control design approach considers to periodically sample and actuate but real time can violate this mandated periodicity.
 
 
 
@@ -66,22 +66,15 @@ A common DBMS are the ones based on the relational model, which is a consolidate
 Time series, as a collection of data measured in different instants in time, need an adequate management by the DBMS. The special need of time series is mainly caused by its high dimension and that the time is a principal component that must be always taken into account. 
  
 
-\todo{docs quan la memòria és finita}
+%\todo{docs quan la memòria és finita}
 
-%wiki: A very large database, or VLDB, is a database that contains an extremely high number of tuples (database rows), or occupies an extremely large physical filesystem storage space. The most common definition of VLDB is a database that occupies more than 1 terabyte or contains several billion rows, although naturally this definition changes over time.
+In DBMS the high dimension of data is also found in other fields. \textcite{mylopoulos96} states that there is a need for large knowledge databases in diverse areas such as CAD, software engineering, real-time process control, corporate repositories, and digital libraries. DBMS that treat high quantity of data are known as very large databases (VLDB) and they must construct, access, and manage large data efficiently.
 
-\cite{mylopoulos96}%diverse areas such as CAD, software engineering, real-time process control, corporate repositories and digital libraries require the construction, efficient access and management of large, shared knowledge bases. 
-
-
-\cite{deligiannakis07}
+In the last decade, hardware has improved both technological and economical speaking as stated by \textcite{deligiannakis07}. This has allowed to deploy high dimension sensor networks which recollect a high number of data. They focus on the information transmission in sensor networks and how to exploit correlations among sensor measurements sending the historical information compressed. The compression is achieved with \emph{aggregation} (simple statistics) and \emph{approximation} functions. 
 
 
-\cite{ogras06}                      ``time series, which are usu-
-ally continuous and unbounded in nature.''                                      ``          Since the data
-points arrive sequentially, storing each data point and per-
-forming an offline analysis is prohibitive and random access
-to the data is not allowed, unlike the traditional approaches.''
-
+\textcite{ogras06}  consider that current solutions in VLDB focus on data in the database being static. However, time series are usually dynamic, that is continuous and unbounded in nature. As a consequence, ``since the data points arrive sequentially, storing each data point and performing an offline analysis is prohibitive and random access to the data is not allowed, unlike the traditional approaches.'' They propose summarising dynamic time series with summaries techniques utilised in many other applications of large databases.
+       
 
 
 \subsubsection{Time series DBMS}
