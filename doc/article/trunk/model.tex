@@ -61,13 +61,13 @@ is written as $T(m)$.
   time but it can define exactly the position of any other instant in
   time.
 
-  This definition is coherent with the one given in coordinate
-  systems, \cite{wiki:coordinate}.  Time is treated as universal and
-  constant. Time values are expressed in time units, that is seconds
-  in the international system.
+  % This definition is coherent with the one given in coordinate
+  % systems, \cite{wiki:coordinate}.  Time is treated as universal and
+  % constant. Time values are expressed in time units, that is seconds
+  % in the international system.
 \end{definition}
 
-The time value defines the order between measures.
+Time values are expressed in time units, that is seconds in the international system. The time value defines the order between measures.
 
 \begin{definition}
   \label{def:order-relation}
@@ -99,8 +99,9 @@ has a maximum and a minimum.
   is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
 \end{definition}
 
-Given the order defined by time in a time series, we define the
-sequence interval similarly as it is done in chapters 1 and 2 in \cite{last}.
+Given the order defined by time in \ref{def:order-relation}, in a time
+series we define the sequence interval similarly as it is done in
+chapters 1 and 2 in \cite{last}.
 
 \begin{definition}
   Let $S=\{m_0, \ldots, m_k\}$ be a time series. We define the subset
@@ -124,6 +125,8 @@ next and previous measure.
   \max(S(-\infty,T(n)))$.
 \end{definition}
 
+When it is clear the time series which imposes the time order, we may
+write $\nex(m)$ i $\prev(m)$.
 
 
 
@@ -167,7 +170,10 @@ An empty buffer, or the initial buffer, $B_{\emptyset} =
 series, the initial time of consolidation a duration indicating the
 consolidation step and an interpolation. From the empty buffer all the
 instants in time of consolidation can be calculated as $t_0+k\delta,
-k\in\mathbb{N}$. Before the consolidation the buffer needs measures.
+k\in\mathbb{N}$. 
+
+Before the consolidation the buffer needs measures. For this purpose
+we define an operator.
 
 \begin{definition}
   The operator \emph{add} adds a measure to the time series of a buffer:
@@ -180,6 +186,8 @@ k\in\mathbb{N}$. Before the consolidation the buffer needs measures.
    \] 
 \end{definition}
 
+A predicate will become true when the buffer is ready to consolidate.
+
 \begin{definition}
   We say the buffer is ready to consolidate when a time of a measure
   is bigger than the buffer's next instant in time of consolidation.
@@ -188,9 +196,13 @@ k\in\mathbb{N}$. Before the consolidation the buffer needs measures.
   \tau+\delta$.
 \end{definition}
 
-Let $S$ be a time series and $t_0$ and $t_f$ two instants in time, an
-interpolation function $f$ calculates a measure that is a summary of
-$S$ in the time interval $i=[T_0,T_f]$:
+\subsubsection{Interpolation}
+
+When a buffer is ready to consolidate an interpolation functions is
+used in order to consolidate the buffer.  Let $S$ be a time series and
+$t_0$ and $t_f$ two instants in time, an interpolation function $f$
+calculates a measure that is a summary of $S$ in the time interval
+$i=[T_0,T_f]$:
 \[
 f: \text{Time series} \times \text{time interval} \longrightarrow
 \text{Measure}
@@ -271,7 +283,7 @@ left-continuous $(T_0,T_f]$.
   S'=S(T_0:T_f]:
   v' = \max_{\forall m \in S'}(V(m))
   \]
-
+ %Note: \emph{Minimum interpolation} can be defined dually.
 \item \emph{Last interpolation} function summarises $S$ with the
   maximum measure.
   \[
@@ -302,6 +314,8 @@ left-continuous $(T_0,T_f]$.
 
 \end{definition}
 
+
+\subsubsection{Consolidation}
 
 Let $B=(S,\tau,\delta,f)$ be a buffer ready to consolidate, the
 consolidation from $B$ in the time interval $i=[\tau,\tau+\delta]$
@@ -335,8 +349,8 @@ an interpolation function.
 
 \subsection{Disc}\label{sec:model:disc}
 
-A disc is a container for a regular time series and furthermore its
-cardinal is bounded. 
+A disc is a container for a time series where its
+cardinal is bounded. When the cardinal of the times series is to overcome the limit, some measures need to be discarded. 
 
 \begin{definition}[Disc]
   A \emph{disc} is defined as the tuple $(S,k)$ where $S$ is a time
@@ -346,8 +360,12 @@ cardinal is bounded.
 An empty disc $D_{\emptyset} = (\emptyset,k)$ is a disc with an empty
 time series and the $k$ maximum cardinal that $S$ is allowed to take.
 
+ The cardinal of the times series is kept under control by the add operator. 
+
 \begin{definition}
-  The operator \emph{add} add a measure to the time series of the disc.
+  The operator \emph{add} add a measure to the time series of the
+  disc. If the limited cardinal of the times series is exceeded, the
+  minimum measure is discarded.
   \[
   \text{add}: \text{Disc} \times \text{Measure} \longrightarrow \text{Disc}
   \]
@@ -358,8 +376,8 @@ time series and the $k$ maximum cardinal that $S$ is allowed to take.
   S' =  
   \begin{cases}
       S\cup\{m\} &\text{if }  |S|<k\\
-      (S-\{\min(S)\}) \cup \{m\} 
-    \end{cases}  \
+      (S-\{\min(S)\}) \cup \{m\} & \text{else }
+    \end{cases}  
   \]
 \end{definition}
 
@@ -399,6 +417,8 @@ the buffer and disc ones.
   and only if $B$ is ready to consolidate.
 \end{definition}
 
+If the resolution disc is ready to consolidate, it can be consolidated.
+
 \begin{definition}
   Operator \emph{consolidate} calculates a consolidation measure from
   the buffer and adds it to the disc.
@@ -421,11 +441,18 @@ the buffer and disc ones.
 
 \subsection{Multiresolution Database}\label{sec:model:rrd}
 
+A multiresolution database is an archive of resolution discs which
+share the input of measures, that is they store the same time
+series. A time series is stored regularised and distributed with
+different resolutions in the various resolution discs, as has been seen
+in figure~\ref{fig:model:mtsdb}.
+
 \begin{definition}[Multiresolution Database]
   A \emph{Multiresolution Database} is a set of resolution discs
-  $M=\{R_0,\ldots,R_d\}$.
+  $M=\{R_0,\dotsc,R_d\}$.
 \end{definition}
 
+An empty multiresolution database has empty resolution discs $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$. 
  
 Generally, in a multiresolution database there are not two resolution discs
 with the same information. That is, let $R_a = (B_a, D_a)$ and $R_b =
@@ -435,10 +462,43 @@ have different consolidation interval and interpolation function
 $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
-With reference to the operators, the add and consolidate in a multiresolution database are applied for every resolution disc it contains.
+With reference to the operators, the add and consolidate in a multiresolution database are applied to every resolution disc it contains.
 
 
+\begin{definition}
+  Operator \emph{add} adds a measure to every resolution disc:
+  \[
+  \text{add}: \text{multiresolution database} \times \text{Measure}
+  \longrightarrow \text{multiresolution database}
+  \]
+  \[
+  M=\{R_0,\dotsc,R_d\} \times m \mapsto M' 
+  \]
+  \[  
+  M'= \{ \forall R_i\in M: R_i \text{ add } m \}
+  \]
+\end{definition}
 
+
+\begin{definition}
+  Operator \emph{consolidate} consolidates the resolution discs that
+  are ready to consolidate.
+  \[
+  \text{consolidate}: \text{multiresolution database} \longrightarrow
+  \text{multiresolution database}
+  \]
+  \[
+  M=\{R_0,\dotsc,R_d\} \mapsto M'
+  \]
+  \[
+  M'= \big\{
+  \forall R_i\in M: 
+  \begin{cases}
+    \text{ consolidate } R_i & \text{if } R_i \text{ ready to consolidate} \\
+    R_i & \text{else }
+  \end{cases}\big\}
+  \]
+\end{definition}
 
 %%% Local Variables:
 %%% TeX-master: "article"
