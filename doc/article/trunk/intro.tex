@@ -1,7 +1,7 @@
 \begin{abstract}
   Current monitoring systems are an essential part of supervising
   control as they manage a large amount of information. Data
-  recollection is normally studied as a time series owing to it fits
+  collection is normally studied as a time series owing to it fits
   into sequence of values.  Thanks to the facility of designing
   monitoring hardware, the measurement of data has increased the last
   decade and there is not enough capacity to store nor process all the
@@ -13,7 +13,7 @@
 
   In this paper a formal model for a time series database management
   system is designed.  It is called Multiresoltion Time Series
-  Database Management Systems model (MTSDB). A Time series is
+  Database Management Systems model (MTSMS). A Time series is
   compactly stored in the database and the information is summarised
   by different interpolation functions. From this model this kind of
   DBMS will be better understood, new implementations will be possible
@@ -71,32 +71,38 @@ Monitoring systems are an important part of control and interaction with process
   \label{fig:monitoring_system}
 \end{figure}
 
-The main parts involved in monitoring can be seen in figure \ref{fig:monitoring_system}. A monitor acquires data from sensors. Data can be either measures values or process states acquired as events. 
-On the one hand, data is used as the process output for the controllers, which will calculate the input values for drives. Control loops do not need to be so centralised and normally they reside nearer its process.
-On the other hand, the monitoring system can inform the user with the current state of the process or generate some simple alarms such as data not acquired or a critical event has been triggered. In this figure the user can be either a human or another system such a supervisor with artificial intelligence skills.
+Figure \ref{fig:monitoring_system} shows the main blocks involved in monitoring. A monitor acquires data from sensors. Data can be either measures values or process states acquired as events. 
+On the one hand, data is used as the process output for the controllers, which will calculate the input values for drives. Control loops do not need to be centralised and normally they reside nearer its processes.
+On the other hand, the monitoring system can inform the user with the current state of the process or generate some simple alarms such as data not acquired or a critical event has been triggered.The user can be either a human or another system such a supervisor with artificial intelligence skills.
 
-A monitoring system recollects a
-large amount of data so only a little can be observed online and the
-data stored is also too big to process \parencite{keogh97}. Nevertheless, data must be analysed as there is interesting information achieve  diagnosis, prognosis, prediction, aberrant behaviour detection, and other common control tasks. Monitoring systems have databases management systems (DBMS) in order to manage data storage and information retrieval. 
+A monitoring system recollects a large amount of data. Only a small
+fraction of this data can be observed online and the stored data is
+too big to be processed \parencite{keogh97}. Nevertheless, data must be
+analysed because there is interesting information to achieve diagnosis,
+prognosis, prediction, aberrant behaviour detection, and other common
+control tasks. Thus, monitoring systems rely on databases management systems
+(DBMS) in order to manage data storage and information retrieval.
 
 
 In the context of monitoring, the data collected can be considered as a time
 series. The research in time series data mining has
-increased last decade \parencite{fu11} and the key to success is
-reducing the dimension of time series in order to be able process the
-data in a reasonable time.
+increased during last decade \parencite{fu11} and the key to success is
+to reduce the dimension of time series to be able to process faster the
+data.
 
 This paper focuses on DBMS that store and treat data as time series.
-Traditional DBMS, as is ones derived from relational model, are not adequate for these cases as they do not have enough facilities to manage and retrieve time series information. 
+Traditional DBMS, as is ones derived from relational model, are not adequate for these cases as they do not have enough facilities to manage and retrieve time series information \parencite{schmidt95}. 
 
-Some DBMS have already taken into account the
-specialities of time series.  Time Series Data Server (TSDS) from
-\textcite{weigel10} allows to select a data range from a time series and
-to apply a filter when the data is retrieved.  RRDtool from
-\textcite{rrdtool} applies filters and stores different data ranges when
-data is stored. Then it has in mind that the sampling times can not be
-equally spaced, the temporal order is essential and the value and time
-must be stored together. However, this time series DBMS lack the complete definition of the relation between the three main fields involved: time series, monitoring systems and DBMS.
+Some DBMS have already taken into account the specificities of time
+series.  Time Series Data Server \parencite{weigel10} allows to select
+a data range from a time series and to apply a filter when the data is
+retrieved.  RRDtool \parencite{rrdtool} applies filters and stores
+different data ranges when data is stored. It considers that
+the sampling times can not be equally spaced, the temporal order is
+essential and the value and time must be stored together. However,
+this time series DBMS lack the complete definition of the relation
+between the three main fields involved: time series, monitoring
+systems and DBMS.
 
 
 DBMS are based from formal models that define
@@ -110,7 +116,7 @@ database. Some of this concepts are familiar with RRDtool
 operating mode.
 
 
-
+\todo{estructura article}
 
 
 %%% Local Variables: 

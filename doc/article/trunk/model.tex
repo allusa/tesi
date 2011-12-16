@@ -1,21 +1,21 @@
-\section{Multiresolution TSDB model definition}
+\section{Multiresolution TSMS model definition}
 
-In this section we design a mathematical model for the multiresolution time series database management systems (MTSDB). Some concepts come from an abstraction of RRDtool operations \parencite{rrdtool}. 
+In this section we design a mathematical model for the multiresolution time series database management systems (MTSMS). Some concepts come from an abstraction of RRDtool operations \parencite{rrdtool}. 
 
-A MTSDB manages time series. A time series is regarded as a chronological data collection, so it needs an appropriate management by the DBMS.
-The MTSDB model is an storage solution for a time series where, in short,  the time series information is spread in different time resolutions. 
+A MTSMS manages time series. A time series is regarded as a chronological data collection, so it needs an appropriate management by the DBMS.
+The MTSMS model is an storage solution for a time series where, in short,  the time series information is spread in different time resolutions. 
 
-The main objects of a MTSDB are \emph{measures} and \emph{time series}. A \emph{measure} is a value measured in an instant in time and a  \emph{time series} is a collection of \emph{measures}. A database from a MTSDB contains one time series, which internally is stored in multiple resolutions of itself.
+The main objects of a MTSMS are \emph{measures} and \emph{time series}. A \emph{measure} is a value measured in an instant in time and a  \emph{time series} is a collection of \emph{measures}. A database from a MTSMS contains one time series, which internally is stored in multiple resolutions of itself.
 
 \begin{figure}[tp]
 \centering
 \setlength{\unitlength}{0.3mm}
 \input{imatges/mtsdb-internal_architecture.tex}
-\caption{Architecture of MTSDB model}
+\caption{Architecture of MTSMS model}
 \label{fig:model:mtsdb}
 \end{figure}
 
-The general schema of the MTSDB model can be seen in figure \ref{fig:model:mtsdb}.  A \emph{multiresolution database} is a collection of \emph{resolution discs}, which temporarily accumulate the \emph{measures} in a \emph{buffer} where they are processed and finally stored in a \emph{disc}. Mainly, the data process is intended to change the time intervals between \emph{measures} in order to compact the time series information. In this way, the time series gets stored in different time resolutions, which are spread in the \emph{discs}.
+The general schema of the MTSMS model can be seen in figure \ref{fig:model:mtsdb}.  A \emph{multiresolution database} is a collection of \emph{resolution discs}, which temporarily accumulate the \emph{measures} in a \emph{buffer} where they are processed and finally stored in a \emph{disc}. Mainly, the data process is intended to change the time intervals between \emph{measures} in order to compact the time series information. In this way, the time series gets stored in different time resolutions, which are spread in the \emph{discs}.
 
 \emph{Discs} are size bounded so they only contain a fixed amount of \emph{measures}. When a \emph{disc} gets full it discards a \emph{measure}. In this way, the multiresolution database is bounded in size and the time series gets stored in pieces, that is 'time subseries'.
 
@@ -31,7 +31,7 @@ The general schema of the MTSDB model can be seen in figure \ref{fig:model:mtsdb
 Putting resolution and 'time subseries' together, in a multiresolution database a time series is stored in different resolution pieces. For example, we could have a time series stored with high resolution at recent times and with low resolution at older times. This example is illustrated in figure \ref{fig:model:window}. At the top there are three \emph{discs} with different number of \emph{measures} and at the bottom there is a timeline showing the time series chopped along time. For recent times, every 2 hours a \emph{measure} is stored in the third \emph{disc} which has a capacity of 24 \emph{measures} so that results in a 2 day piece. For mid times, every 1 day a  \emph{measure} is stored in the second \emph{disc} which has a capacity of 12 \emph{measures} so that results in a 12 days piece. For old times, every 5 days a  \emph{measure} is stored in the first \emph{disc} which has a capacity of 6 \emph{measures} so that results in a 30 days piece. 
 
 
-Regarding operations, MTSDB model needs operators to change the time intervals between measures. Mainly, these operators are \emph{interpolation} functions and \emph{consolidation} actions. In this section we design the basic MTSDB model, that is six basic data model definitions -- \emph{measure}, \emph{time series}, \emph{buffer}, \emph{disc}, \emph{resolution disc}, and \emph{multiresolution database} -- and the operations to create a \emph{multiresolution database}, to add \emph{measures} and to \emph{interpolate} and \emph{consolidate} time series.
+Regarding operations, MTSMS model needs operators to change the time intervals between measures. Mainly, these operators are \emph{interpolation} functions and \emph{consolidation} actions. In this section we design the basic MTSMS model, that is six basic data model definitions -- \emph{measure}, \emph{time series}, \emph{buffer}, \emph{disc}, \emph{resolution disc}, and \emph{multiresolution database} -- and the operations to create a \emph{multiresolution database}, to add \emph{measures} and to \emph{interpolate} and \emph{consolidate} time series.
 
 
 
@@ -503,7 +503,7 @@ With reference to the operators, the add and consolidate in a multiresolution da
 %%% TeX-master: "article"
 %%% ispell-local-dictionary: "british"
 %%% End:
-% LocalWords:  Round  buffer buffers RRDtool MTSDB multiresolution DBMS
+% LocalWords:  Round  buffer buffers RRDtool MTSMS multiresolution DBMS
 
 
 
