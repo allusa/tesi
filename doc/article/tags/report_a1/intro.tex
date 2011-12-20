@@ -1,0 +1,126 @@
+\begin{abstract}
+  Current monitoring systems are an essential part of supervising
+  control as they manage a large amount of information. Data
+  collection is normally studied as a time series owing to it fits
+  into sequence of values.  Thanks to the facility of designing
+  monitoring hardware, the measurement of data has increased the last
+  decade and there is not enough capacity to store nor process all the
+  time series. Therefore, we need to design database management
+  systems capable of storing and processing efficiently the time
+  series. Moreover, this systems have to cope with the measurements
+  not happening at regular time intervals as it is a restriction
+  imposed by some time series treatment algorithms.
+
+  In this paper a formal model for a time series database management
+  system is designed.  It is called Multiresoltion Time Series
+  Database Management Systems model (MTSMS). A Time series is
+  compactly stored in the database and the information is summarised
+  by different interpolation functions. From this model this kind of
+  DBMS will be better understood, new implementations will be possible
+  and we will be able to enhance its potential.
+\end{abstract}
+
+
+
+\section{Introduction}
+
+Monitoring systems are an important part of control and interaction with processes. Mainly, they are in charge of recollecting data, being aware of the current state and informing the user.  It can also be thought as the core part of SCADA systems (\emph{Supervisory Control And Data Acquisition}). 
+
+\begin{figure}[tp]
+  \begin{center}
+    \scriptsize 
+    \begin{tikzpicture}[node distance=0.5cm]  
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, >=latex', shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+      \node[mynode]                                       (monitor)   {Monitoring system};  
+      \node[mynode, below right=2cm and -0.5cm of monitor]  (bd)        {DBMS}; 
+      \node[mynode, below=2cm of monitor, left=2cm and 2cm of bd]     (control)   {Controllers}; 
+      \node[mynode, roig, below right=0.5cm and 3cm of monitor] (usuari)    {User};  
+      \node[mynode, verd, left=2cm of control]            (actuador)  {Drives};
+      \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
+      
+      
+      \draw[myarrow] (monitor.east) --   (usuari.north)	
+         node [above,sloped,midway] {Alarms}
+         node [below,sloped,midway] {Current state};
+      \draw[myarrow] (bd.east) --   (usuari.south)
+         node [above,sloped,midway] {Historic}
+         node [below,sloped,midway] {Information retrieval};
+      \draw[myarrow] (sensor.east) --   (monitor.west) 
+         node [above,midway] {Measures}
+         node [below,midway] {Events};
+      \draw[myarrow] (control.west) -- (actuador.east)
+         node [above,midway] {Input};
+      \draw[myarrow] (monitor.south) -- (bd.north)
+         node [above,sloped,midway] {Storage};
+      \draw[myarrow] (monitor.south) -- (control.north)
+         node [above,sloped,midway] {Control loops};
+      
+    \end{tikzpicture} 
+  \end{center}
+  \caption{Monitoring system: from data acquisition to user information}
+  \label{fig:monitoring_system}
+\end{figure}
+
+Figure \ref{fig:monitoring_system} shows the main blocks involved in monitoring. A monitor acquires data from sensors. Data can be either measures values or process states acquired as events. 
+On the one hand, data is used as the process output for the controllers, which will calculate the input values for drives. Control loops do not need to be centralised and normally they reside nearer its processes.
+On the other hand, the monitoring system can inform the user with the current state of the process or generate some simple alarms such as data not acquired or a critical event has been triggered.The user can be either a human or another system such a supervisor with artificial intelligence skills.
+
+A monitoring system recollects a large amount of data. Only a small
+fraction of this data can be observed online and the stored data is
+too big to be processed \parencite{keogh97}. Nevertheless, data must be
+analysed because there is interesting information to achieve diagnosis,
+prognosis, prediction, aberrant behaviour detection, and other common
+control tasks. Thus, monitoring systems rely on databases management systems
+(DBMS) in order to manage data storage and information retrieval.
+
+
+In the context of monitoring, the data collected can be considered as a time
+series. The research in time series data mining has
+increased during last decade \parencite{fu11} and the key to success is
+to reduce the dimension of time series to be able to process faster the
+data.
+
+This paper focuses on DBMS that store and treat data as time series.
+Traditional DBMS, as is ones derived from relational model, are not adequate for these cases as they do not have enough facilities to manage and retrieve time series information \parencite{schmidt95}. 
+
+Some DBMS have already taken into account the specificities of time
+series.  Time Series Data Server \parencite{weigel10} allows to select
+a data range from a time series and to apply a filter when the data is
+retrieved.  RRDtool \parencite{rrdtool} applies filters and stores
+different data ranges when data is stored. It considers that
+the sampling times can not be equally spaced, the temporal order is
+essential and the value and time must be stored together. However,
+this time series DBMS lack the complete definition of the relation
+between the three main fields involved: time series, monitoring
+systems and DBMS.
+
+
+DBMS are based from formal models that define
+the objects and operations of the abstract machine to which users
+interact, such is the relational model \parencite{date}. In this paper
+a model is proposed for an storage system that will keep a time series
+in a multiresolution and bounded way.  In this first proposal there
+are six definitions that are related to the data storage mechanism:
+measure, time series, buffer, disc, resolution disc, and multiresolution
+database. Some of this concepts are familiar with RRDtool
+operating mode.
+
+
+\todo{estructura article}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "article"
+%%% ispell-local-dictionary: "british"
+%%% End: 
