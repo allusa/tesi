@@ -1,0 +1,102 @@
+\section{Nomenclature and notation}
+
+\begin{description}
+\item[DBMS] Data Base Management System
+\item[RDBMS] Relational Data Base Management System
+\item[MTSMS] Multiresolution Time Series Data Base management system
+\item[RRDtool] Round Robin Database management system \parencite{rrdtool}
+\item[SCADA] Supervisory Control And Data Acquisition
+\item[TSDB] Time Series Data Base
+\item[TSMS] Time Series Data Base management system
+\item[VLDB] Very Large Data Base 
+\end{description}
+
+\subsection{Mathematical symbols}
+
+% \begin{table}[h]
+%   \centering
+%   \begin{tabular}[h]{cl} \hline
+%     $:$ &  such that\\
+%     $\times$ & set theory cartesian product\\
+%     $|\dots|$ & set theory cardinality\\
+%     $\exists!$ & there exists exactly one \\\hline
+%   \end{tabular}
+%   \caption{Some disambiguation on common mathematical symbols used, for others see \cite{wiki:mathematical-symbols}}
+%   \label{tab:mathematical-symbols}
+% \end{table}
+
+
+  \begin{longtable}[h]{ll}
+    \caption{MTSDB notation \label{tab:mtsdb-symbols}}
+    \endfirsthead
+    \caption[]{MTSDB notation (continued)}
+    \endhead
+    %\endfoot
+    %\endlastfoot
+    \hline
+    %
+    Time & $t\in\mathbb{R}$ \\ \hline
+    Instant in time & $t^i$ \\
+    Duration & $t^d$ \\
+    Reference time & $t^R$ \\
+    Time interval & $[t^i_a,t^i_b]$\\[2ex]
+    \pagebreak[3]\hline
+    %
+    Measure & $m=(v,t)$ \\ \hline
+    Value & V(m) \\ 
+    Time & T(m) \\
+    Order & $m_a \leq m_b$ \\[2ex]
+    \hline\pagebreak[3]\hline
+    %
+    Time series & $S = \{m_0,\dotsc,m_k\}$ \\\hline
+    Cardinal & $|S|$           \\
+    Maximum  & $\max(S)$       \\
+    Minimum  & $\min(S)$       \\
+    Interval & $S(t^i_a,t^i_b]$ \\
+             & $S(t^i_a,+\infty)$  \\
+             & $S(-\infty,t^i_b)$  \\
+    Next     & $\nex\limits_S(m_a)$   \\
+    Previous & $\prev\limits_S(m_a)$  \\
+    Regular  & \emph{<predicate>} \\
+    Continuous representation & $S(t)$ \\[2ex]
+    %\emph{zero-order hold backwards} $S(t)^\text{zohb}$
+    \pagebreak[3]\hline
+    %
+    Buffer & $B = (S,\tau,\delta,f)$ \\\hline
+    Last consolidation & $\tau$    \\
+    Consolidation step & $\delta$  \\
+    Interpolation function & $f: S \times [t^i_a,t^i_b] \mapsto m'$ \\
+    Empty        & $B_{\emptyset}$   \\
+    Add measure  &  $\text{add}: B \times m \mapsto B'$ \\
+    Ready to consolidate & \emph{<predicate>} \\
+    Consolidate & $\text{consolidate}:B \mapsto B' \times m'$ \\[2ex]
+    \pagebreak[3]\hline
+     %
+    Disc & $D = (S,k)$ \\\hline
+    Maximum cardinality & $k$ \\
+    Empty   & $D_{\emptyset}$ \\
+    Add measure  &  $\text{add}: D \times m \mapsto D'$ \\[2ex]    
+    \pagebreak[3]\hline
+     %
+    Resolution disc & $R = (B,D)$ \\\hline
+    Empty   & $R_{\emptyset}$ \\
+    Add measure  &  $\text{add}: R \times m \mapsto R'=(B',D)$ \\  
+    Ready to consolidate & \emph{<predicate>} \\
+    Consolidate & $\text{consolidate}:R \mapsto R'=(B',D')$ \\[2ex] 
+    \pagebreak[3]\hline
+     %
+     Multiresolution Database & $M=\{R_0,\dotsc,R_d\}$ \\\hline
+     Empty   & $M_{\emptyset}$ \\
+     Add measure  & $\forall R\in M: R \text{ add } m$ \\
+     Consolidate  & $\forall R\in M: \text{ consolidate } R$ \\%[2ex]
+     %\hline
+     %
+  \end{longtable}
+ 
+
+
+
+%%% Local Variables:
+%%% TeX-master: "article"
+%%% ispell-local-dictionary: "british"
+%%% End:

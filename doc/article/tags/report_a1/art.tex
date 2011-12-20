@@ -18,37 +18,13 @@ Database management systems are the computer systems implementing storage and re
 
 \subsection{Monitoring and applications}
 
-Monitoring systems are an important part of control and interaction with processes. Mainly, they are in charge of recollecting data, being aware of the current state and informing the user.  It can also be thought as the core part of SCADA systems (\emph{Supervisory Control And Data Acquisition}). 
-
-\begin{figure}[tp]
-  \begin{center}
-    \scriptsize 
-    \input{imatges/monitoratge.tex}
-  \end{center}
-  \caption{Monitoring system: from data acquisition to user information}
-  \label{fig:monitoring_system}
-\end{figure}
-
-Figure \ref{fig:monitoring_system} shows the main blocks involved in monitoring. A monitor acquires data from sensors. Data can be either measures values or process states acquired as events. 
-On the one hand, data is used as the process output for the controllers, which will calculate the input values for drives. Control loops do not need to be centralised and normally they reside nearer its processes.
-On the other hand, the monitoring system can inform the user with the current state of the process or generate some simple alarms such as data not acquired or a critical event has been triggered.The user can be either a human or another system such a supervisor with artificial intelligence skills.
-
-A monitoring system recollects a large amount of data. Only a small
-fraction of this data can be observed online and the stored data is
-too big to be processed \parencite{keogh97}. Nevertheless, data must be
-analysed because there is interesting information to achieve diagnosis,
-prognosis, prediction, aberrant behaviour detection, and other common
-control tasks. Thus, monitoring systems rely on databases management systems
-(DBMS) in order to manage data storage and information retrieval. In the context of monitoring, the data collected can be considered as a time
-series.
-
-
 Monitoring sensor data and processing the data to achieve diagnosis,
 prognosis and prediction is a common task in many fields such as
 prognosis in degradation models \parencite{yu11}, navy
 vessels \parencite{palmer07} or water distribution
-networks \parencite{quevedo10}. 
-
+networks \parencite{quevedo10}.  A monitoring system recollects a
+large amount of data so only a little can be observed online and the
+data stored is also too big to process \parencite{keogh97}.
 
 \textcite{quevedo10} show the enormous information residing in complex remote systems. This information comes from many sensors that are distributed in the area. A SCADA is the system responsible for periodically recollect and centralise the sensing values. During the recollection time two problems may appear: some values that have not been obtained and values that are erroneous. The database managers can not cope with such data as the historical information would be inconsistent. Therefore, a validation process must be taken in order to assure that stored data is correct. If data is invalid, a reconstruction process may take place in order to modify values to estimated ones. In \cite{quevedo10} validation and reconstruction techniques are applied to water distribution networks. 
 
@@ -62,13 +38,15 @@ Data acquisition comes from the processes. However, processes can be controlled 
 
 
 
+
 \subsection{Time series data mining}
 
-Time series theory formalises analysis methods such as the validations and reconstruction processes.
+In the monitoring context, the data collected can be considered as a time
+series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
 
 The analysis of time series includes different activities such as prediction in economics, weather forecasts, quality control in business, etc. In this context, time series data mining is the study and management of large collections of chronological data. Furthermore, this data is continually increasing in size as time goes on.
 
-Mining research in time series has increased the last decade as shown in \textcite{fu11} and the main target is to reduce the dimension of time series to be able to process faster the data. Fu summarises exhaustively the current state of the art in time series data mining  and concludes that there is still room to further investigate and develop. Mining tasks have had intensively research but the problem of  time series representation needs better solutions because of high volume of time data. Furthermore, it is said to be one of the ten challenging problems in data mining \parencite{yangwu06}.
+Mining research in time series has increased the last decade as shown in \textcite{fu11}. Fu summarises exhaustively the current state of the art in time series data mining  and concludes that there is still room to further investigate and develop. Mining tasks have had intensively research but the problem of  time series representation needs better solutions because of high volume of time data. Furthermore, it is said to be one of the ten challenging problems in data mining \parencite{yangwu06}.
  
 Time series data mining research  is given at mainly four tasks \parencite{keogh02}: indexing, clustering, classification and segmentation. In order to solve these tasks, lots of experimental algorithms have been proposed by different authors. \textcite{keogh02} compare and evaluate some of these algorithms with the same datasets and they recommend the time series data mining community to follow the same benchmark when evaluating the performance of similar algorithms. 
 
