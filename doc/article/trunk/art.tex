@@ -2,7 +2,7 @@
   % * Mostreig: docs quan període de mostreig no regular
   % * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
 
-\section{Preliminaries}
+\section{Preliminaries}\label{sec:preliminaries}
 
 Obtaining information from environment is a complex task that has a user, either human or machine, as the final target as stated in figure \ref{fig:monitoring_system}. Mainly, the processes between data acquisition and user information can be divided into three focus.
 
@@ -99,7 +99,10 @@ In the last decade, hardware has improved both technological and economical spea
        
 
 
-\subsubsection{Time series DBMS}
+
+
+
+\section{Time series DBMS}\label{sec:TSMS}
 
 Time series analysis techniques must be computed in specific DBMS in order to process data efficiently. Moreover, the amount of data is increasing as data acquisition becomes easier and there is more storage capacity. 
 Mainly, time series data is different from other data types in the sense that the series values are dependent from another variable: the time. Consequently, DBMS can not process independently values and times; it can be generally stated that they must keep the temporal coherence. 
@@ -121,7 +124,7 @@ However, as far as we know, TSMS properties have not been further investigated a
 
 
 
-\subsubsection{Similar systems}
+\subsection{Similar systems}
 Next, we summarise some current TSMS.
 
 \paragraph{Calanda} \textcite{dreyer94} propose the requirements of special purpose TSMS and they  base the model on four basic structural elements: events, time series, groups, metadata and the time series bases. They implement a special purpose TSMS \parencite{dreyer94b,dreyer95,dreyer95b} called Calanda which has calendar operations, can group time series and make simple queries. They exemplify it with financial data. In \cite{schmidt95} Calanda is compared with temporal databases systems designed for time series.
@@ -148,7 +151,7 @@ Nowadays, RRDtool efficiency and speed when processing time series is being impr
 It is noticeable the emerging use of RRDtool in testing environments. As instance, \textcite{zhang07} and \textcite{chilingaryan10} use RRDtool for storing experimental data and then predicting or validating the data.
 
 
-\subsubsection{Overview}
+\subsection{Overview}
 
 Current TSMS are mainly concerned with the time series analysis problems. However, the relation between database and monitoring system are not addressed. That is, mainly speaking, the problems inferred from data acquisition which  must be treated properly, such as holes in data, false data or sampling time irregularities. 
 The latter is one of the most overlooked problem by TSMS as samples are typically considered equi-spaced, although computer monitoring systems present some variation and delays in sampling times. 
