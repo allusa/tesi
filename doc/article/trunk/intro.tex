@@ -1,24 +1,45 @@
 \begin{abstract}
-  Current monitoring systems are an essential part of supervising
-  control as they manage a large amount of information. Data
-  collection is normally studied as a time series owing to it fits
-  into sequence of values.  Thanks to the facility of designing
-  monitoring hardware, the measurement of data has increased the last
-  decade and there is not enough capacity to store nor process all the
-  time series. Therefore, we need to design database management
-  systems capable of storing and processing efficiently the time
-  series. Moreover, this systems have to cope with the measurements
-  not happening at regular time intervals as it is a restriction
-  imposed by some time series treatment algorithms.
-
   In this paper a formal model for a time series database management
   system is designed.  It is called Multiresoltion Time Series
-  Database Management Systems model (MTSMS). A Time series is
-  compactly stored in the database and the information is summarised
-  by different interpolation functions. From this model this kind of
-  DBMS will be better understood, new implementations will be possible
-  and we will be able to enhance its potential.
+  Database Management Systems model (MTSMS). In a MTSMS a time series
+  is compactly stored in the database and the information is
+  summarised by different interpolation functions. From this model
+  this kind of Data Base Management Systems (DBMS) will be better
+  understood, new implementations will be possible and we will be able
+  to enhance its potential.
+
+  Thanks to the facility of designing monitoring hardware, the
+  measurement of data has increased the last decade and there is not
+  enough capacity to store nor process all the time series. Therefore,
+  we need to design DBMS capable of storing and processing efficiently
+  the time series. Moreover, this systems have to cope with the
+  measurements not happening at regular time intervals or holes in
+  data and must achieve prognosis, data fusion, and other knowledge
+  discovery techniques.
+
+\bigskip
+{\bf Keywords:} Time series, database management systems, data mining, knowledge discovery in databases, database applications.
 \end{abstract}
+
+% \bigskip
+% \hrule
+% {\scriptsize
+%   %Report. December 23, 2011.\\
+%   \{aleix,teresa,sebas\}@dipse.upc.edu\\
+%   Department of Disseny i Programació de Sistemes
+%   Electrònics from Universitat Politècnica de
+%   Catalunya, EPSEM, 08242 Manresa, ES.  Research supported
+%   by Universitat Politècnica de Catalunya (UPC).  }
+
+
+% \begin{center}
+%   {\footnotesize \cc\bysa}
+%   {\tiny This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License.\\
+%     \LaTeX\ source available at
+%     \url{http://escriny.epsem.upc.edu/projects/rrb/}.
+%   }
+%   \end{center}
+
 
 
 
@@ -61,7 +82,7 @@ database. Some of this concepts are familiar with RRDtool
 operating mode.
 
 
-\todo{estructura article}
+
 The paper is organised as follows. In \autoref{sec:preliminaries} the preliminaries concerning TSMS are summarised. In \autoref{sec:TSMS} the state of TSMS is shown as well as known similar systems that are designed with some TSMS properties. In \autoref{sec:MTSMS} a model for a multiresolution TSMS is presented for the first time. Possible reference implementations of this model are explored in \autoref{sec:implementation}. In sections \ref{sec:conclusion} and \ref{sec:future}  the MTSMS is concluded and future work is proposed. In \autoref{sec:notation} the main nomenclature and notation used in the paper is summarised. 
 
 
