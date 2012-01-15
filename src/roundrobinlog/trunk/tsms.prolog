@@ -1,5 +1,5 @@
 
-consult('rpn.pl').
+consult('rpn.prolog').
 
 
 % mesura m(t,v1,v2,...)
