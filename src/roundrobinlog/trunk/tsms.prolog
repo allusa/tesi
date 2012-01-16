@@ -248,3 +248,6 @@ fold([M|S],Mi,F,R) :-
 % cardinal: fold([m(1,2),m(2,3)],m(0,0),[pop,pop,1,+],Cardinal).
 % suma: fold([m(1,2),m(2,3)],m(0,0),[exc,exc2,+,exc2,+,exc],Suma).
 % màxim valor: fold([m(1,2),m(2,3)],m(-i,-i),[exc,roda,max,exc2,max],Max).
+% Suprem: fold([m(1,2),m(2,0)],m(-i,i),[exc,cul,max,exc2,roda,cul,eq,exc2,if],Sup).
+% Ínfim: fold([m(1,2),m(2,0)],m(+i,i),[exc,cul,min,exc2,roda,cul,eq,exc2,if],Inf).
+
