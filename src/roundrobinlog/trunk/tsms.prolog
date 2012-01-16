@@ -1,6 +1,4 @@
-
-consult('rpn.prolog').
-
+:- ['rpn.prolog'].
 
 % mesura m(t,v1,v2,...)
 % mesura(V,T)
@@ -198,13 +196,33 @@ map([M|S],F,R) :-
 	unio([Mf],Smap,R).
 
 %aplica(M,F,Mf)
-aplica([C1|C],[F1|F],[M1|Mf]) :-
-	rpn(C1,F1,M1),
-	aplica(C,F,Mf).
+empilamesura(m(T,V),P1,R) :-
+	empila(T,P1,P2),
+	reempila(V,P2,R).
+reempila([],P,P) :- !.
+reempila([V1|V],P,R) :-
+	empila(V1,P,P1),
+	reempila(V,P1,R), !.
+reempila(V1,P,R) :-
+	empila(V1,P,R), !.
+	
+aplica(M,F,Mr) :-
+	pila(P),
+	empilamesura(M,P,P1),
+	rpn(F,P1,R),
+	empilamesura(Mr,P,R).
 
 
-
-
+%fold(S,Minicial,F,R)
+fold([],Mi,_,Mi) :- !.
+fold([M|S],Mi,F,R) :-
+	pila(P),
+	empilamesura(Mi,P,P1),
+	empilamesura(M,P1,P2),
+	rpn(F,P2,Pr),
+        empilamesura(Mr,P,Pr),
+	fold(S,Mr,F,R), !.
+	
 
 
 	
@@ -224,3 +242,9 @@ aplica([C1|C],[F1|F],[M1|Mf]) :-
 % uniot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R).
 % uniot([m(1,2),m(5,3),m(6,5),m(10,1)],[m(2,3),m(4,2),m(6,4)],R).
 % fusiot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R).
+% fusiot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R),map(R,[+],R2).
+
+
+% cardinal: fold([m(1,2),m(2,3)],m(0,0),[pop,pop,1,+],Cardinal).
+% suma: fold([m(1,2),m(2,3)],m(0,0),[exc,exc2,+,exc2,+,exc],Suma).
+% màxim valor: fold([m(1,2),m(2,3)],m(-i,-i),[exc,roda,max,exc2,max],Max).
