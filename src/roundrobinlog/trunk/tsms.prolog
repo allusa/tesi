@@ -219,15 +219,29 @@ fold([M|S],Mi,F,R) :-
 	pila(P),
 	empilamesura(Mi,P,P1),
 	empilamesura(M,P1,P2),
-	rpn(F,P2,Pr),
+	otsms(F,Fo),
+	rpn(Fo,P2,Pr),
         empilamesura(Mr,P,Pr),
 	fold(S,Mr,F,R), !.
 	
 
 
-	
+% operadors per rpn definits pel tsms
+otsms([],[]).
+otsms([O|F],R) :-
+	orpn(O,Func),
+	append(Func,F,F2),
+	otsms(F2,R).
+otsms([O|F],[O|R]) :-
+	not( orpn(O,_) ),
+	otsms(F,R).
 
+%orpn(nom,funcioRPN)
+orpn(cardinal,[pop,pop,1,+]).
+orpn(suma,[exc,exc2,+,exc2,+,exc]).
+orpn(ant,[exc,dup,cul,gt,exc,dup,exc2,<<,<<,cul,exc2,>>,>>,lt,*,dup,exc2,exc,<<,if,exc2,exc,<<,if,<<,<<]).	
 
+orpn(mitjana,[suma]).
 
 
 %Exemples
@@ -247,7 +261,11 @@ fold([M|S],Mi,F,R) :-
 
 % cardinal: fold([m(1,2),m(2,3)],m(0,0),[pop,pop,1,+],Cardinal).
 % suma: fold([m(1,2),m(2,3)],m(0,0),[exc,exc2,+,exc2,+,exc],Suma).
-% màxim valor: fold([m(1,2),m(2,3)],m(-i,-i),[exc,roda,max,exc2,max],Max).
-% Suprem: fold([m(1,2),m(2,0)],m(-i,i),[exc,cul,max,exc2,roda,cul,eq,exc2,if],Sup).
-% Ínfim: fold([m(1,2),m(2,0)],m(+i,i),[exc,cul,min,exc2,roda,cul,eq,exc2,if],Inf).
+% màxim valor: fold([m(1,2),m(2,3)],m(-i,-i),[exc,<<,max,exc2,max],Max).
+% Suprem: fold([m(1,2),m(2,0)],m(-i,i),[exc,cul,max,exc2,<<,cul,eq,exc2,if],Sup).
+% Ínfim: fold([m(1,2),m(2,0)],m(+i,i),[exc,cul,min,exc2,<<,cul,eq,exc2,if],Inf).
+% Anterior a m: fold([m(4,50),m(6,70)],m(-i,[i,9,60]),[exc,dup,cul,gt,exc,dup,exc2,<<,<<,cul,exc2,>>,>>,lt,*,dup,exc2,exc,<<,if,exc2,exc,<<,if,<<,<<],Ant).
 
+
+% fold([m(1,2),m(2,3)],m(0,0),[cardinal],Cardinal).
+% fold([m(4,50),m(6,70)],m(-i,[i,9,60]),[ant],Ant).
