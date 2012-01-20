@@ -12,9 +12,6 @@ empila(O,P,[O|P]).
 desempila([_|P],P).
 cim([V|_],V).
 
-cul([V],V).
-cul([_|P],R) :-
-	cul(P,R).
 roda([V],[V]).
 roda([V1|P],[C,V1|Pr]) :-
 	roda(P,[C|Pr]).
@@ -23,6 +20,9 @@ roda([V1|P],[C,V1|Pr]) :-
 
 
 %% línia real ampliada
+infinit(+i).
+infinit(-i).
+
 %A=B
 equals(+i,+i):- !.
 equals(-i,-i):- !.
@@ -40,43 +40,74 @@ less(A,B)  :-
 	number(B),
 	A < B.
 
+
+% B = -A
+negacio(+i,-i).
+negacio(-i,+i).
+negacio(A,B) :-
+	number(A),
+	B is -A.
+
 % C = A+B
-suma(+i,-i,i).
+suma(+i,-i,i). 
 suma(-i,+i,i).
+suma(A,+i,+i) :-
+	A \== -i.	
 suma(+i,B,+i) :- 
-	B \== -i.	
+	B \== -i.
+suma(A,-i,-i) :-
+	A \== +i.	
 suma(-i,B,-i) :- 
 	B \== +i.	
-suma(A,+i,+i) :- 
-	A \== -i.	
-suma(A,-i,-i) :- 
-	A \== +i.
 suma(A,B,C) :-
 	number(A),
 	number(B),
-	C is A+B.	
+	plus(A,B,C).	
 
 % C = A-B
-resta(+i,+i,i).
-resta(-i,-i,i).
-resta(+i,B,+i) :-
-	B \== +i.	
-resta(-i,B,-i) :-
-	B \== -i.
-resta(A,+i,-i) :-
-	A \== +i.	
-resta(A,-i,+i) :-
-	A \== -i.
 resta(A,B,C) :-
-	number(A),
-	number(B),
-	C is A-B.
+	negacio(B,Bn),
+	suma(A,Bn,C).
 
 % C = A*B
+multiplica(A,0,0):- 
+	infinit(A). %s'aplica 0x{+i,-i} = 0 com a teoria de mesura
+multiplica(A,B,A) :-
+	infinit(A),
+	less(0,B).
+multiplica(A,B,C) :-
+	infinit(A),
+	less(B,0),
+	negacio(A,C).
+multiplica(A,B,C) :-
+	not( infinit(A) ),
+	infinit(B),
+	multiplica(B,A,C).
 multiplica(A,B,C) :-
 	number(A),
 	number(B),
 	C is A*B.
+
+% C = A/B
+divideix(0,0,i).  
+% 0/0 indeterminació: es defineix indefinit
+%A/0 no definit http://mathworld.wolfram.com/DivisionbyZero.html. Es podria definir indefinit: divideix(_,0,i).
+divideix(A,B,i) :-
+	infinit(A),
+	infinit(B).
+divideix(A,B,C) :-
+	infinit(A),
+	not( infinit(B) ),
+	multiplica(C,B,A).
+divideix(A,B,0) :-
+	infinit(B),
+	not( infinit(A) ).
+divideix(A,B,C) :-
+	number(A),
+	number(B),
+	%not( B is 0 ),
+	C is A/B.
+
 
 %---------------------------------------
 % operacions
@@ -86,7 +117,7 @@ multiplica(A,B,C) :-
 %% operacions sense indefinits
 
 %indefinit 2 operands
-o2i([eq,lt,gt,le,ge,ne,min,max,+,-]).
+o2i([eq,lt,gt,le,ge,ne,min,max,+,-,*,/]).
 %indefinit 3 operands
 o3i([limit]).
 
@@ -206,12 +237,14 @@ o(limit,[C,_,A|P],[i|P]) :-
 
 
 %% Arithmetics
-o(+,[V1,V2|P],[V|P]) :-
+o(+,[V2,V1|P],[V|P]) :-
 	suma(V1,V2,V).
-o(-,[V1,V2|P],[V|P]) :-
+o(-,[V2,V1|P],[V|P]) :-
 	resta(V1,V2,V).
-o(*,[V1,V2|P],[V|P]) :-
+o(*,[V2,V1|P],[V|P]) :-
 	multiplica(V1,V2,V).
+o(/,[V2,V1|P],[V|P]) :-
+	divideix(V1,V2,V).
 	
 
 % Processing the stack directly

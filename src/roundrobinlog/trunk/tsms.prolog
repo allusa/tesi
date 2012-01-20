@@ -209,7 +209,8 @@ reempila(V1,P,R) :-
 aplica(M,F,Mr) :-
 	pila(P),
 	empilamesura(M,P,P1),
-	rpn(F,P1,R),
+	otsms(F,Fo),
+	rpn(Fo,P1,R),
 	empilamesura(Mr,P,R).
 
 
@@ -237,11 +238,32 @@ otsms([O|F],[O|R]) :-
 	otsms(F,R).
 
 %orpn(nom,funcioRPN)
+%per map
+orpn(temps,[pop,dup]).
+
+%per fold
 orpn(cardinal,[pop,pop,1,+]).
 orpn(suma,[exc,exc2,+,exc2,+,exc]).
 orpn(ant,[exc,dup,cul,gt,exc,dup,exc2,<<,<<,cul,exc2,>>,>>,lt,*,dup,exc2,exc,<<,if,exc2,exc,<<,if,<<,<<]).	
 
-orpn(mitjana,[suma]).
+
+
+
+% Interpoladors
+mitjana(S,Ma) :-
+	fold(S,m(0,0),[suma],Suma),
+	fold(S,m(0,0),[cardinal],Cardinal),
+	map([Suma],[exc,pop,0,exc],S0),
+	map([Cardinal],[exc,pop,0,exc],C0),
+	fusiot(S0,C0,F0),
+	map(F0,[/],Ma).
+
+area(S1,A) :-
+	map(S1,[temps],S2),
+	map(S1,[pop,ant m],S3).
+	
+
+	
 
 
 %Exemples
@@ -256,8 +278,8 @@ orpn(mitjana,[suma]).
 % uniot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R).
 % uniot([m(1,2),m(5,3),m(6,5),m(10,1)],[m(2,3),m(4,2),m(6,4)],R).
 % fusiot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R).
-% fusiot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R),map(R,[+],R2).
 
+% fusiot([m(2,3),m(4,2),m(6,4)],[m(1,2),m(5,3),m(6,5),m(10,1)],R),map(R,[+],R2).
 
 % cardinal: fold([m(1,2),m(2,3)],m(0,0),[pop,pop,1,+],Cardinal).
 % suma: fold([m(1,2),m(2,3)],m(0,0),[exc,exc2,+,exc2,+,exc],Suma).
@@ -269,3 +291,5 @@ orpn(mitjana,[suma]).
 
 % fold([m(1,2),m(2,3)],m(0,0),[cardinal],Cardinal).
 % fold([m(4,50),m(6,70)],m(-i,[i,9,60]),[ant],Ant).
+
+% mitjana([m(1,2),m(2,3)],Ma).
