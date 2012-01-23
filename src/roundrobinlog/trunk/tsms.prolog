@@ -225,6 +225,13 @@ fold([M|S],Mi,F,R) :-
         empilamesura(Mr,P,Pr),
 	fold(S,Mr,F,R), !.
 	
+%foldfold(S1,S2,F,R)
+foldfold(_,[],_,[]).
+foldfold(S1,[Mi|S2],F,R) :-
+	foldfold(S1,S2,F,Rff),
+	fold(S1,Mi,F,Rf),
+	unio(Rff,[Rf],R). %cal que fold retorni una ST
+
 
 
 % operadors per rpn definits pel tsms
@@ -258,10 +265,16 @@ mitjana(S,Ma) :-
 	fusiot(S0,C0,F0),
 	map(F0,[/],Ma).
 
-area(S1,A) :-
-	map(S1,[temps],S2),
-	map(S1,[pop,ant m],S3).
-	
+area(S,T0,Tf,A) :-
+	selecciot(S,T0,Tf,St1),
+	selecciot(S,T0,T0,St2),
+	unio(St1,St2,S1),
+	map(S1,[pop,-i],S2),
+	foldfold(S1,S2,[i,exc2,<<,exc2,i,exc2,ant,pop,exc2,pop],S3),
+	fusiot(S1,S3,S4),
+	map(S4,[cul,exc,-,*],S5),
+	fold(S5,m(0,0),[exc,pop,dup,isinf,exc,0,exc,if,+],M5),
+	map([M5],[Tf,T0,-,/],A).
 
 	
 
@@ -293,3 +306,7 @@ area(S1,A) :-
 % fold([m(4,50),m(6,70)],m(-i,[i,9,60]),[ant],Ant).
 
 % mitjana([m(1,2),m(2,3)],Ma).
+
+% Temps-TempsAnt S1=[m(0,30),m(3,50),m(6,70),m(10,90)],map(S1,[pop,-i],S2),foldfold(S1,S2,[i,exc2,<<,exc2,i,exc2,ant,pop,exc2,pop],TempsAnt).
+
+% Area: S1=[m(1,30),m(3,50),m(6,70),m(10,90)],area(S1,0,9,S2).
