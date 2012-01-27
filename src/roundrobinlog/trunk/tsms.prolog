@@ -254,8 +254,6 @@ orpn(suma,[exc,exc2,+,exc2,+,exc]).
 orpn(ant,[exc,dup,cul,gt,exc,dup,exc2,<<,<<,cul,exc2,>>,>>,lt,*,dup,exc2,exc,<<,if,exc2,exc,<<,if,<<,<<]).	
 
 
-
-
 % Interpoladors
 mitjana(S,Ma) :-
 	fold(S,m(0,0),[suma],Suma),
@@ -276,7 +274,27 @@ area(S,T0,Tf,A) :-
 	fold(S5,m(0,0),[exc,pop,dup,isinf,exc,0,exc,if,+],M5),
 	map([M5],[Tf,T0,-,/],A).
 
-	
+
+
+
+%tsms ([STs i valors], Funcio, ST)
+tsms(P,[],P).	
+tsms(P,[O|F],Pr) :-
+	oms(O,P,P2),
+	tsms(P2,F,Pr).
+tsms(P,[O|F],Pr) :-
+	otsms([O],Oo),
+	rpn(Oo,P,P2),
+	tsms(P2,F,Pr).
+
+
+%per tsms
+oms(unio,[S0,S1|P],[R|P]) :-
+	unio(S1,S0,R).
+oms(selecciot,[Tf,T0,S|P],[R|P]) :-
+	selecciot(S,T0,Tf,R).
+
+
 
 
 %Exemples
@@ -310,3 +328,5 @@ area(S,T0,Tf,A) :-
 % Temps-TempsAnt S1=[m(0,30),m(3,50),m(6,70),m(10,90)],map(S1,[pop,-i],S2),foldfold(S1,S2,[i,exc2,<<,exc2,i,exc2,ant,pop,exc2,pop],TempsAnt).
 
 % Area: S1=[m(1,30),m(3,50),m(6,70),m(10,90)],area(S1,0,9,S2).
+
+% S=[m(1,2),m(3,1),m(10,2),m(11,1)],tsms([9,0,S],[exc,dup,exc2,dup,exc2,cul,exc2,exc,selecciot,>>,selecciot,unio],Sr).
