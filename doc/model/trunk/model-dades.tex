@@ -1,0 +1,161 @@
+
+\section{Data model}
+
+Dos models estructurals.
+
+Hi ha un model pels TSMS que inclou mesura i sèries temporals.
+
+Hi ha un model pels MTSMS que té buffer, discs i mtsdb, els quals inclouen els models del TSMS.
+
+
+\subsection{TSMS data model}
+
+Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
+
+Una mesura és un tuple temps-valor:
+
+* El temps és un conjunt compactificat (tancat) i amb ordre total, el qual pot ser un conjunt finit o infinit. P.ex. els reals extesos $\bar{\mathbb{R}} \in [-\infty,+\infty]$
+
+* El valor és qualsevol objecte, fins i tot una altra relació, el qual té el seu model de dades i les seves operacions. El model de dades ha d'incloure una dada que defineixi el valor indefinit. Per exemple el conjunt dels reals estesos amb l'infinit que defineix el valor indefinit: $\mathbb{R} \cup \{\infty\}$. 
+
+
+Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau 2 a on la capçalera conté els dominis temps i valor. Inclou algunes restriccions més que les relacions:
+
+* Els temps no poden estar repetits
+
+* Els valors han de contenir el mateix tipus d'objecte.
+
+Els temps no repetits indueixen un ordre temporal a les sèries temporals. Tot i així, les relacions, per ser conjunts, conserven la no definció d'un ordre dels elements. 
+
+
+
+\subsubsection{Exemples}
+
+\paragraph{Exemple 1}
+Sèrie temporal $S_1$ on el temps i els valors pertanyen a $\bar{\mathbb{R}}$. Conté la mesura de valor 1 en el temps 5, la mesura de valor 3 en el temps 7 i la mesura de valor 1 en el temps 10. Modelada com a relació, és a dir com a parella capçalera i conjunt de valors certs, s'escriu com 
+$S_1 = ( \{temps,valor\}, \{ \{temps:5,valor:1\}, \{temps:7,valor:3\}, \{temps:10,valor:1\} \} )$.
+
+Degut al format esquemàtic, simplifiquem l'escriptura de les sèries temporals com a conjunt de tuples $(t,v)$ a on $t$ és el temps i $v$ és el valor. Així doncs la sèrie temporal $S$ es pot escriure de manera simplificada com a 
+$S = \{ (5,1), (7,3), (10,1) \}$.
+
+Tal com s'utilitza en les relacions, les sèries temporals es poden visualitzar com a taules. La sèrie temporal $S_1$ es visualitza com a taula a la \autoref{fig:serietemporal:real}.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_1$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    7  & 3 \\
+    10 & 1 \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal amb valors reals}
+  \label{fig:serietemporal:real}
+\end{figure}
+
+
+\paragraph{Exemple 2}
+Sèrie temporal $S_2$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a  $\bar{\mathbb{R}^3}$; és a dir és un vector. Conté el valor (1,2,3) en el temps 5, el valor (3,4,5) en el temps 7 i el valor (1,2,3) en el temps 10.
+
+De manera simplificada s'escriu com 
+$S_2 = \{ (5,(1,2,3)), (7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula a la \autoref{fig:serietemporal:vector}. No obstant, es pot visualitzar de forma més còmode com a $S_2^b = \{ (5,1,2,3), (7,3,4,5), (10,1,2,3) \}$
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & (1,2,3) \\
+    7  & (3,4,5) \\
+    10 & (1,2,3) \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[tp]{|c|c|c|c|}
+   \multicolumn{4}{c}{$S_2^b$} \\ \hline
+    $t$  & $v_1$ & $v_2$ & $v_3$ \\ \hline
+    5  & 1 & 2 & 3 \\
+    7  & 3 & 4 & 5 \\
+    10 & 1 & 2 & 3 \\ \hline
+  \end{tabular}
+
+  \caption{Taula d'una sèrie temporal amb valors vectors}
+  \label{fig:serietemporal:vector}
+\end{figure}
+
+
+\paragraph{Exemple 3}
+Sèrie temporal $S_3$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una sèrie temporal del mateix format que en l'exemple 1. Conté les tuples de $S_1$ com a valors en el temps 1 i 2. 
+
+De manera simplificada s'escriu com
+$S_3 =  \{ (1,\{ (5,1), (7,3), (10,1) \}) , (2,\{ (5,1), (7,3), (10,1) \}) \}$ i es visualitza com a taula a la \autoref{fig:serietemporal:serietemporal}.
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_3$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1 &   
+       \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         5  & 1 \\
+         7  & 3 \\
+         10 & 1 \\ \hline
+       \end{tabular} \\ \hline
+    2 & 
+       \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         5  & 1 \\
+         7  & 3 \\
+         10 & 1 \\ \hline
+       \end{tabular} \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal amb valors sèrie temporal}
+  \label{fig:serietemporal:serietemporal}
+\end{figure}
+
+
+
+
+\paragraph{Exemple 4} RELVAR
+Sèrie temporal $S_4$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una referència a una sèrie temporal. Conté $S_1$ com a valors en el temps 1 i 2. 
+
+De manera simplificada s'escriu com
+$S_4 =  \{ (1,S_1) , (2,S_1) \}$ 
+i es visualitza com a taula a la \autoref{fig:serietemporal:relvar}.
+
+S'aplica el concepte de \emph{relvar} dels SGBDR \parencite{date}.
+Així doncs, cal notar que $S_4$  no és el mateix que $S_3$.
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_4$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1 & $S_1$ \\
+    2 & $S_1$ \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal amb valors \emph{relvar}}
+  \label{fig:serietemporal:relvar}
+\end{figure}
+
+
+
+\subsection{MTSMS data model}
+
+
+
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+
+
+
+
