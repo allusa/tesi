@@ -55,7 +55,7 @@ Tal com s'utilitza en les relacions, les sèries temporals es poden visualitzar 
 
 
 \paragraph{Exemple 2}
-Sèrie temporal $S_2$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a  $\bar{\mathbb{R}^3}$; és a dir és un vector. Conté el valor (1,2,3) en el temps 5, el valor (3,4,5) en el temps 7 i el valor (1,2,3) en el temps 10.
+Sèrie temporal $S_2$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a  $\bar{\mathbb{R}}^3$; és a dir és un vector. Conté el valor (1,2,3) en el temps 5, el valor (3,4,5) en el temps 7 i el valor (1,2,3) en el temps 10.
 
 De manera simplificada s'escriu com 
 $S_2 = \{ (5,(1,2,3)), (7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula a la \autoref{fig:serietemporal:vector}. No obstant, es pot visualitzar de forma més còmode com a $S_2^b = \{ (5,1,2,3), (7,3,4,5), (10,1,2,3) \}$
@@ -118,7 +118,7 @@ $S_3 =  \{ (1,\{ (5,1), (7,3), (10,1) \}) , (2,\{ (5,1), (7,3), (10,1) \}) \}$ i
 
 
 
-\paragraph{Exemple 4} RELVAR
+\paragraph{Exemple 4} 
 Sèrie temporal $S_4$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una referència a una sèrie temporal. Conté $S_1$ com a valors en el temps 1 i 2. 
 
 De manera simplificada s'escriu com
@@ -141,15 +141,40 @@ Així doncs, cal notar que $S_4$  no és el mateix que $S_3$.
 
 
 
+
+
 \subsection{MTSMS data model}
 
+Una MTSDB és una relació de buffers amb discs. 
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M_1$} \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 0 & 5  & 2 & mitjana  \\
+    $S_{B2}$ & $S_{D2}$ & 0 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}
+  \caption{Taula d'una mtsdb independent}
+  \label{fig:mtsdb:independent}
+\end{figure}
 
 
 
 
-
-
-
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M_2$} \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 0 & 5  & 2 & mitjana  \\
+    $S_{D1}$ & $S_{D2}$ & 0 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}
+  \caption{Taula d'una mtsdb en cadena}
+  \label{fig:mtsdb:cadena}
+\end{figure}
 
 
 %%% Local Variables:
