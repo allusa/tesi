@@ -1,0 +1,342 @@
+\chapter{Model d'operacions}
+
+
+
+\section{Model de dades SGST}
+
+
+\subsection{Sèrie temporal}
+
+
+
+Per tal que l'operació d'unió de conjunts sigui vàlida per les sèries
+temporals cal tenir en compte quan dues sèries temporals tenen mesures
+en el mateix instant de temps. En cas d'utilitzar l'operació d'unió de
+conjunts la sèrie temporal resultant no compliria amb la definició
+\ref{def:serie_temporal} ja que contindria mesures amb temps
+repetits. Com a conseqüència, es defineix l'operació d'unió per les
+sèries temporals.
+
+\begin{definition}[unió]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
+  temporals $S_1 \cup S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
+  m_k\}$ que conté totes les mesures de $S_1$ i les mesures de $S_2$
+  no repetides: $S_1 \cup S_2 = \{ m \in S_1 \} \cup \{ m^2 =
+  (v^2,t^2) \in S_2 | \forall m^1 = (v^1,t^1) : t_1 \neq t_2
+  \}$. Segons aquesta definició sempre es compleix que $k \leq k_1 +
+  k_2$.
+
+Nota: la unió de sèries temporals no és commutativa. Per a
+  poder unir dues sèries temporals amb mesures multivaluades cal que
+  totes siguin de la mateixa dimensió.
+\end{definition}
+
+
+
+
+
+
+\section{Model de dades MSGST}
+
+
+
+\subsection{Buffer}
+
+
+Abans de consolidar, però, cal que la sèrie temporal contingui mesures. L'operació \emph{afegeix} permet afegir una mesura a un buffer.
+
+\begin{definition}
+  L'operació \emph{afegeix} afegeix una mesura a la sèrie temporal del buffer:
+  \[
+  \text{afegeix}: \text{Buffer} \times \text{Mesura} \longrightarrow \text{Buffer}
+  \]
+  \[
+   B \times m \longrightarrow B'= B \cup \{m\}
+   \]
+\end{definition}
+
+Cada cop que s'afegeix una mesura a un buffer es pot comprovar si el buffer ja és consolidable mitjançant un predicat que ens retorna un booleà: cert o fals. 
+
+\begin{definition}
+  Un buffer és consolidable quan el temps d'una mesura de la sèrie temporal és més gran que el proper instant de temps de consolidació:
+  \[
+  \text{consolidable?}: \text{Buffer} \longrightarrow \text{Booleà}
+  \]
+  Sigui $B=(S,\tau,\delta,f)$ un buffer i $m=\max(S)$ la mesura màxima, $B$ és consolidable si i només si $T(m) \geq \tau+\delta$
+\end{definition}
+
+
+\subsection{Interpolació}
+\label{sec:model:interpolador}
+
+Sigui $S$ una sèrie temporal i $T_0$ i $T_f$ dos instants de temps, un interpolador $f$ calcula la mesura que resumeix a $S$ en un interval de temps $i=[T_0,T_f]$. 
+\[
+f: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+
+Hi poden haver diferents interpoladors depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns interpoladors per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
+
+
+\begin{definition}[Interpolador mitjana aritmètica]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=[T_0,T_f]$ un interval de temps, l'interpolador mitjana
+  aritmètica (MA) resumeix $S(t)$ amb una mesura que és la mitjana dels
+  valors de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MA: \text{Sèrie temporal} \times \text{interval de temps}
+\longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
+\]
+\end{definition}
+
+\begin{definition}[Interpolador màxim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'interpolador màxim
+  (MAX) resumeix $S(t)$ amb una mesura que és el màxim dels valors
+  de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MAX: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \max_{\forall m \in S'}(V(m))
+\]
+\end{definition}
+
+De manera dual es pot definir l'interpolador mínim (MIN) com el
+que resumeix $S(t)$ amb una mesura que és el mínim dels valors de les
+mesures al conjunt $S(T_0,T_f]$.
+
+
+\begin{definition}[Interpolador últim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'interpolador últim
+  (LAST) resumeix $S(t)$ amb una mesura que és la mesura màxima del
+  conjunt $S(T_0,T_f]$.
+\[
+LAST: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(\max(S(T_0:T_f]),T_f)
+\]
+\end{definition}
+
+
+
+\begin{definition}[Interpolador àrea]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'interpolador àrea
+  (AREA) resumeix $S(t)$ amb una mesura que conserva l'àrea sota la
+  corba de la representació \emph{zero-order hold} cap enrere del
+  conjunt $S(T_0,T_f]$.
+\[
+AREA: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+v' = 
+\frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}
+\]
+per $S(t)$ estar definida a trossos, $v'$ es pot expressar com
+\[
+o=\min(S(T_0:T_f]),
+S'= S(T_0:T_f] - \{o\},
+n=\seg\limits_S \max(S'): %equivalent a n=\min(S(T_f,\infty)) quan existeix S(T_f,\infty)
+\]
+\[
+:v'= \frac{(T(o)-T_0)V(o) 
++( T_f- T(\ant\limits_S n) )V(n) 
++\sum\limits_{\forall m \in S'}( T(m)- T(\ant\limits_S m) )V(m)}
+{T_f-T_0} 
+\]
+
+Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
+\end{definition}
+
+%Compte amb AREA S [t<T_0,T_0] que no està definida en la definició discreta
+
+%Quan una sèrie temporal és regular, l'intepolador mitjana aritmètica i l'interpolador àrea valen el mateix en l'interval $(T_o,n\delta]$.
+
+
+
+
+
+
+\subsection{Consolidació}
+
+Quan un buffer és consolidable, es pot calcular una mesura de consolidació de la sèrie temporal per cada interval de temps consolidable. De manera simplificada, a cada consolidació només es té en compte l'interval que comença al darrer temps de consolidació del buffer. 
+
+Sigui $B=(S,\tau,\delta,f)$ un buffer consolidable, la mesura de consolidació de $B$ en l'interval de temps $i=[\tau,\tau+\delta]$ és $m'=(v,\tau+\delta)$ on $m'=f(S,i)$ i $f$ és un interpolador. L'operació \emph{consolida} permet consolidar la sèrie temporal del buffer calculant-ne la mesura de consolidació.
+
+\begin{definition}
+  L'operació \emph{consolida} calcula la mesura de consolidació i treu
+  les mesures consolidades de la sèrie temporal del buffer, en
+  l'interval de consolidació actual:
+  \[
+  \text{consolida}: \text{Buffer} \longrightarrow \text{Buffer} \times \text{Mesura}
+  \]
+  \[
+  B=(S,\tau,\delta,f) \longrightarrow B' \times m'
+  \]
+  \[
+  B'= (S',\tau+\delta,\delta,f)
+  \]
+  \[
+  S' = S(\tau+\delta,\infty)
+  \]
+  \[
+  m' = f(S,[\tau,\tau+\delta]): f \text{ és un interpolador}
+  \]
+\end{definition}
+
+
+
+
+
+
+\subsection{Disc}
+
+L'operació \emph{afegeix} permet afegir una mesura a un disc, controlant-ne el cardinal màxim.
+
+\begin{definition}
+  L'operació \emph{afegeix} afegeix una mesura a la sèrie temporal del disc:
+  \[
+  \text{afegeix}: \text{Disc} \times \text{Mesura} \longrightarrow \text{Disc}
+  \]
+  \[
+  D=(S,k) \times m \longrightarrow D'= (S',k)
+  \]
+  \[
+  S' =  
+  \begin{cases}
+      S\cup\{m\} &\text{si }  |S|<k\\
+      (S-\{\min(S)\}) \cup \{m\} 
+    \end{cases}  \
+  \]
+\end{definition}
+
+
+
+
+
+\subsection{Disc resolució}
+
+
+Per altra banda, les operacions dels buffers i dels discs estan relacionades amb les operacions dels discs Round Robin. 
+
+L'operació \emph{afegeix} permet afegir una mesura a un disc Round Robin.
+
+\begin{definition}
+  L'operació \emph{afegeix} afegeix una mesura al buffer del disc Round Robin:
+  \[
+  \text{afegir}: \text{Disc Round Robin} \times \text{Mesura} \longrightarrow \text{Disc Round Robin}
+  \]
+  \[
+  R=(B,D) \times m \longrightarrow R'= (B',D)
+  \]
+  \[
+  B'= B \text{ afegeix } m
+  \]
+\end{definition}
+
+Cada cop que s'afegeix una mesura a un disc Round Robin es pot comprovar si ja és consolidable. 
+
+\begin{definition}
+  Un disc Round Robin és consolidable quan el seu buffer és consolidable:
+  \[
+  \text{consolidable?}: \text{Disc Round Robin} \longrightarrow \text{Booleà}
+  \]
+  Sigui $R=(B,D)$ un disc Round Robin, $R$ és consolidable si i només
+  si $B$ és consolidable.
+\end{definition}
+
+
+Quan un disc Round Robin és consolidable, es pot consolidar amb l'operació \emph{consolida}. 
+
+\begin{definition}
+  L'operació \emph{consolida} calcula una  mesura de consolidació del buffer, en
+  l'interval de consolidació actual, i la desa al disc. 
+  \[
+  \text{consolida}: \text{Disc Round Robin} \longrightarrow \text{Disc Round Robin}
+  \]
+  \[
+  R=(B,D) \longrightarrow R'= (B',D')
+  \]
+  \[
+  B' \times m'= \text{ consolida } B 
+  \]
+  \[
+  D'= D \text{ afegeix } m'
+  \]
+\end{definition}
+
+
+
+
+
+\subsection{Base de dades multiresolució}
+
+
+
+With reference to the operators, the add and consolidate in a multiresolution database are applied to every resolution disc it contains.
+
+
+\begin{definition}
+  Operator \emph{add} adds a measure to every resolution disc:
+  \[
+  \text{add}: \text{multiresolution database} \times \text{Measure}
+  \longrightarrow \text{multiresolution database}
+  \]
+  \[
+  M=\{R_0,\dotsc,R_d\} \times m \mapsto M' 
+  \]
+  \[  
+  M'= \{ \forall R_i\in M: R_i \text{ add } m \}
+  \]
+\end{definition}
+
+
+\begin{definition}
+  Operator \emph{consolidate} consolidates the resolution discs that
+  are ready to consolidate.
+  \[
+  \text{consolidate}: \text{multiresolution database} \longrightarrow
+  \text{multiresolution database}
+  \]
+  \[
+  M=\{R_0,\dotsc,R_d\} \mapsto M'
+  \]
+  \[
+  M'= \big\{
+  \forall R_i\in M: 
+  \begin{cases}
+    \text{ consolidate } R_i & \text{if } R_i \text{ ready to consolidate} \\
+    R_i & \text{else }
+  \end{cases}\big\}
+  \]
+\end{definition}
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
