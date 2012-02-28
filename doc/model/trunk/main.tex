@@ -2,6 +2,7 @@
 % document principal
 %--------------------
 % cal compilar amb `pdflatex -shell-escape main.tex`
+% makeglossaries main
 %--------------------
 \documentclass[paper=a4,fontsize=12pt,twoside,parskip=half,BCOR12mm]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
@@ -23,6 +24,9 @@
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
 
+\usepackage{longtable}
+\usepackage{glossaries}
+
 \usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
     pdftitle={Model dels SGBD per sèries temporals},
     pdfauthor={Aleix Llusà Serra},
@@ -31,6 +35,8 @@
     pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals (SGST); model SGST multiresolució},
     pdflang=ca,
     ]{hyperref}
+
+\input{glossari.tex}
 
 \def\figureautorefname{figura}
 
@@ -55,7 +61,7 @@
 
 %------------- Índexs ------------
 %\listoftodos
-%\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
+\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
 %\addtocontents{toc}{\protect\enlargethispage{1cm}}
 %\listoffigures
 %\listoftables
@@ -75,12 +81,18 @@
 \include{model}
 
 
-
 %------- Annexos ------
 \appendix
 
-%\input{notation}
+\include{notacio}
 
+
+%------- Glossari ------
+\cleardoublepage
+\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
+%\pdfbookmark{\glossaryname}{bookmark:glossari}
+\glsaddall
+\printglossaries
 
 %------- Bibliografia ------
 \cleardoublepage

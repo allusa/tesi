@@ -3,16 +3,14 @@
 
 Dos models estructurals:
 
-* Hi ha un model pels TSMS que inclou mesura i sèries temporals.
+* Hi ha un model pels SGST (TSMS) que inclou mesura i sèries temporals.
 
-* Hi ha un model pels MTSMS que té buffer, discs i mtsdb, els quals inclouen el model de sèrie temporal del TSMS.
+* Hi ha un model pels SGSTM (MTSMS) que té buffer, discs i mtsdb, els quals inclouen el model de sèrie temporal del SGST.
 
 
 \section{Model de dades SGST}
 
-Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
-
-Una mesura és un tuple temps-valor:
+Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures. Una mesura és un tuple temps-valor.
 
 
 
@@ -21,7 +19,7 @@ Una mesura és un tuple temps-valor:
 \subsection{Temps}
 
 Utilitzem el temps com un valor que ens permet ordenar les mesures.  
-A tal efecte, el conjunt de temps es defineix com un conjunt compactificat (tancat) i amb ordre total. No obstant, pot ser tant un conjunt finit com infinit. 
+A tal efecte, el conjunt de temps es defineix com un conjunt tancat (compactificat) i amb ordre total. No obstant, pot ser tant un conjunt finit com infinit. 
 
 Per facilitar la comprensió, en el document utilitzarem el conjunt de reals com a conjunt pels temps. Concretament, per a complir que sigui un conjunt tancat usarem el conjunt estès de nombres reals $\bar{\mathbb{R}} \in \mathbb{R} \cup \{+\infty,-\infty\}$, \parencite{wiki:extendedreal,cantrell:extendedreal}, també anomenat recta real acabada. 
 
@@ -36,7 +34,7 @@ per exemple en la teoria de la mesura habitualment es defineix com $0 \times
 \infty = 0$, \cite{wiki:extendedreal}.
 
 
-El conjunt dels reals és un espai mètric ja que té definida una funció distància (o mètrica), com per exemple la distància euclidiana. Com a conseqüència, ens permet distingir entre instants de temps (els elements del conjunt) i durades (la mètrica). Observant els instants de temps com a punts en la recta real i les durades com a segments en la recta real, es pot definir el temps com a sistema de coordenades especificant un instant com a marc de referència, \parencite{iep:time-supplement,wiki:coordinate}. 
+El conjunt dels reals és un espai mètric ja que té definida una funció distància (o mètrica), com per exemple la distància euclidiana. Com a conseqüència, ens permet distingir entre instants de temps (els elements del conjunt) i durades (la mètrica). Observant els instants de temps com a punts en la recta real i les durades com a segments de la recta real, es pot definir el temps com a sistema de coordenades especificant un instant com a marc de referència, \parencite{iep:time-supplement,wiki:coordinate}. 
 
 
 \begin{definition}[Temps]
@@ -56,42 +54,30 @@ El conjunt dels reals és un espai mètric ja que té definida una funció dist�
 
 \end{definition}
 
-En resum, els instants de temps es poden veure com una seqüència de valors reals que indiquen esdeveniments amb ordre clarament definit i entre dos instants de temps sempre hi ha una durada. Tant els instants de temps com les durades s'expressen amb un real que té unitats de temps, les quals són 'segons' en sistema internacional. 
+En resum, els instants de temps es poden veure com una seqüència de valors reals que indiquen esdeveniments amb ordre clarament definit i entre dos instants de temps sempre hi ha una durada. Tant els instants de temps com les durades s'expressen amb un real que té unitats de temps. Aquestes unitats són 'segons' en sistema internacional. 
 
 
 
 \subsubsection{Calendari}
-\textcite{dreyer94} situen els calendaris i les seves operacions com a essencials en els SGST. Tanmateix, no creiem que sigui necessari modelar les dates de calendari en el model de temps. El temps és la línia contínua de temps, el calendari són nom especials a certs punts de la línia de temps. Només cal una eina que sigui capaç de convertir de noms a instants de temps. 
+\textcite{dreyer94} situen els calendaris i les seves operacions com a essencials en els SGST. Tanmateix, pot no ser necessari modelar les dates de calendari en el model de temps. El temps és la línia contínua de temps, el calendari són nom especials a certs punts de la línia de temps. Només cal una eina que sigui capaç de convertir de noms a instants de temps. 
 
 Per una banda, no afecta al model SGST que els calendaris siguin més o menys complicats, en aquest cas només es veuen complicades les funcions de conversió de temps a calendari i viceversa.
-Per altra banda, tampoc afecta que els calendaris siguin ambigus (p.ex.\ dos noms per al mateix instant o instants sense nom) o que continguin propietats impredictibles (p.ex.\ cas dels segons addicionals en UTC) ja que la solució a aquests problemes correspon a la bona definició dels sistemes de calendari.
+Per altra banda, tampoc afecta que els calendaris siguin ambigus (p.ex.\ dos noms per al mateix instant o instants sense nom) o que continguin propietats impredictibles (p.ex.\ cas dels segons addicionals en UTC) ja que la responsabilitat d'aquests problemes correspon a la bona definició dels sistemes de calendari.
 
 
 \subsection{Valor}
 
+El valor és qualsevol objecte el qual té el seu model de dades i les seves operacions. Els valors poden ser atòmics, com reals o cadenes, o bé estructures de dades, com vectors, llistes o fins i tot una altra relació.
 
-* El valor és qualsevol objecte, fins i tot una altra relació, el qual té el seu model de dades i les seves operacions. El model de dades ha d'incloure una dada que defineixi el valor indefinit. Per exemple el conjunt dels reals estesos amb l'infinit que defineix el valor indefinit: $\mathbb{R} \cup \{\infty\}$. 
-
-
-Els valors poden ser atomics (escalars com enter o strings) o bé estructures de dades (com vectors o llistes).
+El model de dades dels valors ha d'incloure una dada que defineixi el valor indefinit. Més endavant a la definició~\ref{def:model:mesura_valor_indefinit} es detallen les propietats de les mesures amb valor indefinit. Seguint l'exemple amb els reals, el valor indefinit es defineix amb el valor impropi infinit del conjunt dels reals estès projectivament, \parencite{cantrell:projectivelyextendedreal}, $\mathbb{R}^*\in\mathbb{R} \cup \{\infty\}$.  En aquest cas el valor és un escalar però fàcilment es pot estendre el concepte a valors multivaluats ${\mathbb{R}^*}^n$ que representin una co\l.lecció de valors mesurats en el mateix instant de temps, tal i com fa per exemple \textcite{assfalg08:thesis}. 
 
 
-En la definició~\ref{def:model:mesura}, el valor d'una mesura és un
-escalar. Això no obstant, és fàcil estendre el concepte a mesures
-multivaluades, que representen una co\l.lecció de valors
-mesurats en el mateix instant de temps, tal i com es fa per exemple a
-A\ss falg, \cite{assfalg08:thesis}.
-
-\begin{definition}[Mesura multivaluada]
-  Definim \emph{mesura} com el tuple $(v,t)$, en el que
-  $v\in\bar{\mathbb{R}}^n$ és el valor de la mesura i $t \in
-  \mathbb{R}$ és l'instant de temps en que s'ha pres aquesta mesura.
-\end{definition}
 
 
 
 \subsection{Mesura}\label{sec:model:mesura} 
 
+Una mesura és una parella de temps i valor.
 
 \begin{definition}[Mesura]
   \label{def:model:mesura}
@@ -107,24 +93,21 @@ $T(m)$ per referir-nos a $t$.
 Donades dues mesures és fàcil establir la relació d'ordre induïda pel
 temps.
 
-\begin{definition}
+\begin{definition}[Relació d'ordre]
   \label{def:model:mesura-relacio-ordre}
   Sigui $m=(t_m,v_m)$ i $n=(t_n,v_n)$. Direm que $m\geq n$ si i solament
   si $t_m\geq t_n$.
 \end{definition}
 
 
-\todo{repassar coherència amb apartats anteriors}
-En la definició~\ref{def:model:mesura} de mesura i la
-definició~\ref{def:model:temps} de temps s'ha utilitzat el conjunt estès de
-nombres reals $\bar{\mathbb{R}} \in \mathbb{R} \cup
-\{+\infty,-\infty\}$, el qual a vegades també es denota en notació
-d'interval com $\bar{\mathbb{R}} \in [-\infty,+\infty]$,
-\cite{cantrell:extendedreal}. Aquesta extensió amb l'element impropi
+En les definicions de temps i valor s'han estès els conjunts amb valors impropis, concretament s'ha exemplificat amb el conjunt estès de
+nombres reals afí $\bar{\mathbb{R}} \in \mathbb{R} \cup
+\{+\infty,-\infty\}$ i amb el projectiu $\mathbb{R}^*\in\mathbb{R} \cup \{\infty\}$, \parencite{cantrell:extendedreal,cantrell:projectivelyextendedreal}. Aquesta extensió amb l'element impropi
 infinit ($\infty$) dóna com a resultat unes mesures impròpies que
 anomenarem mesura de valor indefinit i mesura indefinida.
 
 \begin{definition}[Mesura de valor indefinit]
+  \label{def:model:mesura_valor_indefinit}
   Definim \emph{mesura de valor indefinit} com el tuple $(t,v)$, en el
   que el valor és $v=\infty$ i l'instant de temps és
   $t\in\bar{\mathbb{R}}$.
@@ -133,11 +116,11 @@ anomenarem mesura de valor indefinit i mesura indefinida.
 \begin{definition}[Mesura indefinida]
   \label{def:model:mesura_indefinida}
   Definim \emph{mesura indefinida} com el tuple $(t,v)$, en el que el
-  valor és $v\in\bar{\mathbb{R}}$ i l'instant de temps és
+  valor és $v\in\mathbb{R}^*$ i l'instant de temps és
   $t\in\{+\infty,-\infty\}$.
 \end{definition}
 
-Així doncs, sigui $m$ una mesura, es podrà notar la mesura de valor indefinit com  $m=(t,\infty)$ i les mesures indefinides com $m=(+\infty,v)$ per la positiva  i $m=(-\infty,v)$ per la negativa, les quals normalment s'anotaran també amb valor indefinit: $m=(+\infty,\infty)$ i $m=(-\infty,\infty,)$ respectivament.
+Així doncs, sigui $m$ una mesura, es podrà notar la mesura de valor indefinit com  $m=(t,\infty)$ i les mesures indefinides com $m=(+\infty,v)$ per la positiva  i $m=(-\infty,v)$ per la negativa, les quals normalment s'anotaran també amb valor indefinit: $m=(+\infty,\infty)$ i $m=(-\infty,\infty)$ respectivament.
 
 
 Les mesures de valor indefinit es podran utilitzar en aquells casos en els que el valor de la mesura és desconegut. Els valors desconeguts  són aquells valors que no existeixen (es desconeixen, \emph{missing data} ) o que s'ignoren (es descarten, \emph{censoring} o \emph{truncation}). Els valors que no existeixen prenen el valor desconegut en el moment de la mesura, en canvi els valors descartats són marcats com a desconeguts després d'un processament de les dades. 
@@ -150,8 +133,7 @@ Nota: en alguns sistemes es distingeix entre valors infinits ($\infty$) i valors
 \label{sec:model:serietemporal}
 
 Les sèries temporals són seqüències de mesures ordenades en el temps. 
-Tradicionalment s'anomenen sèries temporals tot i que també s'anomenen seqüències temporals, per exemple al capítol 2 de Last,~\cite{last}.
-
+Tradicionalment s'anomenen sèries temporals tot i que també s'anomenen seqüències temporals, per exemple a \cite{last:hetland}.
 
 \begin{definition}[Sèrie temporal]
   \label{def:serie_temporal}
@@ -160,32 +142,36 @@ Tradicionalment s'anomenen sèries temporals tot i que també s'anomenen seqüè
   $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$.
 \end{definition}
 
+Per ser un conjunt, les sèries temporals tenen mesura de cardinalitat.
+\begin{definition}[Cardinal]
 Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, definim el nombre de
 mesures que conté la sèrie temporal com el cardinal del conjunt
 $|S|$. Una sèrie temporal sense mesures és la sèrie temporal buida $S=
 \emptyset$, és a dir que no té cap element $|S|=0$.
+\end{definition}
 
 La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
 sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
-temporal s'ha considerat finita, quan la sèrie temporal no és
-buida això comporta l'existència d'un màxim i d'un mínim.  Si $S$ és
-una sèrie temporal, $\max(S)$ i $\min(S)$ són respectivament la mesura
-màxima i mínima d'$S$.
+temporal s'ha considerat finita i sense elements repetits, quan la
+sèrie temporal no és buida això comporta l'existència d'un màxim i
+d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
+respectivament la mesura màxima i mínima d'$S$.
 
-\begin{definition}
+\begin{definition}[Màxim i mínim]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si
-  $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el mínim de
-  la sèrie temporal si $\forall m \in S: n \leq m$.
+  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
+  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
+  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
+  m$.
 \end{definition}
 
 El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
-és buida $S= \emptyset$. En
+és buida: $S= \emptyset$. En
 canvi, el suprem i l'ínfim estan definits per qualsevol
 sèrie temporal tal com passa amb el conjunt estès de nombres reals,
 \cite{cantrell:extendedreal}.  
 
-\begin{definition}
+\begin{definition}[Suprem i ínfim]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
   mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
   $n=\max(S)$ en cas que el màxim estigui definit o
@@ -193,35 +179,34 @@ sèrie temporal tal com passa amb el conjunt estès de nombres reals,
   l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
   estigui definit o $n=(+\infty,\infty)$ en cas contrari.
 \end{definition}
-
 Quan la sèrie temporal no és buida, per
 ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
 i un mínim i per tant es corresponen amb el suprem i l'ínfim
 respectivament.
 
 
-Atesa la relació d'ordre induïda pel temps en una sèrie temporal és
-possible definir el concepte d'interval sobre la seqüència, semblant a
-com es fa als capítols 1 i 2 de Last, \cite{last}.
+Atesa la relació d'ordre induïda pel temps en una sèrie temporal
+(def.\ \ref{def:model:mesura-relacio-ordre}) és possible definir el
+concepte d'interval sobre la seqüència, semblant a com es fa a \cite{last:keogh,last:hetland}.
 
-\begin{definition}
-  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem la
-  subsèrie $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
+\begin{definition}[Interval]
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
+  $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
   | r<T(m)\leq t\}$, a on $r$ i $t$ són dos instants de temps.
 
   També es defineix la subsèrie $S[-\infty,t)\subseteq S$ com la sèrie
   temporal $S[-\infty,t) = \{m\in S | T(\inf(S))\leq T(m) < t\}$.
-%$S(r,\infty) = \{m\in S | r<T(m)\leq T(\sup(S))\}$. 
 \end{definition}
 S'observa que la subsèrie $S(r,+\infty]\subseteq S$ és
 equivalent a la sèrie temporal $S(r,+\infty] \equiv S(r,T(\sup(S))]$ i
-anàlogament $S(-\infty,t] \equiv S(T(\inf(S)),t]$.  
+anàlogament $S(-\infty,t] \equiv S(T(\inf(S)),t]$. També s'observa que les subsèries $S(t,t]\subseteq S$ i $S[t,t)\subseteq S$ són equivalents a la sèrie temporal buida $S(t,t] \equiv S[t,t) \equiv \emptyset$ ja que per ser els temps d'ordre total $\nexists T(m): t < T(m) \leq t$ o $\nexists T(m): t \leq T(m) < t$, respectivament. 
+%Finalment, s'observa que la subsèrie $S(-\infty,+\infty]\subseteq S$ només és equivalent a la sèrie temporal original quan aquesta no conté la mesura indefinida negativa $S(-\infty,+\infty]\equiv S: (-\infty,v)\notin S$
  
-Atesa la relació d'ordre induïda pel temps en una sèrie temporal es
+També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
 defineix el concepte de mesura següent i mesura anterior en una
 seqüència.
 
-\begin{definition}
+\begin{definition}[Successor i predecessor]
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
   mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
   com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
@@ -238,7 +223,7 @@ S)=(+\infty,\infty)$ i $\ant\limits_S(\inf S)=(-\infty,\infty)$.
 
 De la definició anterior es dedueix que donada una sèrie temporal $S$
 que no conté mesures indefinides i donada la mesura indefinida
-$o=(+\infty,-\infty)$, el predecessor de $o$ sempre és el suprem de la
+$o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
 sèrie temporal $\ant\limits_S( (+\infty,\infty) ) = \sup(S): \forall
 m\in S: T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
 \emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
@@ -258,7 +243,7 @@ T(m)\in\mathbb{R}$.
 
 Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
 
-Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau 2\todo{consultar a Date} a on la capçalera conté els dominis temps i valor. Inclou algunes restriccions més que les relacions:
+Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau 2\todo{consultar a Date}  a on la capçalera conté els dominis temps i valor. Inclou algunes restriccions més que les relacions:
 
 * Els temps no poden estar repetits
 
