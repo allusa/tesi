@@ -1,5 +1,7 @@
 
-\chapter{Model de dades}
+\chapter{Model estructural de dades}
+
+En aquest capítol es defineixen els objectes que ens permeten modelar l'estructura de les dades.
 
 Dos models estructurals:
 
@@ -67,7 +69,7 @@ Per altra banda, tampoc afecta que els calendaris siguin ambigus (p.ex.\ dos nom
 
 \subsection{Valor}
 
-El valor és qualsevol objecte el qual té el seu model de dades i les seves operacions. Els valors poden ser atòmics, com reals o cadenes, o bé estructures de dades, com vectors, llistes o fins i tot una altra relació.
+El valor és qualsevol objecte que constitueixi un tipus de dades; és a dir, un objecte que defineix per una banda l'estructura i el conjunt de valors que pot prendre i per altra banda les operacions que s'hi poden aplicar. Els valors poden ser atòmics, com reals o cadenes, o bé estructures de dades, com vectors, llistes o fins i tot una altra relació.
 
 El model de dades dels valors ha d'incloure una dada que defineixi el valor indefinit. Més endavant a la definició~\ref{def:model:mesura_valor_indefinit} es detallen les propietats de les mesures amb valor indefinit. Seguint l'exemple amb els reals, el valor indefinit es defineix amb el valor impropi infinit del conjunt dels reals estès projectivament, \parencite{cantrell:projectivelyextendedreal}, $\mathbb{R}^*\in\mathbb{R} \cup \{\infty\}$.  En aquest cas el valor és un escalar però fàcilment es pot estendre el concepte a valors multivaluats ${\mathbb{R}^*}^n$ que representin una co\l.lecció de valors mesurats en el mateix instant de temps, tal i com fa per exemple \textcite{assfalg08:thesis}. 
 
@@ -243,7 +245,7 @@ T(m)\in\mathbb{R}$.
 
 Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
 
-Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau 2\todo{consultar a Date}  a on la capçalera conté els dominis temps i valor. Inclou algunes restriccions més que les relacions:
+Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau dos  a on la capçalera conté els atributs temps i valor, ambdós amb els dominis de temps i valor ja vistos com per exemple el tipus de dades 'reals estesos'. Inclou algunes restriccions més que les relacions:
 
 * Els temps no poden estar repetits
 
@@ -350,7 +352,7 @@ De manera simplificada s'escriu com
 $S_4 =  \{ (1,S_1) , (2,S_1) \}$ 
 i es visualitza com a taula a la \autoref{fig:model:serietemporal:relvar}.
 
-S'aplica el concepte de \emph{relvar} dels SGBDR \parencite{date}.
+S'aplica el concepte de variable relació (\emph{relvar}) dels SGBDR \parencite[sec.\ 3.3]{date}.
 Així doncs, cal notar que $S_4$  no és el mateix que $S_3$.
 \begin{figure}[tp]
   \centering
@@ -368,7 +370,7 @@ Així doncs, cal notar que $S_4$  no és el mateix que $S_3$.
 
 
 
-\subsection{Model de dades SGSTM}
+\section{Model de dades SGSTM}
 
 Una MTSDB és una relació de buffers amb discs. 
 
