@@ -25,7 +25,6 @@
 \DeclareMathOperator*{\ant}{ant}
 
 \usepackage{longtable}
-\usepackage{glossaries}
 
 \usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
     pdftitle={Model dels SGBD per sèries temporals},
@@ -36,7 +35,21 @@
     pdflang=ca,
     ]{hyperref}
 
+
+\usepackage[
+          acronym,
+          %nonumberlist,
+          %toc,
+          section,
+          numberedsection=autolabel
+          ]{glossaries}
+%\renewcommand*{\glspostdescription}{}%anul·la el punt final
+\renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
+%Índex d'abreviacions?? si conté abreviatures o símbols
+% \short<type>name,
 \input{glossari.tex}
+\loadglsentries[notation]{notacio.tex}
+
 
 \def\figureautorefname{figura}
 
@@ -84,16 +97,15 @@
 %------- Annexos ------
 \appendix
 
-\include{notacio}
-
-
 %------- Glossari ------
 \cleardoublepage
-\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
+%\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
 %\pdfbookmark{\glossaryname}{bookmark:glossari}
+\chapter{Nomenclatura i abreviacions}
 \glsaddall
-\printglossaries
-
+\printglossary
+\printglossary[type=\acronymtype]
+\printglossary[type=notation,nonumberlist,style=estil-notation]
 %------- Bibliografia ------
 \cleardoublepage
 %\phantomsection\addcontentsline{toc}{chapter}{\bibname}

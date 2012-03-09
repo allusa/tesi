@@ -1,17 +1,83 @@
+\newglossary{notation}{not}{ntn}{Notació}
+\newglossarystyle{estil-notation}{%
+  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
+  \renewenvironment{theglossary}
+  {\begin{longtable}{ll}
+      % \caption{Notació dels SGSTM \label{tab:sgstm-simbols}}
+      % \endfirsthead
+      % \caption[]{Notació dels SGSTM (continuació)}
+      % \endhead
+          % \endfoot
+          % \endlastfoot
+    }{\end{longtable}}
+  \renewcommand*{\glossarysubentryfield}[6]{%
+    \glstarget{##2}{##3}% the entry name
+    &
+    % \space (##4)% the symbol in brackets
+    \space ##4% the description
+    % \space [##6]% the number list in square brackets
+    \\
+  }%
+  \renewcommand*{\glossaryentryfield}[5]{%
+    \\\pagebreak[3]\hline
+    \glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
+    \hline
+  }
+}
+
+
+\renewcommand{\seename}{vegeu}
+\renewcommand{\entryname}{Notació}
+\renewcommand{\descriptionname}{Descripció}
+
 \makeglossaries
+
+
+%\renewcommand{\glossarypreamble}{Text com a préambul}
+
+
+
+%TERMES
+
 
 %\newglossaryentry{DBMS}{ description = {Data Base Management System} }
 
+\newglossaryentry{SGBD-model}{ description = {Un model és}, name={Model de SGBD} }
+
+\newglossaryentry{SBDR-cap}{ description = {La capçalera d'un SGBDR}, name={Capçalera}, parent={SGBD-model} }
+
+
+\newglossaryentry{ohm}{name=ohm,symbol={\ensuremath{\Omega}},
+description=unit of electrical resistance}
+
+
+\newglossaryentry{relationships}{
+description=relationships are semantic. relationships are entities.}
+
+
+%ABREVIACIONS (abreviatures,sigles,símbols)
+
+
+%ABREVIATURES
+
+
+
+%SIGLES
 
 
 %català
-\newacronym{SGBD}{SGBD}{Sistema de gestió de base de dades, (\emph{DBMS})}
+\newglossaryentry{SGBD}{type=\acronymtype, name={SGBD}, description={Sistema de gestió de base de dades (\emph{Data Base Management System})}, text={SGBD}, first={Sistema de gestió de base de dades (SGBD)}, plural={SGBD}, firstplural={Sistemes de gestió de bases de dades (SGBD)}}
+
+%\newglossaryentry{SGBDR}{type=\acronymtype, name={SGBD}, description={Sistema de gestió de base de dades relacional(\emph{Relational Data Base Management System})}, text={SGBDR}, first={Sistema de gestió de base de dades (SGBD)}, plural={SGBD}, firstplural={Sistemes de gestió de bases de dades (SGBD)}}
+
+\newacronym[first={Sistema de gestió de base de dades relacional (SGBDR)}]{SGBDR}{SGBDR}{Sistema de gestió de base de dades relacional (\emph{Relational Data Base Management System})}
 
 
 %anglès
-\newacronym{DBMS}{DBMS}{Data Base Management System}
+\newacronym[see=SGBD]{DBMS}{DBMS}{\nopostdesc}
+\newacronym[see=SGBDR]{RDBMS}{RDBMS}{\nopostdesc}
+
 \newacronym{MTSMS}{MTSMS}{Multiresolution Time Series Data Base management system}
-\newacronym{RDBMS}{RDBMS}{Relational Data Base Management System}
 \newacronym{RRDtool}{RRDtool}{Round Robin Database management system \parencite{rrdtool}}
 \newacronym{SCADA}{SCADA}{Supervisory Control And Data Acquisition}
 \newacronym{TSDB}{TSDB}{Time Series Data Base}
@@ -21,8 +87,14 @@
 
 
 
+%SÍMBOLS
 
 
-%%% Local Variables:
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
 %%% TeX-master: "main"
-%%% End:
+%%% End: 
