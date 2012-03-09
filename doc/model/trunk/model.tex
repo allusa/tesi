@@ -223,114 +223,9 @@ En resum, a partir del model de dades Round Robin descrit en aquest capítol per
 
 \section{Consultes}
 
-\subsection{Selecció temporal d'una sèrie temporal}
-
-Sigui $S$ una sèrie temporal i $i=[t_0,t_f]$ un interval de temps,
-per una banda s'ha definit l'interval sobre la seqüència d'una sèrie temporal $S(t_0,t_f]$  i per altra banda s'ha definit la representació contínua $r$ d'una sèrie temporal $S(t)$. Per seleccionar un interval temporal cal tenir en compte tant l'interval sobre la seqüència com la representació contínua; aquesta selecció temporal s'anota com selecció de $S$ en $i$ amb representació $r$ o bé $S[t_o,t_f]^r$. 
-
-\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
-  $r$]
-  \[
-  \text{selecció}: \text{Sèrie Temporal} \times \text{interval de
-    temps} \times \text{representació} \longrightarrow \text{Sèrie
-    Temporal}
-  \]
-  \[
-  S = \{m_0 , \ldots , m_k\}  \times i = [t_0,t_f] \times r \longrightarrow S'
-  \]
-  \[
-  \forall  t \in i: S' = S(t)^r 
-  \] 
-\end{definition}
-
-A continuació s'exemplifica utilitzant la representació \emph{zoh} enrere.
-
-
-\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
-  \emph{zohe}]
-  Sigui $S$ una sèrie temporal, $i=[t_0,t_f]$ un interval de temps i
-  \emph{zohe} la representació $S(t)$ amb \emph{zero-order-hold} cap
-  enrere, es defineix la subsèrie $S[t_0,t_f]^{\text{zohe}}\subseteq
-  S$ com la sèrie temporal 
-  \[
-  S[t_0,t_f]^{\text{zohe}} = (S \cup \{m\})(t_0,t_f] : m=(v,t_f) \in S:
-  \]
-  \[
-  v=  V(\inf(S-S[-\infty,t_f)))
-  \]
-  % $S-S[-\infty,t_f)$ seria equivalent a $S[t_f,+\infty]$
-\end{definition}
-
-Observeu que, sigui $t$ un instant de temps, la selecció de $S$ en $[t,t]$ és equivalent a la representació contínua $S(t)$. 
 
 
 
-\subsection{Selecció de la resolució d'una sèrie temporal}
-
-La selecció de la resolució d'una sèrie temporal permet canviar, en el
-context d'una representació, la resolució a una de marcada per un
-conjunt d'instants de temps. A diferència d'un buffer, la selecció de
-resolució no permet aplicar interpoladors ni obliga a que la sèrie
-temporal resultant sigui regular.
-
-Sigui $S$ una sèrie temporal, $i= \{t_0,t_1,\dotsc,t_n\}$ un conjunt
-d'instants de temps i la representació contínua $r$ de la sèrie
-temporal $S(t)$, la selecció de resolució s'anota com resolució de $S$
-en $i$ amb representació $r$ o bé $S[i]^r$.
-
-\begin{definition}[Selecció de la resolució de $S$ en $i$ amb representació
-  $r$]
-  \[
-  \text{resolució}: \text{Sèrie Temporal} \times \text{instants de
-    temps} \times \text{representació} \longrightarrow \text{Sèrie
-    Temporal}
-  \]
-  \[
-  S = \{m_0 , \ldots , m_k\} \times i = \{t_0,t_1,\dotsc,t_n\} \times r
-  \longrightarrow S'
-  \]
-  \[
-  t_0 < t_1 < \dotsb < t_n:
-  \]
-  \[
-  S' = S[-\infty,t_0]^r \cup  S[t_0,t_1]^r \cup \dotsb \cup S[t_{n-1},t_n]^r
-  \] 
-  % Es podria fer recursiu
-  % \[
-  % t_f = \sup(i): i_n = i - t_f: t_a = \sup(i_n):
-  % S' = \left\{\begin{array}{ll}
-  %     \{\} & \text{si } |i| = 0 \\
-  %     S[i_n]^r \cup S[t_a,t_f]^r 
-  %   \end{array}\right.
-  % \] 
-\end{definition}
-
-
-
-
-\subsection{Unió temporal de sèries temporals}
-
-$S_1 \cup^r S_2$. En principi per la unió les sèries temporals han de tenir la mateixa dimensió pel que fa a mesures multivaluades.
-
-\begin{definition}[Unió temporal de $S_1$ i $S_2$ amb representació
-  $r$]
-  \[
-  \text{unió}: \text{Sèrie Temporal} \times \text{Sèrie temporal}
-  \times \text{representació} \longrightarrow \text{Sèrie Temporal}
-  \]
-  \[
-  S_1 = \{m_0^1 , \ldots , m_{k1}^1\}  \times S_2 = \{m_0^2 , \ldots , m_{k2}^2\} \times r \longrightarrow S'
-  \]
-  \[
-  t_1=T(\inf S_1), t_2=T(\sup S_1):
-  \]
-  \[
-  S' = S_1 \cup  ( S_2 - S_2[t_1,t_2]^r )
-  \] 
-
-  Nota: la unió temporal no és commutativa. 
-  % Però, $(S_1 \cup^r S_2) \cup $(S_2 \cup^r S_1) = S_1 \cup S_2$?
-\end{definition}
 
 
 \subsection{Consulta temporal d'una RRD}
@@ -370,33 +265,6 @@ Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Ro
 \end{definition}
 
 
-\subsection{Fusió temporal de dues sèries temporals}
-
-Fusió (join) de dues sèries temporals.
-
-
-\begin{definition}[Fusió temporal de $S1$ i $S2$ amb representació $r$]
-  \[
-  \text{fusió}: \text{Sèrie Temporal} \times
-  \text{Sèrie Temporal} \times \text{representació} \longrightarrow
-  \text{Sèrie Temporal}
-  \]
-  \[
-  S_1 = \{m_0^1 , \ldots , m_{k_1}^1\} \times S_2 = \{m_0^2 , \ldots ,
-  m_{k_2}^2\} \times r \longrightarrow S'
-  \]
-  \[
-  |S'| <= k_1 + k_2 : m' = (v',t'):
-  \]
-  \[
-  t = \{t^1 \, | \, \forall m^1=(v^1,t^1) \in S_1\} \cup \{t^2 | \forall
-  m^2=(v^2,t^2) \in S_2\}:
-  \]
-  \[
-  S' = \{m'=(t',v_1',v_2') \, | \, (t',v_1') \in S_1[t]^r \wedge (t',v_2') \in S_2[t]^r \}
-  \]
-
-\end{definition}
 
 
 

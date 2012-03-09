@@ -127,7 +127,7 @@ Així doncs, sigui $m$ una mesura, es podrà notar la mesura de valor indefinit 
 
 Les mesures de valor indefinit es podran utilitzar en aquells casos en els que el valor de la mesura és desconegut. Els valors desconeguts  són aquells valors que no existeixen (es desconeixen, \emph{missing data} ) o que s'ignoren (es descarten, \emph{censoring} o \emph{truncation}). Els valors que no existeixen prenen el valor desconegut en el moment de la mesura, en canvi els valors descartats són marcats com a desconeguts després d'un processament de les dades. 
 
-Nota: en alguns sistemes es distingeix entre valors infinits ($\infty$) i valors indefinits (NaN,\emph{not a number}), \cite{wiki:ieee754}. Aquest no és el cas de les definicions de mesures indefinides presents.
+Nota: en alguns sistemes es distingeix entre valors infinits ($\infty$) i valors indefinits (NaN, \emph{not a number}), \cite{wiki:ieee754}. Aquest no és el cas de les definicions de mesures indefinides presents.
 
 
 
@@ -192,6 +192,7 @@ Atesa la relació d'ordre induïda pel temps en una sèrie temporal
 concepte d'interval sobre la seqüència, semblant a com es fa a \cite{last:keogh,last:hetland}.
 
 \begin{definition}[Interval]
+  \label{def:model:st-interval}
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
   $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
   | r<T(m)\leq t\}$, a on $r$ i $t$ són dos instants de temps.
@@ -241,11 +242,11 @@ T(m)\in\mathbb{R}$.
 
 
 
-\subsection{Base de dades sèrie temporal}
+\subsection{Relació sèrie temporal}
 
 Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
 
-Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau dos  a on la capçalera conté els atributs temps i valor, ambdós amb els dominis de temps i valor ja vistos com per exemple el tipus de dades 'reals estesos'. Inclou algunes restriccions més que les relacions:
+Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau dos (relació binària)  a on la capçalera conté els atributs temps i valor, ambdós amb els dominis de temps i valor ja vistos com per exemple el tipus de dades 'reals estesos'. Inclou algunes restriccions més que les relacions:
 
 * Els temps no poden estar repetits
 
@@ -254,11 +255,13 @@ Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una rel
 Els temps no repetits indueixen un ordre temporal a les sèries temporals. Tot i així, les relacions, per ser conjunts, conserven la no definció d'un ordre dels elements. 
 
 
+En el model relacional no hi ha ordre en els atributs a diferència de les relacions matemàtiques que tenen un ordre d'esquerra a dreta \parencite[sec.\ 5.3]{date}.
+
 \subsection{Exemples}
 
 \paragraph{Exemple 1}
 Sèrie temporal $S_1$ on el temps i els valors pertanyen a $\bar{\mathbb{R}}$. Conté la mesura de valor 1 en el temps 5, la mesura de valor 3 en el temps 7 i la mesura de valor 1 en el temps 10. Modelada com a relació, és a dir com a parella capçalera i conjunt de valors certs, s'escriu com 
-$S_1 = ( \{temps,valor\}, \{ \{temps:5,valor:1\}, \{temps:7,valor:3\}, \{temps:10,valor:1\} \} )$.
+$S_1 = ( \{temps: \bar{\mathbb{R}}, valor: \bar{\mathbb{R}}\}, \{ \{temps:5,valor:1\}, \{temps:7,valor:3\}, \{temps:10,valor:1\} \} )$.
 
 Degut al format esquemàtic, simplifiquem l'escriptura de les sèries temporals com a conjunt de tuples $(t,v)$ a on $t$ és el temps i $v$ és el valor. Així doncs la sèrie temporal $S$ es pot escriure de manera simplificada com a 
 $S = \{ (5,1), (7,3), (10,1) \}$.
@@ -307,7 +310,7 @@ $S_2 = \{ (5,(1,2,3)), (7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula
 \end{figure}
 
 
-\paragraph{Exemple 3}
+\paragraph{Exemple 3} \emph{Valors relació}. \label{par:model:exemple-relvalues}
 Sèrie temporal $S_3$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una sèrie temporal del mateix format que en l'exemple 1. Conté les tuples de $S_1$ com a valors en el temps 1 i 2. 
 
 De manera simplificada s'escriu com
@@ -343,9 +346,12 @@ i es visualitza com a taula a la \autoref{fig:model:serietemporal:serietemporal}
 \end{figure}
 
 
+S'observa que la capçalera de $S3$ és $\{temps:\bar{\mathbb{R}},valor:
+relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}\}$ \parencite[sec.\ 5.3]{date}. És a dir, el valor és de tipus relació que es defineix amb la capçalera de la relació on el temps i el valor pertanyen a $\bar{\mathbb{R}}$. Per tant, el valor de $S3$ és de tipus sèrie temporal amb valors reals. Cal insistir que \emph{tots} el valors de $S3$ han de pertànyer al mateix domini \parencite[sec.\ 5.4]{date}, el qual és $relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}$.
 
 
-\paragraph{Exemple 4} 
+
+\paragraph{Exemple 4} \emph{Variable relació}.\todo{això no es pot fer, perquè no existeix el tipus relvar?? però les tuples poden contenir expressions?? No existeixen les tuplevar (Date rebutja ferotjament els apuntadors a dins dels DBMS) [Date on database :writings 2000-2006 / C.J. Date]}
 Sèrie temporal $S_4$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una referència a una sèrie temporal. Conté $S_1$ com a valors en el temps 1 i 2. 
 
 De manera simplificada s'escriu com
@@ -484,9 +490,12 @@ $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
 
-\subsubsection{Exemples}
+\subsection{Exemples}
 
 \paragraph{Exemple 1}
+
+
+S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} s'obre valors relació).
 
 \begin{figure}[tp]
   \centering
@@ -502,7 +511,7 @@ $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
 
-\paragraph{Exemple 2}
+\paragraph{Exemple 2}\todo{Compte! que no existeix el tipus relvar i potser no es pot definir una relació que contingui relvars (apuntadors). Cal pensar amb l'exemple 4 suprimit del model dels SGST}
 
 \begin{figure}[tp]
   \centering

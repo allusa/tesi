@@ -1,97 +1,133 @@
-\chapter{Nomenclatura i notació}\label{sec:notation}
 
 
-\section{Mathematical symbols}
-
-% \begin{table}[h]
-%   \centering
-%   \begin{tabular}[h]{cl} \hline
-%     $:$ &  such that\\
-%     $\times$ & set theory cartesian product\\
-%     $|\dots|$ & set theory cardinality\\
-%     $\exists!$ & there exists exactly one \\\hline
-%   \end{tabular}
-%   \caption{Some disambiguation on common mathematical symbols used, for others see \cite{wiki:mathematical-symbols}}
-%   \label{tab:mathematical-symbols}
-% \end{table}
+\newglossaryentry{not:sgst}{ name={Notació SGST}, description={\nopostdesc},sort=10}
 
 
-\subsection{SGST}
 
 
-\subsection{SGSTM}
+\newglossaryentry{not:temps}{ name={Temps}, description={$t\in\bar{\mathbb{R}}$},sort=20}
+
+\newglossaryentry{not:instant}{name={$t^i$},description={Instant de temps}, parent={not:temps}, sort=1 }
+\newglossaryentry{not:duracio}{description={Duració},name={$t^d$},parent={not:temps}, sort=2 }
+\newglossaryentry{not:temps-referencia}{description={Temps de referència},name={$t^R$},parent={not:temps}, sort=3 }
+\newglossaryentry{not:temps-interval}{description={Interval de temps},name={$[t^i_a,t^i_b]$},parent={not:temps}, sort=4 }
 
 
-  \begin{longtable}[h]{ll}
-    \caption{Notació dels SGSTM \label{tab:sgstm-simbols}}
-    \endfirsthead
-    \caption[]{Notació dels SGSTM (continuació)}
-    \endhead
-    %\endfoot
-    %\endlastfoot
-    \hline
-    %
-    Time & $t\in\mathbb{R}$ \\ \hline
-    Instant in time & $t^i$ \\
-    Duration & $t^d$ \\
-    Reference time & $t^R$ \\
-    Time interval & $[t^i_a,t^i_b]$\\[2ex]
-    \pagebreak[3]\hline
-    %
-    Measure & $m=(v,t)$ \\ \hline
-    Value & V(m) \\ 
-    Time & T(m) \\
-    Order & $m_a \leq m_b$ \\[2ex]
-    \hline\pagebreak[3]\hline
-    %
-    Time series & $S = \{m_0,\dotsc,m_k\}$ \\\hline
-    Cardinal & $|S|$           \\
-    Maximum  & $\max(S)$       \\
-    Minimum  & $\min(S)$       \\
-    Interval & $S(t^i_a,t^i_b]$ \\
-             & $S(t^i_a,+\infty)$  \\
-             & $S(-\infty,t^i_b)$  \\
-    Next     & $\seg\limits_S(m_a)$   \\
-    Previous & $\ant\limits_S(m_a)$  \\
-    Regular  & \emph{<predicate>} \\
-    Continuous representation & $S(t)$ \\[2ex]
-    %\emph{zero-order hold backwards} $S(t)^\text{zohb}$
-    \pagebreak[3]\hline
-    %
-    Buffer & $B = (S,\tau,\delta,f)$ \\\hline
-    Last consolidation & $\tau$    \\
-    Consolidation step & $\delta$  \\
-    Interpolation function & $f: S \times [t^i_a,t^i_b] \mapsto m'$ \\
-    Empty        & $B_{\emptyset}$   \\
-    Add measure  &  $\text{add}: B \times m \mapsto B'$ \\
-    Ready to consolidate & \emph{<predicate>} \\
-    Consolidate & $\text{consolidate}:B \mapsto B' \times m'$ \\[2ex]
-    \pagebreak[3]\hline
-     %
-    Disc & $D = (S,k)$ \\\hline
-    Maximum cardinality & $k$ \\
-    Empty   & $D_{\emptyset}$ \\
-    Add measure  &  $\text{add}: D \times m \mapsto D'$ \\[2ex]    
-    \pagebreak[3]\hline
-     %
-    Resolution disc & $R = (B,D)$ \\\hline
-    Empty   & $R_{\emptyset}$ \\
-    Add measure  &  $\text{add}: R \times m \mapsto R'=(B',D)$ \\  
-    Ready to consolidate & \emph{<predicate>} \\
-    Consolidate & $\text{consolidate}:R \mapsto R'=(B',D')$ \\[2ex] 
-    \pagebreak[3]\hline
-     %
-     Multiresolution Database & $M=\{R_0,\dotsc,R_d\}$ \\\hline
-     Empty   & $M_{\emptyset}$ \\
-     Add measure  & $\forall R\in M: R \text{ add } m$ \\
-     Consolidate  & $\forall R\in M: \text{ consolidate } R$ \\%[2ex]
-     %\hline
-     %
-  \end{longtable}
+
+\newglossaryentry{not:valor}{ name={Valor}, description={\nopostdesc},sort=30}
+
+
+
+\newglossaryentry{not:mesura}{ name={Mesura}, description={$m=(t,v)$},sort=40}
+
+\newglossaryentry{not:mesura-temps}{description={Temps},name={$T(m)$},parent={not:mesura}, sort=1 }
+\newglossaryentry{not:mesura-valor}{description={Valor},name={$V(m)$},parent={not:mesura}, sort=2 }
+\newglossaryentry{not:mesura-ordre}{description={Ordre total},name={$m_a \leq m_b$},parent={not:mesura}, sort=3 }
+
+
+
+
+
+\newglossaryentry{not:serietemporal}{ name={Sèrie temporal}, description={$\{m_0,\dotsc,m_k\}$},sort=50}
+
+\newglossaryentry{not:st-cardinal}{description={Cardinal},name={$|S|$},parent={not:serietemporal}, sort=1 }
+\newglossaryentry{not:st-max}{description={Màxim},name={$\max(S)$},parent={not:serietemporal}, sort=2 }
+\newglossaryentry{not:st-min}{description={Mínim},name={$\min(S)$},parent={not:serietemporal}, sort=3 }
+\newglossaryentry{not:st-interval}{description={Interval},name={$S(t^i_a,t^i_b]$},parent={not:serietemporal}, sort=4 }
+\newglossaryentry{not:st-interval-i}{description={Interval},name={$S[-\infty,t^i_b)$},parent={not:serietemporal}, sort=5 }
+
+
+%\newglossaryentry{not:}{description={},name={},parent={not:serietemporal}, sort= }
+
+
+
+
+
+\newglossaryentry{not:sgstm}{ name={Notació SGSTM}, description={\nopostdesc},sort=60}
+
+
+
+
+
+
+
+
+% \section{Mathematical symbols}
+
+% % \begin{table}[h]
+% %   \centering
+% %   \begin{tabular}[h]{cl} \hline
+% %     $:$ &  such that\\
+% %     $\times$ & set theory cartesian product\\
+% %     $|\dots|$ & set theory cardinality\\
+% %     $\exists!$ & there exists exactly one \\\hline
+% %   \end{tabular}
+% %   \caption{Some disambiguation on common mathematical symbols used, for others see \cite{wiki:mathematical-symbols}}
+% %   \label{tab:mathematical-symbols}
+% % \end{table}
+
+
+% \subsection{SGSTM}
+
+
+%   \begin{longtable}[h]{ll}
+%     \caption{Notació dels SGSTM \label{tab:sgstm-simbols}}
+%     \endfirsthead
+%     \caption[]{Notació dels SGSTM (continuació)}
+%     \endhead
+%     %\endfoot
+%     %\endlastfoot
+%     \hline
+
+%     Time series & $S = \{m_0,\dotsc,m_k\}$ \\\hline
+%     Cardinal & $|S|$           \\
+%     Maximum  & $\max(S)$       \\
+%     Minimum  & $\min(S)$       \\
+%     Interval & $S(t^i_a,t^i_b]$ \\
+%              & $S(t^i_a,+\infty)$  \\
+%              & $S(-\infty,t^i_b)$  \\
+%     Next     & $\seg\limits_S(m_a)$   \\ %next (next)
+%     Previous & $\ant\limits_S(m_a)$  \\  %Prior (prior) Date2003
+%     Regular  & \emph{<predicate>} \\
+%     Continuous representation & $S(t)$ \\[2ex]
+%     %\emph{zero-order hold backwards} $S(t)^\text{zohb}$
+%     \pagebreak[3]\hline
+%     %
+%     Buffer & $B = (S,\tau,\delta,f)$ \\\hline
+%     Last consolidation & $\tau$    \\
+%     Consolidation step & $\delta$  \\
+%     Interpolation function & $f: S \times [t^i_a,t^i_b] \mapsto m'$ \\
+%     Empty        & $B_{\emptyset}$   \\
+%     Add measure  &  $\text{add}: B \times m \mapsto B'$ \\
+%     Ready to consolidate & \emph{<predicate>} \\
+%     Consolidate & $\text{consolidate}:B \mapsto B' \times m'$ \\[2ex]
+%     \pagebreak[3]\hline
+%      %
+%     Disc & $D = (S,k)$ \\\hline
+%     Maximum cardinality & $k$ \\
+%     Empty   & $D_{\emptyset}$ \\
+%     Add measure  &  $\text{add}: D \times m \mapsto D'$ \\[2ex]    
+%     \pagebreak[3]\hline
+%      %
+%     Resolution disc & $R = (B,D)$ \\\hline
+%     Empty   & $R_{\emptyset}$ \\
+%     Add measure  &  $\text{add}: R \times m \mapsto R'=(B',D)$ \\  
+%     Ready to consolidate & \emph{<predicate>} \\
+%     Consolidate & $\text{consolidate}:R \mapsto R'=(B',D')$ \\[2ex] 
+%     \pagebreak[3]\hline
+%      %
+%      Multiresolution Database & $M=\{R_0,\dotsc,R_d\}$ \\\hline
+%      Empty   & $M_{\emptyset}$ \\
+%      Add measure  & $\forall R\in M: R \text{ add } m$ \\
+%      Consolidate  & $\forall R\in M: \text{ consolidate } R$ \\%[2ex]
+%      %\hline
+%      %
+%   \end{longtable}
  
 
 
 
 %%% Local Variables:
+%%% mode: latex
 %%% TeX-master: "main"
 %%% End:
