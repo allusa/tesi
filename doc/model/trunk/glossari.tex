@@ -40,88 +40,81 @@
 %TERMES
 
 
-%\newglossaryentry{DBMS}{ description = {Data Base Management System} }
-
-
-\newglossaryentry{domain}{ description = {sets over which relations are defined. It is the same as type} }
-\newglossaryentry{type}{ description = {}, see=domain }
-\newglossaryentry{SGBD-model}{ description = {Un model és}, name={Model de SGBD} }
-
-
-\newglossaryentry{SBDR-cap}{ description = {La capçalera d'un SGBDR}, name={Capçalera}, parent={SGBD-model} }
-
-
-
-\newglossaryentry{heading}{ description = {Equivalent to intension and relation schema} }
-\newglossaryentry{intension}{ description = {}, see=heading }
-\newglossaryentry{relation schema}{ description = {}, see=heading }
-
-\newglossaryentry{body}{ description = {Equivalent to extension} }
-\newglossaryentry{extension}{ description = {}, see=body}
-
-
-\newglossaryentry{DBMS data model}{ description = {A data model (first sense) is an abstract, self-contained, logical definition of the
-objects, operators, and so forth, that together constitute the abstract machine with which
-users interact. The objects allow us to model the structure of data. The operators allow us
-to model its behavior.\cite{date}. Sometimes it is referred as architecture.
-} }
-
-\newglossaryentry{data model}{ description = { A data model (second sense) is a model of the persistent data of some particular
-enterprise. [date06]}}
-
-
-\newglossaryentry{DBMS implementation}{ description = {An implementation of a given data model is a physical realization on a real
-machine of the components of the abstract machine that together constitute that model.\cite{date}} }
-
-
-\newglossaryentry{data independence}{ description = {model and implementation kept separated}}
+\newglossaryentry{SistemaGestioBaseDades}{name={sistema de gesti{ó} de base de dades}, description={(\emph{Data Base Management System})} }
 
 
 
 
+%terme:SGBDR
 
-\newglossaryentry{ohm}{name=ohm,symbol={\ensuremath{\Omega}},
-description=unit of electrical resistance}
-
-
-\newglossaryentry{relationships}{
-description=relationships are semantic. relationships are entities.}
+\newglossaryentry{terme:SGBDR}{name={sistema de gestió de base de dades relacional}, description={(\emph{Relational Data Base Management System}). Totes les definicions són coherents amb \textcite{date} } }
 
 
-%ABREVIACIONS (abreviatures,sigles,símbols)
+%tipus,valor,variable,operador
+
+\newglossaryentry{terme:SGBDR:domini}{see={terme:SGBDR},name={domini}, description = {(\emph{domain}), equivalent a tipus de dades.
+Conjunt de valors. Cada domini té associat un conjunt d'operadors, en alguns casos fins i tot s'entén que el domini inclou els operadors (concepte de classe a orientació a objecte). Els tipus tenen una representació (estructura) o més d'una, és a dir els seus valors poden estar denotats per més d'un literal} }
+\newglossaryentry{terme:SGBDR:tipus}{see={terme:SGBDR:domini}, name={tipus de dades}, description = {(\emph{data type}), a vegades solament 'tipus' (\emph{type}) o bé 'tipus de dades abstracte' (\emph{abstract data type}). Segons \textcite{date} en el context de model tots els tipus de dades han de ser abstractes} }
+
+\newglossaryentry{terme:SGBDR:escalar}{parent={terme:SGBDR:domini}, name={escalar}, description = {Un tipus és escalar (\emph{scalar}) quan no té components visibles a l'usuari i és no escalar (\emph{nonscalar}) en cas contrari; no obstant, tant els escalars com els no escalars tenen representació, la qual pot contenir components} }
 
 
-%ABREVIATURES
+\newglossaryentry{terme:SGBDR:valor}{see={terme:SGBDR},name={valor}, description = {(\emph{value}), equivalent a objecte i instància.
+'Constant individual' que és d'un tipus de dades. A vegades s'utilitza 'constant' per designar una  variable que mai canvia de valor, però aquest no és el cas d'aquesta definició} }
+\newglossaryentry{terme:SGBDR:objecte}{see={terme:SGBDR:valor}, name={objecte}, description = {(\emph{object})} }
+\newglossaryentry{terme:SGBDR:instancia}{see={terme:SGBDR:valor}, name={instància}, description = {(\emph{instance})} }
+
+\newglossaryentry{terme:SGBDR:literal}{see={terme:SGBDR},name={literal}, description = {(\emph{literal}).
+Símbol que denota un valor. Un valor pot estar denotat per més d'un literal. Segons aquesta definició literal no és equivalent a valor} }
 
 
-
-%SIGLES
-
-
-
-%català
-\newglossaryentry{SGBD}{type=\acronymtype, name={SGBD}, description={Sistema de gestió de base de dades (\emph{Data Base Management System})}, text={SGBD}, first={Sistema de gestió de base de dades (SGBD)}, plural={SGBD}, firstplural={Sistemes de gestió de bases de dades (SGBD)}}
-
-%\newglossaryentry{SGBDR}{type=\acronymtype, name={SGBD}, description={Sistema de gestió de base de dades relacional(\emph{Relational Data Base Management System})}, text={SGBDR}, first={Sistema de gestió de base de dades (SGBD)}, plural={SGBD}, firstplural={Sistemes de gestió de bases de dades (SGBD)}}
-
-\newacronym[first={Sistema de gestió de base de dades relacional (SGBDR)}]{SGBDR}{SGBDR}{Sistema de gestió de base de dades relacional (\emph{Relational Data Base Management System})}
-
-
-%anglès
-\newacronym[see=SGBD]{DBMS}{DBMS}{\nopostdesc}
-\newacronym[see=SGBDR]{RDBMS}{RDBMS}{\nopostdesc}
-
-\newacronym{MTSMS}{MTSMS}{Multiresolution Time Series Data Base management system}
-\newacronym{RRDtool}{RRDtool}{Round Robin Database management system \parencite{rrdtool}}
-\newacronym{SCADA}{SCADA}{Supervisory Control And Data Acquisition}
-\newacronym{TSDB}{TSDB}{Time Series Data Base}
-\newacronym{TSDS}{TSDS}{Time Series Data Server \parencite{weigel10}}
-\newacronym{TSMS}{TSMS}{Time Series Data Base management system}
-\newacronym{VLDB}{VLDB}{Very Large Data Base}
+\newglossaryentry{terme:SGBDR:variable}{see={terme:SGBDR},name={variable}, description = {(\emph{variable}).
+Contenidor d'una aparició d'un valor. El valor que conté la variable pot ser canviat mitjançant l'operador d'assignació. En canvi els valors, per si mateixos, no poden ser actualitzats} } %A l'esquerra de l'operador d'assignació sempre hi ha variables, tot i que s'admeten simplificacions mitjançant expressions que són pseudovariables (p.ex. s[1] := 3 és equivalent a s := [s[0],3,s[2],..]).
+%Les variables tenen adreces (\emph{addresses}) i per tant es pot apuntar (\emph{point to}) a les variables mitjançant els operadors de referència (\emph{referencing}), el qual retorna l'adreça d'una variable, i de desreferència (\emph{dereferencing}), el qual retorna la variable a partir de l'adreça. Els valors adreces pertanyen al tipus apuntador, però el model relacional prohibeix els valors de tipus apuntador i per tant no té REF ni DEREF; les relvar s'identifiquen pel seu nom i no cal que tinguin adreça. (Compte que en orientació a objectes una variable és el contenidor d'un valor que és un ID d'objecte, és a dir és el contenidor d'una referència).
 
 
 
-%SÍMBOLS
+
+%pendent: falta posar el name
+
+% \newglossaryentry{SGBD-model}{ description = {Un model és}, name={Model de SGBD} }
+
+
+% \newglossaryentry{SBDR-cap}{ description = {La capçalera d'un SGBDR}, name={Capçalera}, parent={SGBD-model} }
+
+
+
+% \newglossaryentry{heading}{ description = {Equivalent to intension and relation schema} }
+% \newglossaryentry{intension}{ description = {}, see=heading }
+% \newglossaryentry{relation schema}{ description = {}, see=heading }
+
+% \newglossaryentry{body}{ description = {Equivalent to extension} }
+% \newglossaryentry{extension}{ description = {buit}, see=body}
+
+
+% \newglossaryentry{DBMS data model}{ description = {A data model (first sense) is an abstract, self-contained, logical definition of the
+% objects, operators, and so forth, that together constitute the abstract machine with which
+% users interact. The objects allow us to model the structure of data. The operators allow us
+% to model its behavior.\cite{date}. Sometimes it is referred as architecture.
+% } }
+
+% \newglossaryentry{data model}{ description = { A data model (second sense) is a model of the persistent data of some particular
+% enterprise. [date06]}}
+
+
+% \newglossaryentry{DBMS implementation}{ description = {An implementation of a given data model is a physical realization on a real
+% machine of the components of the abstract machine that together constitute that model.\cite{date}} }
+
+
+% \newglossaryentry{data independence}{ description = {model and implementation kept separated}}
+
+
+
+
+% \newglossaryentry{relationships}{
+% description={relationships are semantic. relationships are entities.}}
+
+
 
 
 
