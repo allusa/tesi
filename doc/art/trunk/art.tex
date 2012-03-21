@@ -34,7 +34,7 @@ Hi han hagut algunes propostes per apartar-se del model relacional, com pot ser 
 Date i altres consideren la possibilitat, tot i que remota, que es pugui definir un model més potent que el relacional però que no hi ha cap indici que cap definició ho estigui aconseguint ni de fet explorant. Per tant, aconsellen que cap aplicació de gestió de bases de dades no s'allunyi del model relacional.
 
 
-El model relacional es basa en la lògica i la teoria de conjunts.
+El model relacional es basa en la lògica de predicats i la teoria de conjunts.
 
 
 
@@ -48,6 +48,9 @@ Només hi ha hagut un àmbit en el que han admès que s'havia d'estendre el mode
 
 
 Així doncs no hi ha necessitat d'estendre el model relacional. Sí que hi ha necessitat, però, de tenir disponibles diversos tipus de dades. La creació de nous tipus de dades ha estat un tema de molta confusió ja que les 'suposades' implementacions del model relacional no ho han permès i sobretot ha fet que les implementacions basades en orientació a objectes tinguessin un gran impacte \todo{citar ODMG (object databases)}. Date ha rebutjat aquesta idea argumentant que el model relacional mai no ha fixat els tipus de dades disponibles sinó que ben al contrari mai n'ha parlat i per tant els tipus de dades han tingut total llibertat de creació; si bé el model relacional defineix que com a mínim hi ha d'haver el tipus booleà i el tipus relació.
+
+El model relacional requereix que hi hagi un 'sistema' de tipus però diu molt poc de la naturalesa d'aquest sistema de tipus; això es coneix com a ortogonalitat entre les relacions i els tipus.
+
 
 
 Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBDR s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
@@ -75,8 +78,6 @@ De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un
 En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
 
 Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
-
-
 
 
 
