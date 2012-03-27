@@ -12,7 +12,7 @@
 %---------- Mode esborrany --------------------
 %\includeonly{resum}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
-%\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
+\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
 %%\renewcommand{\headrulewidth}{0pt}
 %----------------------------------------------
 
@@ -22,6 +22,25 @@
 
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
+
+%anotacions a la bibliografia
+% \newboolean{bbx@annotation}% (same as biblatex-dw)
+% \DeclareBibliographyOption{annotation}[true]{%
+% \setboolean{bbx@annotation}{#1}}
+
+\renewbibmacro{finentry}{%
+\finentry%
+\iffieldundef{annotation}%
+{}%
+{%\ifbool{bbx@annotation}%
+{\color{blue}
+\begin{quotation}\noindent%
+\printfield{annotation}%
+\end{quotation}}%
+{}}%
+}
+
+
 %-------------- dades --------------------------
 \usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
     pdftitle={Model dels SGBD Round Robin pel tractament de sèries temporals},
