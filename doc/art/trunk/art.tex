@@ -1,10 +1,22 @@
 \chapter{Estat actual}
-\
+
+\section{Sèries temporals}
+
+* Mineria sèries temporals
+  
+  - mineria
+  - aplicacions
+
+* SGBD
+ - model relacional
+ - implementacions
+
+    - SGBD+xarxes
+    - Per sèries temporals
+
 \section{Sèries temporals}
 
 %http://tex.stackexchange.com/questions/26401/help-to-develop-a-textcite-command-to-be-used-with-verbose-citation-styles-in-b
-
-
 % \makeatletter
 
 % \protected\def\blx@textcitepunct#1{%
@@ -23,16 +35,69 @@
 % \makeatother
 
 
-Important! Diferència entre dades temporals i sèries temporals.
-
-
-Aquí tenim a \textcite{stonebraker07} però no
-
 Aquí tenim a \textcite{stonebraker07}.
 
 Un exemple ben buscat \textcite{stonebraker07}, però no
 
 Cal buscar a  \parencite{stonebraker07} 
+
+
+Important! Diferència entre dades temporals i sèries temporals.
+
+
+
+\section{SGBD+xarxes}
+
+
+
+Podem tenim les dades distribuïdes en diferents sensors i quan es llança una consulta es decideix a on s'ha de resoldre.
+
+
+
+
+
+
+\section{Intro}
+\label{cap:estat}
+
+En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) per sèries temporals en el context de la mineria de dades de sèries temporals (\emph{time series data mining}), el qual també es considerat com mineria de dades per  detectar automàticament coneixement (\emph{knowledge discovery databases}). Els SGBD de model Round Robin (RRD) pertanyen a aquest context ja que  emmagatzemen sèries temporals  de les quals es vol aconseguir informació rellevant.
+
+
+El capítol comença resumint l'estat de les sèries temporals en aquest camp de mineria; és a dir d'emmagatzematge i tractament. A continuació es llisten algunes aplicacions informàtiques que han implementat models de la mineria de sèries temporals. Finalment, es descriu l'estat actual de l'aplicació RRDtool, la qual també es classifica en aquest camp.
+
+
+
+
+\section{Mineria de sèries temporals}
+
+L'anàlisi de sèries temporals abasta camps molt diferents com ara la predicció econòmica, la medicina, la meteorologia, la qualitat industrial, etc. En aquest context,  la mineria de sèries temporals tracta de gestionar co\l.leccions cronològiques de dades que tenen una mida gran i contínuament estan en creixement. 
+Aquest apartat se centra en  l'estat actual de la mineria de sèries temporals, àmbit que, en la darrera dècada, ha experimentat un important increment de la recerca.
+
+
+En un article molt recent de \textcite{fu11}, es fa esment d'aquest increment de recerca i es resumeix l'estat actual de forma exhaustiva. Fu conclou que la recerca s'ha centrat en tasques de mineria però no s'ha resolt del tot el problema de la representació de sèries temporals.
+
+Segons \textcite{keogh02}, les quatre tasques que centren l'atenció de la recerca actual de sèries temporals són l'indexat, l'agrupament, la classificació i la segmentació. A més, Keogh compara els experiments duts a terme en aquests camps.
+Un pas comú previ a aquestes quatre tasques és el de representació de la sèrie temporal. 
+\textcite{keogh97,keogh98} investiguen la representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise Linear Representation}). Keogh fa notar que la representació PLR és l'habitual degut a que la visió de l'ésser humà segmenta les corbes en línies rectes.
+Més tard \textcite{keogh00,keogh01} exploren la representació de sèries temporals per tal de reduir la dimensió d'una sèrie temporal i poder-la indexar més fàcilment  i proposa dues tècniques eficients en el càlcul: la PAA (\emph{Piecewise Aggregate Aproximation}) i  la APCA (\emph{Adaptive Piecewise Constant Approximation}), ambdues basades en la representació a trossos constants de la sèrie temporal. 
+D'aquestes dues tècniques Keogh conclou que mantenen una bona aproximació a la sèrie temporal i que a més  tenen molt menys cost de càlcul que altres de més complicades, com ara la \emph{Discrete Fourier Transform} (DFT),  la  \emph{Singular Value Decomposition} (SVD) o la \emph{Discrete Wavelet Transform} (DWT).
+
+
+
+\subsection{Aplicacions de les sèries temporals}
+
+Tal com expliquen \textcite{quevedo10}, en un sistema complex de telecontrol hi ha una gran quantitat d'informació a manipular que s'obté de diversos sensors distribuïts pel camp de mesura, aquesta informació s'anomena variables mesurades. Un SCADA (\emph{Supervisory Control And Data Acquisition})  és el sistema encarregat de recollir i centralitzar les variables de manera periòdica en el temps. En el moment de reco\l.lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos. Les tècniques de bases de dades no poden emmagatzemar les dades amb aquests dos tipus de problema ja que aleshores els registres històrics quedarien falsejats. Així doncs, cal comprovar que les dades emmagatzemades són correctes, segons un procés de validació, i modificar-les en el cas que siguin falses, segons un procés de reconstrucció. \textcite{quevedo10} aplica aquests processos a xarxes de distribució d'aigua.
+
+Els mètodes de validació i reconstrucció es poden basar en anàlisis senzilles del senyal o en comparacions del valor real amb models de predicció de dades. Quan les dades es tracten com a sèries temporals, hi ha mètodes de predicció específics.
+Tot i que la teoria de sèries temporals permet establir aquests mètodes de predicció i reconstrucció, els SGBD habituals, com ara els de model relacional, no ho faciliten.  
+Per tal d'aplicar aquests mètodes a les sèries temporals de manera eficient, els SGBD s'han d'especialitzar en el tractament de sèries temporals.
+
+
+
+
+
+
+
 
 
 
