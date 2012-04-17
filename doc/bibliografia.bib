@@ -312,8 +312,9 @@
   bibsource = {DBLP, http://dblp.uni-trier.de},
   url = {http://pages.cs.wisc.edu/~nil/764/ORDB/34_stonebraker86inclusion.pdf},
   urldate = 	 {2011-11-08},
-  annotation = {La definició de nous tipus per part de l'usuari. Tot i així, cal recordar que Date considera que la definició de nous tipus a SQL té mássa detalls d'implementació i no contempla adequadament el que ell anomena possible representacions.},
+  annotation = {La definició de nous tipus per part de l'usuari. ADT: abstract data types}, 
 } 
+%Tot i així, cal recordar que Date considera que la definició de nous tipus a SQL té mássa detalls d'implementació i no contempla adequadament el que ell anomena possible representacions.
 
 
 @InProceedings{stonebraker86:sigmod,
@@ -756,6 +757,193 @@ ISSN={1083-4427},}
 
 
 %------- sensor networks ------
+
+%sequence data
+%http://www.cs.cornell.edu/home/praveen/papers.html#SeqPapers
+
+
+@inproceedings{seshadri95, 
+author={Seshadri, Praveen and Livny, Miron and Ramakrishnan, Raghu}, 
+title={SEQ: A model for sequence databases}, 
+booktitle={Proceedings of the Eleventh International Conference on Data Engineering}, 
+series = {ICDE' 95},
+year={1995}, 
+month={03}, 
+pages={232 -239}, 
+keywords={SEQ model;ordering information;sequence data;sequence databases;sequence queries;data structures;optimisation;query processing;temporal databases;}, 
+doi={10.1109/ICDE.1995.380388}, 
+url={http://www.cs.cornell.edu/home/praveen/papers/seq.de95.ps.Z},
+urldate = {2012-04-16},
+}
+
+@phdthesis{seshadri96:thesis,
+ author={Seshadri, Praveen},
+ title={Management of Sequence Data}, 
+ institution = {University of Wisconsin},
+ year = {1996},
+ url = {http://www.cs.cornell.edu/home/praveen/papers/thesis.ps.gz},
+ urldate = {2012-04-16},
+}
+
+
+
+%data stream
+
+@inproceedings{babcock02,
+ author = {Babcock, Brian and Babu, Shivnath and Datar, Mayur and Motwani, Rajeev and Widom, Jennifer},
+ title = {Models and issues in data stream systems},
+ booktitle = {Proceedings of the twenty-first ACM SIGMOD-SIGACT-SIGART symposium on Principles of database systems},
+ series = {PODS '02},
+ year = {2002},
+ location = {Madison, Wisconsin},
+ pages = {1--16},
+ doi = {10.1145/543613.543615},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ url = {http://infolab.usc.edu/csci599/Fall2002/paper/DML2_streams-issues.pdf},
+ urldate = {2012-04-17},
+} 
+
+
+%sensor networks
+
+%gerhke
+%http://www.cs.cornell.edu/johannes/publications.html
+
+
+@inproceedings{bonnet01,
+ author = {Bonnet, Philippe and Gehrke, Johannes and Seshadri, Praveen},
+ title = {Towards Sensor Database Systems},
+ booktitle = {Proceedings of the Second International Conference on Mobile Data Management},
+ series = {MDM '01},
+ volume = {1987},
+ year = {2001},
+ month = {01},
+ pages = {3--14},
+ publisher = {Springer-Verlag},
+ address = {Hong Kong},
+ doi = {10.1007/3-540-44498-X_1},
+ url = {http://www.cs.cornell.edu/johannes/papers/2001/MDM2001-sensor.pdf},
+ urldate = {2012-04-16},
+ annotation = {Presenten el model del SGBD Cougar. Està basat en dues estructures: dades emmagatzemades modelades com a relacions i dades dels sensors (sèries temporals) modelades com a seqüències. El model de funcionament és de SGBD distribuït: els sensors són nodes que emmgatzemen les dades i responen a parts de les consultes; alguns nodes actuen com a líders i fusionen les diferents consultes.},
+} 
+
+
+@set{tinyDB,
+  entryset = {tinyDB:web,madden05},
+  crossref = {tinyDB:web},
+}
+
+@online{tinyDB:web,
+ entryset = {tinyDB:web},
+ title = {TinyDB. A declarative database for sensor networks},
+ author = {Madden, Samuel R. and Hellerstein, Joseph M. and Hong, Wei and Stanek, Kyle and Franklin, Michael J.},
+ year = {2003--2002},
+ url = {http://telegraph.cs.berkeley.edu/tinydb/index.htm},
+ urldate = {2012-04-17},
+}
+
+@article{madden05,
+ entryset = {tinyDB:web},
+ author = {Madden, Samuel R. and Franklin, Michael J. and Hellerstein, Joseph M. and Hong, Wei},
+ title = {TinyDB: an acquisitional query processing system for sensor networks},
+ journal = {ACM Transactions on Database Systems},
+ volume = {30},
+ number = {1},
+ month = {03},
+ year = {2005},
+ pages = {122--173},
+ doi = {10.1145/1061318.1061322},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Query processing, data acquisition, sensor networks},
+ url = {http://db.cs.berkeley.edu/papers/tods05-tinydb.pdf},
+ urldate = {2012-04-17},
+ annotation = {TinyDB és un SGBD per xarxes de sensors que reosl les consultes de manera distribuïda en els nodes. A diferència d'altres SGBD distribuïts, modifica i s'implica en parts del procés d'adquisició de les dades, per exemple indica que dos sensors han d'adquirir amb la mateixa freqüència per tal de després poder correlacionar les dades}, 
+} 
+
+
+
+
+
+@set{cougar,
+  entryset = {cougar:doc,fung02,cougar:web},
+  crossref = {cougar:doc},
+}
+
+
+@online{cougar:web,
+ entryset = {cougar:doc},
+ title = {COUGAR: the network is the database},
+ year = {2010},
+ organization = {Cornell University},
+ url = {http://www.cs.cornell.edu/bigreddata/cougar/index.php},
+ urldate = {2012-04-16},
+ annote = {Recerca i publicacions relacionades amb el SGBD Cougar. També hi ha documentació a \url{http://www.cs.cornell.edu/boom/2002sp/extproj/www.cs.cornell.edu/database/cougar/default.htm}}
+}
+
+@manual{cougar:doc,
+ entryset = {cougar:doc},
+ title = {Cougar design and implementation},
+ author = {Gehrke, Johannes and Calimlim, Manuel and Fung, Wai Fu and Sun, David},
+ year = {2002},
+ organization = {Cornell University},
+ url = {http://www.cs.cornell.edu/boom/2002sp/extproj/www.cs.cornell.edu/database/cougar/cougardesigndoc.pdf},
+ urldate = {2012-04-16},
+}
+
+@inproceedings{fung02,
+ entryset = {cougar:doc},
+ author = {Fung, Wai Fu and Sun, David and Gehrke, Johannes},
+ title = {COUGAR: the network is the database},
+ booktitle = {Proceedings of the 2002 ACM SIGMOD international conference on Management of data},
+ series = {SIGMOD '02},
+ year = {2002},
+ location = {Madison, Wisconsin},
+ pages = {621--621},
+ doi = {10.1145/564691.564775},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ url={http://www.cs.cornell.edu/johannes/papers/2002/sigmod2002-cougardemo.pdf},
+ urldate = {2012-04-16},
+ pdf = {http://www.cs.cornell.edu/boom/2002sp/extproj/www.cs.cornell.edu/database/cougar/cougardesigndoc.pdf}
+} 
+
+
+@article{yaogehrke02, 
+author={Yong Yao and Johannes  Gehrke},
+title={The Cougar Approach to In-Network Query Processing in Sensor Networks},
+journal={Sigmod Record},
+publisher = {ACM},
+year={2002},
+volume={31},
+number={3},
+month={09},
+pages = {9--18},
+doi = {10.1145/601858.601861},
+url={http://www.cs.cornell.edu/johannes/papers/2002/sigmod-record2002.pdf},
+urldate = {2012-04-16},
+annote={Les xarxes de sensors tenen restriccions en els recursos: comunicació, energia, processament, incertesa dels sensors. A tal efecte no es considera de bon rendiment transmetre totes les dades a un node central per a la posterior consulta sinó que s'han de generar consultes eficients que es puguin resoldre en els nodes intermitjos. },
+}
+
+
+@article{demers03,
+ author = {Demers, Alan and Gehrke, Johannes and Rajaraman, Rajmohan and Trigoni, Niki and Yao, Yong},
+ title = {The Cougar Project: a work-in-progress report},
+ journal = {SIGMOD Record},
+ issue_date = {December 2003},
+ volume = {32},
+ number = {4},
+ month = {12},
+ year = {2003},
+ pages = {53--59},
+ doi = {10.1145/959060.959070},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ url={http://www.cs.cornell.edu/johannes/papers/2003/SigmodRecord2003-Sensor.pdf},
+ urldate = {2012-04-16},
+ annotation = {Estructures en arbre per a la comunicació entre nodes sensors que formen part del SGBD Cougar},
+} 
 
 
 @article{gehrkemadden04, 
