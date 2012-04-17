@@ -74,6 +74,18 @@ El capítol comença resumint l'estat de les sèries temporals en aquest camp de
 
 \section{Sèries temporals}
 
+What Are Time Series [http://cs.nyu.edu/shasha/papers/jagtalk.html]
+
+Time series = sequence of values usually recorded at regular increasing intervals 
+(yearly, monthly, weekly, ... secondly). 
+Regularity is critical: without regularity, moving averages, autocorrelations, and volatility would not make sense (e.g. if I have a sequence of daily price closings and then 1,000 values within one day, the moving average covering the entire sequence doesn't make much sense). 
+Non-regular time series are also of interest (e.g. the history of stock splits), but we can say less about them.
+Time series also exhibit historicity: the past is an indicator of the future. That is why autoregression can be used to predict the future of sales and why the past volatility may predict future volatility.
+Notice that temporal logics, for example, use the fact that the i+1st value in a sequence is at a later time than the ith value, but assume neither regularity nor historicity. Temporal query languages are equally agnostic about this question.
+
+
+
+
 Important! Diferència entre dades temporals i sèries temporals.
 
 Tal com diu A{\ss}falg,~\cite{assfalg08:thesis}, la coherència temporal pot ser vista des de dues vessants. La primera, a la qual anomena \emph{bitemporal data}, consisteix en expressar el temps vàlid durant el qual un esdeveniment és cert i el temps de transacció durant el qual l'esdeveniment és guardat a la base de dades, és a dir consisteix a descriure dos estats, cert o fals, per cada observació. La segona, a la qual anomena \emph{time series data}, consisteix a descriure co\l.leccions de dades en funció del temps. A més diu que les primeres poden ser expressades amb les segones
@@ -98,7 +110,7 @@ Database management systems are the computer systems implementing storage and re
 
 
 
-\subsection{Mineria de sèries temporals}
+\subsection{Anàlisi de sèries temporals}
 
 La mineria de sèries temporals (\emph{time series data mining}) és el procés d'anàlisis i descobriment de patrons en sèries temporals. És un camp recent que acompanya els processos de descobriment de coneixement a les bases de dades (\emph{knowledge discovery in databases}) \parencite{last01}.
 
@@ -124,16 +136,16 @@ L'anàlisi de sèries temporals abasta camps molt diferents com ara la predicci�
 L'ús de sèries temporals per analitzar les dades té com a objectius la comprensió del comportament de les variables observades, poder trobar-ne un model d'ajust i utilitzar-lo per a predicció o per a llaços de control.
 
 
-El monitoratge de dades de sensors i el processat de les dades per tal d'aconseguir diagnosis, prognosis, predicció, fusió de dades i altres tasques d'anàlisi de sèries temporals són comunes en diferents camps com ara prognosis en models de degradació \parencite{yu11}, qualificació de l'estat dels sensors en vaixells \parencite{palmer07}, validació i reconstrucció de dades en xarxes de distribució d'aigua \parencite{quevedo10}, classificació de valors econòmics \parencite{dreyer95}, optimització de la planificació semafòrica \parencite{last11} o estimació del temps de viatge en autopistes \parencite{soriguera10}.
+El monitoratge de dades de sensors i el processament de les dades per tal d'aconseguir diagnosis, prognosis, predicció, fusió de dades i altres tasques d'anàlisi de sèries temporals són comunes en diferents camps com ara prognosis en models de degradació \parencite{yu11}, qualificació de l'estat dels sensors en vaixells \parencite{palmer07}, validació i reconstrucció de dades en xarxes de distribució d'aigua \parencite{quevedo10}, classificació de valors econòmics \parencite{dreyer95}, optimització de la planificació semafòrica \parencite{last11} o estimació del temps de viatge en autopistes \parencite{soriguera10}.
 
 
 
-Un dels camps recents on la mineria de sèries temporals hi té molta aplicació és en les xarxes de sensors. L'abaratiment del maquinari permet monitorar el procés amb grans quantitats de sensors inte\l.ligents \parencite{jainagrawal05,gehrkemadden04}, els quals tenen processador i ràdio incorporats però tenen recursos limitats pel que fa a transmissió, energia i processat. Així doncs, el problema  de les xarxes de sensors rau en estudiar l'ús eficient d'aquests recursos, pel qual actualment trobem dues propostes.
+Un dels camps recents on la mineria de sèries temporals hi té molta aplicació és en les xarxes de sensors. L'abaratiment del maquinari permet monitorar el procés amb grans quantitats de sensors inte\l.ligents \parencite{jainagrawal05,yaogehrke02}, els quals tenen processador i ràdio incorporats però tenen recursos limitats pel que fa a transmissió, energia i processament i estan sotmesos a la incertesa dels sensors. Així doncs, el problema  de les xarxes de sensors rau en estudiar l'ús eficient d'aquests recursos, pel qual actualment trobem dues propostes.
 Una solució consisteix en transmetre la informació a un node central comprimint-la tant amb agregacions (estadístics) com amb aproximacions \parencite{deligiannakis07}.
-Una altra solució consisteix en tenir les dades distribuïdes en diferents sensors i quan es llança una consulta es decideix a on s'ha de resoldre, el qual s'anomena xarxa de sensors amb sistema distribuït de base de dades \parencite{gehrkemadden04}.
+Una altra solució consisteix en tenir les dades distribuïdes en diferents sensors i quan es llança una consulta es decideix a on s'ha de resoldre tenint en compte que el processament local és més barat que la comunicació \parencite{yaogehrke02,gehrkemadden04,bonnet01}. 
 
 
-\subsection{Monitoratge de sèries temporals}
+\subsection{Adquisició de sèries temporals}
 
 Els sistemes de monitoratge són un part important del control i interacció amb els processos. Principalment, aquests sistemes s'encarreguen de recollir dades, conèixer l'estat actual del procés i informar a l'usuari. Els sistemes de monitoratge constitueixen la part principal dels sistemes SCADA (\emph{Supervisory Control And Data Acquisition}). Un SCADA  és el sistema encarregat de recollir i centralitzar les dades de manera periòdica en el temps.
 
@@ -156,7 +168,12 @@ Els llaços de control poden no estar tan centralitzats i habitualment resideixe
 
 Per altra banda, els sistemes de monitoratge informen l'usuari de l'estat actual del procés, tot i que poden només avisar-lo amb alarmes senzilles com per exemple que no s'han pogut adquirir les dades o que el sensor ha disparat un esdeveniment crític. Per a usuari ens referim tant a un usuari humà com a un altre sistema supervisor amb inte\l.ligència artificial. 
 
-Per a càlculs més complicats amb les dades, els sistemes de monitoratge utilitzen sistemes de gestió de bases de dades (SGBD). Mitjançant els SGBD, s'emmagatzemen les dades en bases de dades i posteriorment l'usuari les consulta per observar els històrics o per obtenir informació i descobrir coneixement a partir de les dades emmagatzemades.
+Per a càlculs més complicats amb les dades, els sistemes de monitoratge utilitzen sistemes de gestió de bases de dades (SGBD). Mitjançant els SGBD, s'emmagatzemen les dades en bases de dades i posteriorment l'usuari les consulta per observar els històrics o per obtenir informació i descobrir coneixement a partir de les dades emmagatzemades. 
+
+La \autoref{fig:sistema_monitoratge} presenta una visió centralitzada de l'adquisició de dades. Ara bé, els sistemes de monitoratge internament poden tenir estructura distribuïda quan els sensors tenen suficient capacitat de processament, com per exemple les xarxes de sensors. En aquests casos els monitors cedeixen parts al sensors, sobretot pel que fa als SGBD que passen a tenir un paper més rellevant en la comunicació.  
+
+
+
 
 
 
@@ -179,7 +196,7 @@ Així doncs, cal comprovar que les dades emmagatzemades són correctes, mitjanç
 
 El tercer problema és dóna quan el període de mostreig no és regular, és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
 
-Una causa de la irregularitat es deu a que els sistemes de monitoratge informàtics sovint no són capaços de complir amb exactitud el temps de mesura sinó que presenten una certa variació, ja sigui deguda a retards en els sensors, les comunicacions o la planificació del monitoratge amb altres tasques concurrents del sistema operatiu. Aquesta causa, però, es pot atenuar si els sensors envien el temps de mesura juntament amb el valor mesurat.
+Una causa de la irregularitat es deu a que els sistemes de monitoratge informàtics sovint no són capaços de complir amb exactitud el temps de mesura sinó que presenten una certa variació, ja sigui deguda a retards en els sensors, les comunicacions o la planificació del monitoratge amb altres tasques concurrents del sistema operatiu. Aquesta causa, però, es pot atenuar si els sensors envien el temps de mesura juntament amb el valor mesurat. Aleshores, el problema recau en la sincronització dels rellotges dels sensors.
 
 Una altra causa es deu a que l'adquisició de dades prové de processos sotmesos a sistemes de control, els quals prenen el control de l'adquisició de dades. És a dir, el sistema de monitoratge ha d'obeir a les restriccions de temps imposades pels llaços de control. Aquestes restriccions són especialment crítiques en els sistemes de control en temps real ja que, aleshores, el sistema de monitoratge no pot imposar restriccions de temps diferents de les que s'han calculat per als llaços de control.  \textcite{lozoya08} mostren que s'ha de vigilar amb les entrades i sortides de les tasques periòdiques als sistemes en temps real. L'actuació dels sistemes de control es degrada quan no es té en compte que les operacions d'entrada i sortida estan subjectes a fluctuacions degudes al mostreig i a latències. Aquest problema afecta als sistemes de monitoratge en dues vessants.
 Per una banda, els sistemes de monitoratge tenen una part de l'adquisició controlada per les aplicacions de control en temps real i per tant el període de mostreig resultant que veu el monitor no és regular. 
@@ -193,7 +210,7 @@ En conclusió, per tal de gestionar la complexitat derivada de la recollida de d
 
 
 
-\subsection{Sistemes de gestió per sèries temporals}
+\subsection{Emmagatzematge de sèries temporals}
 
 
 Els sistemes de gestió de bases de dades (SGBD) són els sistemes informàtics que s'encarreguen d'emmagatzemar informació i de permetre a l'usuari consultar-la. A la secció \ref{sec:art:sgbd} es descriu com es formalitzen els SGBD, en aquest apartat ens centrarem en les necessitats que tenen les sèries temporals dels SGBD.
@@ -212,13 +229,23 @@ En els SGBD, el problema de grans quantitats de dades també es troba en altres 
 Com a solució proposen resumir dinàmicament les sèries temporals amb les tècniques de compressió que s'apliquen en altres aplicacions on hi ha bases de dades grans.
 
 
+Alguns models han proposat que les sèries temporals són un subconjunt de les seqüències \parencite{seshadri96:thesis} i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
+\textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
+Altres relacionen el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. %Aleshores es fan consultes contínues: cada cop que arriba una dada nova s'actualitza la vista. 
+%Data Stream Management System (DSMS) is an extension of Data Base Management System  
+\todo{Chronicle data model [55]}
+%[55] H. Jagadish, I. Mumick, and A. Silberschatz. View maintenance issues for the Chronicle data model.     In Proc. of the 1995 ACM Symp. on Principles of Database Systems, pages 113–124, May 1995.
+
+
+
 \textcite{dreyer94} proposen desenvolupar SGBD que implementin operacions específiques per les sèries temporals, aleshores els anomenen sistemes de gestió de bases de dades per sèries temporals (SGST, \emph{time series database management systems}). Consideren que els altres SGBD no són adequats per tractar sèries temporals, tot i que després de comparar els SGBD per dades temporals i els SGST \parencite{schmidt95} troben que hi ha aspectes comuns entre els dos sistemes.
 Els SGST estan optimitzats per gestionar les dades segons les operacions de temps i rotació, les quals són molt comunes en la gestió de les sèries temporals.  A més també cal controlar el creixement de la base de dades i la consulta ha de ser flexible i d'alta velocitat \parencite{keogh10:isax}. 
 
-No obstant, fins a on coneixem, les propietats dels SGST no s'han investigat més enllà del model proposat \parencite{dreyer94}  ja que la recerca s'ha concentrat en tasques de mineria de dades. Per exemple \textcite{last01} estudien una metodologia general per descobrir coneixement en els SGST, tant pel que fa a 
+No obstant, fins a on coneixem, les propietats d'un model de SGST no s'han investigat més enllà  ja que la recerca s'ha concentrat en tasques de mineria de dades. Per exemple \textcite{last01} estudien una metodologia general per descobrir coneixement en els SGST, tant pel que fa a 
 patrons temporals %(groups of events ordered by time)
 com a regles temporals%(cause-effect relationships between events)
-, i breument noten l'existència d'un model pels SGST.
+, i breument noten l'existència del model \cite{dreyer94} pels SGST.
+
 
 Ara bé, sí que hi ha hagut implementacions de sistemes específics per a sèries temporals. Alguns són només l'aplicació d'un algoritme d'anàlisi per un problema concret de sèries temporals però  altres  són més elaborats i es defineixen com a SGBD per a sèries temporals. A l'apartat següent se'n mostren exemples. 
 
@@ -235,7 +262,7 @@ En aquest apartat resumim algunes aplicacions que considerem que implementem con
 
 
 
-\paragraph{T-Time}  \textcite{assfalg08:thesis} mostra un SGST que pot cercar similituds calculades com a distàncies entre sèries temporals. Principalment, dues sèries temporals es marquen com a similars si la seva distància és menor que un llindar en cada interval. A partir d'aquest mètode dissenya algoritmes eficients que implementa en un programa anomenat T-Time \parencite{assfalg08:ttime}.
+\paragraph{T-Time}  \textcite{assfalg08:thesis} mostra un sistema que pot cercar similituds calculades com a distàncies entre sèries temporals. Principalment, dues sèries temporals es marquen com a similars si la seva distància és menor que un llindar en cada interval. A partir d'aquest mètode dissenya algoritmes eficients que implementa en un programa anomenat T-Time \parencite{assfalg08:ttime}.
 
 
  
@@ -250,29 +277,16 @@ En aquest apartat resumim algunes aplicacions que considerem que implementem con
 
 
 
-\paragraph{RRDtool} RRDtool \parencite{rrdtool} {é}s un SGST molt usat per la comunitat de programari lliure. Projectes en diversos camps l'utilitzen com a SGBD, en els quals hi ha sistemes de monitoratge professionals, també en l'àmbit de programari lliure, com Nagios/Icinga \parencite{nagios,icinga} o el Multi Router Traffic Grapher (MRTG) \parencite{mrtg}. Aquests monitors transfereixen a RRDtool la responsabilitat de gestionar l'emmagatzematge i d'operar amb les dades, i així es poden centrar en l'adquisició de dades i la gestió d'alarmes. 
+\paragraph{RRDtool} RRDtool \parencite{rrdtool} {é}s un SGBD molt usat per la comunitat de programari lliure. Projectes en diversos camps l'utilitzen com a SGBD, en els quals hi ha sistemes de monitoratge professionals, també en l'àmbit de programari lliure, com Nagios/Icinga \parencite{nagios,icinga} o el Multi Router Traffic Grapher (MRTG) \parencite{mrtg}. Aquests monitors transfereixen a RRDtool la responsabilitat de gestionar l'emmagatzematge i d'operar amb les dades, i així es poden centrar en l'adquisició de dades i la gestió d'alarmes. 
 En l'evolució de RRDtool hi ha dues millores destacables. En primer lloc, \textcite{lisa98:oetiker} va separar el sistema de gestió de RRDtool de MRTG i el va dissenyar amb una estructura característica de Round Robin. En segon lloc,  \textcite{lisa00:brutlag} va estendre RRDtool amb algoritmes de predicció i detecció de comportaments aberrants. 
 Actualment, s'està estudiant l'eficiència i rapidesa de RRDtool a processar sèries temporals. \textcite{carder:rrdcached} ha dissenyat una aplicació, \emph{rrdcached}, que millora el rendiment de RRDtool amb la qual s'aconsegueix fer funcionar  simultàniament sistemes amb grans quantitats de bases de dades RRDtool \parencite{lisa07:plonka}. \textcite{jrobin} han dissenyat una adaptació de RRDtool anomenada \emph{JRobin}. 
 Finalment, és destacable l'ús emergent de RRDtool en entorns d'experimentació, com és el cas de \textcite{zhang07} i \textcite{chilingaryan10} que hi emmagatzemen dades experimentals per posteriorment predir o validar-les.
 
 
-\paragraph{Cougar} \todo{cougar}
+\paragraph{Cougar} \textcite{cougar} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
+Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
 
-cougar databases
-
-http://www.cs.cornell.edu/bigreddata/cougar/index.php
-
-
-
-
-                                                                 At
-                   Berkeley and Cornell, we’ve built two prototype
-                   sensor network query processors (SNQPs)—
-                   TinyDB (http://telegraph.cs.berkeley.edu/tinydb)
-                   and Cougar (http://cougar.cs.cornell.edu)—that
-                   run on a variety of sensor platforms. \parencite{gehrkemadden04}
-
-
+\paragraph{TinyDB} Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a Cougar és TinyDB \parencite{tinyDB}. A part de les característiques descrites per Cougar, aquest sistema  modifica i s'implica en parts del procés d'adquisició de les dades com és el temps, la freqüència o l'ordre de mostreig. Per exemple donada una consulta que vol correlacionar les dades de dos sensors, el sistema indica als sensors implicats que han d'adquirir amb la mateixa freqüència.
 
 
 
@@ -285,9 +299,9 @@ http://www.cs.cornell.edu/bigreddata/cougar/index.php
 Els SGST actuals bàsicament resolen alguns problemes d'anàlisis de sèries temporals.
 Però no solen atendre la relació entre la base de dades i el sistema de monitoratge, és a dir la manera com s'adquireixen les dades. En aquest pas intermig hi ha un sèrie de problemes, com per exemple forats, dades falses o irregularitat en els temps de mostreig, que cal gestionar correctament. Concretament un dels problemes que no s'atén és el de mostreig irregular ja que es considera que les mostres estan a intervals regulars (equi-espaiades) encara que els sistemes de monitoratge informàtics sovint no són capaços de complir-ho amb exactitud sinó que presenten una certa variació en els temps de mesura. 
 
-RRDtool n'és una excepció ja que, per ser un sistema productiu, el processat de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
+RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
 
-
+També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
 
 
 
@@ -313,7 +327,7 @@ L'any 1970 (i 1969) Codd va proposar un model relacional pels SGBD (SGBDR) que v
 Avui dia, no hi cap implementació comercial que segueixi fidelment el model relacional \todo{citar date}, tot i que n'hi ha que caminen cap aquest camí (rel,TransRelational). Això ha contribuït a que per una banda hi hagi hagut una sèrie de malentesos i errors que Date s'ha encarregat de desmentir en nombroses publicacions \todo{citar, sobretot ddbunk} i per altra banda també ha contribuït en gran mesura a voler explorar altres models.              
 
 
-Alguns SQL squirks (the possibility of nulls, the possibility of duplicate rows, the
+lguns SQL squirks (the possibility of nulls, the possibility of duplicate rows, the
 fact of left-to-right column ordering, and so on), tema modernament discutit són els nulls [datesigmod2008]
 
 Alguns malentesos també es deuen en l'ús de la mateixa terminologia amb significat diferent entre el model relacional i l'orientació a objectes, sobretot pel que fa als termes valor i variable. 
@@ -347,7 +361,7 @@ for interval-valued attributes relies on support for relation-valued attributes,
 
 
 
-Així doncs no hi ha necessitat d'estendre el model relacional. Sí que hi ha necessitat, però, de tenir disponibles diversos tipus de dades. La creació de nous tipus de dades ha estat un tema de molta confusió ja que les 'suposades' implementacions del model relacional no ho han permès, o les extensions proposades per \textcite{stonebraker86} es consideren que són a nivell d'implementació i no les que es desitjarien a nivell de model, i sobretot ha fet que les implementacions basades en orientació a objectes tinguessin un gran impacte \todo{citar ODMG (object databases)}. Date ha rebutjat aquesta idea argumentant que el model relacional mai no ha fixat els tipus de dades disponibles sinó que ben al contrari mai n'ha parlat i per tant els tipus de dades han tingut total llibertat de creació; si bé el model relacional defineix que com a mínim hi ha d'haver el tipus booleà i el tipus relació.
+Així doncs no hi ha necessitat d'estendre el model relacional. Sí que hi ha necessitat, però, de tenir disponibles diversos tipus de dades. La creació de nous tipus de dades ha estat un tema de molta confusió ja que les 'suposades' implementacions del model relacional no ho han permès, o les extensions proposades per \textcite{stonebraker86} es consideren que són a nivell d'implementació i no les que es desitjarien a nivell de model (silbershatz96 en parla a l'apartat 6.research a on diu que els ADT han de ser més flexible i conformar tipus de primer nivell. però veure seshadriVLDBJournal1998:enhanced abstract data types in object-relational databases), i sobretot ha fet que les implementacions basades en orientació a objectes tinguessin un gran impacte \todo{citar ODMG (object databases)}. Date ha rebutjat aquesta idea argumentant que el model relacional mai no ha fixat els tipus de dades disponibles sinó que ben al contrari mai n'ha parlat i per tant els tipus de dades han tingut total llibertat de creació; si bé el model relacional defineix que com a mínim hi ha d'haver el tipus booleà i el tipus relació.
 
 El model relacional requereix que hi hagi un 'sistema' de tipus però diu molt poc de la naturalesa d'aquest sistema de tipus; això es coneix com a ortogonalitat entre les relacions i els tipus.
 
@@ -391,6 +405,20 @@ Relational DBMS can implement \emph{bitemporal data}. Then they are known as tem
 A TSMS could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no consolidated data model  for time series. 
 
 After comparing temporal DBMS and TSMS \parencite{schmidt95} they ask whether temporal DBMS and TSMS will meet or they need to be manage by different systems despite both working with time aspects.
+
+
+he fundamental difficulty is that the relational model does not take advantage of the order of rows. Whereas one can perform an ``order by'' query and manipulate the data in some other language, one cannot natively manipulate the ordered data using select, from, and where. 
+Arguably, this is good for data independence, but it is bad for time series.
+[http://cs.nyu.edu/shasha/papers/jagtalk.html]
+
+        However, there are major differences between sen-
+sor networks and traditional distributed database systems.
+Most relevant to sensor networks is existing work on dis-
+tributed aggregation [38, 42], but these approaches do not
+consider the physical limitations of sensor networks. Mad-
+den et al. [30] give an extended classification of aggregate
+operators with properties relevant to sensor network aggre-
+gation. %\cite{demers03}
 
 
 \subsection{Sobre implementació i model}
