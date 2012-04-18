@@ -2,9 +2,7 @@
 \label{cap:estat}
 
 
-
-
-* Mineria sèries temporals
+* Sèries temporals
   
   - mineria
   - aplicacions
@@ -19,9 +17,8 @@
 * SGBD
  - model relacional
  - implementacions
+ - temporal data
 
-    - SGBD+xarxes
-    - Per sèries temporals
 
   % * Sèries temporals (històrics, predicció, diagnosis, prognosis, etc.)
   % * Mostreig: docs quan període de mostreig no regular
@@ -29,26 +26,12 @@
 
 
 
+
+El capítol comença resumint l'estat de les sèries temporals en aquest camp de mineria; és a dir d'emmagatzematge i tractament. A continuació es llisten algunes aplicacions informàtiques que han implementat models de la mineria de sèries temporals. Finalment, es descriu l'estat actual de l'aplicació RRDtool, la qual també es classifica en aquest camp.
+
 This paper focuses on Data Base Management Systems (DBMS) that store
-and treat data as time series.  Traditional DBMS, as is ones derived
-from relational model, are not adequate for these cases as they do not
-have enough facilities to manage and retrieve time series
+and treat data as time series.   Other DBMS are not adequate for these cases as they do not have enough facilities to manage and retrieve time series
 information \parencite{schmidt95}.
-
-Some DBMS have already taken into account the specificities of time
-series, then called Time Series Data Base Management Systems
-(TSMS) \parencite{dreyer94}.  Time Series Data
-Server \parencite{weigel10} allows to select a data range from a time
-series and to apply a filter when the data is retrieved.
-RRDtool \parencite{rrdtool} applies filters and stores different data
-ranges when data is stored, moreover it considers that the sampling
-times can not be equally spaced, the temporal order is essential and
-the value and time must be stored together. However, this TSMS lack
-the complete definition of the relation between the three main fields
-involved: time series, monitoring systems and DBMS.
-
-
-
 
 DBMS are based from formal models that define the objects and
 operations of the abstract machine to which users interact, such is
@@ -56,57 +39,24 @@ the relational model \parencite{date}. TSMS lack a consolidated formal
 model, although special properties and requirements for a TSMS
 have been proposed \parencite{dreyer94}.
 
-In this paper
-a model is proposed for an storage system that will keep a time series
-in a multiresolution and bounded way.  In this first proposal there
-are six definitions that are related to the data storage mechanism:
-measure, time series, buffer, disc, resolution disc, and multiresolution
-database. Some of this concepts are familiar with RRDtool
-operating mode.
-
-En aquest capítol se situen els sistemes de gestió de bases de dades (SGBD) per sèries temporals en el context de la mineria de dades de sèries temporals (\emph{time series data mining}), el qual també es considerat com mineria de dades per  detectar automàticament coneixement (\emph{knowledge discovery databases}). Els SGBD de model Round Robin (RRD) pertanyen a aquest context ja que  emmagatzemen sèries temporals  de les quals es vol aconseguir informació rellevant.
-
-El capítol comença resumint l'estat de les sèries temporals en aquest camp de mineria; és a dir d'emmagatzematge i tractament. A continuació es llisten algunes aplicacions informàtiques que han implementat models de la mineria de sèries temporals. Finalment, es descriu l'estat actual de l'aplicació RRDtool, la qual també es classifica en aquest camp.
-
-
-
 
 
 \section{Sèries temporals}
 
-What Are Time Series [http://cs.nyu.edu/shasha/papers/jagtalk.html]
+Una sèrie temporal és un conjunt de valors, a on cadascun té associat un instant de temps que indica quan s'ha mesurat.
+Tradicionalment s'anomenen sèries temporals tot i que també s'accepta que són seqüències temporals, per exemple a \cite{last:hetland}.
 
-Time series = sequence of values usually recorded at regular increasing intervals 
-(yearly, monthly, weekly, ... secondly). 
-Regularity is critical: without regularity, moving averages, autocorrelations, and volatility would not make sense (e.g. if I have a sequence of daily price closings and then 1,000 values within one day, the moving average covering the entire sequence doesn't make much sense). 
-Non-regular time series are also of interest (e.g. the history of stock splits), but we can say less about them.
-Time series also exhibit historicity: the past is an indicator of the future. That is why autoregression can be used to predict the future of sales and why the past volatility may predict future volatility.
-Notice that temporal logics, for example, use the fact that the i+1st value in a sequence is at a later time than the ith value, but assume neither regularity nor historicity. Temporal query languages are equally agnostic about this question.
+Les sèries temporals són dades temporals ja que tenen dimensió de temps, però cal distingir-les d'altres tipus de dades temporals. \textcite{assfalg08:thesis} diferencia entre dues categories.  La primera, a la qual anomena \emph{bitemporal data}, consisteix en expressar el temps vàlid durant el qual un fet o esdeveniment és cert i el temps de transacció durant el qual el fet és guardat a la base de dades. La segona, a la qual anomena \emph{time series data}, consisteix a descriure co\l.leccions de dades en funció del temps. A més diu que les primeres poden ser expressades amb les segones. 
+Aquestes dues categories de dades temporals, tot i tenir aspectes en comú, no poden ser tractades amb els mateixos sistemes \parencite{schmidt95}.  
 
 
+Les sèries temporals s'utilitzen en camps molt diversos a on l'objectiu és obtenir informació a partir d'unes dades observades. Alguns dels usos més típics són les observacions de correlacions entre sèries temporals i prediccions de valors futurs. A continuació dividim en tres parts el procés en que intervenen les sèries temporals:  des de l'observació fins a obtenir la informació. 
+ 
+L'anàlisi de sèries temporal és la formalització de les tècniques que s'utilitzen per extreure informació. A vegades aquesta extracció també es coneix com descobriment de coneixement o inte\l.ligència artificial. 
 
+Les sèries temporals provenen d'una adquisició de dades. Els sistemes de monitoratge s'encarreguen de recollir dades dels sensors, periòdicament o en base a esdeveniments. Les dades recollides poden tenir forats o no ser regulars i aleshores presenten problemes quan s'analitzen com a sèries temporals.
 
-Important! Diferència entre dades temporals i sèries temporals.
-
-Tal com diu A{\ss}falg,~\cite{assfalg08:thesis}, la coherència temporal pot ser vista des de dues vessants. La primera, a la qual anomena \emph{bitemporal data}, consisteix en expressar el temps vàlid durant el qual un esdeveniment és cert i el temps de transacció durant el qual l'esdeveniment és guardat a la base de dades, és a dir consisteix a descriure dos estats, cert o fals, per cada observació. La segona, a la qual anomena \emph{time series data}, consisteix a descriure co\l.leccions de dades en funció del temps. A més diu que les primeres poden ser expressades amb les segones
-As said in \textcite{assfalg08:thesis}, the temporal coherence can be divided in two types. Firstly, there is  \emph{bitemporal data} which consists in storing the valid time during which an event is true and storing the transaction time in which the event is stored in the database. That is, two states -- true or false -- are annotated for each observation.  Secondly, there is \emph{time series data} which consists in describing a collection of data that depends from time. He also says that the first type can be expressed in terms of second type.
-
-
-Obtaining information from environment is a complex task that has a user, either human or machine, as the final target as stated in figure \ref{fig:sistema_monitoratge}.
- Mainly, the processes between data acquisition and user information can be divided into three focus.
-
-
-Monitoring systems recollect data from sensors eventually from events and periodically from measures, in the latter case some problems arise when monitoring can not be done at regular intervals. Then the recollected data is used in different application fields. There is intensive research in applying techniques to obtain information from this data.
-
-Time series data mining analyses the storage of chronological data from which relevant information want to be retrieved. Sometimes, this extraction of information is also referred as knowledge discovery or artificial intelligence.
-In the monitoring context, the data collected can be considered as a time series.
-
-Database management systems are the computer systems implementing storage and retrieval of information. Time series data mining techniques must be implemented in these systems paying attention to their especial needs. Then, they are known as time series database management systems.
-
-
-
-
-
+L'emmagatzematge de les dades i la implementació de les tècniques d'anàlisi té lloc en els sistemes de gestió de bases. Aquests s'encarreguen de l'organització correcte de la informació i de respondre a les operacions de consulta. Les sèries temporals necessiten un tractament específic per part d'aquests sistemes.
 
 
 
@@ -161,7 +111,7 @@ Els sistemes de monitoratge són un part important del control i interacció amb
 \end{figure}
 
 
-El monitoratge es pot dividir en diferents blocs principals, els quals es mostren a la \autoref{fig:sistema_monitoratge}. Un monitor adquireix dades dels sensors. Les dades poden ser valors de mesures o estats del procés adquirits com a esdeveniments. 
+El monitoratge es pot dividir en diferents blocs principals, els quals es mostren a la \autoref{fig:sistema_monitoratge}. Un monitor adquireix dades dels sensors. Les dades poden ser valors de mesures o estats del procés adquirits com a esdeveniments. Fent referència a la classificació de dades temporals de \textcite{assfalg08:thesis}, en general les mesures es poden entendre com a sèries temporals i els esdeveniments com a dades bitemporals.
 
 Per una banda, les dades es poden utilitzar com a sortida del procés en els sistemes de control, els quals calculen els valors d'entrada dels accionaments.
 Els llaços de control poden no estar tan centralitzats i habitualment resideixen a prop dels processos que controlen.
@@ -231,11 +181,8 @@ Com a solució proposen resumir dinàmicament les sèries temporals amb les tèc
 
 Alguns models han proposat que les sèries temporals són un subconjunt de les seqüències \parencite{seshadri96:thesis} i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
 \textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
-Altres relacionen el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. %Aleshores es fan consultes contínues: cada cop que arriba una dada nova s'actualitza la vista. 
+També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. 
 %Data Stream Management System (DSMS) is an extension of Data Base Management System  
-\todo{Chronicle data model [55]}
-%[55] H. Jagadish, I. Mumick, and A. Silberschatz. View maintenance issues for the Chronicle data model.     In Proc. of the 1995 ACM Symp. on Principles of Database Systems, pages 113–124, May 1995.
-
 
 
 \textcite{dreyer94} proposen desenvolupar SGBD que implementin operacions específiques per les sèries temporals, aleshores els anomenen sistemes de gestió de bases de dades per sèries temporals (SGST, \emph{time series database management systems}). Consideren que els altres SGBD no són adequats per tractar sèries temporals, tot i que després de comparar els SGBD per dades temporals i els SGST \parencite{schmidt95} troben que hi ha aspectes comuns entre els dos sistemes.
@@ -394,6 +341,9 @@ En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròp
 Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
 
 
+A la xerrada [Date02] va dir que els object/relational són relacionals.
+
+
 Sobre sèries temporals i temporal data\cite{assfalg08:thesis}
 
 Els SGBD relacionals són capaços d'implementar el primer tipus de coherència, les \emph{bitemporal data}; llavors es classifiquen sota el nom de bases de dades temporals, \cite{date,wiki:temporal_database}. Però el model relacional no és suficient pel segon tipus: les sèries temporals. Tot i que en principi no hi hauria cap problema a utilitzar una base de dades relacional per a sèries temporals, enteses com a dades històriques, la pròpia naturalesa dels sistemes relacionals  dificulta les operacions necessàries. 
@@ -420,6 +370,8 @@ den et al. [30] give an extended classification of aggregate
 operators with properties relevant to sensor network aggre-
 gation. %\cite{demers03}
 
+
+Seq model [seshadri95] vs relacional: veure capítol 14 Tree-Structured Data [date06] a on Date descriu com modelar estructures d'arbre amb relacions. Potser es podrien aplicar conceptes semblants per les seqüències? En tot cas: el model estructural ha de contemplar explícitament l'ordre o ho han de fer les operacions?
 
 \subsection{Sobre implementació i model}
 
@@ -452,7 +404,7 @@ El llenguatge dels SGBD, per exemple D, és declaratiu (what) i no procedural/im
 
 http://stackoverflow.com/questions/2117651/difference-between-sql-and-prolog
 
-
+diferències entre model semàntic i programació orientada a objectes [hull86]?
 
 
 
