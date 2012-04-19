@@ -1,0 +1,165 @@
+\section[SGBD]{Sistemes de gestió de bases de dades}
+\label{sec:art:sgbd}
+
+
+
+According to \textcite{date}, a database is a computer container for a data collection. The computer systems that manage databases are called database management systems (DBMS). Their objective is to storage information and allow an user to add and retrieve this information. DBMS implement several operations such as create a database, add data, consult information, etc.
+
+DBMS rely on formal theories called DBMS model, so a DBMS is an implementation of a model an a database can be seen as an instance of a DBMS. According to Date, ``a data model is an abstract definition, self contained and logical of the objects, operations and the rest that together constitutes the abstract machine where users interact. The objects allow modelling the data structure. The operations allow modelling the behaviour''.
+
+A common DBMS are the ones based on the relational model, which is a consolidated mathematical model. In the context of DBMS, the relational systems set a goal that has had an important subsequent relevance. Mainly, the success of relational systems comes from having a consolidated mathematical model \parencite{date}.
+
+
+Els sistemes de gestió de bases de dades (SGBD) 
+
+
+
+L'any 1970 (i 1969) Codd va proposar un model relacional pels SGBD (SGBDR) que va revolucionar aquest àmbit. A partir de llavors els SGBDR han anat evolucionat, amb Date com a principal divulgador, fins a tenir una gran solidesa.
+
+Avui dia, no hi cap implementació comercial que segueixi fidelment el model relacional \todo{citar date}, tot i que n'hi ha que caminen cap aquest camí (rel,TransRelational). Això ha contribuït a que per una banda hi hagi hagut una sèrie de malentesos i errors que Date s'ha encarregat de desmentir en nombroses publicacions \todo{citar, sobretot ddbunk} i per altra banda també ha contribuït en gran mesura a voler explorar altres models.              
+
+
+lguns SQL squirks (the possibility of nulls, the possibility of duplicate rows, the
+fact of left-to-right column ordering, and so on), tema modernament discutit són els nulls [datesigmod2008]
+
+Alguns malentesos també es deuen en l'ús de la mateixa terminologia amb significat diferent entre el model relacional i l'orientació a objectes, sobretot pel que fa als termes valor i variable. 
+
+Relacional: tipus | representació |  valor, objecte, instància  | variable  | referència (adreça continguda en una variable) | operadors (de lectura i de modificació)
+Objectes: tipus, classe (tipus amb atributs i mètodes), interfície | classe, atributs,propietats  |  valor, estat, objecte/instància immutable/estàtic |  valor, objecte/instància mutable/dinàmic  | variable | funcions,mètodes (funcions dins de classes) (purs o modificadors)
+
+Aquesta confusió pot ser deguda a 'the object model' is closer to being a model of storage than it is to being a model of data. [date06]
+
+
+Hi han hagut algunes propostes per apartar-se del model relacional, com pot ser recuperant models antics de xarxa (Xquery) o bé utilitzant el paradigma de programació d'objectes \todo{cites}, tot i que Date i altres consideren que no estan ben fundades i cap d'aquestes té la mateixa potència que el model relacional. Actualment s'està treballant en una implementació fidel al model relacional \todo{citar}. 
+
+Date i altres consideren la possibilitat, tot i que remota, que es pugui definir un model més potent que el relacional però que no hi ha cap indici que cap definició ho estigui aconseguint ni de fet explorant. Per tant, aconsellen que cap aplicació de gestió de bases de dades no s'allunyi del model relacional.
+
+
+El model relacional es basa en la lògica de predicats i la teoria de conjunts.
+
+
+
+
+
+Com s'ha d'estendre el model relacional?
+
+Date i altres consideren que el model relacional va evolucionat i no consideren que hi hagi hagut cap revolució des de la seva aparició. (Tot i que han definit una nova àlgebra relacional anomenada 'A' que fa molt bona pinta). Consideren que el model relacional està bastant completat i l'evoluciona en petites modificacions de comprensió. 
+
+Només hi ha hagut un àmbit en el que han admès que s'havia d'estendre el model relacional i aquest és el de les dades temporals \todo{citar}.  'Support for interval-valued attributes (and hence for temporal databases) involves among other things support for
+%generalized versions of the usual relational operators.' [date]            Note: Those “U_” operators are all defined in terms of two new relational operators called pack and unpack,
+and those latter operators in turn are defined in terms of relation-valued attributes. As already noted, therefore, support
+for interval-valued attributes relies on support for relation-valued attributes, at least conceptually. 
+
+
+
+
+Així doncs no hi ha necessitat d'estendre el model relacional. Sí que hi ha necessitat, però, de tenir disponibles diversos tipus de dades. La creació de nous tipus de dades ha estat un tema de molta confusió ja que les 'suposades' implementacions del model relacional no ho han permès, o les extensions proposades per \textcite{stonebraker86} es consideren que són a nivell d'implementació i no les que es desitjarien a nivell de model (silbershatz96 en parla a l'apartat 6.research a on diu que els ADT han de ser més flexible i conformar tipus de primer nivell. però veure seshadriVLDBJournal1998:enhanced abstract data types in object-relational databases), i sobretot ha fet que les implementacions basades en orientació a objectes tinguessin un gran impacte \todo{citar ODMG (object databases)}. Date ha rebutjat aquesta idea argumentant que el model relacional mai no ha fixat els tipus de dades disponibles sinó que ben al contrari mai n'ha parlat i per tant els tipus de dades han tingut total llibertat de creació; si bé el model relacional defineix que com a mínim hi ha d'haver el tipus booleà i el tipus relació.
+
+El model relacional requereix que hi hagi un 'sistema' de tipus però diu molt poc de la naturalesa d'aquest sistema de tipus; això es coneix com a ortogonalitat entre les relacions i els tipus.
+
+
+
+Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBDR s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
+
+Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional.
+
+Segon, s'hauria de considerar que el SGST són un nou tipus de dades en el model relacional i per tant el model relacional ja té tota la potència per una banda constituir SGBD i per altra banda definir i incorporar nous tipus.
+
+
+Com es defineixen nous tipus complexos als SGBD?
+
+En el cas que es descarti que el cas dels SGST presenta els mateixos problemes que les dades temporals i per tant els SGST han d'esdevenir un tipus de dades, cal preguntar-se com són els tipus de dades al model relacional.
+
+Concretament el model relacional només defineix què es un tipus de dades però dóna llibertat a la seva creació. Això és un gran avantatge. En els cas de tipus de dades senzills es defineixen amb una bona estructura i ja està però què passa quan es vol definir un nou tipus de dades complex?
+
+Cal recercar com s'han definit nous tipus de dades complexos. Els principals problemes es donen que el tipus és complex i forma una entitat de per sí. És a dir que definir un tipus sèrie temporal no és trivial. Aleshores, com cal procedir?
+
+
+
+Sobre la necessitat de modelar els tipus.
+
+Cal definir un model pel tipus que volem dissenyar.
+De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un SGBD. Per tant, utilitzarem les mateixes eines que es fan servir per modelar els SGBDR per a poder modelar el nostre SGST. Com que s'hauran utilitzat les mateixes eines, el SGST podrà esdevenir perfectament un tipus de dades pels SGBDR.
+
+En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
+
+Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
+
+
+A la xerrada [Date02] va dir que els object/relational són relacionals.
+
+
+Sobre sèries temporals i temporal data\cite{assfalg08:thesis}
+
+Els SGBD relacionals són capaços d'implementar el primer tipus de coherència, les \emph{bitemporal data}; llavors es classifiquen sota el nom de bases de dades temporals, \cite{date,wiki:temporal_database}. Però el model relacional no és suficient pel segon tipus: les sèries temporals. Tot i que en principi no hi hauria cap problema a utilitzar una base de dades relacional per a sèries temporals, enteses com a dades històriques, la pròpia naturalesa dels sistemes relacionals  dificulta les operacions necessàries. 
+
+
+Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series \parencite{schmidt95}. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
+
+
+A TSMS could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no consolidated data model  for time series. 
+
+After comparing temporal DBMS and TSMS \parencite{schmidt95} they ask whether temporal DBMS and TSMS will meet or they need to be manage by different systems despite both working with time aspects.
+
+
+he fundamental difficulty is that the relational model does not take advantage of the order of rows. Whereas one can perform an ``order by'' query and manipulate the data in some other language, one cannot natively manipulate the ordered data using select, from, and where. 
+Arguably, this is good for data independence, but it is bad for time series.
+[http://cs.nyu.edu/shasha/papers/jagtalk.html]
+
+        However, there are major differences between sen-
+sor networks and traditional distributed database systems.
+Most relevant to sensor networks is existing work on dis-
+tributed aggregation [38, 42], but these approaches do not
+consider the physical limitations of sensor networks. Mad-
+den et al. [30] give an extended classification of aggregate
+operators with properties relevant to sensor network aggre-
+gation. %\cite{demers03}
+
+
+Seq model [seshadri95] vs relacional: veure capítol 14 Tree-Structured Data [date06] a on Date descriu com modelar estructures d'arbre amb relacions. Potser es podrien aplicar conceptes semblants per les seqüències? En tot cas: el model estructural ha de contemplar explícitament l'ordre o ho han de fer les operacions?
+
+\subsection{Sobre implementació i model}
+
+Diferència entre implementació i model segons Date. Això aporta independència de dades; molt important: els models no han de tenir detalls d'implementació ni parlar d'objectius de rendiment.
+Actualment hi ha certa confusió sobre la independència entre el model i la implementació, com es veu tot seguit.
+
+
+Recentment ha aparegut un nou corrent en l'àmbit dels SGBD que s'anomena NoSQL (Not Only SQL). Diuen que volen sobrepassar les limitacions dels SGBD relacionals. Crec que aquí hi ha un malentès, deuen voler dir sobrepassar les limitacions de les implementacions comercials del model relacional, moltes vegades referides com a SQL pel llenguatge de consulta que utilitzen. En alguns casos a NoSQL es confon implementació amb model ja que es parla de que NoSQL millora el rendiment dels SGBD però en el model mai es parla de rendiment. 
+
+És més, en Date es posiciona en contra de SQL per ser una mala implementació del model relacional, i ha desenvolupat el llenguatge TutorialD que precisament no és SQL. 
+
+
+Tornant a NoSQL, aquest no genera cap conflicte amb el model relacional. Sovint NoSQL critiquen els SGBD relacionals per voler ser 'one size fits all' \parencite{stonebraker07,stonebraker09} però que cada aplicació té els seus requisits i per tant una mateixa implementació no pot ser bona per a tots el camps. El model relacional no hi pot estar més d'acord amb aquesta afirmació: un model, infinites implementacions. Així doncs aquí hi ha el malentès per culpa de les implementacions errònies de SQL. El model relacional continua sent vàlid i admet qualsevol implementació: ha admès durant anys les denominades SQL, a les quals ha criticat per ser males implementacions, i ara pot admetre les NoSQL. En principi, el model relacional, per ser un model de 'tots' els SGBD, també descriu els productes NoSQL.
+
+No obstant, caldria observar si els productes NoSQL pateixen el mateix mal que els SQL: fer una mala implementació del model relacional. TuotialD és, o pretén ser, una implementació completa del model relacional tot i que a nivell acadèmic.
+Ara bé, una implementació d'un SGBD que vulgui  obtenir un bon rendiment en una determinada aplicació potser no pot implementar el model relacional complet sinó que només una part; aleshores aquesta implementació no es pot anomenar SGBD relacional? És a dir, a què s'anomena SGBD relacional? -Un que es pot modelar amb el model relacional: tots(en el moment actual)? -Un a on l'usuari hi veu clarament els conceptes del model relacional.
+
+Actualment sembla que la comunitat informàtica s'ha centrat en les implementacions (garantir propietats ACID, no garantir-les, optimització de consultes, emmagatzematge de grans volums de dades, consultes via web, bases de dades distribuïdes, gastar el mínim d'energia, etc.) \parencite{stonebraker07,stonebraker10}, la qual cosa és excel·lent per a disposar un SGBD adequat a cada aplicació i per tant ha de continuar treballant en aquest camí. Ara bé, sembla que ha oblidat que hi ha un model, el relacional, que descriu com ha de ser un SGBD per a obtenir la màxima potència de cara a la gestió de dades per part de l'usuari i que encara no s'ha trobat cap altre model que tingui la mateixa potència. 
+
+
+
+
+
+
+
+\section{Preguntes}
+
+El llenguatge dels SGBD, per exemple D, és declaratiu (what) i no procedural/imperatiu (how). Com lliguen els SGBD amb els llenguatges de programació declaratius, per exemple amb la programació lògica amb Prolog? Concretament, com lliga Prolog amb el concepte de SGBD? Té la mateixa potència un SGBD que Prolog?
+ Es pot veure Prolog com un SGBD?
+
+http://stackoverflow.com/questions/2117651/difference-between-sql-and-prolog
+
+diferències entre model semàntic i programació orientada a objectes [hull86]?
+
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
+
+% LocalWords:  monitoratge

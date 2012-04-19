@@ -1,0 +1,216 @@
+\section{Sèries temporals}
+
+Una sèrie temporal és un conjunt de valors a on cadascun té associat un instant de temps.
+Tradicionalment s'anomenen sèries temporals tot i que també s'accepta que són seqüències temporals, per exemple a \cite{last:hetland}.
+
+Les sèries temporals són dades temporals ja que tenen dimensió de temps, però cal distingir-les d'altres tipus de dades temporals. \textcite{assfalg08:thesis} diferencia entre dues categories.  La primera, a la qual anomena \emph{bitemporal data}, consisteix en expressar el temps vàlid durant el qual un fet o esdeveniment és cert i el temps de transacció durant el qual el fet és guardat a la base de dades. La segona, a la qual anomena \emph{time series data}, consisteix a descriure co\l.leccions de dades en funció del temps. A més diu que les primeres poden ser expressades amb les segones. 
+Aquestes dues categories de dades temporals, tot i tenir aspectes en comú, no poden ser tractades amb els mateixos sistemes \parencite{schmidt95}.  
+
+
+Les sèries temporals s'utilitzen en camps molt diversos a on l'objectiu és obtenir informació a partir d'unes dades observades. Alguns dels usos més típics són les observacions de correlacions entre sèries temporals i prediccions de valors futurs. A continuació dividim en tres parts el procés en que intervenen les sèries temporals:  des de l'observació fins a obtenir la informació. 
+ 
+L'anàlisi de sèries temporal és la formalització de les tècniques que s'utilitzen per extreure informació. A vegades aquesta extracció també es coneix com descobriment de coneixement o inte\l.ligència artificial. 
+
+Les sèries temporals provenen d'una adquisició de dades. Els sistemes de monitoratge s'encarreguen de recollir dades dels sensors, periòdicament o en base a esdeveniments. Les dades recollides poden tenir forats o no ser regulars i aleshores presenten problemes quan s'analitzen com a sèries temporals.
+
+L'emmagatzematge de les dades i la implementació de les tècniques d'anàlisi té lloc en els sistemes de gestió de bases. Aquests s'encarreguen de l'organització correcte de la informació i de respondre a les operacions de consulta. Les sèries temporals necessiten un tractament específic per part d'aquests sistemes.
+
+
+
+\subsection{Anàlisi de sèries temporals}
+
+La mineria de sèries temporals (\emph{time series data mining}) és el procés d'anàlisis i descobriment de patrons en sèries temporals. És un camp recent que acompanya els processos de descobriment de coneixement a les bases de dades (\emph{knowledge discovery in databases}) \parencite{last01}.
+
+
+La recerca en mineria de sèries temporals s'ha incrementat en la darrera dècada tal com esmenta \textcite{fu11} en un article recent. L'objectiu principal és reduir la mida de les sèries temporals per tal de processar amb menor temps les dades.
+\citeauthor{fu11} resumeix l'estat actual de la mineria de sèries temporals de forma exhaustiva i conclou que encara queden molts problemes per investigar i resoldre. La recerca en tasques de mineria ha estat intensa però es necessita millorar la representació de sèries temporals, ja que es considera el pas que redueix la mida de les dades. A més a més, les sèries temporals es consideren un dels deu problemes prioritaris  en la mineria de dades \parencite{yangwu06}.
+
+Segons \textcite{keogh02}, les quatre tasques que centren l'atenció de la recerca actual de sèries temporals són l'indexat (\emph{indexing}), l'agrupament (\emph{clustering}), la classificació (\emph{classification}) i la segmentació (\emph{segmentation}). A més, \citeauthor{keogh02} comparen  alguns algoritmes experimentals duts a terme en aquests camps per diversos autors. Recomanen a la comunitat de mineria de sèries temporals que segueixi el seu estudi com a punt de referència per avaluar el rendiment d'algoritmes similars.
+
+Un pas comú previ a les quatre tasques anteriors és el de representació de la sèrie temporal. 
+La representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise Linear Representation}) \parencite{keogh97,keogh98} {é}s la més habitual actualment per ser més propera als usuaris ja que la visió de l'ésser humà segmenta les corbes en línies rectes.
+Després de definir la PLR, \textcite{keogh00,keogh01} exploren altres representacions de sèries temporals per tal de reduir la dimensió d'una sèrie temporal i poder-la indexar més fàcilment. Proposen dues tècniques eficients en el càlcul: la \emph{Piecewise Aggregate Aproximation} i la \emph{Adaptive Piecewise Constant Approximation}, ambdues basades en la representació a trossos constants de la sèrie temporal. 
+D'aquestes dues tècniques, \citeauthor{keogh00,keogh01} conclouen que mantenen una bona aproximació a la sèrie temporal i que a més  tenen molt menys cost de càlcul que altres de més complicades, com ara la \emph{Discrete Fourier Transform},  la  \emph{Singular Value Decomposition} o la \emph{Discrete Wavelet Transform}.
+
+
+
+
+\subsubsection{Aplicacions de les sèries temporals}
+
+L'anàlisi de sèries temporals abasta camps molt diferents com ara la predicció econòmica, la medicina, la meteorologia, la qualitat industrial, etc. En aquest context,  la mineria de sèries temporals tracta de gestionar co\l.leccions cronològiques de dades que tenen una mida gran i que contínuament estan en creixement.
+
+
+L'ús de sèries temporals per analitzar les dades té com a objectius la comprensió del comportament de les variables observades, poder trobar-ne un model d'ajust i utilitzar-lo per a predicció o per a llaços de control.
+
+
+El monitoratge de dades de sensors i el processament de les dades per tal d'aconseguir diagnosis, prognosis, predicció, fusió de dades i altres tasques d'anàlisi de sèries temporals són comunes en diferents camps com ara prognosis en models de degradació \parencite{yu11}, qualificació de l'estat dels sensors en vaixells \parencite{palmer07}, validació i reconstrucció de dades en xarxes de distribució d'aigua \parencite{quevedo10}, classificació de valors econòmics \parencite{dreyer95}, optimització de la planificació semafòrica \parencite{last11} o estimació del temps de viatge en autopistes \parencite{soriguera10}.
+
+
+
+Un dels camps recents on la mineria de sèries temporals hi té molta aplicació és en les xarxes de sensors. L'abaratiment del maquinari permet monitorar el procés amb grans quantitats de sensors inte\l.ligents \parencite{jainagrawal05,yaogehrke02}, els quals tenen processador i ràdio incorporats però tenen recursos limitats pel que fa a transmissió, energia i processament i estan sotmesos a la incertesa dels sensors. Així doncs, el problema  de les xarxes de sensors rau en estudiar l'ús eficient d'aquests recursos, pel qual actualment trobem dues propostes.
+Una solució consisteix en transmetre la informació a un node central comprimint-la tant amb agregacions (estadístics) com amb aproximacions \parencite{deligiannakis07}.
+Una altra solució consisteix en tenir les dades distribuïdes en diferents sensors i quan es llança una consulta es decideix a on s'ha de resoldre tenint en compte que el processament local és més barat que la comunicació \parencite{yaogehrke02,gehrkemadden04,bonnet01}. 
+
+
+\subsection{Adquisició de sèries temporals}
+
+Els sistemes de monitoratge són un part important del control i interacció amb els processos. Principalment, aquests sistemes s'encarreguen de recollir dades, conèixer l'estat actual del procés i informar a l'usuari. Els sistemes de monitoratge constitueixen la part principal dels sistemes SCADA (\emph{Supervisory Control And Data Acquisition}). Un SCADA  és el sistema encarregat de recollir i centralitzar les dades de manera periòdica en el temps.
+
+
+
+\begin{figure}[tp]
+  \begin{center}
+    \scriptsize 
+    \input{imatges/monitoratge.tex}
+  \end{center}
+  \caption{Sistema de monitoratge: de l'adquisició de dades fins a informar l'usuari}
+  \label{fig:sistema_monitoratge}
+\end{figure}
+
+
+El monitoratge es pot dividir en diferents blocs principals, els quals es mostren a la \autoref{fig:sistema_monitoratge}. Un monitor adquireix dades dels sensors. Les dades poden ser valors de mesures o estats del procés adquirits com a esdeveniments. Fent referència a la classificació de dades temporals de \textcite{assfalg08:thesis}, en general les mesures es poden entendre com a sèries temporals i els esdeveniments com a dades bitemporals.
+
+Per una banda, les dades es poden utilitzar com a sortida del procés en els sistemes de control, els quals calculen els valors d'entrada dels accionaments.
+Els llaços de control poden no estar tan centralitzats i habitualment resideixen a prop dels processos que controlen.
+
+Per altra banda, els sistemes de monitoratge informen l'usuari de l'estat actual del procés, tot i que poden només avisar-lo amb alarmes senzilles com per exemple que no s'han pogut adquirir les dades o que el sensor ha disparat un esdeveniment crític. Per a usuari ens referim tant a un usuari humà com a un altre sistema supervisor amb inte\l.ligència artificial. 
+
+Per a càlculs més complicats amb les dades, els sistemes de monitoratge utilitzen sistemes de gestió de bases de dades (SGBD). Mitjançant els SGBD, s'emmagatzemen les dades en bases de dades i posteriorment l'usuari les consulta per observar els històrics o per obtenir informació i descobrir coneixement a partir de les dades emmagatzemades. 
+
+La \autoref{fig:sistema_monitoratge} presenta una visió centralitzada de l'adquisició de dades. Ara bé, els sistemes de monitoratge internament poden tenir estructura distribuïda quan els sensors tenen suficient capacitat de processament, com per exemple les xarxes de sensors. En aquests casos els monitors cedeixen parts al sensors, sobretot pel que fa als SGBD que passen a tenir un paper més rellevant en la comunicació.  
+
+
+
+
+
+
+
+\subsubsection{Problemes en el monitoratge}
+
+Els sistemes de monitoratge habitualment reben problemes derivats de la reco\l.lecció de dades. Principalment distingim tres problemes.
+
+El primer problema és la gestió d'una quantitat enorme de dades. 
+
+Un sistema de monitoratge recull una gran quantitat de dades. Ara bé, l'usuari només en pot observar una petita part sincronitzat (\emph{online}) amb el procés i les dades emmagatzemades esdevenen massa grans per a ser processades posteriorment \parencite{keogh97}. No obstant, les dades han de ser analitzades ja que contenen informació interessant per a les aplicacions de les sèries temporals descrites a l'apartat anterior. S'observa que en el context de monitoratge les dades recollides es poden considerar com a sèries temporals ja que abstractament són una co\l.lecció de mesures.
+
+
+El segon problema és el de la necessitat de censurar les dades, és a dir validar que les dades siguin correctes i en cas contrari rebutjar-les o reconstruir-les. 
+
+\textcite{quevedo10} mostren la quantitat d'informació que hi ha en els sistemes complexos de telecontrol. Aquesta informació s'obté de diversos sensors distribuïts pel camp de mesura.
+En el moment de reco\l.lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos. En el procés de gestió de dades no es poden emmagatzemar les dades amb aquests dos tipus de problema ja que aleshores els registres històrics serien inconsistents. 
+Així doncs, cal comprovar que les dades emmagatzemades són correctes, mitjançant un procés de validació, i modificar-les en el cas que siguin falses, mitjançant un procés de reconstrucció que estimi els valors correctes. Per exemple, \citeauthor{quevedo10} apliquen aquests processos de validació i reconstrucció a xarxes de distribució d'aigua.
+
+
+El tercer problema és dóna quan el període de mostreig no és regular, és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
+
+Una causa de la irregularitat es deu a que els sistemes de monitoratge informàtics sovint no són capaços de complir amb exactitud el temps de mesura sinó que presenten una certa variació, ja sigui deguda a retards en els sensors, les comunicacions o la planificació del monitoratge amb altres tasques concurrents del sistema operatiu. Aquesta causa, però, es pot atenuar si els sensors envien el temps de mesura juntament amb el valor mesurat. Aleshores, el problema recau en la sincronització dels rellotges dels sensors.
+
+Una altra causa es deu a que l'adquisició de dades prové de processos sotmesos a sistemes de control, els quals prenen el control de l'adquisició de dades. És a dir, el sistema de monitoratge ha d'obeir a les restriccions de temps imposades pels llaços de control. Aquestes restriccions són especialment crítiques en els sistemes de control en temps real ja que, aleshores, el sistema de monitoratge no pot imposar restriccions de temps diferents de les que s'han calculat per als llaços de control.  \textcite{lozoya08} mostren que s'ha de vigilar amb les entrades i sortides de les tasques periòdiques als sistemes en temps real. L'actuació dels sistemes de control es degrada quan no es té en compte que les operacions d'entrada i sortida estan subjectes a fluctuacions degudes al mostreig i a latències. Aquest problema afecta als sistemes de monitoratge en dues vessants.
+Per una banda, els sistemes de monitoratge tenen una part de l'adquisició controlada per les aplicacions de control en temps real i per tant el període de mostreig resultant que veu el monitor no és regular. 
+Per altra banda, les aplicacions que analitzen les dades obtingudes del monitoratge poden veure com la seva actuació es degrada si no consideren que l'adquisició de dades és irregular, el qual és similar a la regressió que s'observa \parencite{lozoya08} quan en el disseny d'un controlador discret es considera que es mostreja i s'actua periòdicament però en la implementació amb un sistema en temps real aquest pot fluctuar la periodicitat.
+
+
+
+
+En conclusió, per tal de gestionar la complexitat derivada de la recollida de dades i també la complexitat de les consultes posteriors per part de l'usuari, els sistemes de monitoratge es recolzen en sistemes de gestió de bases de dades per gestionar l'emmagatzematge de les dades i la recuperació d'informació.
+
+
+
+
+\subsection{Emmagatzematge i gestió de sèries temporals}
+
+
+Els sistemes de gestió de bases de dades (SGBD) són els sistemes informàtics que s'encarreguen d'emmagatzemar informació i de permetre a l'usuari consultar-la. A la secció \ref{sec:art:sgbd} es descriu com es formalitzen els SGBD, en aquest apartat ens centrarem en les necessitats que tenen les sèries temporals dels SGBD.
+
+
+Les sèries temporals es diferencien d'altres tipus de dades en que els seus valors són dependents d'una variable: el temps. Com a conseqüència, qualsevol SGBD que hi vulgui tractar no ho pot fer de manera independent pels valors i pel temps; ha de conservar la coherència temporal.
+
+Per poder aplicar les tècniques d'anàlisis de les sèries temporals de manera eficient cal disposar de SGBD específics. 
+Durant l'última dècada, el maquinari informàtic ha millorat tant des del punt de vista tecnològic com de l'econòmic \parencite{deligiannakis07}, el qual ha facilitat l'adquisició de dades, per exemple amb xarxes de sensors, i alhora ha ampliat la capacitat per emmagatzemar les dades. 
+Per tant, el volum de dades a tractar  en els SGBD cada cop esdevé més crític.
+
+ 
+En els SGBD, el problema de grans quantitats de dades també es troba en altres camps com demostren \textcite{mylopoulos96} sobre la necessitat de grans bases de dades de coneixement. Els SGBD que tracten amb aquestes dades s'anomenen \emph{very large databases} (VLDB) i han de construir, accedir i gestionar la quantitat de dades de manera eficient.
+
+\textcite{ogras06}  consideren que les solucions de les VLDB estan pensades per a bases de dades estàtiques. No obstant, observen que les sèries temporal normalment són dinàmiques, és a dir de naturalesa contínua i de mida no fitada. Conseqüentment, conclouen que les solucions tradicionals no es poden aplicar a causa de l'arribada seqüencial de les dades i que no es poden processar aleatòriament. 
+Com a solució proposen resumir dinàmicament les sèries temporals amb les tècniques de compressió que s'apliquen en altres aplicacions on hi ha bases de dades grans.
+
+
+Alguns models han proposat que les sèries temporals són un subconjunt de les seqüències \parencite{seshadri96:thesis} i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
+\textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
+També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
+%Data Stream Management System (DSMS) is an extension of Data Base Management System  
+
+
+\textcite{dreyer94} proposen desenvolupar SGBD que implementin operacions específiques per les sèries temporals, aleshores els anomenen sistemes de gestió de bases de dades per sèries temporals (SGST, \emph{time series database management systems}). Consideren que els altres SGBD no són adequats per tractar sèries temporals, tot i que després de comparar els SGBD per dades temporals i els SGST \parencite{schmidt95} troben que hi ha aspectes comuns entre els dos sistemes.
+Els SGST estan optimitzats per gestionar les dades segons les operacions de temps i rotació, les quals són molt comunes en la gestió de les sèries temporals.  A més també cal controlar el creixement de la base de dades i la consulta ha de ser flexible i d'alta velocitat \parencite{keogh10:isax}. 
+
+No obstant, fins a on coneixem, les propietats d'un model de SGST no s'han investigat més enllà  ja que la recerca s'ha concentrat en tasques de mineria de dades. Per exemple \textcite{last01} estudien una metodologia general per descobrir coneixement en els SGST, tant pel que fa a 
+patrons temporals %(groups of events ordered by time)
+com a regles temporals%(cause-effect relationships between events)
+, i breument noten l'existència del model \cite{dreyer94} pels SGST.
+
+
+Ara bé, sí que hi ha hagut implementacions de sistemes específics per a sèries temporals. Alguns són només l'aplicació d'un algoritme d'anàlisi per un problema concret de sèries temporals però  altres  són més elaborats i es defineixen com a SGBD per a sèries temporals. A l'apartat següent se'n mostren exemples. 
+
+
+
+
+\subsubsection{Implementacions actuals}
+
+En aquest apartat resumim algunes aplicacions que considerem que implementem conceptes dels SGST.
+
+
+\paragraph{Calanda} \textcite{dreyer94} proposen els requeriments de propòsit específic que han de complir els SGST i basen el model en quatre elements estructurals bàsics: esdeveniments, sèries temporals, grups i metadades, a banda de les bases de dades per sèries temporals. Implementen un SGST anomenat Calanda \parencite{dreyer94b,dreyer95,dreyer95b} que té operacions de calendari, pot agrupar sèries temporals i respondre consultes simples i ho exemplifiquen amb dades econòmiques. A \cite{schmidt95} es compara Calanda amb els SGBD temporals que operen amb sèries temporals. 
+
+
+
+
+\paragraph{T-Time}  \textcite{assfalg08:thesis} mostra un sistema que pot cercar similituds calculades com a distàncies entre sèries temporals. Principalment, dues sèries temporals es marquen com a similars si la seva distància és menor que un llindar en cada interval. A partir d'aquest mètode dissenya algoritmes eficients que implementa en un programa anomenat T-Time \parencite{assfalg08:ttime}.
+
+
+ 
+\paragraph{iSAX} \textcite{keogh08:isax,keogh10:isax} estudien l'anàlisi i l'indexat de co\l.lecions massives de sèries temporals. Descriuen que el problema principal del tractament rau en l'indexat de les sèries temporals i proposen mètodes per calcular-lo de manera eficient. El mètode principal que proposen està basat en l'aproximació a trossos constants de la sèrie temporal \parencite{keogh00}.  Ho implementen en una estructura de gestió de dades que anomenen \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. Les representacions de sèries temporals que s'obtenen amb aquesta eina permeten reduir l'espai emmagatzemat i indexar tant bé com altres mètodes de representació més complexos.
+
+
+
+
+\paragraph{TSDS} \textcite{weigel10} noten la necessitat de mostrar les dades en tot el seu rang temporal i no només en un subconjunt com normalment s'ofereixen. Desenvolupen el paquet informàtic \emph{Time Series Data Server} (TSDS) \parencite{tsds} a on es poden introduir les dades de sèries temporals per posteriorment consultar-les per rangs temporals o aplicant-hi filtres i operacions.
+
+
+
+
+
+\paragraph{RRDtool} RRDtool \parencite{rrdtool} {é}s un SGBD molt usat per la comunitat de programari lliure. Projectes en diversos camps l'utilitzen com a SGBD, en els quals hi ha sistemes de monitoratge professionals, també en l'àmbit de programari lliure, com Nagios/Icinga \parencite{nagios,icinga} o el Multi Router Traffic Grapher (MRTG) \parencite{mrtg}. Aquests monitors transfereixen a RRDtool la responsabilitat de gestionar l'emmagatzematge i d'operar amb les dades, i així es poden centrar en l'adquisició de dades i la gestió d'alarmes. 
+En l'evolució de RRDtool hi ha dues millores destacables. En primer lloc, \textcite{lisa98:oetiker} va separar el sistema de gestió de RRDtool de MRTG i el va dissenyar amb una estructura característica de Round Robin. En segon lloc,  \textcite{lisa00:brutlag} va estendre RRDtool amb algoritmes de predicció i detecció de comportaments aberrants. 
+Actualment, s'està estudiant l'eficiència i rapidesa de RRDtool a processar sèries temporals. \textcite{carder:rrdcached} ha dissenyat una aplicació, \emph{rrdcached}, que millora el rendiment de RRDtool amb la qual s'aconsegueix fer funcionar  simultàniament sistemes amb grans quantitats de bases de dades RRDtool \parencite{lisa07:plonka}. \textcite{jrobin} han dissenyat una adaptació de RRDtool anomenada \emph{JRobin}. 
+Finalment, és destacable l'ús emergent de RRDtool en entorns d'experimentació, com és el cas de \textcite{zhang07} i \textcite{chilingaryan10} que hi emmagatzemen dades experimentals per posteriorment predir o validar-les.
+
+
+\paragraph{Cougar} \textcite{cougar} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
+Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
+
+\paragraph{TinyDB} Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a Cougar és TinyDB \parencite{tinyDB}. A part de les característiques descrites per Cougar, aquest sistema  modifica i s'implica en parts del procés d'adquisició de les dades com és el temps, la freqüència o l'ordre de mostreig. Per exemple donada una consulta que vol correlacionar les dades de dos sensors, el sistema indica als sensors implicats que han d'adquirir amb la mateixa freqüència.
+
+
+\todo{\url{http://www.scidb.org/}}
+
+
+
+\subsection{Visió general}
+
+Els SGST actuals bàsicament resolen alguns problemes d'anàlisis de sèries temporals.
+Però no solen atendre la relació entre la base de dades i el sistema de monitoratge, és a dir la manera com s'adquireixen les dades. En aquest pas intermig hi ha un sèrie de problemes, com per exemple forats, dades falses o irregularitat en els temps de mostreig, que cal gestionar correctament. Concretament un dels problemes que no s'atén és el de mostreig irregular ja que es considera que les mostres estan a intervals regulars (equi-espaiades) encara que els sistemes de monitoratge informàtics sovint no són capaços de complir-ho amb exactitud sinó que presenten una certa variació en els temps de mesura. 
+
+RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
+
+També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
+
+% LocalWords:  monitoratge
