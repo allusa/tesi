@@ -28,17 +28,17 @@
 % \DeclareBibliographyOption{annotation}[true]{%
 % \setboolean{bbx@annotation}{#1}}
 
-\renewbibmacro{finentry}{%
-\finentry%
-\iffieldundef{annotation}%
-{}%
-{%\ifbool{bbx@annotation}%
-{\color{blue}
-\begin{quotation}\noindent%
-\printfield{annotation}%
-\end{quotation}}%
-{}}%
-}
+% \renewbibmacro{finentry}{%
+% \finentry%
+% \iffieldundef{annotation}%
+% {}%
+% {%\ifbool{bbx@annotation}%
+% {\color{blue}
+% \begin{quotation}\noindent%
+% \printfield{annotation}%
+% \end{quotation}}%
+% {}}%
+% }
 
 
 %cites bibliogràfiques: números de citacions entre comes
@@ -47,6 +47,10 @@
 
 
 \makeatletter
+
+%\DeclareAutoPunctuation{.,;:!?}
+%per defecte \DeclareRangeChars{~,;-+/}
+\DeclareRangeChars*{:}
 
 \newcommand{\citacomes}[4]{
 \blx@addpunct{comma}\space\cite[#1][#2]{#3}%
@@ -124,7 +128,7 @@
 
 %------------- Índexs ------------
 %\listoftodos
-\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
+%\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
 %\addtocontents{toc}{\protect\enlargethispage{1cm}}
 %\listoffigures
 %\listoftables
