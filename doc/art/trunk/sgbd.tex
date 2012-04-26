@@ -118,6 +118,35 @@ gation. %\cite{demers03}
 
 Seq model [seshadri95] vs relacional: veure capítol 14 Tree-Structured Data [date06] a on Date descriu com modelar estructures d'arbre amb relacions. Potser es podrien aplicar conceptes semblants per les seqüències? En tot cas: el model estructural ha de contemplar explícitament l'ordre o ho han de fer les operacions?
 
+[date06]:
+                                                Now, the relational model provides just one way to
+represent data—namely, by means of relations themselves—and the sole essential information
+carriers in a relational database are thus necessarily relations, a fortiori. By contrast, other data
+models typically provide many distinct ways to represent data (lists, bags, links, sets, arrays,
+and so on), and all or any of those ways can be used as essential information carriers in a
+nonrelational database. One way of representing data is both necessary and sufficient; more
+than one introduces complexity, but no additional power.
+     As a matter of fact, it’s the concept of essentiality that forms the underpinning for the well-
+known, and important, Information Principle:
+     The entire information content of a relational database is represented in one and only
+     one way: namely, as attribute values within tuples within relations.
+
+[date06,pàg116]:
+Note that what they don’t do is introduce any more power. To be more specific, there’s no data that can
+be represented with arrays, lists, and so on, that can’t be represented without them. Likewise, there’s no
+useful processing that can be done on data represented with arrays, lists, and so on, that can’t be done
+on data represented without them.
+[pàg 134]
+about the continual references in the body of this chapter to the effect that we might have
+array-valued attributes, list-valued attributes, and so on. Don’t such possibilities constitute an
+obvious violation of The Information Principle?
+     Well, no, they don’t. What that principle says is that the only kind of variable permitted in
+the database (considered in turn as a variable) is the relation variable. But a relation variable
+can have attributes of any type whatsoever ... including array types, list types, and so on.
+Thus, the database at any given time might include a relation value that in turn includes array
+values, list values, and so on ... But there are still no array or list variables (etc.) anywhere in sight.
+
+
 \subsection{Sobre implementació i model}
 
 Diferència entre implementació i model segons Date. Això aporta independència de dades; molt important: els models no han de tenir detalls d'implementació ni parlar d'objectius de rendiment.

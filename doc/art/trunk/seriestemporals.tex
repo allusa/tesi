@@ -136,31 +136,30 @@ En els SGBD, el problema de grans quantitats de dades també es troba en altres 
 Com a solució proposen resumir dinàmicament les sèries temporals amb les tècniques de compressió que s'apliquen en altres aplicacions on hi ha bases de dades grans.
 
 
-Alguns models han proposat que les sèries temporals són un subconjunt de les seqüències \parencite{seshadri96:thesis} i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
-\textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
-També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
-%Data Stream Management System (DSMS) is an extension of Data Base Management System  
 
 
 \textcite{dreyer94} proposen desenvolupar SGBD que implementin operacions específiques per les sèries temporals, aleshores els anomenen sistemes de gestió de bases de dades per sèries temporals (SGST, \emph{time series database management systems}). Consideren que els altres SGBD no són adequats per tractar sèries temporals, tot i que després de comparar els SGBD per dades temporals i els SGST \parencite{schmidt95} troben que hi ha aspectes comuns entre els dos sistemes.
 Els SGST estan optimitzats per gestionar les dades segons les operacions de temps i rotació, les quals són molt comunes en la gestió de les sèries temporals.  A més també cal controlar el creixement de la base de dades i la consulta ha de ser flexible i d'alta velocitat \parencite{keogh10:isax}. 
-
 No obstant, fins a on coneixem, les propietats d'un model de SGST no s'han investigat més enllà  ja que la recerca s'ha concentrat en tasques de mineria de dades. Per exemple \textcite{last01} estudien una metodologia general per descobrir coneixement en els SGST, tant pel que fa a 
 patrons temporals %(groups of events ordered by time)
 com a regles temporals%(cause-effect relationships between events)
 , i breument noten l'existència del model \cite{dreyer94} pels SGST.
 
-\todo{sciQL \cite{zhang11}: model i problemes per a SGST amb SQL}
 
-\todo{sciDB \cite{stonebraker09:scidb}: model per a SGST amb array data model}
+Altres estudis proposen tractar les sèries temporals com a tipus que tenen ordre, per exemple seqüències o matrius.
 
-Ara bé, sí que hi ha hagut implementacions de sistemes específics per a sèries temporals. Alguns són només l'aplicació d'un algoritme d'anàlisi per un problema concret de sèries temporals però  altres  són més elaborats i es defineixen com a SGBD per a sèries temporals. A l'apartat següent se'n mostren exemples. 
+\textcite{seshadri96:thesis} proposa que les sèries temporals són un subconjunt de les seqüències i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
+\textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
+També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
+%Data Stream Management System (DSMS) is an extension of Data Base Management System  
 
+En els SGBD per matrius \emph{arrays} destaquen els anomenats sistemes de gestió de bases de dades científiques, camp en el qual les sèries temporals hi tenen un paper de primer ordre \parencite{zhang11}. \textcite{stonebraker09:scidb} estudien les necessitats d'aquests sistemes sobretot en l'àmbit de la ciència. \textcite{kersten11} proposen un sistema molt semblant però a més integren el seu llenguatge, anomenat SciQL, amb la sintaxi de SQL. \textcite{zhang11} exemplifiquen detalladament l'ús de SciQL per a les sèries temporals per a algunes de les seves propietats: regularitat, interpolació i cerca de correlacions.
 
 
 
 \subsubsection{Implementacions actuals}
 
+Hi ha hagut implementacions de sistemes específics per a sèries temporals. Alguns són només l'aplicació d'un algoritme d'anàlisi per un problema concret de sèries temporals però  altres  són més elaborats i es defineixen com a SGBD per a sèries temporals. 
 En aquest apartat resumim algunes aplicacions que considerem que implementem conceptes dels SGST.
 
 
@@ -195,8 +194,12 @@ Les consultes es processen de manera distribuïda: cada sensor és un node amb c
 
 \paragraph{TinyDB} Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a Cougar és TinyDB \parencite{tinyDB}. A part de les característiques descrites per Cougar, aquest sistema  modifica i s'implica en parts del procés d'adquisició de les dades com és el temps, la freqüència o l'ordre de mostreig. Per exemple donada una consulta que vol correlacionar les dades de dos sensors, el sistema indica als sensors implicats que han d'adquirir amb la mateixa freqüència.
 
+\paragraph{SciDB} \textcite{stonebraker09:scidb} estudien els SGBD científiques amb models  de dades basats en matrius. Estan desenvolupant SciDB \parencite{scidb}, un SGBD productiu i optimitzat per treballar amb matrius.
 
-\todo{\url{http://www.scidb.org/}}
+
+\paragraph{SciQL} \textcite{kersten11} descriuen SciQL, un llenguatge per a SGBD científiques. Hi ha un prototip en desenvolupament de SciQL \parencite{sciql}.
+
+
 
 
 
@@ -208,6 +211,9 @@ Però no solen atendre la relació entre la base de dades i el sistema de monito
 RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
 
 També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
+
+
+SciQL, un model recent per SGBD  basat en matrius, és el que més es pot considerar com a SGST, ja que s'ha demostrat que en compleix algunes propietats.
 
 
 
