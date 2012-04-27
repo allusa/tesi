@@ -1,0 +1,197 @@
+%--------------------
+% document principal
+%--------------------
+% cal compilar amb `pdflatex -shell-escape main.tex`
+%--------------------
+\documentclass[paper=a4,fontsize=12pt,twoside,parskip=half,BCOR12mm]{scrbook}
+%%%%BCOR12mm  factor de correcció per enquadernació
+
+%------------- capçalera ----------------------
+\input{capçalera.default}
+\graphicspath{{imatges/}} %{{imatges/}{imatges/model/}}
+%---------- Mode esborrany --------------------
+%\includeonly{resum}
+\usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
+\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
+%%\renewcommand{\headrulewidth}{0pt}
+%----------------------------------------------
+
+
+%------------- format -------------------------
+%%ús coma decimal sense espais:  2{,}5
+
+\DeclareMathOperator*{\seg}{seg}
+\DeclareMathOperator*{\ant}{ant}
+
+%anotacions a la bibliografia
+% \newboolean{bbx@annotation}% (same as biblatex-dw)
+% \DeclareBibliographyOption{annotation}[true]{%
+% \setboolean{bbx@annotation}{#1}}
+
+% \renewbibmacro{finentry}{%
+% \finentry%
+% \iffieldundef{annotation}%
+% {}%
+% {%\ifbool{bbx@annotation}%
+% {\color{blue}
+% \begin{quotation}\noindent%
+% \printfield{annotation}%
+% \end{quotation}}%
+% {}}%
+% }
+
+
+%cites bibliogràfiques: números de citacions entre comes
+%http://tex.stackexchange.com/questions/26401/help-to-develop-a-textcite-command-to-be-used-with-verbose-citation-styles-in-b
+%http://tex.stackexchange.com/questions/28461/biblatex-tighter-integration-of-textcite-in-the-flow-of-text
+
+
+\makeatletter
+
+%\DeclareAutoPunctuation{.,;:!?}
+%per defecte \DeclareRangeChars{~,;-+/}
+\DeclareRangeChars*{:}
+
+\newcommand{\citacomes}[4]{
+\blx@addpunct{comma}\space\cite[#1][#2]{#3}%
+%\blx@imc@ifpunctmark{#4}{\blx@addpunct{comma}\space#4}{#4}%
+\blx@imc@ifnumerals{#4}{%per separar accents
+\blx@imc@ifpunctmark{#4}{\blx@addpunct{comma}\space#4}{#4}}%
+{\blx@addpunct{comma}\space#4}%
+}
+
+\renewrobustcmd*{\textcite}{\blx@citeargs\cbx@textcite}
+\newcommand{\cbx@textcite}[4]{%
+\citeauthor{#3}%
+\citacomes{#1}{#2}{#3}{#4}%
+}
+
+\renewrobustcmd*{\parencite}{\blx@citeargs\cbx@parencite}
+\newcommand{\cbx@parencite}[4]{%
+\citacomes{#1}{#2}{#3}{#4}%
+}
+
+\DeclareCiteCommand{\citeauthor}
+  {\usebibmacro{cite:init}%
+    \boolfalse{citetracker}%
+    \boolfalse{pagetracker}%
+    \usebibmacro{prenote}}%pre
+  {\ifciteindex
+     {\indexnames{labelname}}
+     {}%
+     \iffieldequals{namehash}{\cbx@lasthash}%
+     {}%repetit 
+     {\ifnumequal{\value{citecount}}{1}{}{\multicitedelim}%
+       \printnames{labelname}}%
+     \savefield{namehash}{\cbx@lasthash}%
+}%post
+  {}%\multicitedelim}%sep
+  {\usebibmacro{postnote}}
+
+
+\makeatother
+%cal escapar els accents: \parencite{tal} {é}s
+
+%http://tex.stackexchange.com/questions/28461/biblatex-tighter-integration-of-textcite-in-the-flow-of-text
+%http://tex.stackexchange.com/questions/19627/biblatex-idiom-for-testing-contents-of-list-field
+
+%-------------- dades --------------------------
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
+    pdftitle={Model dels SGBD Round Robin pel tractament de sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    pdfcreator={DiPSE--UPC},
+    pdfsubject={SGBD RRD},
+    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
+    pdflang=ca,
+    ]{hyperref}
+
+\def\figureautorefname{figura}
+
+\title{Model dels SGBD Round Robin}
+\author{Aleix Llusà Serra}
+%----------------------------------------------
+
+
+\begin{document}
+
+
+%------------- Pàgina de títol ------------
+%\maketitle
+%\input{portada}
+%----------------------------------------------
+
+%------------- Abstract ------------
+%\begin{abstract}
+%\include{resum}
+%\end{abstract}
+%----------------------------------------------
+
+%------------- Índexs ------------
+%\listoftodos
+%\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
+%\addtocontents{toc}{\protect\enlargethispage{1cm}}
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%----------------------------------------------
+
+
+
+%------------- Cos ------------
+%\frontmatter
+%\mainmatter
+
+\include{art}
+
+
+
+%------- Annexos ------
+%\appendix
+
+%\include{}
+
+
+%------- Bibliografia ------
+\cleardoublepage
+%\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+\pdfbookmark{\bibname}{bookmark:bibliografia}
+\printbibliography
+%----------------------------------------------
+
+%\backmatter
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Model dels  sistemes de gestió de bases de dades per sèries temporals.
+%
+% Copyright (C) 2011-2012 Aleix Llusà Serra.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
