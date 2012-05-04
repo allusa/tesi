@@ -1,14 +1,13 @@
 %--------------------
 % document principal
 %--------------------
-% cal compilar amb `pdflatex -shell-escape main.tex`
+% cal compilar amb `pdflatex main.tex`
 %--------------------
-\documentclass[paper=a4,fontsize=12pt,twoside,parskip=half,BCOR12mm]{scrbook}
+\documentclass[paper=a4,fontsize=11pt,twoside,parskip=half,BCOR12mm]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
 
 %------------- capçalera ----------------------
 \input{capçalera.default}
-\graphicspath{{imatges/}} %{{imatges/}{imatges/model/}}
 %---------- Mode esborrany --------------------
 %\includeonly{resum}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
@@ -20,8 +19,6 @@
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
 
-\DeclareMathOperator*{\seg}{seg}
-\DeclareMathOperator*{\ant}{ant}
 
 %anotacions a la bibliografia
 % \newboolean{bbx@annotation}% (same as biblatex-dw)
@@ -96,27 +93,31 @@
 %http://tex.stackexchange.com/questions/19627/biblatex-idiom-for-testing-contents-of-list-field
 
 %-------------- dades --------------------------
-\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
-    pdftitle={Model dels SGBD Round Robin pel tractament de sèries temporals},
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle]{hyperref}
+
+\hypersetup{
+    pdftitle={Model dels SGBD per sèries temporals},
     pdfauthor={Aleix Llusà Serra},
     pdfcreator={DiPSE--UPC},
-    pdfsubject={SGBD RRD},
+    pdfsubject={SGST},
     pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
     pdflang=ca,
-    ]{hyperref}
+}
+
 
 \def\figureautorefname{figura}
 
-\title{Model dels SGBD Round Robin}
+\title{Model dels SGBD per sèries temporals}
 \author{Aleix Llusà Serra}
 %----------------------------------------------
 
-\includeonly{seriestemporals}
+%\includeonly{seriestemporals}
 
 \begin{document}
 
 \tableofcontents{}
 
+\include{art}
 \include{seriestemporals}
 \include{sgbd}
 
