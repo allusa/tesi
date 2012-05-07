@@ -113,7 +113,7 @@ Una altra solució consisteix en tenir les dades distribuïdes en diferents sens
 
 Els sistemes de monitoratge habitualment reben problemes derivats de la reco\l.lecció de dades. Principalment distingim tres problemes.
 
-\begin{itemize}
+\begin{enumerate}
 \item El primer problema és la gestió d'una quantitat enorme de dades. 
 
 Un sistema de monitoratge recull una gran quantitat de dades. Ara bé, l'usuari només en pot observar una petita part sincronitzat (\emph{online}) amb el procés i les dades emmagatzemades esdevenen massa grans per a ser processades posteriorment \parencite{keogh97}. No obstant, les dades han de ser analitzades ja que contenen informació interessant per a les aplicacions de les sèries temporals descrites a l'apartat anterior. S'observa que en el context de monitoratge les dades recollides es poden considerar com a sèries temporals ja que abstractament són una co\l.lecció de mesures.
@@ -134,7 +134,7 @@ Una altra causa es deu a que l'adquisició de dades prové de processos sotmesos
 Per una banda, els sistemes de monitoratge tenen una part de l'adquisició controlada per les aplicacions de control en temps real i per tant el període de mostreig resultant que veu el monitor no és regular. 
 Per altra banda, les aplicacions que analitzen les dades obtingudes del monitoratge poden veure com la seva actuació es degrada si no consideren que l'adquisició de dades és irregular, el qual és similar a la regressió que s'observa \parencite{lozoya08} quan en el disseny d'un controlador discret es considera que es mostreja i s'actua periòdicament però en la implementació amb un sistema en temps real aquest pot fluctuar la periodicitat.
 
-\end{itemize}
+\end{enumerate}
 
 
 
@@ -146,17 +146,21 @@ En conclusió, per tal de gestionar la complexitat derivada de la recollida de d
 
 \subsection{Anàlisi de sèries temporals}
 
-La mineria de sèries temporals (\emph{time series data mining}) és el procés d'anàlisis i descobriment de patrons en sèries temporals. És un camp recent que acompanya els processos de descobriment de coneixement a les bases de dades (\emph{knowledge discovery in databases}) \parencite{last01}.
-
+L'anàlisi de sèries temporals consisteix en l'aplicació de models i de algoritmes que s'estudien en la mineria de sèries temporals (\emph{time series data mining}). La mineria de dades, en la qual s'inscriu la de sèries temporals, és l'estudi d'algoritmes específics per a extreure patrons de les dades i s'inclou com un pas del procés general de descobriment de coneixement a les bases de dades (\emph{knowledge discovery in databases}) \parencite{fayyad96,last01}.
 
 La recerca en mineria de sèries temporals s'ha incrementat en la darrera dècada tal com esmenta \textcite{fu11} en un article recent. L'objectiu principal és reduir la mida de les sèries temporals per tal de processar amb menor temps les dades.
 \citeauthor{fu11} resumeix l'estat actual de la mineria de sèries temporals de forma exhaustiva i conclou que encara queden molts problemes per investigar i resoldre. La recerca en tasques de mineria ha estat intensa però es necessita millorar la representació de sèries temporals, ja que es considera el pas que redueix la mida de les dades. A més a més, les sèries temporals es consideren un dels deu problemes prioritaris  en la mineria de dades \parencite{yangwu06}.
 
-Segons \textcite{keogh02}, les quatre tasques que centren l'atenció de la recerca actual de sèries temporals són l'indexat (\emph{indexing}), l'agrupament (\emph{clustering}), la classificació (\emph{classification}) i la segmentació (\emph{segmentation}). A més, \citeauthor{keogh02} comparen  alguns algoritmes experimentals duts a terme en aquests camps per diversos autors. Recomanen a la comunitat de mineria de sèries temporals que segueixi el seu estudi com a punt de referència per avaluar el rendiment d'algoritmes similars.
+Segons \textcite{keogh02}, les quatre tasques que centren l'atenció de la recerca actual de sèries temporals són
+l'indexat (\emph{indexing}), que treballa amb una estructura comprimida de les dades;
+l'agrupament (\emph{clustering}), que agrupa les dades segons la similitud entre elles per tal de descobrir patrons;
+la classificació (\emph{classification}), que etiqueta les dades segons les característiques que presentin;
+i la segmentació (\emph{segmentation}), que parteix una sèrie temporal en subseqüències.
+A més, \citeauthor{keogh02} comparen  alguns algoritmes experimentals duts a terme en aquests camps per diversos autors. Recomanen a la comunitat de mineria de sèries temporals que segueixi el seu estudi com a punt de referència per avaluar el rendiment d'algoritmes similars.
 
-Un pas comú previ a les quatre tasques anteriors és el de representació de la sèrie temporal. 
+Un pas comú previ a les quatre tasques anteriors és el de representació de la sèrie temporal. Les sèries temporals són discretes, són valors en punts de temps discrets, i la representació és el model de funció que aproxima la sèrie temporal a la seva naturalesa contínua original. La mineria de sèries temporals aprofita la representació per reduir la mida de les sèries temporals.
 La representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise Linear Representation}) \parencite{keogh97,keogh98} {é}s la més habitual actualment per ser més propera als usuaris ja que la visió de l'ésser humà segmenta les corbes en línies rectes.
-Després de definir la PLR, \textcite{keogh00,keogh01} exploren altres representacions de sèries temporals per tal de reduir la dimensió d'una sèrie temporal i poder-la indexar més fàcilment. Proposen dues tècniques eficients en el càlcul: la \emph{Piecewise Aggregate Aproximation} i la \emph{Adaptive Piecewise Constant Approximation}, ambdues basades en la representació a trossos constants de la sèrie temporal. 
+Després de definir la PLR, \textcite{keogh00,keogh01} exploren altres representacions de sèries temporals per tal de reduir la mida d'una sèrie temporal i poder-la indexar més fàcilment. Proposen dues tècniques eficients en el càlcul: la \emph{Piecewise Aggregate Aproximation} i la \emph{Adaptive Piecewise Constant Approximation}, ambdues basades en la representació a trossos constants de la sèrie temporal. 
 D'aquestes dues tècniques, \citeauthor{keogh00,keogh01} conclouen que mantenen una bona aproximació a la sèrie temporal i que a més  tenen molt menys cost de càlcul que altres de més complicades, com ara la \emph{Discrete Fourier Transform},  la  \emph{Singular Value Decomposition} o la \emph{Discrete Wavelet Transform}.
 
 
