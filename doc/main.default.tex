@@ -3,11 +3,12 @@
 %--------------------
 % cal compilar amb `pdflatex -shell-escape main.tex`
 %--------------------
-\documentclass[paper=a4,fontsize=12pt,twoside,parskip=half,BCOR12mm]{scrbook}
+\documentclass[paper=a4,fontsize=11pt,twoside,parskip=half,BCOR12mm]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
-
 %------------- capçalera ----------------------
 \input{capçalera.default}
+\bibliography{bibliografia}
+%\ExecuteBibliographyOptions{annotation=true,backref=true,}
 \graphicspath{{imatges/}} %{{imatges/}{imatges/model/}}
 %---------- Mode esborrany --------------------
 %\includeonly{resum}
@@ -16,25 +17,23 @@
 %%\renewcommand{\headrulewidth}{0pt}
 %----------------------------------------------
 
-
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
-
+\newtheorem{definition}{Definició}
+\def\figureautorefname{figura} %ús: \autoref{}
+\numberwithin{equation}{chapter}
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
 %-------------- dades --------------------------
-\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
-    pdftitle={Model dels SGBD Round Robin pel tractament de sèries temporals},
+\hypersetup{
+    pdftitle={Model dels SGBD per sèries temporals},
     pdfauthor={Aleix Llusà Serra},
     pdfcreator={DiPSE--UPC},
-    pdfsubject={SGBD RRD},
+    pdfsubject={SGST},
     pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
     pdflang=ca,
-    ]{hyperref}
-
-\def\figureautorefname{figura}
-
-\title{Model dels SGBD Round Robin}
+}
+\title{Model dels SGBD per sèries temporals}
 \author{Aleix Llusà Serra}
 %----------------------------------------------
 
@@ -91,7 +90,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-% Model dels  sistemes de gestió de bases de dades per sèries temporals.
+% Model dels sistemes de gestió de bases de dades per sèries temporals.
 %
 % Copyright (C) 2011-2012 Aleix Llusà Serra.
 % 
