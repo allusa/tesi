@@ -4,11 +4,13 @@
 % cal compilar amb `pdflatex -shell-escape main.tex`
 % makeglossaries main
 %--------------------
-\documentclass[paper=a4,fontsize=12pt,twoside,parskip=half,BCOR12mm]{scrbook}
+\documentclass[paper=a4,fontsize=11pt,twoside,parskip=half,BCOR12mm]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
-
+%\usepackage[T1]{fontenc}
 %------------- capçalera ----------------------
 \input{capçalera.default}
+\bibliography{bibliografia}
+\ExecuteBibliographyOptions{annotation=true,backref=true,}
 %\graphicspath{{imatges/}} %{{imatges/}{imatges/model/}}
 %---------- Mode esborrany --------------------
 %\includeonly{model-dades}
@@ -20,22 +22,15 @@
 %\usetikzlibrary{calc}
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
-
+\newtheorem{definition}{Definició}
+\def\figureautorefname{figura} %ús: \autoref{}
+\numberwithin{equation}{chapter}
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
 
 \usepackage{longtable}
 
-\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
-    pdftitle={Model dels SGBD per sèries temporals},
-    pdfauthor={Aleix Llusà Serra},
-    %pdfcreator={},
-    pdfsubject={SGSTM (MTSMS)},
-    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals (SGST); model SGST multiresolució},
-    pdflang=ca,
-    ]{hyperref}
-
-
+%glossaris
 \usepackage[
           acronym,
           %nonumberlist,
@@ -52,9 +47,17 @@
 \loadglsentries{glossari-abreviacions.tex}
 \loadglsentries[notation]{notacio.tex}
 
-
-\def\figureautorefname{figura}
-
+%-------------- dades --------------------------
+\hypersetup{
+    pdftitle={Model dels SGBD per sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    pdfcreator={DiPSE--UPC},
+    pdfsubject={SGST},
+    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
+    pdflang=ca,
+}
+\title{Model dels SGBD per sèries temporals}
+\author{Aleix Llusà Serra}
 \title{Model dels SGBD per sèries temporals}
 \author{Aleix Llusà Serra}
 %----------------------------------------------
