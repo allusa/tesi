@@ -140,14 +140,14 @@
 
 
 
-@inbook{date05,
+@inbook{date06:_datab_types_relat_model,
   author = 	 {Date, C. J. and Darwen, Hugh},
-  title = {Reference Material from 3rd Edition},
+  title = {Databases, Types and the Relational Model},
   chapter = {4,5,A,I},
   booktitle = 	 {Databases, Types and the Relational Model},
-  year = 	 {2006},
-  edition = {3},
-  isbn = {0321399420},
+  year = 	 2006,
+  edition = 3,
+  isbn = 0321399420,
   publisher = 	 {Pearson Education},
   url = {http://www.thethirdmanifesto.com/},
   urldate = {2012-04-01},
@@ -156,21 +156,23 @@
 
 
 
-@book{date02:temporal,
+@book{date02:_tempor_data_relat_model,
  author = {Date, Chris and Darwen, Hugn},
  title = {Temporal Data and the Relational Model},
- year = {2002},
- isbn = {1558608559},
+ year = 2002,
+ isbn = 1558608559,
  publisher = {Morgan Kaufmann Publishers Inc.},
  address = {San Francisco, CA, USA},
+ doi = {10.1016/B978-155860855-9/50047-7},
 } 
+%http://www.sciencedirect.com/science/book/9781558608559
 
 
 @inproceedings{date02:foundation,
  author = {Date, C. J.},
  title = {Foundation matters},
  booktitle = {Proceedings of the 28th international conference on Very Large Data Bases},
- series = {VLDB '02},
+ series = {VLDB'02},
  year = {2002},
  location = {Hong Kong, China},
  pages = {2},
@@ -215,6 +217,109 @@
  url = {http://nosql-database.org/},
  urldate = {2012-05-01},
 }
+
+
+
+%%------- articles i tesis de SGBD -------
+
+@inproceedings{stonebraker86,
+  author    = {Michael Stonebraker},
+  title     = {Inclusion of New Types in Relational Data Base Systems},
+  booktitle = {Proceedings of the Second International Conference on Data Engineering},
+  series    = {ICDE'86},
+  month     = {02},
+  year      = {1986},
+  pages     = {262--269},
+  address   = {Los Angeles, California, USA},
+  publisher = {IEEE Computer Society},
+  bibsource = {DBLP, http://dblp.uni-trier.de},
+  url = {http://pages.cs.wisc.edu/~nil/764/ORDB/34_stonebraker86inclusion.pdf},
+  urldate = 	 {2011-11-08},
+  annotation = {La definició de nous tipus per part de l'usuari. ADT: abstract data types}, 
+} 
+%Tot i així, cal recordar que Date considera que la definició de nous tipus a SQL té mássa detalls d'implementació i no contempla adequadament el que ell anomena possible representacions.
+
+
+@InProceedings{stonebraker86:sigmod,
+  author = 	 {Michael Stonebraker and Lawrence A. Rowe},
+  title = 	 {The design of POSTGRES},
+  booktitle = {Proceedings of the 1986 ACM SIGMOD international conference on Management of data},
+  series = {SIGMOD'86},
+  pages = 	 {340--355},
+  year = 	 {1986},
+  address = 	 {New York, USA},
+  month = 	 {06},
+  publisher = {ACM},
+  doi = {10.1145/16894.16888},
+}
+%urldate = 	 {2011-06-28},
+
+
+
+@article{stonebraker10,
+ author = {Stonebraker, Michael},
+ title = {SQL databases v. NoSQL databases},
+ journal = {Communications of the ACM},
+ issue_date = {April 2010},
+ volume = {53},
+ number = {4},
+ month = {04},
+ year = {2010},
+ pages = {10--11},
+ doi = {10.1145/1721654.1721659},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ annotation = {Stonebraker comenta que els productes NoSQL exploren la part de baix nivell dels SGBD. Explica que el canvi entre diferents SGBD es pot donar per motius de rendiment i flexibilitat i parla dels criteris de rendiment (OLTP, logging, buffer, ACID, etc.). Conclou que es pot parlar d'aquests criteris però que no s'hauria d'abandonar l'SQL.},
+} 
+
+@article{stonebraker09,
+ author = {Stonebraker, Michael and Hong, Jason},
+ title = {Saying good-bye to DBMSs, designing effective interfaces},
+ journal = {Communications of the ACM},
+ issue_date = {September 2009},
+ volume = {52},
+ number = {9},
+ month = {09},
+ year = {2009},
+ pages = {12--13},
+ doi = {10.1145/1562164.1562169},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ annotation = {Stonebraker descriu la millora de rendiment de les noves implementacions de SGBD, però confón en situar les implmentacions tradicionals de SGBD com a model relacional. Diu que les implementacions amb taules poden no ser adients en determinades aplicacions, i té raó, però no és cert que el model relacional obligui a que la implementació es faci amb relacions sinó que es pot fer amb qualsevol dels mètodes que descriu.} 
+}
+
+@inproceedings{stonebraker07,
+ author = {Stonebraker, Michael and Madden, Samuel and Abadi, Daniel J. and Harizopoulos, Stavros and Hachem, Nabil and Helland, Pat},
+ title = {The end of an architectural era: (it's time for a complete rewrite)},
+ booktitle = {Proceedings of the 33rd international conference on Very large data bases},
+ series = {VLDB'07},
+ year = {2007},
+ location = {Vienna, Austria},
+ pages = {1150--1160},
+ url = {http://www.vldb.org/conf/2007/papers/industrial/p1150-stonebraker.pdf},
+ urldate = {2012-03-26},
+ publisher = {VLDB Endowment},
+ annotation = {Stonebraker intueix la fi dels SGBD 'one size fits all' pel que afa a rendiment, és a dir que creu que cada aplicació necessita una implementació adequada. Amb aquesta afirmació té tota la raó, en dóna mostres amb detalls d'implementació que milloren el rendiment, però al final confón model amb implementació: 'The Relational Model Is not Necessarily the Answer'. Tot i que reconeix que 'stars and snowflakes are easily modeled using relational schemas' confón en atribuir problemes de rendiment al model relacional, ja que aquest com a model no té i no pot tenir cap especificació de rendiment. Tot i que més endavant atribueix la culpa correctament a les implementacions: 'SQL is Not the Answer'.},
+} 
+
+
+@article{seshadri98:_enhan,
+ author = {Seshadri, Praveen},
+ title = {Enhanced abstract data types in object-relational databases},
+ journal = {The VLDB Journal},
+ issue_date = {August 1998},
+ volume = 7,
+ number = 3,
+ month = {08},
+ year = 1998,
+ pages = {130--140},
+ doi = {10.1007/s007780050059},
+ publisher = {Springer-Verlag New York, Inc.},
+ address = {Secaucus, NJ, USA},
+ keywords = {Database types, Extensibility, Object-relational database, Query optimization},
+} 
+
+
 
 
 
@@ -504,87 +609,6 @@
 }
 
 
-%%------- articles i tesis de SGBD -------
-
-@inproceedings{stonebraker86,
-  author    = {Michael Stonebraker},
-  title     = {Inclusion of New Types in Relational Data Base Systems},
-  booktitle = {Proceedings of the Second International Conference on Data Engineering},
-  series    = {ICDE'86},
-  month     = {02},
-  year      = {1986},
-  pages     = {262--269},
-  address   = {Los Angeles, California, USA},
-  publisher = {IEEE Computer Society},
-  bibsource = {DBLP, http://dblp.uni-trier.de},
-  url = {http://pages.cs.wisc.edu/~nil/764/ORDB/34_stonebraker86inclusion.pdf},
-  urldate = 	 {2011-11-08},
-  annotation = {La definició de nous tipus per part de l'usuari. ADT: abstract data types}, 
-} 
-%Tot i així, cal recordar que Date considera que la definició de nous tipus a SQL té mássa detalls d'implementació i no contempla adequadament el que ell anomena possible representacions.
-
-
-@InProceedings{stonebraker86:sigmod,
-  author = 	 {Michael Stonebraker and Lawrence A. Rowe},
-  title = 	 {The design of POSTGRES},
-  booktitle = {Proceedings of the 1986 ACM SIGMOD international conference on Management of data},
-  series = {SIGMOD'86},
-  pages = 	 {340--355},
-  year = 	 {1986},
-  address = 	 {New York, USA},
-  month = 	 {06},
-  publisher = {ACM},
-  doi = {10.1145/16894.16888},
-}
-%urldate = 	 {2011-06-28},
-
-
-
-@article{stonebraker10,
- author = {Stonebraker, Michael},
- title = {SQL databases v. NoSQL databases},
- journal = {Communications of the ACM},
- issue_date = {April 2010},
- volume = {53},
- number = {4},
- month = {04},
- year = {2010},
- pages = {10--11},
- doi = {10.1145/1721654.1721659},
- publisher = {ACM},
- address = {New York, NY, USA},
- annotation = {Stonebraker comenta que els productes NoSQL exploren la part de baix nivell dels SGBD. Explica que el canvi entre diferents SGBD es pot donar per motius de rendiment i flexibilitat i parla dels criteris de rendiment (OLTP, logging, buffer, ACID, etc.). Conclou que es pot parlar d'aquests criteris però que no s'hauria d'abandonar l'SQL.},
-} 
-
-@article{stonebraker09,
- author = {Stonebraker, Michael and Hong, Jason},
- title = {Saying good-bye to DBMSs, designing effective interfaces},
- journal = {Communications of the ACM},
- issue_date = {September 2009},
- volume = {52},
- number = {9},
- month = {09},
- year = {2009},
- pages = {12--13},
- doi = {10.1145/1562164.1562169},
- publisher = {ACM},
- address = {New York, NY, USA},
- annotation = {Stonebraker descriu la millora de rendiment de les noves implementacions de SGBD, però confón en situar les implmentacions tradicionals de SGBD com a model relacional. Diu que les implementacions amb taules poden no ser adients en determinades aplicacions, i té raó, però no és cert que el model relacional obligui a que la implementació es faci amb relacions sinó que es pot fer amb qualsevol dels mètodes que descriu.} 
-}
-
-@inproceedings{stonebraker07,
- author = {Stonebraker, Michael and Madden, Samuel and Abadi, Daniel J. and Harizopoulos, Stavros and Hachem, Nabil and Helland, Pat},
- title = {The end of an architectural era: (it's time for a complete rewrite)},
- booktitle = {Proceedings of the 33rd international conference on Very large data bases},
- series = {VLDB '07},
- year = {2007},
- location = {Vienna, Austria},
- pages = {1150--1160},
- url = {http://www.vldb.org/conf/2007/papers/industrial/p1150-stonebraker.pdf},
- urldate = {2012-03-26},
- publisher = {VLDB Endowment},
- annotation = {Stonebraker intueix la fi dels SGBD 'one size fits all' pel que afa a rendiment, és a dir que creu que cada aplicació necessita una implementació adequada. Amb aquesta afirmació té tota la raó, en dóna mostres amb detalls d'implementació que milloren el rendiment, però al final confón model amb implementació: 'The Relational Model Is not Necessarily the Answer'. Tot i que reconeix que 'stars and snowflakes are easily modeled using relational schemas' confón en atribuir problemes de rendiment al model relacional, ja que aquest com a model no té i no pot tenir cap especificació de rendiment. Tot i que més endavant atribueix la culpa correctament a les implementacions: 'SQL is Not the Answer'.},
-} 
 
 
 
@@ -622,7 +646,7 @@
 @InProceedings{assfalg08:ttime,
   author = 	 {Johannes A{\ss}falg and Hans-Peter Kriegel and Peer Kr{\"o}ger, Peter Kunath and Alexey Pryakhin and Matthias Renz},
   title = 	 {T-Time: Threshold-Based Data Mining on Time Series},
-  booktitle = {Proceedings of the 24th International Conference on Data Engineering)},
+  booktitle = {Proceedings of the 24th International Conference on Data Engineering},
   series =       {ICDE'08},
   pages = 	 {1620-1623},
   year = 	 {2008},
@@ -915,7 +939,7 @@ urldate = {2012-04-16},
  author = {Jagadish, H. V. and Mumick, Inderpal Singh and Silberschatz, Abraham},
  title = {View maintenance issues for the chronicle data model (extended abstract)},
  booktitle = {Proceedings of the fourteenth ACM SIGACT-SIGMOD-SIGART symposium on Principles of database systems},
- series = {PODS '95},
+ series = {PODS'95},
  year = {1995},
  location = {San Jose, California, United States},
  pages = {113--124},
@@ -946,7 +970,7 @@ annotation = {Seqüències temporals observades com a \emph{data streams}. Les c
  author = {Babcock, Brian and Babu, Shivnath and Datar, Mayur and Motwani, Rajeev and Widom, Jennifer},
  title = {Models and issues in data stream systems},
  booktitle = {Proceedings of the twenty-first ACM SIGMOD-SIGACT-SIGART symposium on Principles of database systems},
- series = {PODS '02},
+ series = {PODS'02},
  year = {2002},
  location = {Madison, Wisconsin},
  pages = {1--16},
@@ -985,7 +1009,7 @@ annotation = {Seqüències temporals observades com a \emph{data streams}. Les c
  author = {Bonnet, Philippe and Gehrke, Johannes and Seshadri, Praveen},
  title = {Towards Sensor Database Systems},
  booktitle = {Proceedings of the Second International Conference on Mobile Data Management},
- series = {MDM '01},
+ series = {MDM'01},
  volume = {1987},
  year = {2001},
  month = {01},
@@ -1067,7 +1091,7 @@ annotation = {Seqüències temporals observades com a \emph{data streams}. Les c
  author = {Fung, Wai Fu and Sun, David and Gehrke, Johannes},
  title = {COUGAR: the network is the database},
  booktitle = {Proceedings of the 2002 ACM SIGMOD international conference on Management of data},
- series = {SIGMOD '02},
+ series = {SIGMOD'02},
  year = {2002},
  location = {Madison, Wisconsin},
  pages = {621--621},
@@ -1400,7 +1424,7 @@ doi={10.1109/TII.2008.2002702},
  author = {Zhang, Ying and Kersten, Martin and Ivanova, Milena and Nes, Niels},
  title = {SciQL: bridging the gap between science and relational DBMS},
  booktitle = {Proceedings of the 15th Symposium on International Database Engineering \& Applications},
- series = {IDEAS '11},
+ series = {IDEAS'11},
  year = {2011},
  location = {Lisboa, Portugal},
  pages = {124--133},
@@ -1418,7 +1442,7 @@ doi={10.1109/TII.2008.2002702},
  author = {Kersten, Martin and Zhang, Ying and Ivanova, Milena and Nes, Niels},
  title = {SciQL, a query language for science applications},
  booktitle = {Proceedings of the EDBT/ICDT 2011 Workshop on Array Databases},
- series = {AD '11},
+ series = {AD'11},
  year = {2011},
  location = {Uppsala, Sweden},
  pages = {1--12},

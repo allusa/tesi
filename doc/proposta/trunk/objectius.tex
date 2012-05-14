@@ -12,3 +12,40 @@ having interval-valued attributes.
 Propose additional constraints on relation variables having interval-valued
 attributes.
 [transparencies darwen]
+
+
+
+Els SGBD relacionals són capaços d'implementar el primer tipus de coherència, les \emph{bitemporal data}; llavors es classifiquen sota el nom de bases de dades temporals, \cite{date:introduction,wiki:temporal_database}. Però el model relacional no és suficient pel segon tipus: les sèries temporals. Tot i que en principi no hi hauria cap problema a utilitzar una base de dades relacional per a sèries temporals, enteses com a dades històriques, la pròpia naturalesa dels sistemes relacionals  dificulta les operacions necessàries. 
+
+Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date:introduction}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series \parencite{schmidt95}. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
+
+
+A TSMS could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no consolidated data model  for time series. 
+
+
+
+Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBDR s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
+
+Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional?.
+
+Segon, s'hauria de considerar que el SGST són un nou tipus de dades en el model relacional i per tant el model relacional ja té tota la potència per una banda constituir SGBD i per altra banda definir i incorporar nous tipus.
+
+
+Com es defineixen nous tipus complexos als SGBD?
+
+En el cas que es descarti que el cas dels SGST presenta els mateixos problemes que les dades temporals i per tant els SGST han d'esdevenir un tipus de dades, cal preguntar-se com són els tipus de dades al model relacional.
+
+Concretament el model relacional només defineix què es un tipus de dades però dóna llibertat a la seva creació. Això és un gran avantatge. En els cas de tipus de dades senzills es defineixen amb una bona estructura i ja està però què passa quan es vol definir un nou tipus de dades complex?
+
+Cal recercar com s'han definit nous tipus de dades complexos. Els principals problemes es donen que el tipus és complex i forma una entitat de per sí. És a dir que definir un tipus sèrie temporal no és trivial. Aleshores, com cal procedir?
+
+
+
+Sobre la necessitat de modelar els tipus.
+
+Cal definir un model pel tipus que volem dissenyar.
+De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un SGBD. Per tant, utilitzarem les mateixes eines que es fan servir per modelar els SGBDR per a poder modelar el nostre SGST. Com que s'hauran utilitzat les mateixes eines, el SGST podrà esdevenir perfectament un tipus de dades pels SGBDR.
+
+En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
+
+Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.

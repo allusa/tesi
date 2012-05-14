@@ -64,7 +64,9 @@ errors, alguns dels quals han estat avaluats i desmentits per
 \citeauthor{dbdebunk} en vàries
 publicacions \parencite{dbdebunk,date06}, i que per altra banda han
 contribuït en gran mesura a voler explorar altres models de
-SGBD \parencite{stonebraker09}.
+SGBD \parencite{stonebraker09}, els quals presenten diferents maneres
+de representar les dades: llistes, seqüències, enllaços, matrius, etc.
+%[date06pp116,134]
 
 Tot i així, \textcite[cap.~21--25]{date06} considera que els nous
 models de SGBD, a vegades anomenats post-relacionals, no estan fundats
@@ -84,12 +86,14 @@ Actualment \textcite{date:thethirdmanifesto} estan treballant en el
 relacionals. Destaquen que, en el model relacional, els tipus i les
 relacions són necessaris i suficients per representar absolutament
 qualsevol tipus de dades a nivell lògic. %[date06ch21,370]
-Amb aquesta definició s'entén que els SGBDR també es puguin anomenar
-SGBD objecte/relacionals (\emph{object/relational}).  Com a proposta
-per a obtenir SGBDR purament relacionals
-\textcite{date05,date:tutoriald} estan definint les regles d'un nou
-llenguatge, \emph{Tutorial D}, que ha de servir pels estudis del model
-relacional a nivell acadèmic.
+Amb aquesta definició de sistema que permet tipus definits per
+l'usuari, s'entén que els SGBDR també es puguin anomenar SGBD
+objecte/relacionals (\emph{object/relational})
+\parencite{date02:foundation}.  Com a proposta per a obtenir SGBDR
+purament relacionals
+\textcite{date06:_datab_types_relat_model,date:tutoriald} estan
+definint les regles d'un nou llenguatge, \emph{Tutorial D}, que ha de
+servir pels estudis del model relacional a nivell acadèmic.
 
 
 \textcite[cap.~6]{date06} manifesta i avisa de l'ús de la mateixa
@@ -101,21 +105,21 @@ model d'orientació a objectes és més proper a un model
 d'emmagatzematge. % 'the object model' is closer to being a model of
                   % storage than it is to being a model of
                   % data. [date06ch6pp92]
-A la \autoref{tab:sgbd:relacional-objectes} es resumeix la possible equivalència lògica dels
-conceptes entre el model relacional i l'orientació a objectes tal com
-Date exposa al capítol 6, tot i que cal tenir en compte que
-la semblança és difusa.
+A la \autoref{tab:sgbd:relacional-objectes} es resumeix la possible
+equivalència lògica dels conceptes entre el model relacional i
+l'orientació a objectes tal com Date exposa al capítol 6, tot i que
+cal tenir en compte que la semblança és difusa.
 
 
 \begin{table}
 \centering
 \begin{tabular}[ht]{ll}
   relacional & objectes \\\hline \hline
-  tipus & tipus, classe\footnote{tipus amb atributs i mètodes}, interfície \\\hline
+  tipus & tipus, classe, interfície \\\hline
   representació & classe, atributs, propietats \\\hline
   valor, objecte, instància & valor, estat, objecte/instància immutable/estàtic \\\hline
   variable & valor, objecte/instància mutable/dinàmic \\\hline
-  referència\footnote{adreça continguda en una variable} & variable \\\hline
+  referència & variable \\\hline
   operador & funció, mètode \\\hline
 \end{tabular}
 \caption{Possible equivalència lògica de termes entre el model relacional i l'orientació a objectes \parencite[cap.~6]{date06}.}
@@ -140,7 +144,7 @@ Aquesta diferència entre implementació i model aporta independència de dades 
 \textcite{dbdebunk} detallen algunes confusions actuals sobre la independència entre el model i la implementació.
 
 
-Com s'ha dit anteriorment, Date descriu els SGBD \emph{SQL} com a implementacions no fidels al model relacional, encara que aquests productes comercialment es coneguin com a SGBDR. Com a proposta per a obtenir SGBDR purament relacionals \textcite{date05,date:tutoriald} han definit el llenguatge \emph{Tutorial D} i ja està donant resultats amb SGBDR com \emph{Rel} .
+Com s'ha dit anteriorment, Date descriu els SGBD \emph{SQL} com a implementacions no fidels al model relacional, encara que aquests productes comercialment es coneguin com a SGBDR. Com a proposta per a obtenir SGBDR purament relacionals \textcite{date06:_datab_types_relat_model,date:tutoriald} han definit el llenguatge \emph{Tutorial D} i ja està donant resultats amb SGBDR com \emph{Rel} .
 
 
 Recentment ha aparegut un nou corrent en l'àmbit dels SGBD que s'anomena NoSQL (\emph{Not Only SQL}) amb l'objectiu de sobrepassar les limitacions dels SGBDR \parencite{edlich:nosql,stonebraker10}. 
@@ -163,175 +167,96 @@ En resum, l'àmbit informàtic de SGBD se centra en les implementacions. Recerca
 Per altra banda, l'àmbit matemàtic de SGBD, amb el model relacional com a màxim exponent, se centra en els conceptes dels SGBD. Recerca en millorar-ne la comprensió, en obtenir la màxima potència de cara a la gestió de dades per part de l'usuari o en obtenir nous models, encara que  no s'ha trobat cap altre model que tingui la mateixa potència que el relacional. Cal destacar que tot i tenir conceptes antics consolidats i que han tingut èxit amb els SGBD SQL, s'obre una nova perspectiva amb Tutorial D i les implementacions que comencen a prendre cos  a nivell acadèmic. La idea bàsica dels SGBDR és que ho són realment quan la base de dades conté i només conté variables relacions els atributs de les quals admeten qualsevol tipus, respectivament definit per Date com a \emph{Information Principle} o \emph{The Principle of Uniform Representation} \parencite{date:dictionary} i que la teoria de tipus i el model relacional són ortogonals és a dir independents \parencite[cap.~6]{date06}.
 
 
-%Ara bé, una implementació d'un SGBD que vulgui  obtenir un bon rendiment en una determinada aplicació potser no pot implementar el model relacional complet sinó que només una part
+%Ara bé, una implementació d'un SGBD que vulgui  obtenir un bon rendiment en una determinada aplicació potser no pot implementar el model relacional complet sinó que només una part [saake07]
 
 
 
 
+
+\subsection{Extensió del model}
 %Com s'ha d'estendre el model relacional?
-\subsection{Extensió del model relacional}
+
+El model relacional va evolucionat i no es considera que hi hagi hagut
+cap revolució des de la seva aparició
+\parencite[cap.~19]{date06}. %[date06ch19pp254]
+Consideren que el model relacional està bastant completat i que
+evoluciona en la comprensió de les teories i els conceptes que hi
+intervenen, com per exemple la recent àlgebra relacional
+'A' \parencite[ap.~A]{date06:_datab_types_relat_model}.  En aquest
+context d'evolució, es contemplen les investigacions que poden
+estendre el model relacional, és a dir, aconseguir abstraccions més
+generals de les dades \parencite[cap.~25]{date06}. %[date06ch25pp441]
+
+% En l'extensió hi ha el què després s'aplica a sobre: optimitzacions,
+% redundàncies, etc.
+
+En el sentit d'extensió, també cal contemplar la definició de nous
+tipus de dades, els quals estenen els SGBD en funcionalitat.  Aquests
+nous tipus poden afegir estructures i operadors que ja siguin
+expressables amb l'àlgebra relacional. No obstant, un bon model d'un
+tipus serveix per apujar el nivell d'abstracció en el tractament dels
+conceptes relacionats amb el
+tipus. %[date02:_temporal_data:prefaceppxix]
+
+Com s'ha dit anteriorment, la teoria de tipus i el model relacional
+són ortogonals: el model relacional requereix que hi hagi un 'sistema'
+de tipus però diu molt poc de la naturalesa d'aquest sistema de tipus,
+si bé el model relacional defineix que com a mínim hi ha d'haver el
+tipus booleà i el tipus relació \parencite{date:thethirdmanifesto}. Pel que
+fa a implementar el tipus de dades en els SGBD, els quals aleshores
+també s'anomenen SGBD objecte/relacionals, destaquen les primeres
+propostes fetes per \textcite{stonebraker86} per tal que els usuaris
+puguin definir els seus propis tipus i les de
+\textcite{seshadri98:_enhan} que estudia la definició de tipus de
+dades complexos per tal que es puguin tractar eficientment.
 
 
 
-                                And those investigations in turn can lead to (compatible!)
-extensions to the original model; that is, the model can grow over time to become an
-ever more faithful abstraction of data “as it really is.” In other words, a model of data is
-really a theory of data (or at least the beginnings of one), and it’s not a static thing [date06ch25pp441]
+
+\subsubsection{Dades temporals}
+
+Una de les extensions importants del model relacional s'ha produït amb
+l'estudi de les dades
+temporals \parencite{date02:_tempor_data_relat_model}. Amb el model de
+dades temporals basat en el model relacional s'obtenen SGBDR capaços
+d'emmagatzemar i consultar dades històriques.
+
+El model de les dades
+temporals \parencite{date02:_tempor_data_relat_model} es basa en
+relacions i intervals per representar les dades històriques. Cada
+relació s'estén amb un atribut que és un interval temporal que indica
+el rang temporal de validesa de les proposicions. A més el model també
+defineix les operacions necessàries per tractar amb les dades
+temporals. Aquestes operacions són extensions de l'àlgebra relacional.
+El principal objectiu del model de dades temporals és poder tenir
+suport per a les dades històriques en els SGBDR.
+\textcite[cap.~28]{date06} compara aquest model per dades temporals
+amb altres aproximacions que s'han fet no basades en el model
+relacional.
 
 
 
-Date considera que el model relacional va evolucionat i no considera que hi hagi hagut cap revolució des de la seva aparició [date06ch19pp254]. Tot i que hi ha noves maneres per explicar-lo, com és el cas de l'àlgebra relacional 'A' \todo{cite apxA dates and types o thirdmanifesto}. Consideren que el model relacional està bastant completat i que evoluciona en la comprensió de les teories i els conceptes que hi intervenen. 
+El model de dades temporals representa les dades històriques amb el
+temps vàlid i temps de
+transacció \parencite[cap.~15]{date02:_tempor_data_relat_model}, el
+que es coneix com a dades bitemporals.
 
-Només hi ha hagut un àmbit en el que han admès que s'havia d'estendre el model relacional i aquest és el de les dades temporals \todo{citar date temporal}.
+Però no es considera adequat per a les sèries temporals...
 
-
-  'Support for interval-valued attributes (and hence for temporal databases) involves among other things support for
-%generalized versions of the usual relational operators.' [date]            Note: Those “U_” operators are all defined in terms of two new relational operators called pack and unpack,
-and those latter operators in turn are defined in terms of relation-valued attributes. As already noted, therefore, support
-for interval-valued attributes relies on support for relation-valued attributes, at least conceptually. 
-
-Third, I’d like to see good support for temporal data. I think support for the time dimen-
-sion is important already and due to become much more so. Now, several researchers
-have proposed approaches to this problem—approaches that are, however, fundamentally
-flawed for the most part (in my opinion), because they violate fundamental relational
-principles. By contrast, it’s my belief that the relational model already includes what’s
-needed to support the time dimension properly. All that’s needed is a set of well chosen
-and carefully designed shorthands. Along with two coauthors, Hugh Darwen and Nikos
-Lorentzos, I’ve written about this topic at some length in another book, Temporal Data
-and the Relational Model (Morgan Kaufmann, 2003). [date06ch2pp22]
+a algun lloc deia que el seu model per dades temporals no era del tot adequat per les sèries temporals? date02ch16.8?
 
 
 
-%When people say "object-relational", this is  fundamentally what they're talking about, user-defined types. 
-%Of course, I and CJ Date would argue that features of "object-relational" are really just features of a fully-implemented "relational", meaning user-defined types, and so for that reason saying "object" is just a noise-word, helpful only for marketing and nothing else. 
-
-
-Així doncs no hi ha necessitat d'estendre el model relacional. Sí que hi ha necessitat, però, de tenir disponibles diversos tipus de dades. La creació de nous tipus de dades ha estat un tema de molta confusió ja que les 'suposades' implementacions del model relacional no ho han permès, o les extensions proposades per \textcite{stonebraker86} es consideren que són a nivell d'implementació i no les que es desitjarien a nivell de model (silbershatz96 en parla a l'apartat 6.research a on diu que els ADT han de ser més flexible i conformar tipus de primer nivell. però veure seshadriVLDBJournal1998:enhanced abstract data types in object-relational databases), i sobretot ha fet que les implementacions basades en orientació a objectes tinguessin un gran impacte \todo{citar ODMG (object databases)}. Date ha rebutjat aquesta idea argumentant que el model relacional mai no ha fixat els tipus de dades disponibles sinó que ben al contrari mai n'ha parlat i per tant els tipus de dades han tingut total llibertat de creació; si bé el model relacional defineix que com a mínim hi ha d'haver el tipus booleà i el tipus relació.
-
-El model relacional requereix que hi hagi un 'sistema' de tipus però diu molt poc de la naturalesa d'aquest sistema de tipus; això es coneix com a ortogonalitat entre les relacions i els tipus.
-
-
-
-Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBDR s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
-
-Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional.
-
-Segon, s'hauria de considerar que el SGST són un nou tipus de dades en el model relacional i per tant el model relacional ja té tota la potència per una banda constituir SGBD i per altra banda definir i incorporar nous tipus.
-
-
-Com es defineixen nous tipus complexos als SGBD?
-
-En el cas que es descarti que el cas dels SGST presenta els mateixos problemes que les dades temporals i per tant els SGST han d'esdevenir un tipus de dades, cal preguntar-se com són els tipus de dades al model relacional.
-
-Concretament el model relacional només defineix què es un tipus de dades però dóna llibertat a la seva creació. Això és un gran avantatge. En els cas de tipus de dades senzills es defineixen amb una bona estructura i ja està però què passa quan es vol definir un nou tipus de dades complex?
-
-Cal recercar com s'han definit nous tipus de dades complexos. Els principals problemes es donen que el tipus és complex i forma una entitat de per sí. És a dir que definir un tipus sèrie temporal no és trivial. Aleshores, com cal procedir?
-
-
-
-Sobre la necessitat de modelar els tipus.
-
-Cal definir un model pel tipus que volem dissenyar.
-De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un SGBD. Per tant, utilitzarem les mateixes eines que es fan servir per modelar els SGBDR per a poder modelar el nostre SGST. Com que s'hauran utilitzat les mateixes eines, el SGST podrà esdevenir perfectament un tipus de dades pels SGBDR.
-
-En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
-
-Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
-
-
-A la xerrada [Date02] va dir que els object/relational són relacionals.
-
-
-Sobre sèries temporals i temporal data\cite{assfalg08:thesis}
-
-vocabulari proposat per darwen [transparències]
-Stated times = "valid times"
-Logged times = "transaction times"
-
-
-The Book’s Aims:
-Describe a foundation for inclusion of support for temporal data in a truly
-relational database management system (TRDBMS)
-Focussing on problems related to data representing beliefs that hold throughout
-given intervals (usually, of time).
-Propose additional operators on relations and relation variables ("relvars")
-having interval-valued attributes.
-Propose additional constraints on relation variables having interval-valued
-attributes.
-transparencies darwen]
-
-
-Els SGBD relacionals són capaços d'implementar el primer tipus de coherència, les \emph{bitemporal data}; llavors es classifiquen sota el nom de bases de dades temporals, \cite{date:introduction,wiki:temporal_database}. Però el model relacional no és suficient pel segon tipus: les sèries temporals. Tot i que en principi no hi hauria cap problema a utilitzar una base de dades relacional per a sèries temporals, enteses com a dades històriques, la pròpia naturalesa dels sistemes relacionals  dificulta les operacions necessàries. 
-
-
-Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date:introduction}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series \parencite{schmidt95}. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
-
-
-A TSMS could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no consolidated data model  for time series. 
 
 After comparing temporal DBMS and TSMS \parencite{schmidt95} they ask whether temporal DBMS and TSMS will meet or they need to be manage by different systems despite both working with time aspects.
 
 
-he fundamental difficulty is that the relational model does not take advantage of the order of rows. Whereas one can perform an ``order by'' query and manipulate the data in some other language, one cannot natively manipulate the ordered data using select, from, and where. 
-Arguably, this is good for data independence, but it is bad for time series.
-[http://cs.nyu.edu/shasha/papers/jagtalk.html]
-
-        However, there are major differences between sen-
-sor networks and traditional distributed database systems.
-Most relevant to sensor networks is existing work on dis-
-tributed aggregation [38, 42], but these approaches do not
-consider the physical limitations of sensor networks. Mad-
-den et al. [30] give an extended classification of aggregate
-operators with properties relevant to sensor network aggre-
-gation. %\cite{demers03}
-
-
-Seq model [seshadri95] vs relacional: veure capítol 14 Tree-Structured Data [date06] a on Date descriu com modelar estructures d'arbre amb relacions. Potser es podrien aplicar conceptes semblants per les seqüències? En tot cas: el model estructural ha de contemplar explícitament l'ordre o ho han de fer les operacions?
-
-[date06]:
-                                                Now, the relational model provides just one way to
-represent data—namely, by means of relations themselves—and the sole essential information
-carriers in a relational database are thus necessarily relations, a fortiori. By contrast, other data
-models typically provide many distinct ways to represent data (lists, bags, links, sets, arrays,
-and so on), and all or any of those ways can be used as essential information carriers in a
-nonrelational database. One way of representing data is both necessary and sufficient; more
-than one introduces complexity, but no additional power.
-     As a matter of fact, it’s the concept of essentiality that forms the underpinning for the well-
-known, and important, Information Principle:
-     The entire information content of a relational database is represented in one and only
-     one way: namely, as attribute values within tuples within relations.
-
-[date06,pàg116]:
-Note that what they don’t do is introduce any more power. To be more specific, there’s no data that can
-be represented with arrays, lists, and so on, that can’t be represented without them. Likewise, there’s no
-useful processing that can be done on data represented with arrays, lists, and so on, that can’t be done
-on data represented without them.
-[pàg 134]
-about the continual references in the body of this chapter to the effect that we might have
-array-valued attributes, list-valued attributes, and so on. Don’t such possibilities constitute an
-obvious violation of The Information Principle?
-     Well, no, they don’t. What that principle says is that the only kind of variable permitted in
-the database (considered in turn as a variable) is the relation variable. But a relation variable
-can have attributes of any type whatsoever ... including array types, list types, and so on.
-Thus, the database at any given time might include a relation value that in turn includes array
-values, list values, and so on ... But there are still no array or list variables (etc.) anywhere in sight.
 
 
 
 
 
 
-
-
-
-% \section{Preguntes}
-
-% El llenguatge dels SGBD, per exemple D, és declaratiu (what) i no procedural/imperatiu (how). Com lliguen els SGBD amb els llenguatges de programació declaratius, per exemple amb la programació lògica amb Prolog? Concretament, com lliga Prolog amb el concepte de SGBD? Té la mateixa potència un SGBD que Prolog?
-%  Es pot veure Prolog com un SGBD?
-
-% http://stackoverflow.com/questions/2117651/difference-between-sql-and-prolog
-
-% diferències entre model semàntic i programació orientada a objectes [hull86]?
 
 
 
