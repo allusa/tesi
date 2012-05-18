@@ -33,8 +33,18 @@ observades. L'ús de sèries temporals per analitzar les dades pot tenir
 diferents objectius, com per exemple la comprensió del comportament de
 les variables observades, el càlcul de correlacions entre sèries
 temporals o el disseny d'un model d'ajust per a utilitzar-lo com a
-predicció de valors futurs o per a llaços de control.
-L'adquisició de dades de sensors i el processament de les dades per tal d'aconseguir diagnosis, prognosis, predicció, fusió de dades i altres tasques d'anàlisi de sèries temporals són comunes en diferents camps com ara prognosis en models de degradació \parencite{yu11}, qualificació de l'estat dels sensors en vaixells \parencite{palmer07}, validació i reconstrucció de dades en xarxes de distribució d'aigua \parencite{quevedo10}, classificació de valors econòmics \parencite{dreyer95}, optimització de la planificació semafòrica \parencite{last11}, estimació del temps de viatge en autopistes \parencite{soriguera10} o transmissió d'informació en xarxes de sensors \parencite{jainagrawal05,yaogehrke02}.
+predicció de valors futurs o per a llaços de control.  L'adquisició de
+dades de sensors i el processament de les dades per tal d'aconseguir
+diagnosis, prognosis, predicció, fusió de dades i altres tasques
+d'anàlisi de sèries temporals són comunes en diferents camps com ara
+prognosis en models de degradació \parencite{yu11}, qualificació de
+l'estat dels sensors en vaixells \parencite{palmer07}, validació i
+reconstrucció de dades en xarxes de distribució
+d'aigua \parencite{quevedo10}, classificació de valors
+econòmics \parencite{dreyer95}, optimització de la planificació
+semafòrica \parencite{last11}, estimació del temps de viatge en
+autopistes \parencite{soriguera10} o transmissió d'informació en
+xarxes de sensors \parencite{jainagrawal05,yaogehrke02}.
 
 
 
@@ -184,8 +194,15 @@ Per tant, el volum de dades a tractar  en els SGBD cada cop esdevé més crític
  
 En els SGBD, el problema de grans quantitats de dades també es troba en altres camps com demostren \textcite{mylopoulos96} sobre la necessitat de grans bases de dades de coneixement. Els SGBD que tracten amb aquestes dades s'anomenen \emph{very large databases} (VLDB) i han de construir, accedir i gestionar la quantitat de dades de manera eficient.
 
-\textcite{ogras06}  consideren que les solucions de les VLDB estan pensades per a bases de dades estàtiques. No obstant, observen que les sèries temporal normalment són dinàmiques, és a dir de naturalesa contínua i de mida no fitada. Conseqüentment, conclouen que les solucions tradicionals no es poden aplicar a causa de l'arribada seqüencial de les dades i que no es poden processar aleatòriament. 
-Com a solució proposen resumir dinàmicament les sèries temporals amb les tècniques de compressió que s'apliquen en altres aplicacions on hi ha bases de dades grans.
+\textcite{ogras06} consideren que les aproximacions que fan les VLDB
+estan pensades per a bases de dades estàtiques. No obstant, observen
+que les sèries temporal normalment són dinàmiques, és a dir de
+naturalesa contínua i de mida no fitada. Conseqüentment, conclouen que
+les solucions tradicionals, les quals analitzen a posteriori i sense
+tenir en compte l'ordre, no es poden aplicar a causa de l'arribada
+seqüencial i contínua de les dades.  Com a solució proposen resumir
+dinàmicament les sèries temporals amb les tècniques de compressió que
+s'apliquen en altres aplicacions on hi ha bases de dades grans.
 
 
 
@@ -202,7 +219,7 @@ Altres estudis proposen tractar les sèries temporals com a tipus que tenen ordr
 
 \textcite{seshadri96:thesis} proposa que les sèries temporals són un subconjunt de les seqüències i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
 \textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
-També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
+També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95,ogras06}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
 %Data Stream Management System (DSMS) is an extension of Data Base Management System  
 
 En els SGBD per matrius \emph{arrays} destaquen els anomenats sistemes de gestió de bases de dades científiques, camp en el qual les sèries temporals hi tenen un paper de primer ordre \parencite{zhang11}. \textcite{stonebraker09:scidb} estudien les necessitats d'aquests sistemes sobretot en l'àmbit de la ciència. \textcite{kersten11} proposen un sistema molt semblant però a més integren el seu llenguatge, anomenat SciQL, amb la sintaxi de SQL. \textcite{zhang11} exemplifiquen detalladament l'ús de SciQL per a les sèries temporals per a algunes de les seves propietats: regularitat, interpolació i cerca de correlacions.
