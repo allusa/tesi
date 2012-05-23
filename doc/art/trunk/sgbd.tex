@@ -98,10 +98,12 @@ qualsevol tipus de dades a nivell lògic. %[date06ch21,370]
 La idea bàsica dels SGBDR és que ho són realment quan la base de dades conté i només conté variables relacions els atributs de les quals admeten qualsevol tipus, respectivament definit per Date com a \emph{Information Principle} o \emph{The Principle of Uniform Representation} \parencite{date:dictionary} i que la teoria de tipus i el model relacional són ortogonals és a dir independents \parencite[cap.~6]{date06}.
 
 Dins de la proposta per a obtenir SGBDR purament relacionals
-\textcite{date06:_datab_types_relat_model,date:tutoriald} estan
-definint les regles d'un nou llenguatge, \emph{Tutorial D}, que ha de
+\textcite{date06:_datab_types_relat_model,date:tutoriald} defineixen
+com a \emph{D} els llenguatges que segueixin els principis del
+\emph{Third Manifesto}. Concretament, com a exemple d'un llenguatge
+\emph{D} estan definint les regles de \emph{Tutorial D}, que ha de
 servir pels estudis del model relacional a nivell acadèmic. Per
-exemple, és el llenguatge que utilitzen SGBDR com \emph{Rel}.
+exemple, aquest llenguatge ja s'utilitza en SGBDR com \emph{Rel}.
 
 
 El model relacional ha incorporat conceptes d'altres disciplines. En
@@ -208,19 +210,44 @@ model relacional. %[date06ch25,ch21pp379-380]
 
 
 
-Recentment ha aparegut un nou corrent en l'àmbit dels SGBD que s'anomena NoSQL (\emph{Not Only SQL}) amb l'objectiu de sobrepassar les limitacions dels SGBDR \parencite{edlich:nosql,stonebraker10}. 
-A l'espera que Date valori aquest corrent, cal tenir present els seus apunts sobre sistemes relacionals contra sistemes no relacionals \parencite[part 7]{date06}, sobretot pel que fa al concepte de l'\emph{Information Principle} i que SQL no és un bon referent pels SGBDR. És a dir, s'ha d'entendre NoSQL com una crítica a les implementacions comercials actuals del model relacional, una crítica que pot estar motivada per l'ús de SQL per part d'aquest productes. 
-No es pot entendre, però, el NoSQL com una crítica al model relacional ja que els objectius parlen de millorar el rendiment dels SGBD, cosa només atribuïble a les implementacions però no al model. Precisament, actualment del model relacional destaca la proposta de \citeauthor{date:tutoriald} d'un llenguatge, \emph{Tutorial D}, que no és SQL.
+Recentment ha aparegut un nou corrent en l'àmbit dels SGBD que
+s'anomena NoSQL (\emph{Not Only SQL}) amb l'objectiu de sobrepassar
+les limitacions dels SGBDR \parencite{edlich:nosql,stonebraker10}.  A
+l'espera que Date valori aquest corrent, cal tenir present els seus
+apunts sobre sistemes relacionals contra sistemes no
+relacionals \parencite[part 7]{date06}, sobretot pel que fa al
+concepte de l'\emph{Information Principle} i que SQL no és un bon
+referent pels SGBDR. És a dir, s'ha d'entendre NoSQL com una crítica a
+les implementacions comercials actuals del model relacional, una
+crítica que pot estar motivada per l'ús de SQL per part d'aquest
+productes.  No es pot entendre, però, el NoSQL com una crítica al
+model relacional ja que els objectius parlen de millorar el rendiment
+dels SGBD, cosa només atribuïble a les implementacions però no al
+model. Precisament, actualment del model relacional destaca la
+proposta de \citeauthor{date:tutoriald} d'un llenguatge,
+\emph{Tutorial D}, que no és SQL.
 
 
 El corrent de NoSQL també critica l'adequació dels productes actuals.
-Els SGBD NoSQL apunten els SGBDR actuals per voler ser \emph{one size fits all} \parencite{stonebraker07,stonebraker09} però que cada aplicació té els seus requisits i per tant una mateixa implementació no pot ser bona per a tots el camps.
-En aquesta mateixa línia els models pels SGBD prenen més sentit que mai ja que permeten mantenir una definició comuna per a moltes implementacions.
+Els SGBD NoSQL apunten els SGBDR actuals per voler ser \emph{one size
+  fits all} \parencite{stonebraker07,stonebraker09} però que cada
+aplicació té els seus requisits i per tant una mateixa implementació
+no pot ser bona per a tots el camps.  En aquesta mateixa línia els
+models pels SGBD prenen més sentit que mai ja que permeten mantenir
+una definició comuna per a moltes implementacions.
 
 
-Segons es desprèn de \textcite{date06} fins a l'actualitat només hi ha hagut un model consolidat pels SGBD: el model relacional. 
-Ara, en el corrent NoSQL també es parla de nous models de SGBD \parencite{edlich:nosql,stonebraker09:scidb}.
-\citeauthor{date06} ha avaluat que alguns nous models recuperen intents fallits en el passat tot i que es poden representar amb el model relacional, per exemple els SGBD XML basats en estructures d'arbre \parencite[cap.~14]{date06} o els ODMG basats en objectes \parencite[cap.~27]{date06}. Tot i així, en un futur cal estar atents per si alguns d'aquests models joves de SGBD arriben a consolidar-se o no poden esdevenir tant potents com el model relacional.
+Segons es desprèn de \textcite{date06} fins a l'actualitat només hi ha
+hagut un model consolidat pels SGBD: el model relacional.  Ara, en el
+corrent NoSQL també es parla de nous models de
+SGBD \parencite{edlich:nosql,stonebraker09:scidb}.
+\citeauthor{date06} ha avaluat que alguns nous models recuperen
+intents fallits en el passat tot i que es poden representar amb el
+model relacional, per exemple els SGBD XML basats en estructures
+d'arbre \parencite[cap.~14]{date06} o els ODMG basats en
+objectes \parencite[cap.~27]{date06}. Tot i així, en un futur cal
+estar atents per si alguns d'aquests models joves de SGBD arriben a
+consolidar-se i poden esdevenir tant potents com el model relacional.
 
 
 
@@ -267,35 +294,36 @@ entre els dos sistemes i es pregunten si es podran trobar sistemes que
 els englobin a tots dos o cadascun necessitarà sistemes específics.
 
 
-%a algun lloc deia que el seu model per dades temporals no era del tot adequat per les sèries temporals? date02ch16.8?
+%a algun lloc deia Date que el seu model per dades temporals no era del tot adequat per les sèries temporals?, potser perquè els intervals no estaven pensat per a instants? date02ch16.8?
 
 
 
-\subsection{Conclusions}
+\subsection{Conclusió}
 
 
 Actualment l'àmbit informàtic de SGBD se centra en les
 implementacions, com ho demostra el nou corrent NoSQL concentrat en
-trobar models d'implementacions que tinguin bon rendiment. Hi ha
-recerca de temes de garantia de propietats ACID (\emph{atomicity,
-  consistency, isolation, durability}), d'optimització de consultes,
-d'emmagatzematge de grans volums de dades, de consultes via web, de
-distribució de bases de dades, de reduir la despesa en energia,
-etc. \parencite{stonebraker07,stonebraker10}, la qual cosa és
-excel·lent per a disposar un SGBD adequat a cada aplicació.
-
-%Ara bé, una implementació d'un SGBD que vulgui  obtenir un bon rendiment en una determinada aplicació potser no pot implementar el model relacional complet sinó que només una part [saake07]
+trobar models d'implementacions que tinguin bon rendiment. A tal
+efecte la recerca es concentra en temes de garantia de propietats ACID
+(\emph{atomicity, consistency, isolation, durability}), d'optimització
+de consultes, d'emmagatzematge de grans volums de dades, de consultes
+via web, de distribució de bases de dades, de reduir la despesa en
+energia, etc. \parencite{stonebraker07,stonebraker10}, la qual cosa és
+exce\l.lent per a disposar d'un SGBD adequat a cada aplicació.
+\textcite{haerder05:_dbms_archit} descriu diferents models d'implementació per als SGBD, ja que indica que per obtenir bon rendiment la implementació d'un SGBD s'ha d'estudiar per cada aplicació. És més, una implementació d'un SGBD que vulgui  obtenir un bon rendiment en una determinada aplicació potser no pot implementar el model de dades complet sinó que només una part, com per exemple en els sistemes encastats \parencite{saake09:_downs_data_manag_embed_system}.
 
 Per altra banda, l'àmbit matemàtic de SGBD, amb el model relacional
-com a màxim exponent, se centra en els conceptes dels SGBD. Recerca en
-millorar-ne la comprensió, en obtenir la màxima potència de cara a la
-gestió de dades per part de l'usuari o en obtenir nous models, encara
-que no s'ha trobat cap altre model que tingui la mateixa potència que
-el relacional. Cal destacar que tot i tenir conceptes antics
-consolidats i que han tingut èxit amb els SGBD SQL, s'obre una nova
-perspectiva amb Tutorial D i les implementacions que comencen a
-prendre cos a nivell acadèmic.
-
+com a màxim exponent, se centra en els conceptes teòrics, és a dir
+respon a la pregunta de què són els SGBD. Recerca en millorar-ne la
+comprensió, en obtenir la màxima potència i facilitat de cara a la
+gestió de dades per part de l'usuari o en obtenir nous models. Tot i
+així, actualment encara no s'ha trobat cap altre model que tingui la
+mateixa potència que el relacional. Cal destacar que tot i que el
+model relacional té conceptes madurs i consolidats, i que a més han
+tingut èxit amb els SGBD SQL, s'obre una nova perspectiva amb
+l'evolució de conceptes que proposa el \emph{Third Manifesto},
+especialment amb Tutorial D i les implementacions que comencen a prendre
+cos a nivell acadèmic.
 
 
 
