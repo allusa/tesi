@@ -1,5 +1,48 @@
+\chapter{Introducció}
+
+
+
+
+Aquesta recerca s'estructura al voltant dels sistemes
+d'emmagatzemament i tractament de dades com a sèries temporals.
+Concretament se centra en els sistemes de gestió de bases de dades
+(SGBD) que s'ocupen de sèries temporals (SGST). Els SGST han de tenir  funcionalitats adequades per gestionar i
+explotar correctament la informació de les sèries temporals.
 
 Tal com diu Fu, la recerca en mineria de sèries temporals ha augmentat. Per tant és un camp amb interès actual, sobretot hi ha interès en processar grans volums de dades. Hi ha molts que estudien com resoldre això, per tant potser es pot observar que pel que fa a implementacions d'algoritmes que tinguin bon rendiment o facin bon ús d'energia hi ha molt escrit i s'obtenen bons resultats. Tot i així sembla que encara hi ha camp a recórrer: la recerca en aquests temes segueix avançant. No obstant, nosaltres ens centrarem en obtenir un model de SGBD, en el benentès que molts d'aquests estudis es podrien aplicar en la implementació de SGBD que seguissin el model.
+
+
+Recentment s'ha observat que hi ha un forat de coneixement entre els SGBD i les aplicacions de les sèries temporals, referides a la literatura com a científiques [stonebraker09:scidb i zhang]
+
+
+Estan apareixent SGST (RRDTool, Cougar, ...) però no hi ha definit clarament un model de SGST. 
+
+Alguns intents han estat Dreyer amb unes primeres propostes de que han de complir els SGST, bonnet per a xarxes de sensors, zhang amb exemples de resolucions de consultes per algunes de les propietats de les sèries temporals
+
+Ara bé, els SGST actuals es basen en models propis, p.ex. Cougar amb models de seqüències, però no s'han estudiat com a model de SGBD, del qual actualment només es considera com a representant el model relacional [Date]. 
+
+Dins del model relacional hi ha hagut un estudi profund per als intervals temporals, referits com a dades temporals [date02], i això confereix una nova dimensió en la resolució del problema dels històrics temporals en els SGBD. Tot i ser una categoria diferent dels intervals temporals [assfalg], les sèries temporals necessiten un estudi similar.
+
+
+
+
+\section{Objectius i contribucions}
+
+
+
+La motivació prové per una banda de RRDtool i per altra banda de la formalització de les dades temporals [date02]
+
+
+
+  Dissenyar un model de dades que descrigui l'estructura i el comportament
+
+  dels SGBD per a sèries temporals.
+  Proposar una implementació de referència del model dissenyat.
+
+
+
+  Proposar millores i treballs futurs al voltant del model dissenyat.
+
 
 
 Objectius del llibre de temporal data de darwen i date, segons unes transparències de Darwen:
@@ -17,18 +60,13 @@ attributes.
 
 
 
-Els SGBD relacionals són capaços d'implementar el primer tipus de coherència, les \emph{bitemporal data}; llavors es classifiquen sota el nom de bases de dades temporals, \cite{date:introduction,wiki:temporal_database}. Però el model relacional no és suficient pel segon tipus: les sèries temporals. Tot i que en principi no hi hauria cap problema a utilitzar una base de dades relacional per a sèries temporals, enteses com a dades històriques, la pròpia naturalesa dels sistemes relacionals  dificulta les operacions necessàries. 
 
-Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date:introduction}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series \parencite{schmidt95}. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
-
-
-A TSMS could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no consolidated data model  for time series. 
 
 
 
 Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBDR s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
 
-Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional?.
+Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional?. --> Bé de fet potser aquesta era la idea inicial en el model relacional (que s'havia de modificar per a poder tenir històrics) però ara després de modelar les dades temporals es pot veure que el model relacional ho accepta com a tipus: és a dir les relacions que tinguin atributs de tipus interval temporal passen a ser relacions temporals.
 
 Segon, s'hauria de considerar que el SGST són un nou tipus de dades en el model relacional i per tant el model relacional ja té tota la potència per una banda constituir SGBD i per altra banda definir i incorporar nous tipus.
 
@@ -51,3 +89,52 @@ De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un
 En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
 
 Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
+
+
+
+
+\subsection{Contribucions}
+
+
+1. Comprensió de l'estudi de la modelització de SGBD. Segons formalitza Date cal entendre principalment el model relacional: relacions i tipus. 
+
+2. Estudi de la modelització de nous tipus complexos dins dels models de SGBD.
+Les sèries temporals s'han d'entendre com a tipus complex.
+Els SGBD permeten que els usuaris defineixin nous tipus \parencite{stonebraker86} però no hi ha un estudi teòric dels tipus als SGBD: Date ens descriu abastament les relacions però no els tipus. Els tipus s'han d'estudiar i modelar per a poder-los considerar com a tals, oimés els tipus complexos ja que requereixen un estudi més complet i possiblement s'hagin de modelar com un propi SGBD. 
+
+
+
+3. Proposta de model per a les sèries temporals separat en dos: 
+
+* Proposta d'un model per a les sèries temporals similar al de les dades temporals [date02], ho anomenem model de SGST. A sobre del model de SGST, el qual és un model general per a les sèries temporals, s'hi poden proposar altres models per a propietats més específiques de les sèries temporals, concretament nosaltres proposem el model multiresolució.
+
+* Proposta d'un model multiresolució a sobre del model de les sèries temporals. Ho anomenem model de SGSTM. En el model multiresolució s'hi inclouen propietats de les sèries temporals que s'han observat en les seves aplicacions: regularització, canvis de resolució mitjançant agregacions, farciment de forats, ... 
+(nota: a més aquesta part del model és la més sensible a ser implementada com a data streams)
+
+4. Implementació de referència del model.
+
+
+5. Possible exemplificació en algun cas pràctic?
+
+
+A multiresolution database is an storage system for one time series, that is a col-
+lection of data measured in dierent instants in time. The time series is compactly
+stored in the database as has been shown in gure 2. The principal part of a mul-
+tiresolution database is the set of resolution discs where the time series is stored
+distributed by the dierent interpolation functions and sampling periods.      Each
+resolution disc uses its buer to interpolate the measures and uses its disc to con-
+solidate the result.
+
+
+
+
+\section{Treball fet fins ara}
+
+
+
+Tesi de màster es va estudiar RRDtool a on es van observar propietats molt interessants de les sèries temporals: multiresolució, regularització, naturalesa, representació.
+
+
+S'ha estat treballant en el model de SGST (no publicat). S'ha dividit el model en dues parts: una per al model general de les sèries temporals, basat en mesures i sèries temporals, una altra pel model de multiresolució, el qual es basa en buffers i discs. De moment s'ha dissenyat una estructura, el treball continua a definir les operacions. 
+
+
