@@ -21,42 +21,129 @@ Alguns intents han estat Dreyer amb unes primeres propostes de que han de compli
 
 Ara bé, els SGST actuals es basen en models propis, p.ex. Cougar amb models de seqüències, però no s'han estudiat com a model de SGBD, del qual actualment només es considera com a representant el model relacional [Date]. 
 
-Dins del model relacional hi ha hagut un estudi profund per als intervals temporals, referits com a dades temporals [date02], i això confereix una nova dimensió en la resolució del problema dels històrics temporals en els SGBD. Tot i ser una categoria diferent dels intervals temporals [assfalg], les sèries temporals necessiten un estudi similar.
+Dins del model relacional hi ha hagut un estudi profund per als intervals temporals, referits com a dades temporals [date02], i això confereix una nova dimensió en la resolució del problema dels històrics temporals en els SGBD. Les sèries temporals necessiten un estudi similar, tot i que no poden ser tractades com a intervals temporals ja que són una categoria diferent de dades temporals [assfalg].
+
+
+\section{Estructura del document}
+
+Aquest document és una proposta de recerca per a definir un model de
+sistema de gestió per a sèries temporals. En una primera part es
+presenten els objectius i les justificacions de la recerca. En una
+segona part s'estudia el context de la recerca i l'estat actual en els
+àmbits de les sèries temporals i els SGBD. En una tercera part es
+detalla el treball dut a terme fins a l'actualitat i la planificació
+del treball futur per a assolir els objectius proposats.
 
 
 
 
-\section{Objectius i contribucions}
+\section{Objectius i contribucions esperades}
+
+
+Aquesta recerca té per objectiu l'estudi d'un model de SGBD per a
+sèries temporals que en descrigui l'estructura i el comportament. A
+tal efecte, es divideix en els següents objectius més concrets
+d'estudi que han d'aportar solució al forat de coneixement entre
+l'àmbit de SGBD i el de sèries temporals.
+
+
+\begin{enumerate}
+
+\item Comprensió de l'estudi de la modelització de SGBD. Segons es
+  desprèn de la formalització de Date cal entendre principalment el
+  model relacional, el qual es fonamenta en dos conceptes: relacions i
+  tipus.
+
+\item Estudi de la modelització de nous tipus complexos dins dels
+  models de SGBD.  Les sèries temporals s'han d'entendre com a tipus
+  complex.  Els SGBD permeten que els usuaris defineixin nous
+  tipus \parencite{stonebraker86} però no hi ha un estudi teòric dels
+  tipus als SGBD: Date ens descriu abastament les relacions però no
+  els tipus. Els tipus s'han d'estudiar i modelar per a poder-los
+  considerar com a tals, oimés els tipus complexos ja que requereixen
+  un estudi més complet i possiblement s'hagin de modelar com un propi
+  SGBD. Una referència d'estudi és el cas dels intervals
+  temporals \parencite{date02:_tempor_data_relat_model}.
 
 
 
-La motivació prové per una banda de RRDtool i per altra banda de la formalització de les dades temporals [date02]
+\item Proposta de model per a les sèries temporals per tal que puguin
+  ser incloses en els SGBD. D'aquesta manera els SGBD podran tractar
+  dades amb instants de temps que representin l'evolució de variables
+  en funció del temps. El model consisteix en la definició de
+  l'estructura de les sèries temporals i les operacions bàsiques que
+  necessiten.
+
+  El model es presenta en dues parts:
+
+  \begin{enumerate}
+  \item Proposta d'un model per a les sèries temporals similar a
+    l'estudi fet pels intervals
+    temporals \parencite{date02:_tempor_data_relat_model}, ho anomenem
+    model de SGBD per a sèries temporals (SGST). A sobre del model de
+    SGST, el qual és un model general per a les sèries temporals, s'hi
+    poden proposar altres models per a propietats més específiques de
+    les sèries temporals.
+
+  \item Proposta d'exemple de model específic a sobre del model de
+    SGST. Concretament es proposa un model pels SGST multiresolució
+    (SGSTM).  En el model de SGSTM s'hi inclouen propietats de les
+    sèries temporals relacionades amb la resolució que s'han observat
+    en les seves aplicacions: regularització, canvis de resolució
+    mitjançant agregacions, farciment de forats, etc.  
+    % (nota: a més aquesta part del model és la més sensible a ser
+    % implementada com a data streams)
+  \end{enumerate}
+
+\item Implementació de referència del model SGST i del model
+  SGSTM. Per una banda, aquesta implementació, a nivell acadèmic, ha
+  de servir com a exemple per a futurs desenvolupaments de SGST,
+  acadèmics o productius. Per altra banda, ha de servir per a
+  exemplificar-ne els seu funcionament amb unes dades de prova.
+
+
+%5. Possible exemplificació en algun cas pràctic?
+
+\end{enumerate}
 
 
 
-  Dissenyar un model de dades que descrigui l'estructura i el comportament
-
-  dels SGBD per a sèries temporals.
-  Proposar una implementació de referència del model dissenyat.
-
 
 
-  Proposar millores i treballs futurs al voltant del model dissenyat.
-
+
+\section{Motivació i justificació}
 
 
-Objectius del llibre de temporal data de darwen i date, segons unes transparències de Darwen:
+Per una banda, després d'una mirada general a algunes aplicacions de
+les sèries temporals s'observa que hi ha algoritmes específics per al
+seu tractament. En el tractament de les sèries temporals es duen a
+terme un conjunt de tasques comunes: canvis de resolució, farciment de
+forats, delmat de dades, etc. No s'ha identificat un model per a
+aquests problemes, tot i que hi ha sistemes dissenyats específicament
+per a tractar-hi, com per exemple RRDtool \parencite{rrdtool} o
+Cougar \parencite{fung02}.
 
-The Book’s Aims:
-Describe a foundation for inclusion of support for temporal data in a truly
-relational database management system (TRDBMS)
-Focussing on problems related to data representing beliefs that hold throughout
-given intervals (usually, of time).
-Propose additional operators on relations and relation variables ("relvars")
-having interval-valued attributes.
-Propose additional constraints on relation variables having interval-valued
-attributes.
-[transparencies darwen]
+Per altra banda, en el model relacional de SGBD es troba una
+formalització per als sistemes que tractin amb qualsevol tipus de
+dades. No obstant, el model relacional només presenta els conceptes
+bàsics dels SGBD, quedant per resoldre la formalització dels
+tipus. Concretament dins d'aquest àmbit destaca la publicació del
+model per a intervals
+temporals \parencite{date02:_tempor_data_relat_model}, el qual
+s'utilitza per a formalitzar els històrics en els SGBD.
+
+En els SGBD també hi ha l'estudi d'implementacions que obtinguin bon rendiment. Un cop s'ha formalitzat el model es poden estudiar implementacions adequades per a cada aplicació. Per exemple en el cas de les sèries temporals es pot aplicar la gestió mitjançant \emph{data streams} \parencite{babcock02}.
+
+
+
+
+Un dels grans aturadors en l'àmbit de les sèries temporals és no tenir un model de gestió que faci d'enllaç entre les diferents aplicacions i les diferents implementacions, el que s'anomena com a forat de coneixement entre els SGBD i les sèries temporals \parencite{zhang11,stonebraker09:scidb}. Un model permetria estudiar les propietats abstractes de les sèries temporals i poder comparar entre diferents sistemes de gestió.
+
+
+
+
+
+
 
 
 
@@ -93,42 +180,11 @@ Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacio
 
 
 
-\subsection{Contribucions}
 
 
-1. Comprensió de l'estudi de la modelització de SGBD. Segons formalitza Date cal entendre principalment el model relacional: relacions i tipus. 
+\chapter{Planificació}
 
-2. Estudi de la modelització de nous tipus complexos dins dels models de SGBD.
-Les sèries temporals s'han d'entendre com a tipus complex.
-Els SGBD permeten que els usuaris defineixin nous tipus \parencite{stonebraker86} però no hi ha un estudi teòric dels tipus als SGBD: Date ens descriu abastament les relacions però no els tipus. Els tipus s'han d'estudiar i modelar per a poder-los considerar com a tals, oimés els tipus complexos ja que requereixen un estudi més complet i possiblement s'hagin de modelar com un propi SGBD. 
-
-
-
-3. Proposta de model per a les sèries temporals separat en dos: 
-
-* Proposta d'un model per a les sèries temporals similar al de les dades temporals [date02], ho anomenem model de SGST. A sobre del model de SGST, el qual és un model general per a les sèries temporals, s'hi poden proposar altres models per a propietats més específiques de les sèries temporals, concretament nosaltres proposem el model multiresolució.
-
-* Proposta d'un model multiresolució a sobre del model de les sèries temporals. Ho anomenem model de SGSTM. En el model multiresolució s'hi inclouen propietats de les sèries temporals que s'han observat en les seves aplicacions: regularització, canvis de resolució mitjançant agregacions, farciment de forats, ... 
-(nota: a més aquesta part del model és la més sensible a ser implementada com a data streams)
-
-4. Implementació de referència del model.
-
-
-5. Possible exemplificació en algun cas pràctic?
-
-
-A multiresolution database is an storage system for one time series, that is a col-
-lection of data measured in dierent instants in time. The time series is compactly
-stored in the database as has been shown in gure 2. The principal part of a mul-
-tiresolution database is the set of resolution discs where the time series is stored
-distributed by the dierent interpolation functions and sampling periods.      Each
-resolution disc uses its buer to interpolate the measures and uses its disc to con-
-solidate the result.
-
-
-
-
-\section{Treball fet fins ara}
+\section{Treball realitzat}
 
 
 
@@ -138,3 +194,24 @@ Tesi de màster es va estudiar RRDtool a on es van observar propietats molt inte
 S'ha estat treballant en el model de SGST (no publicat). S'ha dividit el model en dues parts: una per al model general de les sèries temporals, basat en mesures i sèries temporals, una altra pel model de multiresolució, el qual es basa en buffers i discs. De moment s'ha dissenyat una estructura, el treball continua a definir les operacions. 
 
 
+A multiresolution database is an storage system for one time series, that is a col-lection of data measured in derent instants in time. The time series is compactly
+stored in the database as has been shown ingure 2. The principal part of a mul-
+tiresolution database is the set of resolution discs where the time series is stored
+distributed by the dierent interpolation functions and sampling periods.      Each
+resolution disc uses its bur to interpolate the measures and uses its disc to con-
+solidate the result.
+
+
+\section{Treball futur}
+
+
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
