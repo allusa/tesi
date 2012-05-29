@@ -1,0 +1,58 @@
+\chapter{Planificació}
+
+\section{Treball realitzat}
+
+
+
+Tesi de màster es va estudiar RRDtool a on es van observar propietats molt interessants de les sèries temporals: multiresolució, regularització, naturalesa, representació.
+
+
+S'ha estat treballant en el model de SGST (no publicat). S'ha dividit el model en dues parts: una per al model general de les sèries temporals, basat en mesures i sèries temporals, una altra pel model de multiresolució, el qual es basa en buffers i discs. De moment s'ha dissenyat una estructura, el treball continua a definir les operacions. 
+
+
+A multiresolution database is an storage system for one time series, that is a col-lection of data measured in derent instants in time. The time series is compactly
+stored in the database as has been shown ingure 2. The principal part of a mul-
+tiresolution database is the set of resolution discs where the time series is stored
+distributed by the dierent interpolation functions and sampling periods.      Each
+resolution disc uses its bur to interpolate the measures and uses its disc to con-
+solidate the result.
+
+
+\section{Treball futur}
+
+
+
+Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBD relacionals s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
+
+Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional?. --> Bé de fet potser aquesta era la idea inicial en el model relacional (que s'havia de modificar per a poder tenir històrics) però ara després de modelar les dades temporals es pot veure que el model relacional ho accepta com a tipus: és a dir les relacions que tinguin atributs de tipus interval temporal passen a ser relacions temporals.
+
+Segon, s'hauria de considerar que el SGST són un nou tipus de dades en el model relacional i per tant el model relacional ja té tota la potència per una banda constituir SGBD i per altra banda definir i incorporar nous tipus.
+
+
+Com es defineixen nous tipus complexos als SGBD?
+
+En el cas que es descarti que el cas dels SGST presenta els mateixos problemes que les dades temporals i per tant els SGST han d'esdevenir un tipus de dades, cal preguntar-se com són els tipus de dades al model relacional.
+
+Concretament el model relacional només defineix què es un tipus de dades però dóna llibertat a la seva creació. Això és un gran avantatge. En els cas de tipus de dades senzills es defineixen amb una bona estructura i ja està però què passa quan es vol definir un nou tipus de dades complex?
+
+Cal recercar com s'han definit nous tipus de dades complexos. Els principals problemes es donen que el tipus és complex i forma una entitat de per sí. És a dir que definir un tipus sèrie temporal no és trivial. Aleshores, com cal procedir?
+
+
+
+Sobre la necessitat de modelar els tipus.
+
+Cal definir un model pel tipus que volem dissenyar.
+De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un SGBD. Per tant, utilitzarem les mateixes eines que es fan servir per modelar els SGBDR per a poder modelar el nostre SGST. Com que s'hauran utilitzat les mateixes eines, el SGST podrà esdevenir perfectament un tipus de dades pels SGBDR.
+
+En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
+
+Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
