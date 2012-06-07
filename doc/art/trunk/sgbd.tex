@@ -7,14 +7,14 @@ Segons \textcite{date:introduction}, ``una base de dades és un
 contenidor informàtic per a una co\l.lecció de dades''. El sistemes
 informàtics que tracten amb bases de dades s'anomenen sistemes de
 gestió de bases de dades (SGBD, \emph{Data Base Management Systems}) i
-tenen l'objectiu d'emmagatzemar informació i permetre consultar i
+tenen els objectius d'emmagatzemar informació i permetre consultar i
 afegir aquesta informació per part dels usuaris.  Per complir aquests
-objectius, els SGBD ofereixen a l'usuari diferents operacions a fer
-amb la base de dades, com per exemple crear-la, afegir dades o
-consultar informació a partir de les dades emmagatzemades.
+objectius, els SGBD ofereixen a l'usuari diferents operacions com per
+exemple crear una base de dades, afegir dades o consultar informació a
+partir de les dades emmagatzemades.
 
-Els SGBD es poden descriure amb teories matemàtiques que reben el nom
-de model de dades, aleshores es poden veure els SGBD com una
+Els SGBD es poden descriure mitjançant teories matemàtiques que reben
+el nom de model de dades, per tant es poden veure els SGBD com una
 implementació d'un model de dades.  Segons
 \citeauthor{date:introduction}, ``un model de dades és una definició
 abstracta, auto continguda i lògica dels objectes, de les operacions i
@@ -23,26 +23,26 @@ que els usuaris interaccionen. Els objectes permeten modelar
 l'estructura de les dades. Les operacions permeten modelar el
 comportament''. Ara bé, \citeauthor{date:introduction} avisa que el
 concepte model de dades també s'usa per a definir una estructura
-persistent de dades concreta i per tant cal distingir adequadament
+persistent de dades concreta i, per tant, cal distingir adequadament
 entre els dos conceptes.  Tal com fa Date, en aquest document parlarem
 de model de dades, o simplement de model, en el primer sentit de
 màquina abstracta.
 
 
 Un model de SGBD que ha s'ha consolidat i esdevingut un referent és el
-model relacional (\emph{relational}). Principalment l'èxit d'aquest
-model és degut a que es basa en teories matemàtiques consolidades: la
-lògica de predicats i la teoria de
-conjunts \parencite{date:introduction}.
+model relacional (\emph{relational}). L'èxit d'aquest model és degut a
+que es fonamenta en teories matemàtiques consolidades: la lògica de
+predicats i la teoria de conjunts \parencite{date:introduction}.
 
 
 
-\textcite{date:introduction} diferencia amb detall els conceptes
-d'implementació i model.  El model d'un SGBD és el model matemàtic tal
+\textcite{date:introduction} diferencia amb detall els conceptes de
+model i d'implementació.  El model d'un SGBD és el model matemàtic tal
 com s'ha descrit anteriorment, en canvi un SGBD és la implementació
-d'un model de dades, per exemple \emph{PostgreSQL}.
+d'un model de dades, per exemple \emph{PostgreSQL} \parencite{postgresql}.
 %Segons l'esquema de comunicació, també es poden anomenar com a sistema servidor de bases de dades, per exemple postgresql.
-En aquestes conceptes una base de dades és una instància d'un SGBD, per exemple la base de dades dels estudiants.
+En aquest context una base de dades és una instància d'un SGBD,
+per exemple la base de dades dels estudiants.
 
 
 Aquesta diferència entre implementació i model aporta independència de dades (\emph{data independence}) \parencite{date:dictionary}. En altres paraules, els models no han de tenir detalls d'implementació ni parlar d'objectius de rendiment. 
@@ -60,7 +60,7 @@ Aquesta diferència entre implementació i model aporta independència de dades 
 El model relacional va ser proposat per \textcite{codd70} per a
 formalitzar els SGBD, els quals quan es basen en aquestes teories
 s'anomenen relacionals (SGBDR). A partir de llavors els SGBDR han anat
-evolucionat fins a tenir una gran solidesa, amb
+evolucionat fins a aconseguir una gran solidesa, amb
 \textcite{date:introduction,date06,date:dictionary} com a principal
 divulgador.
 
@@ -71,7 +71,7 @@ Les implementacions més populars de SGBDR són les que s'anomenen
   Language}. Ara bé, els SGBD \emph{SQL} es desvien considerablement
 del model relacional: permeten files duplicades, tenen ordre en les
 columnes, permeten valors nuls, etc, sent aquest últim un tema
-modernament discutit \parencite{date08:nulls}.
+actualment discutit \parencite{date08:nulls}.
 
 Les diferències entre els SGBD \emph{SQL} i el model relacional han
 contribuït a que hi hagi hagut una sèrie de malentesos i
@@ -92,32 +92,36 @@ consolidat.
 
 Actualment \textcite{date:thethirdmanifesto} estan treballant en el
 '\emph{Third Manifesto}' com a proposta per a obtenir SGBDR purament
-relacionals. Destaquen que, en el model relacional, els tipus i les
-relacions són necessaris i suficients per representar absolutament
-qualsevol tipus de dades a nivell lògic. %[date06ch21,370]
-La idea bàsica dels SGBDR és que ho són realment quan la base de dades
-conté i només conté variables relacions els atributs de les quals
-admeten qualsevol tipus, respectivament definit per Date com a
-\emph{Information Principle} o \emph{The Principle of Uniform
-  Representation} \parencite{date:dictionary} i que la teoria de tipus
-i el model relacional són ortogonals és a dir
-independents \parencite[cap.~6]{date06}.  
-Segons aquest punt de vista, els tipus són el conjunt de coses de les que podem parlar mentre que les relacions són proposicions certes sobre aquestes coses.
+relacionals. Destaquen que, en el model relacional, els tipus de dades
+i les relacions són necessaris i suficients per representar qualssevol
+dades a nivell lògic. %[date06ch21,369]
+Defineixen dos principis bàsics dels SGBDR: l'\emph{Information
+  Principle} o \emph{The Principle of Uniform
+  Representation} \parencite{date:dictionary}, segons el qual una base
+de dades només conté variables relacions, i el principi
+d'ortogonalitat entre la teoria de tipus i el model
+relacional \parencite[cap.~6]{date06}, segons el qual relacions i
+tipus de dades són independents i per tant els atributs de les
+relacions admeten qualsevol tipus.  Segons aquest punt de vista, els
+tipus de dades són el conjunt de coses de les que podem parlar mentre que les
+relacions són proposicions certes sobre aquestes coses.
 %In other words, types give us our vocabulary the things we can talk about and relations give us the ability to say things about the things we can talk about. (There's a nice analogy here that might help: Types are to relations as nouns are to sentences.) %[date05ch4secMore on Relations Versus Types]
 
-Dins de la proposta per a obtenir SGBDR purament relacionals
-\textcite{date06:_datab_types_relat_model,date:tutoriald} defineixen
+En la proposta per a obtenir SGBDR purament relacionals
+\textcite{date06:_datab_types_relat_model,date:tutoriald} classifiquen
 com a \emph{D} els llenguatges que segueixin els principis del
 \emph{Third Manifesto}. Concretament, com a exemple d'un llenguatge
 \emph{D} estan definint les regles de \emph{Tutorial D}, que ha de
-servir pels estudis del model relacional a nivell acadèmic. Per
-exemple, aquest llenguatge ja s'utilitza en SGBDR com \emph{Rel}.
+servir pels estudis del model relacional a nivell acadèmic. Aquest
+llenguatge ja s'utilitza en alguns SGBDR, com per exemple a
+\emph{Rel} \parencite{rel}.
 
 
 El model relacional ha incorporat conceptes d'altres disciplines. En
-destaca sobretot la incorporació de conceptes d'orientació a objectes
-com és el cas de l'herència.  Aleshores s'entén que els SGBDR també es
-puguin anomenar SGBD objecte/relacionals (\emph{object/relational})
+destaca sobretot la incorporació de conceptes dels models d'orientació
+a objectes com és el cas de l'herència.  Aleshores s'entén que els
+SGBDR també es puguin anomenar SGBD objecte/relacionals
+(\emph{object/relational})
 \parencite{date02:foundation}.  Tot i així, \textcite[cap.~6]{date06}
 manifesta i avisa de l'ús de la mateixa terminologia amb significat
 diferent entre el model relacional i l'orientació a objectes, sobretot
@@ -157,11 +161,11 @@ d'emmagatzematge. % 'the object model' is closer to being a model of
 \subsubsection{Extensió del model}
 %Com s'ha d'estendre el model relacional?
 
-El model relacional va evolucionat i no es considera que hi hagi hagut
+El model relacional ha evolucionat però no es considera que hi hagi hagut
 cap revolució des de la seva aparició
 \parencite[cap.~19]{date06}. %[date06ch19pp254]
-Consideren que el model relacional està bastant completat i que
-evoluciona en la comprensió de les teories i els conceptes que hi
+Consideren que el model relacional és bastant complet i que segueix
+evolucionant en la comprensió de les teories i els conceptes que hi
 intervenen, com per exemple la recent àlgebra relacional
 'A' \parencite[ap.~A]{date06:_datab_types_relat_model}.  En aquest
 context d'evolució, es contemplen les investigacions que poden
@@ -173,23 +177,25 @@ generals de les dades \parencite[cap.~25]{date06}. %[date06ch25pp441]
 
 En el sentit d'extensió, també cal contemplar la definició de nous
 tipus de dades, els quals estenen els SGBD en funcionalitat.  Aquests
-nous tipus poden afegir estructures i operadors que ja siguin
+nous tipus de dades poden afegir estructures i operadors que ja siguin
 expressables amb l'àlgebra relacional. No obstant, un bon model d'un
-tipus serveix per augmentar el nivell d'abstracció en el tractament dels
-conceptes relacionats amb el
-tipus \parencite{date02:_tempor_data_relat_model}. %[date02:_tempor_data_relat_model:prefaceppxix]
+tipus de dades serveix per augmentar el nivell d'abstracció en el
+tractament dels conceptes relacionats amb aquestes
+dades
+\parencite{date02:_tempor_data_relat_model}. %[date02:_tempor_data_relat_model:prefaceppxix]
 
 Com s'ha dit anteriorment, la teoria de tipus i el model relacional
 són ortogonals: el model relacional requereix que hi hagi un 'sistema'
-de tipus però diu molt poc de la naturalesa d'aquest sistema de tipus,
+de tipus de dades però diu molt poc de la naturalesa d'aquest sistema,
 si bé el model relacional defineix que com a mínim hi ha d'haver el
-tipus booleà i el tipus relació \parencite{date:thethirdmanifesto}. Pel que
-fa a implementar el tipus de dades en els SGBD, els quals aleshores
-també s'anomenen SGBD objecte/relacionals, destaquen les primeres
-propostes fetes per \textcite{stonebraker86} per tal que els usuaris
-puguin definir els seus propis tipus i les de
-\textcite{seshadri98:_enhan} que estudia la definició de tipus de
-dades complexos per tal que es puguin tractar eficientment.
+tipus booleà i el tipus
+relació \parencite{date:thethirdmanifesto}. Pel que fa a implementar
+el tipus de dades en els SGBD, els quals aleshores també s'anomenen
+SGBD objecte/relacionals, destaquen les primeres propostes fetes per
+\textcite{stonebraker86} per tal que els usuaris puguin definir els
+seus propis tipus de dades i les de \textcite{seshadri98:_enhan} que
+estudia la definició de tipus de dades complexos per tal que es puguin
+tractar eficientment.
 
 
  
@@ -199,7 +205,7 @@ dades complexos per tal que es puguin tractar eficientment.
 
 \subsection{Altres sistemes}
 
-Les crítiques als SGBDR, sobretot les que han estat degudes als SGBD
+Les crítiques als SGBDR, sobretot les degudes als SGBD
 \emph{SQL}, han contribuït a voler explorar altres models de
 SGBD \parencite{stonebraker09}. Aquests models presenten diferents
 maneres de representar les dades: llistes, seqüències, enllaços,
@@ -321,7 +327,14 @@ de consultes, d'emmagatzematge de grans volums de dades, de consultes
 via web, de distribució de bases de dades, de reduir la despesa en
 energia, etc. \parencite{stonebraker07,stonebraker10}, la qual cosa és
 exce\l.lent per a disposar d'un SGBD adequat a cada aplicació.
-\textcite{haerder05:_dbms_archit} descriu diferents models d'implementació per als SGBD, ja que indica que per obtenir bon rendiment la implementació d'un SGBD s'ha d'estudiar per cada aplicació. És més, una implementació d'un SGBD que vulgui  obtenir un bon rendiment en una determinada aplicació potser no pot implementar el model de dades complet sinó que només una part, com per exemple en els sistemes encastats \parencite{saake09:_downs_data_manag_embed_system}.
+\textcite{haerder05:_dbms_archit} descriu diferents models
+d'implementació per als SGBD, ja que indica que per obtenir bon
+rendiment la implementació d'un SGBD s'ha d'estudiar per cada
+aplicació. És més, una implementació d'un SGBD que vulgui obtenir un
+bon rendiment en una determinada aplicació potser no pot implementar
+el model de dades complet sinó que només una part, com per exemple en
+els sistemes
+encastats \parencite{saake09:_downs_data_manag_embed_system}.
 
 Per altra banda, l'àmbit matemàtic de SGBD, amb el model relacional
 com a màxim exponent, se centra en els conceptes teòrics, és a dir
@@ -333,7 +346,7 @@ mateixa potència que el relacional. Cal destacar que tot i que el
 model relacional té conceptes madurs i consolidats, i que a més han
 tingut èxit amb els SGBD SQL, s'obre una nova perspectiva amb
 l'evolució de conceptes que proposa el \emph{Third Manifesto},
-especialment amb Tutorial D i les implementacions que comencen a prendre
+especialment amb \emph{Tutorial D} i les implementacions que comencen a prendre
 cos a nivell acadèmic.
 
 
