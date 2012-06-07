@@ -298,3 +298,53 @@ Sent from the RRDtool Users Mailinglist mailing list archive at Nabble.com.
 * Explorar el camp dels formats multimèdia de compressió amb pèrdua
 
 * Explorar el camp fitat i multiresolució (ja significa pèrdua) que s'utilitza en els gràfics 3D: la importància depèn de l'observador, no té perquè està fix. Certs objectes es veuen com un píxel i no cal renderitzar tot el polígon.
+
+
+
+
+
+
+
+
+\section{Treball futur}
+
+
+
+
+Així doncs, tenint en compte que segons Date el model relacional és complet, que no hi ha cap de tant potent i que l'ampliació de funcionalitat dels SGBD relacionals s'ha de fer mitjançant la creació de nous tipus, el SGST hauria de contemplar aquestes idees. 
+
+Primer s'hauria de veure que el cas de les sèries temporals no sigui com el cas de les dades temporals a on sí que s'ha necessitat estendre el model relacional?. --> Bé de fet potser aquesta era la idea inicial en el model relacional (que s'havia de modificar per a poder tenir històrics) però ara després de modelar les dades temporals es pot veure que el model relacional ho accepta com a tipus: és a dir les relacions que tinguin atributs de tipus interval temporal passen a ser relacions temporals.
+
+Segon, s'hauria de considerar que el SGST són un nou tipus de dades en el model relacional i per tant el model relacional ja té tota la potència per una banda constituir SGBD i per altra banda definir i incorporar nous tipus.
+
+
+Com es defineixen nous tipus complexos als SGBD?
+
+En el cas que es descarti que el cas dels SGST presenta els mateixos problemes que les dades temporals i per tant els SGST han d'esdevenir un tipus de dades, cal preguntar-se com són els tipus de dades al model relacional.
+
+Concretament el model relacional només defineix què es un tipus de dades però dóna llibertat a la seva creació. Això és un gran avantatge. En els cas de tipus de dades senzills es defineixen amb una bona estructura i ja està però què passa quan es vol definir un nou tipus de dades complex?
+
+Cal recercar com s'han definit nous tipus de dades complexos. Els principals problemes es donen que el tipus és complex i forma una entitat de per sí. És a dir que definir un tipus sèrie temporal no és trivial. Aleshores, com cal procedir?
+
+
+
+Sobre la necessitat de modelar els tipus.
+
+Cal definir un model pel tipus que volem dissenyar.
+De fet, volem dissenyar un SGST. És a dir, un tipus que conformi pròpiament un SGBD. Per tant, utilitzarem les mateixes eines que es fan servir per modelar els SGBDR per a poder modelar el nostre SGST. Com que s'hauran utilitzat les mateixes eines, el SGST podrà esdevenir perfectament un tipus de dades pels SGBDR.
+
+En resum, per a definir nous tipus complexes cal modelar-los com a entitat pròpia, fent un símil amb el model relacional. Això no vol dir, però, que un cop modelats constitueixin de per sí un nou model per als SGBD, sinó que queden dins dels SGBDR. \todo{caldria} elaborar més i trobar alguna pista de com definir nous tipus complexos, stonebraker86 només indica com es va estendre postgresql amb operadors de creació de nous tipus però no com s'han de modelar els nous tipus.
+
+Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacional, per tant hem d'utilitzar el model relacional per a definir el nostre nou model.
+
+
+
+\section{Especulacions}
+
+* El model relacional ha estat dissenyat per modelar 'qualsevol' tipus de dades. Pe tant és cert que no ha estat dissenyat per modelar 'específicament' un tipus de dades. Conclusió: el model relacional és general i suficient per treballar amb qualssevol dades. No obstant, no és fàcil observar els tipus de dades de forma tant general i per això requereixen una certa abstracció tant de l'estructura, p.ex. es vol parlar de sèries temporals i no de relacions amb timestamps, com de les operacions, p.ex. es vol parlar d'un interval sobre la sèrie i no de la selecció de les tuples que tinguin timestamps entre dos valors. D'aquesta necessitat d'abstracció en parla [date05capsec8.5pp185] sobre la seva definició per interval temporals, fins i tot diu que l'usuari pot no veure que està treballant a sobre de relacions.
+
+
+* [sehadri96-thesissec9.2pp73] conclou que seria interessant estudiar com les seqüències ordenades per temps poden ser convertides a relacions amb timestamps i viceversa. Observa que el model relacional o l'orientat a objectes s'estén associant un timestamp a cada tuple o objecte. Això vol dir que el model que ell proposa no s'ajusta al model relacional? Sí que és cert que a la tesi demostra l'equivalència de les seves seqüències amb les relacions, tant estructura com els operadors, però potser no contempla les seqüències com una extensió de les relacions?
+
+
+* Potser la recerca antigament s'ha concentrat en modelar les dades temporals de cop [segev87] però modernament s'ha separat entre intervals temporals i sèries temporals, de moment hi ha conclusió sobre els intervals temporals [date02], i en el futur a partir dels models d'ambdós es podrà observar les propietats que tenen en comú i formalitzar-les en el model de dades temporals.
