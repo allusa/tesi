@@ -3,29 +3,64 @@
 \section{Treball realitzat}
 
 
-Inicialment, en la tesi final de màster en Automàtica i Robòtica
-''Estudi i modelització dels SGBD Round Robin pel tractament de sèries
-temporals'' (2011) es va estudiar profundament un sistema de gestió de
-bases de dades (SGBD) específic per a sèries temporals, RRDtool, i com
-a resultat de la seva formalització es van observar propietats
-interessants de les sèries temporals: naturalesa, representació,
-multiresolució i regularització.
+La tesi de màster en Automàtica i Robòtica ''Estudi i modelització
+dels SGBD Round Robin pel tractament de sèries temporals'' (2011) va
+consistir en l'estudi d'RRDTool, un sistema de gestió de bases de
+dades (SGBD) específic per a sèries temporals.
+%
+Fruit d'aquest estudi es va formalitzar el model de RRDTool i es va
+dissenyar i implementar un prototip software que responia a la
+formalització.
+%
+Aquest treball va permetre concloure que:
+\begin{itemize}
+\item Els SGBD's aplicats a sèries temporals tenen aspectes propis que
+  els converteixen en objecte d'estudi de \emph{per se}.
+\item El concepte de multiresolució és interessant en moltes
+  aplicacions reals, especialment quan existeixen restriccions d'espai
+  per emmagatzemar dades.
+\item El model proposat per a RDDTool és susceptible de ser millorat
+  com a mínim en el següents aspectes:
+  \begin{itemize}
+  \item Generalització. El model que es va presentar estava fortament
+    lligat a RDDTool. Generalitzar el model de forma que encabeixi
+    altres concepcions permetria enriquir-lo.
+  \item Incorporació d'operacions. El model presentat únicament feia
+    referència a les dades. Era un model de dades. Per completar el
+    model cal també considerar les operacions sobre les dades.
+  \item Contextualització. Cal interrelacionar i descriure el model el
+    context d'altres models existents per a SGBD's. Específicament cal
+    comparar-lo amb el model relacional usat en els SGBD's
+    convencionals.
+  \end{itemize}
+\item És convenient estudiar la feina feta per altres autors en
+  l'àmbit de l'emmagatzemat i gestió de dades provinents de sèries
+  temporals.
+\end{itemize}
 
-Posteriorment, a partir de la formalització anterior, s'ha treballat
-en el disseny d'un model de SGBD per sèries temporals.  S'ha dividit
-el model en dues parts. Una per al model general de les sèries
-temporals enteses com a co\l.lecció de dades mesurades en diferents
-instants de temps; es basa en temps, mesures i sèries temporals. Una
-altra pel model de multiresolució que emmagatzema la sèrie temporal
-amb diferents resolucions i funcions d'interpolació; es basa en discs
-resolucions que tenen un buffer on interpolen les mesures i un disc on
-consoliden el resultat.
-
-
-Finalment, s'ha situat l'àmbit d'estudi entre l'anàlisi de sèries
-temporals i els SGBD. Així, s'ha estudiat l'estat actual d'aquests dos
-temes, el qual es presenta en aquesta proposta de tesi.
-
+Arrel de la feina anterior, s'ha treballat en els següents aspectes:
+\begin{itemize}
+\item S'ha realitzat una tasca de recerca bibliogràfica i estudi dels
+  treballs existents en l'àmbit de la gestió i emmagatzemat de dades
+  provinents de sèries temporals. El resultat d'aquesta tasca s'ha
+  reflectit a l'apartat~\ref{} d'aquest mateix document.
+\item S'ha estudiat en profunditat el model relacional. Atesa la
+  preeminència d'aquest model en els SGBD's actuals, s'ha considerat
+  imprescindible tenir-ne un bon coneixement que permetés estudiar les
+  seves deficiències per la gestió de sèries temporals i en quina
+  forma poden ser superades.
+\item S'està refent el model de SGBD per sèries temporals.  S'ha
+  dividit el model en dues parts ben diferenciades:
+  \begin{enumerate}
+  \item La primera és el model general. Aquest defineix la gestió de
+    sèries temporals enteses com a co\l.lecció de dades mesurades en
+    diferents instants de temps. Es basa en els conceptes de temps,
+    mesura i sèrie temporal.
+  \item La segona és el model de multiresolució. Aquest model explica
+    la forma d'emmagatzemar una sèrie temporal amb diferents
+    resolucions temporals.
+  \end{enumerate}
+\end{itemize}
 
 
 \section{Treball futur}
