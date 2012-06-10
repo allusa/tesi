@@ -3,34 +3,33 @@
 \section{Treball realitzat}
 
 
-La tesi de màster en Automàtica i Robòtica ''Estudi i modelització
-dels SGBD Round Robin pel tractament de sèries temporals'' (2011) va
-consistir en l'estudi d'RRDTool, un sistema de gestió de bases de
+La tesi de màster \parencite{llusa11:tfm} va consistir en l'estudi de
+\emph{RRDtool} \parencite{rrdtool}, un sistema de gestió de bases de
 dades (SGBD) específic per a sèries temporals.
 %
-Fruit d'aquest estudi es va formalitzar el model de RRDTool i es va
+Fruit d'aquest estudi es va formalitzar el model de \emph{RRDtool} i es va
 dissenyar i implementar un prototip software que responia a la
 formalització.
 %
 Aquest treball va permetre concloure que:
 \begin{itemize}
-\item Els SGBD's aplicats a sèries temporals tenen aspectes propis que
+\item Els SGBD aplicats a sèries temporals tenen aspectes propis que
   els converteixen en objecte d'estudi de \emph{per se}.
 \item El concepte de multiresolució és interessant en moltes
   aplicacions reals, especialment quan existeixen restriccions d'espai
   per emmagatzemar dades.
-\item El model proposat per a RDDTool és susceptible de ser millorat
+\item El model proposat per a \emph{RDDtool} és susceptible de ser millorat
   com a mínim en el següents aspectes:
   \begin{itemize}
   \item Generalització. El model que es va presentar estava fortament
-    lligat a RDDTool. Generalitzar el model de forma que encabeixi
+    lligat a \emph{RDDtool}. Generalitzar el model de forma que encabeixi
     altres concepcions permetria enriquir-lo.
   \item Incorporació d'operacions. El model presentat únicament feia
     referència a les dades. Era un model de dades. Per completar el
     model cal també considerar les operacions sobre les dades.
   \item Contextualització. Cal interrelacionar i descriure el model el
-    context d'altres models existents per a SGBD's. Específicament cal
-    comparar-lo amb el model relacional usat en els SGBD's
+    context d'altres models existents per a SGBD. Específicament cal
+    comparar-lo amb el model relacional usat en els SGBD
     convencionals.
   \end{itemize}
 \item És convenient estudiar la feina feta per altres autors en
@@ -43,9 +42,9 @@ Arrel de la feina anterior, s'ha treballat en els següents aspectes:
 \item S'ha realitzat una tasca de recerca bibliogràfica i estudi dels
   treballs existents en l'àmbit de la gestió i emmagatzemat de dades
   provinents de sèries temporals. El resultat d'aquesta tasca s'ha
-  reflectit a l'apartat~\ref{} d'aquest mateix document.
+  reflectit a l'apartat~\ref{sec:art} d'aquest mateix document.
 \item S'ha estudiat en profunditat el model relacional. Atesa la
-  preeminència d'aquest model en els SGBD's actuals, s'ha considerat
+  preeminència d'aquest model en els SGBD actuals, s'ha considerat
   imprescindible tenir-ne un bon coneixement que permetés estudiar les
   seves deficiències per la gestió de sèries temporals i en quina
   forma poden ser superades.
@@ -65,10 +64,64 @@ Arrel de la feina anterior, s'ha treballat en els següents aspectes:
 
 \section{Treball futur}
 
+Per tal d'assolir els objectius detallats a la secció
+\ref{sec:objectius}, a continuació es proposen les tasques a
+realitzar.  A la figura \ref{fig:pla:futur} es detalla el pla de
+treball amb temps estimat.
 
-A la figura \ref{fig:pla:futur} es detalla el pla de treball amb temps
-estimat per tal d'assolir els objectius detallats a la secció
-\ref{sec:objectius}.
+
+
+
+
+\begin{enumerate}
+
+
+\item Estudi d'aplicacions de les sèries temporals. Per a assolir
+  l'objectiu~1 estudiarem recerca actual de sèries temporals.
+  Consultarem articles i llibres que tinguin les sèries temporals com
+  a temàtica principal. També cercarem l'existència de programari que
+  tingui en els seus objectius el tractament de sèries temporals.
+
+\item Estudi del model relacional. Per a l'objectiu~2 estudiarem el
+  model relacional com a referent pels models de SGBD. Ens basarem en
+  l'estudi dels llibres de
+  \textcite{date:introduction,date06,date:dictionary}. Usarem
+  \emph{rel} \parencite{rel} com a implementació de referència ja que
+  incorpora el llenguatge \emph{Tutorial D}, el qual és utilitzat per
+  Date en els seus exemples.
+
+\item Estudi de la gestió d'intervals temporals. Per a l'objectiu~3
+  estudiarem la recerca que ha conduit a incorporar els interval
+  temporals en els SGBD per a gestionar històrics. Ens basarem en
+  l'estudi que relaciona el model relacional amb els intervals
+  temporals de \textcite{date02:_tempor_data_relat_model}.
+
+\item Disseny d'un model de SGBD per sèries temporals. Per a la
+  primera part de l'objectiu 4 dissenyarem un model per als SGBD de
+  sèries temporals formalitzat amb expressions algebraiques. A partir
+  de l'estudi de l'estat de l'art de les sèries temporals, observarem
+  les propietats interessants de ser modelitzades i les operacions que
+  precisen els SGBD per sèries temporals.
+
+\item Disseny d'un model de SGBD multiresolució per sèries
+  temporals. Per a la segona part de l'objectiu 4 dissenyarem un model
+  que contempli la multiresolució de les sèries temporals. Aquest
+  model utilitzarà propietats del model anterior per les sèries
+  temporals. La mulitresolució té l'objectiu d'emmagatzemar les sèries
+  temporals de forma compacta, així es preveu que alguns conceptes de la recerca
+  en \emph{data streams} poden prendre-hi sentit.
+
+\item Implementació de referència. Per a l'objectiu~5 s'implementaran
+  els models anteriors utilitzant un llenguatge de programació adequat
+  per a models, com per exemple \texttt{Python} o \texttt{Prolog}.  Es
+  prioritzarà la implementació correcte del model enfront a una
+  implementació que contempli un bon rendiment. 
+
+\item Experimentació amb dades. Per a complementar l'objectiu~5 es
+  provarà la implementació amb dades experimentals per alguna
+  aplicació concreta.
+
+\end{enumerate}
 
 \begin{figure}[tp]
 \begin{gantt}[xunitlength=0.8cm]{15}{12}
@@ -84,20 +137,20 @@ estimat per tal d'assolir els objectius detallats a la secció
   \ganttmilestone{Proposta de tesi}{2}
 
   \ganttgroup{Estudi}{0}{4}
-  \ganttbar{Aplicacions}{0}{2}
-  \ganttbar{Model relacional}{0}{4}
-  \ganttbar{Intervals temporals}{2}{2}
+  \ganttbar{1. Aplicacions}{0}{2}
+  \ganttbar{2. Model relacional}{0}{4}
+  \ganttbar{3. Intervals temporals}{2}{2}
 
-  \ganttgroup{Disseny}{4}{3}
-  \ganttbar{Model sèries temporals}{4}{3}
-  \ganttbar{Model multiresolució}{5}{2}
+  \ganttgroup{Disseny models}{4}{3}
+  \ganttbar{4. Sèries temporals}{4}{3}
+  \ganttbar{5. Multiresolució}{5}{2}
   \ganttcon{7}{7}{7}{11}
 
   \ganttgroup{Experimentació}{7}{2}
-  \ganttbar{Implementació}{7}{2}
-  \ganttbar{Dades experimentals}{8}{1}
+  \ganttbar{6. Implementació}{7}{2}
+  \ganttbar{7. Dades experimentals}{8}{1}
 
-  \ganttbar{Redacció memòria}{8}{2}
+  \ganttbar{8. Redacció memòria}{8}{2}
 
   \ganttmilestonecon{Lectura de tesi}{10}
 
