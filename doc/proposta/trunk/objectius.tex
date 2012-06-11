@@ -9,38 +9,41 @@ adequades per gestionar i explotar correctament la informació de les
 sèries temporals.
 
 La recerca en anàlisi de sèries temporals ha augmentat en la darrera
-dècada, tal com explica \textcite{fu11}. És un camp amb interès
-actual, sobretot pel que fa a processar grans volums de dades amb bon
-rendiment, tant des de la vessant de temps d'execució com,
-modernament, de la vessant de consum d'energia. Hi ha multitud de
-metodologies i algoritmes que proposen solucions a aquests problemes
+dècada, tal com explica \textcite{fu11}. Actualment, és un camp de
+gran interès, sobretot pel que fa a processar grans volums de dades
+amb bon rendiment, tant des de la vessant de temps d'execució com,
+modernament, de la vessant de consum d'energia. Com es mostra a
+l'apartat \ref{sec:art} d'aquesta memòria, hi ha multitud de
+metodologies i algoritmes que proposen solucions a aquests problemes.
 Tot i així, la recerca en aquests temes segueix avançant a la recerca
-de noves solucions. Aquestes metodologies de sèries temporals són
-bones candidates per a ésser resoltes de forma ordenada i integrada
-mitjançant SGBD. Per a aquest objectiu és necessari disposar d'un
-model per a sèries temporals a on es reculli de forma general el
-problema de tractament de sèries temporals, aleshores molts d'aquests
-estudis de la recerca de sèries temporals es podran aplicar en la
-implementació de SGBD que segueixin el model de SGST.
+de noves solucions. En general podem dir que les metodologies i
+algoritmes basats en sèries temporals són bones candidates per a ésser
+resoltes de forma ordenada i integrada mitjançant SGBD. Per a assolir
+aquest objectiu és necessari disposar d'un model per a sèries
+temporals a on es reculli de forma general el problema de tractament
+de sèries temporals, aleshores molts d'aquests estudis de la recerca
+de sèries temporals es podran aplicar en la implementació de SGBD que
+segueixin el model de SGST.
 
 
-Recentment s'ha observat que hi ha un forat de coneixement entre els
-SGBD i les aplicacions de les sèries temporals, referides a la
-literatura com a científiques \parencite{stonebraker09:scidb,zhang11}.
-Hi alguns sistemes que es poden considerar com a SGST, com per exemple
-RRDTool o Cougar, però no s'ha definit clarament un model de SGST.
-Algunes propostes que mostren la necessitat d'estudiar conceptes de
-model són les definicions de \textcite{dreyer94} d'estructures
-bàsiques que han de tenir els SGST, els estudis de \textcite{bonnet01}
-per a xarxes de sensors o els exemples de consultes de
-\textcite{zhang11} per algunes de les propietats de les sèries
-temporals.
+Recentment s'ha observat que hi ha necessitat de coneixement entre els
+SGBD i les aplicacions de les sèries
+temporals \parencite{stonebraker09:scidb,zhang11}.  Hi alguns sistemes
+que es poden considerar com a SGST, com per exemple
+\emph{RRDtool} \parencite{rrdtool} o \emph{Cougar} \parencite{cougar},
+però en ells no s'ha definit clarament un model de SGST.  Dels
+treballs publicats en els que es mostra la necessitar d'estudiar
+conceptes de model es destaquen el treball de \textcite{dreyer94}, en
+el qual presenten l'estructura bàsica que han de tenir els SGST; els
+estudis de \textcite{bonnet01} per a xarxes de sensors; i els exemples
+de consultes de \textcite{zhang11} per algunes de les propietats de
+les sèries temporals.
 
 En els SGBD es contempla l'estudi formal dels seus conceptes
 mitjançant models basats en teories matemàtiques, del qual n'és una
 referència el model relacional \parencite{date:introduction}.  Dins
-del model relacional hi ha hagut un estudi profund per als intervals
-temporals, referits com a dades
+del model relacional hi ha hagut un estudi profund relacionat amb els
+intervals temporals, considerats com a dades
 temporals \parencite{date02:_tempor_data_relat_model}, que resol el
 problema dels històrics temporals en els SGBD. Les sèries temporals
 necessiten un estudi similar ja que no poden ser tractades com a
@@ -92,54 +95,57 @@ següents subobjectius més concrets:
 \item Estudi dels models de SGBD existents. Segons es desprèn de la
   formalització de \textcite{date:introduction} el model principal és
   el model relacional, el qual es fonamenta en dos conceptes:
-  relacions i tipus. 
+  relacions i tipus de dades. 
 
-\item Una àrea de treball important en els SGBD és la incorporació
-  de nous tipus de dades complexos. És important estudiar com es
-  modifica el model de dades d'un SGBD quan s'afegeix un nou tipus de
-  dades complex.  Les sèries temporals es poden d'entendre com a tipus
-  complex ja que presenten diferents propietats i necessiten operadors
-  addicionals.  Els SGBD permeten que els usuaris defineixin nous
-  tipus \parencite{stonebraker86} però no hi ha un estudi teòric dels
-  tipus als SGBD: \textcite{date:introduction} descriu abastament les
-  relacions però no els tipus. Els tipus s'han d'estudiar i modelar
-  per a poder-los considerar com a tals, oimés els tipus complexos ja
-  que requereixen un estudi més complet i possiblement s'hagin de
-  modelar com un propi SGBD. Una referència d'estudi és el cas dels
-  intervals temporals \parencite{date02:_tempor_data_relat_model}.
+\item Una àrea de treball important en els SGBD és la incorporació de
+  nous tipus de dades complexos. És important estudiar com es modifica
+  el model de dades d'un SGBD quan s'afegeix un nou tipus de dades
+  complex.  Les sèries temporals es poden d'entendre com a tipus
+  complex ja que presenten diferents propietats característiques i
+  necessiten operadors addicionals.  Els SGBD permeten que els usuaris
+  defineixin nous tipus de dades \parencite{stonebraker86} però no hi
+  ha un estudi teòric dels tipus de dades en els SGBD.
+  \textcite{date:introduction} descriu abastament les relacions però
+  no els tipus de dades. Els tipus de dades s'han d'estudiar i modelar
+  per a poder-los tractar i generar operadors, oimés els tipus
+  complexos ja que requereixen un estudi més complet i possiblement
+  s'hagin de modelar com un propi SGBD. Una referència d'estudi és el
+  cas dels intervals
+  temporals \parencite{date02:_tempor_data_relat_model}.
 
 %% Compte!!
-\item Proposta de model per a les sèries temporals per tal que puguin
-  ser incloses en els SGBD. D'aquesta manera els SGBD podran tractar
-  dades amb instants de temps que representin l'evolució de variables
-  en funció del temps. El model consisteix en la definició de
-  l'estructura de les sèries temporals i les operacions bàsiques que
-  necessiten.
+\item Disseny d'un model de SGBD per a les sèries temporals. D'aquesta
+  manera els SGBD podran tractar dades amb instants de temps que
+  mostrin l'evolució de variables en funció del temps. El model
+  consisteix en la definició de l'estructura de les sèries temporals i
+  les operacions bàsiques que necessiten.
 
-  El model es presenta en dues parts:
+  L'assoliment d'aquest objectiu té dues parts:
 
   \begin{enumerate}
-  \item Proposta d'un model per a les sèries temporals similar a
-    l'estudi fet pels intervals
-    temporals \parencite{date02:_tempor_data_relat_model}, ho anomenem
-    model de SGBD per a sèries temporals (SGST). A sobre del model de
-    SGST, el qual és un model general per a les sèries temporals, s'hi
-    poden proposar altres models per a propietats més específiques de
-    les sèries temporals.
+  \item Disseny d'un model per a la gestió bàsica de les sèries
+    temporals, el qual anomenem model de SGBD per a sèries temporals
+    (SGST).  L'estructura d'aquest model és similar a l'utilitzat en
+    els intervals
+    temporals \parencite{date02:_tempor_data_relat_model}.  Prenent
+    com a base el model de SGST, el qual és un model general per a les
+    sèries temporals, s'hi poden incloure altres models per a
+    propietats més específiques de les sèries temporals.
 
-  \item Proposta d'exemple de model específic a sobre del model de
-    SGST. Concretament es proposa un model pels SGST multiresolució
-    (SGSTM).  En el model de SGSTM s'hi inclouen propietats de les
-    sèries temporals relacionades amb la resolució que s'han observat
-    en les seves aplicacions: regularització, canvis de resolució
-    mitjançant agregacions, farciment de forats, etc.  
+  \item Disseny d'un model específic en base del model de
+    SGST. Concretament es dissenya un model pels SGST multiresolució
+    (SGSTM).  En el model de SGSTM s'hi poden incloure propietats de
+    les sèries temporals relacionades amb la resolució que s'han
+    observat en les aplicacions pràctiques de les sèries temporals:
+    regularització, canvis de resolució mitjançant agregacions,
+    reconstrucció de forats, etc.
     % (nota: a més aquesta part del model és la més sensible a ser
     % implementada com a data streams)
   \end{enumerate}
 
-\item Implementació de referència del model SGST i del model
-  SGSTM. Per una banda, aquesta implementació, a nivell acadèmic, ha
-  de servir com a exemple per a futurs desenvolupaments de SGST,
+\item Implementació de referència dels models de SGST i SGSTM. Per una
+  banda, aquesta implementació, a nivell acadèmic, ha de servir com a
+  exemple per a futurs desenvolupaments de sistemes de gestió,
   acadèmics o productius. Per altra banda, ha de servir per a
   exemplificar-ne els seu funcionament amb unes dades de prova.
 
@@ -157,57 +163,59 @@ següents subobjectius més concrets:
 
 Una de les grans mancances en l'àmbit de les sèries temporals és no
 tenir un model que faci d'enllaç entre les diferents aplicacions i les
-diferents implementacions, el que s'anomena com a forat de coneixement
-entre els SGBD i les sèries
+diferents implementacions, el que s'anomena com a necessitat de
+coneixement entre els SGBD i les sèries
 temporals \parencite{zhang11,stonebraker09:scidb}. Un model permetria,
 entre d'altres, estudiar les propietats abstractes de les sèries
-temporals i poder comparar entre diferents sistemes de gestió.
+temporals i poder comparar diferents sistemes de gestió.
 
 
 
 L'estudi d'un model de SGBD per a sèries temporals està motivat
-principalment per dues bandes.
+principalment per dos motius.
 
 
 Per una banda, després d'una mirada general a algunes aplicacions de
-les sèries temporals s'observa que hi ha molts algoritmes específics
-per al seu tractament. A més, s'observa que en el tractament de les
-sèries temporals es duen a terme un conjunt de tasques comunes: canvis
-de resolució, farciment de forats, reducció del volum de dades, etc.
-Tot i que hi ha sistemes dissenyats específicament per a tractar-hi,
-com per exemple RRDtool \parencite{rrdtool} o
-Cougar \parencite{fung02}, no s'ha identificat un model general per a
-aquests problemes.
+les sèries temporals, s'observa que hi ha molts algoritmes específics
+i dissenyats a mida per al seu tractament. A més, s'observa que en el
+tractament de les sèries temporals es duen a terme un conjunt de
+tasques comunes: canvis de resolució, reconstrucció de forats,
+reducció del volum de dades, etc.  Tot i que hi ha sistemes dissenyats
+específicament per a tractar-hi, com per exemple
+\emph{RRDtool} \parencite{rrdtool} o \emph{Cougar} \parencite{fung02},
+no s'ha identificat un model general per tractar aquests problemes.
 
 Per altra banda, en el model relacional de SGBD es troba una
-formalització per als sistemes que tractin amb qualsevol tipus de
-dades. Disposar d'un model matemàtic consolidat, com és el cas del
-relacional, ha estat una fita important en l'àmbit dels SGBD.  No
-obstant, el model relacional només presenta els conceptes bàsics dels
-SGBD, quedant per resoldre la formalització dels tipus. Concretament
-dins d'aquest àmbit destaca la publicació del model per a intervals
+formalització per a tractar qualsevol tipus de dades. Disposar d'un
+model matemàtic consolidat, com és el cas del relacional, ha estat una
+fita important en l'àmbit dels SGBD.  No obstant, el model relacional
+només presenta els conceptes bàsics dels SGBD, quedant per resoldre la
+formalització dels tipus de dades. Concretament dins d'aquest àmbit
+destaca la publicació del model per a intervals
 temporals \parencite{date02:_tempor_data_relat_model}, el qual
 s'utilitza per a formalitzar els històrics en els SGBD.
 
 En l'àmbit dels SGBD també s'hi inclou l'estudi d'implementacions que
-obtinguin bon rendiment. Un cop s'ha formalitzat el model es poden
-estudiar implementacions adequades per a cada aplicació. Per exemple
-en el cas de les sèries temporals es pot aplicar la gestió mitjançant
-\emph{data streams} \parencite{babcock02}.
+permetin obtenir un bon rendiment. Un cop s'ha formalitzat el model es
+poden avaluar les implementacions més adequades per a cada
+aplicació. Per exemple en el cas de les sèries temporals es pot
+aplicar la gestió mitjançant \emph{data
+  streams} \parencite{babcock02}.
 
 
-El model relacional va marcar una fita que va situar els SGBD
+El model relacional \parencite{codd70} va permetre situar els SGBD
 relacionals com a preeminents, sobretot els que tenien en comú un
 llenguatge anomenat SQL (\emph{Structured Query Language}). Tot i que
-semblava que era un àmbit consolidat, recentment han aparegut corrents
-crítics a aquesta supremacia, liderats pel corrent
-NoSQL \parencite{edlich:nosql,stonebraker10}.  En aquest corrent han
-aparegut SGBD amb més bon rendiment que els SGBD SQL, però pel que fa
-a models hi ha diversitat: alguns semblen reduccions del model
-relacional, \textcite[cap.~14,27]{date06} comenta els arbres i els
-objectes, altres aporten conceptes nous però encara són joves per
-observar-ne la potència. En el corrent crític als SGBD SQL també hi
-destaquen \textcite{date:thethirdmanifesto} que proposen conceptes i
+semblava que els SGBD eren un àmbit consolidat, recentment el corrent
+NoSQL (\emph{Not Only SQL}) \parencite{edlich:nosql,stonebraker10} ho
+ha posat en dubte.  En aquest nou enfoc han aparegut SGBD que milloren
+el rendiment dels SGBD SQL, però no queda massa clar els models
+emprats. En alguns casos segons comenta \textcite[cap.~14,27]{date06}
+sembla que sigui una reducció del model relacional, com per exemple
+els conceptes d'arbres i d'objectes; en altres casos s'aporten
+conceptes nou però les metodologies emprades són encara joves per
+avaluar-ne la potència. \textcite{date:thethirdmanifesto} també
+s'oposen a la preeminència dels SGBD SQL i proposen conceptes i
 llenguatges purament relacionals.
 
 
@@ -224,16 +232,16 @@ eficients, com per exemple els \emph{data streams} per a dades amb
 naturalesa de seqüència \parencite{bai05}.
 
 El model relacional contempla la seva extensió mitjançant nous tipus
-de dades, tot i que el considera independent i només en defineix la
-seva necessitat. Per a tipus de dades senzills és suficient amb
-definir una possible representació amb restriccions, per exemple
-definir telèfons com a subconjunts dels enters. Ara bé, per a tipus de
-dades complexos cal estudiar-los prèviament i modelar-los amb les
-mateixes eines matemàtiques amb les que es modelen els SGBD.  En els
-SGBD podem trobar tipus complexos que han rebut una gran atenció, com
-per exemple els històrics mitjançant intervals temporals o els
-sistemes d'informació geogràfica. Observant aquestes condicions, es
-conclou que les sèries temporals necessiten un estudi similar.
+de dades, tot i que el considera un aspecte independent i només en
+defineix la seva possible necessitat. Per a tipus de dades senzills és
+suficient amb definir una possible representació amb restriccions, per
+exemple definir telèfons com a subconjunts dels enters. Ara bé, per a
+tipus de dades complexos cal estudiar-los prèviament i modelar-los amb
+les mateixes eines matemàtiques amb les que es modelen els SGBD.  En
+els SGBD podem trobar tipus de dades complexos que han rebut una gran
+atenció, com per exemple els històrics mitjançant intervals temporals
+o els sistemes d'informació geogràfica. Observant aquestes condicions,
+es conclou que les sèries temporals necessiten un estudi similar.
 
 %Ara és el torn de les sèries temporals.\todo{informal}
 
