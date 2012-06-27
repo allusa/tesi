@@ -1,17 +1,15 @@
-\documentclass[catalan]{beamer}
+\documentclass[
+   catalan,
+%   handout,
+   ]{beamer}
 \usepackage{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[style=authoryear,sortcites=true]{biblatex}
 \newcommand{\bibendash}{--}
-\usepackage{tikz}
-\usepackage{pgfplots}
-%\usepackage{epic,xcolor,multicol}
 \usepackage{cclicenses}
-%\usepackage[overlay]{textpos}
-%\usepackage{listings}
 
 
-\mode<presentation>
+\mode<beamer>
 {
   \usetheme{Madrid}
   \setbeamercovered{transparent}
@@ -19,8 +17,21 @@
 }
 
 
+\mode<handout>
+{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{8 on 1}[a4paper,border shrink=5mm]
+  \setbeamercolor{background canvas}{bg=black!5}
+  \usetheme{Boadilla}
+  \useinnertheme{default}
+  \usecolortheme{dove}
+}
+
+
+
+
 \bibliography{bibliografia}
-\renewcommand*{\bibfont}{\footnotesize}
+\renewcommand*{\bibfont}{\scriptsize}
 \bibparsep 0.2cm
 \bibhang 0.25cm
 \ExecuteBibliographyOptions{
@@ -48,74 +59,84 @@
 }
 
 
-\date[Juliol 2012]
-{Proposta de Tesi Doctoral \\ Juliol 2012}
+\date[Juny 2012]
+{Proposta de Tesi Doctoral \\ Juny 2012}
 
 
 
 \begin{document}
 
 
-\begin{frame}
+\begin{frame}[plain]
  \titlepage
 \end{frame}
 
+\section*{Índex}
 \begin{frame}{Índex}
-  \begin{enumerate}
-  
-  \item Introducció
- 
-  \item Estat sèries temporals
-
-   \begin{enumerate}
-    \item Adquisició
-    \item Anàlisis
-    \item Emmagatzematge i gestió
-   \end{enumerate}
-
-  \item Estat SGBD
-
-   \begin{enumerate}
-    \item Models
-    \item Intervals temporals
-   \end{enumerate}
-
-  \item Proposta de tesi
-
-   \begin{enumerate}
-    \item Objectius tesi
-    \item Treball realitzat
-    \item Planificació futura
-   \end{enumerate}    
-
-  \item Referències
-\end{enumerate}
+ \tableofcontents
 \end{frame}
 
 
+% \begin{frame}{Índex}
+%   \begin{enumerate}
+  
+%   \item Introducció
+ 
+%   \item Estat sèries temporals
+
+%    \begin{enumerate}
+%     \item Adquisició
+%     \item Anàlisis
+%     \item Emmagatzematge i gestió
+%    \end{enumerate}
+
+%   \item Estat SGBD
+
+%    \begin{enumerate}
+%     \item Models
+%     \item Intervals temporals
+%    \end{enumerate}
+
+%   \item Proposta de tesi
+
+%    \begin{enumerate}
+%     \item Objectius tesi
+%     \item Treball realitzat
+%     \item Planificació futura
+%    \end{enumerate}    
+
+%   \item Referències
+% \end{enumerate}
+% \end{frame}
+
+
+\section{Introducció}
 \input{introduccio}
 
+\section{Estat de l'art}
 \input{seriestemporals}
-
 \input{sgbd}
 
+\section{Proposta de tesi}
 \input{proposta}
 
 
 
-\begin{frame}
+\begin{frame}<handout:0>
+  \addtocounter{framenumber}{-1}
 
-\begin{center}
-{\huge
-Gràcies per l'atenció!
-}
-\end{center}
+  \begin{center}
+    {\huge
+      Gràcies per l'atenció!
+    }
+  \end{center}
 
 \end{frame}
 
 
-\begin{frame}[allowframebreaks]
-{Referències}
+
+\section{Referències}
+\begin{frame}[allowframebreaks]{Referències}
 
 \printbibliography
 
