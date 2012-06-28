@@ -8,7 +8,7 @@
 
   \item Emmagatzemen i consulten tot tipus de dades.
 
-  \item Es poden descriure amb teories matemàtiques: models.
+  \item Es poden descriure amb models matemàtics.
 
   \item El model relacional és un
     referent \parencite{date:introduction}.
@@ -70,14 +70,106 @@ Sistemes i models actuals:
   \item SGBD per dades bitemporals no adequats per sèries
     temporals \parencite{schmidt95}.
 
-  \item Dades bitemporals: històrics amb intervals temporals.
-
-  \item Sèries temporals: anàlisi d'observacions seqüencials amb
-    instants temporals.
-
   \end{itemize}
     
 
+
+\end{frame}
+
+
+
+\begin{frame}{Sèries temporals i dades bitemporals}
+
+
+
+ Dades bitemporals: històrics amb intervals temporals
+
+\begin{columns}
+\column{6cm}
+
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]
+      \begin{axis}[
+          axis y line=left,  axis x line=bottom,
+          yticklabels={},
+          xticklabels={,,,,,temps vàlid}]
+
+          \addplot[only marks,mark=|] coordinates {
+            (0,0) (10,0) (0,10)
+            };
+
+
+          \node[right] at (axis cs:2,5) {\framebox(28,10){}};
+          \node[right] at (axis cs:3.5,7) {\framebox(60,10){}};
+          \node[right] at (axis cs:7,6) {\framebox(30,10){}};
+          \node[above] at (axis cs:9,3) {\framebox(10,10){}};
+
+
+          \node[right] at (axis cs:2,2) {\color{blue}{\framebox(50,10){}}};
+          \node[right] at (axis cs:4.7,4) {\color{blue}{\framebox(50,10){}}};
+          \node[above] at (axis cs:9,3) {\color{blue}{\framebox(10,8){}}};
+
+      \end{axis}
+  \end{tikzpicture}
+\end{center}
+
+\column{6cm}
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]
+      \begin{axis}[
+          axis y line=left,  axis x line=bottom,
+          yticklabels={},
+          xticklabels={,,,,,temps transacció}]
+
+          \addplot[only marks,mark=|] coordinates {
+            (0,0) (10,0) (0,10)
+            };
+
+
+          \node[right] at (axis cs:2,2) {\color{blue}{\framebox(50,10){}}};
+          \node[right] at (axis cs:4.7,4) {\framebox(80,10){}};
+
+      \end{axis}
+  \end{tikzpicture}
+
+\end{center}
+
+\end{columns}
+
+
+   Sèries temporals: anàlisi d'observacions seqüencials amb
+    instants temporals
+
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]
+    \begin{axis}[
+          axis y line=left,  axis x line=bottom,
+          xticklabels={,,,,,,,temps},
+          yticklabels={}]
+
+          \addplot[only marks,mark=|] coordinates {
+            (0,0)
+            };
+
+    \addplot[only marks,mark=*,blue] coordinates {
+        (10,1)
+        (20,3)
+        (25,4)
+        (35,5)
+        (42,7)
+        (45,8)
+        (50,10)
+        (55,6)
+        (60,3)
+        (70,4)
+    };
+
+    \end{axis}
+  \end{tikzpicture}
+ \end{center}
+
+
+ 
 
 \end{frame}
 
