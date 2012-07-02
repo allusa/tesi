@@ -3,15 +3,19 @@
 %--------------------
 % cal compilar amb `pdflatex main.tex`
 %--------------------
-\documentclass[paper=a4,fontsize=10pt,twoside,parskip=half,BCOR-0.5mm,openany,DIV = 10]{scrbook}
+\documentclass[paper=a4,parskip=half,
+oneside,fontsize=11pt, %%format web
+% twoside,openany,fontsize=10pt,DIV = 10,BCOR-0.5mm, %%format en paper
+]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació en rústica
 %%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
 %------------- capçalera ----------------------
 \input{capçalera.default}
 \bibliography{bibliografia}
 \ExecuteBibliographyOptions{
-%  annotation=true,backref=true,
-isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true
+%  annotation=true
+backref=true %%format web 
+% isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true %%format en paper
 }
 \bibitemsep 1mm
 %\bibitemsep 0cm \biblabelsep 0cm \bibhang 0cm \renewcommand{\bibfont}{\normalfont\footnotesize}
@@ -49,13 +53,11 @@ isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true
 
 
 
-%\includeonly{sgbd}
-
 \begin{document}
 
 \include{portada}
 
-\tableofcontents{}
+\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents{}
 
 \include{objectius}
 
