@@ -1,0 +1,159 @@
+\subsection{Sèries temporals}
+\begin{frame}{Estat sèries temporals}
+
+  Sèries temporals:
+
+  \begin{itemize}
+
+  \item Conjunt de valors cadascun dels quals té associat un instant
+    de temps.
+
+  \item Emmarcades en l'àmbit de dades temporals, juntament amb dades
+    bitemporals \parencite{assfalg08:thesis}.
+
+  \end{itemize}
+  
+
+  Aplicacions:
+  \begin{itemize}
+
+  \item Ús generalitzat per a l'anàlisi i la comprensió del
+    comportament temporal de variables. Tasques relacionades amb
+    validació de dades, diagnòstic, prognosis, etc.
+
+  \item Algunes aplicacions actuals: avaluació de la degradació de
+    components \parencite{yu11}, anàlisi de l'estat dels sensors d'un
+    vaixell \parencite{palmer07}, validació i reconstrucció de dades
+    en xarxes de distribució d'aigua \parencite{quevedo10},
+    optimització de la planificació semafòrica \parencite{last11},
+    transmissió d'informació en xarxes de
+    sensors \parencite{jainagrawal05}.
+
+
+  \end{itemize}
+
+\end{frame}
+
+
+%\subsection{Adquisició}
+\begin{frame}{Estat sèries temporals. Adquisició}
+
+  Adquisició de dades mitjançant monitoratge:
+
+  \begin{itemize}
+
+  \item Sèries temporals com a resultat d'una adquisició de
+    dades. Solucions de monitoratge per a adquirir-les.
+
+  \item Interès actual en l'ús eficient de recursos en les xarxes de
+    sensors: 
+    \begin{itemize}
+    \item Transmissió amb agregacions i
+      aproximacions \parencite{deligiannakis07}
+    \item Resolució distribuïda de consultes \parencite{bonnet01}.
+    \end{itemize}
+
+  \end{itemize}
+  
+    Problemes en el monitoratge:
+    \begin{enumerate}
+
+    \item Gestió d'una quantitat enorme de dades. 
+
+    \item Necessitat de censurar les dades: validar-les i reconstruir-les.
+
+    \item Regularitat del període de mostreig.
+
+    \end{enumerate}
+  
+
+  Cal anàlisis de sèries temporals recolzat en els SGBD.
+
+
+
+\end{frame}
+
+
+
+%\subsection{Anàlisis}
+\begin{frame}{Estat sèries temporals. Anàlisis}
+
+  Anàlisis de sèries temporals:
+
+  \begin{itemize}
+
+  \item Aplicació de metodologies i d'algoritmes per extreure
+    característiques o obtenir models de les dades.
+
+  \item Tècniques recollides en la  mineria de sèries temporals.
+
+  \item Recerca actual per reduir la mida de les sèries temporals i el
+    temps de processat \parencite{fu11}. 
+
+  \end{itemize}
+  
+
+  Tasques en la mineria de sèries temporals:
+
+  \begin{itemize}
+
+  \item Quatre tasques principals: indexat, agrupament, classificació i segmentació \parencite{keogh02}.
+
+  \item Tasca de representació és un pas comú que s'aprofita per
+    reduir la mida.  Les representacions a trossos constants són
+    tècniques eficients en el càlcul \parencite{keogh00}.
+
+  \end{itemize}
+
+\end{frame}
+
+
+
+%\subsection{Emmagatzematge i gestió}
+\begin{frame}{Estat sèries temporals. Emmagatzematge i gestió}
+
+  Gestió de les sèries temporals:
+
+  \begin{itemize}
+
+  \item Ús dels SGBD per emmagatzemar sèries temporals i consultar-ne
+    informació.
+
+  \item SGBD específics per a sèries temporals
+    (SGST) amb operacions de temps adequades per
+    a les dades \parencite{dreyer94}.
+
+  \end{itemize}
+  
+    Cal gestionar l'arribada seqüencial i contínua de les dades.
+
+    \begin{itemize}
+
+    \item  Seqüències \parencite{seshadri95}
+
+    \item \emph{Data streams} \parencite{babcock02}
+
+    \item Vectors i matrius \parencite{stonebraker09:scidb,zhang11}
+
+    \end{itemize}
+
+
+  Alguns sistemes amb propietats de SGST: 
+    \emph{Cougar} \parencite{cougar},
+    \emph{iSAX} \parencite{keogh10:isax},
+    \emph{RRDtool} \parencite{rrdtool},
+    \emph{SciDB} \parencite{stonebraker09:scidb} o
+    \emph{SciQL} \parencite{zhang11}.
+
+
+
+
+\end{frame}
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presentacio"
+%%% End: 

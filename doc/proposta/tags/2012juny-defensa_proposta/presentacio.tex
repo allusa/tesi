@@ -1,0 +1,193 @@
+\documentclass[
+   catalan,
+%   handout,
+   ]{beamer}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[style=authoryear,sortcites=true]{biblatex}
+\newcommand{\bibendash}{--}
+\usepackage{cclicenses}
+\usepackage{appendixnumberbeamer}
+\usepackage{gantt}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\mode<beamer>
+{
+  \usetheme{Madrid}
+  \setbeamercovered{transparent}
+  \beamertemplatenavigationsymbolsempty
+}
+
+
+\mode<handout>
+{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{8 on 1}[a4paper,border shrink=5mm]
+  \setbeamercolor{background canvas}{bg=black!5}
+  \usetheme{Boadilla}
+  \useinnertheme{default}
+  \usecolortheme{dove}
+}
+
+
+
+
+\bibliography{bibliografia}
+\renewcommand*{\bibfont}{\footnotesize}
+\bibparsep 0.2cm
+\bibhang 0.25cm
+\ExecuteBibliographyOptions{
+  isbn=false,url=false,doi=false,firstinits=true,abbreviate=true
+}
+
+
+%------------- capçaleres pdf -----------
+
+\title%
+   [SGBD multiresolució de sèries temporals]%
+   {Disseny i modelització d'un sistema de gestió
+     multiresolució de sèries temporals}
+
+\author[A. Llusà]
+{%
+  Aleix Llusà Serra \\
+  {\footnotesize Direcció: Teresa Escobet Canal i Sebastià Vila-Marta}
+}
+
+\institute[Programa doct.\ ARV UPC]
+{
+  {\large Universitat Politècnica de Catalunya} \\
+  Programa de Doctorat en Automàtica, Robòtica i Visió 
+}
+
+
+\date[Juny 2012]
+{Proposta de Tesi Doctoral \\ Juny 2012}
+
+
+
+\begin{document}
+
+
+\begin{frame}[plain]
+ \titlepage
+\end{frame}
+
+\section*{Índex}
+\begin{frame}{Índex}
+ \tableofcontents
+\end{frame}
+
+
+% \begin{frame}{Índex}
+%   \begin{enumerate}
+  
+%   \item Introducció
+ 
+%   \item Estat sèries temporals
+
+%    \begin{enumerate}
+%     \item Adquisició
+%     \item Anàlisis
+%     \item Emmagatzematge i gestió
+%    \end{enumerate}
+
+%   \item Estat SGBD
+
+%    \begin{enumerate}
+%     \item Models
+%     \item Intervals temporals
+%    \end{enumerate}
+
+%   \item Proposta de tesi
+
+%    \begin{enumerate}
+%     \item Objectius tesi
+%     \item Treball realitzat
+%     \item Planificació futura
+%    \end{enumerate}    
+
+%   \item Referències
+% \end{enumerate}
+% \end{frame}
+
+
+\section{Introducció}
+\input{introduccio}
+
+\section{Estat de l'art}
+\input{seriestemporals}
+\input{sgbd}
+
+\section{Proposta de tesi}
+\input{proposta}
+
+
+
+
+\begin{frame}<handout:0>
+  \addtocounter{framenumber}{-1}
+
+  \begin{center}
+    {\huge
+      Gràcies per l'atenció!
+    }
+  \end{center}
+
+\end{frame}
+
+
+
+
+
+\appendix
+
+
+
+
+\begin{frame}[allowframebreaks]{Referències}
+
+\printbibliography
+
+\end{frame}
+
+
+\end{document}
+
+
+
+% LocalWords:  SGBD monitoratge multiresolució
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Defensa Proposta de Tesi Doctoral. Disseny i modelització d'un sistema de gestió multiresolució de sèries temporals
+%
+% Copyright (C) 2012 Aleix Llusà Serra.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
