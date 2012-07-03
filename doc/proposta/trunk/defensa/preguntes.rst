@@ -142,6 +142,17 @@ Jordi Saludes
    presenten models altres no.
 
 
+* Article de Codd 1970 ha estat rebutjat.
+
+   El citem en el text per a establir la referència temporal de quan
+   es va crear el model relacional. Com a referències bibliogràfiques
+   pel model relacional utilitzem les més modernes de Date i Darwen,
+   ja que s'han encarregat de divulgar, millorar i assentar els
+   conceptes proposats per Codd. Destaquem el Third Manifesto de Date
+   i Darwen com a referència del què s'entén per model relacional
+   actualment.
+
+
 * Perquè és interessant estudiar les sèries temporals? Què no poden
   fer els sistemes relacionals per les sèries temporals?
 
