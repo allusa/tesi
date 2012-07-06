@@ -1,0 +1,133 @@
+\documentclass[
+conference, %peerreviewca,
+%draft, %draftcls, draftclsnofoot,
+%onecolumn,
+]{IEEEtran}
+
+
+\usepackage[utf8]{inputenc}
+
+
+%\usepackage{url}
+
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+
+
+\begin{document}
+
+
+
+\title{Multiresolution \\ Time Series}
+
+
+\author{
+  \IEEEauthorblockN{
+    Aleix Llusà Serra%\IEEEauthorrefmark{1}
+    , Teresa Escobet Canal %\IEEEauthorrefmark{1}
+    and Sebastià Vila-Marta%\IEEEauthorrefmark{1}
+  }
+  \IEEEauthorblockA{
+    %\IEEEauthorrefmark{1}%
+    \{aleix,sebas\}@dipse.upc.edu, teresa.escobet@upc.edu\\
+    Department of Electronic System Design and Programming (DiPSE)\\
+    Universitat Politècnica de Catalunya, 08242 Manresa, Spain
+  }
+}
+
+
+\maketitle
+
+
+\begin{abstract}
+%\boldmath
+The abstract goes here.
+\end{abstract}
+
+
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+
+This paper focuses on Data Base Management Systems (DBMS) that store
+and treat data as time series. Traditional DBMS, as is ones derived
+from relational model, are not adequate for these cases as they do not
+have enough facilities to manage and retrieve time series
+information.
+
+
+
+* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS
+
+* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
+
+* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
+
+*Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
+
+* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
+
+* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.)
+
+* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+
+* Calendari, passa a segon terme. El temps es defineix com universal i constant (semblant a Unix Time Epoch). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
+
+* El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
+
+
+* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
+
+
+
+
+
+ P.ex. a la Tesis Soriguera, APPENDIX A2 , 
+Requiem for Freeway Travel Time Estimation Methods Based
+on Blind Speed Interpolations between Point Measurements, parla d'interpolació entre mesures (compte, EN l'ESPAI NO EN EL TEMPS!! però seria un exemple de que els links compleixen amb la interfície temps?) amb diferents mètodes:  interpolacions constants (endavant, endarrere, optimistica), a trossos, lineal, quadràtica;    tot i que conclou que The present paper shows that all speed interpolation methods that omit traffic
+dynamics and queue evolution do not contribute to better travel time estimations. 
+%http://www.fundacioabertis.org/pdf/Editarium_FSoriguera.pdf
+Unlike in fusion 1, in the fusion 2 process the information is not provided by the same
+data source, and hence, the data will not be equally located in space and time. 
+Therefore, a spatial and temporal alignment is needed before the data can be fused.
+
+
+* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. (consultar si en deligiannakis en diu alguna cosa).
+
+%Multi-Sensor Data Fusion: An Introduction. Harvey B. Mitchell
+
+
+\newpage
+
+\mbox{}
+
+\newpage
+
+
+
+
+
+\section{Conclusion}
+The conclusion goes here.
+
+
+\section*{Acknowledgment}
+
+
+The authors would like to thank...
+
+
+
+
+
+
+\end{document}
+
+
+
+
+%%% Local Variables: 
+%%% ispell-local-dictionary: "british"
+%%% End: 
