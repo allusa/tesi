@@ -3,16 +3,24 @@ english
 ]{scrartcl}
 \usepackage[utf8]{inputenc}
 
+\usepackage{todonotes}
 
 \usepackage{url}
 
-% \usepackage[cmex10]{amsmath}
-% \usepackage{amssymb}
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+
+\usepackage{tikz}
+\usepackage{multicol}
+\newcommand{\imatges}{../../imatges}
 
 
+\newtheorem{definition}{Definition}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
 
 \title{
-  A Model for a Multiresolution Time Series\\
+  A model for a Multiresolution Time Series\\
   Database Management System }
 
 
@@ -43,6 +51,10 @@ Manuscripts should be written in English and include a 100-300 word abstract.
 \end{abstract}
 
 {\bfseries Keywords:} 
+
+
+
+\twocolumn
 
 
 
@@ -105,11 +117,29 @@ Therefore, a spatial and temporal alignment is needed before the data can be fus
 \section{The Model}
 
 
-%\section{Results and Discussion}
+\input{model}
 
 
 
 
+
+
+
+\section{Example}
+
+
+
+
+
+\begin{figure}[tp]
+\centering
+\input{\imatges/model/locales/mtsdb-time_window.tex}
+\caption{Example of different resolutions for a time series in a MTSDB}
+\label{fig:model:window}
+\end{figure}
+
+
+Putting resolution and 'time subseries' together, in a multiresolution database a time series is stored in different resolution pieces. For example, we could have a time series stored with high resolution at recent times and with low resolution at older times. This example is illustrated in figure \ref{fig:model:window}. At the top there are three \emph{discs} with different number of \emph{measures} and at the bottom there is a timeline showing the time series chopped along time. For recent times, every 2 hours a \emph{measure} is stored in the third \emph{disc} which has a capacity of 24 \emph{measures} so that results in a 2 day piece. For mid times, every 1 day a  \emph{measure} is stored in the second \emph{disc} which has a capacity of 12 \emph{measures} so that results in a 12 days piece. For old times, every 5 days a  \emph{measure} is stored in the first \emph{disc} which has a capacity of 6 \emph{measures} so that results in a 30 days piece. 
 
 
 \section{Related Work}
@@ -149,7 +179,7 @@ Per altra banda, hi ha les dades bitemporals que exploren històrics mitjançant
 \section{Conclusions} 
 The conclusion goes here.
 
-
+L'interès actual ens fa ser optimistes per aventurar que aviat podrem gestionar les sèries temporals adequadament amb els SGBD.
 
 
 
@@ -165,12 +195,12 @@ This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC).
 \bibitem{llusa11:tfm} A.\ Llusà Serra, ``Estudi i modelització
   dels SGBD Round Robin pel tractament de sèries temporals''
   (catalan), Master Thesis, Universitat Politècnica de Catalunya,
-  2011. 
+  2011. \todo{no citat}
 
 \bibitem{llusa12:ptd} A.\ Llusà Serra, ``Disseny i modelització
   d'un sistema de gestió multiresolució de sèries temporals''
   (catalan), Thesis Proposal, Universitat Politècnica de Catalunya,
-  2012.
+  2012. \todo{no citat}
 
 
 \bibitem{rrdtool} T.\ Oetiker, ``RRDtool, Round Robin database'',
