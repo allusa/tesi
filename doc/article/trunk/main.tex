@@ -1,6 +1,4 @@
-\documentclass[
-english
-]{scrartcl}
+\documentclass{scrartcl}
 \usepackage[utf8]{inputenc}
 
 \usepackage{todonotes}
@@ -68,13 +66,39 @@ information.
 
 
 
-* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS
+Unió entre els dos camps d'anàlisis de sèries temporals i de models de SGBD. 
+
+- Multitud d'algoritmes i metodologies. Problemes en el monitoratge.
+- Model relacional és referent
+
+
+
+
+Motivació: vam observar RRDtool [citar tfm?] i volíem entendre els conceptes i modelar-los per tal de veure'n la flexibilitat: RRDtool és molt restringit amb el tractament amb el temps i amb el tipus de dades que pot tractar.
+
+
+
+** Paper structure **
+
+
+
+\section{Requirements}
+
+Requirements for a TSMS
+
+
+* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS [schmidt i dreyer] 
 
 * Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
 
 * Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
 
-*Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
+* Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
+
+* Cal censurar les dades.
+
+* Cal regularitzar les sèries temporals, o saber operar amb elles quan no són regulars. La no regularitat en el temps de mostreig pot provenir per exemple de jitter en mostrejos periòdics (problemes estudiats en el control) o d'un event-based sampling/control.
+
 
 * Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
 
@@ -90,28 +114,9 @@ information.
 * Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
 
 
+* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. 
 
 
-
- P.ex. a la Tesis Soriguera, APPENDIX A2 , 
-Requiem for Freeway Travel Time Estimation Methods Based
-on Blind Speed Interpolations between Point Measurements, parla d'interpolació entre mesures (compte, EN l'ESPAI NO EN EL TEMPS!! però seria un exemple de que els links compleixen amb la interfície temps?) amb diferents mètodes:  interpolacions constants (endavant, endarrere, optimistica), a trossos, lineal, quadràtica;    tot i que conclou que The present paper shows that all speed interpolation methods that omit traffic
-dynamics and queue evolution do not contribute to better travel time estimations. 
-%http://www.fundacioabertis.org/pdf/Editarium_FSoriguera.pdf
-Unlike in fusion 1, in the fusion 2 process the information is not provided by the same
-data source, and hence, the data will not be equally located in space and time. 
-Therefore, a spatial and temporal alignment is needed before the data can be fused.
-
-
-* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. (consultar si en deligiannakis en diu alguna cosa).
-
-%Multi-Sensor Data Fusion: An Introduction. Harvey B. Mitchell
-
-
-
-
-
-%Paper structure
 
 
 \section{The Model}
@@ -127,7 +132,9 @@ Therefore, a spatial and temporal alignment is needed before the data can be fus
 
 \section{Example}
 
+Fer un exemple amb dades concretes a on es vegi com funciona el model.
 
+Per exemple la figura de rellotges: entren unes dades amb període diari i s'observa com es resumeixen al cap de 2 dies i al cap de 5 dies amb interpolador mitjana o màxim.
 
 
 
@@ -163,6 +170,7 @@ Cougar
 % \textcite{cougar,fung02} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
 % Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
 
+SciDB i SciQL
 % item[SciDB]
 % \textcite{stonebraker09:scidb} estudien els SGBD científiques amb models  de dades basats en matrius. Estan desenvolupant SciDB \parencite{scidb}, un SGBD productiu i optimitzat per treballar amb matrius.
 
@@ -189,7 +197,8 @@ This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC).
 
 
 
-\begin{thebibliography}{9}
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
 
 
 \bibitem{llusa11:tfm} A.\ Llusà Serra, ``Estudi i modelització
