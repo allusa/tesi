@@ -5,6 +5,9 @@
 
 \usepackage{url}
 
+\usepackage[hmargin=2cm,vmargin=4cm,columnsep=7.5mm]{geometry}
+
+
 \usepackage[cmex10]{amsmath}
 \usepackage{amssymb}
 
@@ -18,7 +21,8 @@
 \DeclareMathOperator*{\prev}{prev}
 
 \title{
-  A model for a Multiresolution Time Series\\
+  Model and requirements 
+  for a Multiresolution Time Series\\
   Database Management System }
 
 
@@ -152,9 +156,12 @@ Putting resolution and 'time subseries' together, in a multiresolution database 
 \section{Related Work}
 
 
+\todo{una mica d'intro}
+
+
 Per una banda, hi ha alguns que exploren SGBD similars
 
-
+On the one hand, there are DBMS with some properties for time series.
 
 RRDtool from Oetiker \cite{rrdtool} is a professional database
 management system extremely used by the free software community. It is
@@ -163,7 +170,7 @@ when processing time series is being improved. Nevertheless, it is
 focused to a particular kind of data, gauges and counters, and it has
 not general time series operations.
 
-Cougar 
+Cougar \cite{fung2}
 
 
 % item[Cougar]
@@ -179,14 +186,20 @@ SciDB i SciQL
 % \textcite{kersten11} descriuen SciQL, un llenguatge per a SGBD científiques basades en matrius. Hi ha un prototip en desenvolupament de SciQL \parencite{sciql}.
 
 
+On the other hand,
 
 Per altra banda, hi ha les dades bitemporals que exploren històrics mitjançant intervals temporals. Hi ha hagut tot un recorregut d'investigació de com encaixar  els intervals temporals en els SGBD, finalment DDL2002 marca una fita.
 
 
 
-\section{Conclusions} 
+\section{Conclusions and future work} 
 The conclusion goes here.
 
+Hem vist un model de MTSMS, quins requeriments tenen aquests sistemes i com es podria aplicar en un exemple. L'objectiu és emmagatzemar les sèries temporals de forma compacta i gestionar-les amb coherència amb la dimensió temporal. 
+
+Hem vist el primer pas per definir el model de dades per a un MTSMS, en un futur caldrà definir-ne les operacions i un model de dades que agrupi propietats generals dels TSMS com poden ser la unió de sèries temporals, el càlcul d'itervals temporals, etc.
+
+Amb aquesta recerca volem demostrar que l'ús de SGBD per a les sèries temporals facilitarà enormement el treball amb aquestes.
 L'interès actual ens fa ser optimistes per aventurar que aviat podrem gestionar les sèries temporals adequadament amb els SGBD.
 
 
@@ -216,7 +229,10 @@ This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC).
   1998--2011.  \url{http://oss.oetiker.ch/rrdtool/}
 
 
-\bibitem{fung02} W.\ Fu Fung, D.\ Sun and J.\ Gehrke, ``COUGAR: the network is the database'', Proceedings of the 2002 ACM SIGMOD international conference on Management of Data, Madison, 4--6 June 2002, pp. 621--621. doi: 10.1145/564691.564775 
+\bibitem{fung02} W.\ Fu Fung, D.\ Sun and J.\ Gehrke, ``COUGAR: the
+  network is the database'', Proceedings of the 2002 ACM SIGMOD
+  international conference on Management of Data, Madison, 4--6 June
+  2002, pp. 621--621. doi: 10.1145/564691.564775
 
 
 
