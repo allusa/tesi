@@ -46,8 +46,17 @@ Paco del Aguila
 
 * Com es contempla l'aplicació de diferents interpoladors a les dades?
 
+  El SGBD ha de poder ser pluginable, és a dir ha de permetre
+  incorporar els interpoladors que l'usuari vulgui.
 
-* Com està pensada la transmissió d'informació en xarxes de sensors de forma distribuïda?
+
+* Com està pensada la transmissió d'informació en xarxes de sensors de
+  forma distribuïda?
+
+  En principi no es contempla en el model sinó que es contempla com
+  una aplicació: poder resoldre consultes de forma distribuïda. Hi ha
+  alguns articles que dissenyen SGBD distribuïts per a xarxes de
+  sensors com per exemple Cougar o TinyDB.
 
 
 
@@ -60,7 +69,8 @@ Ramon Pérez
 
 * Les sèries temporals es troben a quasi tot arreu.
 
-* Hi ha aplicacions de les sèries temporals en altres camps que els citats? Potser fer una classificació de les aplicacions.
+* Hi ha aplicacions de les sèries temporals en altres camps que els
+  citats? Potser fer una classificació de les aplicacions.
 
 * Què es preferiria: crear un model a part del relacional (perquè les
   sèries temporals no es poguessin resoldre amb el model relacional) o
@@ -129,7 +139,9 @@ Jordi Saludes
    definir-se'l i aplicar-lo a les dades.
 
 
-* Quan hi ha implicat el temps hi ha una tècnica d'implementació anomenada inter.. que podria lligar amb aquesta proposta.
+* Quan hi ha implicat el temps hi ha una tècnica d'implementació
+  anomenada functional reactive programming que podria lligar amb
+  aquesta proposta.
 
    Es pren nota d'estudiar aquest tema.
 

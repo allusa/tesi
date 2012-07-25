@@ -21,8 +21,7 @@
 \DeclareMathOperator*{\prev}{prev}
 
 \title{
-  Model and requirements 
-  for a Multiresolution Time Series\\
+  Model and requirements for a Multiresolution Time Series
   Database Management System }
 
 
@@ -50,13 +49,16 @@
 \begin{abstract}
 The abstract goes here.
 Manuscripts should be written in English and include a 100-300 word abstract.
+
+Tot i que el el món d'analàsis de sèries temporals trobem multitud de metodologies i algoritmes per analitzar les sèries temporals, no hi ha suport en els SGBD per a gestionar-ho.
 \end{abstract}
 
 {\bfseries Keywords:} 
 
 
 
-\twocolumn
+
+%\twocolumn
 
 
 
@@ -110,7 +112,7 @@ Requirements for a TSMS
 
 * Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
 
-* Calendari, passa a segon terme. El temps es defineix com universal i constant (semblant a Unix Time Epoch). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
+* Calendari, passa a segon terme, (en contraposició a Dreyer). El temps es defineix com universal i constant (semblant a Unix Time Epoch). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
 
 * El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
 
@@ -156,12 +158,10 @@ Putting resolution and 'time subseries' together, in a multiresolution database 
 \section{Related Work}
 
 
-\todo{una mica d'intro}
+\todo{una mica d'intro}: L'objectiu de dissenyar SGBD per a sèries temporals gaudeix d'un gran interès actualment.
 
-
-Per una banda, hi ha alguns que exploren SGBD similars
-
-On the one hand, there are DBMS with some properties for time series.
+On the one hand, there are DBMS with some properties and operations
+for time series.
 
 RRDtool from Oetiker \cite{rrdtool} is a professional database
 management system extremely used by the free software community. It is
@@ -170,25 +170,38 @@ when processing time series is being improved. Nevertheless, it is
 focused to a particular kind of data, gauges and counters, and it has
 not general time series operations.
 
-Cougar \cite{fung2}
+Cougar \cite{bonnet01} is a sensor database system. It has two
+structures: one for sensor properties stored into relations and
+another for time series stored into data sequences from sensors.  Time
+series have specific operations and can combine relations and
+sequences.
 
 
-% item[Cougar]
-% \textcite{cougar,fung02} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
-% Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
-
-SciDB i SciQL
-% item[SciDB]
-% \textcite{stonebraker09:scidb} estudien els SGBD científiques amb models  de dades basats en matrius. Estan desenvolupant SciDB \parencite{scidb}, un SGBD productiu i optimitzat per treballar amb matrius.
+SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
+database systems. These systems are intended for science applications,
+in which time series play a principal role. They structure time series
+into arrays in order to achieve multidimensional analysis.
 
 
-% item[SciQL]
-% \textcite{kersten11} descriuen SciQL, un llenguatge per a SGBD científiques basades en matrius. Hi ha un prototip en desenvolupament de SciQL \parencite{sciql}.
+
+On the other hand, the relational DBMS model is continuously evolving
+\todo{citar third manifesto?}. Particularly regarding time data,
+intensive research has been carried in the bitemporal data field, that
+is the management of history using time intervals. 
+The recent temporal data research in relational DBMS model terms
+\cite{ddl02} marks a promising foundation. It models bitemporal data
+as relations extended with time intervals attributes and extends
+relational operations in order to deal with related time aspects.
+
+Although bitemporal data and time series data are not exactly the same
+and so can not be treated interchangeably \todo{cita, schidmidt95?},
+time series research can benefit from two aspects of this bitemporal
+data research. First, it shows the way to extend relational DBMS with
+new types and how to model them. Second, it settles some time-related
+concepts that can apply well to time series.
 
 
-On the other hand,
 
-Per altra banda, hi ha les dades bitemporals que exploren històrics mitjançant intervals temporals. Hi ha hagut tot un recorregut d'investigació de com encaixar  els intervals temporals en els SGBD, finalment DDL2002 marca una fita.
 
 
 
@@ -214,15 +227,15 @@ This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC).
 \begin{thebibliography}{99}
 
 
-\bibitem{llusa11:tfm} A.\ Llusà Serra, ``Estudi i modelització
-  dels SGBD Round Robin pel tractament de sèries temporals''
-  (catalan), Master Thesis, Universitat Politècnica de Catalunya,
-  2011. \todo{no citat}
+% \bibitem{llusa11:tfm} A.\ Llusà Serra, ``Estudi i modelització
+%   dels SGBD Round Robin pel tractament de sèries temporals''
+%   (catalan), Master Thesis, Universitat Politècnica de Catalunya,
+%   2011. \todo{no citat}
 
-\bibitem{llusa12:ptd} A.\ Llusà Serra, ``Disseny i modelització
-  d'un sistema de gestió multiresolució de sèries temporals''
-  (catalan), Thesis Proposal, Universitat Politècnica de Catalunya,
-  2012. \todo{no citat}
+% \bibitem{llusa12:ptd} A.\ Llusà Serra, ``Disseny i modelització
+%   d'un sistema de gestió multiresolució de sèries temporals''
+%   (catalan), Thesis Proposal, Universitat Politècnica de Catalunya,
+%   2012. \todo{no citat}
 
 
 \bibitem{rrdtool} T.\ Oetiker, ``RRDtool, Round Robin database'',
