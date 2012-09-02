@@ -38,22 +38,20 @@ Regarding operations, MTSMS model needs operators to change the time intervals b
 
 A \emph{measure} is a tuple $(v,t)$ where $v\in{\mathbb{R}}$ is the
 value of the measure and $t \in \mathbb{R}$ is the instant in time of
-measurement. Let $m = (v,t)$ be a measure, $v$ is written as $V(m)$ and $t$
-is written as $T(m)$.
+measurement. Let $m = (v,t)$ be a measure, $v$ is written as $V(m)$
+and $t$ is written as $T(m)$.
 
-The time value defines the order between measures.  Let $m = (v_m, t_m)$
-and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if and only if
-$t_m\geq t_n$.
+The time value defines the order between measures.  Let $m = (v_m,
+t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if and only
+if $t_m\geq t_n$.
 
 
-Time series are sequences of measures that are ordered in time. They
-are also called time sequences such as in \cite{last:hetland}.
+A time series is sequence of measures that are ordered in time. 
 \begin{definition}[Time series]
-  A \emph{time series} $S$ is defined as a set of measures
-  $S = \{m_0, \ldots, m_k\}$ without repeated time values $\forall i,j:
-  i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$. We will refer to the
-  number of measures of the time series as the cardinality of the set
-  $|S|$.
+  A \emph{time series} $S$ is a a set of measures $S = \{m_0, \ldots,
+  m_k\}$ without repeated time values $\forall i,j: i\leq k, j\leq k,
+  i\neq j : T(m_i)\neq T(m_j)$, where $k+1=|S|$ is the cardinality of
+  the set.
 \end{definition}
 
 The order defined by measures implies a total order in a time
@@ -65,40 +63,36 @@ minimum is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
 
 Given the order defined by time, in a time series we define the
 sequence interval similarly as it is done in
-\cite{last:keogh,last:hetland}.
-  Let $S=\{m_0, \ldots, m_k\}$ be a time series. We define the subset
-  $S(r,t] \subseteq S$ as the time series $S(r,t]=\{m\in S |
-  r<T(m)\leq t\}$, where $r$ and $t$ are two instants in time.
-  We also define the subset $S(r,+\infty)\subseteq S$ as the time
-  series $S(r,+\infty) = \{m\in S | r< T(m) \leq T(\max(S))\}$ and the
-  subset $S(-\infty,t)\subseteq S$ as the time series $S(-\infty,t) =
-  \{m\in S | T(\min(S))\leq T(m) < t\}$.
+\cite{last:keogh,last:hetland}.  Let $S=\{m_0, \ldots, m_k\}$ be a
+time series. We define the subset $S(r,t] \subseteq S$ as the time
+series $S(r,t]=\{m\in S | r<T(m)\leq t\}$, where $r$ and $t$ are two
+instants in time.  We also define the subset $S(r,+\infty)\subseteq S$
+as the time series $S(r,+\infty) = \{m\in S | r< T(m) \leq
+T(\max(S))\}$ and the subset $S(-\infty,t)\subseteq S$ as the time
+series $S(-\infty,t) = \{m\in S | T(\min(S))\leq T(m) < t\}$.
 
 
 The time order in time series also implies the sequence concept of
-next and previous measure.
-  Let $S=\{m_0, \ldots, m_k\}$ be a time series and $l\in S$ and $n$
-  two measures. We define the next measure of $n$ in $S$ as
-  $l=\nex_S(n)$ where $l = \min(S(T(n),+\infty))$. We define
-  the previous measure of $n$ in $S$ as $l=\prev_S(n)$ where $l =
-  \max(S(-\infty,T(n)))$.
+next and previous measure.  Let $S=\{m_0, \ldots, m_k\}$ be a time
+series and $l\in S$ and $n$ be two measures. We define the next
+measure of $n$ in $S$ as $l=\nex_S(n)$ where $l =
+\min(S(T(n),+\infty))$. We define the previous measure of $n$ in $S$
+as $l=\prev_S(n)$ where $l = \max(S(-\infty,T(n)))$.
 
 
+%\subsubsection{Regularity of time series}
 
-\subsubsection{Regularity of time series} 
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an instant in temps
-and $\delta$ a duration of time, the time series' measures can be
-situated in the time interval $i_0=[t,t+\delta]$ and its multiples
-$i_j=[t+j\delta \,,\, t+(j+1)\delta]: j=0,1,2,\ldots$. When the
-measures are equally spaced the time series is called regular. In
-signal processing, these time intervals are called sampling intervals,
-$\delta$ is called sampling period and $t$ is called sampling initial
-time.
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an time instant and
+$\delta$ a time duration, the time series' measures can be located in
+the time interval $i_0=[t,t+\delta]$ and its multiples $i_j=[t+j\delta
+\,,\, t+(j+1)\delta]: j=0,1,2,\ldots$. In signal processing, these
+time intervals are called sampling intervals, $\delta$ is called
+sampling period and $t$ is called initial time. When the measures are
+equally spaced the time series is called regular.
 
 \begin{definition}[Regular time series]
-  Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an instant in time
-  and $\delta$ a duration of time. We define $S$ as regular if and
+  Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ a time instant
+  and $\delta$ a time duration. $S$ is regular if and
   only if $\forall m \in S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) =
   \delta$ and $T(\min(S))=t$.
 \end{definition}
@@ -109,223 +103,220 @@ time.
 \subsection{Buffer}\label{sec:model:buffer}
 
 A buffer is a container for a regular or a no-regular time series. The
-buffer regularises the time series with a function to a constant
-sampling period. We call consolidation to this action. In the context
-of buffers, the constant sampling period is called consolidation step
-and the function is called interpolation.
+buffer objective is to regularise the time series with predetermined $\delta$ 
+and attribute function. We call consolidation to this action. In the context
+of buffers, the sampling period is called consolidation step
+and the function is called attribute interpolation function.
 
 \begin{definition}[Buffer]
   A \emph{buffer} is defined as the tuple $(S,\tau,\delta,f)$ where
-  $S$ is a time series, $\tau$ is the last consolidation instant in
-  time, $\delta$ is the duration of the consolidation step and $f$ is
-  an interpolation.
+  $S$ is a time series, $\tau$ is the last consolidation time, $\delta$
+  is the duration of the consolidation step and $f$ is an
+  attribute interpolation function.
 \end{definition}
 
 An empty buffer, or the initial buffer, $B_{\emptyset} =
-(\emptyset,t_0, \delta_0, f)$ is a buffer that has an empty time
-series, the initial time of consolidation a duration indicating the
-consolidation step and an interpolation. From the empty buffer all the
-instants in time of consolidation can be calculated as $t_0+k\delta,
-k\in\mathbb{N}$. 
+(\emptyset,t_0, \delta, f)$ is a buffer that has an empty time
+series, an initial consolidation time and predetermined $\delta$ and
+$f$. From an empty buffer all the consolidation time instants
+can be calculated as $t_0+k\delta, k\in\mathbb{N}$.
 
-We define the operator \emph{add} to add a measure to the time series
-of a buffer, 
-$\text{add}:
-B = (S,\tau,\delta,f) \times m = (v,t) \mapsto B'=
-(S',\tau,\delta,f), S' = S \cup \{m\}
-$.
+We define the operator \emph{addBuffer} as the addition of a new measure to
+buffer's time series, $\text{addBuffer}: B = (S,\tau,\delta,f) \times m =
+(v,t) \mapsto B'$ where $B'=(S',\tau,\delta,f)$ and $S' = S \cup \{m\} $.
 \[
-\text{add}: \text{Buffer} \times \text{Measure} \longrightarrow \text{Buffer}
+\text{addBuffer}: \text{Buffer} \times \text{Measure} \longrightarrow \text{Buffer}
 \]
 
 
 
 We say the buffer is ready to consolidate when a time of a measure is
-bigger than the buffer's next instant in time of consolidation.  Let
+bigger than the buffer's next consolidation time.  Let
 $B=(S,\tau,\delta,f)$ be a buffer and $m=\max(S)$ the maximum measure,
 $B$ is ready to consolidate if and only if $T(m) \geq \tau+\delta$.
 
 
-\subsubsection{Interpolation}\todo{Teresa: attribute function}
+%\subsubsection{Consolidation}
 
-When a buffer is ready to consolidate an interpolation functions is
-used in order to consolidate the buffer.  Let $S$ be a time series and
-$t_0$ and $t_f$ two instants in time, an interpolation function $f$
-calculates a measure that is a summary of $S$ in the time interval
-$i=[T_0,T_f]$:
+Let $B=(S,\tau,\delta,f)$ be a buffer ready to consolidate, the
+consolidation from $B$ in the time interval $i=[\tau,\tau+\delta]$
+results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$. Attribute
+interpolation function $f$ is described next in
+section~\ref{sec:model:interpolador}.  We define the operator
+\emph{consolidateBuffer} that calculates the measure of consolidation and
+reduces the consolidated part of the time series from the buffer. In a
+simplified, the \emph{consolidateBuffer} is only applied to the present
+consolidation interval, $\text{consolidateBuffer}: B=(S,\tau,\delta,f)
+\mapsto B' \times m' $ where $ B'= (S',\tau+\delta,\delta,f) $, $ S' =
+S(\tau+\delta,\infty) $ and $m' = f(S,[\tau,\tau+\delta])$.
+  \[
+  \text{consolidateBuffer}: \text{Buffer} \longrightarrow \text{Buffer}
+  \times \text{Measure}
+  \]
+
+
+
+
+
+\subsubsection{Attribute interpolation function}
+\label{sec:model:interpolador}
+\todo{Teresa: cal repensar si aquest apartat es fa més global}
+
+{\color{red}
+
+  An attribute interpolation function is used when a buffer is
+  consolidated.  Let $S$ be a time series and $t_0$ and $t_f$ two time
+  instants, an attribute interpolation function $f$ calculates a
+  measure that summarises an attribute of $S$ in the time interval
+  $i=[T_0,T_f]$:
 \[
 f: \text{Time series} \times \text{time interval} \longrightarrow
 \text{Measure}
 \]
 
 
-In the design of the interpolation function we can interpret a time
-series in different ways. \cite{last:keogh}, cites
-some possible representations for time series such as \emph{Fourier
+There can be different interpolation functions in order to summarise a
+time series. As instance, we may want to summarise a time series by
+its maximum values or by its integral. \todo{ampliar, potser tenim
+  alguna cita?}
+
+In the design of the attribute interpolation function we can interpret
+a time series in different ways, that is what we call the
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite some
+possible representations for time series such as \emph{Fourier
   Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
 \emph{Piecewise Linear Representation} (PLR), remarking this last as
-the most used. The most common representation is with linear
-functions \cite{keogh01}.
+the most used. The most common representation is with linear functions
+\cite{keogh01}.  
 
-It is also possible to represent a time series with staircase
-function, that is with a piecewise constant representation.  We define
-a new interpretation for time series called \emph{zero-order hold
-  backwards} that is the representation used by RRDtool
-\cite{lisa98:oetiker}, consisting in holding each value until the
-preceding value. We exemplify it with a continuous definition of a
-time series using left-continuous step functions.  Let
-$S=\{m_0,\ldots,m_k\}$ be a time series, $S(t)$ is the continuous
-representations along time $t$:
-$
+The variety of time series representations results in a variety of the
+same attribute interpolation functions. As instance, a maximum
+attribute interpolation function may give different values if we
+consider a linear or a piecewise representation. Therefore, the time
+series representation results in attribute interpolation
+functions families.  }
+
+
+Next, we show some attribute interpolation functions for time series
+represented by a staircase function, that is with a piecewise constant
+representation.  We define a new representation for time series called
+\emph{zero-order hold backwards} consisting in holding each value
+until the preceding value, which a similar representation is used by RRDtool
+\cite{lisa98:oetiker}.
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series,
+we define $S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards} continuous representation along time $t$:
+%continuous definition of the time series using left-continuous step functions.
+$$
 \forall t \in \mathbb{R}  ,\forall m \in S:
-S(t) =  
+S(t)^{\text{zohe}} =  
 \begin{cases}
   \text{not defined} & \text{if } t > T(\max S) \\
   V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
 \end{cases}
-$
+$$
 
 
-
-There can be different interpolation functions in order to summarise a
-time series. The representation of the time series can also make
-differences to the same interpolation functions. Next, we show some
-examples for time series represented by \emph{zero-order hold
-  backwards}, where the time interval of consolidation is interpreted
-left-continuous $(T_0,T_f]$.
-
-
-  Let $S=\{m_0,\ldots,m_k\}$ be a time series interpreted
-  \emph{zero-order hold backwards} and $i=[T_0,T_f]$ be a time
-  interval, the interpolation function summarises $S$ with a measure
-  that is calculated from the measure values belonging to the subset
-  $S(T_0,T_f]$:
-  \[
-  f: \text{Time series} \times \text{time interval}
-  \longrightarrow \text{Measure}
-  \]
-  \[
-  S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'=(v',T_f)
-  \]
-
-  The resulting value $v'$ depends on the interpolation function, let
-  $S'=S(T_0:T_f]$:
+We now define the \emph{zero-order hold backwards} attribute
+interpolation function family as the one having the consolidation time
+interval left-continuous $(T_0,T_f]$ in accordance to the
+\emph{zero-order hold backwards} representation being defined using
+left-continuous step functions.  Let $S=\{m_0,\ldots,m_k\}$ be a time
+series and $i=[T_0,T_f]$ be a time interval, the attribute
+interpolation function $f^{\text{zohes}}\in f$ summarises $S$ with a
+measure that is calculated from the measure values belonging to the
+subset $S(T_0,T_f]$, $f^{zohes}: S=\{m_0,\ldots,m_k\} \times
+i=[T_0,T_f] \mapsto m'$ where $m'=(v',T_f)$ and the resulting value
+$v'$ depends on the attribute interpolation function. Let
+$S'=S(T_0,T_f]$:
 
 \begin{itemize}
 
-\item \emph{Arithmetic mean interpolation} function summarises $S$
+\item \emph{Arithmetic mean interpolation} function summarises $S'$
   with the mean of the measure values.
   $
   v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
   $
 
-\item \emph{Maximum interpolation} function summarises $S$ with the
+\item \emph{Maximum interpolation} function summarises $S'$ with the
   maximum of the measure values.
   $
   v' = \max_{\forall m \in S'}(V(m))
   $
  %Note: \emph{Minimum interpolation} can be defined dually.
-\item \emph{Last interpolation} function summarises $S$ with the
+\item \emph{Last interpolation} function summarises $S'$ with the
   maximum measure.
   $
   v' = \max(S')
   $
 
-\item \emph{Area interpolation} function summarises $S$ keeping the
-  area of the region.
+\item \emph{Area interpolation} function summarises $S'$ keeping the
+  area of the region. Considering the continuous approach of $S$ we
+  can see the area interpolation function as $v' =
+  \frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}$. \todo{potser en les
+    altres també s'ha de definir de forma contínua? La forma contínua
+    és independent de la representació?, aleshores potser posar-ho
+    abans com a exemples generals d'interpoladors. Necessitem les fórmules a trossos?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se?} 
+
+In the piecewise  approach it becomes:
   \[
-  o=\min(S(T_0:T_f]),
-  S'= S(T_0:T_f] - \{o\},
-  n=\nex_S \max(S'): 
+  o=\min(S'),
+  S''= S' - \{o\},
+  n=\nex_{S} \max(S''): 
   \]\todo{S' definit general}
   \[
   \begin{split}
   :v'  = & \frac{1}{T_f-T_0} 
-  \big[ (T(o)-T_0)V(o) +( T_f- T(\prev_S n) )V(n) \\
-    & {}+\sum\limits_{\forall m \in S'}( T(m)- T(\prev_S m) )V(m) \big]   
+  \big[ (T(o)-T_0)V(o) +( T_f- T(\prev_{S} n) )V(n) \\
+    & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
    \end{split}
   \]\todo{repassar a model que sigui correcte}
   
-  Note: if we consider the continuous definition of $S$ we can see the
-  area interpolation function as $v' = \frac{\int_{T_0}^{T_f} S(t) dt}{T_f
-    - T_0}$
 
 \end{itemize}
 
 
 
 
-\subsubsection{Consolidation}
-
-Let $B=(S,\tau,\delta,f)$ be a buffer ready to consolidate, the
-consolidation from $B$ in the time interval $i=[\tau,\tau+\delta]$
-results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$ and $f$ is
-an interpolation function.
-
-\begin{definition}
-  The operator \emph{consolidate} calculates the measure of
-  consolidation and reduces the consolidated part of the time series
-  from the buffer. In a simplified, the \emph{consolidate} is only
-  applied to the present consolidation interval.
-  \[
-  \text{consolidate}: \text{Buffer} \longrightarrow \text{Buffer}
-  \times \text{Measure}
-  \]
-  \[
-  B=(S,\tau,\delta,f) \mapsto B' \times m'
-  \]
-  \[
-  B'= (S',\tau+\delta,\delta,f)
-  \]
-  \[
-  S' = S(\tau+\delta,\infty)
-  \]
-  \[
-  m' = f(S,[\tau,\tau+\delta]): f \text{ is an interpolation}
-  \]
-\end{definition}
 
 
 
 \subsection{Disc}\label{sec:model:disc}
 
-A disc is a container for a time series where its
-cardinal is bounded. When the cardinal of the times series is to overcome the limit, some measures need to be discarded. 
+A disc is a container with a finite capacity. Each time series stored
+in a disc has its cardinal bounded. When the cardinal of the time
+series is to overcome the limit, some measures need to be discarded.
 
 \begin{definition}[Disc]
-  A \emph{disc} is defined as the tuple $(S,k)$ where $S$ is a time
-  series and $k\in\mathbb{N}$ is the maximum cardinal of $S$.
+  A \emph{disc} is a tuple $(S,k)$ where $S$ is a time
+  series and $k\in\mathbb{N}$ is the maximum allowed cardinal of $S$.
 \end{definition}
 
 An empty disc $D_{\emptyset} = (\emptyset,k)$ is a disc with an empty
 time series and the $k$ maximum cardinal that $S$ is allowed to take.
 
- The cardinal of the times series is kept under control by the add operator. 
-
-\begin{definition}
-  The operator \emph{add} add a measure to the time series of the
-  disc. If the limited cardinal of the times series is exceeded, the
-  minimum measure is discarded.
-  \[
-  \text{add}: \text{Disc} \times \text{Measure} \longrightarrow \text{Disc}
-  \]
-  \[
-  D=(S,k) \times m \mapsto D'= (S',k)
-  \]
-  \[
-  S' =  
+The cardinal of the times series is kept under control by the add
+operator.  The operator \emph{addDisc} is defined as the procedure to
+add a measure to the time series stored on the disc. If the predefined
+capacity is exceeded, the minimum measure of the time series is
+discarded, $\text{addDisc}: D=(S,k) \times m \mapsto D'$ where $ D' =
+(S',k)$, $ S' =
   \begin{cases}
       S\cup\{m\} &\text{if }  |S|<k\\
       (S-\{\min(S)\}) \cup \{m\} & \text{else }
     \end{cases}  
+    $
+  \[
+  \text{addDisc}: \text{Disc} \times \text{Measure} \longrightarrow \text{Disc}
   \]
-\end{definition}
+
 
 
 \subsection{Resolution disc}
 
-A resolution disc is a disc with a regular time series and a buffer
-with a time series pending regularisation.
+A resolution disc is a disc which stores a regular time series. It is
+composed of a disc and a buffer with the time series to be
+regularised.
 
 \begin{definition}[Resolution disc]
   A \emph{resolution disc} is a tuple $(B,D)$ where $B$
@@ -338,44 +329,28 @@ an empty resolution disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
 On the other hand, the operators of a resolution disc are related to
 the buffer and disc ones.
 
-\begin{definition}
-  Operator \emph{add} adds a measure  to the buffer of the resolution disc:
-  \[
-  \text{add}: \text{resolution disc} \times \text{Measure}
-  \longrightarrow \text{resolution disc}
-  \]
-  \[
-  R=(B,D) \times m \mapsto R'= (B',D)
-  \]
-  \[
-  B'= B \text{ add } m
-  \]
-\end{definition}
+Operator \emph{addResolutionDisc} is the addition of a measure to the
+buffer of the resolution disc, $\text{addResolutionDisc } : R=(B,D) \times m \mapsto R'$ where
+$R'= (B',D)$ and $B'= B \text{ addBuffer } m$.
+\[
+\text{addResolutionDisc}: \text{Resolution Disc} \times \text{Measure}
+\longrightarrow \text{Resolution Disc}
+\]
 
-\begin{definition}
-  Let $R=(B,D)$ be a resolution disc, $R$ is ready to consolidate if
-  and only if $B$ is ready to consolidate.
-\end{definition}
+Let $R=(B,D)$ be a resolution disc, $R$ is ready to consolidate if and
+only if $B$ is ready to consolidate.
 
-If the resolution disc is ready to consolidate, it can be consolidated.
+If the resolution disc is ready to consolidate, it can be
+consolidated.  Operator \emph{consolidateResolutionDisc} calculates a
+consolidation measure from the buffer and adds it to the disc,
+$\text{consolidateResolutionDisc } : R=(B,D) \mapsto R'$ where $R'=
+(B',D')$, $B' \times m'= \text{ consolidateBuffer } B $ and $ D'= D
+\text{ addDisc } m'$.
+\[
+\text{consolidate}: \text{Resolution Disc} \longrightarrow
+\text{Resolution Disc}
+\]
 
-\begin{definition}
-  Operator \emph{consolidate} calculates a consolidation measure from
-  the buffer and adds it to the disc.
-  \[
-  \text{consolidate}: \text{resolution disc} \longrightarrow
-  \text{resolution disc}
-  \]
-  \[
-  R=(B,D) \mapsto R'= (B',D')
-  \]
-  \[
-  B' \times m'= \text{ consolidate } B 
-  \]
-  \[
-  D'= D \text{ add } m'
-  \]
-\end{definition}
 
 
 
@@ -398,47 +373,38 @@ Generally, in a multiresolution database there are not two resolution discs
 with the same information. That is, let $R_a = (B_a, D_a)$ and $R_b =
 (B_b, D_b)$ be two resolution discs, its buffers
 $B_a=(S_a,\tau_a,\delta_a,f_a)$ and $B_b=(S_b,\tau_b,\delta_b,f_b)$
-have different consolidation interval and interpolation function
+have different consolidation interval and attribute interpolation function
 $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
-With reference to the operators, the add and consolidate in a multiresolution database are applied to every resolution disc it contains.
+With reference to the operators, the add and consolidate in a
+multiresolution database are applied to every resolution disc it
+contains.
 
 
-\begin{definition}
-  Operator \emph{add} adds a measure to every resolution disc:
-  \[
-  \text{add}: \text{multiresolution database} \times \text{Measure}
-  \longrightarrow \text{multiresolution database}
-  \]
-  \[
-  M=\{R_0,\dotsc,R_d\} \times m \mapsto M' 
-  \]
-  \[  
-  M'= \{ \forall R_i\in M: R_i \text{ add } m \}
-  \]
-\end{definition}
+Operator \emph{addMD} is defined as the addition of a measure to every
+resolution disc, $\text{addMD } : M=\{R_0,\dotsc,R_d\} \times m
+\mapsto M' $ where $M'= \{ \forall R_i\in M: R_i \text{
+  addResolutionDisc } m \}$.
+\[
+\text{addMD}: \text{Multiresolution Database} \times \text{Measure}
+\longrightarrow \text{Multiresolution database}
+\]
 
 
-\begin{definition}
-  Operator \emph{consolidate} consolidates the resolution discs that
-  are ready to consolidate.
-  \[
-  \text{consolidate}: \text{multiresolution database} \longrightarrow
-  \text{multiresolution database}
-  \]
-  \[
-  M=\{R_0,\dotsc,R_d\} \mapsto M'
-  \]
-  \[
-  M'= \big\{
-  \forall R_i\in M: 
+Operator \emph{consolidateMD} consolidates the resolution discs that
+are ready to consolidate, $\text{consolidateMD } :
+M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:
   \begin{cases}
-    \text{ consolidate } R_i & \text{if } R_i \text{ ready to consolidate} \\
+    \text{ consolidateResolutionDisc } R_i & \text{if } R_i \text{ ready to consolidate} \\
     R_i & \text{else }
   \end{cases}\big\}
+  $.
+\[
+\text{consolidate}: \text{Multiresolution Database} \longrightarrow
+\text{Multiresolution Database}
   \]
-\end{definition}
+
 
 %%% Local Variables:
 %%% TeX-master: "main"
