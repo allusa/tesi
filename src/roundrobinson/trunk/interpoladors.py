@@ -27,10 +27,14 @@ def mitjana(s,i):
     m(20.0,5)
     """
     sp = s[i[0]:i[1]]
+    cardinal = len(sp)
+    if not cardinal:
+        return Mesura(float("inf"),i[1])
+
     v = 0
     for m in sp:
         v += m.v 
-    v /= float(len(sp))
+    v /= float(cardinal)
     return Mesura(v,i[1])
 
     

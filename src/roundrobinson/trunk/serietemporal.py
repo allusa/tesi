@@ -354,3 +354,35 @@ class SerieTemporal(set):
         representi ordenat.
         """
         return 'SerieTemporal({0})'.format( repr(sorted(self)) )
+
+
+
+    def esRegular(self):
+        """
+        Predicat que és cert ssi la sèrie temporal és regular
+
+        >>> s = _s1test()
+        >>> s.esRegular()
+        False
+        >>> s2 = SerieTemporal()
+        >>> s2.add(Mesura(10,3));s2.add(Mesura(10,6));s2.add(Mesura(25,9));s2.add(Mesura(10,12))
+        >>> s2.esRegular()
+        True
+        """
+        r = min(self)
+        s = self[r.t:] #S(r,infinit)
+
+        prevdelta = None
+
+        for m in s:
+            delta = m.t - self.ant(m).t
+            if not prevdelta:
+                prevdelta = delta
+            elif delta == prevdelta:
+                prevdelta = delta
+            else:
+                return False
+
+        return True
+
+

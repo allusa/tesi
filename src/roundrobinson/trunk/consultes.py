@@ -14,7 +14,8 @@ Implementació de les operacions de consulta
 import copy
 
 from serietemporal import Mesura,SerieTemporal
-from roundrobinson import RRD, DiscRoundRobin
+from discbuffer import ResolutionDisc
+from roundrobinson import RRD
 from interpoladors import mitjana
 
 def _s1test():
@@ -66,13 +67,13 @@ def _rrdtest():
     """
     M = RRD()
 
-    r1 = DiscRoundRobin(2,10,mitjana)
+    r1 = ResolutionDisc(2,10,mitjana)
     r1.D.s = _s1test()
 
-    r2 = DiscRoundRobin(5,10,mitjana)
+    r2 = ResolutionDisc(5,10,mitjana)
     r2.D.s = _s2test()
 
-    r3 = DiscRoundRobin(10,10,mitjana)
+    r3 = ResolutionDisc(10,10,mitjana)
     r3.D.s = _s3test()
     
     M.add(r1)
