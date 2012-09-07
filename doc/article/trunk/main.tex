@@ -8,7 +8,7 @@
 \usepackage[hmargin=2cm,vmargin=4cm,columnsep=7.5mm]{geometry}
 
 \usepackage{biblatex}
-\bibliography{../../share/bibliografia}
+\bibliography{bibliografia}
 
 \usepackage[cmex10]{amsmath}
 \usepackage{amssymb}
@@ -105,10 +105,14 @@ Time series are usually stored in a database.     i a partir d'aqui introduir el
 
 
 This paper focuses on Data Base Management Systems (DBMS) that store
-and treat data as time series. Traditional DBMS, as is ones derived
-from relational model, are not adequate for these cases as they do not
-have enough facilities to manage and retrieve time series
-information.
+and treat data as time series, known as Time Series Data Base
+Management Systems (TSMS). Traditional DBMS, as is ones derived from
+relational model, are not adequate for these cases as they do not have
+enough facilities to manage and retrieve time series information.
+
+Although there is no standard model for TSMS, there are some interesting proposals \cite{dreyer94,zhang11}. We will define a multiresolution TSMS (MTSMS) as being a TSMS defining the basic concepts where needed.
+
+
 
 
 
@@ -128,18 +132,28 @@ Motivació: vam observar RRDtool [citar tfm?] i volíem entendre els conceptes i
 
 
 
-\section{Requirements}
+\section{Requirements for a MTSMS}
 
-Requirements for a TSMS
+A TSMS is a special purpose DBMS aimed at storing and managing time
+series and MTSMS is a TSMS with multiresolution capabilities. Next we
+describe the main requirements that a TSMS must achieve, specifically
+remarking the improvements where the MTSMS can contribute.
 
 
-* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS [schmidt i dreyer] 
 
 * Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
+
 
 * Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
 
 * Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
+
+
+
+
+* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS [schmidt i dreyer] 
+
+
 
 * Cal censurar les dades.
 
@@ -148,24 +162,28 @@ Requirements for a TSMS
 
 * Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
 
-* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.)
+* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
 
-* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+
 
 * Calendari, passa a segon terme, (en contraposició a Dreyer). El temps es defineix com universal i constant (semblant a Unix Time Epoch). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
 
 * El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
 
 
+
+
 * Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
 
 
-* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. 
+* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+
+* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. [bonnet01?]
+
+* S'ha de poder calcular incrementalment, citar data streams
 
 
-
-
-\section{The Model}
+\section{The multiresolution model}
 
 
 \input{model}
@@ -264,8 +282,9 @@ L'interès actual ens fa ser optimistes per aventurar que aviat podrem gestionar
 
 This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC).
 
+Data comes from iSense project \todo{isense}.
 
-
+\printbibliography{}
 % \bibliographystyle{plain}
 % \begin{thebibliography}{99}
 
