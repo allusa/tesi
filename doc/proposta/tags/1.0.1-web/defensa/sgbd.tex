@@ -1,0 +1,181 @@
+\subsection[SGBD]{Sistemes de gestió de bases de dades}
+\begin{frame}{Estat sistemes gestió de bases de dades}
+
+  Els SGBD són els sistemes informàtics que tracten amb bases de
+  dades. 
+
+  \begin{itemize}  
+
+  \item Emmagatzemen i consulten tot tipus de dades.
+
+  \item Es poden descriure amb models matemàtics.
+
+  \item El model relacional és un
+    referent \parencite{date:introduction}.
+
+  \end{itemize}
+  
+Sistemes i models actuals:
+
+  \begin{itemize}  
+
+  \item Els SGBD relacionals han tingut hegemonia sota el llenguatge
+    SQL, però actualment el corrent \emph{NoSQL} proposa nous SGBD amb
+    més bon rendiment \parencite{stonebraker10}.
+
+
+  \item El corrent \emph{NoSQL} també proposa nous models però no
+    estan prou consolidats per avaluar-los. El model relacional
+    proposa millores i un nou llenguatge, \emph{Tutorial
+      D} \parencite{date06,date:thethirdmanifesto}.
+
+  \end{itemize}
+
+  Extensió mitjançant tipus de dades:
+
+  \begin{itemize}
+
+  \item Els tipus de dades complexos necessiten un estudi propi.
+
+  \item Exemple recent: els intervals temporals.
+
+  \end{itemize}
+  
+\end{frame}
+
+
+%\subsection{Intervals temporals}
+\begin{frame}{Estat sistemes gestió bases de dades. Intervals temporals}
+
+  SGBD per a tractar dades amb històrics:
+
+  \begin{itemize}  
+
+  \item Emmagatzematge i consulta de dades històriques mitjançant
+    intervals temporals, anomenats de forma general com a dades
+    temporals.
+
+  \item Extensió del model relacional amb intervals temporals i
+    operacions \parencite{date02:_tempor_data_relat_model}.
+
+  \item Històrics basats en temps vàlid i de transacció: dades
+    bitemporals.
+
+  \end{itemize}
+  
+  Les sèries temporals també són dades temporals, però:
+
+  \begin{itemize}  
+
+  \item SGBD per dades bitemporals no adequats per sèries
+    temporals \parencite{schmidt95}.
+
+  \end{itemize}
+    
+
+
+\end{frame}
+
+
+
+\begin{frame}{Sèries temporals i dades bitemporals}
+
+
+
+ Dades bitemporals: històrics amb intervals temporals
+
+\begin{columns}
+\column{6cm}
+
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]
+      \begin{axis}[
+          axis y line=left,  axis x line=bottom,
+          yticklabels={},
+          xticklabels={,,,,,temps vàlid}]
+
+          \addplot[only marks,mark=|] coordinates {
+            (0,0) (10,0) (0,10)
+            };
+
+
+          \node[right] at (axis cs:2,5) {\framebox(28,10){}};
+          \node[right] at (axis cs:3.5,7) {\framebox(60,10){}};
+          \node[right] at (axis cs:7,6) {\framebox(30,10){}};
+          \node[above] at (axis cs:9,3) {\framebox(10,10){}};
+
+
+          \node[right] at (axis cs:2,2) {\color{blue}{\framebox(50,10){}}};
+          \node[right] at (axis cs:4.7,4) {\color{blue}{\framebox(50,10){}}};
+          \node[above] at (axis cs:9,3) {\color{blue}{\framebox(10,8){}}};
+
+      \end{axis}
+  \end{tikzpicture}
+\end{center}
+
+\column{6cm}
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]
+      \begin{axis}[
+          axis y line=left,  axis x line=bottom,
+          yticklabels={},
+          xticklabels={,,,,,temps transacció}]
+
+          \addplot[only marks,mark=|] coordinates {
+            (0,0) (10,0) (0,10)
+            };
+
+
+          \node[right] at (axis cs:2,2) {\color{blue}{\framebox(50,10){}}};
+          \node[right] at (axis cs:4.7,4) {\framebox(80,10){}};
+
+      \end{axis}
+  \end{tikzpicture}
+
+\end{center}
+
+\end{columns}
+
+
+   Sèries temporals: anàlisi d'observacions seqüencials amb
+    instants temporals
+
+\begin{center}
+  \begin{tikzpicture}[scale=0.5]
+    \begin{axis}[
+          axis y line=left,  axis x line=bottom,
+          xticklabels={,,,,,,,temps},
+          yticklabels={}]
+
+          \addplot[only marks,mark=|] coordinates {
+            (0,0)
+            };
+
+    \addplot[only marks,mark=*,blue] coordinates {
+        (10,1)
+        (20,3)
+        (25,4)
+        (35,5)
+        (42,7)
+        (45,8)
+        (50,10)
+        (55,6)
+        (60,3)
+        (70,4)
+    };
+
+    \end{axis}
+  \end{tikzpicture}
+ \end{center}
+
+
+ 
+
+\end{frame}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presentacio"
+%%% End: 

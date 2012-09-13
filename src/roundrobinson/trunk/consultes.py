@@ -15,7 +15,7 @@ import copy
 
 from serietemporal import Mesura,SerieTemporal
 from discbuffer import ResolutionDisc
-from roundrobinson import RRD
+from roundrobinson import MRD
 from interpoladors import mitjana
 
 def _s1test():
@@ -65,7 +65,7 @@ def _rrdtest():
     """
     Retorna una base de dades Round Robin de prova
     """
-    M = RRD()
+    M = MRD()
 
     r1 = ResolutionDisc(2,10,mitjana)
     r1.D.s = _s1test()
@@ -186,7 +186,7 @@ def consulta(m):
     >>> M = _rrdtest()
     >>> consulta(M)
     SerieTemporal([m(60,0), m(10,1), m(10,2), m(40,5), m(30,10)])
-    >>> consulta(RRD())
+    >>> consulta(MRD())
     SerieTemporal([])
     """
     if len(m) == 0:
@@ -203,7 +203,7 @@ def consulta(m):
             sd0 = d.s
             r0 = r 
 
-    mr0 = RRD(); mr0.add(r0)
+    mr0 = MRD(); mr0.add(r0)
     return unio(sd0, consulta(m-mr0) )
 
 
