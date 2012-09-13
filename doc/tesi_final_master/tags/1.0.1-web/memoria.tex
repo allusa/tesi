@@ -1,0 +1,177 @@
+%--------------------
+% document principal
+%--------------------
+% cal compilar amb `pdflatex -shell-escape memoria.tex`
+%--------------------
+\documentclass[a4paper,12pt,twoside,BCOR12mm]{scrbook}
+%%%%BCOR12mm  factor de correcció per enquadernació
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} 
+
+%---------- Mode esborrany --------------------
+%\includeonly{resum}
+%\usepackage{fancyhdr}
+%\pagestyle{fancyplain}
+%\chead{\fancyplain{--- esborrany \today\ ---}{}}
+%%\renewcommand{\headrulewidth}{0pt}
+%----------------------------------------------
+
+
+
+%---------- Bibliografia -------------------
+\usepackage[style=numeric,sortcites=true]{biblatex}
+\newcommand{\bibendash}{--}
+\bibliography{bibliografia}
+%---------- Gràfics ------------------------
+\usepackage[final]{graphicx}
+% \graphicspath{{imatges/}}
+\usepackage{epstopdf}
+\usepackage{tikz}
+\usepackage{pgfplots}
+%\usepackage[off]{auto-pst-pdf}
+\usepackage{epic,color,multicol}
+\usepackage{cclicenses}
+%---------- Símbols ------------------------
+\usepackage{url} %\url i \path
+\usepackage{eurosym}
+\usepackage{amsmath,amssymb,amsthm}
+\numberwithin{equation}{chapter}
+\newtheorem{definition}{Definició}
+\DeclareMathOperator*{\seg}{seg}
+\DeclareMathOperator*{\ant}{ant}
+%\usepackage{numprint} %%aleshores \numprint{2,5} sinó es pot utilitzar 2{,}5
+%---------- Codi ---------------------------
+\usepackage{upquote} %perquè en verbatim surtin les cometes `
+\usepackage{listings}
+\lstloadlanguages{bash,C,HTML,Python,XML}
+\lstset{frame=single,frameround=tttt,escapechar=@,
+        breaklines=true,breakindent=0pt,numberstyle=\tiny,
+        prebreak=\mbox{{\color{blue}\tiny$\searrow$}},
+        postbreak=\mbox{{\color{blue}\tiny$\rightarrow$}},
+        columns=fullflexible,
+        extendedchars=true,literate={à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1 {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1 {l·l}{{\l.l}}1
+{À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1 {Ï}{{\"\I}}1 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1 {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+      }
+
+\lstdefinestyle{sh} 
+    {language=sh, frame=none, prebreak =\textbackslash, postbreak ={},basicstyle=\ttfamily,showspaces=false,keepspaces=true}
+
+%% ÚS del lstlisting
+%%\begin{lstlisting}[language=C,caption=Plantilla de NagiosGrapher pels missatges,label=NGmis,numbers=left]
+%%\lstinline[style=sh]!for i:integer;!
+%--------------------------------------------
+
+
+
+
+
+%------------- format -------------------------
+\parindent0cm 
+\parskip0.2cm
+
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle,
+    pdftitle={Estudi i modelització dels SGBD Round Robin pel tractament de sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    pdfcreator={DiPSE-UPC},
+    pdfsubject={Tesi de màster 2011},
+    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
+    ]{hyperref}
+%----------------------------------------------
+
+
+
+\begin{document}
+
+%------------- Pàgina de títol ------------
+\input{portada_master}
+%----------------------------------------------
+
+
+%------------- Abstract ------------
+\include{resum}
+%----------------------------------------------
+
+
+%------------- Índexs ------------
+\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
+%\addtocontents{toc}{\protect\enlargethispage{1cm}}
+%\listoffigures
+%\listoftables
+%\lstlistoflistings
+%----------------------------------------------
+
+
+
+%------------- Cos ------------
+
+%\mainmatter
+
+\include{intro}
+
+\include{estat}
+
+\include{velocitats}
+
+\include{rrd}
+
+\include{rrdtool}
+
+\include{model}
+
+\include{implementacio}
+
+\include{conclusions}
+
+
+%------- Annexos ------
+%\appendix
+
+%\include{}
+
+
+%------- Bibliografia ------
+\cleardoublepage
+%\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+\pdfbookmark{\bibname}{bookmark:bibliografia}
+\printbibliography
+
+
+
+%----------------------------------------------
+
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Memòria Tesi de Màster. Estudi i modelització dels SGBD Round Robin pel tractament de sèries temporals.
+%
+% Copyright (C) 2011-2012 Aleix Llusà Serra.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
