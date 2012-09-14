@@ -15,7 +15,9 @@
 
 \usepackage{tikz}
 \usepackage{multicol}
+\usepackage{graphicx}
 \newcommand{\imatges}{../../imatges}
+\newcommand{\experiment}{../../../src/experiments/trunk}
 
 
 \newtheorem{definition}{Definition}
@@ -185,34 +187,14 @@ remarking the improvements where the MTSMS can contribute.
 
 \section{The multiresolution model}
 
-
 \input{model}
-
-
-
-
-
 
 
 \section{Example}
 
-\todo{Teresa: usar dades iSense}
-
-Fer un exemple amb dades concretes a on es vegi com funciona el model.
-
-Per exemple la figura de rellotges: entren unes dades amb període diari i s'observa com es resumeixen al cap de 2 dies i al cap de 5 dies amb interpolador mitjana o màxim.
+\input{example}
 
 
-
-\begin{figure}[tp]
-\centering
-\input{\imatges/model/locales/mtsdb-time_window.tex}
-\caption{Example of different resolutions for a time series in a MTSDB}
-\label{fig:model:window}
-\end{figure}
-
-
-Putting resolution and 'time subseries' together, in a multiresolution database a time series is stored in different resolution pieces. For example, we could have a time series stored with high resolution at recent times and with low resolution at older times. This example is illustrated in figure \ref{fig:model:window}. At the top there are three \emph{discs} with different number of \emph{measures} and at the bottom there is a timeline showing the time series chopped along time. For recent times, every 2 hours a \emph{measure} is stored in the third \emph{disc} which has a capacity of 24 \emph{measures} so that results in a 2 day piece. For mid times, every 1 day a  \emph{measure} is stored in the second \emph{disc} which has a capacity of 12 \emph{measures} so that results in a 12 days piece. For old times, every 5 days a  \emph{measure} is stored in the first \emph{disc} which has a capacity of 6 \emph{measures} so that results in a 30 days piece. 
 
 
 \section{Related Work}

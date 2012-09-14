@@ -8,11 +8,13 @@ import time, datetime
 from roundrobinson.roundrobinson import MRD
 from roundrobinson.serietemporal import Mesura
 from roundrobinson.interpoladors import mitjana
+from roundrobinson.consultes import consulta
 
 import locale
 
 from matplotlib import pyplot as plt
 from matplotlib.dates import DateFormatter
+from matplotlib.ticker import MaxNLocator
 
 
 def datetimetotimestamp(t):  
@@ -30,6 +32,64 @@ def consolidatot(mrd,debug=False):
         if debug:
             print tauactual(mrd)
  
+
+def timestamptostring(t):
+    
+    s1 = 1
+    h1 = 3600
+    d1 = 24 * h1
+    m1 = 30 * d1
+    y1 = 365 * d1
+
+    if t%y1 == 0 and t/y1 != 0:
+        return '{0}y'.format(t/y1)
+    if t%m1 == 0 and t/m1 != 0:
+        return '{0}m'.format(t/m1)
+    if t%d1 == 0 and t/d1 != 0:
+        return '{0}d'.format(t/d1)
+    if t%h1 == 0 and t/h1 != 0:
+        return '{0}h'.format(t/h1)
+        
+    return '{0} s'.format(t)
+
+
+def formatador(delta):
+    """
+    Retorna el millor format per a representar temps que que
+    provinguin d'aquest delta
+    """
+
+    strftimes = {
+        's': '%X',
+        'h': '%H:%M',
+        'd': '%b %d',
+        'm': '%b %Y',
+        'y': '%Y',
+        }
+    
+    s1 = 1
+    h1 = 3600
+    d1 = 24 * h1
+    m1 = 30 * d1
+    y1 = 365 * d1  
+
+
+    ut = None
+    if delta > y1:
+        ut = 'y'
+    elif delta > m1:
+        ut = 'm'
+    elif delta > d1:
+        ut = 'd'
+    elif delta > h1:
+        ut = 'h'
+    elif delta > s1:
+        ut = 's'     
+
+    if ut in strftimes:
+        return strftimes[ut]
+    return '%c'
+
 
 
 def llegeix_dades(fitxer):
@@ -55,16 +115,49 @@ def crea_mrd(temps,valors,tzero=0,debug=False):
     #temps segons Unix Time Epoch (segons)
     zero = tzero
     h1 = 3600
+    h5 = 5 * h1
     d1 = 24 * h1
-    d5 = 5 * d1
-    m1 = 30 * d1
+    d2 = 2 * d1
+    d15 = 15 * d1
+    d50 = 50 * d1
 
     #configuració base de dades multiresolució
     mrd = MRD()
-    mrd.afegeix_disc(h1,48,mitjana,zero)
-    mrd.afegeix_disc(d1,10,mitjana,zero)
-    mrd.afegeix_disc(d5,10,mitjana,zero)
-    mrd.afegeix_disc(m1,15,mitjana,zero)
+    mrd.afegeix_disc(h5,24,mitjana,zero)
+    mrd.afegeix_disc(d2,20,mitjana,zero)
+    mrd.afegeix_disc(d15,12,mitjana,zero)
+    mrd.afegeix_disc(d50,12,mitjana,zero)
+
+    if debug:
+        print tauactual(mrd)
+
+    #farciment de mesures amb consolidació
+    for t,v in zip(temps,valors):
+        m = Mesura(v,t)
+        mrd.update(m)
+
+        consolidatot(mrd,debug)
+
+    return mrd
+
+
+def crea_mrd2(temps,valors,tzero=0,debug=False):
+
+    #temps segons Unix Time Epoch (segons)
+    zero = tzero
+    h1 = 3600
+    h5 = 5 * h1
+    d1 = 24 * h1
+    d2 = 2 * d1
+    d15 = 15 * d1
+    d50 = 50 * d1
+
+    #configuració base de dades multiresolució
+    mrd = MRD()
+    mrd.afegeix_disc(h5,48,mitjana,zero)
+    mrd.afegeix_disc(d2,40,mitjana,zero)
+    mrd.afegeix_disc(d15,24,mitjana,zero)
+    mrd.afegeix_disc(d50,24,mitjana,zero)
 
     if debug:
         print tauactual(mrd)
@@ -85,15 +178,33 @@ def dibuixa(mrd):
     Pinta els discs resolució d'una base de dades multiresolució
 
     >>> ut = 3600
-    >>> mrd = crea_mrd([ut*x for x in [1,2,3,4,5,24,48]],[1,2,3,4,5,6,7])
+    >>> mrd = crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
     >>> dibuixa(mrd)
     """
 
+    #figura amb tota la MRD
+    sttot = consulta(mrd)
+    vt = []
+    vv = []
+    while len(sttot):
+        m = min(sttot)
+        sttot.discard(m)
+        temps = datetime.datetime.fromtimestamp(m.t)
+        vt.append(temps)
+        vv.append(m.v)
+
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(1,1,1)
+    ax2.plot(vt,vv,label='MRD')
+
+
+
+
 
     #pinta
-    locale.setlocale(locale.LC_TIME, '')
-    fig = plt.figure()
-    format = DateFormatter('%d/%m')
+    #locale.setlocale(locale.LC_TIME, '') #activa els locales per defecte
+    fig = plt.figure(dpi=40)#figsize=(1,1)) #dpi=80 -> 80x80px
+
 
     mida = len(mrd)
     index = 1
@@ -150,16 +261,22 @@ def dibuixa(mrd):
 
         ax = fig.add_subplot(mida,1,index+1)
         ax.grid(True)
-        ax.yaxis.set_label_text(u'Temp. (\u2103)')
-        #ax.xaxis.set_major_formatter(format)
-        plt.xticks(rotation=20)
-        fig.subplots_adjust(hspace=0.8)
-        etiqueta = "DR: d {0} c {1}".format(rd.B.delta,rd.D.k)
+        #ax.yaxis.set_label_text(u'Temp. (\u2103)')
+        format = DateFormatter(formatador(rd.B.delta))
+        ax.xaxis.set_major_formatter(format)
+        locatx = MaxNLocator(8)
+        locaty = MaxNLocator(4)
+        ax.xaxis.set_major_locator(locatx)
+        ax.yaxis.set_major_locator(locaty)
+        plt.xticks(rotation=15)
+        fig.subplots_adjust(hspace=0.5)
+        etiqueta = "RD: {0} |{1}|".format(timestamptostring(rd.B.delta),rd.D.k)
         
         ax.plot(vt,vv,label=etiqueta)
         ax.legend()
 
     ax.xaxis.set_label_text('Temps')
+
 
     #fig.autofmt_xdate()
     plt.show()
