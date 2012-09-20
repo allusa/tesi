@@ -1,4 +1,4 @@
-\todo{Teresa: usar dades iSense}
+\section{Example}
 
 Next we show an example database for a real time series data. Original
 data is shown in figure~\ref{fig:exemple:original} for a period of one
@@ -8,7 +8,7 @@ data and some outlying observations.
 
 \begin{figure}[tp]
 \centering
-\includegraphics{\experiment/original.pdf}
+\includegraphics[width=12cm]{\experiment/original.pdf}
 \caption{Example of a time series data}
 \label{fig:exemple:original}
 \end{figure}
@@ -42,21 +42,60 @@ piece. For old times, every 50 days a \emph{measure} is stored in the
 first \emph{disc} which has a capacity of 12 \emph{measures} so that
 results in a 600 days piece.
 
-All the resolution discs are consolidated by average interpolation function\todo{fer referència allà on s'expliqui}. The resulting time series in the MTSDB are shown in figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a resolution disc's time series. Missing data and outlayers observations have been eliminated, the number of stored values has been reduced from \todo{quants} to 92 but now there i only high resolution for the recent data. Note that October 18th corresponds to the 'now ' point showed in figure \ref{fig:exemple:window}.
-
+All the resolution discs are consolidated by average interpolation
+function\todo{fer referència allà on s'expliqui}. The resulting time
+series in the MTSDB are shown in figure~\ref{fig:exemple:4mrd}, where
+each graphic corresponds to a resolution disc's time series. Missing
+data and outlayers observations have been eliminated and the number of
+stored values has been reduced from 146709 to 92. However, now there
+is only high resolution for recent data. Note that October 18th
+corresponds to the 'now ' point showed in figure
+\ref{fig:exemple:window} and May 2010 corresponds to the oldest data
+known.
 
 \begin{figure}[tp]
 \centering
-\includegraphics{\experiment/isense2.pdf}
+\includegraphics[width=12cm]{\experiment/isense2.pdf}
 \caption{Different resolutions for a time series in a MTSDB}
 \label{fig:exemple:4mrd}
 \end{figure}
 
+We can easily have a bigger MTSDB by doubling the capacity of
+resolution discs. Then we have 184 stored values and the resulting
+time series are shown in figure~\ref{fig:exemple:4mrdbigger}.  Now we
+can see preserve more historic but no more resolution. Although plots seem
+smoother, this is only a visualisation issue owing to the fact we are
+showing more points in the same width.
 
 
 
+\begin{figure}[tp]
+\centering
+\includegraphics[width=12cm]{\experiment/isense3.pdf}
+\caption{Different resolutions for a time series in a bigger MTSDB}
+\label{fig:exemple:4mrdbigger}
+\end{figure}
 
 
+The union of the four time subseries is shown in
+figure~\ref{fig:exemple:4mrdtot}. In the intervals where time
+subseries overlap, the one with the highest resolution is
+chosen. Therefore we obtain a piecewise function where each piece has
+a different resolution. Comparing this figure with the original
+figure~\ref{fig:exemple:original}, as we have applied mean
+interpolation it resembles an incremental low-pass filter. Concluding,
+we have shown that with this attribute interpolation function we want
+not an approximation to the original function but an extraction of
+some interesting information.
+
+
+
+\begin{figure}[tp]
+\centering
+\includegraphics[width=12cm]{\experiment/isense3-tot.pdf}
+\caption{All time series united from the bigger MTSDB}
+\label{fig:exemple:4mrdtot}
+\end{figure}
 
 
 

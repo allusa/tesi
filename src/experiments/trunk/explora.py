@@ -18,6 +18,7 @@ for t,v in f:
         temps.append(t)
         valors.append(v)
 
+print 'Mida: {0} mostres'.format(len(temps))
 
 pyplot.plot(temps,valors)
 pyplot.show()
