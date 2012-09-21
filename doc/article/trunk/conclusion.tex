@@ -1,0 +1,97 @@
+\section{Related Work}
+
+The research in time series data management has increased last decade
+as the procedure of processing and synthesizing information becomes
+complicated if data varies over time. From this point of view we focus
+on DBMS aimed to time series where we find two main perspectives in
+current research.
+
+
+On the one hand, there are DBMS with some properties and operations
+for time series.
+
+RRDtool from Oetiker \cite{rrdtool} is a professional database
+management system extremely used by the free software community. It is
+used in professional monitoring systems and its efficiency and speed
+when processing time series is being improved. Nevertheless, it is
+focused to a particular kind of data, gauges and counters, and it has
+not general time series operations.
+
+Cougar \cite{bonnet01} is a sensor database system. It has two
+structures: one for sensor properties stored into relations and
+another for time series stored into data sequences from sensors.  Time
+series have specific operations and can combine relations and
+sequences.
+
+
+SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
+database systems. These systems are intended for science applications,
+in which time series play a principal role. They structure time series
+into arrays in order to achieve multidimensional analysis.
+
+
+
+On the other hand, there is the relational DBMS model as the common
+study for DBMS theories. The relational DBMS model is continuously
+evolving \cite{date:thethirdmanifesto}.
+
+Particularly regarding time data,
+intensive research has been carried in the bitemporal data field, that
+is the management of history using time intervals.  The recent
+temporal data research in relational DBMS model terms
+\cite{date02:_tempor_data_relat_model} marks a promising
+foundation. It models bitemporal data as relations extended with time
+intervals attributes and extends relational operations in order to
+deal with related time aspects.
+
+Although bitemporal data and time series data are not exactly the same
+and so can not be treated interchangeably \cite{schmidt95},
+time series research can benefit from two aspects of this bitemporal
+data research. First, it shows the way to extend relational DBMS with
+new types and how to model them. Second, it settles some time-related
+concepts that can apply well to time series.
+
+
+
+
+
+
+\section{Conclusions and future work} 
+The conclusion goes here.
+
+Hem vist un model de MTSMS, quins requeriments tenen aquests sistemes i com es podria aplicar en un exemple. L'objectiu és emmagatzemar les sèries temporals de forma compacta i gestionar-les amb coherència amb la dimensió temporal. 
+
+
+El model MTSMS es basa en emmagatezamar una sèries temporal partida en subsèries a on cadascuna té una resolució diferent i s'ha compactat amb un interpolador d'atribut. En una base de dades multiresolució els paràmetres a configurar són el nombre de subsèries i de cadascuna el període i funció de compactació associat i la mida màxima que pot prendre.
+
+Hem vist el primer pas per definir el model de dades per a un MTSMS, en un futur caldrà definir-ne les operacions i un model de dades que agrupi propietats generals dels TSMS com poden ser la unió de sèries temporals, el càlcul d'itervals temporals, etc. So we are claiming for a need of a TSMS model where the multiresoltion model can be build.
+
+
+ In an example
+we have shown that with this attribute interpolation function we want
+not an approximation to the original function but an extraction of
+some interesting information.
+
+Amb aquesta recerca volem demostrar que l'ús de SGBD per a les sèries temporals facilitarà enormement el treball amb aquestes.
+L'interès actual ens fa ser optimistes per aventurar que aviat podrem gestionar les sèries temporals adequadament amb els SGBD.
+
+
+
+\section*{Acknowledgements}
+
+This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC).
+
+Data comes from iSense project \todo{isense}.
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+% LocalWords:  DBMS
