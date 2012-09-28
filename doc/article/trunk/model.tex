@@ -294,67 +294,72 @@ M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:
 
 \section{Attribute interpolation function}\todo{potser dir-li aggregate? en català com en direm?}
 \label{sec:model:interpolador}
-\todo{Teresa: cal repensar si aquest apartat es fa més global. Proposa que les aif sigui una secció nova, la 4, si tenim més coses a dir}
 
 
-{\color{red}
-
-  An attribute interpolation function is used when a buffer is
-  consolidated in order to summarise information from the time series.
-  Let $S$ be a time series and $t_0$ and $t_f$ two time instants, an
-  attribute interpolation function $f$ calculates a measure that
-  summarises an attribute of $S$ in the time interval $i=[T_0,T_f]$:
+An attribute interpolation function is used when a buffer is
+consolidated in order to summarise information from the time series.
+Let $S$ be a time series and $t_0$ and $t_f$ two time instants, an
+attribute interpolation function $f$ calculates a measure that
+summarises an attribute of $S$ in the time interval $i=[T_0,T_f]$:
 \[
 f: \text{Time series} \times \text{time interval} \longrightarrow
 \text{Measure}
 \]
+\[
+f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
+\]
+
+There can be different attribute interpolation functions in order to
+summarise a time series. As instance, we may want to calculate
+statistics from a time series such as the maximum value, the average
+or apply digital signal processing operations as is done in
+\cite{zhang11}.
 
 
-There can be different attribute interpolation functions in order to summarise a
-time series. As instance, we may want to calculate statistics from a time series such as the maximum value, the average or apply digital signal processing operations as is done in \cite{zhang11}. 
+We can globally define the behaviour of attribute interpolation
+functions in the discrete (set) and continuous forms. However, $T(m')$
+rest undefined as the resulting consolidation time is subject to
+interpretation, which we discuss below. Next, we exemplify some
+operators for both cases.
 
-
-We can globally define the behaviour of attribute interpolation functions in the discrete (set) and continuous forms, except consolidation time which is subject to interpretation.
-
-Purely discrete interpolation with typical set operators. Let $S'=S(T_0,T_f]$\todo{?}:
-
+First, purely discrete interpolation (d) which resembles typical set
+operators. We must define the consolidation interval depending on $i$,
+let $S'=S(T_0,T_f]$:
 \begin{itemize}
-\item maximum:  $S \times i \mapsto m'$ where $V(m') = \max_{\forall m \in S'}(V(m))$ and $T(m')$ depends.
-\item arithmetic mean: $S \times i \mapsto m'$ where $V(m') = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and $T(m')$ depends.
+\item maximum$^d$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall m
+    \in S'}(V(m))$. It summarises $S'$ with the maximum of
+  the measure values.
+\item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
+  summarises $S'$ with the maximum measure.
+\item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$. It
+  summarises $S'$ with the mean of the measure values.
 \end{itemize}
 
 
-Continuous interpolation, we need continuous function $S(t)$. Let $t\in\mathbb{R}$ :
-
+Second, continuous interpolation (c). Note that we need a continuous
+function $S(t)$ which is discussed below. Let $t\in\mathbb{R}$:
 \begin{itemize}
-
-\item maximum: $S \times i \mapsto m'$ where $V(m') = \max_{\forall t \in [T_0,T_f]}(S(t))$ and $T(m')$ depends. 
-
-\item last: $S \times i \mapsto m'$ where $V(m') = S(T_f)$ and $T(m')$ depends. 
-
-\item average function
-
-If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
-$$
-\int_a^b f(x)dx = f(x^*)(b-a)
-$$
-
-The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
-
-Weisstein, Eric W. "Average Function." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/AverageFunction.html
-
-
+\item maximum$^c$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall t
+    \in [T_0,T_f]}(S(t))$. It summarises $S(t)$ with the maximum in
+  interval $i$.
+\item last$^c$: $S \times i \mapsto m'$ where $V(m') = S(T_f)$. It
+  summarises $S(t)$ with the last value in interval $i$.
+\item average$^c$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{\int_{T_0}^{T_f} S(t)dt}{T_f-T_0}$. It summarises $S(t)$ with
+  the average value, that is the area, in interval $i$. $S(t)$ must be
+  continuous on the closed interval.
 \end{itemize}
 
 
 In the design of the attribute interpolation function we can interpret
 a time series in different ways, that is what we call the
-representation of a time series. Keogh et al.\ \cite{last:keogh} cite some
-possible representations for time series such as \emph{Fourier
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite
+some possible representations for time series such as \emph{Fourier
   Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
-\emph{Piecewise Linear Representation} (PLR), remarking this last as
-the most used. The most common representation is with linear functions
-\cite{keogh01}.  
+\emph{Piecewise Linear Representation} (PLR). This last is remarked as
+the most used owing to the most common representation is with linear
+functions \cite{keogh01}.
 
 The variety of time series representations results in a variety of the
 same attribute interpolation functions. As instance, a maximum
@@ -364,64 +369,30 @@ the time series representation results in attribute interpolation
 functions families.
 
 
-\todo{dos exemples}
 Next, we show two possible families for attribute interpolation
-functions: one for time series represented by a purely discrete
-function and another by a staircase function.
+functions: one for time series represented by a staircase function and
+another by a impulse train function.
 
-
-}
-
-
-% Attribute interpolation functions for time series represented by a
-% purely discrete function are similar to set operators as the discrete representation is  
-
-% $$
-% \forall t \in \mathbb{R}  ,\forall m \in S:
-% S(t)^{\text{discrete}} =  
-% \begin{cases}
-%   V(m) & \text{if }  t=T(m) \\
-%   \text{not defined} & \text{else} 
-% \end{cases}
-% $$
-
-
-% \todo{família discreta: existeix $S(t)$?}
-% no pot existir, podem fer com una delta comb (The Dirac delta function, or $\delta$ function, is (informally) a generalized function on the real number line that is zero everywhere except at zero) on els nd siguin zero això va bé possiblement per avg, max i area (és zero) però això ens porta problemes amb min i altres
-
-% no pot existir, fem els nd com $\infty$: s'aplica le màtematiques de Projectively Extended Real Numbers on $\infty$ no té signe ni ordre. Per tant max i min podríen funcionar, àrea seria $\infty$ i avg?
-
-
-% compte amb l'interpolador àrea: From a purely mathematical viewpoint, any extended-real function that is equal to zero everywhere but a single point must have total integral zero but the Dirac delta is not strictly a function: with an integral of one over the entire real line. Per tant, compte a no definir la família discreta amb delta de Dirac.
-
-
-
-
-
-
-
-
-
-
-Next, we show some attribute interpolation functions for time series
+First, we show some attribute interpolation functions for time series
 represented by a staircase function, that is with a piecewise constant
 representation.  We define a new representation for time series called
-\emph{zero-order hold backwards} (zohe%from \emph{zero-order hold everted}
-) consisting in holding each value until the preceding
-value, which a similar representation is used by RRDtool
-\cite{lisa98:oetiker}.
+\emph{zero-order hold backwards}
+(zohe%from \emph{zero-order hold everted}
+) consisting in holding each value until the preceding value, which a
+similar representation is used by RRDtool \cite{lisa98:oetiker}.
 
-Let $S=\{m_0,\ldots,m_k\}$ be a time series,
-we define $S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards} continuous representation along time $t$:
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+$S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards}
+continuous representation along time $t$:
 %continuous definition of the time series using left-continuous step functions.
-$$
+\[
 \forall t \in \mathbb{R}  ,\forall m \in S:
 S(t)^{\text{zohe}} =  
 \begin{cases}
-  \text{not defined} & \text{if } t > T(\max S) \\
+  \infty & \text{if } t > T(\max S) \\%\text{not defined}
   V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
 \end{cases}
-$$\todo{nd o $\infty$?}
+\]
 
 
 We now define the \emph{zero-order hold backwards} attribute
@@ -431,66 +402,95 @@ resulting interpolated measure's time always being $T_f$, in
 accordance to the \emph{zero-order hold backwards} representation
 being defined using left-continuous step functions.  Let
 $S=\{m_0,\ldots,m_k\}$ be a time series and $i=[T_0,T_f]$ be a time
-interval, the attribute interpolation function $f^{\text{zohes}}\in f$
-summarises $S$ with a measure that is calculated from the measure
-values belonging to the subset $S(T_0,T_f]$, $f^{zohes}:
-S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'$ where
-$m'=(v',T_f)$ and the resulting value $v'$ depends on the attribute
-interpolation function. Let $S'=S(T_0,T_f]$: \todo{realment $S'$ hauria de ser $S(T_0,T_f] + \nex_S(\infty,T_f)$? és a dir usar selecció temporal $S[t_0,t_f]^{zohe}$, sinó usant només l'interval sobre la seqüència es fa interpolació sobre el conjunt discret. Potser fer l'exemple amb la família d'interpoladors discrets i amb la d'inteporladors zohe?} 
+interval, the attribute interpolation function $f^{\text{zohe}}\in f$
+summarises $S$ with a measure, $f^{zohes}: S=\{m_0,\ldots,m_k\} \times
+i=[T_0,T_f] \mapsto m'$ where $m'=(v',T_f)$ and the resulting value
+$v'$ depends on the attribute interpolation function calculated from
+the subset $S^{zohe}=(S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$.
+% hauria de ser seltemp:$S[t_0,t_f]^{zohe}$.
 
-
-
-
+On the one hand, purely discrete zohe interpolation functions (zohed)
+have $T(m')=T_f$ and remain with $V(m')$ as defined above except for
+$S'$, let now $S'=S^{zohe}$:
 \begin{itemize}
-
-\item \emph{Arithmetic mean interpolation} function summarises $S'$
-  with the mean of the measure values.
-  $
-  v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
-  $
-
-\item \emph{Maximum interpolation} function summarises $S'$ with the
-  maximum of the measure values.
-  $
-  v' = \max_{\forall m \in S'}(V(m))
-  $
- %Note: \emph{Minimum interpolation} can be defined dually.
-\item \emph{Last interpolation} function summarises $S'$ with the
-  maximum measure.
-  $
-  v' = \max(S')
-  $
-
-\item \emph{Area interpolation} function summarises $S'$ keeping the
-  area of the region. Considering the continuous approach of $S$ we
-  can see the area interpolation function as $v' =
-  \frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}$. \todo{potser en les
-    altres també s'ha de definir de forma contínua? La forma contínua
-    és independent de la representació?, aleshores potser posar-ho
-    abans com a exemples generals d'interpoladors. Necessitem les fórmules a trossos?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se?} 
-
-In the piecewise  approach it becomes:
-  \[
-  o=\min(S'),
-  S''= S' - \{o\},
-  n=\nex_{S} \max(S''): 
-  \]\todo{S' definit general}
-  \[
-  \begin{split}
-  :v'  = & \frac{1}{T_f-T_0} 
-  \big[ (T(o)-T_0)V(o) +( T_f- T(\prev_{S} n) )V(n) \\
-    & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
-   \end{split}
-  \]\todo{repassar a model que sigui correcte}
-  
-
+\item arithmetic mean$^{zohed}$: $S \times i \mapsto m'$ where $V(m')
+  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
+  $T(m')=T_f$. 
+\end{itemize}
+On the other hand, continuous zohe interpolation functions (zohec)
+have also $T(m')=T_f$ and we must define $V(m')$ in the piecewise
+approach, let now $S'=S^{zohe}$:
+\begin{itemize}
+\item maximum$^{zohec}$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
+%Note: \emph{Minimum interpolation} can be defined dually.
+\item last$^{zohec}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$
+  and $T(m')=T_f$.
+\item average$^{zohec}$: $o=\min(S')$, $n=\max(S')$ , $S''= S' -
+  \{o\}:$ $S \times i \mapsto m'$ where $V(m') = \frac{1}{T_f-T_0}
+  \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) + \sum\limits_{\forall m \in
+    S''}( T(m)- T(\prev_S m) )V(m) \big]$ and $T(m')=T_f$.
+% \[
+%   \begin{split}
+%   T(m')  = & \frac{1}{T_f-T_0} 
+%   \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) \\
+%     & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
+%    \end{split}
+%   \]
 \end{itemize}
 
 
 
+Second, we show attribute interpolation functions for time series
+represented by a impulse train function, that is by Dirac delta
+functions.  We define a new representation for time series called
+\emph{Dirac delta} ($\delta$) based on the Dirac delta, which is a
+function that is zero everywhere except at zero.
 
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define $S(t)^{\delta}$
+as its \emph{Dirac delta} continuous representation along time $t$:
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t)^{\delta} =  \sum V(m)\delta(t-T(m)) =
+\begin{cases}
+  V(m) & \text{if }  t=T(m) \\
+  0 & \text{else} 
+\end{cases}
+\]
 
+We now define the \emph{Dirac delta} attribute interpolation function
+family as the one interpreting the consolidation time interval closed
+$i=[T_0,T_f]$ and the resulting interpolated measure's time always
+being $\frac{T_f+T_0}{2}$.  Let $S=\{m_0,\ldots,m_k\}$ be a time
+series and $i=[T_0,T_f]$ be a time interval, the attribute
+interpolation function $f^{\delta}\in f$ summarises $S$ with a
+measure, $f^{\delta}: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto
+m'$ where $m'=(v',\frac{T_f+T_0}{2})$ and the resulting value
+$v'$ depends on the attribute interpolation function calculated from
+the subset $S^{\delta}=S-(S(-\infty,T_0)+S(T_f,+\infty))$.
+% equivalent a l'interval tancat S[T_0,T_f]
 
+On the one hand, purely discrete $\delta$ interpolation functions
+($\delta d$) have $T(m')=\frac{T_f+T_0}{2}$ and remain with $V(m')$ as
+defined above, let now $S'=S^{\delta}$:
+\begin{itemize}
+\item arithmetic mean$^{\delta d}$: $S \times i \mapsto m'$ where $V(m')
+  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
+  $T(m')=\frac{T_f+T_0}{2}$. 
+\end{itemize}
+On the other hand, continuous $\delta$ interpolation functions
+($\delta c$) have also $T(m')=\frac{T_f+T_0}{2}$ and we must define
+$V(m')$ in the piecewise approach, let now $S'=S^{\delta}$:
+\begin{itemize}
+\item maximum$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') = \max(0,
+  \max_{\forall m \in S'}(V(m)))$ and $T(m')=\frac{T_f+T_0}{2}$.
+\item last$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$
+  and $T(m')=\frac{T_f+T_0}{2}$.
+\item average$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') =
+  \sum\limits_{\forall m \in S'} V(m)$ and
+  $T(m')=\frac{T_f+T_0}{2}$. Note that delta function has the
+  fundamental property $\int \delta(t)dt = 1$.
+\end{itemize}
 
 
 
@@ -499,7 +499,7 @@ In the piecewise  approach it becomes:
 %%% TeX-master: "main"
 %%% ispell-local-dictionary: "british"
 %%% End:
-% LocalWords: buffer buffers  MTSMS multiresolution DBMS
+% LocalWords: buffer buffers  MTSMS multiresolution DBMS zohe
 
 
 
