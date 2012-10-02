@@ -3,7 +3,7 @@
 Next we show an example database for a real time series data. Original
 data is shown in figure~\ref{fig:exemple:original} for a period of one
 year and a half. In this plot we can see that there is missing
-data and some outlying observations.
+data, some outlying observations, and there are 146709 stored values.
 
 
 \begin{figure}[tp]
@@ -42,16 +42,19 @@ piece. For old times, every 50 days a \emph{measure} is stored in the
 first \emph{disc} which has a capacity of 12 \emph{measures} so that
 results in a 600 days piece.
 
-All the resolution discs are consolidated by zohe arithmetic mean
-interpolation function (sec.~\ref{sec:model:interpolador}). The resulting time series
-in the MTSDB are shown in figure~\ref{fig:exemple:4mrd}, where each
-graphic corresponds to a resolution disc's time series. Missing data
-and outlayers observations have been eliminated and the number of
-stored values has been reduced from 146709 to 92. However, now there
-is only high resolution for recent data. Note that October 18th
-corresponds to the 'now ' point showed in figure
-\ref{fig:exemple:window} and May 2010 corresponds to the oldest data
-known.
+
+In order to illustrate this example all the resolution discs are
+consolidated by zohe arithmetic mean interpolation function
+(defined in sec.~\ref{sec:model:interpolador}) owing to its simplicity. The
+resulting time series in the MTSDB are shown in
+figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
+resolution disc's time series. We can see that arithmetic mean
+interpolation function has filled missing data and filtered outlayers
+observations, and the number of stored values has been reduced to
+92. However, now there is only high resolution for recent data. Note
+that October 18th 2011 corresponds to the 'now ' point showed in
+figure \ref{fig:exemple:window} and May 2010 corresponds to the oldest
+data known.
 
 \begin{figure}[tp]
 \centering
