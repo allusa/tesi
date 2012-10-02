@@ -1,7 +1,5 @@
 \section{Introduction}
 
-
-
 Modern society depends on the smooth operation of many complex
 engineering systems which provides products and services. Examples
 include electric power systems, water distributions networks,
@@ -12,16 +10,18 @@ collection of large amounts of real-time data for monitoring and
 control of such complex systems.  In most application, these data need
 to be processed and synthesized efficiently to provide relevant
 information to engineers, researchers, accident investigators,
-operators, and many other users. Nevertheless, before using the
-collected signals, it is of primary importance to promptly detecting
-eventual sensor failures or malfunctions and possibly reconstructing
-the incorrect signals in order to avoid processing misleading
-information which may lead to unsafe and/or inefficient actions. The
-correctness of those real-time data depends not only on the measured
-value, but also on the time as it is collected. When observations are
-collected at frequent time interval, large data sets in the form of
-time series are generated [basu07]
-(http://www.springerlink.com/content/442wp9xq56286245/fulltext.pdf). In
+operators, and many other users.
+%
+Nevertheless, before using the collected signals, it is of primary
+importance to promptly detecting eventual sensor failures or
+malfunctions and possibly reconstructing the incorrect signals in
+order to avoid processing misleading information which may lead to
+unsafe and/or inefficient actions. 
+%
+The correctness of those real-time data depends not only on the
+measured value, but also on the time as it is collected. When
+observations are collected at frequent time interval, large data sets
+in the form of time series are generated~\cite{basu07:_autom}.  In
 \cite{fu11} a time series is defined as a collection of observations
 made chronologically, in \cite{last:hetland} they are also called time
 sequences.  The procedure of processing and synthesizing information
@@ -30,21 +30,56 @@ The research in time series data mining has increased last decade and
 the key to success is reducing the dimension of time series in order
 to be able process the data in a reasonable time.
 
-Time series are usually stored in a database.     i a partir d'aqui introduir el que és el Data Based Managment System .....
+% Habitualment les ST es guarden en RDBS però això té problemes
+Time series are usually stored in a database. Most of the time series
+managing software store the data in relational database management
+systems. However, using a RDBMS as a time series backend suffers some
+inconvenients...
 
-
-
-
+% Si les dades cal emmagartzemarles en sistemes petits (sensors, etc)
+% el problemes s'agreugen i apareix la necessitat de limitar la capacitat
 
 
 This paper focuses on Data Base Management Systems (DBMS) that store
-and treat data as time series, known as Time Series Data Base
-Management Systems (TSMS). Traditional DBMS, as is ones derived from
-relational model, are not adequate for these cases as they do not have
-enough facilities to manage and retrieve time series information.
+and treat data as time series. These are usually known as Time Series
+Data Base Management Systems (TSMS). We introduce a new data model for
+a TSMS. This model allows to store time series using different time
+resolutions and organized in a hierarchical way. The model is
+specifically designed to cope well with bounded storage computers like
+those found in sensor systems.
 
-Although there is no standard model for TSMS, there are some interesting proposals \cite{dreyer94,zhang11}. We will define a multiresolution TSMS (MTSMS) as being a TSMS defining the basic concepts where needed.
+There are some prior works concerning TSMS. RRDtool from Oetiker
+\cite{rrdtool} is a free software database management system. It is
+designed to be used in monitoring systems. Because of this, it is
+focused to a particular kind of data, gauges and counters, and it
+lacks general time series operations. RRDtool can store multiple time
+resolution data. The work in this paper is partially inspired in
+RRDtool.
 
+Cougar \cite{bonnet01} is a sensor database system. It has two
+structures: one for sensor properties stored into relations and
+another for time series stored into data sequences from sensors.  Time
+series have specific operations and can combine relations and
+sequences.
+
+SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
+database systems. These systems are intended for science applications,
+in which time series play a principal role. They structure time series
+into arrays in order to achieve multidimensional analysis.
+
+Bitemporal data and time series data are not exactly the same and so
+can not be treated interchangeably \cite{schmidt95}. However, there
+ara some similarities between time series and bitemporal data that can
+be considered. First, extending a relational database model to manage
+bitemporal data shows the way to extend relational DBMS with new types
+and how to model them. Second, bitemporal data modelling settles some
+time-related concepts that can be extended to time series.
+
+The recent bitemporal data research in relational DBMS model terms
+\cite{date02:_tempor_data_relat_model} marks a promising
+foundation. It models bitemporal data as relations extended with time
+intervals attributes and extends relational operations in order to
+deal with related time aspects.
 
 
 

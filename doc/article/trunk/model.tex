@@ -1,4 +1,69 @@
-\section{The multiresolution TSMS model}
+\section{Preliminaries}
+
+A \emph{measure} is a tuple $(v,t)$ where $v\in{\mathbb{R}}$ is the
+value of the measure and $t \in \mathbb{R}$ is the instant in time of
+measurement. Let $m = (v,t)$ be a measure, $v$ is written as $V(m)$
+and $t$ is written as $T(m)$.
+
+The time value defines the order between measures.  Let $m = (v_m,
+t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if and only
+if $t_m\geq t_n$.
+
+A time series is sequence of measures that are ordered in time. 
+\begin{definition}[Time series]
+  A \emph{time series} $S$ is a a set of measures $S = \{m_0, \ldots,
+  m_k\}$ without repeated time values $\forall i,j: i\leq k, j\leq k,
+  i\neq j : T(m_i)\neq T(m_j)$, where $k+1=|S|$ is the cardinality of
+  the set.
+\end{definition}
+
+The order defined by measures implies a total order in a time
+series. As a time series is a finite set, if it is not empty it has a
+maximum and a minimum.  Let $S=\{m_0,\ldots,m_k\}$ be a time series
+and $n\in S$ be a measure. The time series' maximum is $n=\max(S)$ if
+and only if $\forall m \in S: n \geq m $.  Similarly, the time series'
+minimum is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
+
+Given the order defined by time, in a time series we define the
+sequence interval similarly as it is done in
+\cite{last:keogh,last:hetland}.  Let $S=\{m_0, \ldots, m_k\}$ be a
+time series. We define the subset $S(r,t] \subseteq S$ as the time
+series $S(r,t]=\{m\in S | r<T(m)\leq t\}$, where $r$ and $t$ are two
+instants in time.  We also define the subset $S(r,+\infty)\subseteq S$
+as the time series $S(r,+\infty) = \{m\in S | r< T(m) \leq
+T(\max(S))\}$ and the subset $S(-\infty,t)\subseteq S$ as the time
+series $S(-\infty,t) = \{m\in S | T(\min(S))\leq T(m) < t\}$.
+
+
+The time order in time series also implies the sequence concept of
+next and previous measure.  Let $S=\{m_0, \ldots, m_k\}$ be a time
+series and $l\in S$ and $n$ be two measures. We define the next
+measure of $n$ in $S$ as $l=\nex_S(n)$ where $l =
+\min(S(T(n),+\infty))$. We define the previous measure of $n$ in $S$
+as $l=\prev_S(n)$ where $l = \max(S(-\infty,T(n)))$.
+
+
+%\subsubsection{Regularity of time series}
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an time instant and
+$\delta$ a time duration, the time series' measures can be located in
+the time interval $i_0=[t,t+\delta]$ and its multiples $i_j=[t+j\delta
+\,,\, t+(j+1)\delta]: j=0,1,2,\ldots$. In signal processing, these
+time intervals are called sampling intervals, $\delta$ is called
+sampling period and $t$ is called initial time. When the measures are
+equally spaced the time series is called regular.
+
+\begin{definition}[Regular time series]
+  Let $S=\{m_0,\ldots,m_k\}$ be a time series and $\delta$ a time
+  duration. $S$ is regular if and only if $\forall m \in
+  S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) =
+  \delta$. %Property: for a regular time series there is a initial
+           %time instant, let $t_0$ be a time instant then $T(\min(S))=t_0$.
+\end{definition}
+
+
+
+\section{The multiresolution TSMS data model}
 \label{sec:MTSMS}
 
 In this section we design a mathematical model for the multiresolution
@@ -55,70 +120,6 @@ model definitions -- \emph{measure}, \emph{time series},
 \emph{interpolate} and \emph{consolidate} time series.
 
 
-
-\subsection{Measure and Time Series}
-
-A \emph{measure} is a tuple $(v,t)$ where $v\in{\mathbb{R}}$ is the
-value of the measure and $t \in \mathbb{R}$ is the instant in time of
-measurement. Let $m = (v,t)$ be a measure, $v$ is written as $V(m)$
-and $t$ is written as $T(m)$.
-
-The time value defines the order between measures.  Let $m = (v_m,
-t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if and only
-if $t_m\geq t_n$.
-
-
-A time series is sequence of measures that are ordered in time. 
-\begin{definition}[Time series]
-  A \emph{time series} $S$ is a a set of measures $S = \{m_0, \ldots,
-  m_k\}$ without repeated time values $\forall i,j: i\leq k, j\leq k,
-  i\neq j : T(m_i)\neq T(m_j)$, where $k+1=|S|$ is the cardinality of
-  the set.
-\end{definition}
-
-The order defined by measures implies a total order in a time
-series. As a time series is a finite set, if it is not empty it has a
-maximum and a minimum.  Let $S=\{m_0,\ldots,m_k\}$ be a time series
-and $n\in S$ be a measure. The time series' maximum is $n=\max(S)$ if
-and only if $\forall m \in S: n \geq m $.  Similarly, the time series'
-minimum is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
-
-Given the order defined by time, in a time series we define the
-sequence interval similarly as it is done in
-\cite{last:keogh,last:hetland}.  Let $S=\{m_0, \ldots, m_k\}$ be a
-time series. We define the subset $S(r,t] \subseteq S$ as the time
-series $S(r,t]=\{m\in S | r<T(m)\leq t\}$, where $r$ and $t$ are two
-instants in time.  We also define the subset $S(r,+\infty)\subseteq S$
-as the time series $S(r,+\infty) = \{m\in S | r< T(m) \leq
-T(\max(S))\}$ and the subset $S(-\infty,t)\subseteq S$ as the time
-series $S(-\infty,t) = \{m\in S | T(\min(S))\leq T(m) < t\}$.
-
-
-The time order in time series also implies the sequence concept of
-next and previous measure.  Let $S=\{m_0, \ldots, m_k\}$ be a time
-series and $l\in S$ and $n$ be two measures. We define the next
-measure of $n$ in $S$ as $l=\nex_S(n)$ where $l =
-\min(S(T(n),+\infty))$. We define the previous measure of $n$ in $S$
-as $l=\prev_S(n)$ where $l = \max(S(-\infty,T(n)))$.
-
-
-%\subsubsection{Regularity of time series}
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, $t$ an time instant and
-$\delta$ a time duration, the time series' measures can be located in
-the time interval $i_0=[t,t+\delta]$ and its multiples $i_j=[t+j\delta
-\,,\, t+(j+1)\delta]: j=0,1,2,\ldots$. In signal processing, these
-time intervals are called sampling intervals, $\delta$ is called
-sampling period and $t$ is called initial time. When the measures are
-equally spaced the time series is called regular.
-
-\begin{definition}[Regular time series]
-  Let $S=\{m_0,\ldots,m_k\}$ be a time series and $\delta$ a time
-  duration. $S$ is regular if and only if $\forall m \in
-  S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) =
-  \delta$. %Property: for a regular time series there is a initial
-           %time instant, let $t_0$ be a time instant then $T(\min(S))=t_0$.
-\end{definition}
 
 
 
