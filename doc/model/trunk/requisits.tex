@@ -1,0 +1,52 @@
+\section{Requirements for a MTSMS}\todo{o dir-li features?}
+
+A TSMS is a special purpose DBMS aimed at storing and managing time
+series and MTSMS is a TSMS with multiresolution capabilities. Next we
+describe the main requirements that a TSMS must achieve, specifically
+remarking the improvements where the MTSMS can contribute.
+
+
+
+* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
+
+
+* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
+
+* Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
+
+* Visualització adequada de les sèries temporals: no cal emmagatzemar resolucions i informacions sinó es volen mostrar
+
+
+* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS [schmidt i dreyer] 
+
+
+
+* Cal censurar les dades.
+
+* Cal regularitzar les sèries temporals, o saber operar amb elles quan no són regulars. La no regularitat en el temps de mostreig pot provenir per exemple de jitter en mostrejos periòdics (problemes estudiats en el control) o d'un event-based sampling/control.
+
+
+* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
+
+* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
+
+
+
+* Calendari, passa a segon terme, (en contraposició a Dreyer). Es necessiten time scales estàndards (http://support.ntp.org/bin/view/Support/TimeScales): El temps es defineix com universal i constant (semblant a Unix Time Epoch, el qual representa UTC sense tenir en compte els leap seconds, tot i que potser millor seria usar TAI ja que és una representació lineal del temps). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
+
+* El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
+
+
+
+
+* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
+
+
+* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+
+* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. [bonnet01?]
+
+* S'ha de poder calcular incrementalment, citar data streams
+
+* Necessitem les fórmules (els interpoladors) a trossos, en el domini dels conjunts?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se? per exemple calcular l'àrea de S(t): amb integral o definida amb conjunts?
+A més els interpoladors han de poder existir per a dades no númeriques com per exemple els strings.
