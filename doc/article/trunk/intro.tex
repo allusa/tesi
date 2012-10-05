@@ -6,47 +6,86 @@ include electric power systems, water distributions networks,
 transportation systems, manufacturing processes, intelligent
 buildings, communication systems, etc. The emergence of networked
 embedded systems and sensor/actuator networks has made possible the
-collection of large amounts of real-time data for monitoring and
-control of such complex systems.  In most application, these data need
-to be processed and synthesized efficiently to provide relevant
-information to engineers, researchers, accident investigators,
-operators, and many other users.
-%
+collection of large amounts of data for monitoring and control of such
+complex systems. In most application, these data need to be processed
+and synthesised efficiently to provide relevant information to
+engineers, researchers, accident investigators, operators, and many
+other users.  
+
 Nevertheless, before using the collected signals, it is of primary
 importance to promptly detecting eventual sensor failures or
 malfunctions and possibly reconstructing the incorrect signals in
 order to avoid processing misleading information which may lead to
-unsafe and/or inefficient actions. 
-%
-The correctness of those real-time data depends not only on the
-measured value, but also on the time as it is collected. When
-observations are collected at frequent time interval, large data sets
-in the form of time series are generated~\cite{basu07:_autom}.  In
-\cite{fu11} a time series is defined as a collection of observations
-made chronologically, in \cite{last:hetland} they are also called time
-sequences.  The procedure of processing and synthesizing information
-becomes complicated if the behavior of the series varies over time.
-The research in time series data mining has increased last decade and
-the key to success is reducing the dimension of time series in order
-to be able process the data in a reasonable time.
+unsafe and/or inefficient actions.  In all these instances a measure
+is associated with a time stamp, which implies that the correctness of
+those data depends not only on the measured value but also on the time
+as it is collected. When observations are collected at specific time
+interval, large data sets in the form of time series are
+generated~\cite{basu07:_autom}.  
 
-% Habitualment les ST es guarden en RDBS però això té problemes
-Time series are usually stored in a database. Most of the time series
-managing software store the data in relational database management
-systems. However, using a RDBMS as a time series backend suffers some
-inconvenients...
+Time series are defined as a collection of observations made
+chronologically \cite{fu11}, in \cite{last:hetland} they are also
+called time sequences.  Time series are usually stored in a
+database. Usually the managing software to store this data are
+relational database management systems (RDBMS). However, using a RDBMS
+as a time series backend suffers some drawbacks
+\cite{schmidt95,stonebraker09:scidb,zhang11}. Time series come from a
+continuous nature in which they are recorded at regular intervals,
+such as hourly or daily, or at irregular intervals, such as recording
+when a pump is open or closed. 
 
-% Si les dades cal emmagartzemarles en sistemes petits (sensors, etc)
-% el problemes s'agreugen i apareix la necessitat de limitar la capacitat
+One problem when dealing with time series data results from the fact
+that these data are often voluminous \cite{fu11}. As a result, storing
+and accessing them can be complicated. Moreover, it is specially
+critical when developing small embedded systems, whose resources
+(capacity, energy, processing, and communications) suffer a genuine
+restriction \cite{yaogehrke02}.  Another problem is that the procedure
+of processing and synthesising information becomes complicated if data
+is not equi-time spaced.
 
+
+
+%TSMS
 
 This paper focuses on Data Base Management Systems (DBMS) that store
 and treat data as time series. These are usually known as Time Series
-Data Base Management Systems (TSMS). We introduce a new data model for
-a TSMS. This model allows to store time series using different time
-resolutions and organized in a hierarchical way. The model is
-specifically designed to cope well with bounded storage computers like
-those found in sensor systems.
+Data Base Management Systems (TSMS).  A TSMS is a special purpose DBMS
+aimed at storing and managing time series
+
+The main objective of TSMS is to put together two areas of study: time
+series analysis and DBMS.  Time series analysis theory studies
+formally a great amount of algorithms and methodologies that apply to
+time series, focusing on efficiency improving. DBMS theory studies
+systems that store and operate with data; currently the relation model
+\cite{date:introduction} is the referent.
+
+%TSMS features
+
+In time series analysis there are some common operations that can be
+generalised when treating time series.
+
+The main attribute of time series is the time, therefore dealing with
+time is a common operation, such as querying time intervals, finding
+time correlations, or calculating distances between two time
+series. TSMS must respect the temporal coherence of the time series.
+In the context of statistics, aggregation of time series is also
+common operation. Aggregation consists in summarising a time series
+subset with an statistic such as the mean, the maximum, or the mode.
+
+A particular feature of time series is representation. A time series
+is discrete in the set sense, that is a set of value and time
+pairs. Representation is the function model approximating the time
+series to its continuous nature. TSMS operate on time series
+respecting the representation coherence. Furthermore, the values of a
+time series can be of any type; for simplicity examples are presented
+with integers or real numbers but can also be strings or structures
+such as arrays.
+% , preferably using piecewise operations in the set domain rather
+% than solving numerical methods for the continuous domain.
+
+
+%Related work
+\todo{avantatges i incovenients de cada un}
 
 There are some prior works concerning TSMS. RRDtool from Oetiker
 \cite{rrdtool} is a free software database management system. It is
@@ -60,16 +99,16 @@ Cougar \cite{bonnet01} is a sensor database system. It has two
 structures: one for sensor properties stored into relations and
 another for time series stored into data sequences from sensors.  Time
 series have specific operations and can combine relations and
-sequences.
+sequences. %Molt específic per a xarxes de sensors a on aplica data streams: avantages per a càlcul eficient però inconvenients que no són TSMS generalitzables a totes les sèries temporals
 
 SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
 database systems. These systems are intended for science applications,
 in which time series play a principal role. They structure time series
-into arrays in order to achieve multidimensional analysis.
+into arrays in order to achieve multidimensional analysis. %sciql barreja relacions i arrays d'una manera estranya que embolica més que tneir-ne uns o els altres
 
 Bitemporal data and time series data are not exactly the same and so
 can not be treated interchangeably \cite{schmidt95}. However, there
-ara some similarities between time series and bitemporal data that can
+are some similarities between time series and bitemporal data that can
 be considered. First, extending a relational database model to manage
 bitemporal data shows the way to extend relational DBMS with new types
 and how to model them. Second, bitemporal data modelling settles some
@@ -81,18 +120,46 @@ foundation. It models bitemporal data as relations extended with time
 intervals attributes and extends relational operations in order to
 deal with related time aspects.
 
+%MTSMS
+
+In this paper, we introduce a new data model for a TSMS: a TSMS with
+multiresolution capabilities. This model allows to store time series
+using different time resolutions and organised in a
+hierarchical\todo{?} way. The model is specifically designed to cope
+well with bounded storage computers like those found in sensor
+systems.
+
+MTSMS improve TSMS features in various aspects:
+
+\begin{itemize}
+
+\item Voluminous data. 
+
+\item Regular time data.
+
+\item Validate data.
+
+* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
+
+* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui * Visualització adequada de les sèries temporals: no cal emmagatzemar resolucions i informacions sinó es volen mostrar
+
+* Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
+
+* Principals problemes provenen del monitoratge. Cal censurar les dades.
+
+* Cal regularitzar les sèries temporals, o saber operar amb elles quan no són regulars. La no regularitat en el temps de mostreig pot provenir per exemple de jitter en mostrejos periòdics (problemes estudiats en el control) o d'un event-based sampling/control.
+
+* recerca actual molt centrada a recuperar el senyal original: potser nocal. n an example we have shown a possible application of a MTSMS. The
+resulting database has the information we have extracted with the
+attribute interpolation function. We show that in this example we want
+not an approximation to the original function but an extraction of
+some interesting information. Then the database is ready to answer
+time series questions keeping in mind that it holds this information
+summary.
+
+\end{itemize}
 
 
-
-Unió entre els dos camps d'anàlisis de sèries temporals i de models de SGBD. 
-
-- Multitud d'algoritmes i metodologies. Problemes en el monitoratge.
-- Model relacional és referent
-
-
-
-
-Motivació: vam observar RRDtool [citar tfm?] i volíem entendre els conceptes i modelar-los per tal de veure'n la flexibilitat: RRDtool és molt restringit amb el tractament amb el temps i amb el tipus de dades que pot tractar.
 
 
 
@@ -100,58 +167,6 @@ Motivació: vam observar RRDtool [citar tfm?] i volíem entendre els conceptes i
 
 
 
-\section{Requirements for a MTSMS}\todo{o dir-li features?}
-
-A TSMS is a special purpose DBMS aimed at storing and managing time
-series and MTSMS is a TSMS with multiresolution capabilities. Next we
-describe the main requirements that a TSMS must achieve, specifically
-remarking the improvements where the MTSMS can contribute.
-
-
-
-* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
-
-
-* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
-
-* Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
-
-* Visualització adequada de les sèries temporals: no cal emmagatzemar resolucions i informacions sinó es volen mostrar
-
-
-* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS [schmidt i dreyer] 
-
-
-
-* Cal censurar les dades.
-
-* Cal regularitzar les sèries temporals, o saber operar amb elles quan no són regulars. La no regularitat en el temps de mostreig pot provenir per exemple de jitter en mostrejos periòdics (problemes estudiats en el control) o d'un event-based sampling/control.
-
-
-* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
-
-* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
-
-
-
-* Calendari, passa a segon terme, (en contraposició a Dreyer). Es necessiten time scales estàndards (http://support.ntp.org/bin/view/Support/TimeScales): El temps es defineix com universal i constant (semblant a Unix Time Epoch, el qual representa UTC sense tenir en compte els leap seconds, tot i que potser millor seria usar TAI ja que és una representació lineal del temps). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
-
-* El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
-
-
-
-
-* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
-
-
-* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
-
-* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. [bonnet01?]
-
-* S'ha de poder calcular incrementalment, citar data streams
-
-* Necessitem les fórmules (els interpoladors) a trossos, en el domini dels conjunts?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se? per exemple calcular l'àrea de S(t): amb integral o definida amb conjunts?
-A més els interpoladors han de poder existir per a dades no númeriques com per exemple els strings.
 
 
 

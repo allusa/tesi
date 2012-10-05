@@ -1,62 +1,4 @@
-\section{Related Work}
-
-The research in time series data management has increased last decade
-as the procedure of processing and synthesizing information becomes
-complicated if data varies over time. From this point of view we focus
-on DBMS aimed to time series where we find two main perspectives in
-current research.
-
-
-On the one hand, there are DBMS with some properties and operations
-for time series.
-
-RRDtool from Oetiker \cite{rrdtool} is a professional database
-management system extremely used by the free software community. It is
-used in professional monitoring systems and its efficiency and speed
-when processing time series is being improved. Nevertheless, it is
-focused to a particular kind of data, gauges and counters, and it has
-not general time series operations.
-
-Cougar \cite{bonnet01} is a sensor database system. It has two
-structures: one for sensor properties stored into relations and
-another for time series stored into data sequences from sensors.  Time
-series have specific operations and can combine relations and
-sequences.
-
-
-SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
-database systems. These systems are intended for science applications,
-in which time series play a principal role. They structure time series
-into arrays in order to achieve multidimensional analysis.
-
-
-
-On the other hand, there is the relational DBMS model as the common
-study for DBMS theories. The relational DBMS model is continuously
-evolving \cite{date:thethirdmanifesto}.
-
-Particularly regarding time data,
-intensive research has been carried in the bitemporal data field, that
-is the management of history using time intervals.  The recent
-temporal data research in relational DBMS model terms
-\cite{date02:_tempor_data_relat_model} marks a promising
-foundation. It models bitemporal data as relations extended with time
-intervals attributes and extends relational operations in order to
-deal with related time aspects.
-
-Although bitemporal data and time series data are not exactly the same
-and so can not be treated interchangeably \cite{schmidt95},
-time series research can benefit from two aspects of this bitemporal
-data research. First, it shows the way to extend relational DBMS with
-new types and how to model them. Second, it settles some time-related
-concepts that can apply well to time series.
-
-
-
-
-
-
-\section{Conclusions} 
+\section{Conclusions and future work} 
 
 In this paper we have shown a MTSMS model, including the requirements
 for these special systems and how they can be applied to an example
@@ -86,7 +28,12 @@ some interesting information. Then the database is ready to answer
 time series questions keeping in mind that it holds this information
 summary.
 
-
+\todo{treballs futurs: xarxes de sensors distribuïdes}
+* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor.
+* S'ha de poder calcular incrementalment, citar data streams
+\todo{multiresolució seleccionable: no només visió més resolució més recent sinó que potser conservar bona resolució de períodes interessants}
+\todo{interrelació entre el món de RDBMS i TSMS}
+* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
 
 Amb aquesta recerca volem demostrar que l'ús de SGBD per a les sèries temporals facilitarà enormement el treball amb aquestes.
 L'interès actual ens fa ser optimistes per aventurar que aviat podrem gestionar les sèries temporals adequadament amb els SGBD.\todo{acabar així?}

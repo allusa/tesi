@@ -28,6 +28,13 @@ sortcites=true,
 %\bibparsep 0.2cm
 %\bibhang 0.25cm
 
+%afegeix camp eprinttype=hdl
+\DeclareFieldFormat{eprint:hdl}{%
+  \mkbibacro{HDL}\addcolon\space
+  \ifhyperref
+    {\href{http://hdl.handle.net/#1}{\nolinkurl{#1}}}
+    {\nolinkurl{#1}}}
+
 %anotacions a la bibliografia
 \newboolean{bbx@annotation}% (same as biblatex-dw)
 \DeclareBibliographyOption{annotation}[true]{%
