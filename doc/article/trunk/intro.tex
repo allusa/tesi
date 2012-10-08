@@ -120,6 +120,9 @@ foundation. It models bitemporal data as relations extended with time
 intervals attributes and extends relational operations in order to
 deal with related time aspects.
 
+
+
+
 %MTSMS
 
 In this paper, we introduce a new data model for a TSMS: a TSMS with
@@ -130,32 +133,47 @@ well with bounded storage computers like those found in sensor
 systems.
 
 MTSMS improve TSMS features in various aspects:
-
 \begin{itemize}
 
-\item Voluminous data. 
+\item Voluminous data. Monitoring systems capture a huge amount of
+  data from sensors. In order to be able to process this information,
+  data volume must be reduced. With the multiresolution approach only
+  the most interesting segments of data are stored. This segments are
+  seen as different resolutions for the same time series and the user
+  configures how they are extracted and summarised by defining
+  different interpolation steps and functions. Multiresolution can
+  also be useful at visualisation time as the user is able to select
+  the best time range and time step that fits into the screen; there
+  is no need to process with more quantity of data than the one that
+  can be shown.
 
-\item Regular time data.
+\item Data validation. Monitoring systems capture data but can occur
+  some drawbacks that will affect later the process of time series
+  analysis. Main problems are found when monitors can not capture
+  data, known as gaps, or capture data erroneously, such as outlayers.
+  The multiresolution attribute functions cope well with validating,
+  filtering and calculating with this unknown data in order to keep a
+  consistent historic.
 
-\item Validate data.
+\item Data time regularising. Another monitoring side effect happens when
+  the sampling rate is not constant, that is when the resulting data
+  is not equi-time spaced. This no regularities can come from sampling
+  jitters in periodic sampling or from no periodic event-based
+  sampling. The multiresolution consolidation regularises the time
+  interval when processes a time series, therefore each resulting time
+  series segment has a regular time resolution. This regularising
+  approach could also be used when the user wants to consult another
+  resolution for a time series, such as changing periodic data from a
+  month to a year step.
 
-* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
-
-* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui * Visualització adequada de les sèries temporals: no cal emmagatzemar resolucions i informacions sinó es volen mostrar
-
-* Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
-
-* Principals problemes provenen del monitoratge. Cal censurar les dades.
-
-* Cal regularitzar les sèries temporals, o saber operar amb elles quan no són regulars. La no regularitat en el temps de mostreig pot provenir per exemple de jitter en mostrejos periòdics (problemes estudiats en el control) o d'un event-based sampling/control.
-
-* recerca actual molt centrada a recuperar el senyal original: potser nocal. n an example we have shown a possible application of a MTSMS. The
-resulting database has the information we have extracted with the
-attribute interpolation function. We show that in this example we want
-not an approximation to the original function but an extraction of
-some interesting information. Then the database is ready to answer
-time series questions keeping in mind that it holds this information
-summary.
+\item Information summaries. Time series analysis typically focuses on
+  reconstructing the original signal. However, the user objective in a
+  database system is to consult some information. The multiresolution
+  approach is a lossy compression storage solution for data. Therefore
+  it can be regarded as not approximating to the original time series
+  function but extracting the interesting information. The selected
+  information must be determined a priori assuming the context where
+  the future queries will be done.
 
 \end{itemize}
 
@@ -163,7 +181,7 @@ summary.
 
 
 
-** Paper structure **
+** Paper structure **\todo{}
 
 
 
@@ -176,3 +194,5 @@ summary.
 %%% TeX-master: "main"
 %%% ispell-local-dictionary: "british"
 %%% End:
+
+% LocalWords:  multiresolution
