@@ -29,10 +29,10 @@ called time sequences.  Time series are usually stored in a
 database. Usually the managing software to store this data are
 relational database management systems (RDBMS). However, using a RDBMS
 as a time series backend suffers some drawbacks
-\cite{schmidt95,stonebraker09:scidb,zhang11}. Time series come from a
-continuous nature in which they are recorded at regular intervals,
-such as hourly or daily, or at irregular intervals, such as recording
-when a pump is open or closed. 
+\cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. Time series
+come from a continuous nature in which they are recorded at regular
+intervals, such as hourly or daily, or at irregular intervals, such as
+recording when a pump is open or closed.
 
 One problem when dealing with time series data results from the fact
 that these data are often voluminous \cite{fu11}. As a result, storing
@@ -49,8 +49,8 @@ is not equi-time spaced.
 
 This paper focuses on Data Base Management Systems (DBMS) that store
 and treat data as time series. These are usually known as Time Series
-Data Base Management Systems (TSMS).  A TSMS is a special purpose DBMS
-aimed at storing and managing time series
+Data Base Management Systems (TSMS) \cite{dreyer94}.  A TSMS is a
+special purpose DBMS aimed at storing and managing time series
 
 The main objective of TSMS is to put together two areas of study: time
 series analysis and DBMS.  Time series analysis theory studies
@@ -78,8 +78,8 @@ pairs. Representation is the function model approximating the time
 series to its continuous nature. TSMS operate on time series
 respecting the representation coherence. Furthermore, the values of a
 time series can be of any type; for simplicity examples are presented
-with integers or real numbers but can also be strings or structures
-such as arrays.
+generally with integers or real numbers but can also be strings or
+structures such as arrays.
 % , preferably using piecewise operations in the set domain rather
 % than solving numerical methods for the continuous domain.
 
@@ -104,7 +104,7 @@ sequences. %Molt específic per a xarxes de sensors a on aplica data streams: av
 SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
 database systems. These systems are intended for science applications,
 in which time series play a principal role. They structure time series
-into arrays in order to achieve multidimensional analysis. %sciql barreja relacions i arrays d'una manera estranya que embolica més que tneir-ne uns o els altres
+into arrays in order to achieve multidimensional analysis. %scidb barreja relacions i arrays d'una manera estranya que embolica més que tneir-ne uns o els altres %A més sciql ofereix exempes per sèries temporals per algunes de les seves propietats: regularitat, interpolació i cerca de correlacions.
 
 Bitemporal data and time series data are not exactly the same and so
 can not be treated interchangeably \cite{schmidt95}. However, there
@@ -170,10 +170,10 @@ MTSMS improve TSMS features in various aspects:
   reconstructing the original signal. However, the user objective in a
   database system is to consult some information. The multiresolution
   approach is a lossy compression storage solution for data. Therefore
-  it can be regarded as not approximating to the original time series
-  function but extracting the interesting information. The selected
-  information must be determined a priori assuming the context where
-  the future queries will be done.
+  it can be regarded as not only approximating to the
+  original time series function but also extracting the interesting
+  information. The selected information must be determined a priori
+  assuming the context where the future queries will be done.
 
 \end{itemize}
 
