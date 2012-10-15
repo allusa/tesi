@@ -342,14 +342,18 @@ There can be different attribute interpolation functions in order to
 summarise a time series. As instance, we may want to calculate
 statistics from a time series such as the maximum value, the average
 or apply digital signal processing operations as is done in
-\cite{zhang11}.
+\cite{zhang11}. 
+\todo{sense tenir en compte els unnknown i data validation, que en parlarem més avall}
 
 
 We can globally define the behaviour of attribute interpolation
 functions in the discrete (set) and continuous forms. However, $T(m')$
 rest undefined as the resulting consolidation time is subject to
 interpretation, which we discuss below. Next, we exemplify some
-operators for both cases.
+operators for both cases. For simplicity, we present examples with
+real numbers but they could also be integers, strings or more
+elaborated structures such as arrays.
+
 
 First, purely discrete interpolation (d) which resembles typical set
 operators. We must define the consolidation interval depending on $i$,
@@ -538,10 +542,40 @@ not coincide in the $\delta$ interpretation.
 
 
 
-\todo{Teresa: afegir interpoladors d'unknown}
+\todo{Teresa: afegir interpoladors d'unknown} With reference to data
+validation, attribute interpolation functions can cope with this
+process. When data has not been captured or has been captured
+erroneously, it must be treated as unknown data.
+\begin{itemize}
+\item When data has not been captured it is unknown by nature. For
+  example, we try to capture data from a sensor and there is no
+  response.
+\item When data is erroneously it must be marked as unknown. For
+  example, we capture data from a sensor but it responses in a not
+  reasonable time or we capture data that is clearly outside a
+  reasonable limits.
+\end{itemize}
+As a consequence, attribute interpolation functions deals with these
+two subprocesses: treating unknown data and marking data as
+unknown. \todo{seguint amb l'exemple dels reals, fem servir el valor imprpopi infinit}.Let unknown value be represented by infinity.
 
-\todo{In conclusion, infinite attribute interpolation functions can be
-defined and no global assumptions can be made. MTSMS must give freedom to the users to define their own functions.}
+An attribute interpolation functions marking data as unknown is a one giving unknown value as the resulting measure's value, $f: S \times i \mapsto m'$ where $V(m')=\infty$. 
+
+Per exemple definim un limit, usant l'interpolador màxim anterior:
+maxlimit2: return max(2,max(S))
+
+Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda sinó què passa?:
+termini2: 
+
+
+An attribute interpolation functions treating unknown data is a one that can calculate a result when there is unknown values in the original time series, $f: S \times i \mapsto m'$ where $\exists m \in S: T(m)=\infty$. From a purely scientific point of view operating with unknown data yields unknown
+
+Per exemple definim el càlcul d'àrea amb desconeguts, 
+
+
+In conclusion, a huge amount of attribute interpolation functions can
+be defined and no global assumptions can be made. Therefore, MTSMS
+must give freedom to the users to define their own functions.
 
 
 
