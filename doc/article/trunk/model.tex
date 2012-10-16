@@ -342,9 +342,8 @@ There can be different attribute interpolation functions in order to
 summarise a time series. As instance, we may want to calculate
 statistics from a time series such as the maximum value, the average
 or apply digital signal processing operations as is done in
-\cite{zhang11}. 
-\todo{sense tenir en compte els unnknown i data validation, que en parlarem més avall}
-
+\cite{zhang11}.  Furthermore, attribute interpolation functions copes
+with data validation, which we will discuss latter in this section.
 
 We can globally define the behaviour of attribute interpolation
 functions in the discrete (set) and continuous forms. However, $T(m')$
@@ -463,10 +462,10 @@ approach, let now $S'=S^{zohe}$:
 %Note: \emph{Minimum interpolation} can be defined dually.
 \item last$^{zohec}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$
   and $T(m')=T_f$.
-\item average$^{zohec}$: $o=\min(S')$, $n=\max(S')$ , $S''= S' -
-  \{o\}:$ $S \times i \mapsto m'$ where $V(m') = \frac{1}{T_f-T_0}
-  \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) + \sum\limits_{\forall m \in
-    S''}( T(m)- T(\prev_S m) )V(m) \big]$ and $T(m')=T_f$.
+\item average$^{zohec}$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{1}{T_f-T_0} \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) +
+  \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]$,
+  $T(m')=T_f$, $o=\min(S')$, $n=\max(S')$, and $S''= S' - \{o\}$.
 % \[
 %   \begin{split}
 %   T(m')  = & \frac{1}{T_f-T_0} 
@@ -542,10 +541,9 @@ not coincide in the $\delta$ interpretation.
 
 
 
-\todo{Teresa: afegir interpoladors d'unknown} With reference to data
-validation, attribute interpolation functions can cope with this
-process. When data has not been captured or has been captured
-erroneously, it must be treated as unknown data.
+With reference to data validation, attribute interpolation functions
+can cope with this process. When data has not been captured or has
+been captured erroneously, it must be treated as unknown data.
 \begin{itemize}
 \item When data has not been captured it is unknown by nature. For
   example, we try to capture data from a sensor and there is no
@@ -557,22 +555,43 @@ erroneously, it must be treated as unknown data.
 \end{itemize}
 As a consequence, attribute interpolation functions deals with these
 two subprocesses: treating unknown data and marking data as
-unknown. \todo{seguint amb l'exemple dels reals, fem servir el valor imprpopi infinit}.Let unknown value be represented by infinity.
+unknown. Following with real numbers, let unknown value be represented
+by the improper element infinity ($\infty$).  
 
-An attribute interpolation functions marking data as unknown is a one giving unknown value as the resulting measure's value, $f: S \times i \mapsto m'$ where $V(m')=\infty$. 
+An attribute interpolation functions treating unknown data is a one
+that can calculate a result when there are unknown values in the
+original time series, $f^u: S \times i \mapsto m'$ where $\exists m \in
+S: V(m)=\infty$. Although from a purely scientific point of view
+operating with unknown data makes unknown result, interpolation
+functions are free to calculate whatever is needed such as time series
+analysis does with data reconstruction.
 
-Per exemple definim un limit, usant l'interpolador màxim anterior:
-maxlimit2: return max(2,max(S))
+For example, we can redefine the average$^{c}$ interpolation function
+into one capable of treating unknown values by keeping the known area;
+that is, total known area is spread on the time interval.
+average$^{cu}$: $S \times i \mapsto m'$ where $V(m') =
+\frac{\int_{T_0}^{T_f} S^u(t)dt}{T_f-T_0}$ and $S^u(t)=
+\begin{cases}
+  0 &\text{if }  S(t)=\infty\\
+  S(t) & \text{else }
+\end{cases}$.
 
-Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda sinó què passa?:
-termini2: 
 
+An attribute interpolation functions marking data as unknown is a one
+that can give unknown value as the resulting measure's value, $f^{mu}:
+S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
 
-An attribute interpolation functions treating unknown data is a one that can calculate a result when there is unknown values in the original time series, $f: S \times i \mapsto m'$ where $\exists m \in S: T(m)=\infty$. From a purely scientific point of view operating with unknown data yields unknown
+For example, we can define a maximum interpolation, based on the
+maximum$^d$ interpolation, that returns unknown if there is a
+measure's value bigger than 2.  maximum$^{dmu2}$: $S \times i
+\mapsto m'$ where $V(m') = 
+\begin{cases}
+  \infty &\text{if }  m''>2\\
+  m'' & \text{else }
+\end{cases}$ and $m''=\text{maximum}^d(S,i)$.
 
-Per exemple definim el càlcul d'àrea amb desconeguts, 
-
-
+%Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
+    
 In conclusion, a huge amount of attribute interpolation functions can
 be defined and no global assumptions can be made. Therefore, MTSMS
 must give freedom to the users to define their own functions.
