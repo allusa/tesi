@@ -85,8 +85,6 @@ structures such as arrays.
 
 
 %Related work
-\todo{avantatges i incovenients de cada un}
-
 There are some prior works concerning TSMS. RRDtool from Oetiker
 \cite{rrdtool} is a free software database management system. It is
 designed to be used in monitoring systems. Because of this, it is
@@ -97,14 +95,30 @@ RRDtool.
 
 Cougar \cite{bonnet01} is a sensor database system. It has two
 structures: one for sensor properties stored into relations and
-another for time series stored into data sequences from sensors.  Time
+another for time series stored into data sequences from sensors. Time
 series have specific operations and can combine relations and
-sequences. %Molt específic per a xarxes de sensors a on aplica data streams: avantages per a càlcul eficient però inconvenients que no són TSMS generalitzables a totes les sèries temporals
+sequences. Cougar target field is sensor networks, where sensor data
+is stored distributed in sensors. Queries are resolved combining
+sensor data in a data stream orientation, which improves processing
+performance. However, data streams imposes restriction on operators so
+this TSMS can not be generalised to other time series types. Moreover,
+sequences and relations can collide in representing ambiguously time
+series.
+
 
 SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
 database systems. These systems are intended for science applications,
 in which time series play a principal role. They structure time series
-into arrays in order to achieve multidimensional analysis. %scidb barreja relacions i arrays d'una manera estranya que embolica més que tneir-ne uns o els altres %A més sciql ofereix exempes per sèries temporals per algunes de les seves propietats: regularitat, interpolació i cerca de correlacions.
+into arrays in order to achieve multidimensional analysis and allow
+tables to store other data.  Although SciDB is based on arrays, in
+which it includes time series, it does not consider time series
+special needs, that is not considering how continuously voluminous
+data or temporal coherence are achieved.  In contrast, SciQL shows how
+some time series properties are achieved by the DBMS such as time
+series regularities, interpolation or correlation queries.  However,
+difference between tables and arrays seems too physical approached an
+consequently can collide in representing ambiguously time series.
+
 
 Bitemporal data and time series data are not exactly the same and so
 can not be treated interchangeably \cite{schmidt95}. However, there
@@ -127,10 +141,9 @@ deal with related time aspects.
 
 In this paper, we introduce a new data model for a TSMS: a TSMS with
 multiresolution capabilities. This model allows to store time series
-using different time resolutions and organised in a
-hierarchical\todo{?} way. The model is specifically designed to cope
-well with bounded storage computers like those found in sensor
-systems.
+using different time resolutions and organised in a relation way. The
+model is specifically designed to cope well with bounded storage
+computers like those found in sensor systems.
 
 MTSMS improve TSMS features in various aspects:
 \begin{itemize}
