@@ -200,3 +200,11 @@ class ResolutionDisc(object):
         return 'RD:{0},{1}'.format(self.B,self.D)
 
 
+
+    def __gt__(self,other):
+        """
+        Relació d'ordre induïda pel temps de consolidació del Buffer
+        Definint l'ordre, després es pot ordenar un conjunt de discs
+        resolució mitjançant la funció sorted(mrd)
+        """
+        return self.B.delta > other.B.delta
