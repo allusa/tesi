@@ -111,7 +111,7 @@ subseries'.
 
 Regarding operations, MTSMS model needs operators to change the time
 intervals between measures. Mainly, these operators are
-\emph{interpolation} functions and \emph{consolidation} actions. In
+\emph{aggregate} functions and \emph{consolidation} actions. In
 this section we design the basic MTSMS model, that is six basic data
 model definitions -- \emph{measure}, \emph{time series},
 \emph{buffer}, \emph{disc}, \emph{resolution disc}, and
@@ -130,13 +130,13 @@ A buffer is a container for a regular or a no-regular time series. The
 buffer objective is to regularise the time series with predetermined $\delta$ 
 and attribute function. We call consolidation to this action. In the context
 of buffers, the sampling period is called consolidation step
-and the function is called attribute interpolation function.
+and the function is called attribute aggregate function.
 
 \begin{definition}[Buffer]
   A \emph{buffer} is defined as the tuple $(S,\tau,\delta,f)$ where
   $S$ is a time series, $\tau$ is the last consolidation time, $\delta$
   is the duration of the consolidation step and $f$ is an
-  attribute interpolation function.
+  attribute aggregate function.
 \end{definition}
 
 An empty buffer, or the initial buffer, $B_{\emptyset} =
@@ -167,7 +167,7 @@ $B$ is ready to consolidate if and only if $T(m) \geq \tau+\delta$.
 Let $B=(S,\tau,\delta,f)$ be a buffer ready to consolidate, the
 consolidation from $B$ in the time interval $i=[\tau,\tau+\delta]$
 results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$. Attribute
-interpolation function $f$ is described next in
+aggregate function $f$ is described next in
 section~\ref{sec:model:interpolador}.  We define the operator
 \emph{consolidateBuffer} that calculates the measure of consolidation
 and reduces the consolidated part of the time series from the
@@ -282,7 +282,7 @@ Generally, in a multiresolution database there are not two resolution discs
 with the same information. That is, let $R_a = (B_a, D_a)$ and $R_b =
 (B_b, D_b)$ be two resolution discs, its buffers
 $B_a=(S_a,\tau_a,\delta_a,f_a)$ and $B_b=(S_b,\tau_b,\delta_b,f_b)$
-have different consolidation interval and attribute interpolation function
+have different consolidation interval and attribute aggregate function
 $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
@@ -321,14 +321,14 @@ M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:
 
 
 
-\section{Attribute interpolation function}\todo{potser dir-li aggregate? en català com en direm?}
+\section{Attribute aggregate function}
 \label{sec:model:interpolador}
 
 
-An attribute interpolation function is used when a buffer is
+An attribute aggregate function is used when a buffer is
 consolidated in order to summarise information from the time series.
 Let $S$ be a time series and $t_0$ and $t_f$ two time instants, an
-attribute interpolation function $f$ calculates a measure that
+attribute aggregate function $f$ calculates a measure that
 summarises an attribute of $S$ in the time interval $i=[T_0,T_f]$:
 \[
 f: \text{Time series} \times \text{time interval} \longrightarrow
@@ -338,25 +338,16 @@ f: \text{Time series} \times \text{time interval} \longrightarrow
 f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
 \]
 
-There can be different attribute interpolation functions in order to
+There can be different attribute aggregate functions in order to
 summarise a time series. As instance, we may want to calculate
 statistics from a time series such as the maximum value, the average
 or apply digital signal processing operations as is done in
-\cite{zhang11}.  Furthermore, attribute interpolation functions copes
+\cite{zhang11}.  Furthermore, attribute aggregate functions copes
 with data validation, which we will discuss latter in this section.
 
-We can globally define the behaviour of attribute interpolation
-functions in the discrete (set) and continuous forms. However, $T(m')$
-rest undefined as the resulting consolidation time is subject to
-interpretation, which we discuss below. Next, we exemplify some
-operators for both cases. For simplicity, we present examples with
-real numbers but they could also be integers, strings or more
-elaborated structures such as arrays.
-
-
-First, purely discrete interpolation (d) which resembles typical set
-operators. We must define the consolidation interval depending on $i$,
-let $S'=S(T_0,T_f]$:
+Next, we exemplify some discrete operators. For simplicity, we present
+examples with real numbers but they could also be integers, strings or
+more elaborated structures such as arrays. Let $S'=S(T_0,T_f]$:
 \begin{itemize}
 \item maximum$^d$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall m
     \in S'}(V(m))$. It summarises $S'$ with the maximum of
@@ -369,179 +360,8 @@ let $S'=S(T_0,T_f]$:
 \end{itemize}
 
 
-Second, continuous interpolation (c). Note that we need a continuous
-function $S(t)$ which is discussed below. Let $t\in\mathbb{R}$:
-\begin{itemize}
-\item maximum$^c$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall t
-    \in [T_0,T_f]}(S(t))$. It summarises $S(t)$ with the maximum in
-  interval $i$.
-\item last$^c$: $S \times i \mapsto m'$ where $V(m') = S(T_f)$. It
-  summarises $S(t)$ with the last value in interval $i$.
-\item average$^c$: $S \times i \mapsto m'$ where $V(m') =
-  \frac{\int_{T_0}^{T_f} S(t)dt}{T_f-T_0}$. It summarises $S(t)$ with
-  the average value, that is the area, in interval $i$. $S(t)$ must be
-  continuous on the closed interval.
-\end{itemize}
 
-
-In the design of the attribute interpolation function we can interpret
-a time series in different ways, that is what we call the
-representation of a time series. Keogh et al.\ \cite{last:keogh} cite
-some possible representations for time series such as \emph{Fourier
-  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
-\emph{Piecewise Linear Representation} (PLR). This last is remarked as
-the most used owing to the most common representation is with linear
-functions \cite{keogh01}.
-
-The variety of time series representations results in a variety of the
-same attribute interpolation functions. As instance, a maximum
-attribute interpolation function may give different values if we
-consider a linear or a constant piecewise representation. Therefore,
-the time series representation results in attribute interpolation
-functions families.
-
-
-Next, we show two possible families for attribute interpolation
-functions: one for time series represented by a staircase function and
-another by a impulse train function.
-
-First, we show some attribute interpolation functions for time series
-represented by a staircase function, that is with a piecewise constant
-representation.  We define a new representation for time series called
-\emph{zero-order hold backwards}
-(zohe%from \emph{zero-order hold everted}
-) consisting in holding each value until the preceding value, which a
-similar representation is used by RRDtool \cite{lisa98:oetiker}.
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
-$S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards}
-continuous representation along time $t$:
-%continuous definition of the time series using left-continuous step functions.
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t)^{\text{zohe}} =  
-\begin{cases}
-  \infty & \text{if } t > T(\max S) \\%\text{not defined}
-  V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
-\end{cases}
-\]
-
-
-We now define the \emph{zero-order hold backwards} attribute
-interpolation function family as the one interpreting the
-consolidation time interval left-continuous $i=(T_0,T_f]$ and the
-resulting interpolated measure's time always being $T_f$, in
-accordance to the \emph{zero-order hold backwards} representation
-being defined using left-continuous step functions.  Let
-$S=\{m_0,\ldots,m_k\}$ be a time series and $i=[T_0,T_f]$ be a time
-interval, the attribute interpolation function $f^{\text{zohe}}\in f$
-summarises $S$ with a measure, $f^{zohes}: S=\{m_0,\ldots,m_k\} \times
-i=[T_0,T_f] \mapsto m'$ where $m'=(v',T_f)$ and the resulting value
-$v'$ depends on the attribute interpolation function calculated from
-the subset $S^{zohe}=(S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$.
-% hauria de ser seltemp:$S[t_0,t_f]^{zohe}$.
-
-On the one hand, purely discrete zohe interpolation functions (zohed)
-have $T(m')=T_f$ and remain with $V(m')$ as defined above except for
-$S'$, let now $S'=S^{zohe}$:
-\begin{itemize}
-\item maximum$^{zohed}$: $S \times i \mapsto m'$ where $V(m') =
-  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
-\item last$^{zohed}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$ and
-  $T(m')=T_f$.
-\item arithmetic mean$^{zohed}$: $S \times i \mapsto m'$ where $V(m')
-  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
-  $T(m')=T_f$. 
-\end{itemize}
-On the other hand, continuous zohe interpolation functions (zohec)
-have also $T(m')=T_f$ and we must define $V(m')$ in the piecewise
-approach, let now $S'=S^{zohe}$:
-\begin{itemize}
-\item maximum$^{zohec}$: $S \times i \mapsto m'$ where $V(m') =
-  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
-%Note: \emph{Minimum interpolation} can be defined dually.
-\item last$^{zohec}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$
-  and $T(m')=T_f$.
-\item average$^{zohec}$: $S \times i \mapsto m'$ where $V(m') =
-  \frac{1}{T_f-T_0} \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) +
-  \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]$,
-  $T(m')=T_f$, $o=\min(S')$, $n=\max(S')$, and $S''= S' - \{o\}$.
-% \[
-%   \begin{split}
-%   T(m')  = & \frac{1}{T_f-T_0} 
-%   \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) \\
-%     & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
-%    \end{split}
-%   \]
-\end{itemize}
-
-
-
-Second, we show attribute interpolation functions for time series
-represented by a impulse train function, that is by Dirac delta
-functions.  We define a new representation for time series called
-\emph{Dirac delta} ($\delta$) based on the Dirac delta, which is a
-function that is zero everywhere except at zero.
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define $S(t)^{\delta}$
-as its \emph{Dirac delta} continuous representation along time $t$:
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t)^{\delta} =  \sum V(m)\delta(t-T(m)) =
-\begin{cases}
-  V(m) & \text{if }  t=T(m) \\
-  0 & \text{else} 
-\end{cases}
-\]
-
-We now define the \emph{Dirac delta} attribute interpolation function
-family as the one interpreting the consolidation time interval closed
-$i=[T_0,T_f]$ and the resulting interpolated measure's time always
-being $\frac{T_f+T_0}{2}$.  Let $S=\{m_0,\ldots,m_k\}$ be a time
-series and $i=[T_0,T_f]$ be a time interval, the attribute
-interpolation function $f^{\delta}\in f$ summarises $S$ with a
-measure, $f^{\delta}: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto
-m'$ where $m'=(v',\frac{T_f+T_0}{2})$ and the resulting value
-$v'$ depends on the attribute interpolation function calculated from
-the subset $S^{\delta}=S-(S(-\infty,T_0)+S(T_f,+\infty))$.
-% equivalent a l'interval tancat S[T_0,T_f]
-
-On the one hand, purely discrete $\delta$ interpolation functions
-($\delta d$) have $T(m')=\frac{T_f+T_0}{2}$ and remain with $V(m')$ as
-defined above, let now $S'=S^{\delta}$:
-\begin{itemize}
-\item maximum$^{\delta d}$: $S \times i \mapsto m'$ where $V(m') =
-  \max_{\forall m \in S'}(V(m))$ and $T(m')=\frac{T_f+T_0}{2}$.
-\item last$^{\delta d}$: $S \times i \mapsto m'$ where $V(m') =
-  \max(S')$ and $T(m')=\frac{T_f+T_0}{2}$.
-\item arithmetic mean$^{\delta d}$: $S \times i \mapsto m'$ where $V(m')
-  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
-  $T(m')=\frac{T_f+T_0}{2}$. 
-\end{itemize}
-On the other hand, continuous $\delta$ interpolation functions
-($\delta c$) have also $T(m')=\frac{T_f+T_0}{2}$ and we must define
-$V(m')$ in the piecewise approach, let now $S'=S^{\delta}$:
-\begin{itemize}
-\item maximum$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') = \max(0,
-  \max_{\forall m \in S'}(V(m)))$ and $T(m')=\frac{T_f+T_0}{2}$.
-\item last$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') = 
-\begin{cases}
-V(m) & \text{if } m\in S':T(m)=T_f \\
-0 & \text{else}
-\end{cases}$ and $T(m')=\frac{T_f+T_0}{2}$.
-\item average$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') =
-  \sum\limits_{\forall m \in S'} V(m)$ and
-  $T(m')=\frac{T_f+T_0}{2}$. Note that delta function has the
-  fundamental property $\int \delta(t)dt = 1$.
-\end{itemize}
-
-In these two families shown, the continuous and the discrete form for
-maximum and last functions coincide in the zohe interpretation but do
-not coincide in the $\delta$ interpretation. 
-
-
-
-With reference to data validation, attribute interpolation functions
+With reference to data validation, attribute aggregate functions
 can cope with this process. When data has not been captured or has
 been captured erroneously, it must be treated as unknown data.
 \begin{itemize}
@@ -553,36 +373,31 @@ been captured erroneously, it must be treated as unknown data.
   reasonable time or we capture data that is clearly outside a
   reasonable limits.
 \end{itemize}
-As a consequence, attribute interpolation functions deals with these
+As a consequence, attribute aggregate functions deals with these
 two subprocesses: treating unknown data and marking data as
 unknown. Following with real numbers, let unknown value be represented
 by the improper element infinity ($\infty$).  
 
-An attribute interpolation functions treating unknown data is a one
-that can calculate a result when there are unknown values in the
-original time series, $f^u: S \times i \mapsto m'$ where $\exists m \in
-S: V(m)=\infty$. Although from a purely scientific point of view
-operating with unknown data makes unknown result, interpolation
-functions are free to calculate whatever is needed such as time series
-analysis does with data reconstruction.
+An attribute aggregate functions treating unknown data is a one that
+can calculate a result when there are unknown values in the original
+time series, $f^u: S \times i \mapsto m'$ where $\exists m \in S:
+V(m)=\infty$. Although from a strict point of view operating with
+unknown data makes unknown result, aggregate functions are free to
+calculate whatever is needed such as time series analysis does with
+data reconstruction.
 
-For example, we can redefine the average$^{c}$ interpolation function
-into one capable of treating unknown values by keeping the known area;
-that is, total known area is spread on the time interval.
-average$^{cu}$: $S \times i \mapsto m'$ where $V(m') =
-\frac{\int_{T_0}^{T_f} S^u(t)dt}{T_f-T_0}$ and $S^u(t)=
-\begin{cases}
-  0 &\text{if }  S(t)=\infty\\
-  S(t) & \text{else }
-\end{cases}$.
+For example, we can redefine the arithmetic mean$^{d}$ aggregate function
+into one capable of treating unknown values by keeping the known mean;
+that is, total known mean is spread on the time interval.
+arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' = \text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq \infty\}$.
 
 
-An attribute interpolation functions marking data as unknown is a one
+An attribute aggregate functions marking data as unknown is a one
 that can give unknown value as the resulting measure's value, $f^{mu}:
 S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
 
-For example, we can define a maximum interpolation, based on the
-maximum$^d$ interpolation, that returns unknown if there is a
+For example, we can define a maximum aggregate, based on the
+maximum$^d$ aggregate, that returns unknown if there is a
 measure's value bigger than 2.  maximum$^{dmu2}$: $S \times i
 \mapsto m'$ where $V(m') = 
 \begin{cases}
@@ -592,7 +407,7 @@ measure's value bigger than 2.  maximum$^{dmu2}$: $S \times i
 
 %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
     
-In conclusion, a huge amount of attribute interpolation functions can
+In conclusion, a huge amount of attribute aggregate functions can
 be defined and no global assumptions can be made. Therefore, MTSMS
 must give freedom to the users to define their own functions.
 

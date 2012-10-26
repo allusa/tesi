@@ -2,12 +2,13 @@
 
 #isense
 
+import os.path
 import csv
 import time, datetime
 
 from roundrobinson.roundrobinson import MRD
 from roundrobinson.serietemporal import Mesura
-from roundrobinson.interpoladors import mitjana
+from roundrobinson.interpoladors import zohed_maximum, zohed_arithmetic_mean
 from roundrobinson.consultes import consulta
 from roundrobinson.operadors import consolidatot, tauactual
 from roundrobinson.plot import plot_screen, plot_dir
@@ -49,10 +50,10 @@ def crea_mrd(temps,valors,tzero=0,debug=False):
 
     #configuració base de dades multiresolució
     mrd = MRD()
-    mrd.afegeix_disc(h5,24,mitjana,zero)
-    mrd.afegeix_disc(d2,20,mitjana,zero)
-    mrd.afegeix_disc(d15,12,mitjana,zero)
-    mrd.afegeix_disc(d50,12,mitjana,zero)
+    mrd.afegeix_disc(h5,24,zohed_arithmetic_mean,zero)
+    mrd.afegeix_disc(d2,20,zohed_arithmetic_mean,zero)
+    mrd.afegeix_disc(d15,12,zohed_arithmetic_mean,zero)
+    mrd.afegeix_disc(d50,12,zohed_arithmetic_mean,zero)
 
     if debug:
         print tauactual(mrd)
@@ -80,10 +81,10 @@ def crea_mrd2(temps,valors,tzero=0,debug=False):
 
     #configuració base de dades multiresolució
     mrd = MRD()
-    mrd.afegeix_disc(h5,48,mitjana,zero)
-    mrd.afegeix_disc(d2,40,mitjana,zero)
-    mrd.afegeix_disc(d15,24,mitjana,zero)
-    mrd.afegeix_disc(d50,24,mitjana,zero)
+    mrd.afegeix_disc(h5,48,zohed_arithmetic_mean,zero)
+    mrd.afegeix_disc(d2,40,zohed_arithmetic_mean,zero)
+    mrd.afegeix_disc(d15,24,zohed_arithmetic_mean,zero)
+    mrd.afegeix_disc(d50,24,zohed_arithmetic_mean,zero)
 
     if debug:
         print tauactual(mrd)
@@ -105,6 +106,11 @@ def crea_mrd2(temps,valors,tzero=0,debug=False):
 
 if __name__ == '__main__':
 
+    directori = 'matriu0'
+    print "S'emmagatzemaran dades a {0}/".format(directori)
+    if os.path.exists(directori):
+        raise Exception("El directori no ha d'existir")
+    
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
     temps,valors = llegeix_dades('../../dades/iSense_2010-2011/matriu0.csv')
@@ -112,8 +118,8 @@ if __name__ == '__main__':
     mrd = crea_mrd(temps,valors,tzero,debug=True)
     print "S'ha farcit i consolidat la base de dades"
 
-    print 'Emmagatzemant dades a matriu0/'
-    plot_dir(mrd,'matriu0')
+    print 'Emmagatzemant dades a {0}/'.format(directori)
+    plot_dir(mrd,directori)
 
     print 'Creant gràfic'
     plot_screen(mrd)
