@@ -149,6 +149,8 @@ class SerieTemporal(set):
 
         `s[r:t]` correspon a la definició S(r,t] on r i t són dos temps. `s[r:]`correspon a la definició S(r,infinit), així com `s[:t]`correspon a S(-infinit,t] i `s[:]`correspon a S(-infinit,infinit).
 
+        `s["-i":t]` correspon a S[-infinit,t).
+
 
         Per implementació a Python cal definir l'element `s[i]`, el qual es fa correspondre amb m in S: T(m) = i
 

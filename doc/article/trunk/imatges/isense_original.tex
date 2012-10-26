@@ -1,0 +1,13 @@
+\usetikzlibrary{dateplot}    
+\begin{tikzpicture}
+    \begin{axis}[
+        date coordinates in=x,
+%        xticklabel={\pgfcalendar{tickcal}{\tick}{\tick}{\pgfcalendarshorthand{m}{.}}},
+        xticklabel={\pgfcalendarmonthshortname{\month} \year},
+        xticklabel style= {rotate=15,anchor=east},
+        xlabel=Time,
+        ylabel=Temperature (K),
+        ]
+       \addplot[blue] file {dades/matriu0.originalbyday.dat};
+  \end{axis}
+\end{tikzpicture}

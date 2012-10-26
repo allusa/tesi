@@ -6,7 +6,7 @@ Multiresolution database plot tools
 import os
 
 from consultes import consulta
-from operadors import llista_ordenada, tauactual
+from operadors import tauactual
 
 import datetime
 from matplotlib import pyplot as plt
@@ -18,7 +18,7 @@ def _test_crea_mrd(temps,valors,tzero=0,debug=False):
 
     from roundrobinson import MRD
     from serietemporal import Mesura
-    from interpoladors import mitjana
+    from interpoladors import mitjana, zohed_maximum
     from operadors import consolidatot
 
     #temps segons Unix Time Epoch (segons)
@@ -32,10 +32,13 @@ def _test_crea_mrd(temps,valors,tzero=0,debug=False):
 
     #configuració base de dades multiresolució
     mrd = MRD()
+
     mrd.afegeix_disc(h5,24,mitjana,zero)
     mrd.afegeix_disc(d2,20,mitjana,zero)
     mrd.afegeix_disc(d15,12,mitjana,zero)
     mrd.afegeix_disc(d50,12,mitjana,zero)
+
+    mrd.afegeix_disc(h5,24,zohed_maximum,zero)
 
     if debug:
         print tauactual(mrd)
@@ -152,7 +155,7 @@ def plot_screen(mrd):
     #pyplot.plot(temps,valors)
 
     #plot dades discs
-    mrdordenat = llista_ordenada(mrd)
+    mrdordenat = sorted(mrd)
 
     for index,rd in enumerate(mrdordenat):
         st = rd.D.s

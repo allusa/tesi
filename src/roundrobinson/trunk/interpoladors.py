@@ -82,3 +82,96 @@ def area(s,i):
     v /= float(tf-t0)
     return Mesura(v,tf)    
     
+
+
+
+
+
+
+def _zohe_interval(s,i):
+    """
+    Calculates the time series' interval for zohe representation
+    Szohe = S(T0,Tf] U {min(S-S(-inf,Rf))}
+
+    >>> m1 = Mesura(10,1)
+    >>> m2 = Mesura(10,2)
+    >>> m3 = Mesura(40,5)
+    >>> s = SerieTemporal()
+    >>> s.add(m1); s.add(m2); s.add(m3)
+    >>>    
+    >>> _zohe_interval(s,(1,5))
+    SerieTemporal([m(10,2), m(40,5)])
+    >>> _zohe_interval(s,(0,5))
+    SerieTemporal([m(10,1), m(10,2), m(40,5)])
+    """
+    t0,tf = i 
+    m = min(s-s["-i":tf])
+    ms = SerieTemporal()
+    ms.add(m)
+
+    return s[t0:tf].union(ms)
+
+
+
+def zohed_maximum(s,i):
+    """
+    zohe discrete maximum aggregate function
+    Coincides with zohec maximum
+    """
+    return zohec_maximum(s,i)
+
+def zohec_maximum(s,i):
+    """
+    zohe continuous maximum aggregate function
+
+    >>> m1 = Mesura(10,1)
+    >>> m2 = Mesura(10,2)
+    >>> m3 = Mesura(40,5)
+    >>> s = SerieTemporal()
+    >>> s.add(m1); s.add(m2); s.add(m3)
+    >>>   
+    >>> zohec_maximum(s,(1,5))
+    m(40,5)
+    >>> zohec_maximum(s,(1,3))
+    m(40,3)
+    >>> zohec_maximum(s,(1,2))
+    m(10,2)
+    """
+    t0,tf = i
+    sp = _zohe_interval(s,i)
+    vm = -float('inf')
+    for m in sp:
+        if m.v > vm:
+            vm = m.v
+    
+    return Mesura(vm,tf)
+
+
+def zohed_arithmetic_mean(s,i):
+    """
+    zohe discrete arithmetic mean aggregate function
+
+    >>> m1 = Mesura(10,1)
+    >>> m2 = Mesura(10,2)
+    >>> m3 = Mesura(40,5)
+    >>> s = SerieTemporal()
+    >>> s.add(m1); s.add(m2); s.add(m3)
+    >>>   
+    >>> zohed_arithmetic_mean(s,(1,5))
+    m(25.0,5)
+    >>> zohed_arithmetic_mean(s,(1,3))
+    m(25.0,3)
+    >>> zohed_arithmetic_mean(s,(1,2))
+    m(10.0,2)
+    """
+    t0,tf = i
+    sp = _zohe_interval(s,i)
+    card = len(sp)
+
+    vm = 0
+    for m in sp:
+        vm += m.v
+
+    vm /= float(card)
+    
+    return Mesura(vm,tf)

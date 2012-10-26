@@ -1,19 +1,34 @@
 \section{Example}
 
-Next we show an example database for a real time series data. Original
-data is shown in figure~\ref{fig:exemple:original} for a period of one
-year and a half. In this plot we can see that there is missing
-data, some outlying observations, and there are 146709 stored values.
+Next we show an example database for a real time series data.  In a
+distributed sensor monitoring system temperature data has been
+captured from various sensors. In this example we focus on data from
+one sensor.  \todo{explicar pel·lícula}
 
+Original data is shown in figure~\ref{fig:exemple:original} for a
+period of one year and a half, from 29th April 2010 to 18th October
+2011. In this plot we can see that there is missing data and some
+outlying observations, and there are 146709 stored values.
+
+
+% \begin{figure}[tp]
+% \centering
+% \includegraphics[width=12cm]{\experiment/original.pdf}
+% \caption{Example of a time series data}
+% \label{fig:exemple:original}
+% \end{figure}
 
 \begin{figure}[tp]
-\centering
-\includegraphics[width=12cm]{\experiment/original.pdf}
-\caption{Example of a time series data}
-\label{fig:exemple:original}
+  \centering
+  \scriptsize
+  \input{imatges/isense_original.tex}
+  \caption{Example of a temperature time series data}
+  \label{fig:exemple:original}
 \end{figure}
 
 
+
+\subsection{Schema}
 
 \begin{figure}[tp]
 \centering
@@ -43,18 +58,90 @@ first \emph{disc} which has a capacity of 12 \emph{measures} so that
 results in a 600 days piece.
 
 
-In order to illustrate this example all the resolution discs are
-consolidated by zohe arithmetic mean interpolation function
-(defined in sec.~\ref{sec:model:interpolador}) owing to its simplicity. The
-resulting time series in the MTSDB are shown in
+
+\subsection{Attribute aggregate functions}
+
+In order to illustrate this example we consolidate all the resolution
+discs by zohe arithmetic mean aggregate function and by zohe maximum
+aggregate function, which we define next, owing to their simplicity.
+
+In the design of the attribute aggregate function we can interpret
+a time series in different ways, that is what we call the
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite
+some possible representations for time series such as \emph{Fourier
+  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
+\emph{Piecewise Linear Representation} (PLR). This last is remarked as
+the most used owing to the most common representation is with linear
+functions \cite{keogh01}.
+
+The variety of time series representations results in a variety of the
+same attribute aggregate functions. As instance, a maximum attribute
+aggregate function may give different values if we consider a linear
+or a constant piecewise representation. Therefore, the time series
+representation results in attribute aggregate functions families.
+
+In this example we show a possible family of attribute aggregate
+functions for time series represented by a staircase function, that is
+with a piecewise constant representation.  We define a new
+representation for time series called \emph{zero-order hold backwards}
+(zohe%from \emph{zero-order hold everted}
+) consisting in holding each value until the preceding value, which a
+similar representation is used by RRDtool \cite{lisa98:oetiker}.
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+$S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards}
+continuous representation along time $t$:
+%continuous definition of the time series using left-continuous step functions.
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t)^{\text{zohe}} =  
+\begin{cases}
+  \infty & \text{if } t > T(\max S) \\%\text{not defined}
+  V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
+\end{cases}
+\]
+
+
+We now define the \emph{zero-order hold backwards} attribute
+aggregate function family as the one interpreting the
+consolidation time interval left-continuous $i=(T_0,T_f]$ and the
+resulting interpolated measure's time always being $T_f$, in
+accordance to the \emph{zero-order hold backwards} representation
+being defined using left-continuous step functions.  Let
+$S=\{m_0,\ldots,m_k\}$ be a time series and $i=[T_0,T_f]$ be a time
+interval, the attribute aggregate function $f^{\text{zohe}}\in f$
+summarises $S$ with a measure, $f^{zohes}: S=\{m_0,\ldots,m_k\} \times
+i=[T_0,T_f] \mapsto m'$ where $m'=(v',T_f)$ and the resulting value
+$v'$ depends on the attribute aggregate function calculated from
+the subset $S^{zohe}=(S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$.
+
+Let $S'=S^{zohe}$:
+\begin{itemize}
+\item maximum$^{zohe}$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
+\item arithmetic mean$^{zohe}$: $S \times i \mapsto m'$ where $V(m')
+  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
+  $T(m')=T_f$. 
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Results}
+
+The resulting time series in the MTSDB are shown in
 figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
 resolution disc's time series. We can see that arithmetic mean
 interpolation function has filled missing data and filtered outlayers
-observations, and the number of stored values has been reduced to
-92. However, now there is only high resolution for recent data. Note
-that October 18th 2011 corresponds to the 'now ' point showed in
-figure \ref{fig:exemple:window} and May 2010 corresponds to the oldest
-data known.
+observations\todo{note that we could use a non filling aggregate such
+  as a unknown marking function}, and the number of stored values has
+been reduced to 92. However, now there is only high resolution for
+recent data. Note that 18th October 2011 corresponds to the 'now '
+point showed in figure \ref{fig:exemple:window} and May 2010
+corresponds to the oldest data known.
 
 \begin{figure}[tp]
 \centering
@@ -63,6 +150,16 @@ data known.
 \label{fig:exemple:4mrd}
 \end{figure}
 
+\begin{figure}[tp]
+  \centering
+  \scriptsize
+  \input{imatges/isense_4mrdb.tex}
+  \caption{Resolution discs' time series in a MTSDB}
+  \label{fig:exemple:original}
+\end{figure}
+
+
+
 We can easily have a bigger MTSDB by doubling the capacity of
 resolution discs. Then we have 184 stored values and the resulting
 time series are shown in figure~\ref{fig:exemple:4mrdbigger}.  Now we
@@ -70,14 +167,14 @@ can see preserve more historic but no more resolution. Although plots seem
 smoother, this is only a visualisation issue owing to the fact we are
 showing more points in the same width.
 
-
-
 \begin{figure}[tp]
 \centering
 \includegraphics[width=12cm]{\experiment/isense3.pdf}
 \caption{Different resolutions for a time series in a bigger MTSDB}
 \label{fig:exemple:4mrdbigger}
 \end{figure}
+
+
 
 
 The union of the four time subseries is shown in
@@ -106,3 +203,5 @@ some interesting information.
 %%% TeX-master: "main"
 %%% ispell-local-dictionary: "british"
 %%% End:
+
+% LocalWords:  multiresolution
