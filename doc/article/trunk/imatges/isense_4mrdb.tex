@@ -14,6 +14,7 @@
         every mark/.append style={mark size=6},
         major tick length=0.1cm,
         minor tick length=0.066cm,
+        very thin,
     }
 }
 
@@ -83,7 +84,32 @@
         xlabel=Time (UTC),
         ylabel=Temperature (K),
 %v>1.4        unbounded coords=jump,
+        legend style = {anchor = north, draw = none},
+        legend columns = 4,
+        ymax = 320,
+        clip=false,
+%v1.6     restrict y to domain=0:320,
+        y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
         ]
-       \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb-matriu0/3.csv};
+       \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb-matriu0/4.csv};
+       \addlegendentry{mean};
+
+       \addplot[const plot mark right, orange, mark=*] table[col sep=comma] {dades/mrdb-matriu0/3.csv};
+       \addlegendentry{max};
+
+       \node at (axis cs:2011-10-12,330) {(2938)};
+       \node (break) at (axis cs:2011-08-23,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
+    \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
+
   \end{axis}
 \end{tikzpicture}
+%http://tex.stackexchange.com/questions/46422/axis-break-in-pgfplots
+
+%http://tex.stackexchange.com/questions/52409/insert-a-separate-mark-inside-a-pgfplots-graph
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% ispell-local-dictionary: "british"
+%%% End:

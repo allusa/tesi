@@ -85,59 +85,6 @@ Tot i que el el món d'analàsis de sèries temporals trobem multitud de metodol
 
 \printbibliography{}
 
-%%--------------------------
-%%Posició de totes les llegendes
-\pgfplotsset{every axis legend/.append style={
-        at={(0.05,0.95)},
-        anchor=north west}}
-%%--------------------------
-
-
-\begin{figure}[tbp]
-  \centering
-% \pgfplotstabletypeset[string type]{dades.txt}
-  \begin{tikzpicture}
-    \begin{axis}[
-        date coordinates in=x,
-        xticklabel style= {rotate=15,anchor=east},
-        xlabel=temps,
-        x label style={anchor=north west},
-        ylabel=quantitat (bytes),
-        ]
-    \addplot[blue]
-      table[col sep=comma] {dades.txt};
-    \addlegendentry{Valor 1}
-
-    \addplot+[const plot mark right, red, mark=none]
-      table[col sep=comma] {dades.txt};
-    \addlegendentry{Valor 2}
-
-
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Evolució del valor d'un comptador monòton}
-  \label{fig:velocitats:counter}
-\end{figure}
-
-
-
-\begin{figure}[tbp]
-  \centering
-  \input{\experiment/matriu0.tex}
-  \caption{Evolució del valor d'un comptador monòton}
-  \label{fig:velocitats:counter}
-\end{figure}
-
-
-\begin{figure}[tbp]
-  \centering
-  \input{\experiment/roundrobinson/exemple.tex}
-  \caption{Evolució del valor d'un comptador monòton}
-  \label{fig:velocitats:counter}
-\end{figure}
-
-
-
 \end{document}
 
 

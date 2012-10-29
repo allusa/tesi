@@ -38,6 +38,43 @@ def _test_crea_mrd(temps,valors,tzero=0,debug=False):
     mrd.afegeix_disc(d15,12,mitjana,zero)
     mrd.afegeix_disc(d50,12,mitjana,zero)
 
+    if debug:
+        print tauactual(mrd)
+
+    #farciment de mesures amb consolidació
+    for t,v in zip(temps,valors):
+        m = Mesura(v,t)
+        mrd.update(m)
+
+        consolidatot(mrd,debug)
+
+    return mrd
+
+
+def _test_crea_mrd2(temps,valors,tzero=0,debug=False):
+
+    from roundrobinson import MRD
+    from serietemporal import Mesura
+    from interpoladors import mitjana, zohed_maximum
+    from operadors import consolidatot
+
+    #temps segons Unix Time Epoch (segons)
+    zero = tzero
+    h1 = 3600
+    h5 = 5 * h1
+    d1 = 24 * h1
+    d2 = 2 * d1
+    d15 = 15 * d1
+    d50 = 50 * d1
+
+    #configuració base de dades multiresolució
+    mrd = MRD()
+
+    mrd.afegeix_disc(h5,24,mitjana,zero)
+    mrd.afegeix_disc(d2,20,mitjana,zero)
+    mrd.afegeix_disc(d15,12,mitjana,zero)
+    mrd.afegeix_disc(d50,12,mitjana,zero)
+
     mrd.afegeix_disc(h5,24,zohed_maximum,zero)
 
     if debug:
@@ -51,6 +88,7 @@ def _test_crea_mrd(temps,valors,tzero=0,debug=False):
         consolidatot(mrd,debug)
 
     return mrd
+
 
 
 
@@ -113,7 +151,8 @@ def _formatador(delta):
 
 
 
-def plot_screen(mrd):
+
+def plot_screen_consulta(mrd):
     """
     Pinta els discs resolució d'una base de dades multiresolució
 
@@ -121,9 +160,12 @@ def plot_screen(mrd):
     >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
     >>> #plot_screen(mrd)
     """
-
     #figura amb tota la MRD
-    sttot = consulta(mrd)
+    interpolador = mrd[0].B.f
+
+    imrd = [rd for rd in mrd if rd.B.f == interpolador]
+
+    sttot = consulta(imrd)
     vt = []
     vv = []
     while len(sttot):
@@ -139,6 +181,14 @@ def plot_screen(mrd):
 
 
 
+def plot_screen(mrd):
+    """
+    Pinta els discs resolució d'una base de dades multiresolució
+
+    >>> ut = 3600
+    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    >>> #plot_screen(mrd)
+    """
 
 
     #pinta
@@ -270,7 +320,15 @@ def plot_dir(mrd,dirc):
     for i,rd in enumerate(sorted(mrd)):
         nom = '{0}.csv'.format(i)
         f = open(os.path.join(dirc,nom),'w')
+
+
+        delta = rd.B.delta
+        interpolador = rd.B.f.__name__
+        cardinal = rd.D.k
+        cap = '# RD: {0}s |{1}| {2}\n'.format(delta,cardinal,interpolador)
+        f.write(cap)
         plot_file_coordinates(rd.D.s,f)
+
         f.close()
 
 
@@ -282,7 +340,7 @@ def plot_latex_coordinates(st):
     :rtype: string
     >>> ut = 3600
     >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    >>> mrdo = llista_ordenada(mrd)
+    >>> mrdo = sorted(mrd)
     >>> print plot_latex_coordinates(mrdo[1].D.s)
                (1970-01-03 00:00:00,3.5)
                (1970-01-05 00:00:00,7.0)
@@ -396,6 +454,6 @@ def plot_latex(mrd):
 
 if __name__ == '__main__':
     ut = 3600
-    mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
     print plot_latex(mrd)
     #plot_dir(mrd,'exemple')

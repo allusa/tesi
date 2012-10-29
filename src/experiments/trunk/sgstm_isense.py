@@ -55,6 +55,9 @@ def crea_mrd(temps,valors,tzero=0,debug=False):
     mrd.afegeix_disc(d15,12,zohed_arithmetic_mean,zero)
     mrd.afegeix_disc(d50,12,zohed_arithmetic_mean,zero)
 
+    mrd.afegeix_disc(d50,12,zohed_maximum,zero)
+
+
     if debug:
         print tauactual(mrd)
 
@@ -113,7 +116,7 @@ if __name__ == '__main__':
     
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
-    temps,valors = llegeix_dades('../../dades/iSense_2010-2011/matriu0.csv')
+    temps,valors = llegeix_dades('isense/matriu0.csv')
     print "S'ha llegit el fitxer de dades"
     mrd = crea_mrd(temps,valors,tzero,debug=True)
     print "S'ha farcit i consolidat la base de dades"
