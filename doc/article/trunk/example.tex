@@ -42,20 +42,20 @@ In a multiresolution time series database (MTSDB) a time series is
 stored in different resolution pieces, that is in different 'time
 subseries'.  In this example we store the time series with high
 resolution at recent times and with low resolution at older times. The
-schema of this example is illustrated in figure
-\ref{fig:exemple:window}. At the top there are four \emph{discs} with
-different number of \emph{measures} and at the bottom there is a
-timeline showing the time series chopped along time. For recent times,
-every 5 hours a \emph{measure} is stored in the fourth \emph{disc}
-which has a capacity of 24 \emph{measures} so that results in a 5 day
-piece. For low mid times, every 2 days a \emph{measure} is stored in
-the third \emph{disc} which has a capacity of 20 \emph{measures} so
-that results in a 40 days piece. For high mid times, every 15 days a
-\emph{measure} is stored in the second \emph{disc} which has a
-capacity of 12 \emph{measures} so that results in a 180 days
-piece. For old times, every 50 days a \emph{measure} is stored in the
-first \emph{disc} which has a capacity of 12 \emph{measures} so that
-results in a 600 days piece.
+schema of this example is illustrated in
+figure~\ref{fig:exemple:window}. At the top there are four
+\emph{discs} with different number of \emph{measures} and at the
+bottom there is a timeline showing the time series chopped along
+time. For recent times, every 5 hours a \emph{measure} is stored in
+the fourth \emph{disc} which has a capacity of 24 \emph{measures} so
+that results in a 5 day piece. For low mid times, every 2 days a
+\emph{measure} is stored in the third \emph{disc} which has a capacity
+of 20 \emph{measures} so that results in a 40 days piece. For high mid
+times, every 15 days a \emph{measure} is stored in the second
+\emph{disc} which has a capacity of 12 \emph{measures} so that results
+in a 180 days piece. For old times, every 50 days a \emph{measure} is
+stored in the first \emph{disc} which has a capacity of 12
+\emph{measures} so that results in a 600 days piece.
 
 
 
@@ -134,7 +134,11 @@ Let $S'=S^{zohe}$:
 
 The resulting time series in the MTSDB are shown in
 figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
-resolution disc's time series. We can see that arithmetic mean
+resolution disc's time series. The time series is plotted with zohe
+continuous representation.
+
+
+We can see that arithmetic mean
 interpolation function has filled missing data and filtered outlayers
 observations\todo{note that we could use a non filling aggregate such
   as a unknown marking function}, and the number of stored values has
@@ -145,7 +149,7 @@ corresponds to the oldest data known.
 
 \begin{figure}[tp]
 \centering
-\includegraphics[width=12cm]{\experiment/isense2.pdf}
+\includegraphics[width=12cm]{\experiment/isense4.pdf}
 \caption{Different resolutions for a time series in a MTSDB}
 \label{fig:exemple:4mrd}
 \end{figure}
@@ -163,7 +167,7 @@ corresponds to the oldest data known.
 We can easily have a bigger MTSDB by doubling the capacity of
 resolution discs. Then we have 184 stored values and the resulting
 time series are shown in figure~\ref{fig:exemple:4mrdbigger}.  Now we
-can see preserve more historic but no more resolution. Although plots seem
+can preserve more historic but no more resolution. Although plots seem
 smoother, this is only a visualisation issue owing to the fact we are
 showing more points in the same width.
 
