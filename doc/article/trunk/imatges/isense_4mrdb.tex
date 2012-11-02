@@ -8,7 +8,7 @@
         legend style={font=\footnotesize},
         tick label style={font=\tiny},
         label style={font=\tiny},
-        title style={font=\small},
+        title style={font=\small,below, anchor=north,fill=white},
 %        every axis title shift=0pt,
 %        max space between ticks=15,
         every mark/.append style={mark size=6},
@@ -21,15 +21,11 @@
   \begin{tikzpicture}
     \begin{axis}[
         petit,
-%        width=\textwidth,
-%        height=3.5cm,
         title={RD: 5h $|24|$},
-        xlabel=Time (UTC),
         ylabel=Temperature (K),
 %
         date coordinates in=x,
         xticklabel={\pgfcalendarmonthshortname{\month} \day},
-        title style = {below, anchor=north,fill=white},
         ]
        \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb-matriu0/0.csv};
   \end{axis}
@@ -38,15 +34,12 @@
 
   \begin{tikzpicture}
     \begin{axis}[
-        width=\textwidth,
-        height=3.5cm,
+        petit,
         title={RD: 2d $|20|$},
-        xlabel=Time (UTC),
         ylabel=Temperature (K),
 %
         date coordinates in=x,
         xticklabel={\pgfcalendarmonthshortname{\month} \day},
-        title style = {below, anchor=north,fill=white},
         ]
        \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb-matriu0/1.csv};
   \end{axis}
@@ -58,7 +51,6 @@
         width=\textwidth,
         height=3.5cm,
         title={RD: 15d $|12|$},
-        xlabel=Time (UTC),
         ylabel=Temperature (K),
 %
         date coordinates in=x,

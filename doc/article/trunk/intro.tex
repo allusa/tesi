@@ -92,57 +92,6 @@ structures such as arrays.
 % than solving numerical methods for the continuous domain.
 
 
-\subsection{Related work}
-
-There are some prior works concerning TSMS. RRDtool from Oetiker
-\cite{rrdtool} is a free software database management system. It is
-designed to be used in monitoring systems. Because of this, it is
-focused to a particular kind of data, gauges and counters, and it
-lacks general time series operations. RRDtool can store multiple time
-resolution data. The work in this paper is partially inspired in
-RRDtool.
-
-Cougar \cite{bonnet01} is a sensor database system. It has two
-structures: one for sensor properties stored into relational tables
-and another for time series stored into data sequences from
-sensors. Time series have specific operations and can combine
-relations and sequences. Cougar target field is sensor networks, where
-sensor data is stored distributed in sensors. Queries are resolved
-combining sensor data in a data stream orientation, which improves
-processing performance. However, data streams imposes restriction on
-operators so this TSMS can not be generalised to other time series
-types. Moreover, sequences and relations can collide in representing
-ambiguously time series.
-
-
-SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
-database systems. These systems are intended for science applications,
-in which time series play a principal role. They structure time series
-into arrays in order to achieve multidimensional analysis and allow
-tables to store other data.  Although SciDB is based on arrays, in
-which it includes time series, it does not consider time series
-special needs, that is not considering how continuously voluminous
-data or temporal coherence are achieved.  In contrast, SciQL shows how
-some time series properties are achieved by the DBMS such as time
-series regularities, interpolation or correlation queries.  However,
-difference between tables and arrays seems too physical approached an
-consequently can collide in representing ambiguously time series.
-
-
-Bitemporal data and time series data are not exactly the same and so
-can not be treated interchangeably \cite{schmidt95}. However, there
-are some similarities between time series and bitemporal data that can
-be considered. First, extending a relational database model to manage
-bitemporal data shows the way to extend relational DBMS with new types
-and how to model them. Second, bitemporal data modelling settles some
-time-related concepts that can be extended to time series.
-
-The recent bitemporal data research in relational DBMS model terms
-\cite{date02:_tempor_data_relat_model} marks a promising
-foundation. It models bitemporal data as relations extended with time
-intervals attributes and extends relational operations in order to
-deal with related time aspects.
-
 
 
 
@@ -203,6 +152,57 @@ MTSMS improve TSMS features in various aspects:
 
 
 
+\subsection{Related work}
+
+There are some prior works concerning TSMS. 
+
+RRDtool from Oetiker \cite{rrdtool} is a free software database
+management system. It is designed to be used in monitoring
+systems. Because of this, it is focused to a particular kind of data,
+gauges and counters, and it lacks general time series
+operations. RRDtool can store multiple time resolution data. The work
+in this paper is partially inspired in RRDtool.
+
+Cougar \cite{bonnet01} is a sensor database system. It has two
+structures: one for sensor properties stored into relational tables
+and another for time series stored into data sequences from
+sensors. Time series have specific operations and can combine
+relations and sequences. Cougar target field is sensor networks, where
+sensor data is stored distributed in sensors. Queries are resolved
+combining sensor data in a data stream orientation, which improves
+processing performance. However, data streams imposes restriction on
+operators so this TSMS can not be generalised to other time series
+types. Moreover, sequences and relations can collide in representing
+ambiguously time series.
+
+
+SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
+database systems. These systems are intended for science applications,
+in which time series play a principal role. They structure time series
+into arrays in order to achieve multidimensional analysis and allow
+tables to store other data.  Although SciDB is based on arrays, in
+which it includes time series, it does not consider time series
+special needs, that is not considering how continuously voluminous
+data or temporal coherence are achieved.  In contrast, SciQL shows how
+some time series properties are achieved by the DBMS such as time
+series regularities, interpolation or correlation queries.  However,
+difference between tables and arrays seems too physical approached an
+consequently can collide in representing ambiguously time series.
+
+
+Bitemporal data and time series data are not exactly the same and so
+can not be treated interchangeably \cite{schmidt95}. However, there
+are some similarities between time series and bitemporal data that can
+be considered. First, extending a relational database model to manage
+bitemporal data shows the way to extend relational DBMS with new types
+and how to model them. Second, bitemporal data modelling settles some
+time-related concepts that can be extended to time series.
+
+The recent bitemporal data research in relational DBMS model terms
+\cite{date02:_tempor_data_relat_model} marks a promising
+foundation. It models bitemporal data as relations extended with time
+intervals attributes and extends relational operations in order to
+deal with related time aspects.
 
 
 
