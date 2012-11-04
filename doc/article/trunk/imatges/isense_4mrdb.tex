@@ -3,12 +3,14 @@
 
 \pgfplotsset{
    petit/.style={
+        ylabel=Temperature (K),
         width=\textwidth,
         height=3.5cm,
         legend style={font=\footnotesize},
-        tick label style={font=\tiny},
+        tick label style={font=\footnotesize},
         label style={font=\tiny},
         title style={font=\small,below, anchor=north,fill=white},
+        xticklabel style= {rotate=15,anchor=east},
 %        every axis title shift=0pt,
 %        max space between ticks=15,
         every mark/.append style={mark size=6},
@@ -22,10 +24,8 @@
     \begin{axis}[
         petit,
         title={RD: 5h $|24|$},
-        ylabel=Temperature (K),
-%
         date coordinates in=x,
-        xticklabel={\pgfcalendarmonthshortname{\month} \day},
+        xticklabel={\day\ },%\hour:\minute},
         ]
        \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb-matriu0/0.csv};
   \end{axis}
@@ -36,8 +36,6 @@
     \begin{axis}[
         petit,
         title={RD: 2d $|20|$},
-        ylabel=Temperature (K),
-%
         date coordinates in=x,
         xticklabel={\pgfcalendarmonthshortname{\month} \day},
         ]
@@ -48,11 +46,8 @@
 
   \begin{tikzpicture}
     \begin{axis}[
-        width=\textwidth,
-        height=3.5cm,
+        petit,
         title={RD: 15d $|12|$},
-        ylabel=Temperature (K),
-%
         date coordinates in=x,
 %        xticklabel={\pgfcalendar{tickcal}{\tick}{\tick}{\pgfcalendarshorthand{m}{.}}},
         xticklabel={\pgfcalendarmonthshortname{\month} \day},
@@ -65,17 +60,12 @@
 \end{tikzpicture}
 \begin{tikzpicture}
     \begin{axis}[
-        width=\textwidth,
-        height=3.5cm,
+        petit,
         date coordinates in=x,
-%        xticklabel={\pgfcalendar{tickcal}{\tick}{\tick}{\pgfcalendarshorthand{m}{.}}},
         xticklabel={\pgfcalendarmonthshortname{\month} \year},
-        xticklabel style= {rotate=15,anchor=east},
         title={RD: 50d $|12|$},
-        title style = {below, anchor=north,fill=white},
         xlabel=Time (UTC),
-        ylabel=Temperature (K),
-%v>1.4        unbounded coords=jump,
+%        unbounded coords=jump, %v>1.4
         legend style = {anchor = north, draw = none},
         legend columns = 4,
         ymax = 320,
@@ -89,7 +79,7 @@
        \addplot[const plot mark right, orange, mark=*] table[col sep=comma] {dades/mrdb-matriu0/3.csv};
        \addlegendentry{max};
 
-       \node at (axis cs:2011-10-12,330) {(2938)};
+       \node[right] at (axis cs:2011-10-12,330) {\mbox{(2938)}};
        \node (break) at (axis cs:2011-08-23,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
