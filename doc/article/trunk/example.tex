@@ -61,8 +61,10 @@ stored in the first \emph{disc} which has a capacity of 12
 \subsection{Attribute aggregate functions}
 
 In order to illustrate this example we consolidate all the resolution
-discs by zohe arithmetic mean aggregate function and by zohe maximum
-aggregate function, which we define next, owing to their simplicity.
+discs by zohe arithmetic mean aggregate function and the highest
+resolution disc by zohe maximum aggregate function, owing to their
+simplicity. Next, we show the process in designing both aggregate
+functions.
 
 In the design of the attribute aggregate function we can interpret
 a time series in different ways, that is what we call the
@@ -133,33 +135,40 @@ Let $S'=S^{zohe}$:
 
 The resulting time series in the MTSDB are shown in
 figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
-resolution disc's time series. The time series is plotted with zohe
-continuous representation.
+resolution disc's time series. Each graphic is titled by its
+resolutions disc's delta and cardinal values, and each attribute
+aggregate function is plotted with different colour.  The time series
+is plotted with zohe continuous representation. The time axis is shown
+in UTC units rounded to nearest time points in order to reduce
+printing space, for example the timestamp December 2010 is a rounding
+for a day between 1 and 31.
 
-
-We can see that arithmetic mean
-interpolation function has filled missing data and filtered outlayers
-observations\todo{note that we could use a non filling aggregate such
-  as a unknown marking function}, and the number of stored values has
-been reduced to 92. However, now there is only high resolution for
-recent data. Note that 18th October 2011 corresponds to the 'now '
-point showed in figure \ref{fig:exemple:window} and May 2010
-corresponds to the oldest data known.
-
-\begin{figure}[tp]
-\centering
-\includegraphics[width=12cm]{\experiment/isense4.pdf}
-\caption{Different resolutions for a time series in a MTSDB}
-\label{fig:exemple:4mrd}
-\end{figure}
 
 \begin{figure}[tp]
   \centering
   \scriptsize
   \input{imatges/isense_4mrdb.tex}
   \caption{Resolution discs' time series in a MTSDB}
-  \label{fig:exemple:original}
+  \label{fig:exemple:4mrd}
 \end{figure}
+
+
+We can see that arithmetic mean interpolation function has filled
+missing data and filtered outlayers observations; note that we could
+be stricter by using a non filling aggregate such as an unknown marking
+aggregate function. Moreover, the number of stored values has been
+reduced to 92. However, now there is only high resolution for recent
+data. Note that 18th October 2011 corresponds to the 'now ' point
+showed in figure \ref{fig:exemple:window} and May 2010 corresponds to
+the oldest data known.
+
+% \begin{figure}[tp]
+% \centering
+% \includegraphics[width=12cm]{\experiment/isense4.pdf}
+% \caption{Different resolutions for a time series in a MTSDB}
+% \label{fig:exemple:4mrd}
+% \end{figure}
+
 
 
 
@@ -170,12 +179,12 @@ can preserve more historic but no more resolution. Although plots seem
 smoother, this is only a visualisation issue owing to the fact we are
 showing more points in the same width.
 
-\begin{figure}[tp]
-\centering
-\includegraphics[width=12cm]{\experiment/isense3.pdf}
-\caption{Different resolutions for a time series in a bigger MTSDB}
-\label{fig:exemple:4mrdbigger}
-\end{figure}
+% \begin{figure}[tp]
+% \centering
+% \includegraphics[width=12cm]{\experiment/isense3.pdf}
+% \caption{Different resolutions for a time series in a bigger MTSDB}
+% \label{fig:exemple:4mrdbigger}
+% \end{figure}
 
 
 
@@ -193,12 +202,12 @@ some interesting information.
 
 
 
-\begin{figure}[tp]
-\centering
-\includegraphics[width=12cm]{\experiment/isense3-tot.pdf}
-\caption{All time series united from the bigger MTSDB}
-\label{fig:exemple:4mrdtot}
-\end{figure}
+% \begin{figure}[tp]
+% \centering
+% \includegraphics[width=12cm]{\experiment/isense3-tot.pdf}
+% \caption{All time series united from the bigger MTSDB}
+% \label{fig:exemple:4mrdtot}
+% \end{figure}
 
 
 
