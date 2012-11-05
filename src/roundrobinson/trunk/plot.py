@@ -5,8 +5,9 @@ Multiresolution database plot tools
 """
 import os
 
+from serietemporal import Mesura, SerieTemporal
 from consultes import consulta
-from operadors import tauactual
+from operadors import tauactual, sel_interpolador
 
 import datetime
 from matplotlib import pyplot as plt
@@ -152,33 +153,41 @@ def _formatador(delta):
 
 
 
-def plot_screen_consulta(mrd):
+def plot_screen_consult(mrd):
     """
     Pinta els discs resolució d'una base de dades multiresolució
 
     >>> ut = 3600
-    >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    >>> #plot_screen(mrd)
+    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    >>> #plot_screen_consult(mrd)
     """
     #figura amb tota la MRD
-    interpolador = mrd[0].B.f
+    interpoladors = set()
+    for rd in mrd:
+        interpoladors.add(rd.B.f)
 
-    imrd = [rd for rd in mrd if rd.B.f == interpolador]
-
-    sttot = consulta(imrd)
-    vt = []
-    vv = []
-    while len(sttot):
-        m = min(sttot)
-        sttot.discard(m)
-        temps = datetime.datetime.fromtimestamp(m.t)
-        vt.append(temps)
-        vv.append(m.v)
-
+    #pintem per cada interpolador en el mateix gràfic
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(1,1,1)
-    ax2.plot(vt,vv,label='MRD')
 
+    for interpolador in interpoladors:
+
+        imrd = sel_interpolador(mrd,interpolador)
+
+        sttot = consulta(imrd)
+        vt = []
+        vv = []
+        while len(sttot):
+            m = min(sttot)
+            sttot.discard(m)
+            temps = datetime.datetime.fromtimestamp(m.t)
+            vt.append(temps)
+            vv.append(m.v)
+
+        ax2.plot(vt,vv,label=interpolador.__name__)
+
+    ax2.legend()
+    plt.show()
 
 
 def plot_screen(mrd):
@@ -306,19 +315,36 @@ def plot_file_coordinates(st,f):
         s = '{0},{1}\n'.format(t,v)
         f.write(s)
 
-def plot_dir(mrd,dirc):
-    """
-    Write a mrd values into a filesystem
 
-    :param f: Directory name
-    :type f: string
+def _plot_file_rd_min(rd,f):
     """
-    if os.path.exists(dirc):
-        raise Exception('Directory name exists')
+    Write first unknown (infinite) value from the resolution disc
+    """
+    delta = rd.B.delta
+    st = rd.D.s
 
-    os.mkdir(dirc)
+    if len(st) == 0:
+        return
+
+    mmin = min(st) 
+    minf = Mesura(float('inf'), mmin.t-delta)
+    sinf = SerieTemporal()
+    sinf.add(minf)
+
+    plot_file_coordinates(sinf,f)
+
+
+def plot_dir(mrd,dirc,basename=''):
+    """
+    Write a mrd values into a filesystem. Directory `dirc`must be created.
+
+    :param dirc: Directory name
+    :type dirc: string
+    :param basename: Base name for files
+    :type basename: string
+    """
     for i,rd in enumerate(sorted(mrd)):
-        nom = '{0}.csv'.format(i)
+        nom = '{0}{1}.csv'.format(basename,i)
         f = open(os.path.join(dirc,nom),'w')
 
 
@@ -327,7 +353,38 @@ def plot_dir(mrd,dirc):
         cardinal = rd.D.k
         cap = '# RD: {0}s |{1}| {2}\n'.format(delta,cardinal,interpolador)
         f.write(cap)
+        
+        _plot_file_rd_min(rd,f)
         plot_file_coordinates(rd.D.s,f)
+
+        f.close()
+
+
+def plot_dir_consult(mrd,dirc,basename='union'):
+    """
+    Write a mrd consult operation values into a filesystem.
+    Consult is the all union for every interpolator.
+
+    :param dirc: Directory name
+    :type dirc: string
+    """
+    #figura amb tota la MRD
+    interpoladors = set()
+    for rd in mrd:
+        interpoladors.add(rd.B.f)
+
+    #pintem per cada interpolador en el mateix gràfic
+    for i,interpolador in enumerate(interpoladors):
+        imrd = sel_interpolador(mrd,interpolador)
+        sttot = consulta(imrd)
+
+        nom = '{0}{1}.csv'.format(basename,i)
+        f = open(os.path.join(dirc,nom),'w')
+
+        interpoladornom = interpolador.__name__
+        cap = '# TS: consult all {0}\n'.format(interpoladornom)
+        f.write(cap)
+        plot_file_coordinates(sttot,f)
 
         f.close()
 
@@ -456,4 +513,6 @@ if __name__ == '__main__':
     ut = 3600
     mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
     print plot_latex(mrd)
+    #os.mkdir('exemple')
     #plot_dir(mrd,'exemple')
+    #plot_dir_consult(mrd,'exemple')
