@@ -248,15 +248,15 @@ def opera(s,f):
         m.v = f(m.v,m.t)
     return ss
 
-def mitjana(v,t):
+def test_mitjana(v,t):
     """
     Calcula la mitjana per cada mesura d'una sèrie temporal multivaluada
 
     >>> s1 = _s1test()
     >>> s2 = _s2test()   
-    >>> opera(s1,mitjana)
+    >>> opera(s1,test_mitjana)
     SerieTemporal([m(10,1), m(10,2), m(40,5)])
-    >>> opera(fusio(s1,s2),mitjana)
+    >>> opera(fusio(s1,s2),test_mitjana)
     SerieTemporal([m(35.0,0), m(40.0,1), m(40.0,2), m(55.0,4), m(45.0,5), m(inf,10)])
     """
     try:

@@ -11,7 +11,7 @@ from roundrobinson.serietemporal import Mesura
 from roundrobinson.interpoladors import zohed_maximum, zohed_arithmetic_mean
 from roundrobinson.consultes import consulta
 from roundrobinson.operadors import consolidatot, tauactual
-from roundrobinson.plot import plot_screen, plot_dir
+from roundrobinson.plot import plot_screen, plot_screen_consult, plot_dir, plot_dir_consult
 
 
 
@@ -89,6 +89,8 @@ def crea_mrd2(temps,valors,tzero=0,debug=False):
     mrd.afegeix_disc(d15,24,zohed_arithmetic_mean,zero)
     mrd.afegeix_disc(d50,24,zohed_arithmetic_mean,zero)
 
+    mrd.afegeix_disc(d50,24,zohed_maximum,zero)
+
     if debug:
         print tauactual(mrd)
 
@@ -113,19 +115,23 @@ if __name__ == '__main__':
     print "S'emmagatzemaran dades a {0}/".format(directori)
     if os.path.exists(directori):
         raise Exception("El directori no ha d'existir")
+    os.mkdir(directori)
     
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
     temps,valors = llegeix_dades('isense/matriu0.csv')
     print "S'ha llegit el fitxer de dades"
-    mrd = crea_mrd(temps,valors,tzero,debug=True)
+    mrd = crea_mrd2(temps,valors,tzero,debug=True)
     print "S'ha farcit i consolidat la base de dades"
 
     print 'Emmagatzemant dades a {0}/'.format(directori)
     plot_dir(mrd,directori)
+    print 'Emmagatzemant unió total a {0}/'.format(directori)
+    plot_dir_consult(mrd,directori)
 
     print 'Creant gràfic'
     plot_screen(mrd)
+    plot_screen_consult(mrd)
     print 'Gràfic tancat'
 
 

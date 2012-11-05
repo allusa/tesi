@@ -7,8 +7,9 @@ one sensor.  \todo{explicar pel·lícula}
 
 Original data is shown in figure~\ref{fig:exemple:original} for a
 period of one year and a half, from 29th April 2010 to 18th October
-2011. In this plot we can see that there is missing data and some
-outlying observations, and there are 146709 stored values.
+2011.  The time series is plotted interpolating linearly its measures.
+In this plot we can see that there is missing data and some outlying
+observations, and there are 146709 stored values.
 
 
 % \begin{figure}[tp]
@@ -137,7 +138,7 @@ The resulting time series in the MTSDB are shown in
 figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
 resolution disc's time series. Each graphic is titled by its
 resolutions disc's delta and cardinal values, and each attribute
-aggregate function is plotted with different colour.  The time series
+aggregate function is plotted with different colour.  Each time series
 is plotted with zohe continuous representation. The time axis is shown
 in UTC units rounded to nearest time points in order to reduce
 printing space, for example the timestamp December 2010 is a rounding
@@ -146,7 +147,6 @@ for a day between 1 and 31.
 
 \begin{figure}[tp]
   \centering
-  \scriptsize
   \input{imatges/isense_4mrdb.tex}
   \caption{Resolution discs' time series in a MTSDB}
   \label{fig:exemple:4mrd}
@@ -162,15 +162,6 @@ data. Note that 18th October 2011 corresponds to the 'now ' point
 showed in figure \ref{fig:exemple:window} and May 2010 corresponds to
 the oldest data known.
 
-% \begin{figure}[tp]
-% \centering
-% \includegraphics[width=12cm]{\experiment/isense4.pdf}
-% \caption{Different resolutions for a time series in a MTSDB}
-% \label{fig:exemple:4mrd}
-% \end{figure}
-
-
-
 
 We can easily have a bigger MTSDB by doubling the capacity of
 resolution discs. Then we have 184 stored values and the resulting
@@ -179,21 +170,22 @@ can preserve more historic but no more resolution. Although plots seem
 smoother, this is only a visualisation issue owing to the fact we are
 showing more points in the same width.
 
-% \begin{figure}[tp]
-% \centering
-% \includegraphics[width=12cm]{\experiment/isense3.pdf}
-% \caption{Different resolutions for a time series in a bigger MTSDB}
-% \label{fig:exemple:4mrdbigger}
-% \end{figure}
+\begin{figure}[tp]
+  \centering
+  \input{imatges/isense_4mrdb-bigger.tex}
+  \caption{Resolution discs' time series in a bigger MTSDB}
+  \label{fig:exemple:4mrdbigger}
+\end{figure}
 
 
 
 
 The union of the four time subseries is shown in
-figure~\ref{fig:exemple:4mrdtot}. In the intervals where time
+figure~\ref{fig:exemple:4mrdtot}.  In the intervals where time
 subseries overlap, the one with the highest resolution is
 chosen. Therefore we obtain a piecewise function where each piece has
-a different resolution. Comparing this figure with the original
+a different resolution.  Each time series is plotted interpolating
+linearly its measures.  Comparing this figure with the original
 figure~\ref{fig:exemple:original}, as we have applied mean
 interpolation it resembles an incremental low-pass filter. Concluding,
 we have shown that with this attribute interpolation function we want
@@ -209,6 +201,12 @@ some interesting information.
 % \label{fig:exemple:4mrdtot}
 % \end{figure}
 
+\begin{figure}[tp]
+  \centering
+  \input{imatges/isense_mrdb-all.tex}
+  \caption{All time series united from the MTSDB}
+  \label{fig:exemple:4mrdtot}
+\end{figure}
 
 
 %%% Local Variables:
