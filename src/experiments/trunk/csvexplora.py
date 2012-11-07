@@ -1,4 +1,5 @@
 
+# -*- encoding: utf-8 -*-
 
 """
 CSV PARSER
@@ -92,6 +93,34 @@ def pgfplot(temps,valors):
 
 
 
+def decimate(temps,valors):
+    """
+    Fes una decimació per tal que hi hagi un punt cada dia
+    """
+    #intercanvia entre min(False) i max(True)
+    ext = min
+
+    s = ''
+    tant = temps[0]
+    vant = valors[0]
+    for t,v in zip(temps,valors):
+        if tant.date() == t.date():
+            vant = ext(vant,v)
+        else:
+            s += '{0} {1}\n'.format(tant.strftime('%Y-%m-%d'),vant)
+            tant = t
+            vant = v
+            if ext is min:
+                ext = max
+            else:
+                ext = min
+
+    s += '{0} {1}\n'.format(tant.strftime('%Y-%m-%d'),vant)
+
+
+    return s
+
+
 if __name__ == '__main__':
 
     if len(sys.argv) < 2:
@@ -108,3 +137,13 @@ if __name__ == '__main__':
         print pgfplot(temps,valors)
 
 
+    # file.csv decimate out.dat
+    if len(sys.argv) > 2 and sys.argv[2] == 'decimate':
+        if len(sys.argv) == 4:
+            ftx = sys.argv[3]
+            s = decimate(temps,valors)
+            f = open(ftx,'a')
+            f.write(s)
+            f.close()
+        else:
+            print decimate(temps,valors)

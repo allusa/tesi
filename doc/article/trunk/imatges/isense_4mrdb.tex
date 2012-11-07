@@ -17,6 +17,10 @@
         major tick length=0.1cm,
         minor tick length=0.066cm,
         very thin,
+        every axis legend/.append style={
+          at={(1,-0.3)},
+          anchor=north east,
+          draw = none}
     }
 }
 
@@ -66,7 +70,7 @@
         title={RD: 50d $|12|$},
         xlabel=Time (UTC),
 %        unbounded coords=jump, %v>1.4
-        legend style = {anchor = north, draw = none},
+%        legend style = {anchor = north, draw = none},
         legend columns = 4,
         ymax = 320,
         clip=false,
@@ -79,7 +83,7 @@
        \addplot[const plot mark right, orange, mark=*] table[col sep=comma] {dades/mrdb-matriu0/4.csv};
        \addlegendentry{max};
 
-       \node[right] at (axis cs:2011-10-12,330) {\mbox{(2938)}};
+       \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
        \node (break) at (axis cs:2011-08-23,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
