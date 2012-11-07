@@ -121,7 +121,7 @@ if __name__ == '__main__':
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
     temps,valors = llegeix_dades('isense/matriu0.csv')
     print "S'ha llegit el fitxer de dades"
-    mrd = crea_mrd2(temps,valors,tzero,debug=True)
+    mrd = crea_mrd(temps,valors,tzero,debug=True)
     print "S'ha farcit i consolidat la base de dades"
 
     print 'Emmagatzemant dades a {0}/'.format(directori)
