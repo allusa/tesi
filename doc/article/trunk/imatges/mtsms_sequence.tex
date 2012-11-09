@@ -1,4 +1,4 @@
-\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,positioning,fit,petri}
+%\usetikzlibrary{positioning}
 \begin{tikzpicture}
 
   %referencia
@@ -84,15 +84,22 @@
   \node [left=-1.5mm of y10] {10};
 
   \node (inici) [above=4cm of s0] {db born};
-  \node (inici2) [below=4cm of s0] {db born};
+  \node (inici2) [below=4cm of s0] {};
   \draw[-,dotted] (inici) to (inici2);
 
   \node (fi) [above=4.4cm of s9.east] {now};
-  \node (fi2) [below=4.4cm of s9.east] {now};
+  \node (fi2) [below=4.4cm of s9.east] {};
   \draw[-,dotted] (fi) to (fi2);
 
 
+  \node (fut) [below right=1mm and 1mm of fi] {future};
+  \draw[->] (fut.south west) to (fut.south east);
 
+  \node (pas) [below left=1mm and 1mm of fi] {past};
+  \draw[->] (pas.south east) to (pas.south west);
+
+  \node (unk) [below left=1mm and 1mm of inici] {unknown};
+  \draw[->] (unk.south east) to (unk.south west);
 \end{tikzpicture}
 
 

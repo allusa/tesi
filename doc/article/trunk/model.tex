@@ -1,4 +1,11 @@
 \section{Preliminaries}
+\label{sec:model:preliminaries}
+
+In this section we clarify the time series' definitions and
+nomenclature which we use next when defining the MTSMS model.  The
+main objects of a MTSMS are \emph{measures} and \emph{time series}. A
+\emph{measure} is a value measured in an instant in time and a
+\emph{time series} is a collection of \emph{measures}.
 
 A \emph{measure} is a tuple $(v,t)$ where $v\in{\mathbb{R}}$ is the
 value of the measure and $t \in \mathbb{R}$ is the instant in time of
@@ -74,18 +81,15 @@ A MTSMS manages time series. A time series is regarded as a
 chronological data collection, so it needs an appropriate management
 by the DBMS.  The MTSMS model is an storage solution for a time series
 where, in short, the time series information is spread in different
-time resolutions.
-
-The main objects of a MTSMS are \emph{measures} and \emph{time
-  series}. A \emph{measure} is a value measured in an instant in time
-and a \emph{time series} is a collection of \emph{measures}. A
-database from a MTSMS contains one time series, which internally is
-stored in multiple resolutions of itself.
+time resolutions.  The objects of a MTSMS are \emph{measures} and
+\emph{time series} as defined in section~\ref{sec:model:preliminaries}
+and each database from a MTSMS contains only one time series.
 
 \begin{figure}[tp]
 \centering
-\setlength{\unitlength}{0.3mm}
-\input{\imatges/model/locales/mtsdb-internal_architecture.tex}
+%\setlength{\unitlength}{0.3mm}
+%\input{\imatges/model/locales/mtsdb-internal_architecture.tex}
+\input{imatges/mtsms-arquitectura_interna.tex}
 \caption{Architecture of MTSMS model}
 \label{fig:model:mtsdb}
 \end{figure}
@@ -111,13 +115,14 @@ subseries'.
 
 Regarding operations, MTSMS model needs operators to change the time
 intervals between measures. Mainly, these operators are
-\emph{aggregate} functions and \emph{consolidation} actions. In
-this section we design the basic MTSMS model, that is six basic data
-model definitions -- \emph{measure}, \emph{time series},
-\emph{buffer}, \emph{disc}, \emph{resolution disc}, and
-\emph{multiresolution database} -- and the operations to create a
-\emph{multiresolution database}, to add \emph{measures} and to
-\emph{interpolate} and \emph{consolidate} time series.
+\emph{attribute aggregate} functions and \emph{consolidation}
+actions. In this section we design the basic MTSMS model, that is four
+basic data model definitions -- \emph{buffer}, \emph{disc},
+\emph{resolution disc}, and \emph{multiresolution database} -- and the
+operations to create a \emph{multiresolution database}, to add
+\emph{measures} and to \emph{consolidate} time series. \emph{Attribute
+  aggregate} functions are required but not linked to the model,so we
+define them apart in section~\ref{sec:model:interpolador}.
 
 
 
@@ -224,18 +229,18 @@ discarded, $\text{addDisc}: D=(S,k) \times m \mapsto D'$ where $ D' =
 \subsection{Resolution disc}
 
 A resolution disc is a disc which stores a regular time series. It is
-composed of a disc and a buffer with the time series to be
-regularised.
+composed of a buffer, with the time series to be regularised, and a
+disc, with the time series regularised.
 
 \begin{definition}[Resolution disc]
   A \emph{resolution disc} is a tuple $(B,D)$ where $B$
   is a buffer and $D$ is a disc.
 \end{definition}
  
-On the one hand, the definitions of empty buffer and empty disc imply
-an empty resolution disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
+An empty buffer and empty disc imply an empty resolution disc
+$R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
 
-On the other hand, the operators of a resolution disc are related to
+The operators of a resolution disc are related to
 the buffer and disc ones.
 
 Operator \emph{addResolutionDisc} is the addition of a measure to the
@@ -265,7 +270,7 @@ $\text{consolidateResolutionDisc } : R=(B,D) \mapsto R'$ where $R'=
 
 \subsection{Multiresolution Database}\label{sec:model:rrd}
 
-A multiresolution database is an archive of resolution discs which
+A multiresolution database is a set of resolution discs which
 share the input of measures, that is they store the same time
 series. A time series is stored regularised and distributed with
 different resolutions in the various resolution discs, as has been seen
@@ -338,12 +343,12 @@ f: \text{Time series} \times \text{time interval} \longrightarrow
 f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
 \]
 
-There can be different attribute aggregate functions in order to
-summarise a time series. As instance, we may want to calculate
-statistics from a time series such as the maximum value, the average
-or apply digital signal processing operations as is done in
-\cite{zhang11}.  Furthermore, attribute aggregate functions copes
-with data validation, which we will discuss latter in this section.
+Different types of attribute aggregate functions may be utilised in
+order to summarise a time series. As instance, we may calculate
+attribute statistics from a time series such as the maximum value, the
+average or apply digital signal processing operations as is done in
+\cite{zhang11}.  Furthermore, attribute aggregate functions copes with
+data validation, which we will discuss latter in this section.
 
 Next, we exemplify some discrete operators. For simplicity, we present
 examples with real numbers but they could also be integers, strings or

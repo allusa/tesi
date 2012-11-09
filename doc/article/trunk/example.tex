@@ -101,7 +101,7 @@ S(t)^{\text{zohe}} =
 We now define the \emph{zero-order hold backwards} attribute
 aggregate function family as the one interpreting the
 consolidation time interval left-continuous $i=(T_0,T_f]$ and the
-resulting interpolated measure's time always being $T_f$, in
+resulting aggregated measure's time always being $T_f$, in
 accordance to the \emph{zero-order hold backwards} representation
 being defined using left-continuous step functions.  Let
 $S=\{m_0,\ldots,m_k\}$ be a time series and $i=[T_0,T_f]$ be a time
@@ -147,7 +147,7 @@ for a day between 1 and 31.
 \end{figure}
 
 
-We can see that arithmetic mean interpolation function has filled
+We can see that arithmetic mean aggregate function has filled
 missing data and filtered outlayers observations; note that we could
 be stricter by using a non filling aggregate such as an unknown marking
 aggregate function. Moreover, the number of stored values has been
@@ -180,12 +180,15 @@ figure~\ref{fig:exemple:4mrdtot}.  In the intervals where time
 subseries overlap, the one with the highest resolution is
 chosen. Therefore we obtain a piecewise function where each piece has
 a different resolution.  Each time series is plotted interpolating
-linearly its measures.  Comparing this figure with the original
-figure~\ref{fig:exemple:original}, as we have applied mean
-interpolation it resembles an incremental low-pass filter. Concluding,
-we have shown that with this attribute interpolation function we want
-not an approximation to the original function but an extraction of
-some interesting information.
+linearly its measures, note that this linearly visualisation seems
+right time displaced as time series comes from a zohe aggregation.
+Comparing this figure with the original
+figure~\ref{fig:exemple:original}, as we have applied mean aggregation
+it resembles an incremental low-pass filter and the maximum
+aggregation resembles an envelope function. Concluding, we have shown
+that with these attribute aggregate functions we want not an
+approximation to the original function but an extraction of some
+interesting information.
 
 
 
