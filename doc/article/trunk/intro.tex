@@ -1,22 +1,21 @@
 \section{Introduction}
 
-Modern society depends on the smooth operation of many complex
+Modern society depends on the expert operation of many complex
 engineering systems which provides products and services. Examples
 include electric power systems, water distributions networks,
 transportation systems, manufacturing processes, intelligent
-buildings, communication systems, etc. The emergence of networked
-embedded systems and sensor/actuator networks has made possible the
-collection of large amounts of data for monitoring and control of such
-complex systems. In most application, these data need to be processed
-and synthesised efficiently to provide relevant information to
-engineers, researchers, accident investigators, operators, and many
-other users.  
+buildings, communication systems, etc. The emergence of embedded
+systems and sensor networks has made possible the collection of large
+amounts of data for monitoring and control of such complex systems. In
+most application, these data need to be processed and synthesised
+efficiently to provide relevant information to engineers, researchers,
+accident investigators, operators, and many other users.
 
 Nevertheless, before using the collected signals, it is of primary
 importance to promptly detecting eventual sensor failures or
 malfunctions and possibly reconstructing the incorrect signals in
 order to avoid processing misleading information which may lead to
-unsafe and/or inefficient actions.  In all these instances a measure
+unsafe or inefficient actions.  In all these instances, acquired data
 is associated with a time stamp, which implies that the correctness of
 those data depends not only on the measured value but also on the time
 as it is collected. When observations are collected at specific time
@@ -24,8 +23,8 @@ interval, large data sets in the form of time series are
 generated~\cite{basu07:_autom}.  
 
 Time series are defined as a collection of observations made
-chronologically \cite{fu11}, in \cite{last:hetland} they are also
-called time sequences.  Time series are usually stored in a
+chronologically \cite{fu11}, accordingly they are also called time
+sequences \cite{last:hetland}.  Time series are usually stored in a
 database. Usually the managing software to store this data are
 relational database management systems (RDBMS). However, using a RDBMS
 as a time series backend suffers some drawbacks
@@ -78,7 +77,7 @@ time correlations, or calculating distances between two time
 series. TSMS must respect the temporal coherence of the time series.
 In the context of statistics, aggregation of time series is also
 common operation. Aggregation consists in summarising a time series
-subset with an statistic such as the mean, the maximum, or the mode.
+subset with an attribute such as the mean, the maximum, or the mode.
 
 A particular feature of time series is representation. A time series
 is discrete in the set sense, that is a set of value and time
@@ -98,11 +97,22 @@ structures such as arrays.
 %MTSMS
 \subsection{Multiresolution features}
 
-In this paper, we introduce a new data model for a TSMS: a TSMS with
-multiresolution capabilities. This model allows to store time series
-using different time resolutions and organised in an aggregated way. The
-model is specifically designed to cope well with bounded storage
-computers like those found in sensor systems.
+In this paper, we introduce a new data model for a multiresolution
+TSMS (MTSMS). This model allows to store time series using different
+time resolutions and organised in an aggregated way. The model is
+specifically designed to cope well with bounded storage computers like
+those found in sensor systems.
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/mtsms_sequence.tex}
+  \caption{Multiresolution diagram snapshot}
+  \label{fig:mtsms:sequence}
+\end{figure}
+
+\todo{explicar figura \ref{fig:mtsms:sequence}}
+
 
 MTSMS improve TSMS features in various aspects:
 \begin{itemize}
@@ -113,7 +123,7 @@ MTSMS improve TSMS features in various aspects:
   the most interesting segments of data are stored. This segments are
   seen as different resolutions for the same time series and the user
   configures how they are extracted and summarised by defining
-  different interpolation steps and functions. Multiresolution can
+  different consolidation steps and functions. Multiresolution can
   also be useful at visualisation time as the user is able to select
   the best time range and time step that fits into the screen; there
   is no need to process with more quantity of data than the one that
@@ -153,16 +163,6 @@ MTSMS improve TSMS features in various aspects:
 
 
 
-\begin{figure}[tp]
-  \centering
-  \input{imatges/mtsms_sequence.tex}
-  \caption{Multiresolution diagram snapshot}
-  \label{fig:mtsms:sequence}
-\end{figure}
-
-
-
-
 \subsection{Related work}
 
 There are some prior works concerning TSMS. 
@@ -183,8 +183,8 @@ sensor data is stored distributed in sensors. Queries are resolved
 combining sensor data in a data stream orientation, which improves
 processing performance. However, data streams imposes restriction on
 operators so this TSMS can not be generalised to other time series
-types. Moreover, sequences and relations can collide in representing
-ambiguously time series.
+types. 
+%Moreover, sequences and relations can collide in representing ambiguously time series.
 
 
 SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
@@ -197,10 +197,10 @@ special needs, that is not considering how continuously voluminous
 data or temporal coherence are achieved.  In contrast, SciQL shows how
 some time series properties are achieved by the DBMS such as time
 series regularities, interpolation or correlation queries.  However,
-difference between tables and arrays seems too physical approached an
+difference between tables and arrays seems too physical approached and
 consequently can collide in representing ambiguously time series.
 
-
+Bitemporal DBMS is another database field related with time.
 Bitemporal data and time series data are not exactly the same and so
 can not be treated interchangeably \cite{schmidt95}. However, there
 are some similarities between time series and bitemporal data that can

@@ -7,11 +7,11 @@ and manage consistently its temporal dimension.
 
 Our MTSMS model proposes to store a time series split into time
 subseries, which we call resolution discs.  Each resolution disc has a
-different resolution and is compacted with an attribute interpolation
+different resolution and is compacted with an attribute aggregate
 function. Therefore, in a multiresolution database the configuration
 parameters are the quantity of resolution discs and the three
 parameters associated with each: the consolidation step, the attribute
-interpolation function and the capacity.
+aggregate function and the capacity.
 
 The data model shown is the first step to develop a complete model for
 a MTSMS but in future the operations will be defined. In this context,
@@ -22,7 +22,7 @@ upon the generic TSMS model.
 
 In an example we have shown a possible application of a MTSMS. The
 resulting database has the information we have extracted with the
-attribute interpolation function. We show that in this example we want
+attribute aggregate function. We show that in this example we want
 not an approximation to the original function but an extraction of
 some interesting information. Then the database is ready to answer
 time series questions keeping in mind that it holds this information
@@ -55,7 +55,7 @@ nodes. Then queries should be resolved distributed: if adequate
 resolution is available then it is calculated, else query is sent to
 sensor.  With reference to data streams in MTSMS, it seems that
 buffers should be reviewed to incorporate streaming capabilities and
-interpolation functions should be restricted only to those being able
+aggregate functions should be restricted only to those being able
 to calculate incrementally.
 
 
