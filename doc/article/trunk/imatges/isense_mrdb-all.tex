@@ -39,6 +39,9 @@
         y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
         ]
 
+       \addplot[black!15] file {dades/matriu0.originalbyday.dat};
+       \addlegendentry{original};
+
        \addplot[blue] table[col sep=comma] {dades/mrdb-matriu0/union1.csv};
        \addlegendentry{mean};
 
@@ -49,8 +52,6 @@
        \node (break) at (axis cs:2011-09-25,325)[inner sep=0pt,minimum width=0.9em, minimum height=0.4ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
-       \addplot[black!15] file {dades/matriu0.originalbyday.dat};
-       \addlegendentry{original};
 
   \end{axis}
 \end{tikzpicture}

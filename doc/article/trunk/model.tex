@@ -7,10 +7,13 @@ main objects of a MTSMS are \emph{measures} and \emph{time series}. A
 \emph{measure} is a value measured in an instant in time and a
 \emph{time series} is a collection of \emph{measures}.
 
-A \emph{measure} is a tuple $(v,t)$ where $v\in{\mathbb{R}}$ is the
-value of the measure and $t \in \mathbb{R}$ is the instant in time of
-measurement. Let $m = (v,t)$ be a measure, $v$ is written as $V(m)$
-and $t$ is written as $T(m)$.
+A \emph{measure} is a tuple $(v,t)$ where $v$ is the value of the
+measure and $t \in \mathbb{R}$ is the instant in time of measurement.
+The values of a time series can be of any type; for simplicity
+examples are presented generally with integers or real numbers but can
+also be strings or structures such as arrays.  Let $m = (v,t)$ be a
+measure, $v$ is written as $V(m)$ and $t$ is written as $T(m)$.
+
 
 The time value defines the order between measures.  Let $m = (v_m,
 t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if and only
@@ -146,9 +149,9 @@ and the function is called attribute aggregate function.
 
 An empty buffer, or the initial buffer, $B_{\emptyset} =
 (\emptyset,t_0, \delta, f)$ is a buffer that has an empty time series,
-an initial consolidation time and predetermined $\delta$ and $f$. From
+an initial consolidation time $t_0$ and predetermined $\delta$ and $f$. From
 an empty buffer all the consolidation time instants can be calculated
-as $t_0+k\delta, k\in\mathbb{N}$.
+as $t_0+i\delta, i\in\mathbb{N}$.
 
 We define the operator \emph{addBuffer} as the addition of a new
 measure to buffer's time series, $\text{addBuffer}: B =
@@ -378,10 +381,11 @@ been captured erroneously, it must be treated as unknown data.
   reasonable time or we capture data that is clearly outside a
   reasonable limits.
 \end{itemize}
-As a consequence, attribute aggregate functions deals with these
-two subprocesses: treating unknown data and marking data as
-unknown. Following with real numbers, let unknown value be represented
-by the improper element infinity ($\infty$).  
+As a consequence, attribute aggregate functions deals with these two
+subprocesses: treating unknown data and marking data as
+unknown. Following with real numbers example, we have to extend the
+domain with a value that means 'unknown', let this unknown value be
+represented by the improper element infinity ($\infty$).
 
 An attribute aggregate functions treating unknown data is a one that
 can calculate a result when there are unknown values in the original
@@ -391,10 +395,16 @@ unknown data makes unknown result, aggregate functions are free to
 calculate whatever is needed such as time series analysis does with
 data reconstruction.
 
-For example, we can redefine the arithmetic mean$^{d}$ aggregate function
-into one capable of treating unknown values by keeping the known mean;
-that is, total known mean is spread on the time interval.
-arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' = \text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq \infty\}$.
+For example, arithmetic mean$^{d}$ aggregate function returns
+$V(m')=\infty$ if $\exists m \in S: V(m)=\infty$. 
+\todo{dissenyar una funció que tregui els unknown i després cridar a la mean original, potser s'entendrà més bé?}
+We can define a new
+mean function, based on the original arithmetic mean$^{d}$ aggregate,
+that is capable of treating unknown values by keeping the known mean;
+in other words, ignoring unknown values found in the time interval:
+arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+\text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq
+\infty\}$.
 
 
 An attribute aggregate functions marking data as unknown is a one
@@ -403,7 +413,7 @@ S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
 
 For example, we can define a maximum aggregate, based on the
 maximum$^d$ aggregate, that returns unknown if there is a
-measure's value bigger than 2.  maximum$^{dmu2}$: $S \times i
+measure's value bigger than 2:  maximum$^{dmu2}$: $S \times i
 \mapsto m'$ where $V(m') = 
 \begin{cases}
   \infty &\text{if }  m''>2\\
@@ -412,9 +422,24 @@ measure's value bigger than 2.  maximum$^{dmu2}$: $S \times i
 
 %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
     
-In conclusion, a huge amount of attribute aggregate functions can
-be defined and no global assumptions can be made. Therefore, MTSMS
-must give freedom to the users to define their own functions.
+In conclusion, a huge amount of attribute aggregate functions can be
+defined and no global assumptions can be made.  In the design of the
+attribute aggregate function we can interpret a time series in
+different ways, that is what we call the representation of a time
+series. Keogh et al.\ \cite{last:keogh} cite some possible
+representations for time series such as \emph{Fourier Transforms},
+\emph{Wavelets}, \emph{Symbolic Mappings} or \emph{Piecewise Linear
+  Representation} (PLR). This last is remarked as the most used owing
+to the most common representation is with linear functions
+\cite{keogh01}.
+
+The variety of time series representations results in a variety of the
+same attribute aggregate functions. As instance, a maximum attribute
+aggregate function may give different values if we consider a linear
+or a constant piecewise representation. Therefore, the time series
+representation results in attribute aggregate functions families.
+Therefore, MTSMS must give freedom to the users to define their own
+functions.
 
 
 
