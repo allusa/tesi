@@ -49,7 +49,10 @@ is not equi-time spaced.
 This paper focuses on Data Base Management Systems (DBMS) that store
 and treat data as time series. These are usually known as Time Series
 Data Base Management Systems (TSMS) \cite{dreyer94}.  We introduce a
-new data model for a TSMS that has multiresolution capabilities.
+new data model for a multiresolution TSMS (MTSMS). This model allows
+to store time series using different time resolutions and organised in
+an aggregated way. The model is specifically designed to cope well
+with bounded storage computers like those found in sensor systems.
 
 
 ** Paper structure **\todo{}
@@ -59,9 +62,7 @@ new data model for a TSMS that has multiresolution capabilities.
 \subsection{TSMS features}
 
 A TSMS is a special purpose DBMS aimed at storing and managing time
-series
-
-The main objective of TSMS is to put together two areas of study: time
+series. The main objective of TSMS is to put together two areas of study: time
 series analysis and DBMS.  Time series analysis theory studies
 formally a great amount of algorithms and methodologies that apply to
 time series, focusing on efficiency improving. DBMS theory studies
@@ -84,9 +85,7 @@ is discrete in the set sense, that is a set of value and time
 pairs. Representation is the function model approximating the time
 series to its continuous nature. TSMS operate on time series
 respecting the representation coherence. Furthermore, the values of a
-time series can be of any type; for simplicity examples are presented
-generally with integers or real numbers but can also be strings or
-structures such as arrays.
+time series can be of any type.
 % , preferably using piecewise operations in the set domain rather
 % than solving numerical methods for the continuous domain.
 
@@ -97,11 +96,9 @@ structures such as arrays.
 %MTSMS
 \subsection{Multiresolution features}
 
-In this paper, we introduce a new data model for a multiresolution
-TSMS (MTSMS). This model allows to store time series using different
-time resolutions and organised in an aggregated way. The model is
-specifically designed to cope well with bounded storage computers like
-those found in sensor systems.
+A MTSMS is a TSMS that has multiresolution capabilities.
+
+
 
 
 \begin{figure}[tp]
@@ -112,6 +109,7 @@ those found in sensor systems.
 \end{figure}
 
 \todo{explicar figura \ref{fig:mtsms:sequence}}
+Definir les resolucions forma part de la configuració l'esquema
 
 
 MTSMS improve TSMS features in various aspects:
@@ -200,11 +198,13 @@ series regularities, interpolation or correlation queries.  However,
 difference between tables and arrays seems too physical approached and
 consequently can collide in representing ambiguously time series.
 
-Bitemporal DBMS is another database field related with time.
-Bitemporal data and time series data are not exactly the same and so
-can not be treated interchangeably \cite{schmidt95}. However, there
-are some similarities between time series and bitemporal data that can
-be considered. First, extending a relational database model to manage
+Bitemporal DBMS is another database field related with
+time. Bitemporal data is mainly targeted at keeping historical events
+in the database by associating time intervals to data.  Bitemporal
+data and time series data are not exactly the same and so can not be
+treated interchangeably \cite{schmidt95}. However, there are some
+similarities between time series and bitemporal data that can be
+considered. First, extending a relational database model to manage
 bitemporal data shows the way to extend relational DBMS with new types
 and how to model them. Second, bitemporal data modelling settles some
 time-related concepts that can be extended to time series.
