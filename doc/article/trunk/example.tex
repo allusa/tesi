@@ -1,9 +1,10 @@
 \section{Example}
+\label{sec:example}
 
-Next we show an example database for a real time series data.  In a
-distributed sensor monitoring system temperature data has been
-captured from various sensors. In this example we focus on data from
-one sensor.  \todo{citar article isense}
+Next we show an example database for a real time series data.  It is
+situated in a distributed sensor monitoring system where temperature
+data has been captured from various sensors \cite{alippi10}. In this
+example we focus on data from one sensor. 
 
 Original data is shown in figure~\ref{fig:exemple:original} for a
 period of one year and a half, from 29th April 2010 to 18th October
@@ -121,7 +122,9 @@ aggregate function is plotted with different colour.  Each time series
 is plotted with zohe continuous representation. The time axis is shown
 in UTC units rounded to nearest time points in order to reduce
 printing space, for example the timestamp December 2010 is a rounding
-for a day between 1 and 31.
+for a day between 1 and 31. The temperature axis is shown in Kelvin
+units and outlayers are marked as discontinuities, for instance see
+the 2938 K maximum in the fourth plot.
 
 
 \begin{figure}[tp]
@@ -132,14 +135,20 @@ for a day between 1 and 31.
 \end{figure}
 
 
-We can see that arithmetic mean aggregate function has filled
-missing data and filtered outlayers observations; note that we could
-be stricter by using a non filling aggregate such as an unknown marking
-aggregate function. Moreover, the number of stored values has been
-reduced to 92. However, now there is only high resolution for recent
-data. Note that 18th October 2011 corresponds to the 'now ' point
-showed in figure \ref{fig:exemple:window} and May 2010 corresponds to
-the oldest data known.
+In all the four plots, we can see that arithmetic mean aggregate
+function has filled missing data and filtered outlayers
+observations. This is due to the aggregate function coming from a zohe
+interpretation, that is known values are time left hold. Otherwise, we
+could be stricter by using a non filling aggregate such as an unknown
+marking aggregate function as stated in
+section~\ref{sec:model:interpolador}.
+
+Moreover, in the MTSDB the number of stored values has been reduced to
+92, which is the sum of disc's cardinalities. However, now there is
+only high resolution for recent data. Note that 18th October 2011
+corresponds to the 'now ' point showed in figure
+\ref{fig:exemple:window} and May 2010 corresponds to the oldest data
+known.
 
 
 We  can  easily  have a  bigger  MTSDB  by  doubling the  capacity  of
@@ -160,9 +169,10 @@ figures as there is no more known historic.
 
 
 With the multiresolution database filled now we may want to ask
-queries, in which we are currently working.  For example, one query
-could be to unite the resolution discs in order to see the complete
-graphic.  The union of the four time subseries is shown in
+queries, in which we are currently working in order to develop a model
+for multiresolution operators.  For example, one query could be to
+unite the resolution discs in order to see the complete graphic.  The
+union of the four time subseries is shown in
 figure~\ref{fig:exemple:4mrdtot}.  In the intervals where time
 subseries overlap, the one with the highest resolution is
 chosen. Therefore we obtain a piecewise function where each piece has
@@ -172,10 +182,11 @@ right time displaced as time series comes from a zohe aggregation.
 Comparing this figure with the original
 figure~\ref{fig:exemple:original}, as we have applied mean aggregation
 it resembles an incremental low-pass filter and the maximum
-aggregation resembles an envelope function. Concluding, we have shown
-that with these attribute aggregate functions we want not an
-approximation to the original function but an extraction of some
-interesting information.
+aggregation resembles an envelope function. 
+
+Concluding, we have shown that with these attribute aggregate
+functions we want not an approximation to the original function but an
+extraction of some interesting information.
 
 
 

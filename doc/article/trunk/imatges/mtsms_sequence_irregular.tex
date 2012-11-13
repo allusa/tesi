@@ -1,0 +1,119 @@
+%\usetikzlibrary{positioning}
+\begin{tikzpicture}
+
+  \node[node distance=1mm] (0) {0};
+  \node[node distance=1mm] (-1) [left=of 0]{\phantom{9}};
+  \node[node distance=1mm] (1) [right=of 0] {\phantom{1}};
+  \node[node distance=1mm] (2) [right=of 1] {2};
+  \node[node distance=1mm] (3) [right=of 2] {\phantom{3}};
+  \node[node distance=1mm] (4) [right=of 3] {4};
+  \node[node distance=1mm] (5) [right=of 4] {\phantom{5}};
+  \node[node distance=1mm] (6) [right=of 5] {6};
+  \node[node distance=1mm] (7) [right=of 6] {\phantom{7}};
+  \node[node distance=1mm] (8) [right=of 7] {8};
+  \node[node distance=1mm] (9) [right=of 8] {\phantom{9}};
+  \node[node distance=1mm] (10) [right=of 9] {10};
+  \node[node distance=1mm] (11) [right=of 10] {\phantom{9}};
+  \node[node distance=1mm] (12) [right=of 11] {\phantom{9}};
+
+
+  \node [above=0 mm of 0] {$\bullet$}; 
+  \node [above=2 mm of 2] (v2) {$\bullet$}; 
+  \node [above=4 mm of 4] {?}; 
+  \node [above=6 mm of 6] (v6) {$\bullet$}; 
+  \node [above=7 mm of 7] {$\bullet$}; 
+  \node [above=9 mm of 9] {$\bullet$}; 
+  \node [above=10 mm of 10] (v10) {$\bullet$}; 
+
+
+  \node[rectangle,draw] (s0) [below=of 0] {0};
+  \node[rectangle,draw] (s2) [below=of 2] {2};
+  \node[rectangle,draw] (s4) [below=of 4] {u};
+  \node[rectangle,draw] (s6) [below=of 6] {6};
+  \node[rectangle,draw] (s7) [below=of 7] {7};
+  \node[rectangle,draw] (s9) [below=of 9] {9};
+  \node[rectangle,draw] (s10) [below=of 10] {\color{gray}10};
+  \node[rectangle,draw] (s11) [below=of 11] {\phantom{9}};
+  \node[rectangle,draw] (s12) [below=of 12] {\phantom{9}};
+
+
+  \draw[<->] (v2.north east) to (v6.north west)
+  node [above,sloped,midway] {\small gap};
+
+  \draw[<->] (v6.south east) to (v10.south west)
+  node [below,sloped,midway] {\small irregular};
+
+  
+  %rd: 5s |inf| mean
+  \node [circle,draw] (rd50) [below=4cm of 0] {u};
+  \node [circle,draw] (rd55) [below=4cm of 5] {2};
+  \node [circle,draw] (rd510) [below=4cm of 10] {u};
+  \node [below=4.3cm of 10] {\color{gray}8};
+ 
+  \draw[->,bend right] (s4) to (rd55);
+  \draw[->,bend right] (s2) to (rd55);
+
+  \draw[->,dotted,bend right] (s10) to (rd510);
+  \draw[->,bend right] (s9) to (rd510);
+  \draw[->,bend right] (s7) to (rd510);
+  \draw[->,bend right] (s6) to (rd510);
+
+  
+  %rd: 3s |inf| mean
+  \node [circle,draw] (rd30) [below=of s0] {u};
+  \node [circle,draw,fill=white] (rd33) [below=2.5cm of 3] {2};
+  \node [circle,draw,fill=white] (rd36) [below=2.5cm of 6] {5};
+  \node [circle,draw,fill=white] (rd39) [below=2.5cm of 9] {8};
+  \node [circle,draw] (rd312) [below=2.5cm of 12] {u};
+
+  \draw[->] (s2) to (rd33);
+
+  \draw[->] (s6) to (rd36);
+  \draw[->] (s4) to (rd36);
+
+  \draw[->] (s9) to (rd39);
+  \draw[->] (s7) to (rd39);
+
+  \draw[->,dotted] (s12) to (rd312);
+  \draw[->,dotted] (s11) to (rd312);
+  \draw[->,dotted] (s10) to (rd312);
+
+
+
+  %eixos
+  \node (et0) [above=1mm of -1] {};
+  \node (et12) [above=1mm of 11] {};
+  \node [right=-2mm of et12] {time};
+  \draw[->] (et0) to (et12);
+  \node (y5) [above=5mm of 0] {--};
+  \node [left=-1.5mm of y5] {5};
+  \node (y10) [above=10mm of 0] {--};
+  \node [left=-1.5mm of y10] {10};
+
+  \node (inici) [above=3.1cm of s0] {init};
+  \node (inici2) [below=3.3cm of s0] {};
+  \draw[-,dotted] (inici) to (inici2);
+
+  \node (fi) [above=3.4cm of s9.east] {now};
+  \node (fi2) [below=3.5cm of s9.east] {};
+  \draw[-,dotted] (fi) to (fi2);
+
+
+  % \node (fut) [below right=1mm and 1mm of fi] {future};
+  % \draw[->] (fut.south west) to (fut.south east);
+
+  % \node (pas) [below left=1mm and 1mm of fi] {past};
+  % \draw[->] (pas.south east) to (pas.south west);
+
+  \node [above=0cm of s0] {\makebox[0.5cm][l]{sample every 2 u.t.}};
+  \node [below=0.5cm of s0] {\makebox[0.5cm][l]{mean/3}};
+  \node [below=2cm of s0] {\makebox[0.5cm][l]{mean/5}};
+
+\end{tikzpicture}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% ispell-local-dictionary: "british"
+%%% End:

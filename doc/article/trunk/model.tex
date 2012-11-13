@@ -383,29 +383,30 @@ been captured erroneously, it must be treated as unknown data.
 \end{itemize}
 As a consequence, attribute aggregate functions deals with these two
 subprocesses: treating unknown data and marking data as
-unknown. Following with real numbers example, we have to extend the
+unknown. Following with real numbers example, we extend the
 domain with a value that means 'unknown', let this unknown value be
 represented by the improper element infinity ($\infty$).
 
-An attribute aggregate functions treating unknown data is a one that
-can calculate a result when there are unknown values in the original
-time series, $f^u: S \times i \mapsto m'$ where $\exists m \in S:
-V(m)=\infty$. Although from a strict point of view operating with
-unknown data makes unknown result, aggregate functions are free to
-calculate whatever is needed such as time series analysis does with
-data reconstruction.
+An attribute aggregate functions treating unknown
+data is a one that can calculate a result when there are unknown
+values in the original time series, $f^u: S \times i \mapsto m'$ where
+$\exists m \in S: V(m)=\infty$. Although from a strict point of view
+operating with unknown data makes unknown result, aggregate functions
+are free to calculate whatever is needed such as time series analysis
+does with data reconstruction.
 
 For example, arithmetic mean$^{d}$ aggregate function returns
-$V(m')=\infty$ if $\exists m \in S: V(m)=\infty$. 
-\todo{dissenyar una funció que tregui els unknown i després cridar a la mean original, potser s'entendrà més bé?}
-We can define a new
+$V(m')=\infty$ if $\exists m \in S: V(m)=\infty$.  We can define a new
 mean function, based on the original arithmetic mean$^{d}$ aggregate,
-that is capable of treating unknown values by keeping the known mean;
-in other words, ignoring unknown values found in the time interval:
-arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+that naively treats unknown values by keeping the
+known mean; in other words, it ignores unknown values found in the time
+interval: arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
 \text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq
 \infty\}$.
-
+% ignore$^{u}$: $S \mapsto S'$ where $S'= \{m''\in S':V(m'')\neq
+% \infty\}$,
+% arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+% \text{arithmetic mean}^{d}(\text{ignore}^u(S),i)$.
 
 An attribute aggregate functions marking data as unknown is a one
 that can give unknown value as the resulting measure's value, $f^{mu}:
@@ -421,25 +422,26 @@ measure's value bigger than 2:  maximum$^{dmu2}$: $S \times i
 \end{cases}$ and $m''=\text{maximum}^d(S,i)$.
 
 %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
-    
-In conclusion, a huge amount of attribute aggregate functions can be
-defined and no global assumptions can be made.  In the design of the
-attribute aggregate function we can interpret a time series in
-different ways, that is what we call the representation of a time
-series. Keogh et al.\ \cite{last:keogh} cite some possible
-representations for time series such as \emph{Fourier Transforms},
-\emph{Wavelets}, \emph{Symbolic Mappings} or \emph{Piecewise Linear
-  Representation} (PLR). This last is remarked as the most used owing
-to the most common representation is with linear functions
-\cite{keogh01}.
+
+Summarising, in the design of the attribute aggregate function we can
+interpret a time series in different ways, that is what we call the
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite
+some possible representations for time series such as \emph{Fourier
+  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
+\emph{Piecewise Linear Representation} (PLR). This last is remarked as
+the most used owing to the most common representation is with linear
+functions \cite{keogh01}.
 
 The variety of time series representations results in a variety of the
 same attribute aggregate functions. As instance, a maximum attribute
 aggregate function may give different values if we consider a linear
-or a constant piecewise representation. Therefore, the time series
-representation results in attribute aggregate functions families.
-Therefore, MTSMS must give freedom to the users to define their own
-functions.
+or a constant piecewise representation. 
+
+In conclusion, a huge amount of attribute aggregate functions can be
+defined and no global assumptions can be made.  Therefore, the time
+series representation results in attribute aggregate functions
+families.  Therefore, MTSMS must give freedom to the users to define
+their own functions.
 
 
 
