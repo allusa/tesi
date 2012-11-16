@@ -1,0 +1,67 @@
+\usetikzlibrary{dateplot}  
+%\usetikzlibrary{pgfplots.groupplots}
+
+\pgfplotsset{
+   petit/.style={
+        ylabel=Temperature (K),
+%        width=\textwidth,
+%        height=3.5cm,
+        legend style={font=\footnotesize},
+        tick label style={font=\footnotesize},
+        label style={font=\tiny},
+        title style={font=\small,below, anchor=north,fill=white},
+        xticklabel style= {rotate=15,anchor=east},
+%        every axis title shift=0pt,
+%        max space between ticks=15,
+        every mark/.append style={mark size=6},
+        major tick length=0.1cm,
+        minor tick length=0.066cm,
+        very thin,
+        every axis legend/.append style={
+          at={(1,0.02)},
+          anchor=south east,
+          draw = none},
+        legend columns = 4,
+    }
+}
+
+\begin{tikzpicture}
+    \begin{axis}[
+        petit,
+        date coordinates in=x,
+        xticklabel={\pgfcalendarmonthshortname{\month} \year},
+        xlabel=Time (UTC),
+%        unbounded coords=jump, %v>1.4
+%        unbounded coords=discard, %v>1.4
+        ymax = 320,
+        clip=false,
+%v1.6     restrict y to domain=0:320,
+        y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
+        ]
+
+       \addplot[black!15] file {dades/matriu0.originalbyday.dat};
+       \addlegendentry{original};
+
+       \addplot[blue] table[col sep=comma] {dades/mrdb-matriu0/union1.csv};
+       \addlegendentry{mean};
+
+       \addplot[orange] table[col sep=comma] {dades/mrdb-matriu0/union0.csv};
+       \addlegendentry{max};
+
+%       \node[right] at (axis cs:2011-10-12,330) {\mbox{(2938)}};
+       \node (break) at (axis cs:2011-09-25,325)[inner sep=0pt,minimum width=0.9em, minimum height=0.4ex,fill=white] {};
+    \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
+
+
+  \end{axis}
+\end{tikzpicture}
+%http://tex.stackexchange.com/questions/46422/axis-break-in-pgfplots
+
+%http://tex.stackexchange.com/questions/52409/insert-a-separate-mark-inside-a-pgfplots-graph
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% ispell-local-dictionary: "british"
+%%% End:
