@@ -6,9 +6,9 @@ RoundRobinson
 =============
 
 :Author: Aleix Llusà Serra
-:Contact: aleix@dipse.upc.edu
-:Version: 0.2-dev
-:Date: 	2012-09-06
+:Contact: aleix (a) dipse.upc.edu
+:Version: 0.3-dev
+:Date: 	2012-11-16
 :Abstract: Implementació en Python d'un SGBD per sèries temporals multiresolució (SGSTM). Python implementation for a Multiresolution Time Series DBMS (MTSMS).
 :Copyright: GPLv3
 
