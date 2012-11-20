@@ -1,85 +1,50 @@
-\usetikzlibrary{dateplot}  
-%\usetikzlibrary{pgfplots.groupplots}
-
-\pgfplotsset{
-   petit/.style={
-        ylabel=Temperature (K),
-        width=\textwidth,
-        height=3.5cm,
-        legend style={font=\footnotesize},
-        tick label style={font=\footnotesize},
-        label style={font=\tiny},
-        title style={font=\small,below, anchor=north,fill=white},
-        xticklabel style= {rotate=15,anchor=east},
-%        every axis title shift=0pt,
-%        max space between ticks=15,
-        every mark/.append style={mark size=6},
-        major tick length=0.1cm,
-        minor tick length=0.066cm,
-        very thin,
-        every axis legend/.append style={
-          at={(1,-0.3)},
-          anchor=north east,
-          draw = none},
-        legend columns = 4,
-    }
-}
 
   \begin{tikzpicture}
     \begin{axis}[
-        petit,
+        rd,
         title={RD: 5h $|48|$},
-        date coordinates in=x,
         xticklabel={\day\ },%\hour:\minute},
         ]
-       \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb2-matriu0/0.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {dades/mrdb2-matriu0/0.csv};
   \end{axis}
 \end{tikzpicture}
 
 
   \begin{tikzpicture}
     \begin{axis}[
-        petit,
+        rd,
         title={RD: 2d $|40|$},
-        date coordinates in=x,
         xticklabel={\pgfcalendarmonthshortname{\month} \day},
         ]
-       \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb2-matriu0/1.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {dades/mrdb2-matriu0/1.csv};
   \end{axis}
 \end{tikzpicture}
 
 
   \begin{tikzpicture}
     \begin{axis}[
-        petit,
+        rd,
         title={RD: 15d $|24|$},
-        date coordinates in=x,
-%        xticklabel={\pgfcalendar{tickcal}{\tick}{\tick}{\pgfcalendarshorthand{m}{.}}},
         xticklabel={\pgfcalendarmonthshortname{\month} \day},
-%        xticklabel style= {rotate=15,anchor=east},
-        title style = {below, anchor=north,fill=white},
-%v>1.4        unbounded coords=jump,
         ]
-       \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb2-matriu0/2.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {dades/mrdb2-matriu0/2.csv};
   \end{axis}
 \end{tikzpicture}
 \begin{tikzpicture}
     \begin{axis}[
-        petit,
-        date coordinates in=x,
+        rd,
         xticklabel={\pgfcalendarmonthshortname{\month} \year},
         title={RD: 50d $|24|$},
         xlabel=Time (UTC),
-%        unbounded coords=jump, %v>1.4
         ymax = 320,
         clip=false,
 %v1.6     restrict y to domain=0:320,
         y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
         ]
-       \addplot[const plot mark right, blue, mark=*] table[col sep=comma] {dades/mrdb2-matriu0/3.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {dades/mrdb2-matriu0/3.csv};
        \addlegendentry{mean};
 
-       \addplot[const plot mark right, orange, mark=*] table[col sep=comma] {dades/mrdb2-matriu0/4.csv};
+       \addplot[const plot mark right, orange] table[col sep=comma] {dades/mrdb2-matriu0/4.csv};
        \addlegendentry{max};
 
        \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
@@ -88,10 +53,6 @@
 
   \end{axis}
 \end{tikzpicture}
-%http://tex.stackexchange.com/questions/46422/axis-break-in-pgfplots
-
-%http://tex.stackexchange.com/questions/52409/insert-a-separate-mark-inside-a-pgfplots-graph
-
 
 
 %%% Local Variables:

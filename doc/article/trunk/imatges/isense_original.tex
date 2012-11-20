@@ -1,12 +1,8 @@
-\usetikzlibrary{dateplot}    
 \begin{tikzpicture}
     \begin{axis}[
-        date coordinates in=x,
-%        xticklabel={\pgfcalendar{tickcal}{\tick}{\tick}{\pgfcalendarshorthand{m}{.}}},
+        timeseries,
         xticklabel={\pgfcalendarmonthshortname{\month} \year},
-        xticklabel style= {rotate=15,anchor=east},
-        xlabel=Time,
-        ylabel=Temperature (K),
+        xlabel=Time (UTC),
         ymax = 320,
         clip=false,
         y filter/.code = { \pgfmathparse{(#1>320)*322+(#1<320)*#1}},
