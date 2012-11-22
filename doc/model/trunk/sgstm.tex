@@ -1,0 +1,172 @@
+\chapter{Model SGSTM}
+
+
+En aquest capítol es defineixen els operadors que permeten modelar el comportament i la manipulació de les dades.
+
+
+
+\section{Model estructural de dades}
+
+Una MTSDB és una relació de buffers amb discs. 
+
+
+\begin{figure}[tp]
+\centering
+\input{imatges/model/mtsms-arquitectura_interna.tex}
+\caption{Arquitectura del model SGSTM}
+\label{fig:model:bdstm}
+\end{figure}
+
+
+\subsection{Buffer}\label{sec:model:buffer}\todo{falta parlar de regularitat de ST}\todo{falta parlar de representació de ST}
+
+Un buffer és un contenidor d'una sèrie temporal, regular o no regular, que mitjançant una funció permet regularitzar aquesta sèrie temporal amb un període de mostreig constant. A l'acció de regularitzar un interval d'una sèrie temporal l'anomenarem consolidació, al període de mostreig contant l'anomenarem pas de consolidació i a la funció de regularització l'anomenarem agregador d'atributs.
+
+\begin{definition}[Buffer]
+  Definim \emph{buffer} com el tuple $(S,\tau,\delta,f)$, en el que
+  $S$ és una sèrie temporal, $\tau$ és el darrer instant de temps de
+  consolidació, $\delta$ és la durada del pas de consolidació i $f$ és
+  un agregador d'atributs.
+\end{definition}
+
+La consolidació d'una sèrie temporal s'inicia en un instant de temps concret i té lloc a cada pas de consolidació. Amb la finalitat d'establir els intervals de consolidació de la sèrie temporal, es defineix un buffer inicial.
+
+\begin{definition}\label{def:model:buffer_buit}
+  Definim buffer inicial o buffer buit com el buffer $B_{\emptyset} =
+  (\emptyset,t_0, \delta_0, f)$, el qual
+  conté una sèrie temporal buida, l'instant de temps inicial de
+  consolidació, una durada que indica el pas de consolidació i un
+  agregador d'atributs.
+\end{definition}
+
+A partir del buffer buit es poden conèixer tots els instants de temps de consolidació del buffer, els quals seran $t_0+k\delta, k\in\mathbb{N}$. 
+
+
+
+\subsection{Disc}\label{sec:model:disc}
+
+Un disc és un contenidor d'una sèrie temporal regular amb un nombre acotat de mesures. En arribar al nombre màxim de mesures permeses, cada cop que s'afegeix una mesura nova s'elimina la mesura mínima de la sèrie temporal.
+Així doncs, un disc és semblant a una cua \emph{First In First Out} (FIFO), a on el primer d'arribar és el primer de sortir.  
+
+\begin{definition}[Disc]
+  Definim \emph{disc} com el tuple $(S,k)$, en el que $S$
+  és una sèrie temporal i $k\in\mathbb{N}$ és el cardinal màxim de $S$.
+\end{definition}
+
+A l'inici, un disc no conté mesures però cal que estigui caracteritzat pel cardinal màxim. Amb aquesta finalitat es defineix un disc inicial.
+
+\begin{definition}\label{def:model:disc_buit}
+  Definim disc inicial o disc buit com el disc $D_{\emptyset} =
+  (\emptyset,k)$, el qual conté una sèrie temporal buida i el cardinal
+  màxim que podrà prendre $S$.
+\end{definition}
+
+
+
+
+\subsection{Disc resolució}\label{sec:model:disc_multiresolucio}
+
+Un disc resolució és un disc amb buffer. En el buffer hi ha la part d'una sèrie temporal a regularitzar i en el disc hi ha l'altra part ja regularitzada, amb un nombre acotat de mesures. 
+
+\begin{definition}[Disc resolució]
+  Definim \emph{disc resolució} com el tuple $(B,D)$, en el que $B$
+  és un buffer i $D$ és un disc.
+\end{definition}
+ 
+La definició de buffer buit (def.~\ref{def:model:buffer_buit}) i de disc buit (def.~\ref{def:model:disc_buit}) indueixen a una definició de disc resolució buit. 
+
+\begin{definition}\label{def:model:disc_resolucio_buit}
+  Definim disc resolució buit com el disc resolució $R_{\emptyset}
+  = (B_{\emptyset},D_{\emptyset})$, el qual conté un buffer buit i un
+  disc buit.
+\end{definition}
+
+
+
+
+\subsection{Base de dades multiresolució}\label{sec:model:bdstm}
+
+Una base de dades multiresolució és un conjunt de discs resolució que comparteixen l'entrada de mesures, les quals provenen d'una mateixa sèrie temporal. La sèrie temporal queda regularitzada i distribuïda  en els diferents discs resolució amb resolucions diferents, tal com s'ha vist a la \autoref{fig:model:bdstm}
+
+
+\begin{definition}[Base de dades multiresolució]
+  Definim \emph{base de dades multiresolució} com el conjunt de discs resolució
+  $M=\{R_0,\dotsc,R_d\}$.
+\end{definition}
+
+A partir de la definició de disc resolució buit (def.~\ref{def:model:disc_resolucio_buit}) és defineix la base de dades multiresolució buida. 
+ 
+\begin{definition}\label{def:model:bd_multiresolucio_buit}
+  Definim base de dades multiresolució buida com el conjunt de discs
+  resolució buits
+  $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$.
+\end{definition}
+
+Normalment, en una base de dades multiresolució no hi ha dos discs
+resolució amb la mateixa informació. És a dir, donats dos discs
+resolució $R_a = (B_a, D_a)$ i $R_b = (B_b, D_b)$, 
+els seus respectius buffers 
+$B_a=(S_a,\tau_a,\delta_a,f_a)$ i
+$B_b=(S_b,\tau_b,\delta_b,f_b)$ no tenen el mateix interval de
+consolidació i agregador d'atributs: 
+$\delta_a \neq \delta_b \wedge f_a \neq f_b$.
+
+
+
+
+
+
+
+
+
+\subsection{Exemples}
+
+\paragraph{Exemple 1}
+
+
+S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} s'obre valors relació).
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M_1$} \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 0 & 5  & 2 & mitjana  \\
+    $S_{B2}$ & $S_{D2}$ & 0 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}
+  \caption{Taula d'una mtsdb independent}
+  \label{fig:model:mtsdb:independent}
+\end{figure}
+
+
+
+\paragraph{Exemple 2}\todo{Compte! que no existeix el tipus relvar i potser no es pot definir una relació que contingui relvars (apuntadors). Cal pensar amb l'exemple 4 suprimit del model dels SGST}
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M_2$} \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 0 & 5  & 2 & mitjana  \\
+    $S_{D1}$ & $S_{D2}$ & 0 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}
+  \caption{Taula d'una mtsdb en cadena}
+  \label{fig:model:mtsdb:cadena}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\input{sgstm-operacions.tex}
+
+
+\input{sgstm-interpoladors.tex}
+
+
+

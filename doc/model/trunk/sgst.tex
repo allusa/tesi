@@ -1,0 +1,897 @@
+
+\chapter{Model SGST}
+
+En aquest capítol es defineixen els objectes que ens permeten modelar l'estructura de les dades.
+
+Dos models estructurals:
+
+* Hi ha un model pels SGST (TSMS) que inclou mesura i sèries temporals.
+
+* Hi ha un model pels SGSTM (MTSMS) que té buffer, discs i mtsdb, els quals inclouen el model de sèrie temporal del SGST.
+
+
+
+
+\section{Model estructural de dades}
+
+Una sèrie temporal és una relació de temps i valors. A cada parella
+temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un
+conjunt de mesures. Una mesura és un tuple temps-valor.
+
+
+
+Una mesura és un valor mesurat en un instant de temps i una sèrie
+temporal és un co\l.lecció de mesures.
+
+
+
+
+
+\subsection{Temps}
+
+Utilitzem el temps com un valor que ens permet ordenar les mesures.  A
+tal efecte, el domini del temps es defineix com un conjunt tancat
+(compactificat) i amb ordre total. No obstant, pot ser tant un conjunt
+finit com infinit.
+
+Per facilitar la comprensió, en el document utilitzarem el conjunt de
+reals com a conjunt pels temps. Concretament, per a complir que sigui
+un conjunt tancat usarem el conjunt estès de nombres reals
+$\bar{\mathbb{R}} \in \mathbb{R} \cup
+\{+\infty,-\infty\}$, \parencite{wiki:extendedreal,cantrell:extendedreal},
+també anomenat recta real acabada.
+
+
+El conjunt estès de nombres reals té dos punts límits corresponents al
+valor impropi infinit, aleshores en notació d'interval el conjunt es
+pot escriure com $\bar{\mathbb{R}} \in [-\infty,+\infty]$.  Més
+endavant a la definició~\ref{def:model:mesura_indefinida} es detallen
+algunes propietats induïdes a les mesures com a resultat d'aquesta
+extensió.
+
+Les relacions d'ordre i algunes operacions aritmètiques s'estenen al
+conjunt $\bar{\mathbb{R}}$, \cite{cantrell:extendedreal}.  Algunes
+expressions esdevenen indefinides (p.ex.\ $0/0$) i altres depenen del
+context, com és el cas de l'expressió indeterminada $0 \times \infty$ que
+per exemple en la teoria de la mesura habitualment es defineix com $0 \times
+\infty = 0$, \cite{wiki:extendedreal}.
+
+
+El conjunt dels reals és un espai mètric ja que té definida una funció
+distància (o mètrica), com per exemple la distància euclidiana. Com a
+conseqüència, ens permet distingir entre instants de temps (els
+elements del conjunt) i durades (la mètrica). Observant els instants
+de temps com a punts en la recta real i les durades com a segments de
+la recta real, es pot definir el temps com a sistema de coordenades
+especificant un instant com a marc de
+referència, \parencite{iep:time-supplement,wiki:coordinate}.
+
+
+\begin{definition}[Temps]
+  \label{def:model:temps}
+  Siguin $t^i_i$ i $t^i_j$ dos instants de temps, observem la quantitat
+  de temps o la durada $t^d$ com un valor $t^d \in\bar{\mathbb{R}}$
+  que mesura la distància en unitats de temps entre dos temps
+  absoluts $t^d = t^i_i - t^i_j$.
+  
+  Sigui $t^d$ una durada i $t^{R}$ un temps absolut de referència,
+  observem un instant de temps $t^i$ com un valor $t^i
+  \in\bar{\mathbb{R}}$ que mesura la quantitat de temps respecte al
+  temps de referència $t^i= t^{R} + t^d$ . Aquest valor de referència
+  $t^{R}\in\mathbb{R}$ és també un instant de temps però que permet
+  definir unívocament la posició de qualsevol altre instant de temps.
+
+
+\end{definition}
+
+En resum, els instants de temps es poden veure com una seqüència de
+valors reals que indiquen esdeveniments amb ordre clarament definit i
+entre dos instants de temps sempre hi ha una durada. Tant els instants
+de temps com les durades s'expressen amb un real que té unitats de
+temps. Aquestes unitats són 'segons' en sistema internacional.
+
+
+
+\subsubsection{Calendari}
+\textcite{dreyer94} situen els calendaris i les seves operacions com a
+essencials en els SGST. Tanmateix, pot no ser necessari modelar les
+dates de calendari en el model de temps. El temps és la línia contínua
+de temps, el calendari són nom especials a certs punts de la línia de
+temps. Només cal una eina que sigui capaç de convertir de noms a
+instants de temps.
+
+Per una banda, no afecta al model SGST que els calendaris siguin més o
+menys complicats, en aquest cas només es veuen complicades les
+funcions de conversió de temps a calendari i viceversa.  Per altra
+banda, tampoc afecta que els calendaris siguin ambigus (p.ex.\ dos
+noms per al mateix instant o instants sense nom) o que continguin
+propietats impredictibles (p.ex.\ cas dels segons addicionals
+(intercalats) en UTC) ja que la responsabilitat d'aquests problemes
+correspon a la bona definició dels sistemes de calendari.
+
+
+Unix time (posix) no incorpora els leap seconds.
+Millor TAI, unix time (right), ja que és una mesura totalment lineal del temps. 
+Unix time, UTC i TAI: http://lwn.net/Articles/504744/
+
+
+\subsection{Valor}
+
+El \gls{terme:SGBDR:valor} és qualsevol element que és d'un
+\gls{terme:SGBDR:tipus}; és a dir, un objecte que
+pertany a un determinat conjunt de valors i que té associat les
+operacions que s'hi poden aplicar. Exemples de tipus de dades són els
+enters, els reals, les cadenes de text i les estructures de dades com
+vectors, llistes o \glspl{terme:SGBDR:relacio}.  \todo{vigilar amb
+  date, ell en diu escalars i no escalars (amb components visibles) i
+  per exemple considera que un punt és escalar}
+
+El model de dades dels valors ha d'incloure una dada que defineixi el
+valor indefinit. Més endavant a la
+definició~\ref{def:model:mesura_valor_indefinit} es detallen les
+propietats de les mesures amb valor indefinit. Seguint l'exemple amb
+els reals, el valor indefinit es defineix amb el valor impropi infinit
+del conjunt dels reals estès
+projectivament, \parencite{cantrell:projectivelyextendedreal},
+$\mathbb{R}^*\in\mathbb{R} \cup \{\infty\}$.  En aquest cas el valor
+és un escalar però fàcilment es pot estendre el concepte a valors
+multivaluats ${\mathbb{R}^*}^n$ que representin una co\l.lecció de
+valors mesurats en el mateix instant de temps, tal i com fa per
+exemple \textcite{assfalg08:thesis}.
+
+
+
+
+
+\subsection{Mesura}\label{sec:model:mesura} 
+
+Una mesura és una parella de temps i valor.
+
+\begin{definition}[Mesura]
+  \label{def:model:mesura}
+  Definim \emph{mesura} com el tuple $(t,v)$, en el que $v$ és el
+  valor de la mesura i $t$ és l'instant de temps en que s'ha pres
+  aquesta mesura.
+\end{definition}
+
+
+Donada una mesura $m=(t,v)$ escriurem $V(m)$ per referir-nos a $v$ i
+$T(m)$ per referir-nos a $t$.
+
+Donades dues mesures és fàcil establir la relació d'ordre induïda pel
+temps.
+
+\begin{definition}[Relació d'ordre]
+  \label{def:model:mesura-relacio-ordre}
+  Sigui $m=(t_m,v_m)$ i $n=(t_n,v_n)$. Direm que $m\geq n$ si i solament
+  si $t_m\geq t_n$.
+\end{definition}
+
+
+En les definicions de temps i valor s'han estès els conjunts amb
+valors impropis, concretament s'ha exemplificat amb el conjunt estès
+de nombres reals afí $\bar{\mathbb{R}} \in \mathbb{R} \cup
+\{+\infty,-\infty\}$ i amb el projectiu $\mathbb{R}^*\in\mathbb{R}
+\cup\{\infty\}$,
+\parencite{cantrell:extendedreal,cantrell:projectivelyextendedreal}. Aquesta
+extensió amb l'element impropi infinit ($\infty$) dóna com a resultat
+unes mesures impròpies que anomenarem mesura de valor indefinit i
+mesura indefinida.
+
+\begin{definition}[Mesura de valor indefinit]
+  \label{def:model:mesura_valor_indefinit}
+  Definim \emph{mesura de valor indefinit} com el tuple $(t,v)$, en el
+  que el valor és $v=\infty$ i l'instant de temps és
+  $t\in\bar{\mathbb{R}}$.
+\end{definition}
+
+\begin{definition}[Mesura indefinida]
+  \label{def:model:mesura_indefinida}
+  Definim \emph{mesura indefinida} com el tuple $(t,v)$, en el que el
+  valor és $v\in\mathbb{R}^*$ i l'instant de temps és
+  $t\in\{+\infty,-\infty\}$.
+\end{definition}
+
+Així doncs, sigui $m$ una mesura, es podrà notar la mesura de valor
+indefinit com $m=(t,\infty)$ i les mesures indefinides com
+$m=(+\infty,v)$ per la positiva i $m=(-\infty,v)$ per la negativa, les
+quals normalment s'anotaran també amb valor indefinit:
+$m=(+\infty,\infty)$ i $m=(-\infty,\infty)$ respectivament.
+
+
+Les mesures de valor indefinit es podran utilitzar en aquells casos en
+els que el valor de la mesura és desconegut. Els valors desconeguts
+són aquells valors que no existeixen (es desconeixen, \emph{missing
+  data} ) o que s'ignoren (es descarten, \emph{censoring} o
+\emph{truncation}). Els valors que no existeixen prenen el valor
+desconegut en el moment de la mesura, en canvi els valors descartats
+són marcats com a desconeguts després d'un processament de les dades.
+
+Nota: en alguns sistemes es distingeix entre valors infinits
+($\infty$) i valors indefinits (NaN, \emph{not a number}),
+\cite{wiki:ieee754}. Aquest no és el cas de les definicions de mesures
+indefinides presents.
+
+
+
+\subsection{Sèrie temporal}
+\label{sec:model:serietemporal}
+
+Les sèries temporals són seqüències de mesures ordenades en el temps.
+Tradicionalment s'anomenen sèries temporals tot i que també s'anomenen
+seqüències temporals, per exemple a \cite{last:hetland}.
+
+\begin{definition}[Sèrie temporal]
+  \label{def:serie_temporal}
+  Una sèrie temporal $S$ és un conjunt de mesures
+  $S=\{m_0,\ldots,m_k\}$ sense temps repetits
+  $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$.
+\end{definition}
+
+Per ser un conjunt, les sèries temporals tenen mesura de cardinalitat.
+\begin{definition}[Cardinal]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, definim el nombre
+  de mesures que conté la sèrie temporal com el cardinal del conjunt
+  $|S|=k+1$. Una sèrie temporal sense mesures és la sèrie temporal
+  buida $S_\emptyset= \emptyset$, és a dir que no té cap element
+  $|S_\emptyset|=0$.
+\end{definition}
+
+La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
+sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
+temporal s'ha considerat finita i sense elements repetits, quan la
+sèrie temporal no és buida això comporta l'existència d'un màxim i
+d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
+respectivament la mesura màxima i mínima d'$S$.
+
+\begin{definition}[Màxim i mínim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
+  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
+  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
+  m$.
+\end{definition}
+
+El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
+és buida: $S= \emptyset$. En
+canvi, el suprem i l'ínfim estan definits per qualsevol
+sèrie temporal tal com passa amb el conjunt estès de nombres reals,
+\cite{cantrell:extendedreal}.  
+
+\begin{definition}[Suprem i ínfim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
+  $n=\max(S)$ en cas que el màxim estigui definit o
+  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
+  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
+  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
+\end{definition}
+Quan la sèrie temporal no és buida, per
+ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
+i un mínim i per tant es corresponen amb el suprem i l'ínfim
+respectivament.
+
+
+Atesa la relació d'ordre induïda pel temps en una sèrie temporal
+(def.\ \ref{def:model:mesura-relacio-ordre}) és possible definir el
+concepte d'interval sobre la seqüència, semblant a com es fa a \cite{last:keogh,last:hetland}.
+
+\begin{definition}[Interval]
+  \label{def:model:st-interval}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
+  $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
+  | r<T(m)\leq t\}$, a on $r$ i $t$ són dos instants de temps.
+
+  També es defineix la subsèrie $S[-\infty,t)\subseteq S$ com la sèrie
+  temporal $S[-\infty,t) = \{m\in S | T(\inf(S))\leq T(m) < t\}$.
+\end{definition}
+S'observa que la subsèrie $S(r,+\infty]\subseteq S$ és
+equivalent a la sèrie temporal $S(r,+\infty] \equiv S(r,T(\sup(S))]$ i
+anàlogament $S(-\infty,t] \equiv S(T(\inf(S)),t]$. També s'observa que les subsèries $S(t,t]\subseteq S$ i $S[t,t)\subseteq S$ són equivalents a la sèrie temporal buida $S(t,t] \equiv S[t,t) \equiv \emptyset$ ja que per ser els temps d'ordre total $\nexists T(m): t < T(m) \leq t$ o $\nexists T(m): t \leq T(m) < t$, respectivament. 
+%Finalment, s'observa que la subsèrie $S(-\infty,+\infty]\subseteq S$ només és equivalent a la sèrie temporal original quan aquesta no conté la mesura indefinida negativa $S(-\infty,+\infty]\equiv S: (-\infty,v)\notin S$
+ 
+També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
+defineix el concepte de mesura següent i mesura anterior en una
+seqüència.
+
+\begin{definition}[Successor i predecessor]
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
+  mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
+  com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
+  Direm que $l$ és el predecessor de $n$ en $S$ i ho notarem com
+  $l=\ant\limits_S(n)$ si i només si $l=\sup(S[-\infty,T(n)))$.
+
+Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
+exemple quan $n\in S$, podrem escriure $\seg(n)$ i $\ant(n)$.
+\end{definition}
+S'observa que s'obtenen mesures indefinides en els casos que la
+mesura següent o anterior es calcula respectivament per la mesura
+suprema o ínfima de la sèrie temporal: $\seg\limits_S(\sup
+S)=(+\infty,\infty)$ i $\ant\limits_S(\inf S)=(-\infty,\infty)$.
+
+De la definició anterior es dedueix que donada una sèrie temporal $S$
+que no conté mesures indefinides i donada la mesura indefinida
+$o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
+sèrie temporal $\ant\limits_S( (+\infty,\infty) ) = \sup(S): \forall
+m\in S: T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
+\emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
+  una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
+  $l=\ant\limits_S(o)$ que compleix
+  $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
+  $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
+  \mathbb{R}$, i per tant com que $S$ no té mesures indefinides es
+  demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
+$\seg\limits_S( (-\infty,\infty) ) = \inf(S): \forall m\in S:
+T(m)\in\mathbb{R}$.
+
+
+
+
+\subsection{Relació sèrie temporal}
+
+Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
+
+Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau dos (relació binària)  a on la capçalera conté els atributs temps i valor, ambdós amb els dominis de temps i valor ja vistos com per exemple el tipus de dades 'reals estesos'. Inclou algunes restriccions més que les relacions:
+
+* Els temps no poden estar repetits
+
+* Els valors han de contenir el mateix tipus d'objecte.
+
+Els temps no repetits indueixen un ordre temporal a les sèries temporals. Tot i així, les relacions, per ser conjunts, conserven la no definció d'un ordre dels elements. 
+
+
+En el model relacional no hi ha ordre en els atributs a diferència de les relacions matemàtiques que tenen un ordre d'esquerra a dreta \parencite[sec.\ 5.3]{date:introduction}.
+
+\subsection{Exemples}
+
+\paragraph{Exemple 1}
+Sèrie temporal $S_1$ on el temps i els valors pertanyen a $\bar{\mathbb{R}}$. Conté la mesura de valor 1 en el temps 5, la mesura de valor 3 en el temps 7 i la mesura de valor 1 en el temps 10. Modelada com a relació, és a dir com a parella capçalera i conjunt de valors certs, s'escriu com 
+$S_1 = ( \{temps: \bar{\mathbb{R}}, valor: \bar{\mathbb{R}}\}, \{ \{temps:5,valor:1\}, \{temps:7,valor:3\}, \{temps:10,valor:1\} \} )$.
+
+Degut al format esquemàtic, simplifiquem l'escriptura de les sèries temporals com a conjunt de tuples $(t,v)$ a on $t$ és el temps i $v$ és el valor. Així doncs la sèrie temporal $S$ es pot escriure de manera simplificada com a 
+$S = \{ (5,1), (7,3), (10,1) \}$.
+
+Tal com s'utilitza en les relacions, les sèries temporals es poden visualitzar com a taules. La sèrie temporal $S_1$ es visualitza com a taula a la \autoref{fig:model:serietemporal:real}.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_1$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    7  & 3 \\
+    10 & 1 \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal amb valors reals}
+  \label{fig:model:serietemporal:real}
+\end{figure}
+
+
+\paragraph{Exemple 2}
+Sèrie temporal $S_2$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a  $\bar{\mathbb{R}}^3$; és a dir és un vector. Conté el valor (1,2,3) en el temps 5, el valor (3,4,5) en el temps 7 i el valor (1,2,3) en el temps 10.
+
+De manera simplificada s'escriu com 
+$S_2 = \{ (5,(1,2,3)), (7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula a la \autoref{fig:model:serietemporal:vector}. No obstant, es pot visualitzar de forma més còmode com a $S_2^b = \{ (5,1,2,3), (7,3,4,5), (10,1,2,3) \}$
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & (1,2,3) \\
+    7  & (3,4,5) \\
+    10 & (1,2,3) \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[tp]{|c|c|c|c|}
+   \multicolumn{4}{c}{$S_2^b$} \\ \hline
+    $t$  & $v_1$ & $v_2$ & $v_3$ \\ \hline
+    5  & 1 & 2 & 3 \\
+    7  & 3 & 4 & 5 \\
+    10 & 1 & 2 & 3 \\ \hline
+  \end{tabular}
+
+  \caption{Taula d'una sèrie temporal amb valors vectors}
+  \label{fig:model:serietemporal:vector}
+\end{figure}
+
+
+\paragraph{Exemple 3} \emph{Valors relació}. \label{par:model:exemple-relvalues}
+Sèrie temporal $S_3$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una sèrie temporal del mateix format que en l'exemple 1. Conté les tuples de $S_1$ com a valors en el temps 1 i 2. 
+
+De manera simplificada s'escriu com
+$S_3 =  \{ (1,\{ (5,1), (7,3), (10,1) \}), 
+(2,\{ (5,1),$ $(7,3),$ $(10,1) \}) \}$
+i es visualitza com a taula a la \autoref{fig:model:serietemporal:serietemporal}.
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_3$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1 &   
+       \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         5  & 1 \\
+         7  & 3 \\
+         10 & 1 \\ \hline
+       \end{tabular} \\ \hline
+    2 & 
+       \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         5  & 1 \\
+         7  & 3 \\
+         10 & 1 \\ \hline
+       \end{tabular} \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal amb valors sèrie temporal}
+  \label{fig:model:serietemporal:serietemporal}
+\end{figure}
+
+
+S'observa que la capçalera de $S3$ és $\{temps:\bar{\mathbb{R}},valor:
+relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}\}$ \parencite[sec.\ 5.3]{date:introduction}. És a dir, el valor és de tipus relació que es defineix amb la capçalera de la relació on el temps i el valor pertanyen a $\bar{\mathbb{R}}$. Per tant, el valor de $S3$ és de tipus sèrie temporal amb valors reals. Cal insistir que \emph{tots} el valors de $S3$ han de pertànyer al mateix domini \parencite[sec.\ 5.4]{date:introduction}, el qual és $relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}$.
+
+
+
+\paragraph{Exemple 4} \emph{Variable relació}.\todo{això no es pot fer, perquè no existeix el tipus relvar?? però les tuples poden contenir expressions?? No existeixen les tuplevar (Date rebutja ferotjament els apuntadors a dins dels DBMS) [Date on database :writings 2000-2006 / C.J. Date]}
+Sèrie temporal $S_4$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una referència a una sèrie temporal. Conté $S_1$ com a valors en el temps 1 i 2. 
+
+De manera simplificada s'escriu com
+$S_4 =  \{ (1,S_1) , (2,S_1) \}$ 
+i es visualitza com a taula a la \autoref{fig:model:serietemporal:relvar}.
+
+S'aplica el concepte de variable relació (\emph{relvar}) dels SGBDR \parencite[sec.\ 3.3]{date:introduction}.
+Així doncs, cal notar que $S_4$  no és el mateix que $S_3$.
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_4$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1 & $S_1$ \\
+    2 & $S_1$ \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal amb valors \emph{relvar}}
+  \label{fig:model:serietemporal:relvar}
+\end{figure}
+
+
+Relació de noms i sèries temporals $R =  ((nom:string,serie:relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}),\{ ('S_1',S_1),('S_2',S_2)  \})$
+
+Sèrie temporal amb strings com a valors:
+$N= ( (temps:\bar{\mathbb{R}},valor:string) ,\{ (1,'S_1') , (2,'S_1') \})$
+
+Sèrie temporal com a variable relació de vista (relvar view)
+$S_4 =  (N RENAME valor as nom) JOIN R$
+\todo{cal definir una view}
+
+
+
+\subsection{Naturalesa de les sèries temporals}
+
+
+Perquè RRDtool diferencia entre comptadors i magnituds?
+
+[segev87] diferencia entre step-wise constant, discret (potser aquest tal com se'l defineix són intervals temporals), continu. Ho anomena tipus de la sèrie temporal i diu que es poden definir interpolacions per cada una.
+
+
+[John G. Proakis, Dimitris G. Manolakis 2007 Tratamiento digital de señales/Digital signal processing 4a ed pp11-12(segons wikipedia)] Acquisition: Discrete signals may have several origins, but can usually be classified into one of two groups:[1]
+*By acquiring values of an analog signal at constant or variable rate. This process is called sampling.[2]
+*By recording the number of events of a given kind over finite time periods. For example, this could be the number of people taking a certain elevator every day.
+
+
+
+\subsubsection{Regularitat de les sèries temporals} 
+
+Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
+temps i $\delta$ una durada de temps, les mesures de la sèrie temporal
+es poden localitzar en l'interval de temps $i_0=[t,t+\delta]$ i els
+seus múltiples $i_j=[t+j\delta \,,\, t+(j+1)\delta]: j=0,1,2,\ldots$.
+En processat de senyal aquests intervals de temps s'anomenen intervals
+de mostreig, $\delta$ s'anomena període de mostreig i $t$ s'anomena
+temps inicial del mostreig.  La sèrie temporal $S$ és de naturalesa
+diferent segons la situació dels temps $T(m_i)$ en els intervals de
+temps $i_j$.
+
+Una sèrie temporal és regular quan les mesures són equidistants en el
+temps, tal com ho anomenen a \cite{last:hetland}.
+
+\begin{definition}[Sèrie temporal regular]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
+  temps i $\delta$ una durada de temps. Direm que $S$ és regular si i
+  només si $\forall m \in S(T(\min(S),\infty):T(m) - T(\ant(m)) =
+  \delta$ i $T(\min(S))=t$.
+\end{definition}
+
+Si una sèrie temporal és regular, l'anomenem sèrie temporal mostrejada
+regularment amb període de mostreig $\delta$. Noteu que si es complís
+la definició excepte que s'iniciés en el temps que exigim
+$T(\min(S))=t$, aleshores la sèrie temporal seria equidistant però a
+efectes de mostreig no la podríem anomenar regular; sí que seria una sèrie temporal de temps real (v.\ def.~\ref{def:st:tempsreal}).
+
+
+Una sèrie temporal és no regular quan no és regular. 
+En les sèries temporals no regulars es poden distingir tres casos: temps real, ultramostreig i inframostreig.
+
+Una sèrie temporal és de temps real quan a cada interval de mostreig hi ha una i només una mesura. L'interval de mostreig pot estar acotat per una durada anomenada termini.
+
+\begin{definition}[Sèrie temporal de temps real]\label{def:st:tempsreal}
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t$ un instant de
+  temps, $\delta$ una durada de temps i $D$ una durada que indica
+  termini. Direm que $S$ és de temps real si i només si $D\leq\delta$
+  i $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
+  S(t+n\delta,t+n\delta+D]$.  Aleshores la sèrie temporal està
+  mostrejada en temps real per al temps de mostreig $\delta$ amb
+  compliment del termini $D$.
+\end{definition}
+
+Si una sèrie temporal és de temps real, l'anomenem  sèrie temporal mostrejada
+en temps real amb període de mostreig $\delta$ i compliment del termini $D$.
+Si $D=\delta$, es pot anomenar que $S$ és una sèrie temporal de temps real sense termini.
+
+
+% \paragraph{Ultramostreig} Una sèrie temporal està ultramostrejada (\emph{upsampling}) quan a cada interval de mostreig hi ha una mesura o més d'una. 
+% \[
+% \text{Ultramostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
+% \]
+
+% Una sèrie temporal $S$ està ultramostrejada ssi $S$ no és de temps real i $\exists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
+
+% \paragraph{Inframostreig} Una sèrie temporal està inframostrejada (\emph{downsampling}) quan en algun interval de mostreig no hi ha cap mesura. 
+% \[
+% \text{Inframostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
+% \]
+
+% Una sèrie temporal $S$ està inframostrejada ssi $\nexists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
+
+
+
+
+
+
+
+
+\subsubsection{Representació de les sèries temporals}
+
+
+
+La naturalesa indueix representacions?
+Jo puc utilitzar qualsevol representació donada una sèrie temporal, però això em pot causa perjudici si no s'adiu amb la naturalesa.
+
+
+La representació serveix per interpolar:
+
+zoh, zoh cap enrere, lineal, etc.
+
+
+Una sèrie temporal és la representació discreta d'una funció contínua. A partir de la sèrie temporal es pot definir una funció contínua. 
+
+A teoria de senyal s'estudia com fer que aquesta s'aproximi a la real. Estudiant com a senyal fan: donada una sèrie temporal dir quina funció s'hi 'ajusta' més. 
+
+Però jo puc preguntar donada una sèrie temporal quina funció representa i puc dir per representar a zohe és tal, per representar a lineal és qual. 
+
+Potser millor dir-li interpretació?
+
+
+
+\paragraph{Representació de sèries temporals}
+
+\textcite{last:keogh}, cita vàries representacions per les sèries temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} o \emph{Piecewise Linear Representation} (PLR), però assenyala aquesta última com la representació més utilitzada. 
+La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
+Per aproximar el segment $S(t_a:t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
+
+Però també es pot representar una sèrie temporal amb una funció esglaó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
+La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
+El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
+
+%http://en.wikipedia.org/wiki/Piecewise
+
+%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
+
+%http://en.wikipedia.org/wiki/Rectangular_function
+
+%http://en.wikipedia.org/wiki/Step_function
+
+% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
+
+% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
+
+A continuació,  la representació  d'una sèrie temporal segons el model de \emph{zero-order hold} s'estén per diferents continuïtats en els intervals de temps de representació.
+
+Sigui $S$ una sèrie temporal, es defineix $S(t)$ com la representació
+de la sèrie temporal contínuament al llarg del temps $t$.  En primer
+lloc, es representa amb \emph{zero-order hold} a partir de funcions
+graó contínues per la dreta (\emph{right-continuous}).
+
+\begin{definition}[Representació amb \emph{zero-order hold}]
+Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació  $S(t)$ amb \emph{zero-order hold} es defineix
+\[
+\forall t \in \mathbb{R} ,\forall m \in S: S(t) =
+\begin{cases}
+  V(\min S) & \text{si } t < T(\min S) \\
+  V(m) & \text{si }  t\in [T(m),T(\seg m))
+\end{cases}
+\]
+\end{definition}
+
+En segon lloc, es representa $S(t)$ amb \emph{zero-order hold} centrada en
+l'interval, definit també a partir de funcions graó contínues per la
+dreta.
+
+\begin{definition}[Representació amb \emph{zero-order hold} centrada en l'interval]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
+  $S(t)$ amb \emph{zero-order hold} centrada en l'interval es defineix
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t) =  
+\begin{cases}
+  V(m) & \text{si } t = \frac{T(\ant m)+T(m)}{2} \\
+  V(m) & \text{si } t\in \left( \frac{T(\ant m)+T(m)}{2},\frac{T(m)+T(\seg m)}{2} \right) \
+\end{cases}
+\]
+\end{definition}
+
+En tercer lloc, es representa $S(t)$ amb \emph{zero-order hold} cap enrere, ara definit a partir de funcions graó contínues per l'esquerra.
+\begin{definition}[Representació en \emph{zero-order hold} cap enrere]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
+  $S(t)$ amb \emph{zero-order hold} cap enrere es defineix
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t) =  
+\begin{cases}
+  V(\max S) & \text{si } t > T(\max S) \\
+  V(m) & \text{si }  t\in (T(\ant m),T(m)]
+\end{cases}
+\]
+\end{definition}
+
+Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores la representació de $S(t)$ amb \emph{zero-order hold} és la mateixa que la de $S(t-\delta)$ amb \emph{zero-order hold} cap enrere i és la mateixa que la de $S(t-\frac{\delta}{2})$ centrada en l'interval. 
+
+
+
+
+
+
+
+\section{Model d'operacions}
+
+
+
+
+
+
+\subsubsection{Unió}
+
+Per tal que l'operació d'unió de conjunts sigui vàlida per les sèries
+temporals cal tenir en compte quan dues sèries temporals tenen mesures
+en el mateix instant de temps. En cas d'utilitzar l'operació d'unió de
+conjunts la sèrie temporal resultant no compliria amb la definició
+\ref{def:serie_temporal} ja que contindria mesures amb temps
+repetits. Com a conseqüència, es defineix l'operació d'unió per les
+sèries temporals.
+
+\begin{definition}[unió]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
+  temporals $S_1 \cup S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
+  m_k\}$ que conté totes les mesures de $S_1$ i les mesures de $S_2$
+  no repetides: $S_1 \cup S_2 = \{ m \in S_1 \} \cup \{ m^2 =
+  (t^2,v^2) \in S_2 | \forall (t^1,v^1)\in S_1 : t_1 \neq t_2
+  \}$. 
+
+  Tal com succeeix amb les relacions, per a poder unir dues sèries
+  temporals cal que totes dues tinguin la mateixa estructura; és a dir,
+  en termes de SGBDR cal que tinguin la mateixa capçalera.
+\end{definition}
+
+Propietats de la unió:
+
+\begin{itemize}
+\item La dimensió $k$ de la sèrie temporal resultant està fitada a
+  $k_1 \leq k \leq k_1 + k_2$. Nota: a la definició, la dimensió $k$ és
+  proporcional al cardinal $|S_1\cup S_2| = k+1$.
+\item La unió de sèries temporals no és commutativa. En general
+  $S_1\cup S_2 \neq S_2\cup S_1$ tot i que sí que es compleix
+  l'equivalència respecte al cardinal $|S_1\cup S_2| = |S_2\cup S_1|$.
+\end{itemize}
+
+
+
+\subsection{Temporals}
+
+Operacions a on el temps i la representació de la sèrie temporals
+juguen un paper important.
+
+
+\subsubsection{Pertinença temporal}
+
+\begin{definition}[pertinença temporal]
+  Sigui $S=\{m_0, \dotsc, m_{k}\}$ una sèrie temporal i $m=(t,v)$ una
+  mesura, direm que la mesura pertany temporalment a la sèrie 
+  $m\in^t S$ si i només si $\exists m_i=(t_i,v_i)\in S: t_i=t$.
+\end{definition}
+
+
+
+\subsubsection{Selecció temporal}
+
+Sigui $S$ una sèrie temporal i $i=[t_0,t_f]$ un interval de temps,
+per una banda s'ha definit l'interval sobre la seqüència d'una sèrie temporal $S(t_0,t_f]$ (def.~\ref{def:model:st-interval})  i per altra banda s'ha definit la representació contínua $r$ d'una sèrie temporal $S(t)$ \todo{referenciar la definició de repr}.
+Per seleccionar un interval temporal cal tenir en compte tant l'interval sobre la seqüència com la representació contínua, Aquesta selecció temporal s'anota com selecció de $S$ en $i$ amb representació $r$ o bé $S[t_o,t_f]^r$. 
+
+\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
+  $r$]
+  \[
+  \text{selecció}: \text{Sèrie temporal} \times \text{interval de
+    temps} \times \text{representació} \longrightarrow \text{Sèrie
+    temporal}
+  \]
+  \[
+  S = \{m_0 , \ldots , m_k\}  \times i = [t_0,t_f] \times r \longrightarrow S'
+  \]
+  \[
+  \forall  t \in i: S' = S(t)^r 
+  \] 
+\end{definition}
+
+A continuació s'exemplifica utilitzant la representació \emph{zoh} enrere.
+
+
+\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
+  \emph{zohe}]
+  Sigui $S$ una sèrie temporal, $i=[t_0,t_f]$ un interval de temps i
+  \emph{zohe} la representació $S(t)$ amb \emph{zero-order-hold} cap
+  enrere, es defineix la subsèrie $S[t_0,t_f]^{\text{zohe}}\subseteq
+  S$ com la sèrie temporal 
+  \[
+  S[t_0,t_f]^{\text{zohe}} = (S \cup \{m\})(t_0,t_f] : m=(t_f,v):
+  \]
+  \[
+  v=  V(\inf(S-S[-\infty,t_f)))
+  \]
+  
+  Nota: $S-S[-\infty,t_f)$ seria equivalent a l'interval tancat
+  $S[t_f,+\infty]$ si aquest últim estigués definit.
+\end{definition}
+
+Propietats de la selecció temporal:
+
+\begin{itemize}
+\item Observeu que, sigui $t_a$ un instant de temps, la selecció de $S$ en $[t_a,t_a]$ és equivalent a la representació contínua $S(t_a)$. 
+\end{itemize}
+
+
+
+
+\subsubsection{Selecció de la resolució}
+
+La selecció de la resolució d'una sèrie temporal permet canviar, en el
+context d'una representació, la resolució a una de marcada per un
+conjunt d'instants de temps. A diferència d'un buffer, la selecció de
+resolució no permet aplicar interpoladors ni obliga a que la sèrie
+temporal resultant sigui regular.
+
+Sigui $S$ una sèrie temporal, $i= \{t_0,t_1,\dotsc,t_n\}$ un conjunt
+d'instants de temps i la representació contínua $r$ de la sèrie
+temporal $S(t)$, la selecció de resolució s'anota com resolució de $S$
+en $i$ amb representació $r$ o bé $S[i]^r$.
+
+\begin{definition}[Selecció de la resolució de $S$ en $i$ amb representació
+  $r$]
+  \[
+  \text{resolució}: \text{Sèrie temporal} \times \text{instants de
+    temps} \times \text{representació} \longrightarrow \text{Sèrie
+    temporal}
+  \]
+  \[
+  S = \{m_0 , \ldots , m_k\} \times i = \{t_0,t_1,\dotsc,t_n\} \times r
+  \longrightarrow S'
+  \]
+  \[
+  t_0 < t_1 < \dotsb < t_n:
+  \]
+  \[
+  S' = S[t_0,t_0]^r \cup  S[t_1,t_1]^r \cup \dotsb \cup S[t_{n},t_n]^r
+  \] 
+  % Es podria fer recursiu
+  % \[
+  % t_f = \sup(i): i_n = i - t_f: t_a = \sup(i_n):
+  % S' = \left\{\begin{array}{ll}
+  %     \{\} & \text{si } |i| = 0 \\
+  %     S[i_n]^r \cup S[t_a,t_f]^r 
+  %   \end{array}\right.
+  % \] 
+\end{definition}
+
+
+
+Propietats de la selecció de resolució:
+\begin{itemize}
+\item El cardinal de la sèrie temporal resultant és el mateix que el del conjunt d'instants de temps $|S[i]^r| = |i|$
+\end{itemize}
+
+
+
+
+
+\subsubsection{Unió temporal}
+
+Unió temporal de dues sèries temporals $S_1 \cup^r S_2$. Per la unió temporal les sèries temporals han de tenir la mateixa estructura, tal com s'ha notat per a la unió de sèries temporals.
+
+\begin{definition}[Unió temporal de $S_1$ i $S_2$ amb representació
+  $r$]
+  \[
+  \text{unió}: \text{Sèrie temporal} \times \text{Sèrie temporal}
+  \times \text{representació} \longrightarrow \text{Sèrie temporal}
+  \]
+  \[
+  S_1 = \{m_0^1 , \ldots , m_{k1}^1\}  \times S_2 = \{m_0^2 , \ldots , m_{k2}^2\} \times r \longrightarrow S'
+  \]
+  \[
+  t_1=T(\inf S_1), t_2=T(\sup S_1):
+  \]
+  \[
+  S' = S_1 \cup  ( S_2 - S_2[t_1,t_2]^r )
+  \] 
+\end{definition}
+
+
+
+Propietats de la unió temporal:
+\begin{itemize}
+\item No commutativa
+\item Però, $(S_1 \cup^r S_2) \cup (S_2 \cup^r S_1) = S_1 \cup S_2$\todo{és cert?}
+\end{itemize}
+
+
+
+\subsubsection{Fusió temporal}
+
+Fusió (join) de dues sèries temporals $S_1 \text{ fusió } S_2$.
+
+
+\begin{definition}[Fusió temporal de $S1$ i $S2$ amb representació $r$]
+  \[
+  \text{fusió}: \text{Sèrie temporal} \times
+  \text{Sèrie temporal} \times \text{representació} \longrightarrow
+  \text{Sèrie temporal}
+  \]
+  \[
+  S_1 = \{m_0^1 , \ldots , m_{k_1}^1\} \times S_2 = \{m_0^2 , \ldots ,
+  m_{k_2}^2\} \times r \longrightarrow S'
+  \]
+  \[
+  t = \{t^1 \, | \, \forall m^1=(t^1,v^1) \in S_1\} \cup \{t^2 | \forall
+  m^2=(t^2,v^2) \in S_2\}:
+  \]
+  \[
+  S' = \{m'=(t',v_1',v_2') \, | \, (t',v_1') \in S_1[t]^r \wedge (t',v_2') \in S_2[t]^r \} 
+  \]\todo{els valors s'haurien de saber fusionar}
+\end{definition}
+
+
+
+Propietats de la fusió temporal:
+\begin{itemize}
+\item $|S'| <= k_1 + k_2$
+\end{itemize}
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+
+
+
+
+
+
+
+% LocalWords:  SGST

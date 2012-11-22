@@ -1,6 +1,128 @@
 \newcommand{\prev}{\ant}
 
-\chapter{Agregador d'atributs}\todo{potser dir-li aggregate? en català com en direm?}
+
+
+\section{Interpolació}
+\label{sec:model:interpolador}
+
+Sigui $S$ una sèrie temporal i $T_0$ i $T_f$ dos instants de temps, un agregador d'atributs $f$ calcula la mesura que resumeix a $S$ en un interval de temps $i=[T_0,T_f]$. 
+\[
+f: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+
+Hi poden haver diferents agregadors d'atributs depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns agregador d'atributs per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
+
+
+\begin{definition}[Agregador mitjana aritmètica]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=[T_0,T_f]$ un interval de temps, l'agregador mitjana
+  aritmètica (MA) resumeix $S(t)$ amb una mesura que és la mitjana dels
+  valors de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MA: \text{Sèrie temporal} \times \text{interval de temps}
+\longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
+\]
+\end{definition}
+
+\begin{definition}[Agregador D'atributs màxim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs màxim
+  (MAX) resumeix $S(t)$ amb una mesura que és el màxim dels valors
+  de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MAX: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \max_{\forall m \in S'}(V(m))
+\]
+\end{definition}
+
+De manera dual es pot definir l'agregador d'atributs mínim (MIN) com el
+que resumeix $S(t)$ amb una mesura que és el mínim dels valors de les
+mesures al conjunt $S(T_0,T_f]$.
+
+
+\begin{definition}[Agregador D'atributs últim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs últim
+  (LAST) resumeix $S(t)$ amb una mesura que és la mesura màxima del
+  conjunt $S(T_0,T_f]$.
+\[
+LAST: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(\max(S(T_0:T_f]),T_f)
+\]
+\end{definition}
+
+
+
+\begin{definition}[Agregador D'atributs àrea]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs àrea
+  (AREA) resumeix $S(t)$ amb una mesura que conserva l'àrea sota la
+  corba de la representació \emph{zero-order hold} cap enrere del
+  conjunt $S(T_0,T_f]$.
+\[
+AREA: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+v' = 
+\frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}
+\]
+per $S(t)$ estar definida a trossos, $v'$ es pot expressar com
+\[
+o=\min(S(T_0:T_f]),
+S'= S(T_0:T_f] - \{o\},
+n=\seg\limits_S \max(S'): %equivalent a n=\min(S(T_f,\infty)) quan existeix S(T_f,\infty)
+\]
+\[
+:v'= \frac{(T(o)-T_0)V(o) 
++( T_f- T(\ant\limits_S n) )V(n) 
++\sum\limits_{\forall m \in S'}( T(m)- T(\ant\limits_S m) )V(m)}
+{T_f-T_0} 
+\]
+
+Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
+\end{definition}
+
+%Compte amb AREA S [t<T_0,T_0] que no està definida en la definició discreta
+
+%Quan una sèrie temporal és regular, l'intepolador mitjana aritmètica i l'interpolador àrea valen el mateix en l'interval $(T_o,n\delta]$.
+
+If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
+$$
+\int_a^b f(x)dx = f(x^*)(b-a)
+$$
+
+The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
+
+Weisstein, Eric W. "Average Function." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/AverageFunction.html
+
+
+
+
+
+
+\section{Agregador d'atributs}
 \label{sec:model:interpolador}
 
 

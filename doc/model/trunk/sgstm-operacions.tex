@@ -1,0 +1,197 @@
+\section{Model d'operacions}
+
+
+
+\subsection{Buffer}
+
+
+Abans de consolidar, però, cal que la sèrie temporal contingui mesures. L'operació \emph{afegeix} permet afegir una mesura a un buffer.
+
+\begin{definition}
+  L'operació \emph{afegeix} afegeix una mesura a la sèrie temporal del buffer:
+  \[
+  \text{afegeix}: \text{Buffer} \times \text{Mesura} \longrightarrow \text{Buffer}
+  \]
+  \[
+   B \times m \longrightarrow B'= B \cup \{m\}
+   \]
+\end{definition}
+
+Cada cop que s'afegeix una mesura a un buffer es pot comprovar si el buffer ja és consolidable mitjançant un predicat que ens retorna un booleà: cert o fals. 
+
+\begin{definition}
+  Un buffer és consolidable quan el temps d'una mesura de la sèrie temporal és més gran que el proper instant de temps de consolidació:
+  \[
+  \text{consolidable?}: \text{Buffer} \longrightarrow \text{Booleà}
+  \]
+  Sigui $B=(S,\tau,\delta,f)$ un buffer i $m=\max(S)$ la mesura màxima, $B$ és consolidable si i només si $T(m) \geq \tau+\delta$
+\end{definition}
+
+
+
+
+
+
+
+\subsection{Consolidació}
+
+Quan un buffer és consolidable, es pot calcular una mesura de consolidació de la sèrie temporal per cada interval de temps consolidable. De manera simplificada, a cada consolidació només es té en compte l'interval que comença al darrer temps de consolidació del buffer. 
+
+Sigui $B=(S,\tau,\delta,f)$ un buffer consolidable, la mesura de consolidació de $B$ en l'interval de temps $i=[\tau,\tau+\delta]$ és $m'=(v,\tau+\delta)$ on $m'=f(S,i)$ i $f$ és un agregador d'atributs. L'operació \emph{consolida} permet consolidar la sèrie temporal del buffer calculant-ne la mesura de consolidació.
+
+\begin{definition}
+  L'operació \emph{consolida} calcula la mesura de consolidació i treu
+  les mesures consolidades de la sèrie temporal del buffer, en
+  l'interval de consolidació actual:
+  \[
+  \text{consolida}: \text{Buffer} \longrightarrow \text{Buffer} \times \text{Mesura}
+  \]
+  \[
+  B=(S,\tau,\delta,f) \longrightarrow B' \times m'
+  \]
+  \[
+  B'= (S',\tau+\delta,\delta,f)
+  \]
+  \[
+  S' = S(\tau+\delta,\infty)
+  \]
+  \[
+  m' = f(S,[\tau,\tau+\delta]): f \text{ és un agregador d'atributs}
+  \]
+\end{definition}
+\todo{$S'$ pot ser $S$ en el model, en tot cas fer una nota que en la implementació normalment es reduirà per no ocupar espai}
+
+
+
+
+
+\subsection{Disc}
+
+L'operació \emph{afegeix} permet afegir una mesura a un disc, controlant-ne el cardinal màxim.
+
+\begin{definition}
+  L'operació \emph{afegeix} afegeix una mesura a la sèrie temporal del disc:
+  \[
+  \text{afegeix}: \text{Disc} \times \text{Mesura} \longrightarrow \text{Disc}
+  \]
+  \[
+  D=(S,k) \times m \longrightarrow D'= (S',k)
+  \]
+  \[
+  S' =  
+  \begin{cases}
+      S\cup\{m\} &\text{si }  |S|<k\\
+      (S-\{\min(S)\}) \cup \{m\} 
+    \end{cases}  \
+  \]
+\end{definition}
+
+
+
+
+
+\subsection{Disc resolució}
+
+
+Per altra banda, les operacions dels buffers i dels discs estan relacionades amb les operacions dels discs Round Robin. 
+
+L'operació \emph{afegeix} permet afegir una mesura a un disc Round Robin.
+
+\begin{definition}
+  L'operació \emph{afegeix} afegeix una mesura al buffer del disc Round Robin:
+  \[
+  \text{afegir}: \text{Disc Round Robin} \times \text{Mesura} \longrightarrow \text{Disc Round Robin}
+  \]
+  \[
+  R=(B,D) \times m \longrightarrow R'= (B',D)
+  \]
+  \[
+  B'= B \text{ afegeix } m
+  \]
+\end{definition}
+
+Cada cop que s'afegeix una mesura a un disc Round Robin es pot comprovar si ja és consolidable. 
+
+\begin{definition}
+  Un disc Round Robin és consolidable quan el seu buffer és consolidable:
+  \[
+  \text{consolidable?}: \text{Disc Round Robin} \longrightarrow \text{Booleà}
+  \]
+  Sigui $R=(B,D)$ un disc Round Robin, $R$ és consolidable si i només
+  si $B$ és consolidable.
+\end{definition}
+
+
+Quan un disc Round Robin és consolidable, es pot consolidar amb l'operació \emph{consolida}. 
+
+\begin{definition}
+  L'operació \emph{consolida} calcula una  mesura de consolidació del buffer, en
+  l'interval de consolidació actual, i la desa al disc. 
+  \[
+  \text{consolida}: \text{Disc Round Robin} \longrightarrow \text{Disc Round Robin}
+  \]
+  \[
+  R=(B,D) \longrightarrow R'= (B',D')
+  \]
+  \[
+  B' \times m'= \text{ consolida } B 
+  \]
+  \[
+  D'= D \text{ afegeix } m'
+  \]
+\end{definition}
+
+
+
+
+
+\subsection{Base de dades multiresolució}
+
+
+
+With reference to the operators, the add and consolidate in a multiresolution database are applied to every resolution disc it contains.
+
+
+\begin{definition}
+  Operator \emph{add} adds a measure to every resolution disc:
+  \[
+  \text{add}: \text{multiresolution database} \times \text{Measure}
+  \longrightarrow \text{multiresolution database}
+  \]
+  \[
+  M=\{R_0,\dotsc,R_d\} \times m \mapsto M' 
+  \]
+  \[  
+  M'= \{ \forall R_i\in M: R_i \text{ add } m \}
+  \]
+\end{definition}
+
+
+\begin{definition}
+  Operator \emph{consolidate} consolidates the resolution discs that
+  are ready to consolidate.
+  \[
+  \text{consolidate}: \text{multiresolution database} \longrightarrow
+  \text{multiresolution database}
+  \]
+  \[
+  M=\{R_0,\dotsc,R_d\} \mapsto M'
+  \]
+  \[
+  M'= \big\{
+  \forall R_i\in M: 
+  \begin{cases}
+    \text{ consolidate } R_i & \text{if } R_i \text{ ready to consolidate} \\
+    R_i & \text{else }
+  \end{cases}\big\}
+  \]
+\end{definition}
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+% LocalWords:  SGSTM
