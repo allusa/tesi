@@ -4,16 +4,22 @@
 % cal compilar amb `pdflatex -shell-escape main.tex`
 % makeglossaries main
 %--------------------
-\documentclass[paper=a4,fontsize=11pt,twoside,parskip=half,BCOR12mm]{scrbook}
+\documentclass[paper=a4,parskip=half,
+twoside,fontsize=11pt,BCOR12mm,
+%oneside,fontsize=11pt, %%format web
+% twoside,openany,fontsize=10pt,DIV = 10,BCOR12mm, %%format en paper
+]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
+%%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
 %\usepackage[T1]{fontenc}
 %------------- capçalera ----------------------
 \input{capçalera.default}
 \bibliography{bibliografia}
 \ExecuteBibliographyOptions{annotation=true,backref=true,}
-%\graphicspath{{imatges/}} %{{imatges/}{imatges/model/}}
+%backref=true, urldate=long, abbreviate=false,%%format web 
+% isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true %%format en paper
 %---------- Mode esborrany --------------------
-%\includeonly{model-dades}
+%\includeonly{sgstm}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
 %%\renewcommand{\headrulewidth}{0pt}
@@ -24,6 +30,7 @@
 %%ús coma decimal sense espais:  2{,}5
 \newtheorem{definition}{Definició}
 \def\figureautorefname{figura} %ús: \autoref{}
+\def\tableautorefname{taula} %ús: \autoref{}
 \numberwithin{equation}{chapter}
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
@@ -43,22 +50,21 @@
 \renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
 %Índex d'abreviacions?? si conté abreviatures o símbols
 % \short<type>name,
-\input{glossari.tex}
-\loadglsentries{glossari-abreviacions.tex}
-\loadglsentries[notation]{notacio.tex}
+\input{vocabulari/glossari.tex}
+\loadglsentries{vocabulari/abreviacions.tex}
+\loadglsentries[notation]{vocabulari/notacio.tex}
 
 %-------------- dades --------------------------
 \hypersetup{
-    pdftitle={Model dels SGBD per sèries temporals},
+    pdftitle={Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals},
     pdfauthor={Aleix Llusà Serra},
     pdfcreator={DiPSE--UPC},
-    pdfsubject={SGST},
-    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
-    pdflang=ca,
+    pdfsubject={Tesi 2011--2014},
+    pdfkeywords={sèries temporals; model de dades; sistemes de bases de dades; sistemes de monitoratge},
+    pdflang={ca},
 }
-\title{Model dels SGBD per sèries temporals}
-\author{Aleix Llusà Serra}
-\title{Model dels SGBD per sèries temporals}
+
+\title{Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals}
 \author{Aleix Llusà Serra}
 %----------------------------------------------
 
@@ -79,7 +85,7 @@
 
 %------------- Índexs ------------
 %\listoftodos
-\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
+\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents{}
 %\addtocontents{toc}{\protect\enlargethispage{1cm}}
 %\listoffigures
 %\listoftables
@@ -92,13 +98,11 @@
 %\frontmatter
 %\mainmatter
 
-\include{model-dades}
+\include{sgst}
 
-\include{model-operacions}
+\include{sgstm}
 
 \include{model}
-
-\include{interpoladors}
 
 %------- Annexos ------
 \appendix
@@ -126,7 +130,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-% Model dels sistemes de gestió de bases de dades per sèries temporals.
+% Memòria Tesi Doctoral. Model d'un sistema de gestió multiresolució per a sèries temporals.
 %
 % Copyright (C) 2011-2012 Aleix Llusà Serra.
 % 
