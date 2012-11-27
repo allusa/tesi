@@ -2,6 +2,194 @@
 
 
 
+\begin{verbatim}
+VAR timeseries BASE RELATION
+    { t RATIONAL, v RATIONAL }  KEY { t } ;
+
+OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
+return t FROM TUPLE FROM m;
+END OPERATOR;
+
+OPERATOR ts.v(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
+return v FROM TUPLE FROM m;
+END OPERATOR;
+\end{verbatim}
+
+
+
+
+\subsection{Màxim i suprem}
+
+
+La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
+sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
+temporal s'ha considerat finita i sense elements repetits, quan la
+sèrie temporal no és buida això comporta l'existència d'un màxim i
+d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
+respectivament la mesura màxima i mínima d'$S$.
+
+\begin{definition}[Màxim i mínim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
+  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
+  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
+  m$.
+\end{definition}
+
+El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
+és buida: $S= \emptyset$. En
+canvi, el suprem i l'ínfim estan definits per qualsevol
+sèrie temporal tal com passa amb el conjunt estès de nombres reals,
+\cite{cantrell:extendedreal}.  
+
+\begin{definition}[Suprem i ínfim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
+  $n=\max(S)$ en cas que el màxim estigui definit o
+  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
+  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
+  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
+\end{definition}
+Quan la sèrie temporal no és buida, per
+ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
+i un mínim i per tant es corresponen amb el suprem i l'ínfim
+respectivament.
+
+
+
+Tutorial D:
+\begin{verbatim}
+OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
+END OPERATOR;
+
+OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
+END OPERATOR;
+\end{verbatim}
+
+
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1: 
+ts.max(ts1)
+\end{verbatim}
+\begin{verbatim}
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 1.0/0.0, v 1.0 }  //1.0/0.0 infinit
+ } AS ts2: 
+ts.max(ts2)
+\end{verbatim}
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1: 
+ts.sup(ts1)
+\end{verbatim}
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1: 
+ts.sup(timeseries)
+\end{verbatim}
+
+
+
+\subsection{Interval}
+
+Atesa la relació d'ordre induïda pel temps en una sèrie temporal
+(def.\ \ref{def:model:mesura-relacio-ordre}) és possible definir el
+concepte d'interval sobre la seqüència, semblant a com es fa a \cite{last:keogh,last:hetland}.
+
+\begin{definition}[Interval]
+  \label{def:model:st-interval}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
+  $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
+  | r<T(m)\leq t\}$, a on $r$ i $t$ són dos instants de temps.
+
+  També es defineix la subsèrie $S[-\infty,t)\subseteq S$ com la sèrie
+  temporal $S[-\infty,t) = \{m\in S | T(\inf(S))\leq T(m) < t\}$.
+\end{definition}
+S'observa que la subsèrie $S(r,+\infty]\subseteq S$ és
+equivalent a la sèrie temporal $S(r,+\infty] \equiv S(r,T(\sup(S))]$ i
+anàlogament $S(-\infty,t] \equiv S(T(\inf(S)),t]$. També s'observa que les subsèries $S(t,t]\subseteq S$ i $S[t,t)\subseteq S$ són equivalents a la sèrie temporal buida $S(t,t] \equiv S[t,t) \equiv \emptyset$ ja que per ser els temps d'ordre total $\nexists T(m): t < T(m) \leq t$ o $\nexists T(m): t \leq T(m) < t$, respectivament. 
+%Finalment, s'observa que la subsèrie $S(-\infty,+\infty]\subseteq S$ només és equivalent a la sèrie temporal original quan aquesta no conté la mesura indefinida negativa $S(-\infty,+\infty]\equiv S: (-\infty,v)\notin S$
+
+
+\begin{verbatim}
+OPERATOR ts.interval(s1 SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 WHERE t>l AND t<=h;
+END OPERATOR;
+OPERATOR ts.interval.ni(s1 SAME_TYPE_AS  (timeseries), h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 WHERE t<h;
+END OPERATOR;
+\end{verbatim}
+
+
+
+\subsection{Successor}
+
+
+També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
+defineix el concepte de mesura següent i mesura anterior en una
+seqüència.
+
+\begin{definition}[Successor i predecessor]
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
+  mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
+  com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
+  Direm que $l$ és el predecessor de $n$ en $S$ i ho notarem com
+  $l=\ant\limits_S(n)$ si i només si $l=\sup(S[-\infty,T(n)))$.
+
+Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
+exemple quan $n\in S$, podrem escriure $\seg(n)$ i $\ant(n)$.
+\end{definition}
+S'observa que s'obtenen mesures indefinides en els casos que la
+mesura següent o anterior es calcula respectivament per la mesura
+suprema o ínfima de la sèrie temporal: $\seg\limits_S(\sup
+S)=(+\infty,\infty)$ i $\ant\limits_S(\inf S)=(-\infty,\infty)$.
+
+De la definició anterior es dedueix que donada una sèrie temporal $S$
+que no conté mesures indefinides i donada la mesura indefinida
+$o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
+sèrie temporal $\ant\limits_S( (+\infty,\infty) ) = \sup(S): \forall
+m\in S: T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
+\emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
+  una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
+  $l=\ant\limits_S(o)$ que compleix
+  $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
+  $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
+  \mathbb{R}$, i per tant com que $S$ no té mesures indefinides es
+  demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
+$\seg\limits_S( (-\infty,\infty) ) = \inf(S): \forall m\in S:
+T(m)\in\mathbb{R}$.
+
+
+
+
+
+\begin{verbatim}
+OPERATOR ts.next( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.inf(ts.interval(s1,ts.t(m),1.0/0.0));
+END OPERATOR;
+OPERATOR ts.prev( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.sup(ts.interval.ni(s1,ts.t(m)));
+END OPERATOR;
+\end{verbatim}
+
+
 
 
 
@@ -39,6 +227,32 @@ Propietats de la unió:
   $S_1\cup S_2 \neq S_2\cup S_1$ tot i que sí que es compleix
   l'equivalència respecte al cardinal $|S_1\cup S_2| = |S_2\cup S_1|$.
 \end{itemize}
+
+
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+END OPERATOR;
+\end{verbatim}
+
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2: 
+ts.union(ts1,ts2)
+\end{verbatim}
 
 
 
