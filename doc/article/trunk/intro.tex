@@ -55,7 +55,7 @@ an aggregated way. The model is specifically designed to cope well
 with bounded storage computers like those found in sensor systems.
 
 
-This paper is organised as follows. Continuing this introduction, we
+This paper is organised as follows. Following this introduction, we
 summarise the TSMS and the MTSMS features and we show some related
 work concerning these systems.  Next, we formalise the MTSMS model: in
 section~\ref{sec:model:preliminaries} we introduce nomenclature
@@ -73,15 +73,15 @@ proposal and we consider some future working directions.
 \subsection{TSMS features}
 
 A TSMS is a special purpose DBMS aimed at storing and managing time
-series. The main objective of TSMS is to put together two areas of study: time
-series analysis and DBMS.  Time series analysis theory studies
-formally a great amount of algorithms and methodologies that apply to
-time series, focusing on efficiency improving. DBMS theory studies
-systems that store and operate with data; currently the relation model
-\cite{date:introduction} is the referent.
+series. The main objective of TSMS is to put together two areas of
+study: time series analysis and DBMS.  Time series analysis formalises
+a great amount of algorithms and methodologies that apply to time
+series, with a main focus on improving efficiency. DBMS theory
+formalises systems that store and operate with data; currently the
+relation model \cite{date:introduction} is the referent.
 
 In time series analysis there are some common operations that can be
-generalised when treating time series.
+generalised when managing time series.
 
 The main attribute of time series is the time, therefore dealing with
 time is a common operation, such as querying time intervals, finding
@@ -105,23 +105,24 @@ time series can be of any type.
 
 
 %MTSMS
-\subsection{Multiresolution features}
+%\subsection{Multiresolution features}
+\subsection{Multiresolution motivation example}
 
-A MTSMS is a TSMS that has multiresolution capabilities.
+A MTSMS is a TSMS with multiresolution capabilities.
 In a MTSMS a schema has to be configured, which mainly consist in
-defining different pairs of time resolutions and attribute summarising
-functions. We show it with an example.
+defining different pairs of a time resolution and an attribute summarising
+function. We show it with an example.
 
-Figure~\ref{fig:mtsms:sequence} is a diagram showing a multiresolution
-summary. It is for a regular time series, in
-figure~\ref{fig:mtsms:sequence-irregular} there is an example for some
-irregular cases. Both figures show a snapshot in time, suppose between
-time 9 and 10.  
+Figures \ref{fig:mtsms:sequence} and
+\ref{fig:mtsms:sequence-irregular} show a multiresolution summary for
+a regular and irregular time series, respectively. Both figures show a
+snapshot in time, suppose between time 9 and 10.
+
 
 \begin{figure}[tp]
   \centering
   \input{imatges/mtsms_sequence.tex}
-  \caption{Multiresolution diagram snapshot with regular sampling}
+  \caption{Multiresolution snapshot diagram with regular sampling}
   \label{fig:mtsms:sequence}
 \end{figure}
 
@@ -129,7 +130,7 @@ time 9 and 10.
 \begin{figure}[tp]
   \centering
   \input{imatges/mtsms_sequence_irregular.tex}
-  \caption{Multiresolution diagram snapshot with irregular sampling}
+  \caption{Multiresolution snapshot diagram with irregular sampling}
   \label{fig:mtsms:sequence-irregular}
 \end{figure}
 
@@ -305,4 +306,4 @@ deal with related time aspects.
 %%% ispell-local-dictionary: "british"
 %%% End:
 
-% LocalWords:  multiresolution
+% LocalWords:  multiresolution TSMS

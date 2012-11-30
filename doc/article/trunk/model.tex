@@ -246,11 +246,11 @@ $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
 The operators of a resolution disc are related to
 the buffer and disc ones.
 
-Operator \emph{addResolutionDisc} is the addition of a measure to the
-buffer of the resolution disc, $\text{addResolutionDisc } : R=(B,D) \times m \mapsto R'$ where
+Operator \emph{addRD} is the addition of a measure to the
+buffer of the resolution disc, $\text{addRD } : R=(B,D) \times m \mapsto R'$ where
 $R'= (B',D)$ and $B'= B \text{ addBuffer } m$.
 \[
-\text{addResolutionDisc}: \text{Resolution Disc} \times \text{Measure}
+\text{addRD}: \text{Resolution Disc} \times \text{Measure}
 \longrightarrow \text{Resolution Disc}
 \]
 
@@ -258,13 +258,13 @@ Let $R=(B,D)$ be a resolution disc, $R$ is ready to consolidate if and
 only if $B$ is ready to consolidate.
 
 If the resolution disc is ready to consolidate, it can be
-consolidated.  Operator \emph{consolidateResolutionDisc} calculates a
+consolidated.  Operator \emph{consolidateRD} calculates a
 consolidation measure from the buffer and adds it to the disc,
-$\text{consolidateResolutionDisc } : R=(B,D) \mapsto R'$ where $R'=
+$\text{consolidateRD } : R=(B,D) \mapsto R'$ where $R'=
 (B',D')$, $B' \times m'= \text{ consolidateBuffer } B $ and $ D'= D
 \text{ addDisc } m'$.
 \[
-\text{consolidate}: \text{Resolution Disc} \longrightarrow
+\text{consolidateRD}: \text{Resolution Disc} \longrightarrow
 \text{Resolution Disc}
 \]
 
@@ -302,7 +302,7 @@ contains.
 Operator \emph{addMD} is defined as the addition of a measure to every
 resolution disc, $\text{addMD } : M=\{R_0,\dotsc,R_d\} \times m
 \mapsto M' $ where $M'= \{ \forall R_i\in M: R_i \text{
-  addResolutionDisc } m \}$.
+  addRD } m \}$.
 \[
 \text{addMD}: \text{Multiresolution Database} \times \text{Measure}
 \longrightarrow \text{Multiresolution database}
@@ -312,13 +312,14 @@ resolution disc, $\text{addMD } : M=\{R_0,\dotsc,R_d\} \times m
 Operator \emph{consolidateMD} consolidates the resolution discs that
 are ready to consolidate, $\text{consolidateMD } :
 M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:$
+
   $\begin{cases}
-    \text{ consolidateResolutionDisc } R_i & \text{if } R_i \text{ ready to consolidate} \\
+    \text{ consolidateRD } R_i & \text{if } R_i \text{ ready to consolidate} \\
     R_i & \text{else }
   \end{cases}$ $\big\}
   $.
 \[
-\text{consolidate}: \text{Multiresolution Database} \longrightarrow
+\text{consolidateMD}: \text{Multiresolution Database} \longrightarrow
 \text{Multiresolution Database}
   \]
 
