@@ -209,7 +209,7 @@ sèries temporals.
   temporals $S_1 \cup S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
   m_k\}$ que conté totes les mesures de $S_1$ i les mesures de $S_2$
   no repetides: $S_1 \cup S_2 = \{ m \in S_1 \} \cup \{ m^2 =
-  (t^2,v^2) \in S_2 | \forall (t^1,v^1)\in S_1 : t_1 \neq t_2
+  (t^2,v^2) \in S_2 | \forall (t^1,v^1)\in S_1 : t^1 \neq t^2
   \}$. 
 
   Tal com succeeix amb les relacions, per a poder unir dues sèries
@@ -256,6 +256,78 @@ ts.union(ts1,ts2)
 
 
 
+\subsubsection{Intersecció}
+
+Per tal que l'operació d'intersecció de conjunts sigui vàlida per les sèries
+temporals cal tenir en compte quan dues sèries temporals tenen mesures
+en el mateix instant de temps.
+
+\begin{definition}[intersecció]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la intersecció de les dues
+  sèries temporals $S_1 \cap S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté les mesures de $S_1$ repetides a $S_2$:
+  $S_1 \cap S_2 = \{ m^1 = (t^1,v^1) \in S_1 | \exists (t^2,v^2)\in
+  S_2 : t^1 = t^2\}$.
+\end{definition}
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 JOIN (s1 {t} INTERSECT s2 {t});
+END OPERATOR;
+\end{verbatim}
+
+
+
+
+\subsubsection{Unió exclusiva}
+
+Unió de dues sèries temporals sense tenir en compte les mesures que
+tenen el mateix instant de temps.
+
+
+\begin{definition}[unió exclusiva]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió exclusiva de les dues
+  sèries temporals $S_1 \cup^x S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté les mesures no repetides de $S_1$ i de
+  $S_2$: $S_1 \cup^x S_2 =  ( S_1 \cup S_2 ) - (S_1 \cap S_2)$.
+\end{definition}
+
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+END OPERATOR;
+\end{verbatim}
+
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2: 
+ts.xunion(ts1,ts2)
+\end{verbatim}
+
+
+
+
+
+
+
+
+
 \subsection{Temporals}
 
 Operacions a on el temps i la representació de la sèrie temporals
@@ -269,6 +341,16 @@ juguen un paper important.
   mesura, direm que la mesura pertany temporalment a la sèrie 
   $m\in^t S$ si i només si $\exists m_i=(t_i,v_i)\in S: t_i=t$.
 \end{definition}
+
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.temporal.in(m SAME_TYPE_AS  (timeseries), s SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+return (TUPLE FROM m {t}) IN (s {t});
+END OPERATOR;
+\end{verbatim}
+
+
 
 
 
@@ -303,11 +385,13 @@ A continuació s'exemplifica utilitzant la representació \emph{zoh} enrere.
   enrere, es defineix la subsèrie $S[t_0,t_f]^{\text{zohe}}\subseteq
   S$ com la sèrie temporal 
   \[
-  S[t_0,t_f]^{\text{zohe}} = (S \cup \{m\})(t_0,t_f] : m=(t_f,v):
+  S[t_0,t_f]^{\text{zohe}} = S(t_0,t_f] \cup \{m\} : m=(t_f,v):
   \]
   \[
   v=  V(\inf(S-S[-\infty,t_f)))
   \]
+
+  %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
   
   Nota: $S-S[-\infty,t_f)$ seria equivalent a l'interval tancat
   $S[t_f,+\infty]$ si aquest últim estigués definit.
@@ -318,6 +402,53 @@ Propietats de la selecció temporal:
 \begin{itemize}
 \item Observeu que, sigui $t_a$ un instant de temps, la selecció de $S$ en $[t_a,t_a]$ és equivalent a la representació contínua $S(t_a)$. 
 \end{itemize}
+
+
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+VAR x RATIONAL init(0.0);
+VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
+sp := RELATION {
+TUPLE {t h, v x}
+};
+return ts.union(ts.interval(s,l,h),sp);
+END;
+END OPERATOR;
+\end{verbatim}
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2:
+ts.temporal.select.zohe(ts1,1.0,5.0)
+\end{verbatim}
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2:
+ts.temporal.select.zohe(ts1,-1.0/0.0,-1.0/0.0)
+\end{verbatim}
 
 
 
@@ -371,6 +502,11 @@ Propietats de la selecció de resolució:
 
 
 
+TutorialD:
+\begin{verbatim}
+
+\end{verbatim}
+
 
 
 \subsubsection{Unió temporal}
@@ -401,6 +537,14 @@ Propietats de la unió temporal:
 \item No commutativa
 \item Però, $(S_1 \cup^r S_2) \cup (S_2 \cup^r S_1) = S_1 \cup S_2$\todo{és cert?}
 \end{itemize}
+
+
+
+TutorialD:
+\begin{verbatim}
+
+\end{verbatim}
+
 
 
 
@@ -439,6 +583,11 @@ Propietats de la fusió temporal:
 
 
 
+TutorialD:
+\begin{verbatim}
+
+\end{verbatim}
+
 
 
 
@@ -465,6 +614,11 @@ f_m=m_a\in S : \text{fold}( S-\{m_a\},f(m_a,m_i),f)
 \]
 
 
+
+TutorialD:
+\begin{verbatim}
+
+\end{verbatim}
 
 
 

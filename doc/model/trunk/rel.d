@@ -61,12 +61,34 @@ OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) 
 return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
 END OPERATOR;
 
+OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 JOIN (s1 {t} INTERSECT s2 {t});
+END OPERATOR;
+
+OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+END OPERATOR;
+
+
+//Temporals
+
+OPERATOR ts.temporal.in(m SAME_TYPE_AS  (timeseries), s SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+return (TUPLE FROM m {t}) IN (s {t});
+END OPERATOR;
 
 
 
-
-
-
+OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+VAR x RATIONAL init(0.0);
+VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
+sp := RELATION {
+TUPLE {t h, v x}
+};
+return ts.union(ts.interval(s,l,h),sp);
+END;
+END OPERATOR;
 
 
 
