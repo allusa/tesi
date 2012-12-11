@@ -1,0 +1,143 @@
+%--------------------
+% document principal
+%--------------------
+
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+
+%\usepackage{todonotes}
+
+%\usepackage[hmargin=2cm,vmargin=4cm,columnsep=7.5mm]{geometry}
+
+\usepackage{biblatex}
+\bibliography{bibliografia}
+
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+
+%\usepackage{graphicx}
+\usepackage{tikz,pgfplots}
+\usepackage{multicol}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+
+
+\newtheorem{definition}{Definition}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle]{hyperref}
+
+\hypersetup{
+    pdfauthor={Aleix Llusà Serra; Teresa Escobet Canal; Sebastià Vila-Marta },
+    pdfcreator={DiPSE--UPC},
+    pdfsubject={MTSMS model},
+    pdfkeywords={time series; data model; database systems; monitoring systems},
+    pdflang={en},
+}
+
+
+\title{%
+  Model and requirements for a Multiresolution Time Series
+  Database Management System }
+
+
+%[A. Llusà Serra; T. Escobet Canal; S. Vila-Marta]
+\author
+{
+  {%
+    A.\ Llusà Serra,
+    T.\ Escobet Canal
+    and S.\ Vila-Marta
+  }\\
+  {\{aleix, sebas\}@dipse.upc.edu, teresa.escobet@upc.edu}\\
+  {Department of Electronic System Design and Programming (DiPSE)}\\
+  {Universitat Politècnica de Catalunya, Manresa, ES--CT}
+}
+
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+In this paper we define a model for multiresolution time series
+database management systems. The main objective is to store compactly
+a time series and manage consistently its temporal dimension. It is
+achieved by extracting different resolutions and attributes summaries
+from the time series.  
+
+Our work is concerned in putting together two areas of study: time
+series analysis and database management systems (DBMS). Time series analysis
+offers a great deal of methodologies and algorithms to process time
+series data and database field provides software expertise in managing
+data. Therefore it is of primary relevance that DBMS support time series.
+\end{abstract}
+
+{\bfseries Keywords:} time series, data model, database systems,
+monitoring systems.
+
+
+%\twocolumn
+
+%intro, requirements
+\input{intro}
+
+%model MTSMS
+\input{model}
+
+%exemple
+\input{example}
+
+%related work, conclusion, acknowledgement
+\input{conclusion}
+
+
+\printbibliography{}
+
+
+\end{document}
+
+
+%%% Local Variables: 
+%%% ispell-local-dictionary: "british"
+%%% End: 
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Model and requirements for a Multiresolution Time Series Database Management System
+%
+% Copyright (C) 2012 Aleix Llusà Serra, Teresa Escobet Canal, Sebastià Vila-Marta.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% Source LaTeX document code is located at 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
