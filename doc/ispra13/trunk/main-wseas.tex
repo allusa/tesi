@@ -1,0 +1,267 @@
+\documentclass[twocolumn,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+%
+% DO NOT CHANGE THE FOLLOWING PART
+%
+\setlength{\textwidth}{6.9in}
+\setlength{\textheight}{9.5in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0pt}
+\setlength{\topmargin}{-0.25in}
+\setlength{\columnsep}{0.4in}
+\setlength{\parindent}{4ex}
+%
+\newtheorem{definition}{Definition}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{corollary}[definition]{Corollary}
+%
+%
+% THIS IS THE PLACE FOR YOUR OWN DEFINITIONS
+%
+\newcommand{\R}{{\rm I}\!{\rm R}} % the set of real numbers
+% boldface characters in mathematical formulas
+\newcommand{\bff}{\mbox{\boldmath $f$}}
+\newcommand{\bfl}{\mbox{\boldmath $l$}}
+\newcommand{\bfn}{\mbox{\boldmath $n$}}
+\newcommand{\bfu}{\mbox{\boldmath $u$}}
+\newcommand{\bfx}{\mbox{\boldmath $x$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfzero}{\mbox{\boldmath $0$}}
+\newcommand{\bfcurl}{{\bf curl}} % curl of a vector field
+\newcommand{\rmdiv}{{\rm div}} % divergence of a vector field
+\newcommand{\eop}{\hfill $\sqcap\!\!\!\!\sqcup$} % end of proof
+%
+%
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+
+\usepackage[
+style=numeric-comp,%style=authoryear
+sortcites=true,
+%backref=true,
+]{biblatex}
+\bibliography{bibliografia}
+\ExecuteBibliographyOptions{
+%  annotation=true
+%%backref=true, urldate=long, abbreviate=false,%%format web 
+isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true, %%format en paper
+}
+\bibitemsep 0.6mm \biblabelsep 2mm \bibhang 0cm
+% \renewcommand{\bibfont}{\normalfont\footnotesize}
+\renewcommand*\newunitpunct{\addcomma\addspace}
+\DeclareFieldFormat[inproceedings]{booktitle}{}
+\DeclareFieldFormat{volume}{}
+
+\renewbibmacro*{title}{%
+      \printtext[title]{\printfield[sentencecase]{title}}
+}
+
+\renewbibmacro*{publisher+location+date}{%
+  \printlist{publisher}%
+  \newunit
+  \printfield{year}%
+  \newunit
+}
+
+\renewbibmacro*{issue+date}{%
+  \newunit
+  \printfield{year}
+}
+
+
+%http://tex.stackexchange.com/questions/18820/how-to-make-cross-referencing-with-shorthands
+
+
+%a cada secció hi ha un vspace
+\makeatletter
+
+\let\old@section\section
+
+\renewcommand*{\section}{%
+  \@ifstar{%
+    \starsection
+  }{%
+    \@dblarg\nostarsection
+  }%
+}
+\newcommand*{\starsection}[1]{%
+  \old@section*{#1}%
+  \vspace{-4pt}%
+}
+\newcommand{\nostarsection}{}
+\def\nostarsection[#1]#2{%
+  % #1: toc entry
+  % #2: main entry
+  \old@section[{#1}]{#2}%
+  \vspace{-4pt}%
+}
+
+\let\old@subsection\subsection
+\renewcommand\subsection[2][]{\old@subsection[#1]{#2}\vspace{-4pt}}
+
+\let\old@mathbb\mathbb
+\renewcommand\mathbb[2][]{{\rm I}\!{\rm #2}}
+
+\makeatother
+
+% redimensió de les llistes
+\usepackage{enumitem}
+\setitemize{topsep=1pt,itemsep=1pt,leftmargin=8pt,labelwidth=6pt}
+
+
+%
+%
+% THE BEGINNING OF THE DOCUMENT
+%
+\begin{document}
+\global\def\refname{{\normalsize \it References:}}
+%
+\baselineskip 12.5pt
+%
+%
+% TITLE, AUTHOR, ABSTRACT, KEYWORDS
+%
+\title{\LARGE \bf Model and requirements for a Multiresolution Time Series
+  Database Management System}
+
+\date{}
+
+\author{\hspace*{-10pt}
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{A.\ LLUSÀ SERRA}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{T.\ ESCOBET CANAL}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{S.\ VILA-MARTA}
+\end{minipage} \\ \hspace*{-10pt}
+%
+\begin{minipage}[t]{2.7in} \normalsize \baselineskip 12.5pt
+%\centerline{A.\ LLUSÀ SERRA}
+\centerline{Universitat Politècnica de Catalunya}
+\centerline{Department of Electronic System Design and Programming}
+\centerline{Av.\ Bases de Manresa 61--73, 08242 Manresa}
+\centerline{ES--CT}
+%\centerline{aleix@dipse.upc.edu}
+\end{minipage} \\ \hspace*{-10pt}
+%
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{aleix@dipse.upc.edu}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{teresa.escobet@upc.edu}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{sebas@dipse.upc.edu}
+\end{minipage} 
+%
+% If you are three authors then you can use three mini--pages
+% instead of two. Their horizontal size must be less than 2.7in
+% indicated above. It can be e.g. 2.3in. However, you must pay
+% attention that you do not exceed the total width of the text.
+%
+\\ \\ \hspace*{-10pt}
+\begin{minipage}[b]{6.9in} \normalsize
+\baselineskip 12.5pt {\it Abstract:}
+% The text of the abstract follows.
+In this paper we define a model for multiresolution time series
+database management systems. The main objective is to store compactly
+a time series and manage consistently its temporal dimension. It is
+achieved by extracting different resolutions and attributes summaries
+from the time series.  
+%
+Our work is concerned in putting together two areas of study: time
+series analysis and database management systems (DBMS). Time series analysis
+offers a great deal of methodologies and algorithms to process time
+series data and database field provides software expertise in managing
+data. Therefore it is of primary relevance that DBMS support time series.
+%
+\\ [4mm] {\it Key--Words:}
+% The key-words follow.
+time series, data model, database systems, monitoring systems
+\end{minipage}
+\vspace{-10pt}}
+
+\maketitle
+
+\thispagestyle{empty} \pagestyle{empty}
+% numbers of pages are supplemented by the editor
+%
+% THE BEGINNING OF THE TEXT
+%
+
+
+% \section{Introduction}
+% \label{S1} \vspace{-4pt}
+
+
+
+%intro, requirements
+\input{intro}
+
+%model MTSMS
+\input{model}
+
+%exemple
+\input{example}
+
+%related work, conclusion, acknowledgement
+\input{conclusion}
+
+
+
+\vspace{10pt} \noindent
+{\bf Acknowledgements:} \ This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC). Example data comes from i-Sense project.
+% %http://www.i-sense.org/
+
+
+
+\printbibliography{}
+
+
+
+% \begin{thebibliography}{11}
+
+% \vspace{-7pt}
+% \bibitem{BNP}
+% H.~Bellout, J.~Neustupa and P.~Penel, On the Navier-Stokes
+% Equation with Boundary Condi\-tions Based on Vorticity, {\em
+% Math.~Nachr.} 269--270, 2004, pp.~59--72.
+
+% \vspace{-7pt}
+% \bibitem{GR}
+% V.~Girault and P.--A.~Raviart, {\em Finite Element Methods for
+% Navier--Stokes Equations,} Springer --Verlag,
+% Berlin--Heidelberg--New York--Tokyo 1986
+
+% \vspace{-7pt}
+% \bibitem{Ho}
+% E.~Hopf, \"Uber die Anfangswertaufgabe f\"ur die Hydrodynamischen
+% Grundgleichungen, {\em Math. Nachr.}~4, 1951, pp.~213--231.
+
+% \vspace{-7pt}
+% \bibitem{Ka}
+% T.~Kato, Non--stationary flows of viscous and ideal fluids in
+% $\R^3$, {\em J.~Func.~Anal.}~9, 1972, pp. 296--305.
+
+% \vspace{-7pt}
+% \bibitem{Se}
+% J.~Serrin, On the interior regularity of weak solutions of the
+% Navier--Stokes equations, {\em Arch.~Rat. Mech.~Anal.}~9, 1962,
+% pp.~187--195.
+
+% \end{thebibliography}
+
+\end{document}
