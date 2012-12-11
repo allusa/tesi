@@ -55,16 +55,20 @@ sortcites=true,
 \ExecuteBibliographyOptions{
 %  annotation=true
 %%backref=true, urldate=long, abbreviate=false,%%format web 
-isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true, %%format en paper
+isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2, %%format en paper
 }
 \bibitemsep 0.6mm \biblabelsep 2mm \bibhang 0cm
 % \renewcommand{\bibfont}{\normalfont\footnotesize}
 \renewcommand*\newunitpunct{\addcomma\addspace}
 \DeclareFieldFormat[inproceedings]{booktitle}{}
 \DeclareFieldFormat{volume}{}
+\DeclareFieldFormat[inproceedings]{title}{#1}
+\DeclareFieldFormat[book]{title}{#1}
+\DeclareFieldFormat[journal]{title}{#1}
+
 
 \renewbibmacro*{title}{%
-      \printtext[title]{\printfield[sentencecase]{title}}
+  \printfield{title}
 }
 
 \renewbibmacro*{publisher+location+date}{%
@@ -80,7 +84,55 @@ isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbre
 }
 
 
-%http://tex.stackexchange.com/questions/18820/how-to-make-cross-referencing-with-shorthands
+
+http://www.tex.ac.uk/tex-archive/macros/latex/contrib/biblatex/latex/
+
+\DeclareBibliographyDriver{incollection}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \usebibmacro{author/translator+others}%
+  \setunit{\labelnamepunct}\newblock
+  \usebibmacro{title}%
+  \newunit
+  \printlist{language}%
+  \newunit\newblock
+  \usebibmacro{byauthor}%
+  \newunit\newblock
+  \usebibmacro{in:}%
+  {\cite{\thefield{crossref}}}
+%  \usebibmacro{maintitle+booktitle}%
+%  \newunit\newblock
+%  \usebibmacro{byeditor+others}%
+%  \newunit\newblock
+%  \printfield{edition}%
+%  \newunit
+%  \iffieldundef{maintitle}
+%    {\printfield{volume}%
+%     \printfield{part}}
+%    {}%
+%  \newunit
+%  \printfield{volumes}%
+%  \newunit\newblock
+%  \usebibmacro{series+number}%
+%  \newunit\newblock
+%  \printfield{note}%
+%  \newunit\newblock
+%  \usebibmacro{publisher+location+date}%
+  \newunit\newblock
+  \usebibmacro{chapter+pages}%
+%  \newunit\newblock
+%  \iftoggle{bbx:isbn}
+%    {\printfield{isbn}}
+%    {}%
+%  \newunit\newblock
+%  \usebibmacro{doi+eprint+url}%
+%  \newunit\newblock
+%  \usebibmacro{addendum+pubstate}%
+  \setunit{\bibpagerefpunct}\newblock
+  \usebibmacro{pageref}%
+  \newunit\newblock
+%  \usebibmacro{related}%
+  \usebibmacro{finentry}}
 
 
 %a cada secció hi ha un vspace
