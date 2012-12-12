@@ -1,16 +1,20 @@
 \section{Introduction}
 
-Modern society depends on the expert operation of many complex
-engineering systems which provides products and services. Examples
-include electric power systems, water distributions networks,
-transportation systems, manufacturing processes, intelligent
-buildings, communication systems, etc. The emergence of embedded
-systems and sensor networks has made possible the collection of large
-amounts of data for monitoring and control of such complex systems. In
-most application, these data need to be processed and synthesised
-efficiently to provide relevant information to engineers, researchers,
-accident investigators, operators, and many other users.
+% Modern society depends on the expert operation of many complex
+% engineering systems which provides products and services. Examples
+% include electric power systems, water distributions networks,
+% transportation systems, manufacturing processes, intelligent
+% buildings, communication systems, etc. The emergence of embedded
+% systems and sensor networks has made possible the collection of large
+% amounts of data for monitoring and control of such complex systems. In
+% most application, these data need to be processed and synthesised
+% efficiently to provide relevant information to engineers, researchers,
+% accident investigators, operators, and many other users.
 
+The emergence of embedded
+systems and sensor networks has made possible the collection of large
+amounts of data for monitoring and control of complex systems.
+%
 Nevertheless, before using the collected signals, it is of primary
 importance to promptly detecting eventual sensor failures or
 malfunctions and possibly reconstructing the incorrect signals in
@@ -72,7 +76,8 @@ proposal and we consider some future working directions.
 
 
 
-\subsection{Related work}
+
+\section{Related work}
 
 There are some prior works concerning TSMS. 
 
@@ -130,9 +135,7 @@ deal with related time aspects.
 
 
 
-
-
-\subsection{TSMS features}
+\section{TSMS features}
 
 A TSMS is a special purpose DBMS aimed at storing and managing time
 series. The main objective of TSMS is to put together two areas of
@@ -168,136 +171,134 @@ time series can be of any type.
 
 %MTSMS
 %\subsection{Multiresolution features}
-\subsection{Multiresolution motivation example}
+%\subsection{Multiresolution motivation example}
 
 A MTSMS is a TSMS with multiresolution capabilities.
 In a MTSMS a schema has to be configured, which mainly consist in
 defining different pairs of a time resolution and an attribute summarising
-function. We show it with an example.
+function. 
+%We show it with an example.
 
-Figures \ref{fig:mtsms:sequence} and
-\ref{fig:mtsms:sequence-irregular} show a multiresolution summary for
-a regular and irregular time series, respectively. Both figures show a
-snapshot in time, suppose between time 9 and 10.
-
-
-\begin{figure}[tp]
-  \centering
-  \input{imatges/mtsms_sequence.tex}
-  \caption{Multiresolution snapshot diagram with regular sampling}
-  \label{fig:mtsms:sequence}
-\end{figure}
+% Figures \ref{fig:mtsms:sequence} and
+% \ref{fig:mtsms:sequence-irregular} show a multiresolution summary for
+% a regular and irregular time series, respectively. Both figures show a
+% snapshot in time, suppose between time 9 and 10.
 
 
-\begin{figure}[tp]
-  \centering
-  \input{imatges/mtsms_sequence_irregular.tex}
-  \caption{Multiresolution snapshot diagram with irregular sampling}
-  \label{fig:mtsms:sequence-irregular}
-\end{figure}
-
-At the top of the figures there is a plot of a time series with time
-axis in general units of time (u.t.) and with value axis in
-undetermined units. The 'now' point shows when the snapshot has been
-taken, so the time before is the past and the time after is the
-future, which is grey coloured. The 'init' point shows when the
-database system has started sampling, so data in time before is
-unknown; we indicate the starting point as being zero u.t.\ and unknown
-time points with negative units.
-
-At the bottom of the figures there is a digram showing the
-multiresolution action. The first row shows the numerical time series'
-values corresponding to the above plot; in
-fig.~\ref{fig:mtsms:sequence} the time series is sampled every one
-unit of time and in fig.~\ref{fig:mtsms:sequence-irregular} every
-two. The second and the third row show a particular schema of a
-multiresolution database consisting in two time resolutions for the
-time series: one computes the mean of the sampled values every three
-u.t.\ and the other computes the mean every five u.t. In this example,
-computing the mean acts as the attribute summarising function of which
-we have spoken earlier. All data stored before zero time, this
-included, is unknown as sampling had not started. For the future
-values we also simulate as having unknown stored values which will
-change as time advances.
-
-If we look at fig.~\ref{fig:mtsms:sequence} we see, drawn by arrows,
-that every three sampled values a mean is stored and independently
-every five values another mean is stored. For the future values we
-show in gray that if we advance the time one u.t.\ then value 10 is
-sampled an the mean for time 10 can be computed resulting 8 but not
-yet the mean for time 12.
-
-Fig.~\ref{fig:mtsms:sequence-irregular} is essentially the same but
-showing two possible monitoring irregularities: a gap and a time
-disruption. In other words, we want to sample the time series every 2
-u.t.\ but first for some reason it can not be done in time 4 and
-second the sampling clock is disrupted and samples are done in time 7
-and 9 instead of 8. The resulting stored time schema is the same: on
-time resolution every 3 u.t.\ and the other every 5 u.t.; that is,
-without time disruptions. The resulting stored values are computed
-from the known sampled values, some coincide with
-fig.~\ref{fig:mtsms:sequence} whereas some differ specially in the
-gap. A better function than mean would solve this, we extend this
-further in section~\ref{sec:model:interpolador}.
+% \begin{figure}[tp]
+%   \centering
+%   \input{imatges/mtsms_sequence.tex}
+%   \caption{Multiresolution snapshot diagram with regular sampling}
+%   \label{fig:mtsms:sequence}
+% \end{figure}
 
 
+% \begin{figure}[tp]
+%   \centering
+%   \input{imatges/mtsms_sequence_irregular.tex}
+%   \caption{Multiresolution snapshot diagram with irregular sampling}
+%   \label{fig:mtsms:sequence-irregular}
+% \end{figure}
 
+% At the top of the figures there is a plot of a time series with time
+% axis in general units of time (u.t.) and with value axis in
+% undetermined units. The 'now' point shows when the snapshot has been
+% taken, so the time before is the past and the time after is the
+% future, which is grey coloured. The 'init' point shows when the
+% database system has started sampling, so data in time before is
+% unknown; we indicate the starting point as being zero u.t.\ and unknown
+% time points with negative units.
 
+% At the bottom of the figures there is a digram showing the
+% multiresolution action. The first row shows the numerical time series'
+% values corresponding to the above plot; in
+% fig.~\ref{fig:mtsms:sequence} the time series is sampled every one
+% unit of time and in fig.~\ref{fig:mtsms:sequence-irregular} every
+% two. The second and the third row show a particular schema of a
+% multiresolution database consisting in two time resolutions for the
+% time series: one computes the mean of the sampled values every three
+% u.t.\ and the other computes the mean every five u.t. In this example,
+% computing the mean acts as the attribute summarising function of which
+% we have spoken earlier. All data stored before zero time, this
+% included, is unknown as sampling had not started. For the future
+% values we also simulate as having unknown stored values which will
+% change as time advances.
 
-MTSMS improve TSMS features in various aspects:
-\begin{itemize}
+% If we look at fig.~\ref{fig:mtsms:sequence} we see, drawn by arrows,
+% that every three sampled values a mean is stored and independently
+% every five values another mean is stored. For the future values we
+% show in gray that if we advance the time one u.t.\ then value 10 is
+% sampled an the mean for time 10 can be computed resulting 8 but not
+% yet the mean for time 12.
 
-\item Voluminous data. Monitoring systems capture a huge amount of
-  data from sensors. In order to be able to process this information,
-  data volume must be reduced. With the multiresolution approach only
-  the most interesting segments of data are stored. This segments are
-  seen as different resolutions for the same time series and the user
-  configures how they are extracted and summarised by defining
-  different consolidation steps and functions. Multiresolution can
-  also be useful at visualisation time as the user is able to select
-  the best time range and time step that fits into the screen; there
-  is no need to process with more quantity of data than the one that
-  can be shown. In figure~\ref{fig:mtsms:sequence} there is an example of
-  extracting two resolutions: one every three units of time and
-  another every five.
-
-\item Data validation. Monitoring systems capture data but can occur
-  some drawbacks that will affect later the process of time series
-  analysis. Main problems are found when monitors can not capture
-  data, known as gaps, or capture data erroneously, such as outlayers.
-  The multiresolution attribute functions cope well with validating,
-  filtering and calculating with this unknown data in order to keep a
-  consistent historic. In figure~\ref{fig:mtsms:sequence-irregular} an
-  example of a gap can be seen.
-
-\item Data time regularising. Another monitoring side effect happens
-  when the sampling rate is not constant, that is when the resulting
-  data is not equi-time spaced. This no regularities can come from
-  sampling jitters in periodic sampling or from no periodic
-  event-based sampling. The multiresolution consolidation regularises
-  the time interval when processes a time series, therefore each
-  resulting time series segment has a regular time resolution. This
-  regularising approach could also be used when the user wants to
-  consult another resolution for a time series, such as changing
-  periodic data from a month to a year step. In
-  figure~\ref{fig:mtsms:sequence-irregular} an example of time
-  regularising can be seen.
-
-\item Information summaries. Time series analysis typically focuses on
-  reconstructing the original signal. However, the user objective in a
-  database system is to consult some information. The multiresolution
-  approach is a lossy compression storage solution for data. Therefore
-  it can be regarded as not only approximating to the original time
-  series function but also extracting the interesting information. The
-  selected information must be determined a priori assuming the
-  context where the future queries will be done. In
-  figure~\ref{fig:mtsms:sequence} there is an example of summarising by
-  mean attribute.
-
-\end{itemize}
+% Fig.~\ref{fig:mtsms:sequence-irregular} is essentially the same but
+% showing two possible monitoring irregularities: a gap and a time
+% disruption. In other words, we want to sample the time series every 2
+% u.t.\ but first for some reason it can not be done in time 4 and
+% second the sampling clock is disrupted and samples are done in time 7
+% and 9 instead of 8. The resulting stored time schema is the same: on
+% time resolution every 3 u.t.\ and the other every 5 u.t.; that is,
+% without time disruptions. The resulting stored values are computed
+% from the known sampled values, some coincide with
+% fig.~\ref{fig:mtsms:sequence} whereas some differ specially in the
+% gap. A better function than mean would solve this, we extend this
+% further in section~\ref{sec:model:interpolador}.
 
 
 
+
+
+% MTSMS improve TSMS features in various aspects:
+% \begin{itemize}
+
+% \item Voluminous data. Monitoring systems capture a huge amount of
+%   data from sensors. In order to be able to process this information,
+%   data volume must be reduced. With the multiresolution approach only
+%   the most interesting segments of data are stored. This segments are
+%   seen as different resolutions for the same time series and the user
+%   configures how they are extracted and summarised by defining
+%   different consolidation steps and functions. Multiresolution can
+%   also be useful at visualisation time as the user is able to select
+%   the best time range and time step that fits into the screen; there
+%   is no need to process with more quantity of data than the one that
+%   can be shown. In figure~\ref{fig:mtsms:sequence} there is an example of
+%   extracting two resolutions: one every three units of time and
+%   another every five.
+
+% \item Data validation. Monitoring systems capture data but can occur
+%   some drawbacks that will affect later the process of time series
+%   analysis. Main problems are found when monitors can not capture
+%   data, known as gaps, or capture data erroneously, such as outlayers.
+%   The multiresolution attribute functions cope well with validating,
+%   filtering and calculating with this unknown data in order to keep a
+%   consistent historic. In figure~\ref{fig:mtsms:sequence-irregular} an
+%   example of a gap can be seen.
+
+% \item Data time regularising. Another monitoring side effect happens
+%   when the sampling rate is not constant, that is when the resulting
+%   data is not equi-time spaced. This no regularities can come from
+%   sampling jitters in periodic sampling or from no periodic
+%   event-based sampling. The multiresolution consolidation regularises
+%   the time interval when processes a time series, therefore each
+%   resulting time series segment has a regular time resolution. This
+%   regularising approach could also be used when the user wants to
+%   consult another resolution for a time series, such as changing
+%   periodic data from a month to a year step. In
+%   figure~\ref{fig:mtsms:sequence-irregular} an example of time
+%   regularising can be seen.
+
+% \item Information summaries. Time series analysis typically focuses on
+%   reconstructing the original signal. However, the user objective in a
+%   database system is to consult some information. The multiresolution
+%   approach is a lossy compression storage solution for data. Therefore
+%   it can be regarded as not only approximating to the original time
+%   series function but also extracting the interesting information. The
+%   selected information must be determined a priori assuming the
+%   context where the future queries will be done. In
+%   figure~\ref{fig:mtsms:sequence} there is an example of summarising by
+%   mean attribute.
+
+% \end{itemize}
 
 
 
@@ -310,7 +311,7 @@ MTSMS improve TSMS features in various aspects:
 
 
 %%% Local Variables:
-%%% TeX-master: "main"
+%%% TeX-master: "main-wseas"
 %%% ispell-local-dictionary: "british"
 %%% End:
 

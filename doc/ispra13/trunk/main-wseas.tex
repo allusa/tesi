@@ -1,4 +1,4 @@
-\documentclass[twocolumn,11pt]{article}
+\documentclass[twocolumn,11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage{times}
 %
@@ -47,130 +47,18 @@
 \input{imatges/estils_pgf.tex}
 
 \usepackage[
-style=numeric-comp,%style=authoryear
+style=numeric-comp,
 sortcites=true,
 %backref=true,
 ]{biblatex}
 \bibliography{bibliografia}
 \ExecuteBibliographyOptions{
-%  annotation=true
-%%backref=true, urldate=long, abbreviate=false,%%format web 
-isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2, %%format en paper
+isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
 }
-\bibitemsep 0.6mm \biblabelsep 2mm \bibhang 0cm
-% \renewcommand{\bibfont}{\normalfont\footnotesize}
-\renewcommand*\newunitpunct{\addcomma\addspace}
-\DeclareFieldFormat[inproceedings]{booktitle}{}
-\DeclareFieldFormat{volume}{}
-\DeclareFieldFormat[inproceedings]{title}{#1}
-\DeclareFieldFormat[book]{title}{#1}
-\DeclareFieldFormat[journal]{title}{#1}
+\bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
 
 
-\renewbibmacro*{title}{%
-  \printfield{title}
-}
-
-\renewbibmacro*{publisher+location+date}{%
-  \printlist{publisher}%
-  \newunit
-  \printfield{year}%
-  \newunit
-}
-
-\renewbibmacro*{issue+date}{%
-  \newunit
-  \printfield{year}
-}
-
-
-
-http://www.tex.ac.uk/tex-archive/macros/latex/contrib/biblatex/latex/
-
-\DeclareBibliographyDriver{incollection}{%
-  \usebibmacro{bibindex}%
-  \usebibmacro{begentry}%
-  \usebibmacro{author/translator+others}%
-  \setunit{\labelnamepunct}\newblock
-  \usebibmacro{title}%
-  \newunit
-  \printlist{language}%
-  \newunit\newblock
-  \usebibmacro{byauthor}%
-  \newunit\newblock
-  \usebibmacro{in:}%
-  {\cite{\thefield{crossref}}}
-%  \usebibmacro{maintitle+booktitle}%
-%  \newunit\newblock
-%  \usebibmacro{byeditor+others}%
-%  \newunit\newblock
-%  \printfield{edition}%
-%  \newunit
-%  \iffieldundef{maintitle}
-%    {\printfield{volume}%
-%     \printfield{part}}
-%    {}%
-%  \newunit
-%  \printfield{volumes}%
-%  \newunit\newblock
-%  \usebibmacro{series+number}%
-%  \newunit\newblock
-%  \printfield{note}%
-%  \newunit\newblock
-%  \usebibmacro{publisher+location+date}%
-  \newunit\newblock
-  \usebibmacro{chapter+pages}%
-%  \newunit\newblock
-%  \iftoggle{bbx:isbn}
-%    {\printfield{isbn}}
-%    {}%
-%  \newunit\newblock
-%  \usebibmacro{doi+eprint+url}%
-%  \newunit\newblock
-%  \usebibmacro{addendum+pubstate}%
-  \setunit{\bibpagerefpunct}\newblock
-  \usebibmacro{pageref}%
-  \newunit\newblock
-%  \usebibmacro{related}%
-  \usebibmacro{finentry}}
-
-
-%a cada secció hi ha un vspace
-\makeatletter
-
-\let\old@section\section
-
-\renewcommand*{\section}{%
-  \@ifstar{%
-    \starsection
-  }{%
-    \@dblarg\nostarsection
-  }%
-}
-\newcommand*{\starsection}[1]{%
-  \old@section*{#1}%
-  \vspace{-4pt}%
-}
-\newcommand{\nostarsection}{}
-\def\nostarsection[#1]#2{%
-  % #1: toc entry
-  % #2: main entry
-  \old@section[{#1}]{#2}%
-  \vspace{-4pt}%
-}
-
-\let\old@subsection\subsection
-\renewcommand\subsection[2][]{\old@subsection[#1]{#2}\vspace{-4pt}}
-
-\let\old@mathbb\mathbb
-\renewcommand\mathbb[2][]{{\rm I}\!{\rm #2}}
-
-\makeatother
-
-% redimensió de les llistes
-\usepackage{enumitem}
-\setitemize{topsep=1pt,itemsep=1pt,leftmargin=8pt,labelwidth=6pt}
-
+\input{wseas_latex}
 
 %
 %
@@ -184,17 +72,17 @@ http://www.tex.ac.uk/tex-archive/macros/latex/contrib/biblatex/latex/
 %
 % TITLE, AUTHOR, ABSTRACT, KEYWORDS
 %
-\title{\LARGE \bf Model and requirements for a Multiresolution Time Series
-  Database Management System}
+\title{\LARGE \bf Model for a Multiresolution Time Series
+  Database System}
 
 \date{}
 
 \author{\hspace*{-10pt}
 \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{A.\ LLUSÀ SERRA}
+\centerline{A.\ LLUSÀ-SERRA}
 \end{minipage} \kern 0in
 \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{T.\ ESCOBET CANAL}
+\centerline{T.\ ESCOBET-CANAL}
 \end{minipage} \kern 0in
 \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
 \centerline{S.\ VILA-MARTA}
@@ -261,23 +149,22 @@ time series, data model, database systems, monitoring systems
 
 
 %intro, requirements
-\input{intro}
+\input{intro-wseas}
 
 %model MTSMS
-\input{model}
+\input{model-wseas}
 
 %exemple
-\input{example}
+\input{example-wseas}
 
 %related work, conclusion, acknowledgement
-\input{conclusion}
+\input{conclusion-wseas}
 
 
 
 \vspace{10pt} \noindent
 {\bf Acknowledgements:} \ This work was supported by Universitat Polit\`{e}cnica de Catalunya (UPC). Example data comes from i-Sense project.
 % %http://www.i-sense.org/
-
 
 
 \printbibliography{}
