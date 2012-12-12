@@ -73,7 +73,7 @@ equally spaced the time series is called regular.
 
 
 
-\section{The multiresolution TSMS data model}
+\section{The proposed data model}
 \label{sec:MTSMS}
 
 In this section we design a mathematical model for the multiresolution
@@ -90,8 +90,6 @@ and each database from a MTSMS contains only one time series.
 
 \begin{figure}[tp]
 \centering
-%\setlength{\unitlength}{0.3mm}
-%\input{\imatges/model/locales/mtsdb-internal_architecture.tex}
 \input{imatges/mtsms-arquitectura_interna.tex}
 \caption{Architecture of MTSMS model}
 \label{fig:model:mtsdb}
@@ -157,10 +155,10 @@ We define the operator \emph{addBuffer} as the addition of a new
 measure to buffer's time series, $\text{addBuffer}: B =
 (S,\tau,\delta,f) \times m = (v,t) \mapsto B'$ where
 $B'=(S',\tau,\delta,f)$ and $S' = S \cup \{m\} $.
-\[
-\text{addBuffer}: \text{Buffer} \times \text{Measure} \longrightarrow
-\text{Buffer}
-\]
+% \[
+% \text{addBuffer}: \text{Buffer} \times \text{Measure} \longrightarrow
+% \text{Buffer}
+% \]
 
 
 
@@ -186,10 +184,10 @@ B=(S,\tau,\delta,f) \mapsto B' \times m' $ where $ B'=
 f(S,[\tau,\tau+\delta])$. Note that the resulting buffer's time series
 can be reduced, such as $ S' = S(\tau+\delta,\infty)$, when the
 historic is no more needed.
-  \[
-  \text{consolidateBuffer}: \text{Buffer} \longrightarrow \text{Buffer}
-  \times \text{Measure}
-  \]
+  % \[
+  % \text{consolidateBuffer}: \text{Buffer} \longrightarrow \text{Buffer}
+  % \times \text{Measure}
+  % \]
 
 
 
@@ -223,9 +221,9 @@ discarded, $\text{addDisc}: D=(S,k) \times m \mapsto D'$ where $ D' =
       (S-\{\min(S)\}) \cup \{m\} & \text{else }
     \end{cases}  
     $
-  \[
-  \text{addDisc}: \text{Disc} \times \text{Measure} \longrightarrow \text{Disc}
-  \]
+  % \[
+  % \text{addDisc}: \text{Disc} \times \text{Measure} \longrightarrow \text{Disc}
+  % \]
 
 
 
@@ -249,10 +247,10 @@ the buffer and disc ones.
 Operator \emph{addRD} is the addition of a measure to the
 buffer of the resolution disc, $\text{addRD } : R=(B,D) \times m \mapsto R'$ where
 $R'= (B',D)$ and $B'= B \text{ addBuffer } m$.
-\[
-\text{addRD}: \text{Resolution Disc} \times \text{Measure}
-\longrightarrow \text{Resolution Disc}
-\]
+% \[
+% \text{addRD}: \text{Resolution Disc} \times \text{Measure}
+% \longrightarrow \text{Resolution Disc}
+% \]
 
 Let $R=(B,D)$ be a resolution disc, $R$ is ready to consolidate if and
 only if $B$ is ready to consolidate.
@@ -263,10 +261,10 @@ consolidation measure from the buffer and adds it to the disc,
 $\text{consolidateRD } : R=(B,D) \mapsto R'$ where $R'=
 (B',D')$, $B' \times m'= \text{ consolidateBuffer } B $ and $ D'= D
 \text{ addDisc } m'$.
-\[
-\text{consolidateRD}: \text{Resolution Disc} \longrightarrow
-\text{Resolution Disc}
-\]
+% \[
+% \text{consolidateRD}: \text{Resolution Disc} \longrightarrow
+% \text{Resolution Disc}
+% \]
 
 
 
@@ -303,25 +301,24 @@ Operator \emph{addMD} is defined as the addition of a measure to every
 resolution disc, $\text{addMD } : M=\{R_0,\dotsc,R_d\} \times m
 \mapsto M' $ where $M'= \{ \forall R_i\in M: R_i \text{
   addRD } m \}$.
-\[
-\text{addMD}: \text{Multiresolution Database} \times \text{Measure}
-\longrightarrow \text{Multiresolution database}
-\]
+% \[
+% \text{addMD}: \text{Multiresolution Database} \times \text{Measure}
+% \longrightarrow \text{Multiresolution database}
+% \]
 
 
 Operator \emph{consolidateMD} consolidates the resolution discs that
 are ready to consolidate, $\text{consolidateMD } :
 M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:$
-
   $\begin{cases}
     \text{ consolidateRD } R_i & \text{if } R_i \text{ ready to consolidate} \\
     R_i & \text{else }
   \end{cases}$ $\big\}
   $.
-\[
-\text{consolidateMD}: \text{Multiresolution Database} \longrightarrow
-\text{Multiresolution Database}
-  \]
+% \[
+% \text{consolidateMD}: \text{Multiresolution Database} \longrightarrow
+% \text{Multiresolution Database}
+%   \]
 
 
 
@@ -347,12 +344,12 @@ f: \text{Time series} \times \text{time interval} \longrightarrow
 f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
 \]
 
-Different types of attribute aggregate functions may be utilised in
+Different types of attribute aggregate functions may be used in
 order to summarise a time series. As instance, we may calculate
 attribute statistics from a time series such as the maximum value, the
 average or apply digital signal processing operations as is done in
 \cite{zhang11}.  Furthermore, attribute aggregate functions copes with
-data validation, which we will discuss latter in this section.
+data validation.%, which we will discuss latter in this section.
 
 Next, we exemplify some discrete operators. For simplicity, we present
 examples with real numbers but they could also be integers, strings or
@@ -382,47 +379,47 @@ been captured erroneously, it must be treated as unknown data.
   reasonable time or we capture data that is clearly outside a
   reasonable limits.
 \end{itemize}
-As a consequence, attribute aggregate functions deals with these two
-subprocesses: treating unknown data and marking data as
-unknown. Following with real numbers example, we extend the
-domain with a value that means 'unknown', let this unknown value be
-represented by the improper element infinity ($\infty$).
+% As a consequence, attribute aggregate functions deals with these two
+% subprocesses: treating unknown data and marking data as
+% unknown. Following with real numbers example, we extend the
+% domain with a value that means 'unknown', let this unknown value be
+% represented by the improper element infinity ($\infty$).
 
-An attribute aggregate functions treating unknown
-data is a one that can calculate a result when there are unknown
-values in the original time series, $f^u: S \times i \mapsto m'$ where
-$\exists m \in S: V(m)=\infty$. Although from a strict point of view
-operating with unknown data makes unknown result, aggregate functions
-are free to calculate whatever is needed such as time series analysis
-does with data reconstruction.
+% An attribute aggregate functions treating unknown
+% data is a one that can calculate a result when there are unknown
+% values in the original time series, $f^u: S \times i \mapsto m'$ where
+% $\exists m \in S: V(m)=\infty$. Although from a strict point of view
+% operating with unknown data makes unknown result, aggregate functions
+% are free to calculate whatever is needed such as time series analysis
+% does with data reconstruction.
 
-For example, arithmetic mean$^{d}$ aggregate function returns
-$V(m')=\infty$ if $\exists m \in S: V(m)=\infty$.  We can define a new
-mean function, based on the original arithmetic mean$^{d}$ aggregate,
-that naively treats unknown values by keeping the
-known mean; in other words, it ignores unknown values found in the time
-interval: arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
-\text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq
-\infty\}$.
-% ignore$^{u}$: $S \mapsto S'$ where $S'= \{m''\in S':V(m'')\neq
-% \infty\}$,
-% arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
-% \text{arithmetic mean}^{d}(\text{ignore}^u(S),i)$.
+% For example, arithmetic mean$^{d}$ aggregate function returns
+% $V(m')=\infty$ if $\exists m \in S: V(m)=\infty$.  We can define a new
+% mean function, based on the original arithmetic mean$^{d}$ aggregate,
+% that naively treats unknown values by keeping the
+% known mean; in other words, it ignores unknown values found in the time
+% interval: arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+% \text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq
+% \infty\}$.
+% % ignore$^{u}$: $S \mapsto S'$ where $S'= \{m''\in S':V(m'')\neq
+% % \infty\}$,
+% % arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+% % \text{arithmetic mean}^{d}(\text{ignore}^u(S),i)$.
 
-An attribute aggregate functions marking data as unknown is a one
-that can give unknown value as the resulting measure's value, $f^{mu}:
-S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
+% An attribute aggregate functions marking data as unknown is a one
+% that can give unknown value as the resulting measure's value, $f^{mu}:
+% S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
 
-For example, we can define a maximum aggregate, based on the
-maximum$^d$ aggregate, that returns unknown if there is a
-measure's value bigger than 2:  maximum$^{dmu2}$: $S \times i
-\mapsto m'$ where $V(m') = 
-\begin{cases}
-  \infty &\text{if }  m''>2\\
-  m'' & \text{else }
-\end{cases}$ and $m''=\text{maximum}^d(S,i)$.
+% For example, we can define a maximum aggregate, based on the
+% maximum$^d$ aggregate, that returns unknown if there is a
+% measure's value bigger than 2:  maximum$^{dmu2}$: $S \times i
+% \mapsto m'$ where $V(m') = 
+% \begin{cases}
+%   \infty &\text{if }  m''>2\\
+%   m'' & \text{else }
+% \end{cases}$ and $m''=\text{maximum}^d(S,i)$.
 
-%Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
+% %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
 
 Summarising, in the design of the attribute aggregate function we can
 interpret a time series in different ways, that is what we call the
@@ -441,13 +438,13 @@ or a constant piecewise representation.
 In conclusion, a huge amount of attribute aggregate functions can be
 defined and no global assumptions can be made.  Therefore, the time
 series representation results in attribute aggregate functions
-families.  MTSMS must give freedom to the users to define their own
-functions.
+families.  MTSMS must give freedom to the users to define
+their own functions.
 
 
 
 %%% Local Variables:
-%%% TeX-master: "main"
+%%% TeX-master: "main-wseas"
 %%% ispell-local-dictionary: "british"
 %%% End:
 % LocalWords: buffer buffers  MTSMS multiresolution DBMS zohe
