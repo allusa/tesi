@@ -3,6 +3,10 @@
         timeseries,
         xticklabel={\pgfcalendarmonthshortname{\month} \year},
         xlabel=Time (UTC),
+        every axis x label/.style={
+          at={(1,0)},
+          anchor=north,
+          },
         ymax = 320,
         clip=false,
         y filter/.code = { \pgfmathparse{(#1>320)*322+(#1<320)*#1}},
