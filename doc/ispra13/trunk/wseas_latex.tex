@@ -88,6 +88,7 @@
 
 
 %a cada secció hi ha un vspace
+
 \makeatletter
 
 \let\old@section\section
@@ -108,17 +109,20 @@
 \def\nostarsection[#1]#2{%
   % #1: toc entry
   % #2: main entry
-  \vspace{-7pt}
+  \vspace{-9pt}
   \old@section[{#1}]{#2}%
-  \vspace{-6pt}%
+  \vspace{-10pt}%
 }
 
 \let\old@subsection\subsection
-\renewcommand\subsection[2][]{\vspace{-11pt}\old@subsection[#1]{#2}\vspace{-7pt}}
+\renewcommand\subsection[2][]{\vspace{-11pt}\old@subsection[#1]{#2}\vspace{-9pt}}
 
+\makeatother
+
+%reals
+\makeatletter
 \let\old@mathbb\mathbb
 \renewcommand\mathbb[2][]{{\rm I}\!{\rm #2}}
-
 \makeatother
 
 % redimensió de les llistes
@@ -126,5 +130,12 @@
 \setitemize{topsep=1pt,itemsep=1pt,leftmargin=8pt,labelwidth=6pt}
 
 
-%espai caption figures
+%espai figures
+\setlength{\floatsep}{4ex}
+%\setlength{\dblfloatsep}{0cm}
+%\setlength{\dbltextfloatsep}{0cm}
 \setlength{\abovecaptionskip}{0cm}
+\setlength{\belowcaptionskip}{-3ex}
+
+\usepackage{caption}
+\captionsetup{font=small,labelfont=small}

@@ -37,14 +37,14 @@ come from a continuous nature in which they are recorded at regular
 intervals, such as hourly or daily, or at irregular intervals, such as
 recording when a pump is open or closed.
 
-One problem when dealing with time series data results from the fact
-that these data are often voluminous \cite{fu11}. As a result, storing
-and accessing them can be complicated. Moreover, it is specially
-critical when developing small embedded systems, whose resources
-(capacity, energy, processing, and communications) suffer a genuine
-restriction \cite{yaogehrke02}.  Another problem is that the procedure
-of processing and synthesising information becomes complicated if data
-is not equi-time spaced.
+One problem when dealing with time series data results from these data
+being voluminous \cite{fu11}. As a result, storing and accessing
+them can be complicated. Moreover, it is specially critical when
+developing small embedded systems, whose resources (capacity, energy,
+processing, and communications) suffer a genuine restriction
+\cite{yaogehrke02}.  Another problem is that the procedure of
+processing and synthesising information becomes complicated if data is
+not equi-time spaced.
 
 
 
@@ -55,22 +55,23 @@ and treat data as time series. These are usually known as Time Series
 Data Base Management Systems (TSMS) \cite{dreyer94}.  We introduce a
 new data model for a multiresolution TSMS (MTSMS). This model allows
 to store time series using different time resolutions and organised in
-an aggregated way. The model is specifically designed to cope well
-with bounded storage computers like those found in sensor systems.
+an aggregated way. It is designed to cope well with bounded storage
+computers such as sensor systems.
 
 
-This paper is organised as follows. Following this introduction, we
-summarise the TSMS and the MTSMS features and we show some related
-work concerning these systems.  Next, we formalise the MTSMS model: in
-section~\ref{sec:model:preliminaries} we introduce nomenclature
-preliminaries, mainly about measures and time series; in
-section~\ref{sec:MTSMS} we define the data structure, the main part of
-the model; and in section~\ref{sec:model:interpolador} we extend for
-the summarising operators, which we call attribute aggregate
-functions. In section~\ref{sec:example} we show a multiresolution
-database example for real data. Finally in
-section~\ref{sec:concl-future-work} we summarise our MTSMS model
-proposal and we consider some future working directions.
+This paper is organised as follows.  Section~\ref{sec:related-work}
+shows some related work concerning TSMS and
+sec.~\ref{sec:tsms-features} summarises its features.  Next, we
+formalise the MTSMS model: sec.~\ref{sec:model:preliminaries}
+introduces nomenclature
+preliminaries, %mainly about measures and time series;
+sec.~\ref{sec:MTSMS} defines the data
+structure, %the main part of the model;
+and sec.~\ref{sec:model:interpolador} extends for summarising
+operators%, which we call attribute aggregate functions
+. Sec.~\ref{sec:example} shows a multiresolution database example for
+real data. Finally sec.~\ref{sec:concl-future-work} summarises our
+MTSMS model proposal.% and we consider some future working directions.
 
 
 
@@ -78,6 +79,7 @@ proposal and we consider some future working directions.
 
 
 \section{Related work}
+\label{sec:related-work}
 
 There are some prior works concerning TSMS. 
 
@@ -93,12 +95,13 @@ structures: one for sensor properties stored into relational tables
 and another for time series stored into data sequences from
 sensors. Time series have specific operations and can combine
 relations and sequences. Cougar target field is sensor networks, where
-sensor data is stored distributed in sensors. Queries are resolved
+data is stored distributed in sensors. Queries are resolved
 combining sensor data in a data stream orientation, which improves
-processing performance. However, data streams imposes restriction on
-operators so this TSMS can not be generalised to other time series
-types. 
-%Moreover, sequences and relations can collide in representing ambiguously time series.
+processing performance. 
+% However, data streams imposes restriction on
+% operators so this TSMS can not be generalised to other time series
+% types. 
+%% Moreover, sequences and relations can collide in representing ambiguously time series.
 
 
 SciDB \cite{stonebraker09:scidb} and SciQL \cite{zhang11} are array
@@ -115,13 +118,13 @@ difference between tables and arrays seems too physical approached and
 consequently can collide in representing ambiguously time series.
 
 Bitemporal DBMS is another database field related with
-time. Bitemporal data is mainly targeted at keeping historical events
+time. Bitemporal data target is to keep historical events
 in the database by associating time intervals to data.  Bitemporal
 data and time series data are not exactly the same and so can not be
 treated interchangeably \cite{schmidt95}. However, there are some
-similarities between time series and bitemporal data that can be
-considered. First, extending a relational database model to manage
-bitemporal data shows the way to extend relational DBMS with new types
+similarities %between time series and bitemporal data
+that can be considered. First, extending a relational model
+to manage bitemporal data shows the extension of RDMBS with new types
 and how to model them. Second, bitemporal data modelling settles some
 time-related concepts that can be extended to time series.
 
@@ -136,6 +139,7 @@ deal with related time aspects.
 
 
 \section{TSMS features}
+\label{sec:tsms-features}
 
 A TSMS is a special purpose DBMS aimed at storing and managing time
 series. The main objective of TSMS is to put together two areas of
@@ -147,7 +151,7 @@ relation model \cite{date:introduction} is the referent.
 
 In time series analysis there are some common operations that can be
 generalised when managing time series.
-
+%
 The main attribute of time series is the time, therefore dealing with
 time is a common operation, such as querying time intervals, finding
 time correlations, or calculating distances between two time
