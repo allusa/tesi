@@ -61,34 +61,13 @@ resolution disc by zohe maximum aggregate function, owing to their
 simplicity. Next, we show the process in designing both aggregate
 functions.
 
-% In this example we show a possible family of attribute aggregate
-% functions for time series represented by a staircase function, that is
-% with a piecewise constant representation. 
 
-We define a new
-representation for time series called \emph{zero-order hold backwards}
-(zohe%from \emph{zero-order hold everted}
-) consisting in holding each value until the preceding value, which a
-similar representation is used by RRDtool \cite{lisa98:oetiker}.
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
-$S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
-%continuous definition of the time series using left-continuous step functions.
-$
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t)^{\text{zohe}} =  
-\begin{cases}
-  \infty & \text{if } t > T(\max S) \\%\text{not defined}
-  V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
-\end{cases}
-$
-
-
-We now define the \emph{zohe} attribute
-aggregate function family as the one interpreting the
-consolidation time interval left-continuous $i=(T_0,T_f]$
+In accordance to the zohe equation~\ref{eq:zohe} defined using
+left-continuous step functions, we define the zohe attribute aggregate
+function family as the one interpreting the consolidation time
+interval left-continuous $i=(T_0,T_f]$
 %
-, let $S'=(S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$:
+and the one aggregating on the subset $S'=S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$: 
 % and the
 % resulting aggregated measure's time always being $T_f$, in
 % accordance to the \emph{zero-order hold backwards} representation
@@ -203,7 +182,7 @@ maximum aggregation resembles an envelope function.
 \end{figure}
 
 
-Concluding, with this MTSDB schema we achieve not an
+Concluding, with this MTSDB example schema  we achieve not an
 approximation to the original function but an extraction of some
 interesting information.
 
