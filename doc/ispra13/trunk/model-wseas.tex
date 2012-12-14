@@ -65,7 +65,7 @@ the time interval $i_0=[t,t+\delta]$ and its multiples $i_j=[t+j\delta
 When  measures are
 equally spaced the time series is regular.
 \begin{definition}[Regular time series]
-  Let $S=\{m_0,\ldots,m_k\}$ be a time series and $\delta$ a time
+  Let $S=\{m_0,$ $ldots,$ $m_k\}$ be a time series and $\delta$ a time
   duration. $S$ is regular if and only if $\forall m \in
   S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) =
   \delta$. %Property: for a regular time series there is a initial
@@ -77,17 +77,18 @@ equally spaced the time series is regular.
 \section{The proposed data model}
 \label{sec:MTSMS}
 
-In this section we design a mathematical model for the multiresolution
-time series database management systems (MTSMS). Some concepts come
-from an abstraction of RRDtool operations \cite{rrdtool}.
+% In this section we design a mathematical model for the multiresolution
+% time series database management systems (MTSMS). Some concepts come
+% from an abstraction of RRDtool operations \cite{rrdtool}.
 
-A MTSMS manages time series. A time series is regarded as a
-chronological data collection, so it needs an appropriate management
-by the DBMS.  The MTSMS model is an storage solution for a time series
+% A MTSMS manages time series. A time series is regarded as a
+% chronological data collection, so it needs an appropriate management
+% by the DBMS.  
+The MTSMS model is an storage solution for a time series
 where, in short, the information is spread in different time
-resolutions.  The objects of a MTSMS are \emph{measures} and
-\emph{time series} as defined in sec.~\ref{sec:model:preliminaries} and
-each database in a MTSMS contains only one time series.
+resolutions.  The objects of MTSMS are \emph{measures} and
+\emph{time series} as defined in Section~\ref{sec:model:preliminaries} and
+each MTSMS' database contains only one time series.
 
 
 The general schema of the MTSMS model can be seen in figure
@@ -117,7 +118,7 @@ subseries'.
 
 
 
-Regarding operations, MTSMS model needs operators to change the time
+Regarding operations, MTSMS structure needs operators to change the time
 intervals between measures. Mainly, these operators are
 \emph{attribute aggregate} functions and \emph{consolidation}
 actions. In this section we design the basic MTSMS model, that is four
@@ -125,7 +126,7 @@ basic data model definitions -- \emph{buffer}, \emph{disc},
 \emph{resolution disc}, and \emph{multiresolution database} -- and the
 operations to create a \emph{multiresolution database}, to add
 \emph{measures} and to \emph{consolidate} time series. \emph{Attribute
-  aggregate} functions are required but not linked to the model,so we
+  aggregate} functions are required but not linked to the model, so we
 define them apart in section~\ref{sec:model:interpolador}.
 
 
@@ -225,8 +226,10 @@ operator,
 % add a measure to the time series stored on the disc. If the predefined
 % capacity is exceeded, the minimum measure of the time series is
 % discarded, 
- $\text{addDisc}: D=(S,k) \times m \mapsto D'$ where $ D' =
-(S',k)$, $ S' =
+ $\text{addDisc}:$ \\
+$D=(S,k) \times m \mapsto D'$ where $ D' =
+(S',k)$, \linebreak[4]
+$S' =
   \begin{cases}
       S\cup\{m\} &\text{if }  |S|<k\\
       (S-\{\min(S)\}) \cup \{m\} & \text{else }
@@ -265,13 +268,14 @@ $R'= (B',D)$ and $B'= B \text{ addBuffer } m$.
 % \longrightarrow \text{Resolution Disc}
 % \]
 
-Consolidation of the resolution disc's buffer adding the resulting measure to the disc,
+Consolidation of the resolution disc by consolidating its buffer an adding the
+consolidation measure to its disc,
 % Let $R=(B,D)$ be a resolution disc, $R$ is ready to consolidate if and
 % only if $B$ is ready to consolidate.
 % If the resolution disc is ready to consolidate, it can be
 % consolidated.  Operator \emph{consolidateRD} calculates a
 % consolidation measure from the buffer and adds it to the disc,
-$\text{consolidateRD } : R=(B,D) \mapsto R'$ where $R'=
+$\text{consolidateRD } :$ $R=(B,D) \mapsto R'$ where $R'=
 (B',D')$, $B' \times m'= \text{ consolidateBuffer } B $ and $ D'= D
 \text{ addDisc } m'$.
 % \[
@@ -291,9 +295,9 @@ different resolutions in the various resolution discs, as has been seen
 in figure~\ref{fig:model:mtsdb}.
 
 \begin{definition}[Multiresolution Database]
-  A \emph{Multiresolution Database} is a set of resolution discs
-  $M=\{R_0,\dotsc,R_d\}$.  An empty multiresolution database has empty
-  resolution discs
+  A \emph{Multi\-re\-solution Database} is a set of resolution discs $M=$
+  $\{R_0,$\,$\dotsc,$\,$R_d\}$.  An empty multiresolution database has
+  empty resolution discs
   $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$.
 \end{definition}
 
@@ -325,9 +329,9 @@ resolution disc, $\text{addMD } : M=\{R_0,\dotsc,R_d\} \times m
 
 % Operator \emph{consolidateMD} consolidates the resolution discs that
 % are ready to consolidate,
-Consolidation of every ready resolution disc,
- $\text{consolidateMD } :
-M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:$
+Consolidation of every ready resolution disc, \linebreak[4]
+ $\text{consolidateMD } :$
+$M=\{R_0,\dotsc,R_d\} \mapsto M'$ where $ M'= \big\{ \forall R_i\in M:$ \\
   $\begin{cases}
     \text{ consolidateRD } R_i & \text{if } R_i \text{ ready to consolidate} \\
     R_i & \text{else }
@@ -354,13 +358,11 @@ consolidated in order to summarise information from the time series.
 Let $S$ be a time series and $t_0$ and $t_f$ two time instants, an
 attribute aggregate function $f$ calculates a measure that
 summarises an attribute of $S$ in the time interval $i=[T_0,T_f]$:
-\[
-f: \text{Time series} \times \text{time interval} \longrightarrow
-\text{Measure}
-\]
-\[
-f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
-\]
+\begin{align*}
+f&: \text{Time series} \times \text{time interval} \longrightarrow
+\text{Measure} \\
+f&: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
+\end{align*}
 
 Different types of attribute aggregate functions may be used in order
 to summarise a time series. As instance, we may calculate attribute
@@ -375,8 +377,9 @@ Some discrete examples,
 % more elaborated structures such as arrays. 
 let $S'=S(T_0,T_f]$:
 \begin{itemize}
-\item maximum$^d$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall m
-    \in S'}(V(m))$. It summarises $S'$ with the maximum of
+\renewcommand{\labelitemi}{--}
+\item maximum$^d$: $S \times i \mapsto m'$ where  $V(m') = \max_{\forall m
+    \in S'}(V(m))$. It summarises $S'$ with the \linebreak[4] maximum of
   the measure values.
 \item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
   summarises $S'$ with the maximum measure.
@@ -454,6 +457,29 @@ The variety of time series representations results in a variety of the
 same attribute aggregate functions. As instance, a maximum attribute
 aggregate function may give different values if we consider a linear
 or a constant piecewise representation. 
+
+
+Next we show a possible family of attribute aggregate functions for
+time series represented by a staircase function, that is with a
+piecewise constant representation.  We define a new representation for
+time series called \emph{zero-order hold backwards}
+(zohe%from \emph{zero-order hold everted}
+) consisting in holding each value until the preceding value, which is
+used similarly by RRDtool \cite{lisa98:oetiker}.
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+$S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
+%continuous definition of the time series using left-continuous step functions.
+$\forall t \in \mathbb{R}  ,\forall m \in S:$ 
+\begin{equation}
+ S(t)^{\text{zohe}} =  
+\begin{cases}
+  \infty & \text{if } t > T(\max S) \\%\text{not defined}
+  V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
+\end{cases}
+\label{eq:zohe}
+\end{equation}
+
 
 In conclusion, a huge amount of attribute aggregate functions can be
 defined and no global assumptions can be made.  Therefore, the time
