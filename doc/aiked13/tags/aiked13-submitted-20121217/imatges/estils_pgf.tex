@@ -7,8 +7,11 @@
         ylabel=Temperature (K),
         legend style={font=\footnotesize},
         tick label style={font=\footnotesize},
-        label style={font=\tiny},
-        title style={font=\small,below, anchor=north,fill=white},
+        every axis x label/.style={
+          at={(1.3,0)},
+          anchor=north,
+          },
+        label style={font=\footnotesize},
         xticklabel style= {rotate=15,anchor=east},
 %        every axis title shift=0pt,
 %        max space between ticks=15,
@@ -17,20 +20,27 @@
         minor tick length=0.066cm,
         very thin,
         every axis legend/.append style={
-          at={(1,0.02)},
+          at={(1.2,0)},
           anchor=south east,
           draw = none},
        legend columns = 4,
     },
     rd/.style={
         timeseries,
-        width=\textwidth,
+        every axis x label/.style={
+          at={(1.3,-0.3)},
+          anchor=north,
+          },
+        label style={font=\footnotesize},
+        ylabel = {},
+        width=17cm,
         height=3.5cm,   
         max space between ticks=50,
         every axis legend/.append style={
-          at={(1,-0.3)},
+          at={(1,-0.5)},
           anchor=north east,
           draw = none},
+        title style={font=\small,below, at={(0.7,1.4)},anchor=north,fill=white},
     }
 }
 

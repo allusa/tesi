@@ -1,0 +1,211 @@
+\documentclass[twocolumn,11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+%
+% DO NOT CHANGE THE FOLLOWING PART
+%
+\setlength{\textwidth}{6.9in}
+\setlength{\textheight}{9.5in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0pt}
+\setlength{\topmargin}{-0.25in}
+\setlength{\columnsep}{0.4in}
+\setlength{\parindent}{4ex}
+%
+\newtheorem{definition}{Definition}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{corollary}[definition]{Corollary}
+%
+%
+% THIS IS THE PLACE FOR YOUR OWN DEFINITIONS
+%
+\newcommand{\R}{{\rm I}\!{\rm R}} % the set of real numbers
+% boldface characters in mathematical formulas
+\newcommand{\bff}{\mbox{\boldmath $f$}}
+\newcommand{\bfl}{\mbox{\boldmath $l$}}
+\newcommand{\bfn}{\mbox{\boldmath $n$}}
+\newcommand{\bfu}{\mbox{\boldmath $u$}}
+\newcommand{\bfx}{\mbox{\boldmath $x$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfzero}{\mbox{\boldmath $0$}}
+\newcommand{\bfcurl}{{\bf curl}} % curl of a vector field
+\newcommand{\rmdiv}{{\rm div}} % divergence of a vector field
+\newcommand{\eop}{\hfill $\sqcap\!\!\!\!\sqcup$} % end of proof
+%
+%
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+
+\usepackage[
+style=numeric-comp,
+sortcites=true,
+%backref=true,
+]{biblatex}
+\bibliography{bibliografia}
+\ExecuteBibliographyOptions{
+isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
+}
+\bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
+
+
+\input{wseas_latex}
+
+%
+%
+% THE BEGINNING OF THE DOCUMENT
+%
+\begin{document}
+\global\def\refname{{\normalsize \it References:}}
+%
+\baselineskip 12.5pt
+%
+%
+% TITLE, AUTHOR, ABSTRACT, KEYWORDS
+%
+\title{\LARGE \bf Model for a Multiresolution Time Series
+  Database System}
+
+\date{}
+
+\author{\hspace*{-10pt}
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{A.\ LLUSÀ-SERRA}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{T.\ ESCOBET-CANAL}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{S.\ VILA-MARTA}
+\end{minipage} \\ \hspace*{-10pt}
+%
+\begin{minipage}[t]{2.7in} \normalsize \baselineskip 12.5pt
+%\centerline{A.\ LLUSÀ SERRA}
+\centerline{Universitat Politècnica de Catalunya}
+\centerline{Department of Electronic System Design and Programming}
+\centerline{Av.\ Bases de Manresa 61--73, 08242 Manresa}
+\centerline{ES-CT}
+%\centerline{aleix@dipse.upc.edu}
+\end{minipage} \\ \hspace*{-10pt}
+%
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{aleix@dipse.upc.edu}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{teresa.escobet@upc.edu}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+\centerline{sebas@dipse.upc.edu}
+\end{minipage} 
+% %
+% If you are three authors then you can use three mini--pages
+% instead of two. Their horizontal size must be less than 2.7in
+% indicated above. It can be e.g. 2.3in. However, you must pay
+% attention that you do not exceed the total width of the text.
+%
+\\ \\ \hspace*{-10pt}
+\begin{minipage}[b]{6.9in} \normalsize
+\baselineskip 12.5pt {\it Abstract:}
+% The text of the abstract follows.
+A model for multiresolution time series database management systems is
+proposed. The main objective is to store compactly a time series and
+manage consistently its temporal dimension. It is achieved by
+extracting different resolutions and attributes summaries from the
+time series.
+%
+Our work is concerned in putting together two areas of study: time
+series analysis and database management systems (DBMS). Time series analysis
+offers a great deal of methodologies and algorithms to process time
+series data and database field provides software expertise in managing
+data. Therefore it is of primary relevance that DBMS support time series.
+%
+\\ [4mm] {\it Key--Words:}
+% The key-words follow.
+time series, data model, database systems, monitoring systems
+\end{minipage}
+\vspace{-10pt}}
+
+\maketitle
+
+\thispagestyle{empty} \pagestyle{empty}
+% numbers of pages are supplemented by the editor
+%
+% THE BEGINNING OF THE TEXT
+%
+
+
+% \section{Introduction}
+% \label{S1} \vspace{-4pt}
+
+
+
+%intro, requirements
+\input{intro-wseas}
+
+%model MTSMS
+\input{model-wseas}
+
+%exemple
+\input{example-wseas}
+
+%related work, conclusion, acknowledgement
+\input{conclusion-wseas}
+
+
+
+\vspace{10pt} \noindent
+{\bf Acknowledgements:}  The research presented in this paper has been supported by Spanish research project  AVIC ({\small TEC2009-09924}), SHERECS ({\small DPI2011-26243}), the UE project i-Sense ({\small FP7-ICT-270428}), and Universitat Polit\`{e}cnica de Catalunya (UPC).
+
+
+\printbibliography{}
+
+
+
+% \begin{thebibliography}{11}
+
+% \vspace{-7pt}
+% \bibitem{BNP}
+% H.~Bellout, J.~Neustupa and P.~Penel, On the Navier-Stokes
+% Equation with Boundary Condi\-tions Based on Vorticity, {\em
+% Math.~Nachr.} 269--270, 2004, pp.~59--72.
+
+% \vspace{-7pt}
+% \bibitem{GR}
+% V.~Girault and P.--A.~Raviart, {\em Finite Element Methods for
+% Navier--Stokes Equations,} Springer --Verlag,
+% Berlin--Heidelberg--New York--Tokyo 1986
+
+% \vspace{-7pt}
+% \bibitem{Ho}
+% E.~Hopf, \"Uber die Anfangswertaufgabe f\"ur die Hydrodynamischen
+% Grundgleichungen, {\em Math. Nachr.}~4, 1951, pp.~213--231.
+
+% \vspace{-7pt}
+% \bibitem{Ka}
+% T.~Kato, Non--stationary flows of viscous and ideal fluids in
+% $\R^3$, {\em J.~Func.~Anal.}~9, 1972, pp. 296--305.
+
+% \vspace{-7pt}
+% \bibitem{Se}
+% J.~Serrin, On the interior regularity of weak solutions of the
+% Navier--Stokes equations, {\em Arch.~Rat. Mech.~Anal.}~9, 1962,
+% pp.~187--195.
+
+% \end{thebibliography}
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% ispell-local-dictionary: "british"
+%%% End:

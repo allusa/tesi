@@ -1,0 +1,197 @@
+\section{Example}
+\label{sec:example}
+
+Next we show an example database for a real time series data.  It is
+situated in a distributed sensor monitoring system where temperature
+data is captured from various sensors \cite{alippi10}. We focus on one
+sensor data.
+
+Original data is shown in figure~\ref{fig:exemple:original} for a
+period of one year and a half. %, from 29th April 2010 to 18th October 2011.
+ The time series is plotted interpolating linearly its measures.
+In this plot we can see that there is missing data and some outlying
+observations, and there are 146709 stored values.
+
+
+\begin{figure}[tp]
+  \centering
+% \tikzset{
+% every node/.style={transform shape}
+% }
+\tikzset{every picture/.style={scale=0.8}}
+  \input{imatges/isense_original.tex}
+  %\includegraphics[width=12cm]{\experiment/original.pdf}
+  \caption{Example of a temperature time series data}
+  \label{fig:exemple:original}
+\end{figure}
+
+
+
+%\subsection{Schema}
+
+\vspace{5pt} \noindent {\bf Schema:} \ We design a multiresolution
+time series database (MTSDB) that stores a time series with high
+resolution at recent times and with low resolution at older times. The
+schema is illustrated in figure~\ref{fig:exemple:window}. At the top
+there are four \emph{discs} with different number of \emph{measures}
+and at the bottom there is a timeline showing the time series chopped
+along time. For recent times, every 5 hours a \emph{measure} is stored
+in the fourth \emph{disc} which has a capacity of 24 \emph{measures}
+so that results in a 5 day piece. For low mid times, every 2 days in
+the third \emph{disc} with a capacity of 20 resulting in a 40 days
+piece. For high mid times, every 15 in the second \emph{disc} with a
+capacity of 12 resulting 180 days. For old times, every 50 days in the
+first \emph{disc} with a capacity of 12 resulting results in 600 days.
+
+\begin{figure}[tp]
+\centering
+\setlength{\unitlength}{1.3mm}
+\input{imatges/mtsdb-time_window.tex}
+\caption{Schema of resolutions in a MTSDB}
+\label{fig:exemple:window}
+\end{figure}
+
+
+%\subsection{Attribute aggregate functions}
+\vspace{5pt} \noindent
+{\bf Attribute aggregate functions:} \
+In order to illustrate this example we consolidate all the resolution
+discs by zohe arithmetic mean aggregate function and the highest
+resolution disc by zohe maximum aggregate function, owing to their
+simplicity. Next, we show the process in designing both aggregate
+functions.
+
+
+In accordance to the zohe equation~\ref{eq:zohe} defined using
+left-continuous step functions, we define the zohe attribute aggregate
+function family as the one interpreting the consolidation time
+interval left-continuous $i=(T_0,T_f]$
+%
+and the one aggregating on the subset $S'=S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$: 
+% and the
+% resulting aggregated measure's time always being $T_f$, in
+% accordance to the \emph{zero-order hold backwards} representation
+% being defined using left-continuous step functions.  Let
+% $S=\{m_0,\ldots,m_k\}$ be a time series and $i=[T_0,T_f]$ be a time
+% interval, the attribute aggregate function $f^{\text{zohe}}\in f$
+% summarises $S$ with a measure, $f^{zohes}: S=\{m_0,\ldots,m_k\} \times
+% i=[T_0,T_f] \mapsto m'$ where $m'=(v',T_f)$ and the resulting value
+% $v'$ depends on the attribute aggregate function calculated from
+% the subset $S^{zohe}=(S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$.
+%
+% Let $S'=S^{zohe}$:
+\begin{itemize}
+\renewcommand{\labelitemi}{--}
+\item maximum$^{zohe}$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
+\item arithmetic mean$^{zohe}$: $S \times i \mapsto m'$ where $V(m')
+  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
+  $T(m')=T_f$. 
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Results}
+
+The resulting time series after consolidating the MTSDB are shown in
+figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
+resolution disc's time series. Each title shows the
+resolutions disc's delta and cardinal values, and each attribute
+aggregate function has different colour.  Each time series
+is plotted with zohe continuous representation. Time axis has
+UTC units rounded to nearest time points
+% in order to reduce printing space, for example the timestamp December 2010 is a rounding for a day between 1 and 31
+and temperature axis has Kelvin
+units. Outlayers are marked as discontinuities, for instance see
+fourth plot's 2938 K maximum.
+
+
+\begin{figure}[tp]
+  \centering
+  \tikzset{
+    every picture/.style={scale=0.7},
+%    every node/.style={transform shape}
+  }
+  \input{imatges/isense_4mrdb.tex}
+  \caption{Resolution discs' time series in a MTSDB}
+  \label{fig:exemple:4mrd}
+\end{figure}
+
+
+In all the four plots, we can see that arithmetic mean aggregate
+function has filled missing data and filtered outlayers
+observations. This is due to the aggregate function coming from a zohe
+interpretation, that is known values are time left hold. 
+% Otherwise, we
+% could be stricter by using a non filling aggregate such as an unknown
+% marking aggregate function as stated in
+% section~\ref{sec:model:interpolador}.
+
+% Moreover, in the MTSDB the number of stored values has been reduced to
+% 92, which is the sum of disc's cardinalities. However, now there is
+% only high resolution for recent data. Note that 18th October 2011
+% corresponds to the 'now ' point showed in figure
+% \ref{fig:exemple:window} and May 2010 corresponds to the oldest data
+% known.
+
+
+% We  can  easily  have a  bigger  MTSDB  by  doubling the  capacity  of
+% resolution discs.  Then we  have 184 stored  values and  the resulting
+% time series are  shown in figure~\ref{fig:exemple:4mrdbigger}.  Now we
+% can preserve more historic but no more resolution. Although plots seem
+% smoother, this is only a visualisation  issue owing to the fact we are
+% showing more points in the same width. Fourth plot is the same in both
+% figures as there is no more known historic.
+
+% \begin{figure}[tp]
+%   \centering
+%   \tikzset{
+%     every picture/.style={scale=0.8},
+%     every node/.style={transform shape}
+%   }
+%   \input{imatges/isense_4mrdb-bigger.tex}
+%   \caption{Resolution discs' time series in a bigger MTSDB}
+%   \label{fig:exemple:4mrdbigger}
+% \end{figure}
+
+
+
+With the multiresolution database filled now we may want to ask
+queries, in which we are currently working in order to develop a model
+for multiresolution operators.  For example, one query would be the
+union of the four time subseries choosing the one with the highest
+resolution as shown in figure~\ref{fig:exemple:4mrdtot}.  
+%Therefore we obtain a piecewise function where each piece has a different resolution.  
+Each time series is plotted interpolating linearly its measures, note
+that this linearly visualisation seems right time displaced as time
+series comes from a zohe aggregation.  Comparing this figure with the
+original figure~\ref{fig:exemple:original}, as we have applied mean
+aggregation it resembles an incremental low-pass filter and the
+maximum aggregation resembles an envelope function.
+
+\begin{figure}[tp]
+  \centering
+  \tikzset{every picture/.style={scale=0.8}}
+  \input{imatges/isense_mrdb-all.tex}
+  %\includegraphics[width=12cm]{\experiment/isense3-tot.pdf}
+  \caption{All time series united from the MTSDB}
+  \label{fig:exemple:4mrdtot}
+\end{figure}
+
+
+Concluding, with this MTSDB example schema  we achieve not an
+approximation to the original function but an extraction of some
+interesting information.
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main-wseas"
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+% LocalWords:  multiresolution MTSDB
