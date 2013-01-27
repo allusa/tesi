@@ -30,7 +30,7 @@ chronologically, \cite{fu11}, accordingly they are also called time
 sequences \cite{last:hetland}.  Time series are usually stored in a
 database. Usually the managing software to store this data are
 relational database management systems (RDBMS). However, using a RDBMS
-as a time series backend suffers some drawbacks,
+as a time series back-end suffers some drawbacks,
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. Time series
 come from a continuous nature in which they are recorded at regular
 intervals, such as hourly or daily, or at irregular intervals, such as
@@ -54,14 +54,14 @@ This paper focuses on Data Base Management Systems (DBMS) that store
 and treat data as time series. These are usually known as Time Series
 Data Base Management Systems (TSMS), \cite{dreyer94}.  We introduce a
 new data model for a multiresolution TSMS (MTSMS). This model allows
-to store time series using different time resolutions and it organizes
+to store time series using different time resolutions and it organises
 data in an aggregated way. It is designed to cope well with bounded
 storage computers such as sensor systems.
 
 The paper is organised as follows.  In Section~\ref{sec:related-work}
 some related work concerning TSMS are presented and a summary of its
 features is shown in Section~\ref{sec:tsms-features}.  The MTSMS model
-is formalized as follows: the nomenclature preliminaries are
+is formalised as follows: the nomenclature preliminaries are
 introduced in Section~\ref{sec:model:preliminaries}, the data
 structure is formulated in Section~\ref{sec:MTSMS}, and attribute
 aggregation is summarised in
@@ -106,7 +106,7 @@ based on arrays which, according to the authors, include time series,
 it does not consider time series special needs: it does not considers
 how to manage continuously voluminous data neither how to achieve
 temporal coherence.  In contrast, SciQL exhibits some time series
-managing chraracteristics that include time series regularities,
+managing characteristics that include time series regularities,
 interpolation or correlation queries.  However, difference between
 tables and arrays seems too physical and leads to ambiguously
 representing time series.
@@ -135,46 +135,37 @@ deal with related time aspects.
 \section{TSMS features}
 \label{sec:tsms-features}
 
-A TSMS is a special purpose DBMS aimed at storing and managing time
+A TSMS is a special purpose DBMS devoted to store and manage time
 series. The main objective of TSMS is to put together two areas of
 study: time series analysis and DBMS.  Time series analysis formalises
 a great amount of algorithms and methodologies that apply to time
 series, with a main focus on improving efficiency. DBMS theory
-formalises systems that store and operate with data; currently the
-relation model \cite{date:introduction} is the referent.
+formalises systems that store and operate with data. Currently the
+relational model, \cite{date:introduction}, is the referent.
 
-In time series analysis there are some common operations that can be
-generalised when managing time series.
-%
-The main attribute of time series is the time, therefore dealing with
-time is a common operation, such as querying time intervals, finding
-time correlations, or calculating distances between two time
-series. TSMS must respect the temporal coherence of the time series.
-In the context of statistics, aggregation of time series is also
-common operation. Aggregation consists in summarising a time series
-subset with an attribute such as the mean, the maximum, or the mode.
+In time series analysis there are some common generic operations.
+Most of these operations deal with time given the nature of data.
+Usual operations include the query of time intervals, to find time
+correlations, or to calculate distances between two time series. In
+all these operations TSMS must consider the temporal coherence of the
+time series.  In the context of statistics, aggregation of time series
+is also a common operation. Aggregation consists in summarising a time
+series subset with an attribute such as the mean, the maximum, or the
+mode.
 
+%%% REVISAR EL PARAGRAF... ON VOL ANAR A PARAR?
 A particular feature of time series is representation. A time series
 is discrete in the set sense, that is a set of value and time
 pairs. Representation is the function model approximating the time
 series to its continuous nature. TSMS operate on time series
 respecting the representation coherence. Furthermore, the values of a
 time series can be of any type.
-% , preferably using piecewise operations in the set domain rather
-% than solving numerical methods for the continuous domain.
 
-
-
-
-
-%MTSMS
-%\subsection{Multiresolution features}
-%\subsection{Multiresolution motivation example}
-
-A MTSMS is a TSMS with multiresolution capabilities.
-In a MTSMS a schema has to be configured, which mainly consist in
-defining different pairs of a time resolution and an attribute summarising
-function. 
+A MTSMS is a TSMS with multiresolution capabilities.  A MTSMS schema
+represents a time series using a set of table like structures each of
+them representing the serer at a different resolution.  Each table of
+this set is connected to another one by an attribute summarising
+function.
 %We show it with an example.
 
 % Figures \ref{fig:mtsms:sequence} and
