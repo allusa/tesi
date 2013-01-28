@@ -98,18 +98,18 @@ Regarding to operations, \acro{MTSMS} structure needs operators to
 change the time intervals between measures. Most of these operators
 are attribute aggregate functions and consolidation actions.
 
-In what follows we design the basic \acro{MTSMS} model centered in:
+In what follows we describe the basic \acro{MTSMS} model centered in:
 (i) the four basic data model elements ---buffer, disc, resolution
-disc, and multiresolution database--, and (ii) the operations to
+disc, and multiresolution database---, and (ii) the operations to
 create a multiresolution database, to add measures, and to consolidate
 time series. Attribute aggregate functions are required but not linked
 to the model. They are defined in the
 Section~\ref{sec:model:interpolador}.
 
 A \emph{buffer} is a container for a regular or a no-regular time
-series. The buffer objective is to regularise the time series with
-predetermined step and attribute function. We call consolidation to
-this action.
+series. The buffer objective is to regularise the time series using a
+predetermined step and an attribute function. We name
+\emph{consolidation} to this action.
 \begin{definition}[Buffer]
   A \emph{buffer} is defined as the tuple $(S,\tau,\delta,f)$ where
   $S$ is a time series, $\tau$ is the last consolidation time,
@@ -124,24 +124,24 @@ this action.
 \end{definition}
 
 Operator \emph{addBuffer} adds a measure to its time series:
-$\text{addBuffer}: B = (S,\tau,\delta,f) \times m = (v,t) \mapsto
+$\text{addBuffer}: B = (S,\tau,\delta,f) \times m \mapsto
 (S',\tau,\delta,f)$ where $S' = S \cup \{m\} $.
 
-A buffer is ready to consolidate when a time of a measure is bigger
-than the buffer's next consolidation time.  Let $B=(S,\tau,\delta,f)$
-be a buffer and $m=\max(S)$ the maximum measure, $B$ is ready to
-consolidate if and only if $T(m) \geq \tau+\delta$.  The consolidation
-of $B$ in the time interval $i=[\tau,\tau+\delta]$ results in a
-measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$ and $f$ is an attribute
-aggregate function $f$. Operator \emph{consolidateBuffer} computes the
-measure of consolidation and removes the consolidated part of the time
-series from the buffer. Usually consolidateBuffer is only applied to
-the present consolidation interval, $\text{consolidateBuffer}:
-B=(S,\tau,\delta,f) \mapsto B' \times m' $ where $ B'=
-(S',\tau+\delta,\delta,f)$, $S' = S$ and $m' =
-f(S,[\tau,\tau+\delta])$. The buffer's time series can be reduced,
-such as $ S' = S(\tau+\delta,\infty)$, when historic data is not
-needed anymore.
+A buffer is ready to consolidate when the time of some measure is
+bigger than the buffer's next consolidation time.  Let
+$B=(S,\tau,\delta,f)$ be a buffer and $m=\max(S)$ the maximum measure,
+$B$ is ready to consolidate if and only if $T(m) \geq \tau+\delta$.
+The consolidation of $B$ in the time interval $i=[\tau,\tau+\delta]$
+results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$ and $f$ is
+an attribute aggregate function $f$. Operator \emph{consolidateBuffer}
+consolidates a set of measures and removes the consolidated part of
+the time series from the buffer. Usually consolidateBuffer is only
+applied to the present consolidation interval and it is defined as
+follows: $\text{consolidateBuffer}: B=(S,\tau,\delta,f) \mapsto B'
+\times m' $ where $ B'= (S',\tau+\delta,\delta,f)$, $S' = S$ and $m' =
+f(S,[\tau,\tau+\delta])$. When historic data is not needed anymore the
+consolidated buffer measures can be removed applying $S' =
+S(\tau+\delta,\infty)$.
 
 A \emph{disc} is a finite capacity measures container. A time series
 stored in a disc has its cardinal bounded. When the cardinal of the
@@ -173,14 +173,14 @@ time series.
   resolution disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
 \end{definition}
  
-The operators of a resolution disc are related to the buffer and disc
-ones: (i) The addition of a measure to the buffer of the resolution
-disc, $\text{addRD}:R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$,
-and $B'= \text{addBuffer}(B,m)$; (ii) The consolidation of the
-resolution disc by consolidating its buffer an adding the
-consolidation measure to its disc, $\text{consolidateRD}:R=(B,D)
-\mapsto R'$ where $R'= (B',D')$ and $(B',m') =
-\text{consolidateBuffer}(B)$ and $D'= \text{addDisc}(B,m')$.
+The operators of a resolution disc extend the buffer and disc ones:
+(i) The addition of a measure to the buffer of the resolution disc,
+$\text{addRD}:R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$, and
+$B'= \text{addBuffer}(B,m)$; (ii) The consolidation of the resolution
+disc by consolidating its buffer an adding the consolidation measure
+to its disc, $\text{consolidateRD}:R=(B,D) \mapsto R'$ where $R'=
+(B',D')$ and $(B',m') = \text{consolidateBuffer}(B)$ and $D'=
+\text{addDisc}(B,m')$.
 % \]
 
 A \emph{multiresolution database} is a set of resolution discs which
@@ -213,23 +213,19 @@ $$.
 \section{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-An attribute aggregate function is used when a buffer is consolidated
-in order to summarise information from the time series.  Let $S$ be a
-time series and $t_0$ and $t_f$ two time instants, an attribute
-aggregate function $f$ calculates a measure that summarises an
-attribute of $S$ in the time interval $i=[T_0,T_f]$:
+When a buffer is consolidated we summarise the time series information
+using an attribute aggregate function.  Let $S$ be a time series and
+$t_0$ and $t_f$ two time instants, an attribute aggregate function $f$
+calculates a measure that summarises the measures of $S$ included in
+the time interval $i=[T_0,T_f]$:
 \begin{align*}
-f&: \text{Time series} \times \text{time interval} \longrightarrow
-\text{Measure} \\
-f&: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
+f&:S=\{m_0,\ldots,m_k\} \times [T_0,T_f] \mapsto m'
 \end{align*}
 
-Different types of attribute aggregate functions may be used in order
-to summarise a time series. For instance, we may calculate attribute
-statistics from a time series such as the maximum value, the average
-or apply digital signal processing operations, \cite{zhang11}.
-% Furthermore, attribute aggregate functions copes with data
-% validation.%, which we will discuss latter in this section.
+To summarise a time series we can use different attribute aggregate
+functions.  For instance, we can calculate an statistic indicator of
+the time series such as the average or we can apply a more complex
+digital signal processing operation, \cite{zhang11}.
 
 Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
 \begin{itemize}
@@ -303,10 +299,10 @@ interpret a time series in different ways, that is what we call the
 representation of a time series. \citeauthor{last:keogh},
 \cite{last:keogh}, cite some possible representations for time series
 such as Fourier transforms, wavelets, symbolic mappings or piecewise
-linear representation (PLR). This last is remarked as the most used
-owing to the most common representation is with linear functions,
-\cite{keogh01}.
+linear representation. The last one is very usual due to its
+simplicity, \cite{keogh01}.
 
+% Aleix -> REREDACTAR
 The variety of time series representations results in a variety of the
 same attribute aggregate functions. For instance, a maximum attribute
 aggregate function may give different values if we consider a linear
@@ -315,9 +311,9 @@ or a constant piecewise representation.
 Following we show a possible family of attribute aggregate functions
 for time series represented by a staircase function, that is with a
 piecewise constant representation.  We define a new representation for
-time series called \emph{zero-order hold backwards} (zohe) consisting
-in holding each value until the preceding value, which is used
-similarly by RRDtool, \cite{lisa98:oetiker}.
+time series called \emph{zero-order hold backwards} (zohe). This
+representation holds back each value until the preceding value. 
+RRDtool, \cite{lisa98:oetiker}, has a similar aggregate function.
 
 Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
 $S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
@@ -331,6 +327,7 @@ $\forall t \in \mathbb{R} ,\forall m \in S:$
 \label{eq:zohe}
 \end{equation}
 
+% Aleix ->
 In conclusion, we can define many attribute aggregate functions and
 thus no global assumptions can be made about them.  Therefore, the
 time series representation results in attribute aggregate functions

@@ -30,11 +30,11 @@ chronologically, \cite{fu11}, accordingly they are also called time
 sequences, \cite{last:hetland}.  Time series are usually stored in a
 database. Usually the managing software to store this data are
 relational database management systems (\acro{RDBMS}). However, using
-a \acro{RDBMS} as a time series back-end suffers some drawbacks,
+a \acro{RDBMS} as a time series back-end suffers of some drawbacks,
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. Time series
-come from a continuous nature in which they are recorded at regular
-intervals, such as hourly or daily, or at irregular intervals, such as
-recording when a pump is open or closed.
+come from a continuous nature phenomenon. They are recorded at regular
+intervals, say hourly, or at irregular intervals, such as recording
+when a pump starts running.
 
 There are two main problems when managing time series. The first
 results from these data being voluminous, \cite{fu11}. Because of
@@ -53,24 +53,23 @@ spaced.
 This paper focuses on Data Base Management Systems (\acro{DBMS}) that
 store and treat data as time series. These are usually known as Time
 Series Data Base Management Systems (\acro{TSMS}), \cite{dreyer94}.
-We introduce a new data model for a multiresolution \acro{TSMS}
-(\acro{MTSMS}). This model allows to store time series using different
-time resolutions and it organises data in an aggregated way. It is
+We introduce a new data model named multiresolution \acro{TSMS}
+(\acro{MTSMS}). This model organises data in an aggregated way and it
+allows to store time series using different resolutions. It is
 designed to cope well with bounded storage computers such as sensor
 systems.
 
-The paper is organised as follows.  In Section~\ref{sec:related-work}
-some related work concerning \acro{TSMS} are presented and a summary
-of its features is shown in Section~\ref{sec:tsms-features}.  The
-\acro{MTSMS} model is formalised as follows: the nomenclature
-preliminaries are introduced in Section~\ref{sec:model:preliminaries},
-the data structure is formulated in Section~\ref{sec:MTSMS},
-and attribute aggregation is summarised in
+This manuscript is organised as follows.  In
+Section~\ref{sec:related-work} some related work concerning
+\acro{TSMS} are presented and a summary of its features is shown in
+Section~\ref{sec:tsms-features}.  The \acro{MTSMS} model is formalised
+as follows: the nomenclature preliminaries are introduced in
+Section~\ref{sec:model:preliminaries}, the data structure is
+formulated in Section~\ref{sec:MTSMS}, and attribute aggregation is
+summarised in
 Section~\ref{sec:model:interpolador}. Section~\ref{sec:example} is
 devoted to a real data multiresolution database example. Finally,
-Section~\ref{sec:concl-future-work} offers final
-conclusions.% and we consider some future working directions.
-
+Section~\ref{sec:concl-future-work} offers some conclusions.
 
 
 \section{Related work}
@@ -91,25 +90,21 @@ and another for time series stored into data sequences from
 sensors. Time series have specific operations and can combine
 relations and sequences. Cougar target field is sensor networks, where
 data is stored distributed in sensors. Queries are resolved combining
-sensor data in a data stream orientation, which improves processing
+sensor data using a data stream abstraction that improves processing
 performance.
-% However, data streams imposes restriction on
-% operators so this TSMS can not be generalised to other time series
-% types. 
-%% Moreover, sequences and relations can collide in representing ambiguously time series.
 
 SciDB, \cite{stonebraker09:scidb}, and SciQL, \cite{zhang11}, are
 array database systems. These systems are intended for science
 applications, in which time series play a principal role. They
 structure time series into arrays in order to achieve multidimensional
-analysis and allow tables to store other data.  Although SciDB is
-based on arrays which, according to the authors, include time series,
-it does not consider time series special needs: it does not considers
-how to manage continuously voluminous data neither how to achieve
-temporal coherence.  In contrast, SciQL exhibits some time series
-managing characteristics that include time series regularities,
+analysis and allow tables to store other data.  SciDB is based on
+arrays which, according to the authors, allow to represent time
+series. However, it does not consider time series special needs: it
+does not care for managing continuously voluminous data neither for
+achieving temporal coherence.  In contrast, SciQL exhibits some time
+series managing characteristics that include time series regularities,
 interpolation or correlation queries.  However, difference between
-tables and arrays seems too physical and leads to ambiguously
+tables and arrays seems too physical and leads to ambiguity when
 representing time series.
 
 Bitemporal \acro{DBMS} is another database field related with
@@ -117,11 +112,11 @@ time. Bitemporal data target is to keep historical events in the
 database by associating time intervals to data.  Bitemporal data and
 time series data are not exactly the same and so can not be treated
 interchangeably, \cite{schmidt95}. However, there are some
-similarities %between time series and bitemporal data
-that can be considered. First, extending a relational model to manage
-bitemporal data illustrate the extension of \acro{RDMBS} with new
-types and how to model them. Second, bitemporal data modelling settles
-some time-related concepts that can be extended to time series.
+similarities that can be considered. First, extending a relational
+model to manage bitemporal data illustrate the extension of
+\acro{RDMBS} with new types and how to model them. Second, bitemporal
+data modelling settles some time-related concepts that can be extended
+to time series.
 
 The recent bitemporal data research in relational \acro{DBMS} model terms,
 \cite{date02:_tempor_data_relat_model}, marks a promising
@@ -146,16 +141,17 @@ and operate with data. Currently the relational model,
 \cite{date:introduction}, is the referent.
 
 In time series analysis there are some common generic operations.
-Most of these operations deal with time given the nature of data.
+Most of these operations deal with the time given the nature of data.
 Usual operations include the query of time intervals, to find time
 correlations, or to calculate distances between two time series. In
-all these operations \acro{TSMS} must consider the temporal coherence of the
-time series.  In the context of statistics, aggregation of time series
-is also a common operation. Aggregation consists in summarising a time
-series subset with an attribute such as the mean, the maximum, or the
-mode.
+all these operations \acro{TSMS} must consider the temporal coherence
+of the time series.  In the context of statistics, aggregation of time
+series is also a common operation. Aggregate means to summarise a time
+series subset by a smaller set of measures. Statistic indicators like
+the mean, the maximum, or the mode, for instance, summarise time
+series into a only measure.
 
-%%% REVISAR EL PARAGRAF... ON VOL ANAR A PARAR?
+%%% REVISAR EL PARAGRAF... ON VOL ANAR A PARAR? -> Aleix
 A particular feature of time series is representation. A time series
 is discrete in the set sense, that is a set of value and time
 pairs. Representation is the function model approximating the time
@@ -165,10 +161,9 @@ time series can be of any type.
 
 A \acro{MTSMS} is a \acro{TSMS} with multiresolution capabilities.  A
 \acro{MTSMS} schema represents a time series using a set of table like
-structures each of them representing the serer at a different
-resolution.  Each table of this set is connected to another one by an
-attribute summarising function.
-%We show it with an example.
+structures each of them representing the series at a different
+resolution.
+
 
 % Figures \ref{fig:mtsms:sequence} and
 % \ref{fig:mtsms:sequence-irregular} show a multiresolution summary for

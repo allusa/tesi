@@ -1,14 +1,14 @@
 \section{Example}
 \label{sec:example}
 
-Next we show an example database for a real time series data.  Data
-comes from a temperature distributed sensor monitoring system,
+Next we show a real example database for a time series data. Actual
+data comes from a temperature distributed sensor monitoring system,
 \cite{alippi10}. We focus on one sensor data.
 
 The Figure~\ref{fig:exemple:original} shows the original data for one
-year and a half.  The time series is plotted interpolating linearly
-its measures. In this plot we can see that there is missing data and
-some outlying observations. There are $146\,709$ stored values.
+year and a half. The plot interpolates linearly the measures. In this
+plot we can see that there is missing data and some outlying
+observations. There are $146\,709$ stored values.
 
 \begin{figure}[tp]
   \centering
@@ -46,11 +46,11 @@ arithmetic mean aggregate function and the highest resolution disc
 using the zohe maximum aggregate function. Next, we show the process
 in designing both aggregate functions.
 
-In accordance to the zohe equation~\ref{eq:zohe} defined using
+In accordance to the zohe Equation~\ref{eq:zohe} defined using
 left-continuous step functions, we define the zohe attribute aggregate
 function family as the one interpreting the consolidation time
 interval left-continuous $i=(T_0,T_f]$ and the one aggregating on the
-subset $S'=S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$:
+subset $S'=S(T_0,T_f] \cup \{\min(S-S(-\infty,T_f))\}$:
 \begin{itemize}
   \renewcommand{\labelitemi}{--}
 \item maximum$^{zohe}$: $S \times i \mapsto m'$ where $V(m') =
@@ -67,8 +67,8 @@ Figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
 resolution disc time series. Each title shows the disc resolution and
 its cardinal, and each attribute aggregate function has different
 colour.  Each time series is plotted with zohe continuous
-representation. Time axis has UTC units rounded to nearest time points
-and temperature axis has Kelvin units. Outlayers are marked as
+representation. Time axis has \acro{UTC} units rounded to nearest time
+points and temperature axis has Kelvin units. Outlayers are marked as
 discontinuities, for instance see fourth plot's 2938 K maximum.
 
 \begin{figure}[tp]
@@ -77,14 +77,13 @@ discontinuities, for instance see fourth plot's 2938 K maximum.
     every picture/.style={scale=0.7},
   }
   \input{imatges/isense_4mrdb.tex}
-  \caption{Resolution discs' time series in a MTSDB}
+  \caption{Resolution discs' time series in a \acro{MTSDB}}
   \label{fig:exemple:4mrd}
 \end{figure}
 
-In all the four plots, we can see that arithmetic mean aggregate
-function has filled missing data and filtered outlayers
-observations. This is due to the aggregate function coming from a zohe
-interpretation, that is known values are time left hold.
+In all the four plots, we can see that mean aggregate function has
+filled missing data and filtered outlayer observations. This is due
+to the aggregate function coming from a zohe interpretation.
 
 Data can be queried.  For example, one query would be the union of the
 four time subseries choosing the one with the highest resolution as
@@ -104,10 +103,9 @@ the maximum aggregation resembles an envelope function.
   \label{fig:exemple:4mrdtot}
 \end{figure}
 
-Note that with this \acro{MTSDB} example schema we achieve not an
-approximation to the original function but an extraction of some
-interesting information.
-
+Note that this \acro{MTSDB} example schema do not stores the complete
+original data but an approximation to the original function which
+contains more information for recent times.
 
 
 %%% Local Variables:
