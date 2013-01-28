@@ -26,23 +26,12 @@
 %
 % THIS IS THE PLACE FOR YOUR OWN DEFINITIONS
 %
-%\newcommand{\R}{{\rm I}\!{\rm R}} % the set of real numbers
 \newcommand{\R}{\mathbb{R}} % the set of real numbers
-% boldface characters in mathematical formulas
-\newcommand{\bff}{\mbox{\boldmath $f$}}
-\newcommand{\bfl}{\mbox{\boldmath $l$}}
-\newcommand{\bfn}{\mbox{\boldmath $n$}}
-\newcommand{\bfu}{\mbox{\boldmath $u$}}
-\newcommand{\bfx}{\mbox{\boldmath $x$}}
-\newcommand{\bfy}{\mbox{\boldmath $y$}}
-\newcommand{\bfzero}{\mbox{\boldmath $0$}}
-\newcommand{\bfcurl}{{\bf curl}} % curl of a vector field
-\newcommand{\rmdiv}{{\rm div}} % divergence of a vector field
-\newcommand{\eop}{\hfill $\sqcap\!\!\!\!\sqcup$} % end of proof
-%
 %
 \DeclareMathOperator*{\nex}{next}
 \DeclareMathOperator*{\prev}{prev}
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+
 
 \usepackage{tikz,pgfplots}
 \usetikzlibrary{dateplot}
@@ -52,11 +41,11 @@
 \usepackage[
 style=numeric-comp,
 sortcites=true,
-%backref=true,
+% backref=true,
 ]{biblatex}
 \bibliography{bibliografia}
 \ExecuteBibliographyOptions{
-isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
+  isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
 }
 \bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
 
@@ -75,66 +64,67 @@ isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbre
 %
 % TITLE, AUTHOR, ABSTRACT, KEYWORDS
 %
-\title{\LARGE \bf Model for a Multiresolution Time Series
-  Database System}
+\title{\LARGE \bf A Model for a Multiresolution Time Series Database
+  System}
 
 \date{}
 
 \author{\hspace*{-10pt}
-\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{\scshape A.~LLUSÀ-SERRA}
-\end{minipage} \kern 0in
-\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{\scshape T.~ESCOBET-CANAL}
-\end{minipage} \kern 0in
-\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{\scshape S.~VILA-MARTA}
-\end{minipage} \\ \hspace*{-10pt}
-%
-\begin{minipage}[t]{2.7in} \normalsize \baselineskip 12.5pt
-\centerline{Universitat Politècnica de Catalunya}
-\centerline{Department of Electronic System Design and Programming}
-\centerline{Av.~Bases de Manresa 61--73, 08242 Manresa}
-\centerline{\scshape ES-CT}
-\end{minipage} \\ \hspace*{-5pt}
-%
-\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{aleix@dipse.upc.edu}
-\end{minipage} \kern 0in
-\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{teresa.escobet@upc.edu}
-\end{minipage} \kern 0in
-\begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
-\centerline{sebas@dipse.upc.edu}
-\end{minipage} 
-% %
-% If you are three authors then you can use three mini--pages
-% instead of two. Their horizontal size must be less than 2.7in
-% indicated above. It can be e.g. 2.3in. However, you must pay
-% attention that you do not exceed the total width of the text.
-%
-\\ \\ \hspace*{-10pt}
-\begin{minipage}[b]{6.9in} \normalsize
-\baselineskip 12.5pt {\it Abstract:}
-% The text of the abstract follows.
-In this paper we propose a model for multiresolution time series
-database management systems. This model stores compactly a time series
-and manage consistently its temporal dimension. This is achieved by
-extracting different resolutions and attributes summaries from the
-original time series.
-%
-Our work is concerned in putting together two areas of study: time
-series analysis and database management systems. Time series analysis
-offers a great deal of methodologies and algorithms to process time
-series data. Database systems field provides software expertise in
-managing data. Therefore, for many applications it is of primary
-relevance that database systems support time series.
-%
-\\ [4mm] {\it Key--Words:}
-% The key-words follow.
-time series, data model, database systems, monitoring systems
-\end{minipage}
-\vspace{-10pt}}
+  \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+    \centerline{\scshape A.~LLUSÀ-SERRA}
+  \end{minipage} \kern 0in
+  \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+    \centerline{\scshape T.~ESCOBET-CANAL}
+  \end{minipage} \kern 0in
+  \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+    \centerline{\scshape S.~VILA-MARTA}
+  \end{minipage} \\ \hspace*{-10pt}
+  % 
+  \begin{minipage}[t]{2.7in} \normalsize \baselineskip 12.5pt
+    \centerline{Universitat Politècnica de Catalunya}
+    \centerline{Department of Electronic Systems Design and Programming}
+    \centerline{Av.~Bases de Manresa 61--73, 08242 Manresa}
+    \centerline{\scshape ES-CT}
+  \end{minipage} \\ \hspace*{-5pt}
+  % 
+  \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+    \centerline{aleix@dipse.upc.edu}
+  \end{minipage} \kern 0in
+  \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+    \centerline{teresa.escobet@upc.edu}
+  \end{minipage} \kern 0in
+  \begin{minipage}[t]{2.3in} \normalsize \baselineskip 12.5pt
+    \centerline{sebas@dipse.upc.edu}
+  \end{minipage} 
+  % % 
+  % If you are three authors then you can use three mini--pages
+  % instead of two. Their horizontal size must be less than 2.7in
+  % indicated above. It can be e.g. 2.3in. However, you must pay
+  % attention that you do not exceed the total width of the text.
+  % 
+  \\[5pt]
+  \begin{minipage}[b]{6.9in} \normalsize
+    \baselineskip 12.5pt {\it Abstract:}
+    % The text of the abstract follows.
+    In this paper we propose a model for multiresolution time series
+    database management systems. This model stores compactly a time series
+    and manage consistently its temporal dimension. This is achieved by
+    extracting different resolutions and attributes summaries from the
+    original time series.
+    % 
+    Our work is concerned in putting together two areas of study: time
+    series analysis and database management systems. Time series analysis
+    offers a great deal of methodologies and algorithms to process time
+    series data. Database systems field provides software expertise in
+    managing data. Therefore, for many applications it is of primary
+    relevance that database systems support time series.
+    % 
+    \\ [4mm] {\it Key--Words:}
+    % The key-words follow.
+    time series, data model, database systems, monitoring systems
+  \end{minipage}
+  \vspace{-10pt}
+}
 
 \maketitle
 
@@ -161,7 +151,7 @@ time series, data model, database systems, monitoring systems
 presented in this paper has been supported by Spanish research project
 \textsc{avic (tec2009-09924)}, \textsc{sherecs (dpi2011-26243)}, the
 UE project i-Sense ({\small FP7-ICT-270428}), and Universitat
-Polit\`{e}cnica de Catalunya (UPC).
+Polit\`{e}cnica de Catalunya.
 
 \printbibliography{}
 \end{document}

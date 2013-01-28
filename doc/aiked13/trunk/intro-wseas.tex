@@ -27,10 +27,10 @@ time series are generated, \cite{basu07:_autom}.
 
 Time series are defined as a collection of observations made
 chronologically, \cite{fu11}, accordingly they are also called time
-sequences \cite{last:hetland}.  Time series are usually stored in a
+sequences, \cite{last:hetland}.  Time series are usually stored in a
 database. Usually the managing software to store this data are
-relational database management systems (RDBMS). However, using a RDBMS
-as a time series back-end suffers some drawbacks,
+relational database management systems (\acro{RDBMS}). However, using
+a \acro{RDBMS} as a time series back-end suffers some drawbacks,
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. Time series
 come from a continuous nature in which they are recorded at regular
 intervals, such as hourly or daily, or at irregular intervals, such as
@@ -50,21 +50,22 @@ spaced.
 
 %TSMS
 
-This paper focuses on Data Base Management Systems (DBMS) that store
-and treat data as time series. These are usually known as Time Series
-Data Base Management Systems (TSMS), \cite{dreyer94}.  We introduce a
-new data model for a multiresolution TSMS (MTSMS). This model allows
-to store time series using different time resolutions and it organises
-data in an aggregated way. It is designed to cope well with bounded
-storage computers such as sensor systems.
+This paper focuses on Data Base Management Systems (\acro{DBMS}) that
+store and treat data as time series. These are usually known as Time
+Series Data Base Management Systems (\acro{TSMS}), \cite{dreyer94}.
+We introduce a new data model for a multiresolution \acro{TSMS}
+(\acro{MTSMS}). This model allows to store time series using different
+time resolutions and it organises data in an aggregated way. It is
+designed to cope well with bounded storage computers such as sensor
+systems.
 
 The paper is organised as follows.  In Section~\ref{sec:related-work}
-some related work concerning TSMS are presented and a summary of its
-features is shown in Section~\ref{sec:tsms-features}.  The MTSMS model
-is formalised as follows: the nomenclature preliminaries are
-introduced in Section~\ref{sec:model:preliminaries}, the data
-structure is formulated in Section~\ref{sec:MTSMS}, and attribute
-aggregation is summarised in
+some related work concerning \acro{TSMS} are presented and a summary
+of its features is shown in Section~\ref{sec:tsms-features}.  The
+\acro{MTSMS} model is formalised as follows: the nomenclature
+preliminaries are introduced in Section~\ref{sec:model:preliminaries},
+the data structure is formulated in Section~\ref{sec:MTSMS},
+and attribute aggregation is summarised in
 Section~\ref{sec:model:interpolador}. Section~\ref{sec:example} is
 devoted to a real data multiresolution database example. Finally,
 Section~\ref{sec:concl-future-work} offers final
@@ -75,7 +76,7 @@ conclusions.% and we consider some future working directions.
 \section{Related work}
 \label{sec:related-work}
 
-There are some prior works concerning TSMS. 
+There are some prior works concerning \acro{TSMS}.
 %
 RRDtool from Oetiker, \cite{rrdtool}, is a free software database
 management system. It is designed to be used for monitoring
@@ -111,18 +112,18 @@ interpolation or correlation queries.  However, difference between
 tables and arrays seems too physical and leads to ambiguously
 representing time series.
 
-Bitemporal DBMS is another database field related with
+Bitemporal \acro{DBMS} is another database field related with
 time. Bitemporal data target is to keep historical events in the
 database by associating time intervals to data.  Bitemporal data and
 time series data are not exactly the same and so can not be treated
 interchangeably, \cite{schmidt95}. However, there are some
 similarities %between time series and bitemporal data
 that can be considered. First, extending a relational model to manage
-bitemporal data illustrate the extension of RDMBS with new types and
-how to model them. Second, bitemporal data modelling settles some
-time-related concepts that can be extended to time series.
+bitemporal data illustrate the extension of \acro{RDMBS} with new
+types and how to model them. Second, bitemporal data modelling settles
+some time-related concepts that can be extended to time series.
 
-The recent bitemporal data research in relational DBMS model terms,
+The recent bitemporal data research in relational \acro{DBMS} model terms,
 \cite{date02:_tempor_data_relat_model}, marks a promising
 foundation. It models bitemporal data as relations extended with time
 intervals attributes and extends relational operations in order to
@@ -135,19 +136,20 @@ deal with related time aspects.
 \section{TSMS features}
 \label{sec:tsms-features}
 
-A TSMS is a special purpose DBMS devoted to store and manage time
-series. The main objective of TSMS is to put together two areas of
-study: time series analysis and DBMS.  Time series analysis formalises
-a great amount of algorithms and methodologies that apply to time
-series, with a main focus on improving efficiency. DBMS theory
-formalises systems that store and operate with data. Currently the
-relational model, \cite{date:introduction}, is the referent.
+A \acro{TSMS} is a special purpose \acro{DBMS} devoted to store and
+manage time series. The main objective of \acro{TSMS} is to put
+together two areas of study: time series analysis and \acro{DBMS}.
+Time series analysis formalises a great amount of algorithms and
+methodologies that apply to time series, with a main focus on
+improving efficiency. \acro{DBMS} theory formalises systems that store
+and operate with data. Currently the relational model,
+\cite{date:introduction}, is the referent.
 
 In time series analysis there are some common generic operations.
 Most of these operations deal with time given the nature of data.
 Usual operations include the query of time intervals, to find time
 correlations, or to calculate distances between two time series. In
-all these operations TSMS must consider the temporal coherence of the
+all these operations \acro{TSMS} must consider the temporal coherence of the
 time series.  In the context of statistics, aggregation of time series
 is also a common operation. Aggregation consists in summarising a time
 series subset with an attribute such as the mean, the maximum, or the
@@ -157,15 +159,15 @@ mode.
 A particular feature of time series is representation. A time series
 is discrete in the set sense, that is a set of value and time
 pairs. Representation is the function model approximating the time
-series to its continuous nature. TSMS operate on time series
+series to its continuous nature. \acro{TSMS} operate on time series
 respecting the representation coherence. Furthermore, the values of a
 time series can be of any type.
 
-A MTSMS is a TSMS with multiresolution capabilities.  A MTSMS schema
-represents a time series using a set of table like structures each of
-them representing the serer at a different resolution.  Each table of
-this set is connected to another one by an attribute summarising
-function.
+A \acro{MTSMS} is a \acro{TSMS} with multiresolution capabilities.  A
+\acro{MTSMS} schema represents a time series using a set of table like
+structures each of them representing the serer at a different
+resolution.  Each table of this set is connected to another one by an
+attribute summarising function.
 %We show it with an example.
 
 % Figures \ref{fig:mtsms:sequence} and
@@ -237,7 +239,7 @@ function.
 
 
 
-% MTSMS improve TSMS features in various aspects:
+% \acro{MTSMS} improve TSMS features in various aspects:
 % \begin{itemize}
 
 % \item Voluminous data. Monitoring systems capture a huge amount of

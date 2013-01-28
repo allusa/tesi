@@ -1,25 +1,24 @@
 \section{Preliminaries}
 \label{sec:model:preliminaries}
 
-In this section we clarify the time series' definitions and
-nomenclature which we will use in this paper.  The main objects of a
-MTSMS are \emph{measures} and \emph{time series}. A \emph{measure} is
-a value measured in an instant in time and a \emph{time series} is a
-collection of \emph{measures}.
+In this section we introduce some background concepts and the
+nomenclature which we will use later.  First we define the main
+objects of a \acro{MTSMS} which are measures and time series.
 
-A \emph{measure} is a tuple $(v,t)$ where $v$ is the value of the
-measure and $t \in \mathbb{R}$ is the instant in time of measurement.
-The values of a time series can be of any type; for simplicity
-examples are presented generally with integers or real numbers but can
-also be strings or structures such as arrays.  Let $m = (v,t)$ be a
-measure, $v$ is written as $V(m)$ and $t$ is written as $T(m)$.
+A \emph{measure} is a value measured in a time instant. More formally
+it is a tuple $(v,t)$ where $v$ is the value of the measure and $t \in
+\mathbb{R}$ is the time instant of measurement.  The values of a time
+series can be of any type. For simplicity examples are presented with
+integers or real numbers but can also be strings or vectors.  Let $m =
+(v,t)$ be a measure, $v$ is written as $V(m)$ and $t$ is written as
+$T(m)$.
 
 The time value defines the canonical order between measures.  Let $m =
 (v_m, t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if
 and only if $t_m\geq t_n$.
 
-A time series is sequence of measures of the same phenomena that are
-ordered in time.
+A \emph{time series} is sequence of measures of the same phenomena
+that are ordered in time.
 \begin{definition}[Time series]
   A \emph{time series} $S$ is a a set of measures of the same
   phenomena $S = \{m_0, \ldots, m_k\}$ without repeated time values
@@ -67,13 +66,13 @@ equally spaced we say it to be regular.
 \section{The proposed data model}
 \label{sec:MTSMS}
 
-The MTSMS model is an storage solution for a time series where, in
-short, the information is spread in different time resolutions.  The
-objects of MTSMS are measures and time series as defined in
-Section~\ref{sec:model:preliminaries} and each MTSMS database contains
-only one time series.
+The \acro{MTSMS} model is an storage solution for a time series where,
+in short, the information is spread in different time resolutions.
+The objects of \acro{MTSMS} are measures and time series as defined in
+Section~\ref{sec:model:preliminaries} and each \acro{MTSMS} database
+contains only one time series.
 
-The general schema of the MTSMS model can be seen in the
+The general schema of the \acro{MTSMS} model can be seen in the
 Figure~\ref{fig:model:mtsdb}.  A multiresolution database is a
 collection of resolution discs, which temporarily accumulate the
 measures in a buffer where they are processed and finally stored in a
@@ -86,7 +85,7 @@ spread in the discs.
   \centering
   \input{imatges/mtsms-arquitectura_interna.tex}
   \smallskip
-  \caption{Architecture of MTSMS model}
+  \caption{Architecture of \acro{MTSMS} model}
   \label{fig:model:mtsdb}
 \end{figure}
 
@@ -95,16 +94,16 @@ measures. When a disc becomes full it discards a measure. Thus,
 multiresolution database is bounded in size and the time series gets
 stored in pieces, that is time subseries.
 
-Regarding to operations, MTSMS structure needs operators to change the
-time intervals between measures. Most of these operators are attribute
-aggregate functions and consolidation actions. 
+Regarding to operations, \acro{MTSMS} structure needs operators to
+change the time intervals between measures. Most of these operators
+are attribute aggregate functions and consolidation actions.
 
-In what follows we design the basic MTSMS model centered in: (i) the
-four basic data model elements ---buffer, disc, resolution disc, and
-multiresolution database--, and (ii) the operations to create a
-multiresolution database, to add measures, and to consolidate time
-series. Attribute aggregate functions are required but not linked to
-the model. They are defined in the
+In what follows we design the basic \acro{MTSMS} model centered in:
+(i) the four basic data model elements ---buffer, disc, resolution
+disc, and multiresolution database--, and (ii) the operations to
+create a multiresolution database, to add measures, and to consolidate
+time series. Attribute aggregate functions are required but not linked
+to the model. They are defined in the
 Section~\ref{sec:model:interpolador}.
 
 A \emph{buffer} is a container for a regular or a no-regular time
@@ -322,21 +321,20 @@ similarly by RRDtool, \cite{lisa98:oetiker}.
 
 Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
 $S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
-%continuous definition of the time series using left-continuous step functions.
-$\forall t \in \mathbb{R}  ,\forall m \in S:$ 
+$\forall t \in \mathbb{R} ,\forall m \in S:$
 \begin{equation}
  S(t)^{\text{zohe}} =  
 \begin{cases}
-  \infty & \text{if } t > T(\max S) \\%\text{not defined}
-  V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
+  \infty & \text{if } t > T(\max S) \\
+  V(m)   & \text{if } t\in (T(\prev_S m),T(m)]
 \end{cases}
 \label{eq:zohe}
 \end{equation}
 
-In conclusion, a huge amount of attribute aggregate functions can be
-defined and no global assumptions can be made.  Therefore, the time
-series representation results in attribute aggregate functions
-families.  MTSMS must allow to define user aggregate functions.
+In conclusion, we can define many attribute aggregate functions and
+thus no global assumptions can be made about them.  Therefore, the
+time series representation results in attribute aggregate functions
+families.  \acro{MTSMS} must allow to define user aggregate functions.
 
 
 

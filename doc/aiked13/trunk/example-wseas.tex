@@ -25,10 +25,10 @@ Figure~\ref{fig:exemple:window}. At the top there are four discs with
 different number of measures and at the bottom there is a timeline
 showing the time series chopped along time. Going from most to least
 granularity disks are configures as follows: (i) a measure every 5 h
-in the fourth disc which has a capacity of 24 measures ---it spans 5
-days---; (ii) a measure every 2 days in the third disc, with a
-capacity of 20 ---it spans 40 days---; (iii) a measure every 15 days
-in the second disc, with a capacity of 12 ---it spans 180 days--- and;
+in the fourth disc which has a capacity of 24 measures and thus it
+spans 5 days; (ii) a measure every 2 days in the third disc, with a
+capacity of 20 thus spanning 40 days; (iii) a measure every 15 days in
+the second disc, with a capacity of 12 thus spanning 180 days and;
 (iv) a measure every 50 days in the first disc that, with a capacity
 of 12 results in a span of 600 days.
 
@@ -36,7 +36,7 @@ of 12 results in a span of 600 days.
   \centering
   \setlength{\unitlength}{1.3mm}
   \input{imatges/mtsdb-time_window.tex}
-  \caption{Schema of resolutions in a MTSDB}
+  \caption{Schema of resolutions in a \acro{MTSDB}}
   \label{fig:exemple:window}
 \end{figure}
 
@@ -62,7 +62,7 @@ subset $S'=S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$:
 
 %\subsection{Results}
 
-The time series after consolidating the MTSDB are shown in the
+The time series after consolidating the \acro{MTSDB} are shown in the
 Figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
 resolution disc time series. Each title shows the disc resolution and
 its cardinal, and each attribute aggregate function has different
@@ -91,8 +91,8 @@ four time subseries choosing the one with the highest resolution as
 shown in the Figure~\ref{fig:exemple:4mrdtot}.  Each time series is
 plotted interpolating linearly its measures, note that this linearly
 visualisation seems right time displaced as time series comes from a
-zohe aggregation.  Comparing this figure with the original series
-(Figure~\ref{fig:exemple:original}), we observe that it resembles an
+zohe aggregation.  Comparing this figure with the original series, see
+Figure~\ref{fig:exemple:original}, we observe that it resembles an
 incremental low-pass filter because we applied mean aggregation while
 the maximum aggregation resembles an envelope function.
 
@@ -100,12 +100,11 @@ the maximum aggregation resembles an envelope function.
   \centering
   \tikzset{every picture/.style={scale=0.8}}
   \input{imatges/isense_mrdb-all.tex}
-  %\includegraphics[width=12cm]{\experiment/isense3-tot.pdf}
   \caption{All time series united from the MTSDB}
   \label{fig:exemple:4mrdtot}
 \end{figure}
 
-Note that with this MTSDB example schema we achieve not an
+Note that with this \acro{MTSDB} example schema we achieve not an
 approximation to the original function but an extraction of some
 interesting information.
 
