@@ -52,10 +52,10 @@ measure of $n$ in $S$ as $l=\nex_S(n)$ where $l =
 \min(S(T(n),+\infty))$. We define the previous measure of $n$ in $S$
 as $l=\prev_S(n)$ where $l = \max(S(-\infty,T(n)))$.
 
-Let $S$ be a time series, $t$ be an time instant and $\delta$ be a
+Let $S$ be a time series, $t$ be a time instant and $\delta$ be a
 time duration, then the time series' measures can be located in the
 time interval $i_0=[t, t+\delta]$ and its multiples $i_j=[t+j\delta,
-t+(j+1)\delta]$ for $j=0,1,2,\ldots$. When time series measures are
+t+(j+1)\delta]$ for $j=0,1,2,\ldots$. When time series' measures are
 equally spaced we say it to be regular.
 \begin{definition}[Regular time series]
   Let $S=\{m_0,$ $ldots,$ $m_k\}$ be a time series and $\delta$ a time
@@ -177,7 +177,7 @@ The operators of a resolution disc extend the buffer and disc ones:
 (i) The addition of a measure to the buffer of the resolution disc,
 $\text{addRD}:R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$, and
 $B'= \text{addBuffer}(B,m)$; (ii) The consolidation of the resolution
-disc by consolidating its buffer an adding the consolidation measure
+disc by consolidating its buffer and adding the consolidation measure
 to its disc, $\text{consolidateRD}:R=(B,D) \mapsto R'$ where $R'=
 (B',D')$ and $(B',m') = \text{consolidateBuffer}(B)$ and $D'=
 \text{addDisc}(B,m')$.
@@ -197,7 +197,7 @@ in the Figure~\ref{fig:model:mtsdb}.
 
 We define the addition of a measure to every resolution disc as
 $\text{addMD} : M=\{R_0, \dots, R_d\} \times m \mapsto \{R'_0, \dots,
-R'_d\}$ where $R'_i=\text{addRd}(R_i,m)$.
+R'_d\}$ where $R'_i=\text{addRD}(R_i,m)$.
 
 The consolidation of all resolution discs can be defined as follows:
 $\text{consolidateMD}: M=\{R_0, \dots, R_d\} \mapsto \{R'_0, \dots,
@@ -294,24 +294,23 @@ Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
 
 % %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
 
-To summarise, in the design of the attribute aggregate function we can
-interpret a time series in different ways, that is what we call the
-representation of a time series. \citeauthor{last:keogh},
-\cite{last:keogh}, cite some possible representations for time series
-such as Fourier transforms, wavelets, symbolic mappings or piecewise
-linear representation. The last one is very usual due to its
-simplicity, \cite{keogh01}.
+In the design of the attribute aggregate function we can interpret a
+time series in different ways, that is what we call the representation
+of a time series. \citeauthor{last:keogh}, \cite{last:keogh}, cite
+some possible representations for time series such as Fourier
+transforms, wavelets, symbolic mappings or piecewise linear
+representation. The last one is very usual due to its simplicity,
+\cite{keogh01}.
 
-% Aleix -> REREDACTAR
-The variety of time series representations results in a variety of the
-same attribute aggregate functions. For instance, a maximum attribute
-aggregate function may give different values if we consider a linear
-or a constant piecewise representation.
+Time series representations can be taken into account when computing
+with the measures of the time series.  For example, a maximum
+attribute aggregate function may give different values if we consider
+a linear or a constant piecewise representation.
 
 Following we show a possible family of attribute aggregate functions
 for time series represented by a staircase function, that is with a
 piecewise constant representation.  We define a new representation for
-time series called \emph{zero-order hold backwards} (zohe). This
+time series named \emph{zero-order hold backwards} (zohe). This
 representation holds back each value until the preceding value. 
 RRDtool, \cite{lisa98:oetiker}, has a similar aggregate function.
 
@@ -327,11 +326,12 @@ $\forall t \in \mathbb{R} ,\forall m \in S:$
 \label{eq:zohe}
 \end{equation}
 
-% Aleix ->
+
 In conclusion, we can define many attribute aggregate functions and
-thus no global assumptions can be made about them.  Therefore, the
-time series representation results in attribute aggregate functions
-families.  \acro{MTSMS} must allow to define user aggregate functions.
+thus no global assumptions can be made about them. Each user has to
+decide which combination of aggregation and representation fits better
+with the measured phenomena.  Therefore, \acro{MTSMS} must allow to
+define user aggregate functions.
 
 
 

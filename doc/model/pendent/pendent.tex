@@ -358,6 +358,166 @@ Volem crear un nou model de SGBD, Date ens diu que només hi ha el model relacio
 
 
 
+\section{Varis}
+
+Introduction to Time Series and Forecasting
+​http://www.springerlink.com/content/v48138/
+Introduction to Time Series and Forecasting 
+Peter J. Brockwell and Richard A. Davis
+
+
+
+Paquets rrdtool
+RRDTool instal·lat amb paquet Debian Squeeze Testing rrdtool-1.4.3-1. A la web d'en Tobias Oetiker l'última versió estable és la rrdtool 1.4.4 de Juliol 2010.
+Seria interessant provar paquets rrdcached, python-pyrrd, python-rddtool, 
+jrobin. Igual que RRDTool però en java?
+​http://oldwww.jrobin.org/api/jrobinandrrdtoolcompared.html
+rrd-merge reimplementat per poder reconstruir bases de dades RRDtool a partir de backups
+​https://bitbucket.org/ctheune/rrdmerge/overview
+
+
+
+Aberrant Detection in Time Series for Network Monitoring
+​http://cricket.sourceforge.net/aberrant/
+http://www-iepm.slac.stanford.edu/monitoring/forecast/hw.html
+
+
+cdef: PREDICT function
+​https://lists.oetiker.ch/pipermail/rrd-users/2010-October/017146.html
+CDEF:predict=2,-2,1,x,PREDICT
+
+
+IEEE 754 floating point data
+representació interna de números amb IEEE 754 floating point data (64bit Floating Point Numbers). Most CPUS only differ in their representation of NANs
+​http://oss.oetiker.ch/rrdtool-trac/wiki/PortableRrdFormat
+​http://en.wikipedia.org/wiki/IEEE_754
+
+read rrd files from memory - rrdtool io
+​https://lists.oetiker.ch/pipermail/rrd-users/2010-October/017143.html
+I would recommend you do a quick search of the mail archives for
+"rrdtool io" or similar search terms, this has been quite extensively
+discussed in the past. Some options for improving I/O are rrdcached,
+placing files in tmpfs, placing files in a loopback mountpoint of a
+single file, etc.
+
+
+càlcul de la mida en bytes d'una RRD
+​https://lists.oetiker.ch/pipermail/rrd-users/2011-March/017656.html
+Hi Kyle,
+Today Kyle Brandt wrote:
+I am considering redoing all my rra files to capture a higher
+resolution of data.
+1) If I create new rra files with a higher time resolution, can I back
+fill them with data from the lower rra resolution?
+have a look at ​https://svn.oetiker.ch/rrdtool/trunk/contrib/rrdjig/
+2) How do I estimate the size of for each RRA file? Is it something
+like (Some Constant) * Data Points + Base?
+each data point takes 8 bytes ... so the size is essentially
+all the RRAs summed up plus a few bytes for the headers ...
+The size of an RRA is the Columns * Rows * 8
+cheers
+tobi
+
+
+
+Round Robin SQL (RRS)
+​http://rrs.decibel.org/
+Round Robin SQL (RRS) is a SQL implementation of a round robin database. 
+
+Round-Robin Database Storage Engine (RRD)
+​http://www.fromdual.com/round-robin-database-storage-engine
+​http://www.fromdual.com/sites/default/files/rrd.pdf
+Round-Robin Database Storage Engine (RRD)
+Oli Sennhauser
+
+
+​http://www.scausa.com/DataMiningOnTimeSeries2.pdf
+Data mining on time series:
+AN ILLUSTRATION USING FAST-FOOD RESTAURANT FRANCHISE DATA
+Lon-Mu Liu(*)
+January 2001
+As mentioned in Friedman (1997), data
+mining is at best a vaguely defined field; its definition depends largely on the background and views
+of the definer. The view of Fayyad (1997) is that any algorithm that enumerates patterns from data,
+or fits models to data, is data mining. Fayyad further viewed data mining to be a single step in a
+larger process of knowledge discovery in databases (KDD). KDD is considered to be a more
+encompassing process that includes data warehousing, target data selection, data cleaning,
+preprocessing, transformation and reduction, data mining, model selection, evaluation and
+interpretation, and finally consolidation and use of the extracted “knowledge”. Weiss and Indurkhya
+(1998) broadly defined data mining as the search for valuable information in large volumes of data.
+Other researchers more directly tie data mining to pattern or knowledge discovery in large databases,
+and the predictive ability in using such patterns or knowledge in real-life application (see e.g.
+Glymour, Madigan, Pregibon, and Smyth, 1997, and Hand 1998).
+
+
+Data Models and Query Languages of Spatio-Temporal Information
+​http://wis.cs.ucla.edu/~cchen/thesis.ps
+Data Models and Query Languages of Spatio-Temporal Information
+Cindy Xinmin Chen
+University of California
+(wikipedia) A spatiotemporal database is a system that manages both space and time information, such as biological Databases, wireless communication networks, and processing of objects with uncertainty.
+Resum
+Cap1 
+===
+INTRODUCTION
+A les bases de dades convencionals els atributs que contenen informació temporal o espacial són manipulats pels programes d'aplicació amb poca ajuda per part del gestor de bases de dades. Una abse de dades spacio-temporal ofereix tipus de dades temporals i espacials en els seus models i llenguatges query.
+Bases de dades temporals tenen dues dimensions: valid time i transaction time. Capturen el temps de variació dels estats a la realitat i a la base de dades, respectivament.
+
+
+llibre: Real-Time Database Systems Architecture and Techniques
+​http://www.springerlink.com/content/k53772/
+Real-Time Database Systems Architecture and Techniques
+Kam-Yiu Lam and Tei-Wei Kuo
+Resum
+Bases de dades en temps real
+ACID (Atomicity, Consistency, Isolation and Durability)
+Cap2
+===
+MISCONCEPTIONS ABOUT REAL-TIME DATABASES
+While a temporal database is aiming to support some aspects of time associated with information (e.g., time-varying information such as stock quotes), a real-time
+database tries to satisfy timing constraints associated with operational aspects
+of the database.
+Time has several dimensions, but in the context of databases, two dimensions
+are of particular interest: valid time which denotes the time a fact was true in
+reality, and transaction time during which the fact was present in the database
+as stored data
+Cap3
+===
+APPLICATIONS AND SYSTEM CHARACTERISTICS
+4 dominis d'aplicació:
+Avionics and Space
+Air Traffic Control
+Industrial Control
+Command and Control
+Utilitzen temps real creat ad-hoc. Poques aplicacions d'aquestes utilitzen una base de dades en temps real comercial ja que n'hi ha poques generalment disponibles.
+External consistency — The approximate required maximum latency
+of the database data with respect to the external environment. This
+latency bound includes all delays and processing/communication times
+involved from the time the data was valid in the environment to the time
+it is read from the database by an application component. Note that
+this represents approximately half of an end-to-end latency bound. The
+database implementation should support it as a hard deadline if any of
+the system end-to-end deadlines are hard.
+Temporal consistency — The approximate maximum time between
+readings of environment data that, even though the values may differ
+somewhat, can be considered to be equivalently valid representations
+of the external environment. This value determines the importance of
+maintaining the atomicity and consistency during database management.
+
+
+
+
+
+Workshop: Temporal, Spatial, and Spatio-Temporal Data Mining
+​http://www.springerlink.com/content/dwnkk6lppcjr/
+Temporal, Spatial, and Spatio-Temporal Data Mining
+First International Workshop, TSDM 2000 Lyon, France, September 12, 2000 Revised Papers
+
+
+enllaços a mirar
+​http://www.kdnuggets.com/
+​http://www.fib.upc.edu/fib/estudiar-enginyeria-informatica/enginyeries-pla-2003/assignatures/MD.html
+
 
 
 \section{Programes}
