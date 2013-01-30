@@ -1,0 +1,288 @@
+\documentclass[twocolumn,11pt]{article}
+\usepackage{times}
+%
+% DO NOT CHANGE THE FOLLOWING PART
+%
+\setlength{\textwidth}{6.9in}
+\setlength{\textheight}{9.5in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0pt}
+\setlength{\topmargin}{-0.25in}
+\setlength{\columnsep}{0.4in}
+\setlength{\parindent}{4ex}
+%
+\newtheorem{definition}{Definition}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{corollary}[definition]{Corollary}
+%
+%
+% THIS IS THE PLACE FOR YOUR OWN DEFINITIONS
+%
+\newcommand{\R}{{\rm I}\!{\rm R}} % the set of real numbers
+% boldface characters in mathematical formulas
+\newcommand{\bff}{\mbox{\boldmath $f$}}
+\newcommand{\bfl}{\mbox{\boldmath $l$}}
+\newcommand{\bfn}{\mbox{\boldmath $n$}}
+\newcommand{\bfu}{\mbox{\boldmath $u$}}
+\newcommand{\bfx}{\mbox{\boldmath $x$}}
+\newcommand{\bfy}{\mbox{\boldmath $y$}}
+\newcommand{\bfzero}{\mbox{\boldmath $0$}}
+\newcommand{\bfcurl}{{\bf curl}} % curl of a vector field
+\newcommand{\rmdiv}{{\rm div}} % divergence of a vector field
+\newcommand{\eop}{\hfill $\sqcap\!\!\!\!\sqcup$} % end of proof
+%
+%
+% THE BEGINNING OF THE DOCUMENT
+%
+\begin{document}
+\global\def\refname{{\normalsize \it References:}}
+%
+\baselineskip 12.5pt
+%
+%
+% TITLE, AUTHOR, ABSTRACT, KEYWORDS
+%
+\title{\LARGE \bf Instructions for Preparation of Manuscripts for
+WSEAS Proceedings and Journals by Means of LaTeX}
+
+\date{}
+
+\author{\hspace*{-10pt}
+\begin{minipage}[t]{2.7in} \normalsize \baselineskip 12.5pt
+\centerline{JOHN BROWN}
+\centerline{Name of the Institution}
+\centerline{Department of Applied Mathematics}
+\centerline{Long Street 25, 121 35 City}
+\centerline{COUNTRY}
+\centerline{brown@math.univ.az}
+\end{minipage} \kern 0in
+\begin{minipage}[t]{2.7in} \normalsize \baselineskip 12.5pt
+\centerline{SECOND AUTHOR}
+\centerline{Name of the University}
+\centerline{Institute of Mechanical Engineering}
+\centerline{47 West Lincoln Avenue, 87 115 City}
+\centerline{COUNTRY}
+\centerline{second.author@math.univ.ab}
+\end{minipage}
+%
+% If you are three authors then you can use three mini--pages
+% instead of two. Their horizontal size must be less than 2.7in
+% indicated above. It can be e.g. 2.3in. However, you must pay
+% attention that you do not exceed the total width of the text.
+%
+\\ \\ \hspace*{-10pt}
+\begin{minipage}[b]{6.9in} \normalsize
+\baselineskip 12.5pt {\it Abstract:}
+% The text of the abstract follows.
+This paper contains brief instructions for authors who wish to
+prepare their manuscripts for WSEAS proceedings or journals by
+means of LaTeX. You will find the format you have to choose,
+fonts, how to type the title of your paper, the titles of
+sections, examples of definitions, lemmas, theorems, equations
+etc.
+%
+\\ [4mm] {\it Key--Words:}
+% The key-words follow.
+Typing manuscripts, \LaTeX
+\end{minipage}
+\vspace{-10pt}}
+
+\maketitle
+
+\thispagestyle{empty} \pagestyle{empty}
+% numbers of pages are supplemented by the editor
+%
+% THE BEGINNING OF THE TEXT
+%
+\section{Introduction}
+\label{S1} \vspace{-4pt}
+
+Although WSEAS proceedings and journals accept papers in the pdf
+or in a ps format, authors of the papers are encouraged to prepare
+their manuscripts in LaTeX. This concerns especially papers which
+contain many mathematical symbols, formulas, equations and
+similar. LaTeX is a very powerful tool specially developed for
+preparation of such manuscripts and it represents, together with
+Plain TeX and AMS TeX, a very popular and leading text processor
+among wide mathematical community.
+
+The package ``times'' (the declaration on line 2 in the source tex
+file) is used because it produces fonts which are mostly similar
+to the required WSEAS format. You can use the package ``times''
+only if you have a LaTeX 2e compiler.
+
+If you do not have the LaTeX 2e compiler then you must replace the
+declaration ``documentclass'' on line 1 of the source text by
+``documentstyle'' and omit the whole line 2. In that case, your
+fonts will slightly differ from the font ``times new roman'' which
+is required by WSEAS in another example prepared by means of MS
+Word. This concerns especially the title of the paper and the
+titles of sections. The same happens if you use ``documentclass''
+on line 1, but omit ``usepackage\{times\}'' on line 2.
+
+The author has the experience that the package ``times'' causes
+that the dvi file contains some incorrect characters on some LaTeX
+installations. Then the dvi viewer for example shows the
+connection ``fi'' (even inside a word like ``file'') as the Greek
+letter $\Theta$, italic letters look same as roman letters etc.
+Consequently, if you create a pdf file from the dvi file, it also
+looks bad. However, the perfect pdf file is always produced by
+using the PDFLatex.exe instead of Latex.exe compiler (or the
+PDFLaTeX command instead of the LaTeX command) and creating the
+pdf file directly from the tex file.
+
+\subsection{Subsection}
+\vspace{-4pt}
+
+When including a subsection, LaTeX automatically produces for its
+heading smaller letters as here.
+
+Section \ref{S2} contains a sample of a mathematical text.
+Mathematical equations must be numbers as follows: (1), (2),
+$\dots$ and not (1.1), (1.2) $\dots$ depending on your sections.
+LaTeX does it automatically if you do not change it by a special
+command.
+
+\section{Definitions of Function Spaces and Notation}
+\label{S2} \vspace{-4pt}
+
+Assume that $\Omega$ is a bounded simply connected domain in
+$\R^3$ whose boundary $\partial\Omega$ is a smooth surface. We
+shall use the notation:
+
+\begin{list}{$\circ$}
+{\setlength{\topsep 1pt}
+\setlength{\itemsep 1pt}
+\setlength{\leftmargin 8pt}
+\setlength{\labelwidth 6pt}}
+
+\item
+$L_{\sigma}^2(\Omega)^3$ is a subspace of $L^2(\Omega)^3$ which
+contains functions $\bfu$ whose divergence equals zero in $\Omega$
+in the sense of distributions and $(\bfu\cdot\bfn)|_{\partial
+\Omega}=0$ in the sense of traces.
+
+\item
+$D^1$ is the set of functions $\bfu\in W^{1,2}(\Omega)^3\cap
+L_{\sigma}^2(\Omega)^3$ such that $(\bfcurl\, \bfu\cdot
+\bfn)|_{\partial\Omega}=0$ in the sense of traces. It is a closed
+subspace of $W^{1,2}(\Omega)^3$.
+\end{list}
+
+Let $T>0$. We deal with the initial--boundary value problem which
+is defined by the equations
+\begin{eqnarray}
+\frac{\partial\bfu}{\partial t}+(\bfu\cdot\nabla)\bfu &=& -\nabla
+p+\nu\Delta\bfu+\bff \label{5} \\
+\rmdiv\, \bfu &=& 0 \label{6}
+\end{eqnarray}
+in $Q_T\equiv\Omega\times(0,T)$, by the initial condition
+\begin{equation}
+\bfu(\bfx,0)=\bfu^*(\bfx) \qquad \hbox{for}\ \bfx\in\Omega
+\label{7}
+\end{equation}
+and by the generalized impermeability boundary conditions
+\begin{equation}
+\bfu\cdot\bfn=0,\ \ \bfcurl\, \bfu\cdot\bfn=0,\ \
+\bfcurl^2\bfu\cdot\bfn=0 \label{4}
+\end{equation}
+on $\partial\Omega\times(0,T)$. (These boundary conditions were
+introduced in \cite{BNP}.)
+
+\begin{definition} \label{D1}
+This is the example of a definition. In order to stress the
+defined notion, you can e.g.~\underline{underline} it or type it
+by {\bf boldface} letters. \rm Or you can write the whole
+definition by roman letters and type just the defined notion by
+{\it italics}.
+\end{definition}
+
+\begin{lemma} \label{L1}
+A function $\bfu\in W^{1,2}(\Omega)^3\cap L^2_{\sigma}(\Omega)^3$
+sa\-tisfies the homogeneous Dirichlet boundary condition
+\begin{equation}
+\bfu(\bfx)=\bfzero \qquad \hbox{for}\ \bfx\in\partial\Omega
+\label{1}
+\end{equation}
+if and only if it satisfies
+\begin{eqnarray}
+\bfu\cdot\bfn=0, \quad \bfcurl\, \bfu\cdot\bfn=0, \quad
+\frac{\partial\bfu}{\partial\bfn}\cdot\bfn=0 \label{2}
+\end{eqnarray}
+on the boundary $\partial\Omega$ of domain $\Omega$.
+\end{lemma}
+
+\noindent
+{\bf Proof:} \ Assume that $\bfu$ is a smooth vector function in
+$L^2_{\sigma}(\Omega)^3$ at first.
+
+If $\bfu$ satisfies (\ref{1}) then $\bfu$ and $\bfcurl\, \bfu$
+obviously satisfy the first two conditions in (\ref{2}). Let us
+verify the third condition. Let $\bfx_0\in\partial\Omega$. The
+cartesian system of coordinates can be chosen so that the origin
+is at point $\bfx_0$ and $\bfn$ shows the direction of the
+$x_3$--axis. Since $u_1=u_2=0$ on $\partial\Omega$ and $\dots$
+etc. \eop
+
+\vspace{2pt}
+Lemma \ref{L1} confirms that the generalized impermeability
+boundary conditions (\ref{4}) differ from boundary condition
+(\ref{1}) only in the third condition in (\ref{2}).
+
+\begin{theorem} \label{T1}
+This is the example of a theorem. Texts of lemmas and theorems are
+usually typed by italic or slanted fonts in mathematical texts and
+so LaTeX does it automatically, until you do not change it by a
+special command.
+\end{theorem}
+
+\section{Conclusion}
+\label{S3} \vspace{-4pt}
+
+The results explained in the previous sections show that the
+generalized impermeability boundary conditions (\ref{4}) represent
+an acceptable alternative to (\ref{1}). Their relevance on
+boundaries of various smoothness $\dots$ etc.
+
+
+\vspace{10pt} \noindent
+{\bf Acknowledgements:} \ The research was supported by the
+University of ABC and in the case of the first author, it was also
+supported by the Grant Agency of DEF (grant No. 000/05/ 0000).
+
+\begin{thebibliography}{11}
+
+\vspace{-7pt}
+\bibitem{BNP}
+H.~Bellout, J.~Neustupa and P.~Penel, On the Navier-Stokes
+Equation with Boundary Condi\-tions Based on Vorticity, {\em
+Math.~Nachr.} 269--270, 2004, pp.~59--72.
+
+\vspace{-7pt}
+\bibitem{GR}
+V.~Girault and P.--A.~Raviart, {\em Finite Element Methods for
+Navier--Stokes Equations,} Springer --Verlag,
+Berlin--Heidelberg--New York--Tokyo 1986
+
+\vspace{-7pt}
+\bibitem{Ho}
+E.~Hopf, \"Uber die Anfangswertaufgabe f\"ur die Hydrodynamischen
+Grundgleichungen, {\em Math. Nachr.}~4, 1951, pp.~213--231.
+
+\vspace{-7pt}
+\bibitem{Ka}
+T.~Kato, Non--stationary flows of viscous and ideal fluids in
+$\R^3$, {\em J.~Func.~Anal.}~9, 1972, pp. 296--305.
+
+\vspace{-7pt}
+\bibitem{Se}
+J.~Serrin, On the interior regularity of weak solutions of the
+Navier--Stokes equations, {\em Arch.~Rat. Mech.~Anal.}~9, 1962,
+pp.~187--195.
+
+\end{thebibliography}
+
+\end{document}
