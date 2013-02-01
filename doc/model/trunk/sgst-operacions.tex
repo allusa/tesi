@@ -596,28 +596,67 @@ TutorialD:
 
 \section{Map i fold}
 
-\[
-\text{map}: S \times f \longrightarrow S' = \{\forall m\in S : f(m) \}
-\]
+\begin{align*}
+  \text{map}:& S \times f \longrightarrow S' = \{\forall m\in S : f(m) \}, \\
+             & \text{a on } f: m \mapsto m' 
+\end{align*}
 
 
-\[
-\text{fold}: S \times m_i \times f(m,m_i) \longrightarrow m' =
-\begin{cases}
-  m_i & si |S|=0 \\
-  f_m & altrament
-\end{cases},
-\text{ a on}
-\]
-\[
-f_m=m_a\in S : \text{fold}( S-\{m_a\},f(m_a,m_i),f)
-\]
+
+
+
+\begin{align*}
+  \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
+               =& f(\dots(f(f(f(m_i,m_0),m_1),m_2)\dots),m_k), \\
+               & \text{a on } f: m_a \times m_b \mapsto m'
+\end{align*}
+
+
+
+
+% \[
+% \text{fold}: S \times m_i \times f(m,m_i) \longrightarrow m' =
+% \begin{cases}
+%   m_i & si |S|=0 \\
+%   f_m & altrament
+% \end{cases},
+% \text{ a on}
+% \]
+% \[
+% f_m=m_a\in S : \text{fold}( S-\{m_a\},f(m_a,m_i),f)
+% \]
+
+
+
+
+
+
+
+
+Exemple d'operacions map:
+\begin{itemize}
+\item $\text{igual}: S \mapsto S'$ a on $S'= map(S,(t,v)\mapsto(t,v))$
+\item $\text{intercanvia}: S \mapsto S'$ a on $S'= map(S,(t,v)\mapsto(v,t))$
+\item $\text{pes}: S \mapsto S'$ a on $S'= map(S,(t,v)\mapsto(t,t*v))$
+\end{itemize}
+
+Exemple d'operacions fold:
+\begin{itemize}
+\item $\text{sumaV}: S \mapsto m'$ a on $m'=
+  fold(S,(0,0),(t^1,v^1)\times(t^2,v^2)\mapsto(t^1,v^1+v^2))$
+\end{itemize}
+
 
 
 
 TutorialD:
 \begin{verbatim}
-
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+} AS ts1: 
+ts.map(ts1,'t','t*v/2.0')
 \end{verbatim}
 
 

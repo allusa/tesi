@@ -15,6 +15,37 @@ END OPERATOR;
 
 
 
+
+OPERATOR ts.isempty (s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+BEGIN;
+  VAR s PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+  return s = s1;
+END;
+END OPERATOR;
+
+
+
+OPERATOR ts.char (s1 SAME_TYPE_AS  (timeseries)) RETURNS CHARACTER;
+BEGIN;
+VAR s character init('RELATION {');
+VAR coma character init('');
+FOR s1 ORDER(ASC t); 
+BEGIN;
+s := s || coma || '  TUPLE  { t ' ||  t || ' , v ' ||  v || '}';
+coma := ',';
+END;
+END FOR;
+s := s ||  '}';
+return s;
+END;
+END OPERATOR;
+
+
+
+
+
+
+
 OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
 END OPERATOR;
@@ -94,6 +125,77 @@ END OPERATOR;
 
 
 
+//Per a fer l'execute es necessiten variables globals
+VAR ts.map.sp BASE SAME_TYPE_AS ( timeseries) KEY { t };
+OPERATOR ts.map(s SAME_TYPE_AS  (timeseries), texpr CHARACTER, vexpr CHARACTER) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+VAR exp character init('');
+exp := 'ts.map.sp := extend ' || ts.char(s) || ' ADD ( ' || texpr || ' AS tprima,' || vexpr || ' AS vprima) {tprima,vprima} RENAME (tprima AS t,vprima AS v);';
+execute exp;
+return ts.map.sp;
+END;
+END OPERATOR;
+
+
+
+
+
+
+//especials per a fer fold
+//com es deu declararar una relacio de tipus RELATION {} i que quadri amb totes?
+
+OPERATOR ts.char.mi (s1 RELATION { t RATIONAL, v RATIONAL, ti RATIONAL, vi RATIONAL }) RETURNS CHARACTER;
+BEGIN;
+VAR s character init('RELATION {');
+VAR coma character init('');
+FOR s1 ORDER(ASC t); 
+BEGIN;
+s := s || coma || '  TUPLE  { t ' ||  t || ' , v ' ||  v || ', ti ' ||  ti || ', vi ' ||  vi || '}';
+coma := ',';
+END;
+END FOR;
+s := s ||  '}';
+return s;
+END;
+END OPERATOR;
+
+OPERATOR ts.map.mi(s RELATION { t RATIONAL, v RATIONAL, ti RATIONAL, vi RATIONAL }, texpr CHARACTER, vexpr CHARACTER) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+VAR exp character init('');
+exp := 'ts.map.sp := extend ' || ts.char.mi(s) || ' ADD ( ' || texpr || ' AS tprima,' || vexpr || ' AS vprima) {tprima,vprima} RENAME (tprima AS t,vprima AS v) {t,v};';
+execute exp;
+return ts.map.sp;
+END;
+END OPERATOR;
+
+
+
+OPERATOR ts.fold(s SAME_TYPE_AS  (timeseries), mi SAME_TYPE_AS  (timeseries), texpr CHARACTER, vexpr CHARACTER ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+  IF
+    ts.isempty(s)
+  THEN
+    return mi;
+  ELSE 
+   BEGIN;    
+    VAR ma PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+    VAR m PRIVATE RELATION { t RATIONAL, v RATIONAL , ti RATIONAL, vi RATIONAL}  KEY { t } ;
+    ma := ts.min(s);
+    s := s MINUS ma;
+    m := EXTEND ts.fold(s,mi,texpr,vexpr) RENAME (t as ti, v as vi) ADD (ts.t(ma) as t, ts.v(ma) as v);
+    return ts.map.mi(m,texpr,vexpr);
+   END;
+END IF;
+END;
+END OPERATOR;
+
+
+
+
+
+
+
+
 
 //drop
 // DROP OPERATOR ts.union(RELATION SAME_HEADING_AS (timeseries),RELATION SAME_HEADING_AS (timeseries));
@@ -112,3 +214,15 @@ END OPERATOR;
 //sys.Types
 //sys.Operators
 
+
+
+//redistribution FROM TUPLE FROM sys.Version
+
+
+//Exemples
+//WITH RELATION {
+//TUPLE { t 2.0, v 3.0 },
+//TUPLE { t 4.0, v 2.0 },
+//TUPLE { t 6.0, v 4.0 }
+// } AS ts1: 
+//ts.max(ts1)
