@@ -43,6 +43,17 @@ END OPERATOR;
 
 
 
+OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+END OPERATOR;
+
+OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 JOIN (s1 {t} INTERSECT s2 {t});
+END OPERATOR;
+
+OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+END OPERATOR;
 
 
 
@@ -55,6 +66,7 @@ return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MIN (t) AS t));
 END OPERATOR;
 
 
+
 OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
 END OPERATOR;
@@ -62,7 +74,6 @@ END OPERATOR;
 OPERATOR ts.inf(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return ts.min(ts.union(s1,(RELATION { TUPLE {t 1.0/0.0, v 1.0/0.0} })));
 END OPERATOR;
-
 
 
 
@@ -88,17 +99,7 @@ END OPERATOR;
 
 
 
-OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
-END OPERATOR;
 
-OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 JOIN (s1 {t} INTERSECT s2 {t});
-END OPERATOR;
-
-OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
-END OPERATOR;
 
 
 //Temporals
@@ -144,25 +145,13 @@ END OPERATOR;
 //especials per a fer fold
 //com es deu declararar una relacio de tipus RELATION {} i que quadri amb totes?
 
-OPERATOR ts.char.mi (s1 RELATION { t RATIONAL, v RATIONAL, ti RATIONAL, vi RATIONAL }) RETURNS CHARACTER;
-BEGIN;
-VAR s character init('RELATION {');
-VAR coma character init('');
-FOR s1 ORDER(ASC t); 
-BEGIN;
-s := s || coma || '  TUPLE  { t ' ||  t || ' , v ' ||  v || ', ti ' ||  ti || ', vi ' ||  vi || '}';
-coma := ',';
-END;
-END FOR;
-s := s ||  '}';
-return s;
-END;
-END OPERATOR;
+VAR ts.map.smi BASE RELATION { t RATIONAL, v RATIONAL , ti RATIONAL, vi RATIONAL}  KEY { t } ;
 
 OPERATOR ts.map.mi(s RELATION { t RATIONAL, v RATIONAL, ti RATIONAL, vi RATIONAL }, texpr CHARACTER, vexpr CHARACTER) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 BEGIN;
 VAR exp character init('');
-exp := 'ts.map.sp := extend ' || ts.char.mi(s) || ' ADD ( ' || texpr || ' AS tprima,' || vexpr || ' AS vprima) {tprima,vprima} RENAME (tprima AS t,vprima AS v) {t,v};';
+ts.map.smi := s;
+exp := 'ts.map.sp := (extend ts.map.smi  ADD ( ' || texpr || ' AS tprima,' || vexpr || ' AS vprima) {tprima,vprima} RENAME (tprima AS t,vprima AS v) ){t,v};';
 execute exp;
 return ts.map.sp;
 END;
@@ -182,7 +171,7 @@ BEGIN;
     VAR m PRIVATE RELATION { t RATIONAL, v RATIONAL , ti RATIONAL, vi RATIONAL}  KEY { t } ;
     ma := ts.min(s);
     s := s MINUS ma;
-    m := EXTEND ts.fold(s,mi,texpr,vexpr) RENAME (t as ti, v as vi) ADD (ts.t(ma) as t, ts.v(ma) as v);
+    m := EXTEND ts.fold(s,mi,texpr,vexpr) ADD (ts.t(ma) as ti, ts.v(ma) as vi);
     return ts.map.mi(m,texpr,vexpr);
    END;
 END IF;
@@ -190,9 +179,9 @@ END;
 END OPERATOR;
 
 
-
-
-
+OPERATOR ts.mapfold(s SAME_TYPE_AS  (timeseries), si SAME_TYPE_AS  (timeseries), texpr CHARACTER, vexpr CHARACTER ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.fold(s,si,texpr,vexpr)
+END OPERATOR;
 
 
 
