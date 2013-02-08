@@ -1,0 +1,168 @@
+\begin{frame}{Índex}
+  \begin{enumerate}
+  
+  \item Introducció
+    \begin{enumerate}
+    \item Sistema de monitoratge
+    \item Sèries temporals
+    \item Sistemes de Gestió de Bases de Dades (SGBD)
+    \end{enumerate}
+    
+  \item SGBD RRDtool 
+    
+  \item Model de dades Round Robin (RRD)
+    
+  \item Implementació de referència del model RRD
+    
+  \item Conclusions
+    
+  \item Treball futur
+    
+  \item Referències
+\end{enumerate}
+\end{frame}
+
+
+
+
+\begin{frame}{Introducció. Sistema de monitoratge: situació del problema}
+
+  \begin{itemize}
+  \item \emph{Supervisory Control And Data Acquisition} (SCADA). 
+  \item Adquisició de dades $\Rightarrow$  monitoratge:
+
+    \begin{itemize}
+    \item Moltes dades: només una petita part poden ser observades en línia.
+    \item Volem extreure coneixement  de les dades  $\Rightarrow$ sèries temporals.
+    \end{itemize}
+  \end{itemize}
+
+  \begin{center}
+    \scriptsize 
+    \begin{tikzpicture}[node distance=0.5cm]  
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, >=latex', shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+      \node[mynode]                                       (monitor)   {Sistema de monitoratge};  
+      \node[mynode, below right=2cm and -2cm of monitor]  (bd)        {Base dades}; 
+      \node[mynode, below=2cm of monitor, left=of bd]     (control)   {Sistema de control}; 
+      \node[mynode, roig, below right=0.5cm and 1.5cm of monitor] (usuari)    {Usuari};  
+      \node[mynode, verd, left=2cm of control]            (actuador)  {Actuadors};
+      \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
+      
+      
+      \draw[myarrow] (monitor.east) --   (usuari.north);	
+      \draw[myarrow] (bd.east) --   (usuari.south);
+      \draw[myarrow] (sensor.east) --   (monitor.west) 
+         node [above,midway] {Mesures}
+         node [below,midway] {Esdeveniments};
+      \draw[myarrow] (control.west) -- (actuador.east);
+      \draw[myarrow] (monitor.south) -- (bd.north);
+      \draw[myarrow] (monitor.south) -- (control.north)
+         node [above,sloped,midway] {Llaç de control};
+      
+    \end{tikzpicture} 
+  \end{center}
+
+
+\textbf{Objectiu:} Dissenyar un model pels SGBD dels sistemes de monitoratge.
+\end{frame}
+
+
+
+
+\begin{frame}{Introducció. Sèries temporals: estat actual.}
+
+\begin{itemize}
+\item Són co\l.leccions d'observacions cronològiques de magnituds.
+\item Són de gran dimensió (gran nombre de punts).
+\item Són de naturalesa contínua i numèrica.
+\item Ofereixen representació, indexat, cerca de similituds,
+  segmentació, visualització, extracció coneixement (predicció, cerca
+  de patrons\ldots).
+\end{itemize}
+
+La recerca s'ha incrementat en la darrera dècada: és important
+disposar d'esquemes de representació més efectius i eficients,
+\parencite{fu11}:
+\begin{itemize}
+\item Reduir la dimensió: mostreig, \parencite{astrom69}, interpolació
+  lineal amb PLR, \parencite{keogh97}, mitjana de segments amb PAA,
+  \parencite{keogh00}, etc.
+\item Indexar: iSAX, \parencite{keogh08:isax}, T-Time,
+  \parencite{assfalg08:ttime}, etc.
+\end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}{Introducció. SGBD: què són?}
+
+
+Una base de dades és un contenidor informàtic per a una co\l.lecció de dades.
+
+\begin{itemize}
+\item El model d'una bases de dades, que és el model matemàtic a on es
+  descriu teòricament l'estructura de les dades, per exemple el model
+  relacional o model Round Robin.
+
+\item El sistema de gestió de bases de dades, que és la implementació
+  d'un model de dades, per exemple postgresql o
+  RRDtool. 
+
+\item La base de dades, que és una instància d'un sistema de gestió de
+  bases de dades, per exemple la base de dades dels estudiants o la
+  base de dades de la temperatura de l'escola.
+\end{itemize}
+
+
+Els SGBD habituals són els relacionals,  disposen d'un model matemàtic consolidat.
+
+\end{frame}
+
+
+
+\begin{frame}{Introducció. SGBD per sèries temporals: què aporten?}
+
+Què no aporten els SGBD tradicionals?:
+\begin{itemize}
+\item SGBD relacionals permeten \emph{bitemporal data}: \emph{created} i  \emph{modified}, però dificulten operacions temporals de les sèries temporals. 
+
+\item Les mesures són camps numèrics individuals i no un sol conjunt.
+
+\item Cerca aproximada per les sèries temporals; en els SGBD és exacta.
+
+\item Estructures amb dimensió temps: \emph{Time Series Database Systems}. 
+\hspace{1cm}-- Extensió de tipus i operacions \parencite{stonebraker86}.
+
+\end{itemize}
+
+\medskip
+
+Els TSDS habituals no consideren els sistemes de monitoratge:
+\begin{itemize}
+\item Temps de les mesures no regular (mostres no equi-espaiades).
+\item Tractament de valors desconeguts.
+\item L'ordre temporal és essencial. Valor i temps són inseparables.
+\end{itemize}
+
+\medskip
+
+RRDtool: TSDS per a monitors de sèries temporals.
+
+
+\end{frame}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presentacio"
+%%% End: 

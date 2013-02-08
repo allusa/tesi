@@ -1,0 +1,125 @@
+
+\begin{frame}{RRDtool: SGBD Round Robin}
+RRDtool:
+  \begin{itemize}
+   \item Emmagatzema sèries temporals.
+   \item Coherència, rapidesa i poc espai.   
+   \item Presenta gràficament les dades. 
+   \item Utilitzat en entorns productius: Nagios, Icinga, etc.
+  \end{itemize}
+
+
+Estructura Round Robin:
+
+
+  \begin{itemize}
+   \item Nombre fix de registres. 
+   \item Lectura/Escriptura: recorregut cíclic.  
+   \item Pèrdua d'informació.
+ \end{itemize}
+
+\begin{columns}
+\column{6cm}
+
+\begin{center}
+{\small Exemple d'un cicle amb 12 registres}
+
+{\scriptsize
+\begin{tabular}{|c|c|c|}\hline
+registre & temps & valor \\ \hline
+R1 & 00 & 5 \\ \hline
+R2 & 05 & 2 \\ \hline
+\dots & \dots & \dots \\ \hline
+R11 & 50 & 3 \\ \hline
+R12 & 55 & 1 \\ \hline
+\end{tabular}
+}
+\end{center}
+\column{6cm}
+\begin{center}
+\setlength{\unitlength}{2mm}
+\begin{figure}[htb]
+\tiny
+    \begin{picture}(14,12)(-7,-6)
+      \put(0,0){\circle{10}}
+      \put(5,0){\circle{0.8}\makebox(0,0)[l]{\, R9 }}
+      \put(4.33,2.5){\circle{0.8}\makebox(0,0)[l]{\, R10 }}
+      \put(2.5,4.33){\circle{0.8}\makebox(0,0)[bl]{\, R11 }}
+      \put(0,5){\circle{0.8}\makebox(0,0)[b]{\medskip R12 }}
+      \put(-2.5,4.33){\circle{0.8}\makebox(0,0)[br]{R1 \hphantom{(00)}}}   
+      \put(-4.33,2.5){\circle{0.8}\makebox(0,0)[r]{R2 \hphantom{(00)} }}
+      \put(-5,0){\circle{0.8}\makebox(0,0)[r]{R3 \hphantom{(00)} }}
+      \put(-4.33,-2.5){\circle{0.8}\makebox(0,0)[r]{R4 \hphantom{(00)} }}
+      \put(-2.5,-4.33){\circle{0.8}\makebox(0,0)[tr]{R5 \hphantom{(00)}  }} 
+      \put(0,-5){\circle{0.8}\makebox(0,0)[t]{$\stackrel{\bigskip}{\text{R6}}$}}
+      \put(2.5,-4.33){\circle{0.8}\makebox(0,0)[tl]{\, R7 }} 
+      \put(4.33,-2.5){\circle{0.8}\makebox(0,0)[l]{\, R8 }}
+      \put(0,0){\vector(0,1){5}}
+      \put(0,0){\oval(5,5)[t]}
+      \put(-2.5,0){\makebox(0,0)[c]{$\vee$}}
+    \end{picture}
+\end{figure}
+\end{center}
+
+
+\end{columns}
+
+
+\end{frame}
+
+
+
+\begin{frame}{RRDtool, SGBD Round Robin}
+
+
+Representació de RRDtool amb finestres temporals:
+  \begin{itemize}
+    \item Taules Round Robin repetides amb diferents resolucions
+    \item Dades antigues $\Longrightarrow$ menys resolució
+  \end{itemize}
+\vspace{-1mm}
+
+%\input{imatges/rrd/finestra.tex}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}{RRDtool, SGBD Round Robin}
+
+Tres etapes: \smallskip
+\begin{enumerate}
+\item Transformació a velocitat \smallskip
+
+\item Normalització de l'interval 
+\begin{itemize}
+\item A període de mostreig regular.
+\item Conservant l'àrea sota la corba.
+\item Tractament de valors desconeguts
+\item Reconstrucció si no s'excedeix termini.
+\end{itemize}\smallskip
+
+\item Consolidació d'intervals
+\begin{itemize}
+\item average, max, min, last.
+\item No hi ha rellotge intern: les mesures marquen el pas del temps.
+\end{itemize}
+
+\end{enumerate}
+
+\bigskip
+
+RRDtool és interessant! Dissenyem un model que descrigui SGBD similars.
+
+
+\end{frame}
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presentacio"
+%%% End: 
