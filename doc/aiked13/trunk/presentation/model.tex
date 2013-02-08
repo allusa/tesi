@@ -1,0 +1,276 @@
+
+\begin{frame}{Disseny d'un model pels SGBD Round Robin}
+  Una base de dades Round Robin és un contenidor informàtic d'una
+  sèrie temporal que prové d'un monitoratge d'una variable mesurada en
+  diferents instants de temps.
+
+  \begin{enumerate}
+
+  \item Mesura $m=(v,t)$. %Valor en un instant temps.
+    \begin{itemize}
+    \item Les mesures tenen relació d'ordre induïda pel temps.
+    \end{itemize}
+
+  \item Sèrie temporal $S=\{m_0,\ldots,m_k\}$. %Conjunt de mesures.
+    \begin{itemize}
+    \item Regular si les mesures són equidistants en el temps.
+    \end{itemize}
+
+  \item Buffer $B=(S,\tau,\delta,f)$. %Consolidació d'una sèrie temporal.
+    \begin{itemize}
+    \item \emph{afegeix}: $B \times m \mapsto B'$.
+    \item \emph{consolida}: $B \mapsto B' \times m'$.
+    \item $\delta$ pas de consolidació
+    \item $\tau$ darrer instant de consolidació.
+    \item Interpolació $f: S \times [\tau,\tau+\delta] \mapsto m'$.
+    \end{itemize}
+
+  \item Disc $D=(S,k)$. 
+    \begin{itemize}
+    \item Emmagatzematge acotat: $|S| \leq k$. 
+    \item \emph{afegeix}: $D \times m \mapsto D'$.
+    \end{itemize}
+
+  \end{enumerate}
+
+\begin{textblock*}{50mm}(70mm,-40mm)
+
+%\column{5cm}
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=4cm,
+        scale only axis, height=2.3cm,
+        ymin = 0,
+        yticklabels= {,,\tiny valors},
+        y tick label style = {rotate=90,anchor=south},
+        x tick label style = {font=\tiny},        
+        xticklabels={$\underbrace{\tau_{}}_{\tau_0}$,$\underbrace{\tau_0+\delta}_{\tau_1}$,$\underbrace{\tau_1+\delta}_{\tau_2}$,$\underbrace{\tau_2+\delta}_{\tau_3 \ldots}$},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (19,4)
+        (22,6)
+        (25,7)
+        (29,8)
+        (30,4)
+        (35,2)
+        (41,5)
+        (45,8)
+    };
+
+    \end{axis}
+  \end{tikzpicture}
+
+
+\end{textblock*}
+
+
+%\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Model RRD: esquema de funcionament}
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item Disc Round Robin $R=(B,D)$. 
+\begin{itemize}
+\item Consolidació de buffer a disc.
+\end{itemize}
+\item Base de dades Round Robin $M=(B,\{R_0,\ldots,R_d \})$. 
+\begin{itemize}
+\item Sèrie temporal compacta i repartida en discs Round Robin:
+\end{itemize}
+\end{enumerate}
+
+
+
+  % \begin{columns}[l]
+  %    \column{6cm}
+
+\begin{center}
+       \tiny
+       \setlength{\unitlength}{0.2mm}
+%       \input{imatges/model/arxiurrd.tex}
+       \normalsize
+\end{center}
+  % \column{4cm}
+
+
+
+  %   Resum de les operacions:
+  %   \begin{enumerate}
+  %   \item Crea objectes buits
+  %   \item Afegeix
+  %   \item Consolida
+  %   \item Roda
+  %   \item Interpoladors
+  %   \end{enumerate}
+
+
+  %  \end{columns}
+
+\end{frame}
+
+
+
+\begin{frame}{Model RRD: representació i interpolació de sèries temporals}
+
+  \textbf{Representació}: Sèrie temporal $S$, representació contínua
+  $S(t)$
+
+
+  \begin{columns}[l]
+    \column{6cm}
+
+    \centering
+     
+    Repr.\ PLR (\emph{Keogh 1997})
+
+    \begin{tikzpicture}
+      \begin{axis}[
+        % width=10cm,
+        scale only axis, height=2.3cm,
+        ymin = 0,
+        yticklabels= {,,\tiny valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,{\tiny temps}},
+        ]
+ 
+        \addplot[only marks,mark=*,red] coordinates {
+          (19,4)
+          (32,2)
+          (35,4)
+          (38,6)
+          (45,8)
+        };
+
+        \addplot[blue] coordinates {
+          (19,4)
+          (32,2)
+          (45,8)
+        };
+
+    \end{axis}
+  \end{tikzpicture}
+
+  
+
+  \column{6cm}
+  \centering
+  Repr.\ \emph{zero-order hold} cap enrere
+  
+  \begin{tikzpicture}
+    \begin{axis}[
+      % width=10cm,
+      scale only axis, height=2.3cm,
+      ymin = 0,
+      yticklabels= {,,\tiny valors},
+      y tick label style = {rotate=90,anchor=south},
+      xticklabels={,{\tiny temps}},
+      ]
+      
+      \addplot[only marks,mark=*,red] coordinates {
+        (19,4)
+        (32,2)
+        (35,4)
+        (38,6)
+        (45,8)
+      };
+      
+      
+      \addplot[blue,const plot mark right] coordinates {
+        (19,4)
+        (32,2)
+        (35,4)
+        (38,6)
+        (45,8)
+      };
+      
+    \end{axis}
+  \end{tikzpicture}
+
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Model RRD: interpolació de sèries temporals}
+
+  \begin{center}
+  \textbf{Interpolador}: Sèrie temporal $\times$ interval de temps
+  $\rightarrow$ Mesura
+  \end{center}
+
+  \vfill
+
+  \begin{columns}[l]
+    \column{.60\textwidth}
+    Sèrie temporal $S$, amb $S(t)$ repr.\ \emph{zoh} cap enrere:\medskip
+    
+    Interpolador:  $S \times$ $[t_{i-1}^N , t_i^N] \mapsto m' = (v',t_i^N)$
+
+    \begin{itemize}
+
+    \item  Mitjana: 
+      $$v' = \text{avg }\{V(m): m \in S(t_{i-1}^N,t_i^N]\}$$
+    \item  Àrea:
+      $$v' = \frac{\int_{t_{i-1}^N}^{t_i^N} S(t)dt}{t_i^N - t_{i-1}^N}$$
+
+    \end{itemize}
+
+    \column{.40\textwidth}
+     
+    \begin{center}
+      \scriptsize
+      \begin{tikzpicture}
+        \begin{axis}[
+          % width=10cm,
+          scale only axis, height=3cm,
+          ymin = 0,
+          yticklabels= {},
+          xticklabels={$\ldots$,$t_{i-1}^N$,$t_i^N$},
+          ]
+          \addplot[ycomb,blue] coordinates {
+            (20,10)
+            (30,10)
+            (40,10)
+          }; 
+          
+          \addplot[only marks,mark=*,red] coordinates {
+            (19,4)
+            (32,2)
+            (35,4)
+            (38,6)
+            (45,8)
+          };
+          
+          \addplot[only marks,mark=*,green] coordinates {
+            (40,4)
+          };
+          
+          
+          \node[below] at (axis cs:32,2) {$t_{T_{f-k}}$};
+          \node[below] at (axis cs:35,4) {$\ldots$};
+          \node[above] at (axis cs:38,6) {$t_{T_{f-1}}$};
+          \node[above] at (axis cs:45,8) {$t_{T_f}$};
+          \node[right] at (axis cs:40,4) {$m'$};
+        \end{axis}
+      \end{tikzpicture}
+    \end{center}
+  \end{columns}
+\end{frame}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "presentacio"
+%%% End: 

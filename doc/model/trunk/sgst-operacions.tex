@@ -633,48 +633,65 @@ Noteu que $\text{fold}(\{\},m_i,f) \mapsto m_i$
 
 \begin{align*}
   \text{mapfold}: & S=\{m_0,\dotsc,m_k\} \times S_i \times f \longrightarrow S'= \\
-                 =& f(\dots(f(f(f(S_i,m_0),m_1),m_2)\dots),m_k), \\
-                  & \text{a on } f: S_a \times m_b \mapsto S'
-\end{align*}
+                 =& f(\dots(f(f(f(S_i\times\{m_0\})\times\{m_1\})\times\{m_2\})\dots)\times\{m_k\}), \\
+                  & \text{a on } f: \{S_a \times S_b \}\mapsto S'\\
+                  & \text{és a dir? } =map( \{S_a \times S_b \},f)
+\end{align*}\todo{s'ha de definir l'operació producte $S_1 \times S_2 \rightarrow S*$ S* pq no és totalment una sèrie temporal?}
 
 
 
 Propietats d'operacions mapfold:\todo{comprovar}
 \begin{itemize}
-\item Totes les fold es poden implementar com a mapfold:$(S,{m_i},
-  {m_a} \times m_b \mapsto {m'})$
+\item mapfold:$S \times \{\} \times f \mapsto \{\}$ 
 
-\item Totes les map es poden implementar com a mapfold:$(S,{},
-  {} \times m_b \mapsto {m'})$
+\item mapfold:$\{\} \times S_i \times f \mapsto S_i$ 
+
+\item mapfold:$S \times S_i \times
+  \map([S_a\times S_b],(t^1,v^1,t^2,v^2)\mapsto(t^1,v^1)) \mapsto S_i$
+
+\item mapfold:$S \times S_i \times \map([S_a\times
+  S_b],(t^1,v^1,t^2,v^2)\mapsto(t^2,v^2)) \mapsto S'$ a on $|S'|=1$
+
+\item Totes les fold es poden implementar com a mapfold$(S,\{m_i\},
+  \{m_a \times m_b\} \mapsto \{m'\})$
+
+\item Totes les map es poden implementar com a mapfold$(\{(0,0)\},S,
+  \{m_a\} \times  \{\} \mapsto \{m'\})$
 \end{itemize}
 
 
 
 Exemple d'operacions map:
 \begin{itemize}
-\item $\text{igual}: S \mapsto S'$ a on $S'= map(S,(t,v)\mapsto(t,v))$
-\item $\text{intercanvia}: S \mapsto S'$ a on $S'= map(S,(t,v)\mapsto(v,t))$
-\item $\text{pes}: S \mapsto S'$ a on $S'= map(S,(t,v)\mapsto(t,t*v))$
-\item $\text{tpredecessors}_{v1}: S \mapsto S'$ a on $S'= map(S,(t,v)
+\item $\text{igual}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,v))$
+\item $\text{intercanvia}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(v,t))$
+\item $\text{pes}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,t*v))$
+\item $\text{tpredecessors}_{v1}: S \mapsto S'$ a on $S'= \map(S,(t,v)
   \mapsto (t,T(\ant_S(m)))$
 \end{itemize}
 
 Exemple d'operacions fold:
 \begin{itemize}
+\item $\text{cardinal}: S \mapsto m'$ a on $m'=
+  \fold(S,(0,0),(t^1,v^1)\times(t^2,v^2)\mapsto(t^2,v^2+1)$
 \item $\text{sumaV}: S \mapsto m'$ a on $m'=
-  fold(S,(0,0),(t^1,v^1)\times(t^2,v^2)\mapsto(t^1,v^1+v^2))$
+  \fold(S,(0,0),(t^1,v^1)\times(t^2,v^2)\mapsto(t^1,v^1+v^2))$
 \item $\text{sup}: S \times m \mapsto m'$ a on $m'=
-  fold(S,(-\infty,\infty),(t^1,v^1)\times(t^2,v^2)\mapsto [(t^1,v^1)
+  \fold(S,(-\infty,\infty),(t^1,v^1)\times(t^2,v^2)\mapsto [(t^1,v^1)
   \text{ if } t^2 < t^1 \text{ else } (t^2,v^2) ])$
 \item $\text{antM}: S \times m \mapsto m'$ a on $m'=
-  fold(S,(-\infty,\infty),(t^1,v^1)\times(t^2,v^2)\mapsto [(t^1,v^1)
+  \fold(S,(-\infty,\infty),(t^1,v^1)\times(t^2,v^2)\mapsto [(t^1,v^1)
   \text{ if } t^2 < t^1 < T(m) \text{ else } (t^2,v^2) ])$
 \end{itemize}
 
 
 Exemple d'operacions mapfold:
 \begin{itemize}
-\item $\text{tpredecessors}_{v2}: S \mapsto S'$ a on $S'= mapfold(S,S,S^1\times m^2\mapsto )$
+\item $\text{tpredecessors}_{v2}: S \mapsto S'$ a on $S'=
+  mapfold(S,S^b,[S^1\times S^2]\mapsto f), S^b =
+  \map(S,(t,v)\mapsto(t,-\infty)), f=\map([S^1\times
+  S^2],(t^1,v^1,t^2,v^2)\mapsto (t^1,v^2) \text{ if } v^1<t^2<t^1
+  \text{ else } (t^1,v^1))$
 \end{itemize}
 
 
@@ -716,7 +733,7 @@ TUPLE { t 5.0, v 0.0}
 ts.sup(ts1 WHERE t < ts.t(m))
 \end{verbatim}
 
-antM fold TutorialD:
+sup fold TutorialD:
 \begin{verbatim}
 WITH RELATION {
 TUPLE { t 2.0, v 3.0 },
@@ -727,10 +744,19 @@ RELATION {
 TUPLE { t -1.0/0.0, v 1.0/0.0}
 } AS mi: 
 ts.fold(ts1,mi,'max {t,ti}','v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ti, v vi,  e False} } JOIN RELATION { TUPLE {e t > ti}})')
-EXTEND ts1 ADD ( max {t,ts.t(mi)} as tprima, v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ts.t(mi), v ts.v(mi),  e False} } JOIN RELATION { TUPLE {e t > ts.t(mi)}}) as vprima )
 \end{verbatim}
 
-
+predecessors mapfold TutorialD:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+EXTEND ts1 {t} ADD ( -1.0/0.0 as v)
+AS si: 
+ts.fold(ts1,si,'t','v FROM TUPLE FROM (RELATION { TUPLE {v ti, e True}, TUPLE {v v,  e False} } JOIN RELATION { TUPLE {e v < ti and ti<t}})')
+\end{verbatim}
 
 
 %%% Local Variables:

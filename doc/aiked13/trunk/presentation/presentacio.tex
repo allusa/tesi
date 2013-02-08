@@ -1,0 +1,202 @@
+\documentclass[english]{beamer}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[style=authoryear,sortcites=true]{biblatex}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{epic,xcolor,multicol}
+\usepackage[overlay]{textpos}
+\usepackage{listings}
+
+\usetikzlibrary{arrows,positioning}
+
+
+\mode<presentation>
+{
+  \usetheme{Madrid}
+  \setbeamercovered{transparent}
+  \beamertemplatenavigationsymbolsempty
+}
+
+
+
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+
+
+\bibliography{bibliografia}
+\renewcommand*{\bibfont}{\footnotesize}
+\bibparsep 0.2cm
+\bibhang 0.25cm
+
+
+\lstset{%backgroundcolor=\color{lightgray},
+        escapechar=@,
+        breaklines=true,
+        breakindent=0pt,
+        columns=fullflexible,
+        extendedchars=true,
+        language=python,
+        leftmargin=0.1\parindent,
+        inputencoding=utf8,
+        extendedchars=true,
+        columns=[l]fullflexible,
+        % 
+        basicstyle=\sffamily\footnotesize,
+        stringstyle=\color{green},
+        showstringspaces=false,
+        alsoletter={1234567890},
+        otherkeywords={\ , \}, \{},
+        keywordstyle=\color{blue},
+        emph={access,and,as,break,class,continue,def,del,elif,else,%
+          except,exec,finally,for,from,global,if,import,in,is,%
+          lambda,not,or,pass,print,raise,return,try,while,assert},
+        emphstyle=\color{orange}\bfseries,
+        emph={[2]self},
+        emphstyle=[2]\color{gray},
+        emph={[4]ArithmeticError,AssertionError,AttributeError,BaseException,%
+          DeprecationWarning,EOFError,Ellipsis,EnvironmentError,Exception,%
+          False,FloatingPointError,FutureWarning,GeneratorExit,IOError,%
+          ImportError,ImportWarning,IndentationError,IndexError,KeyError,%
+          KeyboardInterrupt,LookupError,MemoryError,NameError,None,%
+          NotImplemented,NotImplementedError,OSError,OverflowError,%
+          PendingDeprecationWarning,ReferenceError,RuntimeError,RuntimeWarning,%
+          StandardError,StopIteration,SyntaxError,SyntaxWarning,SystemError,%
+          SystemExit,TabError,True,TypeError,UnboundLocalError,UnicodeDecodeError,%
+          UnicodeEncodeError,UnicodeError,UnicodeTranslateError,UnicodeWarning,%
+          UserWarning,ValueError,Warning,ZeroDivisionError,abs,all,any,apply,%
+          basestring,bool,buffer,callable,chr,classmethod,cmp,coerce,compile,%
+          complex,copyright,credits,delattr,dict,dir,divmod,enumerate,eval,%
+          execfile,exit,file,filter,float,frozenset,getattr,globals,hasattr,%
+          hash,help,hex,id,input,int,intern,isinstance,issubclass,iter,len,%
+          license,list,locals,long,map,max,min,object,oct,open,ord,pow,property,%
+          quit,range,raw_input,reduce,reload,repr,reversed,round,set,setattr,%
+          slice,sorted,staticmethod,str,sum,super,tuple,type,unichr,unicode,%
+          vars,xrange,zip},
+        emphstyle=[4]\color{purple}\bfseries,
+        morecomment=[s][\color{lightgreen}]{"""}{"""},
+        commentstyle=\color{red}\slshape,
+        literate=
+          {>>>}{\textbf{\textcolor{red}{$>$\kern-.5ex$>$\kern-.5ex$>$}~}}3%
+          {...}{{\textcolor{gray}{...}}}3%
+          {à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1%
+          {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1%
+          {l·l}{{\l.l}}1 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1%
+          {Ï}{{\"\I}}1 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1%
+          {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+        rulesepcolor=\color{blue},
+        xleftmargin=0pt
+      }
+
+
+
+%------------- capçaleres pdf -----------
+\pdfinfo {
+/Title (Modelització dels SGBD RRD)
+/Author	 (Aleix Llusà Serra) 
+/Subject (Estudi i modelització
+    dels SGBD
+    Round Robin pel tractament de sèries temporals)
+/Keywords (sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool)
+}
+
+
+
+\title%
+   [Multiresolution time series DBMS]%
+   {A Model for a Multiresolution \\ Time Series Database System}
+
+\author[Escobet \and Llusà \and Vila]{%
+  Teresa Escobet-Canal \and Aleix Llusà-Serra \and Sebastià Vila-Marta}
+
+\institute[DiPSE--UPC]
+{
+  {\large Universitat Politècnica de Catalunya (UPC)} \\
+  Department of Electronic Systems Design and Programming (DiPSE)
+}
+
+
+\date[\acro{AIKED}' 13, Cambridge, UK]
+{\acro{AIKED}' 13, Cambridge, UK. February 20--22, 2013}
+
+
+
+\begin{document}
+
+
+\begin{frame}
+ \titlepage
+
+ \begin{center}
+ 
+  {\tiny Av.~Bases de Manresa 61--73, 08242 Manresa, \scshape ES-CT}
+
+  {\tiny teresa.escobet@upc.edu \quad  aleix@dipse.upc.edu \quad sebas@dipse.upc.edu}
+
+  \end{center}
+\end{frame}
+
+
+\input{introduccio}
+
+\input{sgbdrrdtool}
+
+\input{model}
+
+\input{python}
+
+\input{conclusions}
+
+
+\begin{frame}[allowframebreaks]
+{Referències}
+
+\printbibliography
+
+\end{frame}
+
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+
+% LocalWords:  SGBD RRD RRDtool monitoratge
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Defensa Tesi de Màster. Estudi i modelització dels SGBD Round Robin pel tractament de sèries temporals
+%
+% Copyright (C) 2011 Aleix Llusà Serra.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
