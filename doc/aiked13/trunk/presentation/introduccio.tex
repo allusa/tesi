@@ -1,76 +1,54 @@
-\begin{frame}{Índex}
-  \begin{enumerate}
-  
-  \item Introducció
-    \begin{enumerate}
-    \item Sistema de monitoratge
-    \item Sèries temporals
-    \item Sistemes de Gestió de Bases de Dades (SGBD)
-    \end{enumerate}
-    
-  \item SGBD RRDtool 
-    
-  \item Model de dades Round Robin (RRD)
-    
-  \item Implementació de referència del model RRD
-    
-  \item Conclusions
-    
-  \item Treball futur
-    
-  \item Referències
-\end{enumerate}
-\end{frame}
+
 
 
 
 
 \begin{frame}{Introducció. Sistema de monitoratge: situació del problema}
 
-  \begin{itemize}
-  \item \emph{Supervisory Control And Data Acquisition} (SCADA). 
-  \item Adquisició de dades $\Rightarrow$  monitoratge:
+  % \begin{itemize}
+  % \item \emph{Supervisory Control And Data Acquisition} (SCADA). 
+  % \item Adquisició de dades $\Rightarrow$  monitoratge:
 
-    \begin{itemize}
-    \item Moltes dades: només una petita part poden ser observades en línia.
-    \item Volem extreure coneixement  de les dades  $\Rightarrow$ sèries temporals.
-    \end{itemize}
-  \end{itemize}
+  %   \begin{itemize}
+  %   \item Moltes dades: només una petita part poden ser observades en línia.
+  %   \item Volem extreure coneixement  de les dades  $\Rightarrow$ sèries temporals.
+  %   \end{itemize}
+  % \end{itemize}
 
-  \begin{center}
-    \scriptsize 
-    \begin{tikzpicture}[node distance=0.5cm]  
-      \tikzset{
-        mynode/.style={rectangle,rounded corners,draw=black, 
-          very thick, inner sep=1em, minimum size=3em, text centered,
-          groc},
-        myarrow/.style={->, >=latex', shorten >=1pt, thick},
-        mylabel/.style={text width=7em, text centered},
-        groc/.style={top color=white, bottom color=yellow!50},
-        verd/.style={top color=white, bottom color=green!50},
-        roig/.style={top color=white, bottom color=red!50},
-      }  
+  % \begin{center}
+  %   \scriptsize 
+  %   \begin{tikzpicture}[node distance=0.5cm]  
+  %     \tikzset{
+  %       mynode/.style={rectangle,rounded corners,draw=black, 
+  %         very thick, inner sep=1em, minimum size=3em, text centered,
+  %         groc},
+  %       myarrow/.style={->, >=latex', shorten >=1pt, thick},
+  %       mylabel/.style={text width=7em, text centered},
+  %       groc/.style={top color=white, bottom color=yellow!50},
+  %       verd/.style={top color=white, bottom color=green!50},
+  %       roig/.style={top color=white, bottom color=red!50},
+  %     }  
 
-      \node[mynode]                                       (monitor)   {Sistema de monitoratge};  
-      \node[mynode, below right=2cm and -2cm of monitor]  (bd)        {Base dades}; 
-      \node[mynode, below=2cm of monitor, left=of bd]     (control)   {Sistema de control}; 
-      \node[mynode, roig, below right=0.5cm and 1.5cm of monitor] (usuari)    {Usuari};  
-      \node[mynode, verd, left=2cm of control]            (actuador)  {Actuadors};
-      \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
+  %     \node[mynode]                                       (monitor)   {Sistema de monitoratge};  
+  %     \node[mynode, below right=2cm and -2cm of monitor]  (bd)        {Base dades}; 
+  %     \node[mynode, below=2cm of monitor, left=of bd]     (control)   {Sistema de control}; 
+  %     \node[mynode, roig, below right=0.5cm and 1.5cm of monitor] (usuari)    {Usuari};  
+  %     \node[mynode, verd, left=2cm of control]            (actuador)  {Actuadors};
+  %     \node[mynode, verd, left=3cm of monitor]            (sensor)    {Sensors};  
       
       
-      \draw[myarrow] (monitor.east) --   (usuari.north);	
-      \draw[myarrow] (bd.east) --   (usuari.south);
-      \draw[myarrow] (sensor.east) --   (monitor.west) 
-         node [above,midway] {Mesures}
-         node [below,midway] {Esdeveniments};
-      \draw[myarrow] (control.west) -- (actuador.east);
-      \draw[myarrow] (monitor.south) -- (bd.north);
-      \draw[myarrow] (monitor.south) -- (control.north)
-         node [above,sloped,midway] {Llaç de control};
+  %     \draw[myarrow] (monitor.east) --   (usuari.north);	
+  %     \draw[myarrow] (bd.east) --   (usuari.south);
+  %     \draw[myarrow] (sensor.east) --   (monitor.west) 
+  %        node [above,midway] {Mesures}
+  %        node [below,midway] {Esdeveniments};
+  %     \draw[myarrow] (control.west) -- (actuador.east);
+  %     \draw[myarrow] (monitor.south) -- (bd.north);
+  %     \draw[myarrow] (monitor.south) -- (control.north)
+  %        node [above,sloped,midway] {Llaç de control};
       
-    \end{tikzpicture} 
-  \end{center}
+  %   \end{tikzpicture} 
+  % \end{center}
 
 
 \textbf{Objectiu:} Dissenyar un model pels SGBD dels sistemes de monitoratge.

@@ -1,42 +1,42 @@
 
-\begin{frame}{Disseny d'un model pels SGBD Round Robin}
-  Una base de dades Round Robin és un contenidor informàtic d'una
-  sèrie temporal que prové d'un monitoratge d'una variable mesurada en
-  diferents instants de temps.
+\begin{frame}{The proposed multiresolution data model}
+
+  The \acro{MTSMS} model is an storage solution for a time series
+  where, in short, the information is spread in different time
+  resolutions.
+
+  \vfill
 
   \begin{enumerate}
 
-  \item Mesura $m=(v,t)$. %Valor en un instant temps.
+  \item Buffer $B=(S,\tau,\delta,f)$. Regularises the time series.
     \begin{itemize}
-    \item Les mesures tenen relació d'ordre induïda pel temps.
+    \item $\delta$ duration of the consolidation step
+    \item $\tau$ last consolidation time
+    \item $f$ attribute aggregate function 
+    \item \emph{add}: $B \times m \mapsto B'$.
+    \item \emph{consolidate}: $B \mapsto B' \times m'$.
     \end{itemize}
 
-  \item Sèrie temporal $S=\{m_0,\ldots,m_k\}$. %Conjunt de mesures.
+  \item Disc $D=(S,k)$. Finite container.
     \begin{itemize}
-    \item Regular si les mesures són equidistants en el temps.
+    \item Storage bounded: $|S| \leq k$ 
+    \item \emph{add}: $D \times m \mapsto D'$
     \end{itemize}
 
-  \item Buffer $B=(S,\tau,\delta,f)$. %Consolidació d'una sèrie temporal.
+  \item Resolution disc $R=(B,D)$. 
     \begin{itemize}
-    \item \emph{afegeix}: $B \times m \mapsto B'$.
-    \item \emph{consolida}: $B \mapsto B' \times m'$.
-    \item $\delta$ pas de consolidació
-    \item $\tau$ darrer instant de consolidació.
-    \item Interpolació $f: S \times [\tau,\tau+\delta] \mapsto m'$.
-    \end{itemize}
-
-  \item Disc $D=(S,k)$. 
-    \begin{itemize}
-    \item Emmagatzematge acotat: $|S| \leq k$. 
-    \item \emph{afegeix}: $D \times m \mapsto D'$.
+    \item \emph{add}: $(B,D) \times m \mapsto (B',D)$
+    \item \emph{consolidate}: $(B,D) \mapsto (B',D')$
     \end{itemize}
 
   \end{enumerate}
 
-\begin{textblock*}{50mm}(70mm,-40mm)
+  \begin{textblock*}{50mm}(70mm,-44mm)
 
-%\column{5cm}
-  \begin{tikzpicture}
+    \centering
+
+    \begin{tikzpicture}
     \begin{axis}[
         width=4cm,
         scale only axis, height=2.3cm,
@@ -65,169 +65,82 @@
         (45,8)
     };
 
-    \end{axis}
+  \end{axis}
   \end{tikzpicture}
 
 
-\end{textblock*}
+  $f: S \times [\tau,\tau+\delta] \mapsto m'$
 
 
-%\end{columns}
+   \end{textblock*}
 
 \end{frame}
 
 
-\begin{frame}{Model RRD: esquema de funcionament}
+\begin{frame}{Multiresolution model: architecture}
 
-\begin{enumerate}
-\setcounter{enumi}{4}
-\item Disc Round Robin $R=(B,D)$. 
-\begin{itemize}
-\item Consolidació de buffer a disc.
-\end{itemize}
-\item Base de dades Round Robin $M=(B,\{R_0,\ldots,R_d \})$. 
-\begin{itemize}
-\item Sèrie temporal compacta i repartida en discs Round Robin:
-\end{itemize}
-\end{enumerate}
+  \begin{enumerate}
+    \setcounter{enumi}{3}
+  \item Multiresolution database $M=\{R_0,\ldots,R_d \}$. 
+    \begin{itemize}
+    \item Each \acro{MTSMS} database contains only one time series.
+    \item Time series is stored regularised
+    \item Time series is distributed with different resolutions
+    \end{itemize}
+  \end{enumerate}
 
 
-
-  % \begin{columns}[l]
-  %    \column{6cm}
-
-\begin{center}
-       \tiny
-       \setlength{\unitlength}{0.2mm}
-%       \input{imatges/model/arxiurrd.tex}
-       \normalsize
-\end{center}
-  % \column{4cm}
-
-
-
-  %   Resum de les operacions:
-  %   \begin{enumerate}
-  %   \item Crea objectes buits
-  %   \item Afegeix
-  %   \item Consolida
-  %   \item Roda
-  %   \item Interpoladors
-  %   \end{enumerate}
-
-
-  %  \end{columns}
-
-\end{frame}
-
-
-
-\begin{frame}{Model RRD: representació i interpolació de sèries temporals}
-
-  \textbf{Representació}: Sèrie temporal $S$, representació contínua
-  $S(t)$
-
-
-  \begin{columns}[l]
-    \column{6cm}
-
-    \centering
-     
-    Repr.\ PLR (\emph{Keogh 1997})
-
-    \begin{tikzpicture}
-      \begin{axis}[
-        % width=10cm,
-        scale only axis, height=2.3cm,
-        ymin = 0,
-        yticklabels= {,,\tiny valors},
-        y tick label style = {rotate=90,anchor=south},
-        xticklabels={,{\tiny temps}},
-        ]
- 
-        \addplot[only marks,mark=*,red] coordinates {
-          (19,4)
-          (32,2)
-          (35,4)
-          (38,6)
-          (45,8)
-        };
-
-        \addplot[blue] coordinates {
-          (19,4)
-          (32,2)
-          (45,8)
-        };
-
-    \end{axis}
-  \end{tikzpicture}
-
-  
-
-  \column{6cm}
-  \centering
-  Repr.\ \emph{zero-order hold} cap enrere
-  
-  \begin{tikzpicture}
-    \begin{axis}[
-      % width=10cm,
-      scale only axis, height=2.3cm,
-      ymin = 0,
-      yticklabels= {,,\tiny valors},
-      y tick label style = {rotate=90,anchor=south},
-      xticklabels={,{\tiny temps}},
-      ]
-      
-      \addplot[only marks,mark=*,red] coordinates {
-        (19,4)
-        (32,2)
-        (35,4)
-        (38,6)
-        (45,8)
-      };
-      
-      
-      \addplot[blue,const plot mark right] coordinates {
-        (19,4)
-        (32,2)
-        (35,4)
-        (38,6)
-        (45,8)
-      };
-      
-    \end{axis}
-  \end{tikzpicture}
-
-\end{columns}
-\end{frame}
-
-
-
-\begin{frame}{Model RRD: interpolació de sèries temporals}
 
   \begin{center}
-  \textbf{Interpolador}: Sèrie temporal $\times$ interval de temps
-  $\rightarrow$ Mesura
+    \input{imatges/mtsms-arquitectura_interna.tex}
+  \end{center}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Multiresolution model: Attribute aggregate function}
+
+  The \acro{mtsms} summarises time series
+  information in order to consolidate.
+
+  \begin{center}
+    \textbf{Attribute aggregate f}: Time series $\times$ Time interval
+    $\rightarrow$ Measure
   \end{center}
 
   \vfill
 
-  \begin{columns}[l]
-    \column{.60\textwidth}
-    Sèrie temporal $S$, amb $S(t)$ repr.\ \emph{zoh} cap enrere:\medskip
-    
-    Interpolador:  $S \times$ $[t_{i-1}^N , t_i^N] \mapsto m' = (v',t_i^N)$
 
+  Examples for left-continuous time subseries consolidation
+  steps:
+  
+  \begin{columns}[l]
+
+
+  \column{.60\textwidth}
+
+  \[
+    f:S \times [T_0, T_f] \mapsto m'=(v',T_f)
+\]
+
+    \mbox{} \quad $S^i=S(T_0,T_f]$:
     \begin{itemize}
 
-    \item  Mitjana: 
-      $$v' = \text{avg }\{V(m): m \in S(t_{i-1}^N,t_i^N]\}$$
-    \item  Àrea:
-      $$v' = \frac{\int_{t_{i-1}^N}^{t_i^N} S(t)dt}{t_i^N - t_{i-1}^N}$$
+    \item maximum: $v' = \max\limits_{\forall m \in S^i}(V(m))$
+
+    \item last: $v' = \max(S^i)$
+
+    \item arithmetic mean: $v' = \frac{1}{|S^i|} \sum\limits_{\forall
+        m\in S^i} V(m)$
 
     \end{itemize}
 
-    \column{.40\textwidth}
+
+
+
+  \column{.40\textwidth}
      
     \begin{center}
       \scriptsize
@@ -237,7 +150,7 @@
           scale only axis, height=3cm,
           ymin = 0,
           yticklabels= {},
-          xticklabels={$\ldots$,$t_{i-1}^N$,$t_i^N$},
+          xticklabels={$\ldots$,$t_{i-1}^N$,$T_0-\delta$,$T_0$,$T_f$},
           ]
           \addplot[ycomb,blue] coordinates {
             (20,10)
@@ -258,10 +171,10 @@
           };
           
           
-          \node[below] at (axis cs:32,2) {$t_{T_{f-k}}$};
+          \node[below] at (axis cs:32,2) {$m_0^i$};
           \node[below] at (axis cs:35,4) {$\ldots$};
-          \node[above] at (axis cs:38,6) {$t_{T_{f-1}}$};
-          \node[above] at (axis cs:45,8) {$t_{T_f}$};
+          \node[above] at (axis cs:38,6) {$m_k^i$};
+          \node[above] at (axis cs:45,8) {$m_0^{i+\delta}$};
           \node[right] at (axis cs:40,4) {$m'$};
         \end{axis}
       \end{tikzpicture}
@@ -271,6 +184,7 @@
 
 
 %%% Local Variables: 
+%%% ispell-local-dictionary: "british"
 %%% mode: latex
 %%% TeX-master: "presentacio"
 %%% End: 

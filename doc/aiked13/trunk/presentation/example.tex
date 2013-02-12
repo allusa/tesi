@@ -1,0 +1,84 @@
+
+
+
+
+\begin{frame}{Example: multiresolution database schema}
+
+  Multiresolution time series database that stores a time series with
+  high resolution at recent times and with low resolution at older
+  times.
+
+
+\begin{center}
+  \setlength{\unitlength}{1.3mm}
+  \input{imatges/mtsdb-time_window.tex}
+\end{center}
+
+\begin{itemize}
+\item Arithmetic mean aggregate function for all resolution discs
+
+\item Maximum aggregate function for  highest resolution disc
+
+\end{itemize}
+
+
+
+\end{frame}
+
+
+
+\begin{frame}{Example: original data and stored data}
+
+  \begin{columns}[l]
+    \column{.40\textwidth}
+    Example of a temperature time series data
+
+    \begin{center}
+      \tikzset{every picture/.style={scale=0.65}}
+      \input{imatges/isense_original.tex}
+    \end{center}
+
+   \column{.60\textwidth}
+
+   Resolution discs' time series in the \acro{MTSDB}
+
+    \begin{center}
+      \tikzset{
+        every picture/.style={scale=0.63},
+      }
+      \input{imatges/isense_4mrdb.tex}
+
+   {\footnotesize Plotted interpolating staircase the measures}
+    \end{center}
+
+ 
+
+  \end{columns}
+
+\end{frame}
+
+
+
+\begin{frame}{Example: union of time subseries}
+
+  \acro{MTSDB} query: union of the four time subseries choosing
+  the one with the highest resolution
+
+  \begin{center}
+    \tikzset{every picture/.style={scale=0.8}}
+    \input{imatges/isense_mrdb-all.tex}
+
+   {\footnotesize Plotted interpolating linearly the measures}
+
+  \end{center}
+
+
+\end{frame}
+
+
+
+%%% Local Variables: 
+%%% ispell-local-dictionary: "british"
+%%% mode: latex
+%%% TeX-master: "presentacio"
+%%% End: 
