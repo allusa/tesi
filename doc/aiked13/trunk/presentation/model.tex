@@ -1,5 +1,5 @@
 
-\begin{frame}{The proposed multiresolution data model}
+\begin{frame}{The proposed multiresolution data model (MTSMS)}
 
   The \acro{MTSMS} model is an storage solution for a time series
   where, in short, the information is spread in different time
@@ -14,20 +14,20 @@
     \item $\delta$ duration of the consolidation step
     \item $\tau$ last consolidation time
     \item $f$ attribute aggregate function 
-    \item \emph{add}: $B \times m \mapsto B'$.
-    \item \emph{consolidate}: $B \mapsto B' \times m'$.
+    %\item \emph{add}%: $B \times m \mapsto B'$.
+    \item \emph{consolidate} buffered S%: $B \mapsto B' \times m'$.
     \end{itemize}
 
   \item Disc $D=(S,k)$. Finite container.
     \begin{itemize}
     \item Storage bounded: $|S| \leq k$ 
-    \item \emph{add}: $D \times m \mapsto D'$
+    \item \emph{add} discarding oldest measure %: $D \times m \mapsto D'$
     \end{itemize}
 
   \item Resolution disc $R=(B,D)$. 
     \begin{itemize}
-    \item \emph{add}: $(B,D) \times m \mapsto (B',D)$
-    \item \emph{consolidate}: $(B,D) \mapsto (B',D')$
+    \item \emph{add} to buffer%: $(B,D) \times m \mapsto (B',D)$
+    \item \emph{consolidate} from buffer to disc%: $(B,D) \mapsto (B',D')$
     \end{itemize}
 
   \end{enumerate}
@@ -41,10 +41,10 @@
         width=4cm,
         scale only axis, height=2.3cm,
         ymin = 0,
-        yticklabels= {,,\tiny valors},
+        yticklabels= {,,\tiny values},
         y tick label style = {rotate=90,anchor=south},
         x tick label style = {font=\tiny},        
-        xticklabels={$\underbrace{\tau_{}}_{\tau_0}$,$\underbrace{\tau_0+\delta}_{\tau_1}$,$\underbrace{\tau_1+\delta}_{\tau_2}$,$\underbrace{\tau_2+\delta}_{\tau_3 \ldots}$},
+        xticklabels={$\underbrace{\tau_{}}_{\tau_0}$,$\underbrace{\tau_0+\delta}_{\tau_1}$,$\underbrace{\tau_{}}_{\tau_0}$,$\underbrace{\tau+\delta}_{\tau_1}$,$\underbrace{\tau+2\delta}_{\tau_2}$,$\underbrace{\tau+3\delta}_{\tau_3}$},
         ]
  
     \addplot[ycomb,blue] coordinates {
@@ -77,6 +77,8 @@
 \end{frame}
 
 
+
+
 \begin{frame}{Multiresolution model: architecture}
 
   \begin{enumerate}
@@ -96,7 +98,6 @@
   \end{center}
 
 \end{frame}
-
 
 
 
