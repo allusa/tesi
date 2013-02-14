@@ -1,17 +1,23 @@
 \begin{frame}{Conclusions}
 
   \begin{itemize}
-  \item S'ha situat l'estat actual de l'emmagatzematge i del tractament de sèries temporals.
 
-  \item S'ha estudiat el sistema de gestió de bases de dades RRDtool.
+  \item We have shown a \acro{MTSMS} model, including the requirements
+    for these special systems and how they can be applied to an
+    example time series.
 
-  \item S'ha dissenyat un model que descriu l'estructura i el
-    comportament dels SGBD Round Robin per a sèries temporals.
-  
-  \item S'ha proposat una implementació de referència del model dissenyat.
+  \item \acro{MTSMS} store time series compactly and manage
+    consistently its temporal dimension.
+
+  \item A time series is split into time subseries, which we call
+    resolution discs. Each has a different resolution, is compacted
+    with an attribute aggregate function, and has a finite capacity.
 
 
- \item Un SGBD Round Robin és un sistema informàtic d'emmagatzematge d'una sèrie temporal compactada i repartida segons diferents funcions d'interpolació i períodes de mostreig.
+  \item Future work: define operations. Queries to a multiresolution
+    database as we would query a time series in a TSMS database.
+
+
 
   \end{itemize}
 
@@ -19,39 +25,8 @@
 
 
 
-
-\begin{frame}{Treball futur}
-
-\begin{itemize}
-
-\item A partir del model RRD es poden estudiar l'aplicació de tècniques d'anàlisis de sèries temporals  i es poden dissenyar SGBD RRD assegurant el funcionament desitjat.
-
-
-\item Tractament de dades desconegudes. Interpoladors específics.
-
-\item Operacions de consulta: extreure dades, fusionar sèries temporals, visualització, predicció, cerca de patrons, etc.
-
-\item Configurant els interpoladors i els períodes de mostreig s'aconsegueixen reduccions diferents de les sèries temporals.
-
-\item Comprovació amb dades experimentals, (\cite{keogh02}).
-
-\item Variacions en la implementació del model per complir restriccions.
-
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-
-\begin{center}
-{\huge
-Thanks for your attention!
-}
-\end{center}
-
-\end{frame}
-
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "presentacio"
+%%% ispell-local-dictionary: "british"
 %%% End: 

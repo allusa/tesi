@@ -1,112 +1,70 @@
-\documentclass[english]{beamer}
+\documentclass[english]{beamer}%handout,
 \usepackage{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{mathptmx}
 \usepackage{amsmath,amssymb}
+
+\usepackage{appendixnumberbeamer}
 \usepackage[style=authoryear,sortcites=true]{biblatex}
+\bibliography{bibliografia}
+\renewcommand*{\bibfont}{\footnotesize}
+\ExecuteBibliographyOptions{
+  isbn=false,url=false,doi=false,eprint=false,%alldates=terse,
+  firstinits=true,abbreviate=true,maxnames=2,
+}
+\bibparsep 0.11cm
+\bibhang 0.25cm
+\renewbibmacro*{title}{%
+  \printfield{title}
+}
+
 
 \usepackage{tikz,pgfplots}
 \usetikzlibrary{dateplot}
 \usetikzlibrary{shapes,arrows,positioning}
 \input{imatges/estils_pgf.tex}
 
-
-\usepackage{epic,xcolor,multicol}
 \usepackage[overlay]{textpos}
-\usepackage{listings}
-
-\usetikzlibrary{arrows,positioning}
 
 
 \mode<presentation>
 {
   \usetheme{Madrid}
+  \setbeamertemplate{headline}{
+    \begin{beamercolorbox}{section in head/foot}
+      \insertnavigation{\paperwidth}
+    \end{beamercolorbox}
+  }
   \setbeamercovered{transparent}
   \beamertemplatenavigationsymbolsempty
 }
+
+
+\mode<handout>
+{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{8 on 1}[a4paper,border shrink=5mm]
+  \setbeamercolor{background canvas}{bg=black!5}
+  \usetheme{Boadilla}
+  \useinnertheme{default}
+  \usecolortheme{dove}
+}
+
+
+%\usepackage{hyperref}
 
 
 
 \newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
 
 
-\bibliography{bibliografia}
-\renewcommand*{\bibfont}{\footnotesize}
-\bibparsep 0.2cm
-\bibhang 0.25cm
-
-
-\lstset{%backgroundcolor=\color{lightgray},
-        escapechar=@,
-        breaklines=true,
-        breakindent=0pt,
-        columns=fullflexible,
-        extendedchars=true,
-        language=python,
-        leftmargin=0.1\parindent,
-        inputencoding=utf8,
-        extendedchars=true,
-        columns=[l]fullflexible,
-        % 
-        basicstyle=\sffamily\footnotesize,
-        stringstyle=\color{green},
-        showstringspaces=false,
-        alsoletter={1234567890},
-        otherkeywords={\ , \}, \{},
-        keywordstyle=\color{blue},
-        emph={access,and,as,break,class,continue,def,del,elif,else,%
-          except,exec,finally,for,from,global,if,import,in,is,%
-          lambda,not,or,pass,print,raise,return,try,while,assert},
-        emphstyle=\color{orange}\bfseries,
-        emph={[2]self},
-        emphstyle=[2]\color{gray},
-        emph={[4]ArithmeticError,AssertionError,AttributeError,BaseException,%
-          DeprecationWarning,EOFError,Ellipsis,EnvironmentError,Exception,%
-          False,FloatingPointError,FutureWarning,GeneratorExit,IOError,%
-          ImportError,ImportWarning,IndentationError,IndexError,KeyError,%
-          KeyboardInterrupt,LookupError,MemoryError,NameError,None,%
-          NotImplemented,NotImplementedError,OSError,OverflowError,%
-          PendingDeprecationWarning,ReferenceError,RuntimeError,RuntimeWarning,%
-          StandardError,StopIteration,SyntaxError,SyntaxWarning,SystemError,%
-          SystemExit,TabError,True,TypeError,UnboundLocalError,UnicodeDecodeError,%
-          UnicodeEncodeError,UnicodeError,UnicodeTranslateError,UnicodeWarning,%
-          UserWarning,ValueError,Warning,ZeroDivisionError,abs,all,any,apply,%
-          basestring,bool,buffer,callable,chr,classmethod,cmp,coerce,compile,%
-          complex,copyright,credits,delattr,dict,dir,divmod,enumerate,eval,%
-          execfile,exit,file,filter,float,frozenset,getattr,globals,hasattr,%
-          hash,help,hex,id,input,int,intern,isinstance,issubclass,iter,len,%
-          license,list,locals,long,map,max,min,object,oct,open,ord,pow,property,%
-          quit,range,raw_input,reduce,reload,repr,reversed,round,set,setattr,%
-          slice,sorted,staticmethod,str,sum,super,tuple,type,unichr,unicode,%
-          vars,xrange,zip},
-        emphstyle=[4]\color{purple}\bfseries,
-        morecomment=[s][\color{lightgreen}]{"""}{"""},
-        commentstyle=\color{red}\slshape,
-        literate=
-          {>>>}{\textbf{\textcolor{red}{$>$\kern-.5ex$>$\kern-.5ex$>$}~}}3%
-          {...}{{\textcolor{gray}{...}}}3%
-          {à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1%
-          {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1%
-          {l·l}{{\l.l}}1 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1%
-          {Ï}{{\"\I}}1 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1%
-          {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
-        rulesepcolor=\color{blue},
-        xleftmargin=0pt
-      }
 
 
 
-%------------- capçaleres pdf -----------
-\pdfinfo {
-/Title (Modelització dels SGBD RRD)
-/Author	 (Aleix Llusà Serra) 
-/Subject (Estudi i modelització
-    dels SGBD
-    Round Robin pel tractament de sèries temporals)
-/Keywords (sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool)
-}
 
 
+
+%------------- portada -----------
 
 \title%
    [Multiresolution time series DBMS]%
@@ -118,7 +76,12 @@
 \institute[DiPSE--UPC]
 {
   {\large Universitat Politècnica de Catalunya (UPC)} \\
-  Department of Electronic Systems Design and Programming (DiPSE)
+  Department of Electronic Systems Design and Programming (DiPSE) \\
+
+  {\tiny Av.~Bases de Manresa 61--73, 08242 Manresa, \scshape ES-CT}
+
+  {\tiny teresa.escobet@upc.edu \quad  aleix@dipse.upc.edu \quad sebas@dipse.upc.edu}
+
 }
 
 
@@ -126,60 +89,58 @@
 {\acro{AIKED}' 13, Cambridge, UK. February 20--22, 2013}
 
 
+\subject{aiked' 13}
+\keywords{time series; data model; database systems; monitoring systems}
 
 \begin{document}
 
 
-\begin{frame}
+\begin{frame}[plain]
+ 
  \titlepage
 
- \begin{center}
- 
-  {\tiny Av.~Bases de Manresa 61--73, 08242 Manresa, \scshape ES-CT}
-
-  {\tiny teresa.escobet@upc.edu \quad  aleix@dipse.upc.edu \quad sebas@dipse.upc.edu}
-
-  \end{center}
 \end{frame}
 
 
-
-\begin{frame}{Index}
-  \begin{enumerate}
-  
-  \item Introduction  
-
-  \item Time Series
-
-  \item The Multiresolution data model
-   
-  \item Example
-    
-  \item Conclusion
-        
-  \item References
-
-\end{enumerate}
+\section*{Contents}
+\begin{frame}{Contents}
+  \tableofcontents
 \end{frame}
 
 
-
+\section{Introduction}
 \input{introduccio}
 
+\section{Time Series}
 \input{time-series}
 
+\section{The Multiresolution data model}
 \input{model}
 
+\section{Multiresolution Example}
 \input{example}
 
+\section{Conclusions}
 \input{conclusions}
 
 
-\begin{frame}[allowframebreaks]
-{References}
+\begin{frame}<handout:0>
+  \addtocounter{framenumber}{-1}
 
-\printbibliography
+  \begin{center}
+    {\huge
+      Thanks for your attention!
+    }
+  \end{center}
 
+\end{frame}
+
+
+\appendix
+
+
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography
 \end{frame}
 
 
@@ -198,9 +159,9 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-% Defensa Tesi de Màster. Estudi i modelització dels SGBD Round Robin pel tractament de sèries temporals
+% AIKED' 13. A Model for a Multiresolution Time Series Database System
 %
-% Copyright (C) 2011 Aleix Llusà Serra.
+% Copyright (C) 2013 Teresa Escobet Canal, Aleix Llusà Serra, Sebastià Vila Marta.
 % 
 % This LaTeX document is free software: you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
