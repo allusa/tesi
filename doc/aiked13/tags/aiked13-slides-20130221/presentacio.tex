@@ -1,0 +1,191 @@
+\documentclass[english]{beamer}%handout,
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage{amsmath,amssymb}
+
+\usepackage{appendixnumberbeamer}
+\usepackage[style=authoryear,sortcites=true]{biblatex}
+\bibliography{bibliografia}
+\renewcommand*{\bibfont}{\footnotesize}
+\ExecuteBibliographyOptions{
+  isbn=false,url=false,doi=false,eprint=false,%alldates=terse,
+  firstinits=true,abbreviate=true,maxnames=2,
+}
+\bibparsep 0.11cm
+\bibhang 0.25cm
+\renewbibmacro*{title}{%
+  \printfield{title}
+}
+
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+
+\usepackage[overlay]{textpos}
+
+
+\mode<presentation>
+{
+  \usetheme{Madrid}
+  \setbeamertemplate{headline}{
+    \begin{beamercolorbox}{section in head/foot}
+      \insertnavigation{\paperwidth}
+    \end{beamercolorbox}
+  }
+  \setbeamercovered{transparent}
+  \beamertemplatenavigationsymbolsempty
+}
+
+
+\mode<handout>
+{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{8 on 1}[a4paper,border shrink=5mm]
+  \setbeamercolor{background canvas}{bg=black!5}
+  \usetheme{Boadilla}
+  \useinnertheme{default}
+  \usecolortheme{dove}
+}
+
+
+%\usepackage{hyperref}
+
+
+
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+
+
+
+
+
+
+
+
+%------------- portada -----------
+
+\title%
+   [Multiresolution time series DBMS]%
+   {A Model for a Multiresolution \\ Time Series Database System}
+
+\author[Escobet \and Llusà \and Vila]{%
+  Teresa Escobet-Canal \and Aleix Llusà-Serra \and Sebastià Vila-Marta}
+
+\institute[DiPSE--UPC]
+{
+  {\large Universitat Politècnica de Catalunya (UPC)} \\
+  Department of Electronic Systems Design and Programming (DiPSE) \\
+
+  {\tiny Av.~Bases de Manresa 61--73, 08242 Manresa, \scshape ES-CT}
+
+  {\tiny teresa.escobet@upc.edu \quad  aleix@dipse.upc.edu \quad sebas@dipse.upc.edu}
+
+}
+
+
+\date[\acro{AIKED}' 13, Cambridge, UK]
+{\acro{AIKED}' 13, Cambridge, UK. February 20--22, 2013}
+
+
+\subject{aiked' 13}
+\keywords{time series; data model; database systems; monitoring systems}
+
+\begin{document}
+
+
+\begin{frame}[plain]
+ 
+ \titlepage
+
+\end{frame}
+
+
+\section*{Contents}
+\begin{frame}{Contents}
+  \tableofcontents
+\end{frame}
+
+
+\section{Introduction}
+\input{introduccio}
+
+\section{Time Series}
+\input{time-series}
+
+\section{The Multiresolution data model}
+\input{model}
+
+\section{Multiresolution Example}
+\input{example}
+
+\section{Conclusions}
+\input{conclusions}
+
+
+\begin{frame}<handout:0>
+  \addtocounter{framenumber}{-1}
+
+  \begin{center}
+    {\huge
+      Thanks for your attention!
+    }
+  \end{center}
+
+\end{frame}
+
+
+\appendix
+
+
+\begin{frame}[allowframebreaks]{References}
+  \printbibliography
+\end{frame}
+
+
+\end{document}
+
+
+
+%%% Local Variables:
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+
+% LocalWords:  SGBD RRD RRDtool monitoratge
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% AIKED' 13. A Model for a Multiresolution Time Series Database System
+%
+% Copyright (C) 2013 Teresa Escobet Canal, Aleix Llusà Serra, Sebastià Vila Marta.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
