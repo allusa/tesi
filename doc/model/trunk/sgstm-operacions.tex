@@ -1,8 +1,9 @@
 \section{Model d'operacions}
 
 
+\subsection{Estructurals}
 
-\subsection{Buffer}
+\subsubsection{Buffer}
 
 
 Abans de consolidar, però, cal que la sèrie temporal contingui mesures. L'operació \emph{afegeix} permet afegir una mesura a un buffer.
@@ -29,11 +30,17 @@ Cada cop que s'afegeix una mesura a un buffer es pot comprovar si el buffer ja �
 
 
 
+Propietats:
+
+\begin{itemize}
+\item Les mesures habitualment s'insereixen ordenades en el temps,
+  sinó un cop duta a terme la consolidació les mesures inserides
+  desordenades poden no ser tingudes en compte.
+\end{itemize}
 
 
 
-
-\subsection{Consolidació}
+\subsubsection{Consolidació}
 
 Quan un buffer és consolidable, es pot calcular una mesura de consolidació de la sèrie temporal per cada interval de temps consolidable. De manera simplificada, a cada consolidació només es té en compte l'interval que comença al darrer temps de consolidació del buffer. 
 
@@ -65,7 +72,7 @@ Sigui $B=(S,\tau,\delta,f)$ un buffer consolidable, la mesura de consolidació d
 
 
 
-\subsection{Disc}
+\subsubsection{Disc}
 
 L'operació \emph{afegeix} permet afegir una mesura a un disc, controlant-ne el cardinal màxim.
 
@@ -90,7 +97,7 @@ L'operació \emph{afegeix} permet afegir una mesura a un disc, controlant-ne el 
 
 
 
-\subsection{Disc resolució}
+\subsubsection{Disc resolució}
 
 
 Per altra banda, les operacions dels buffers i dels discs estan relacionades amb les operacions dels discs Round Robin. 
@@ -145,7 +152,7 @@ Quan un disc Round Robin és consolidable, es pot consolidar amb l'operació \em
 
 
 
-\subsection{Base de dades multiresolució}
+\subsubsection{Base de dades multiresolució}
 
 
 
@@ -186,6 +193,56 @@ With reference to the operators, the add and consolidate in a multiresolution da
   \end{cases}\big\}
   \]
 \end{definition}
+
+
+
+
+
+\subsection{Consultes}
+
+
+\subsubsection{Subsèrie}
+
+
+
+
+
+\subsubsection{Consulta temporal d'una RRD}
+
+Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
+
+
+\begin{definition}[Consulta temporal de $RRD$ amb representació $r$]
+  \[
+  \text{consulta}: \text{Base de dades RR} \times
+  \text{interpolador} \times \text{representació} \longrightarrow
+  \text{Sèrie Temporal}
+  \]
+  \[
+  M = \{R_0 , \ldots , R_d\} \times r \longrightarrow S'
+  \]
+  \[
+  \forall R_j=(B_j,D_j) \in M : B_j=(S_{Bj},\tau_j,\delta_j,f_j), D_j=(S_{Dj},k_j):
+  \]
+  \[
+  \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : 
+  \footnote{S'assumeix que en una RRD no hi ha discs Round Robin amb la mateixa informació.}
+  \]
+  \[
+  S' = S_{D0} \cup^r  S_{D1} \cup^r  S_{D2} \cup^r \dots \cup^r S_{Dd}
+  \]
+  % Es podria fer recursiu
+  % \[
+  % \delta_0 = min (\{\delta_j \in B_j  \}): \forall R_j=(B_j,D_j) : 
+  % R_0=(B_0,D_0)  \in M : B_0=(S_{B0},\tau_0,\delta_0,f_0), D_0=(S_{D0},k_0):
+  % S' = \left\{\begin{array}{ll}
+  %     \{\} & \text{si } |M| = 0 \\
+  %     S_{D0} \cup^r (\text{ consulta } (M-\{R_0\})) 
+  %   \end{array}\right.
+  % \] 
+  
+\end{definition}
+
 
 
 

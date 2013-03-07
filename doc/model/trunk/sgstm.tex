@@ -114,6 +114,26 @@ $\delta_a \neq \delta_b \wedge f_a \neq f_b$.
 
 
 
+\section{Relació multiresolució}
+
+
+
+Una base de dades multiresolució és una relació de buffers i discs. A cada parella buffer-disc l'anomenem disc resolució. Així doncs, una base de dades multiresolució és un conjunt de discs resolució.
+
+Com a conjunt de discs resolució, una base de dades multiresolució
+s'observa com una relació de grau sis a on la capçalera conté els
+atributs
+\begin{itemize}
+\item sèrie temporal del buffer ($S_B$),
+\item sèrie temporal del disc ($S_D$),
+\item últim instant de consolidació ($\tau$),
+\item pas de consolidació ($\delta$),
+\item màxim cardinal del disc ($k$),
+\item i funció d'agregació d'atributs ($f$).
+\end{itemize}
+
+Una restricció habitual és que $\delta$ i $f$ no estiguin repetits; és
+a dir que són els atributs clau de la base de dades multiresolució.
 
 
 
@@ -140,27 +160,150 @@ S'observa que per tal de complir amb les propietats de les relacions, totes les 
 
 
 
-\paragraph{Exemple 2}\todo{Compte! que no existeix el tipus relvar i potser no es pot definir una relació que contingui relvars (apuntadors). Cal pensar amb l'exemple 4 suprimit del model dels SGST}
+
+
+
+
+\section{Estructures interessants}
+
+
+
+\subsection{Discos enllaçats}
+
+
+
+\paragraph{Exemple 2}
+
+Les taules es poden veure a la \autoref{fig:model:mtsdb:cadena} a on la base de dades multiresolució és la vista-relació 
+\begin{verbatim}
+M_2 = ( ((M_2' RENAME S'_B AS S') JOIN (M^{series}_2 RENAME S AS S_B)) RENAME S'_D AS S') JOIN (M^{series}_2 RENAME S AS S_D)
+\end{verbatim}
+
+
 
 \begin{figure}[tp]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
-    \multicolumn{2}{c}{$M_2$} \\ \hline
-    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
-    $S_{B1}$ & $S_{D1}$ & 0 & 5  & 2 & mitjana  \\
-    $S_{D1}$ & $S_{D2}$ & 0 & 10 & 4 & mitjana  \\ \hline
+    \multicolumn{2}{c}{$M'_2$} \\ \hline
+    $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 2 & mitjana  \\
+    $S_{D1}$ & $S_{D2}$ & 40 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}\qquad
+  \begin{tabular}{|c|c|c|}
+    \multicolumn{3}{c}{$M^{series}_{2}$} \\ \hline
+    \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
+    & $t$      & $v$  \\ \hline
+    \multirow{3}{*}{$S_{B1}$} & 46 & 0 \\ 
+    & 48 & 0 \\ 
+    & 49 & 0 \\ \hline
+    \multirow{2}{*}{$S_{D1}$} & 40 & 0 \\ 
+    & 45 & 0 \\ \hline
+    \multirow{4}{*}{$S_{D2}$} & 10 & 0 \\ 
+    & 20 & 0 \\ 
+    & 30 & 0 \\ 
+    & 40 & 0 \\ \hline
   \end{tabular}
   \caption{Taula d'una mtsdb en cadena}
   \label{fig:model:mtsdb:cadena}
 \end{figure}
 
+\todo{per a fer l'exemple falta conèixer els operadors estructurals}
+
+\todo{falta definir qui són els buffer d'entrada de mesures}
+definir una $M^{in}_2$.
 
 
 
 
 
+Respecte a l'estructura general, l'estructura enllaçada restringeix
+els períodes de consolidació de les sèries temporals: aquests són
+múltiples dels discs anteriors.
+
+
+
+\subsection{Data stream}
+
+
+
+Base de dades multiresolució a on les sèries temporals dels buffers
+només tenen una mesura; és a dir tenen cardinal afitat a 1.
+
+
+Per a orientar a streams els buffers s'han de canviar els operadors
+d'afegir i consolidar:
+
+Es canvia l'operador d'afegir per tal que incorpori el càlcul orientat
+a stream cada cop:
+\[
+\text{addB}^{\text{stream}}: B \times m \longrightarrow B' =
+(streamB(S,m),\tau,\delta,f)
+\]
+
+Es canvia l'operador de consolidar per tal que reconegui la sèrie
+temporal del buffer com a consolidada amb stream.
+
+  \[
+  \text{consolidaB}^{\text{stream}}: B \longrightarrow B' \times m'
+  \]
+  \[
+  B'= (S',\tau+\delta,\delta,f)
+  \]
+  \[
+  S' = S(\tau+\delta,\infty)
+  \]
+  \[
+  m' \in S(\tau,\tau+\delta] 
+  \]
+
+
+Per a orientar a streams els buffers es defineix un nou operador
+\[
+\text{streamB}: S \times m \longrightarrow S' = \{f^{\text{stream}}(m_o,m)\}
+\]
+\[
+m_o \in S
+\]
+\[
+f^{\text{stream}} \text{ és un agregador d'atributs orientat a streams}
+\]
+ 
+
+Aleshores els agregadors d'atributs funcionen orientats a stream;
+nota: no tots els agregadors d'atributs es poden definir com a
+streams.
+
+
+Per exemple l'interpolador mitjana orientat a stream:
+
+\[
+\text{mitjana}^{\text{stream}}: m_o \times m_n \longrightarrow m' = (T(m_n),v')
+\]
+\[
+\text{a on } v' = (V(m_0) + V^1(m_n), V^2(m_n) + 1 )
+\]
+
+
+\subsection{Compartició de buffers}
+
+
+Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
 
 
 
 
 
+\subsection{Arquitectura RRDtool}
+
+
+RRDtool té una estructura multiresolució amb un buffer únic d'entrada i buffers orientats a stream. 
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
+
+% LocalWords:  buffers multiresolució

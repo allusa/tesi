@@ -2,195 +2,20 @@
 
 
 
-\begin{verbatim}
-VAR timeseries BASE RELATION
-    { t RATIONAL, v RATIONAL }  KEY { t } ;
-
-OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
-return t FROM TUPLE FROM m;
-END OPERATOR;
-
-OPERATOR ts.v(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
-return v FROM TUPLE FROM m;
-END OPERATOR;
-\end{verbatim}
-
-
-
-
-\subsection{Màxim i suprem}
-
-
-La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
-sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
-temporal s'ha considerat finita i sense elements repetits, quan la
-sèrie temporal no és buida això comporta l'existència d'un màxim i
-d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
-respectivament la mesura màxima i mínima d'$S$.
-
-\begin{definition}[Màxim i mínim]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
-  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
-  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
-  m$.
-\end{definition}
-
-El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
-és buida: $S= \emptyset$. En
-canvi, el suprem i l'ínfim estan definits per qualsevol
-sèrie temporal tal com passa amb el conjunt estès de nombres reals,
-\cite{cantrell:extendedreal}.  
-
-\begin{definition}[Suprem i ínfim]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
-  $n=\max(S)$ en cas que el màxim estigui definit o
-  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
-  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
-  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
-\end{definition}
-Quan la sèrie temporal no és buida, per
-ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
-i un mínim i per tant es corresponen amb el suprem i l'ínfim
-respectivament.
-
-
-
-Tutorial D:
-\begin{verbatim}
-OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
-END OPERATOR;
-
-OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
-END OPERATOR;
-\end{verbatim}
-
-
-
-Exemple:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1: 
-ts.max(ts1)
-\end{verbatim}
-\begin{verbatim}
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 1.0/0.0, v 1.0 }  //1.0/0.0 infinit
- } AS ts2: 
-ts.max(ts2)
-\end{verbatim}
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1: 
-ts.sup(ts1)
-\end{verbatim}
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1: 
-ts.sup(timeseries)
-\end{verbatim}
-
-
-
-\subsection{Interval}
-
-Atesa la relació d'ordre induïda pel temps en una sèrie temporal
-(def.\ \ref{def:model:mesura-relacio-ordre}) és possible definir el
-concepte d'interval sobre la seqüència, semblant a com es fa a \cite{last:keogh,last:hetland}.
-
-\begin{definition}[Interval]
-  \label{def:model:st-interval}
-  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
-  $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
-  | r<T(m)\leq t\}$, a on $r$ i $t$ són dos instants de temps.
-
-  També es defineix la subsèrie $S[-\infty,t)\subseteq S$ com la sèrie
-  temporal $S[-\infty,t) = \{m\in S | T(\inf(S))\leq T(m) < t\}$.
-\end{definition}
-S'observa que la subsèrie $S(r,+\infty]\subseteq S$ és
-equivalent a la sèrie temporal $S(r,+\infty] \equiv S(r,T(\sup(S))]$ i
-anàlogament $S(-\infty,t] \equiv S(T(\inf(S)),t]$. També s'observa que les subsèries $S(t,t]\subseteq S$ i $S[t,t)\subseteq S$ són equivalents a la sèrie temporal buida $S(t,t] \equiv S[t,t) \equiv \emptyset$ ja que per ser els temps d'ordre total $\nexists T(m): t < T(m) \leq t$ o $\nexists T(m): t \leq T(m) < t$, respectivament. 
-%Finalment, s'observa que la subsèrie $S(-\infty,+\infty]\subseteq S$ només és equivalent a la sèrie temporal original quan aquesta no conté la mesura indefinida negativa $S(-\infty,+\infty]\equiv S: (-\infty,v)\notin S$
-
-
-\begin{verbatim}
-OPERATOR ts.interval(s1 SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 WHERE t>l AND t<=h;
-END OPERATOR;
-OPERATOR ts.interval.ni(s1 SAME_TYPE_AS  (timeseries), h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 WHERE t<h;
-END OPERATOR;
-\end{verbatim}
-
-
-
-\subsection{Successor}
-
-
-També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
-defineix el concepte de mesura següent i mesura anterior en una
-seqüència.
-
-\begin{definition}[Successor i predecessor]
-  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
-  mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
-  com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
-  Direm que $l$ és el predecessor de $n$ en $S$ i ho notarem com
-  $l=\ant\limits_S(n)$ si i només si $l=\sup(S[-\infty,T(n)))$.
-
-Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
-exemple quan $n\in S$, podrem escriure $\seg(n)$ i $\ant(n)$.
-\end{definition}
-S'observa que s'obtenen mesures indefinides en els casos que la
-mesura següent o anterior es calcula respectivament per la mesura
-suprema o ínfima de la sèrie temporal: $\seg\limits_S(\sup
-S)=(+\infty,\infty)$ i $\ant\limits_S(\inf S)=(-\infty,\infty)$.
-
-De la definició anterior es dedueix que donada una sèrie temporal $S$
-que no conté mesures indefinides i donada la mesura indefinida
-$o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
-sèrie temporal $\ant\limits_S( (+\infty,\infty) ) = \sup(S): \forall
-m\in S: T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
-\emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
-  una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
-  $l=\ant\limits_S(o)$ que compleix
-  $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
-  $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
-  \mathbb{R}$, i per tant com que $S$ no té mesures indefinides es
-  demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
-$\seg\limits_S( (-\infty,\infty) ) = \inf(S): \forall m\in S:
-T(m)\in\mathbb{R}$.
 
 
 
 
 
-\begin{verbatim}
-OPERATOR ts.next( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.inf(ts.interval(s1,ts.t(m),1.0/0.0));
-END OPERATOR;
-OPERATOR ts.prev( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.sup(ts.interval.ni(s1,ts.t(m)));
-END OPERATOR;
-\end{verbatim}
+\subsection{Bàsiques de conjunts}
+
+Aplicació d'operadors relacionals [Date] a les sèries temporals.
 
 
+\subsubsection{Pertinença}
 
+
+$ m \in S_1$
 
 
 \subsubsection{Unió}
@@ -230,29 +55,27 @@ Propietats de la unió:
 
 
 
-TutorialD:
-\begin{verbatim}
-OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
-END OPERATOR;
-\end{verbatim}
 
 
-Exemple:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2: 
-ts.union(ts1,ts2)
-\end{verbatim}
+\paragraph{Unió exclusiva}
+
+La unió de sèries temporals no és commutativa en canvi una unió
+exclusiva sí que ho és. La unió exclusiva és la unió de dues sèries
+temporals sense tenir en compte les mesures que tenen el mateix
+instant de temps.
+
+
+\begin{definition}[unió exclusiva]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió exclusiva de les dues
+  sèries temporals $S_1 \cup^x S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté les mesures no repetides de $S_1$ i de
+  $S_2$: $S_1 \cup^x S_2 =  ( S_1 \cup S_2 ) - (S_1 \cap S_2)$.
+\end{definition}
+
+
+
+
 
 
 
@@ -271,330 +94,41 @@ en el mateix instant de temps.
   S_2 : t^1 = t^2\}$.
 \end{definition}
 
-TutorialD:
-\begin{verbatim}
-OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 JOIN (s1 {t} INTERSECT s2 {t});
-END OPERATOR;
-\end{verbatim}
 
+\subsubsection{Diferència}
 
+A partir de la unió i la intersecció es pot definir la diferència.
 
 
-\subsubsection{Unió exclusiva}
 
-Unió de dues sèries temporals sense tenir en compte les mesures que
-tenen el mateix instant de temps.
+\subsubsection{Projecció}
 
 
-\begin{definition}[unió exclusiva]
-  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la unió exclusiva de les dues
-  sèries temporals $S_1 \cup^x S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté les mesures no repetides de $S_1$ i de
-  $S_2$: $S_1 \cup^x S_2 =  ( S_1 \cup S_2 ) - (S_1 \cap S_2)$.
-\end{definition}
+Es pot aplicar la projecció relacional.
 
 
-TutorialD:
-\begin{verbatim}
-OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
-END OPERATOR;
-\end{verbatim}
+\subsubsection{Selecció}
 
 
-Exemple:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2: 
-ts.xunion(ts1,ts2)
-\end{verbatim}
+Es pot aplicar la selecció relacional.
 
 
 
+\subsubsection{Producte i fusió}
 
 
 
 
+\subsubsection{Reanomena}
 
+Es pot aplicar el reanomena relacional.
 
-\subsection{Temporals}
 
-Operacions a on el temps i la representació de la sèrie temporals
-juguen un paper important.
 
 
-\subsubsection{Pertinença temporal}
 
-\begin{definition}[pertinença temporal]
-  Sigui $S=\{m_0, \dotsc, m_{k}\}$ una sèrie temporal i $m=(t,v)$ una
-  mesura, direm que la mesura pertany temporalment a la sèrie 
-  $m\in^t S$ si i només si $\exists m_i=(t_i,v_i)\in S: t_i=t$.
-\end{definition}
 
-
-TutorialD:
-\begin{verbatim}
-OPERATOR ts.temporal.in(m SAME_TYPE_AS  (timeseries), s SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
-return (TUPLE FROM m {t}) IN (s {t});
-END OPERATOR;
-\end{verbatim}
-
-
-
-
-
-\subsubsection{Selecció temporal}
-
-Sigui $S$ una sèrie temporal i $i=[t_0,t_f]$ un interval de temps,
-per una banda s'ha definit l'interval sobre la seqüència d'una sèrie temporal $S(t_0,t_f]$ (def.~\ref{def:model:st-interval})  i per altra banda s'ha definit la representació contínua $r$ d'una sèrie temporal $S(t)$ \todo{referenciar la definició de repr}.
-Per seleccionar un interval temporal cal tenir en compte tant l'interval sobre la seqüència com la representació contínua, Aquesta selecció temporal s'anota com selecció de $S$ en $i$ amb representació $r$ o bé $S[t_o,t_f]^r$. 
-
-\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
-  $r$]
-  \[
-  \text{selecció}: \text{Sèrie temporal} \times \text{interval de
-    temps} \times \text{representació} \longrightarrow \text{Sèrie
-    temporal}
-  \]
-  \[
-  S = \{m_0 , \ldots , m_k\}  \times i = [t_0,t_f] \times r \longrightarrow S'
-  \]
-  \[
-  \forall  t \in i: S' = S(t)^r 
-  \] 
-\end{definition}
-
-A continuació s'exemplifica utilitzant la representació \emph{zoh} enrere.
-
-
-\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
-  \emph{zohe}]
-  Sigui $S$ una sèrie temporal, $i=[t_0,t_f]$ un interval de temps i
-  \emph{zohe} la representació $S(t)$ amb \emph{zero-order-hold} cap
-  enrere, es defineix la subsèrie $S[t_0,t_f]^{\text{zohe}}\subseteq
-  S$ com la sèrie temporal 
-  \[
-  S[t_0,t_f]^{\text{zohe}} = S(t_0,t_f] \cup \{m\} : m=(t_f,v):
-  \]
-  \[
-  v=  V(\inf(S-S[-\infty,t_f)))
-  \]
-
-  %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
-  
-  Nota: $S-S[-\infty,t_f)$ seria equivalent a l'interval tancat
-  $S[t_f,+\infty]$ si aquest últim estigués definit.
-\end{definition}
-
-Propietats de la selecció temporal:
-
-\begin{itemize}
-\item Observeu que, sigui $t_a$ un instant de temps, la selecció de $S$ en $[t_a,t_a]$ és equivalent a la representació contínua $S(t_a)$. 
-\end{itemize}
-
-
-
-TutorialD:
-\begin{verbatim}
-OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-BEGIN;
-VAR x RATIONAL init(0.0);
-VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
-x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
-sp := RELATION {
-TUPLE {t h, v x}
-};
-return ts.union(ts.interval(s,l,h),sp);
-END;
-END OPERATOR;
-\end{verbatim}
-
-Exemple:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2:
-ts.temporal.select.zohe(ts1,1.0,5.0)
-\end{verbatim}
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2:
-ts.temporal.select.zohe(ts1,-1.0/0.0,-1.0/0.0)
-\end{verbatim}
-
-
-
-
-\subsubsection{Selecció de la resolució}
-
-La selecció de la resolució d'una sèrie temporal permet canviar, en el
-context d'una representació, la resolució a una de marcada per un
-conjunt d'instants de temps. A diferència d'un buffer, la selecció de
-resolució no permet aplicar interpoladors ni obliga a que la sèrie
-temporal resultant sigui regular.
-
-Sigui $S$ una sèrie temporal, $i= \{t_0,t_1,\dotsc,t_n\}$ un conjunt
-d'instants de temps i la representació contínua $r$ de la sèrie
-temporal $S(t)$, la selecció de resolució s'anota com resolució de $S$
-en $i$ amb representació $r$ o bé $S[i]^r$.
-
-\begin{definition}[Selecció de la resolució de $S$ en $i$ amb representació
-  $r$]
-  \[
-  \text{resolució}: \text{Sèrie temporal} \times \text{instants de
-    temps} \times \text{representació} \longrightarrow \text{Sèrie
-    temporal}
-  \]
-  \[
-  S = \{m_0 , \ldots , m_k\} \times i = \{t_0,t_1,\dotsc,t_n\} \times r
-  \longrightarrow S'
-  \]
-  \[
-  t_0 < t_1 < \dotsb < t_n:
-  \]
-  \[
-  S' = S[t_0,t_0]^r \cup  S[t_1,t_1]^r \cup \dotsb \cup S[t_{n},t_n]^r
-  \] 
-  % Es podria fer recursiu
-  % \[
-  % t_f = \sup(i): i_n = i - t_f: t_a = \sup(i_n):
-  % S' = \left\{\begin{array}{ll}
-  %     \{\} & \text{si } |i| = 0 \\
-  %     S[i_n]^r \cup S[t_a,t_f]^r 
-  %   \end{array}\right.
-  % \] 
-\end{definition}
-
-
-
-Propietats de la selecció de resolució:
-\begin{itemize}
-\item El cardinal de la sèrie temporal resultant és el mateix que el del conjunt d'instants de temps $|S[i]^r| = |i|$
-\end{itemize}
-
-
-
-TutorialD:
-\begin{verbatim}
-
-\end{verbatim}
-
-
-
-\subsubsection{Unió temporal}
-
-Unió temporal de dues sèries temporals $S_1 \cup^r S_2$. Per la unió temporal les sèries temporals han de tenir la mateixa estructura, tal com s'ha notat per a la unió de sèries temporals.
-
-\begin{definition}[Unió temporal de $S_1$ i $S_2$ amb representació
-  $r$]
-  \[
-  \text{unió}: \text{Sèrie temporal} \times \text{Sèrie temporal}
-  \times \text{representació} \longrightarrow \text{Sèrie temporal}
-  \]
-  \[
-  S_1 = \{m_0^1 , \ldots , m_{k1}^1\}  \times S_2 = \{m_0^2 , \ldots , m_{k2}^2\} \times r \longrightarrow S'
-  \]
-  \[
-  t_1=T(\inf S_1), t_2=T(\sup S_1):
-  \]
-  \[
-  S' = S_1 \cup  ( S_2 - S_2[t_1,t_2]^r )
-  \] 
-\end{definition}
-
-
-
-Propietats de la unió temporal:
-\begin{itemize}
-\item No commutativa
-\item Però, $(S_1 \cup^r S_2) \cup (S_2 \cup^r S_1) = S_1 \cup S_2$\todo{és cert?}
-\end{itemize}
-
-
-
-TutorialD:
-\begin{verbatim}
-
-\end{verbatim}
-
-
-
-
-\subsubsection{Fusió temporal}
-
-Fusió (join) de dues sèries temporals $S_1 \text{ fusió } S_2$.
-
-
-\begin{definition}[Fusió temporal de $S1$ i $S2$ amb representació $r$]
-  \[
-  \text{fusió}: \text{Sèrie temporal} \times
-  \text{Sèrie temporal} \times \text{representació} \longrightarrow
-  \text{Sèrie temporal}
-  \]
-  \[
-  S_1 = \{m_0^1 , \ldots , m_{k_1}^1\} \times S_2 = \{m_0^2 , \ldots ,
-  m_{k_2}^2\} \times r \longrightarrow S'
-  \]
-  \[
-  t = \{t^1 \, | \, \forall m^1=(t^1,v^1) \in S_1\} \cup \{t^2 | \forall
-  m^2=(t^2,v^2) \in S_2\}:
-  \]
-  \[
-  S' = \{m'=(t',v_1',v_2') \, | \, (t',v_1') \in S_1[t]^r \wedge (t',v_2') \in S_2[t]^r \} 
-  \]\todo{els valors s'haurien de saber fusionar}
-\end{definition}
-
-
-
-Propietats de la fusió temporal:
-\begin{itemize}
-\item $|S'| <= k_1 + k_2$
-\end{itemize}
-
-
-
-
-
-TutorialD:
-\begin{verbatim}
-
-\end{verbatim}
-
-
-
-
-
-
-
-\section{Map i fold}
+\subsubsection{Map i fold}
 
 \begin{align*}
   \text{map}:& S \times f \longrightarrow S' = \{\forall m\in S : f(m) \}, \\
@@ -667,7 +201,9 @@ Exemple d'operacions map:
 \item $\text{intercanvia}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(v,t))$
 \item $\text{pes}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,t*v))$
 \item $\text{tpredecessors}_{v1}: S \mapsto S'$ a on $S'= \map(S,(t,v)
-  \mapsto (t,T(\ant_S(m)))$
+  \mapsto (t,T(\ant_S(m)))$ \todo{ant no definit encara}
+\item $\text{vpredecessors}: S \mapsto S'$ a on $S'= \map(S,(t,v)
+  \mapsto (t,V(\ant_S(m)))$
 \end{itemize}
 
 Exemple d'operacions fold:
@@ -695,68 +231,356 @@ Exemple d'operacions mapfold:
 \end{itemize}
 
 
+\subsection{Operadors de valors per dues sèries temporals}
 
+Operadors en els valors entre dues sèries temporals que tinguin el
+mateix vector de temps. Si no tenen el mateix vector de temps, s'ha
+d'aplicar operacions temporals. \todo{ref més endavant}
 
-TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
-} AS ts1: 
-ts.map(ts1,'t','t*v/2.0')
+\[
+valueop: S_1 \times S_2 \times op \longrightarrow S'
+\]
+\[
+\text{a on } \{t^1|t^1\in S_1\} = \{t^2|t^2\in S_2\}, 
+\]
+
+\begin{verbatim} 
+( ((S1 rename v as v1) join (S2 rename v as v2)) extend add v as v1 op v2 ) {t,v}
 \end{verbatim}
 
-TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 0.0, v 0.0}
-} AS mi: 
-ts.fold(ts1,mi,'t','v+vi')
-\end{verbatim}
 
-antM TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 5.0, v 0.0}
-} AS m: 
-ts.sup(ts1 WHERE t < ts.t(m))
-\end{verbatim}
 
-sup fold TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t -1.0/0.0, v 1.0/0.0}
-} AS mi: 
-ts.fold(ts1,mi,'max {t,ti}','v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ti, v vi,  e False} } JOIN RELATION { TUPLE {e t > ti}})')
-\end{verbatim}
+Exemples:
+\begin{itemize}
+\item gradient: $S \mapsto S'$ a on $S'= \text{valueop}(S,vpredecessors(S),-)$
+\end{itemize}
 
-predecessors mapfold TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-EXTEND ts1 {t} ADD ( -1.0/0.0 as v)
-AS si: 
-ts.fold(ts1,si,'t','v FROM TUPLE FROM (RELATION { TUPLE {v ti, e True}, TUPLE {v v,  e False} } JOIN RELATION { TUPLE {e v < ti and ti<t}})')
-\end{verbatim}
+
+
+
+\subsection{Bàsiques de seqüències}
+
+
+\subsubsection{Màxim i suprem}
+
+
+La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
+sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
+temporal s'ha considerat finita i sense elements repetits, quan la
+sèrie temporal no és buida això comporta l'existència d'un màxim i
+d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
+respectivament la mesura màxima i mínima d'$S$.
+
+\begin{definition}[Màxim i mínim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
+  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
+  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
+  m$.
+\end{definition}
+
+El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
+és buida: $S= \emptyset$. En
+canvi, el suprem i l'ínfim estan definits per qualsevol
+sèrie temporal tal com passa amb el conjunt estès de nombres reals,
+\cite{cantrell:extendedreal}.  
+
+\begin{definition}[Suprem i ínfim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
+  $n=\max(S)$ en cas que el màxim estigui definit o
+  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
+  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
+  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
+\end{definition}
+Quan la sèrie temporal no és buida, per
+ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
+i un mínim i per tant es corresponen amb el suprem i l'ínfim
+respectivament.
+
+
+
+
+
+
+\subsubsection{Interval}
+
+Atesa la relació d'ordre induïda pel temps en una sèrie temporal
+(def.\ \ref{def:model:mesura-relacio-ordre}) és possible definir el
+concepte d'interval sobre la seqüència, semblant a com es fa a
+\cite{last:keogh,last:hetland}.
+
+\begin{definition}[Interval]
+  \label{def:model:st-interval}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
+  $S(r,t] \subseteq S$ com la sèrie temporal $S(r,t]=\{m\in S
+  | r<T(m)\leq t\}$, a on $r$ i $t$ són dos instants de temps.
+
+  També es defineix la subsèrie $S[-\infty,t)\subseteq S$ com la sèrie
+  temporal $S[-\infty,t) = \{m\in S | T(\inf(S))\leq T(m) < t\}$.
+\end{definition}
+S'observa que la subsèrie $S(r,+\infty]\subseteq S$ és
+equivalent a la sèrie temporal $S(r,+\infty] \equiv S(r,T(\sup(S))]$ i
+anàlogament $S(-\infty,t] \equiv S(T(\inf(S)),t]$. També s'observa que les subsèries $S(t,t]\subseteq S$ i $S[t,t)\subseteq S$ són equivalents a la sèrie temporal buida $S(t,t] \equiv S[t,t) \equiv \emptyset$ ja que per ser els temps d'ordre total $\nexists T(m): t < T(m) \leq t$ o $\nexists T(m): t \leq T(m) < t$, respectivament. 
+%Finalment, s'observa que la subsèrie $S(-\infty,+\infty]\subseteq S$ només és equivalent a la sèrie temporal original quan aquesta no conté la mesura indefinida negativa $S(-\infty,+\infty]\equiv S: (-\infty,v)\notin S$
+
+
+
+
+\subsubsection{Successor}
+
+
+També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
+defineix el concepte de mesura següent i mesura anterior en una
+seqüència.
+
+\begin{definition}[Successor i predecessor]
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
+  mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
+  com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
+  Direm que $l$ és el predecessor de $n$ en $S$ i ho notarem com
+  $l=\ant\limits_S(n)$ si i només si $l=\sup(S[-\infty,T(n)))$.
+
+Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
+exemple quan $n\in S$, podrem escriure $\seg(n)$ i $\ant(n)$.
+\end{definition}
+S'observa que s'obtenen mesures indefinides en els casos que la
+mesura següent o anterior es calcula respectivament per la mesura
+suprema o ínfima de la sèrie temporal: $\seg\limits_S(\sup
+S)=(+\infty,\infty)$ i $\ant\limits_S(\inf S)=(-\infty,\infty)$.
+
+De la definició anterior es dedueix que donada una sèrie temporal $S$
+que no conté mesures indefinides i donada la mesura indefinida
+$o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
+sèrie temporal $\ant\limits_S( (+\infty,\infty) ) = \sup(S): \forall
+m\in S: T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
+\emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
+  una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
+  $l=\ant\limits_S(o)$ que compleix
+  $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
+  $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
+  \mathbb{R}$, i per tant com que $S$ no té mesures indefinides es
+  demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
+$\seg\limits_S( (-\infty,\infty) ) = \inf(S): \forall m\in S:
+T(m)\in\mathbb{R}$.
+
+
+\subsubsection{Concatenació}
+
+A banda de les unions més tradicionals de conjunts, per les sèries
+temporals també resulta interessant definir l'operació de concatenació
+que s'aplica a les seqüències.
+
+\begin{definition}[concatenació]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la concatenació de les dues
+  sèries temporals $S_1 || S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
+  $S_2$ que no intersecten temporalment amb les de $S_1$: $S_1 ||
+  S_2 =  S_1 \cup ( S_2 - S_2(T(\inf(S_1)),T(\sup(S_1))] )$.
+\end{definition}
+
+Propietats
+\begin{itemize}
+\item La concatenació no és commutativa
+\end{itemize}
+
+
+
+
+\subsection{Temporals}
+
+Operacions a on el temps i la representació de la sèrie temporals
+juguen un paper important.
+
+
+\subsubsection{Pertinença temporal}
+
+\begin{definition}[pertinença temporal]
+  Sigui $S=\{m_0, \dotsc, m_{k}\}$ una sèrie temporal i $m=(t,v)$ una
+  mesura, direm que la mesura pertany temporalment a la sèrie 
+  $m\in^t S$ si i només si $\exists m_i=(t_i,v_i)\in S: t_i=t$.
+\end{definition}
+
+
+
+
+
+\subsubsection{Selecció temporal}
+
+Sigui $S$ una sèrie temporal i $i=[t_0,t_f]$ un interval de temps,
+per una banda s'ha definit l'interval sobre la seqüència d'una sèrie temporal $S(t_0,t_f]$ (def.~\ref{def:model:st-interval})  i per altra banda s'ha definit la representació contínua $r$ d'una sèrie temporal $S(t)$ \todo{referenciar la definició de repr}.
+Per seleccionar un interval temporal cal tenir en compte tant l'interval sobre la seqüència com la representació contínua, Aquesta selecció temporal s'anota com selecció de $S$ en $i$ amb representació $r$ o bé $S[t_o,t_f]^r$. 
+
+\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
+  $r$]
+  \[
+  \text{selecció}: \text{Sèrie temporal} \times \text{interval de
+    temps} \times \text{representació} \longrightarrow \text{Sèrie
+    temporal}
+  \]
+  \[
+  S = \{m_0 , \ldots , m_k\}  \times i = [t_0,t_f] \times r \longrightarrow S'
+  \]
+  \[
+  \forall  t \in i: S' = S(t)^r 
+  \] 
+\end{definition}
+
+A continuació s'exemplifica utilitzant la representació \emph{zoh} enrere.
+
+
+\begin{definition}[Selecció temporal de $S$ en $i$ amb representació
+  \emph{zohe}]
+  Sigui $S$ una sèrie temporal, $i=[t_0,t_f]$ un interval de temps i
+  \emph{zohe} la representació $S(t)$ amb \emph{zero-order-hold} cap
+  enrere, es defineix la subsèrie $S[t_0,t_f]^{\text{zohe}}\subseteq
+  S$ com la sèrie temporal 
+  \[
+  S[t_0,t_f]^{\text{zohe}} = S(t_0,t_f] \cup \{m\} : m=(t_f,v):
+  \]
+  \[
+  v=  V(\inf(S-S[-\infty,t_f)))
+  \]
+
+  %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
+  
+  Nota: $S-S[-\infty,t_f)$ seria equivalent a l'interval tancat
+  $S[t_f,+\infty]$ si aquest últim estigués definit.
+\end{definition}
+
+Propietats de la selecció temporal:
+
+\begin{itemize}
+\item Observeu que, sigui $t_a$ un instant de temps, la selecció de $S$ en $[t_a,t_a]$ és equivalent a la representació contínua $S(t_a)$. 
+\end{itemize}
+
+
+
+
+
+
+
+\subsubsection{Selecció de la resolució}
+
+La selecció de la resolució d'una sèrie temporal permet canviar, en el
+context d'una representació, la resolució a una de marcada per un
+conjunt d'instants de temps. A diferència d'un buffer, la selecció de
+resolució no permet aplicar interpoladors ni obliga a que la sèrie
+temporal resultant sigui regular.
+
+Sigui $S$ una sèrie temporal, $i= \{t_0,t_1,\dotsc,t_n\}$ un conjunt
+d'instants de temps i la representació contínua $r$ de la sèrie
+temporal $S(t)$, la selecció de resolució s'anota com resolució de $S$
+en $i$ amb representació $r$ o bé $S[i]^r$.
+
+\begin{definition}[Selecció de la resolució de $S$ en $i$ amb representació
+  $r$]
+  \[
+  \text{resolució}: \text{Sèrie temporal} \times \text{instants de
+    temps} \times \text{representació} \longrightarrow \text{Sèrie
+    temporal}
+  \]
+  \[
+  S = \{m_0 , \ldots , m_k\} \times i = \{t_0,t_1,\dotsc,t_n\} \times r
+  \longrightarrow S'
+  \]
+  \[
+  t_0 < t_1 < \dotsb < t_n:
+  \]
+  \[
+  S' = S[t_0,t_0]^r \cup  S[t_1,t_1]^r \cup \dotsb \cup S[t_{n},t_n]^r
+  \] 
+  % Es podria fer recursiu
+  % \[
+  % t_f = \sup(i): i_n = i - t_f: t_a = \sup(i_n):
+  % S' = \left\{\begin{array}{ll}
+  %     \{\} & \text{si } |i| = 0 \\
+  %     S[i_n]^r \cup S[t_a,t_f]^r 
+  %   \end{array}\right.
+  % \] 
+\end{definition}
+
+
+
+Propietats de la selecció de resolució:
+\begin{itemize}
+\item El cardinal de la sèrie temporal resultant és el mateix que el del conjunt d'instants de temps $|S[i]^r| = |i|$
+\end{itemize}
+
+
+
+\subsubsection{Unió temporal}
+
+Unió temporal de dues sèries temporals $S_1 \cup^r S_2$. Per la unió temporal les sèries temporals han de tenir la mateixa estructura, tal com s'ha notat per a la unió de sèries temporals.
+
+\begin{definition}[Unió temporal de $S_1$ i $S_2$ amb representació
+  $r$]
+  \[
+  \text{unió}: \text{Sèrie temporal} \times \text{Sèrie temporal}
+  \times \text{representació} \longrightarrow \text{Sèrie temporal}
+  \]
+  \[
+  S_1 = \{m_0^1 , \ldots , m_{k1}^1\}  \times S_2 = \{m_0^2 , \ldots , m_{k2}^2\} \times r \longrightarrow S'
+  \]
+  \[
+  t_1=T(\inf S_1), t_2=T(\sup S_1):
+  \]
+  \[
+  S' = S_1 \cup  ( S_2 - S_2[t_1,t_2]^r )
+  \] 
+\end{definition}
+
+
+
+Propietats de la unió temporal:
+\begin{itemize}
+\item No commutativa
+\item Però, $(S_1 \cup^r S_2) \cup (S_2 \cup^r S_1) = S_1 \cup S_2$\todo{és cert?}
+\end{itemize}
+
+
+
+
+\subsubsection{Fusió temporal}
+
+Fusió (join) de dues sèries temporals $S_1 \text{ fusió } S_2$.
+
+
+\begin{definition}[Fusió temporal de $S1$ i $S2$ amb representació $r$]
+  \[
+  \text{fusió}: \text{Sèrie temporal} \times
+  \text{Sèrie temporal} \times \text{representació} \longrightarrow
+  \text{Sèrie temporal}
+  \]
+  \[
+  S_1 = \{m_0^1 , \ldots , m_{k_1}^1\} \times S_2 = \{m_0^2 , \ldots ,
+  m_{k_2}^2\} \times r \longrightarrow S'
+  \]
+  \[
+  t = \{t^1 \, | \, \forall m^1=(t^1,v^1) \in S_1\} \cup \{t^2 | \forall
+  m^2=(t^2,v^2) \in S_2\}:
+  \]
+  \[
+  S' = \{m'=(t',v_1',v_2') \, | \, (t',v_1') \in S_1[t]^r \wedge (t',v_2') \in S_2[t]^r \} 
+  \]\todo{els valors s'haurien de saber fusionar}
+\end{definition}
+
+
+
+Propietats de la fusió temporal:
+\begin{itemize}
+\item $|S'| <= k_1 + k_2$
+\end{itemize}
+
+
+
+
+
+
+
+
+
 
 
 

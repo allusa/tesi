@@ -96,49 +96,6 @@ En resum, a partir del model de dades Round Robin descrit en aquest capítol per
 % \]
 
 
-\section{Consultes}
-
-
-
-
-
-
-\subsection{Consulta temporal d'una RRD}
-
-Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
-
-
-\begin{definition}[Consulta temporal de $RRD$ amb representació $r$]
-  \[
-  \text{consulta}: \text{Base de dades RR} \times
-  \text{interpolador} \times \text{representació} \longrightarrow
-  \text{Sèrie Temporal}
-  \]
-  \[
-  M = \{R_0 , \ldots , R_d\} \times r \longrightarrow S'
-  \]
-  \[
-  \forall R_j=(B_j,D_j) \in M : B_j=(S_{Bj},\tau_j,\delta_j,f_j), D_j=(S_{Dj},k_j):
-  \]
-  \[
-  \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : 
-  \footnote{S'assumeix que en una RRD no hi ha discs Round Robin amb la mateixa informació.}
-  \]
-  \[
-  S' = S_{D0} \cup^r  S_{D1} \cup^r  S_{D2} \cup^r \dots \cup^r S_{Dd}
-  \]
-  % Es podria fer recursiu
-  % \[
-  % \delta_0 = min (\{\delta_j \in B_j  \}): \forall R_j=(B_j,D_j) : 
-  % R_0=(B_0,D_0)  \in M : B_0=(S_{B0},\tau_0,\delta_0,f_0), D_0=(S_{D0},k_0):
-  % S' = \left\{\begin{array}{ll}
-  %     \{\} & \text{si } |M| = 0 \\
-  %     S_{D0} \cup^r (\text{ consulta } (M-\{R_0\})) 
-  %   \end{array}\right.
-  % \] 
-  
-\end{definition}
-
 
 
 
