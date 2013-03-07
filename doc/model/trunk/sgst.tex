@@ -109,7 +109,7 @@ propietats impredictibles (p.ex.\ cas dels segons addicionals
 (intercalats) en UTC) ja que la responsabilitat d'aquests problemes
 correspon a la bona definició dels sistemes de calendari.
 
-
+\todo{}
 Unix time (posix) no incorpora els leap seconds.
 Millor TAI, unix time (right), ja que és una mesura totalment lineal del temps. 
 Unix time, UTC i TAI: http://lwn.net/Articles/504744/
@@ -126,6 +126,9 @@ vectors, llistes o \glspl{terme:SGBDR:relacio}.  \todo{vigilar amb
   date, ell en diu escalars i no escalars (amb components visibles) i
   per exemple considera que un punt és escalar}
 
+\todo{Exemplificar més amb tipus que tenen valors i operacions que se'ls poden aplicar}
+
+
 El model de dades dels valors ha d'incloure una dada que defineixi el
 valor indefinit. Més endavant a la
 definició~\ref{def:model:mesura_valor_indefinit} es detallen les
@@ -138,6 +141,8 @@ $\mathbb{R}^*\in\mathbb{R} \cup \{\infty\}$.  En aquest cas el valor
 multivaluats ${\mathbb{R}^*}^n$ que representin una co\l.lecció de
 valors mesurats en el mateix instant de temps, tal i com fa per
 exemple \textcite{assfalg08:thesis}.
+
+
 
 
 
@@ -211,6 +216,10 @@ Nota: en alguns sistemes es distingeix entre valors infinits
 ($\infty$) i valors indefinits (NaN, \emph{not a number}),
 \cite{wiki:ieee754}. Aquest no és el cas de les definicions de mesures
 indefinides presents.
+
+
+
+
 
 
 
@@ -289,6 +298,7 @@ Sèrie temporal $S_2$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertan
 
 De manera simplificada s'escriu com 
 $S_2 = \{ (5,(1,2,3)), (7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula a la \autoref{fig:model:serietemporal:vector}. No obstant, es pot visualitzar de forma més còmode com a $S_2^b = \{ (5,1,2,3), (7,3,4,5), (10,1,2,3) \}$
+\todo{citar formes normals de les relacions [Date]}
 
 \begin{figure}[tp]
   \centering
@@ -350,6 +360,15 @@ i es visualitza com a taula a la \autoref{fig:model:serietemporal:serietemporal}
 
 S'observa que la capçalera de $S3$ és $\{temps:\bar{\mathbb{R}},valor:
 relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}\}$ \parencite[sec.\ 5.3]{date:introduction}. És a dir, el valor és de tipus relació que es defineix amb la capçalera de la relació on el temps i el valor pertanyen a $\bar{\mathbb{R}}$. Per tant, el valor de $S3$ és de tipus sèrie temporal amb valors reals. Cal insistir que \emph{tots} el valors de $S3$ han de pertànyer al mateix domini \parencite[sec.\ 5.4]{date:introduction}, el qual és $relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}$.
+
+
+\todo{S'ha de mirar a [Date] com es treballen les formes normals amb
+  restriccions} En aquesta relació no es pot aplicar el mateix que a
+l'exemple 2 de formes normals ja que hi ha una restricció de $S_3\{t\}$
+única i cada subsèrie també la té.  Així doncs no seria correcte
+desplegar-la $S^b_3 = \{ (1,5,1), (1,7,3), (1,10,1), (2,5,1),
+(2,7,3),(2,10,1)\}$ ja que no es compleix la unicitat de $S^b_3 \{t\}$; en tot cas s'hauria de canviar la restricció a $S^b_3 \{t^1,t^2\}$
+
 
 
 
