@@ -201,47 +201,227 @@ With reference to the operators, the add and consolidate in a multiresolution da
 \subsection{Consultes}
 
 
-\subsubsection{Subsèrie}
+Abstracció d'una BDSTM com a sèrie temporal
+
+És possible treballar amb una BDSTM com si fos una sèrie temporal?
+
+Com a consulta total: $\text{SerieTotal}(M)$
+Com a consulta amb informació multiresolució: $\text{DiscSelecció}(M,\delta,f)$
 
 
+\subsubsection{Selecció de disc}
 
 
-
-\subsubsection{Consulta temporal d'una RRD}
-
-Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
+Consulta la subsèrie de la BDSTM que té una resolució i atribut
+determinat. 
 
 
-\begin{definition}[Consulta temporal de $RRD$ amb representació $r$]
-  \[
-  \text{consulta}: \text{Base de dades RR} \times
-  \text{interpolador} \times \text{representació} \longrightarrow
-  \text{Sèrie Temporal}
-  \]
-  \[
-  M = \{R_0 , \ldots , R_d\} \times r \longrightarrow S'
-  \]
-  \[
-  \forall R_j=(B_j,D_j) \in M : B_j=(S_{Bj},\tau_j,\delta_j,f_j), D_j=(S_{Dj},k_j):
-  \]
-  \[
-  \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : 
-  \footnote{S'assumeix que en una RRD no hi ha discs Round Robin amb la mateixa informació.}
-  \]
-  \[
-  S' = S_{D0} \cup^r  S_{D1} \cup^r  S_{D2} \cup^r \dots \cup^r S_{Dd}
-  \]
-  % Es podria fer recursiu
-  % \[
-  % \delta_0 = min (\{\delta_j \in B_j  \}): \forall R_j=(B_j,D_j) : 
-  % R_0=(B_0,D_0)  \in M : B_0=(S_{B0},\tau_0,\delta_0,f_0), D_0=(S_{D0},k_0):
-  % S' = \left\{\begin{array}{ll}
-  %     \{\} & \text{si } |M| = 0 \\
-  %     S_{D0} \cup^r (\text{ consulta } (M-\{R_0\})) 
-  %   \end{array}\right.
-  % \] 
-  
+\begin{definition}[DiscSelecció]
+  \begin{gather*}
+    \text{DiscSelecció}: M \times \delta \times f \longrightarrow S' = S_D: \\
+    (S_B,S_D,\delta,\tau,k,f) \in M
+\end{gather*}
 \end{definition}
+
+
+
+\subsubsection{Sèrie temporal total}
+
+
+
+\begin{definition}[Sèrie temporal total]
+  Sigui $M^*$ una base de dades multiresolució a on no hi ha $\delta$ repetits
+  \begin{gather*}
+    \text{SerieTotal}: M^* \longrightarrow S': \\
+    \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
+    \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : \\
+    S' = S_{D0} || S_{D1} || S_{D2} || \dotsb || S_{Dd}
+\end{gather*}
+\end{definition}
+
+Prèviament es pot fer una selecció dels discs resolució que
+comparteixin un determinat agregador d'atributs. \todo{També hi podria
+  haver una operació estructural que sabés fusionar dos discs
+  resolució}
+
+
+
+L'operació de consulta de la sèrie temporal total també es pot aplicar
+tenint en compte la representació.
+\begin{definition}[Sèrie total amb representació]
+  Sigui $M^*$ una base de dades multiresolució a on no hi ha $\delta$
+  repetits i $r$ una representació
+  \begin{gather*}
+    \text{SerieTotal}: M^* \times r \longrightarrow S': \\
+    \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
+    \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : \\
+    S' = S_{D0} \cup^r S_{D1} \cup^r  S_{D2}  \cup^r \dotsb \cup^r  S_{Dd}
+\end{gather*}
+\end{definition}
+
+
+
+\paragraph{Selecció de resolució}
+
+
+Per a extreure una resolució determinada de la sèrie temporal
+emmagatzemada a la base de dades multiresolució, es consulta la sèrie
+temporal total i s'aplica una selecció de resolució
+$\text{SerieTotal}(M)[i]^r$ a on $i$ és el conjunt d'instants de
+temps.
+
+
+
+
+
+
+\subsection{Operacions sobre l'estructura}
+
+* Fusió d'esquemes de BDM
+* Canvis d'esquemes de BDM (afegir multivaluat, canvi de delta d'un disc,canvi de la k,...)
+* Estudiar Push o pull?
+
+
+
+\subsubsection{Canvis en l'esquema}
+
+
+Redueix o augmenta la mida d'un disc
+  \begin{gather*}
+    \text{CanviaK}: R \times k' \longrightarrow R': \\
+    R' = (S_B,S'_D,\delta,\tau,k',f) : \\
+    S'_D = \begin{cases}
+      S_D         & \text{si } k' \geq k   \\
+      treuN(S_D,k-k')    & \text{altrament}
+    \end{cases}, \\
+    treuN: S \times n \mapsto S'=  
+    \begin{cases}
+      S                & \text{si } n=0   \\
+      treuN(S - \{\min(S)\},n-1)  & \text{altrament}
+    \end{cases}
+\end{gather*}
+
+
+Afegeix un multivalor per a emmagatzemar sèries temporals multivaluades
+  \begin{gather*}
+    \text{afegeixMultivalor}: R \longrightarrow R': \\
+    R' = (S'_{B},S'_{D},\delta,\tau,k,f): \\
+    S'_{B} = \text{map}(S_B,(t,v)\mapsto(t,v,\infty)), \\
+    S'_{D} = \text{map}(S_D,(t,v)\mapsto(t,v,\infty))
+  \end{gather*}
+
+
+
+
+
+\subsubsection{Unió de multiresolució}
+
+Cas típic:
+Mesuro una sèrie temporal. Durant un temps emmagatzemo valors a una
+base de dades i després els emmagatzemo a una altra base de dades. Al final vull unir les dues bases de dades.
+
+
+Unió de dos discs resolució que tenen el mateix $\delta$ i $f$.
+Sigui $R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
+$R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$
+  \begin{gather*}
+    \text{UnioR}: R_1^* \times R_2^* \longrightarrow R': \\
+    k^M=\max(k_1,k_2), R' = (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k^M,f), \\
+    S^M_D = S_{Di} | k_i = k_M,  S^m_D = S_{Di} | k_i \neq k^M   : \\
+    S'_B = \text{unio}(S_{B1},S_{B2})\\
+    S'_D = \text{unio}^r(S^M_{D},S^m_{D})
+\end{gather*}\todo{repensar perquè $|S_{D1} \cup S_{D2}| = k$?} 
+
+
+
+
+Com a relacions multiresolució, dues bases de dades multiresolució es
+poden unir si no intersecten en les claus $(\delta,f)$.  En cas que
+intersectin, podem definir la unió multiresolució com la unió que sap unir els discs resolució repetits.
+
+\begin{gather*}
+    \text{UnioM}: M_1 \times M_2 \longrightarrow M': \\
+    K_1 = \{(delta_1,f_1) \in M_1\},K_2 = \{(delta_2,f_2) \in M_2\}, \\
+    K_f = K_1 \cap K_2, K_u =  (K_1 \cup K_2) - K_f : \\
+    M_1'= seleccio(M_1, (delta,f) \in K_u)\\
+    M_2'= seleccio(M_2, (delta,f) \in K_u)\\
+    M_{f1} = seleccio(M_1, (delta,f) \in K_f) \\
+    M_{f2} = seleccio(M_2, (delta,f) \in K_f) \\
+    M_f = \{\forall R_1\in M_1,R_2\in M_2: fusioR(R_1,R_2) |
+       (delta_1,f_1) = (delta_2,f_2) \in K_u  \} \\
+    M' =  M_{f} \cup  M'_{1}  \cup  M'_{2}     
+\end{gather*}
+
+
+
+
+
+
+\subsubsection{Fusió de multiresolució}
+
+Tinc una sèrie temporal en una base de dades, i una altra sèrie temporal en una altra base de dades. Vull emmagatzemar-les totes dues en una mateixa base de dades amb una sèrie temporal multivaluada.
+
+
+Fusió de dos discs resolució que tenen el mateix $\delta$ i $f$.
+Sigui $R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
+$R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$
+  \begin{gather*}
+    \text{FusioR}: R_1^* \times R_2^* \longrightarrow R': \\
+    k^M=\max(k_1,k_2), R' = (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k^M,f), \\
+    S^M_D = S_{Di} | k_i = k_M,  S^m_D = S_{Di} | k_i \neq k^M   : \\
+    S'_B = \text{fusio}^r(S_{B1},S_{B2})\\
+    S'_D = \text{semifusio}^r(S^M_{D},S^m_{D})
+\end{gather*}
+
+
+Fusió de dues bases de dades multiresolució
+
+\begin{gather*}
+    \text{FusioM}: M_1 \times M_2 \longrightarrow M': \\
+    K_1 = \{(delta_1,f_1) \in M_1\},K_2 = \{(delta_2,f_2) \in M_2\}, \\
+    K_f = K_1 \cap K_2, K_u =  (K_1 \cup K_2) - K_f : \\
+    M_1'=\text{afegeixMultivalor}(seleccio(M_1, (delta,f) \in K_u))\\
+    M_2'=\text{afegeixMultivalor*} (seleccio(M_2, (delta,f) \in K_u))\\
+    \text{afegeixMultivalor*: com a }v_1\\
+    M_{f1} = seleccio(M_1, (delta,f) \in K_f) \\
+    M_{f2} = seleccio(M_2, (delta,f) \in K_f) \\
+    M_f = \{\forall R_1\in M_1,R_2\in M_2: fusioR(R_1,R_2) |
+       (delta_1,f_1) = (delta_2,f_2) \in K_u  \} \\
+    M' =  M_{f} \cup  M'_{1}  \cup  M'_{2}     
+\end{gather*}\todo{repensar perquè $|S_{D1} \cup S_{D2}| = k$?} 
+
+
+
+
+\subsection{Com treure profit de les operacions dels SGSTM}
+
+Temes que després es poden aprofitar a les implementacions
+
+* No hi ha updates --> les sèries temporals no s'han de canviar
+
+* Per exemple, vull calcular la mitjana de  BDSTM(a,b] si tinc un disc resolució amb $\delta=b-a$ i $f=$mitjana aquest seria l'adequat en comptes de calcular mitjana(SerieTotal(M)(a,b])
+
+%??
+% No obstant, la base de dades multiresolució conté informació sobre la
+% resolució de les subsèries i per tant aquesta operació és susceptible
+% d'implementar-se aprofitant aquesta informació.  A tall d'exemple es
+% defineix una operació per extreure de la base de dades multiresolució
+% una sèrie temporal regular amb període $T$:
+
+
+% \begin{definition}[Selecció de resolució regular]
+%   \begin{gather*}
+%     \text{ResolucióRegular}: M^* \times T \times r \longrightarrow S'\\
+%     \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
+%     d_i = T - \delta_i , \\
+%     0 \geq d_0 > d_1 \dots > d_a, 0 < d_{a+1} < \dots < d_d: \\
+%     S'' = S_{D0} || S_{D1} || \dotsb || S_{Da}  ||  S_{Da+1} || \dotsb || S_{Dd}, \\
+%     S' = S''[i]^r: i = {t|0+nT,n\in\mathbb{N}}
+%   \end{gather*}
+% \end{definition}
+
+% Nota: les operacions no són equivalents, l'operació $\text{SerieTotal}(M)[i]^r$ és molt més potent que la $\text{ResolucióRegular}(M,T)$.
+
 
 
 
