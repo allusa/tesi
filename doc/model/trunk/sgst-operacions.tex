@@ -18,6 +18,46 @@ Aplicació d'operadors relacionals [Date] a les sèries temporals.
 $ m \in S_1$
 
 
+\subsubsection{Màxim i suprem}
+
+La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
+sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
+temporal s'ha considerat finita i sense elements repetits, quan la
+sèrie temporal no és buida això comporta l'existència d'un màxim i
+d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
+respectivament la mesura màxima i mínima d'$S$.
+
+\begin{definition}[Màxim i mínim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
+  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
+  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
+  m$.
+\end{definition}
+
+El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
+és buida: $S= \emptyset$. En
+canvi, el suprem i l'ínfim estan definits per qualsevol
+sèrie temporal tal com passa amb el conjunt estès de nombres reals,
+\cite{cantrell:extendedreal}.  
+
+\begin{definition}[Suprem i ínfim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
+  $n=\max(S)$ en cas que el màxim estigui definit o
+  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
+  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
+  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
+\end{definition}
+
+Quan la sèrie temporal no és buida, per
+ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
+i un mínim i per tant es corresponen amb el suprem i l'ínfim
+respectivament.
+
+
+
+
 \subsubsection{Unió}
 
 Per tal que l'operació d'unió de conjunts sigui vàlida per les sèries
@@ -234,7 +274,8 @@ Exemple d'operacions mapfold:
 \subsection{Operadors de valors per dues sèries temporals}
 
 Operadors en els valors entre dues sèries temporals que tinguin el
-mateix vector de temps. Si no tenen el mateix vector de temps, s'ha
+mateix vector de temps; és a dir regulars entre elles
+(v.\ def.~\ref{def:st:regular}). Si no tenen el mateix vector de temps, s'ha
 d'aplicar operacions temporals. \todo{ref més endavant}
 
 \[
@@ -261,44 +302,6 @@ Exemples:
 \subsection{Bàsiques de seqüències}
 
 
-\subsubsection{Màxim i suprem}
-
-
-La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
-sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
-temporal s'ha considerat finita i sense elements repetits, quan la
-sèrie temporal no és buida això comporta l'existència d'un màxim i
-d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
-respectivament la mesura màxima i mínima d'$S$.
-
-\begin{definition}[Màxim i mínim]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
-  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
-  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
-  m$.
-\end{definition}
-
-El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
-és buida: $S= \emptyset$. En
-canvi, el suprem i l'ínfim estan definits per qualsevol
-sèrie temporal tal com passa amb el conjunt estès de nombres reals,
-\cite{cantrell:extendedreal}.  
-
-\begin{definition}[Suprem i ínfim]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
-  $n=\max(S)$ en cas que el màxim estigui definit o
-  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
-  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
-  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
-\end{definition}
-Quan la sèrie temporal no és buida, per
-ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
-i un mínim i per tant es corresponen amb el suprem i l'ínfim
-respectivament.
-
-
 
 
 
@@ -309,6 +312,8 @@ Atesa la relació d'ordre induïda pel temps en una sèrie temporal
 (def.\ \ref{def:model:mesura-relacio-ordre}) és possible definir el
 concepte d'interval sobre la seqüència, semblant a com es fa a
 \cite{last:keogh,last:hetland}.
+
+\todo{potser seria millor definir la notació d'interval general (a,b), [a,b), (a,b] i [a,b]? potser fins i tota amb dos punts com fan a last és més clar $S(a:b)$?}
 
 \begin{definition}[Interval]
   \label{def:model:st-interval}
@@ -344,6 +349,7 @@ seqüència.
 Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
 exemple quan $n\in S$, podrem escriure $\seg(n)$ i $\ant(n)$.
 \end{definition}
+
 S'observa que s'obtenen mesures indefinides en els casos que la
 mesura següent o anterior es calcula respectivament per la mesura
 suprema o ínfima de la sèrie temporal: $\seg\limits_S(\sup
@@ -505,8 +511,15 @@ en $i$ amb representació $r$ o bé $S[i]^r$.
 
 Propietats de la selecció de resolució:
 \begin{itemize}
+
 \item El cardinal de la sèrie temporal resultant és el mateix que el del conjunt d'instants de temps $|S[i]^r| = |i|$
+
+\item  $S[i]^r: i = \{\tau+n\delta | n\in\mathbb{N}\}$ Selecció de la resolució de $S$ regular $\delta$ iniciada $\tau$  amb representació $r$.
 \end{itemize}
+
+
+
+
 
 
 
@@ -571,9 +584,15 @@ Fusió (join) de dues sèries temporals $S_1 \text{ fusió } S_2$.
 Propietats de la fusió temporal:
 \begin{itemize}
 \item $|S'| <= k_1 + k_2$
+\item Commutativa?
 \end{itemize}
 
 
+
+Semifusió de dues sèries temporals $S_1 \text{ semifusió } S_2$, a on la primera sèrie temporal marca el vector de temps de fusió, 
+\[
+S_1 \text{ semifusió } S_2 = S_1 \text{ fusió } S_2[S_1\{t\}]^r
+\]
 
 
 
