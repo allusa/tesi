@@ -28,6 +28,7 @@ temporal és un co\l.lecció de mesures.
 
 
 \subsection{Temps}
+\label{sec:sgst:temps}
 
 Utilitzem el temps com un valor que ens permet ordenar les mesures.  A
 tal efecte, el domini del temps es defineix com un conjunt
@@ -116,6 +117,7 @@ Unix time, UTC i TAI: http://lwn.net/Articles/504744/
 
 
 \subsection{Valor}
+\label{sec:sgst:valor}
 
 El \gls{terme:SGBDR:valor} és qualsevol element que és d'un
 \gls{terme:SGBDR:tipus}; és a dir, un objecte que
@@ -261,16 +263,25 @@ homogeneous.
 
 Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
 
-Una sèrie temporal és un conjunt de mesures, així doncs s'observa com una relació de grau dos (relació binària)  a on la capçalera conté els atributs temps i valor, ambdós amb els dominis de temps i valor ja vistos com per exemple el tipus de dades 'reals estesos'. Inclou algunes restriccions més que les relacions:
+Per ser un conjunt de mesures, s'observa una sèrie temporal com una
+relació de grau dos a on la capçalera conté els atributs temps i
+valor. Ambdós atributs tenen els dominis de temps i valor descrits a
+les seccions \ref{def:model:temps} i \ref{sec:sgst:valor}, com per
+exemple el tipus de dades 'reals estesos'. Les relacions de sèries
+temporals inclou algunes restriccions més que les relacions:
 
-* Els temps no poden estar repetits: (key restriction {t})
+\begin{itemize}
+\item Els temps no poden estar repetits: (key restriction {t})
+\item L'atribut de valor ha de contenir el mateix tipus d'objecte i ha
+  d'estar associat al mateix fenomen o fenòmens.
+\end{itemize}
 
-* Els valors han de contenir el mateix tipus d'objecte.
-
-Els temps no repetits indueixen un ordre temporal a les sèries temporals. Tot i així, les relacions, per ser conjunts, conserven la no definció d'un ordre dels elements. 
-
-
-En el model relacional no hi ha ordre en els atributs a diferència de les relacions matemàtiques que tenen un ordre d'esquerra a dreta \parencite[sec.\ 5.3]{date:introduction}.
+Els temps no repetits indueixen un ordre temporal a les sèries
+temporals. Tot i així, les relacions, per ser conjunts, conserven la
+no definció d'un ordre dels elements. En el model relacional no hi ha
+ordre ni en les tuples ni en els atributs a diferència de les
+relacions matemàtiques que tenen un ordre d'esquerra a
+dreta \parencite[sec.\ 5.3]{date:introduction}.
 
 \subsection{Exemples}
 

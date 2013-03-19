@@ -60,6 +60,11 @@ respectivament.
 
 \subsubsection{Unió}
 
+Per a poder unir dos conjunts relació, $A \cup B$, cal que tots dos
+tinguin la mateixa estructura; és a dir, en termes de SGBDR cal que
+$A$ i $B$ tinguin la mateixa capçalera.
+
+
 Per tal que l'operació d'unió de conjunts sigui vàlida per les sèries
 temporals cal tenir en compte quan dues sèries temporals tenen mesures
 en el mateix instant de temps. En cas d'utilitzar l'operació d'unió de
@@ -68,18 +73,37 @@ conjunts la sèrie temporal resultant no compliria amb la definició
 repetits. Com a conseqüència, es defineix l'operació d'unió per les
 sèries temporals.
 
+
+En primer lloc, es defineix la unió exclusiva de dues sèries temporals.  La
+unió exclusiva és la unió de dues sèries temporals sense tenir en
+compte les mesures que tenen el mateix instant de temps.
+
+\begin{definition}[unió exclusiva]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió exclusiva de les dues
+  sèries temporals $S_1 \text{unió}^x S_2$ és una sèrie temporal
+  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures no repetides de $S_1$
+  i de $S_2$: $S_1 \text{unió}^x S_2 = \{ (t^1,v^1) \in S_1 | \forall
+  (t^2,v^2)\in S_1 : t^2 \neq t^1 \} \cup \{ (t^2,v^2) \in S_2 |
+  \forall (t^1,v^1)\in S_1 : t^1 \neq t^2 \}$.
+\end{definition}
+
+Propietats de la unió exclusiva de sèries temporals:
+\begin{itemize}
+\item Commutativa
+\end{itemize}
+
+
+En segon lloc, es defineix la unió de dues sèries temporals que escull
+les mesures del primer operand en cas de mesures repetides.
+
 \begin{definition}[unió]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
-  temporals $S_1 \cup S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
+  temporals $S_1 \text{unió} S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
   m_k\}$ que conté totes les mesures de $S_1$ i les mesures de $S_2$
-  no repetides: $S_1 \cup S_2 = \{ m \in S_1 \} \cup \{ m^2 =
-  (t^2,v^2) \in S_2 | \forall (t^1,v^1)\in S_1 : t^1 \neq t^2
-  \}$. 
+  no repetides: $S_1 \text{unió} S_2 = S_1 \cup (S_1 \text{unió}^x S_2)$. 
 
-  Tal com succeeix amb les relacions, per a poder unir dues sèries
-  temporals cal que totes dues tinguin la mateixa estructura; és a dir,
-  en termes de SGBDR cal que tinguin la mateixa capçalera.
 \end{definition}
 
 Propietats de la unió:
@@ -96,22 +120,6 @@ Propietats de la unió:
 
 
 
-
-\paragraph{Unió exclusiva}
-
-La unió de sèries temporals no és commutativa en canvi una unió
-exclusiva sí que ho és. La unió exclusiva és la unió de dues sèries
-temporals sense tenir en compte les mesures que tenen el mateix
-instant de temps.
-
-
-\begin{definition}[unió exclusiva]
-  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la unió exclusiva de les dues
-  sèries temporals $S_1 \cup^x S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté les mesures no repetides de $S_1$ i de
-  $S_2$: $S_1 \cup^x S_2 =  ( S_1 \cup S_2 ) - (S_1 \cap S_2)$.
-\end{definition}
 
 
 
@@ -239,6 +247,8 @@ Exemple d'operacions map:
 \begin{itemize}
 \item $\text{igual}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,v))$
 \item $\text{intercanvia}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(v,t))$
+\item $\text{translació}: S \times \delta \mapsto S'$ a on $S'=
+  \map(S,(t,v)\mapsto(t+\delta,v))$
 \item $\text{pes}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,t*v))$
 \item $\text{tpredecessors}_{v1}: S \mapsto S'$ a on $S'= \map(S,(t,v)
   \mapsto (t,T(\ant_S(m)))$ \todo{ant no definit encara}
