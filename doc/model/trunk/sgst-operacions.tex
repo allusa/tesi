@@ -165,11 +165,83 @@ Es pot aplicar la selecció relacional.
 \subsubsection{Producte i fusió}
 
 
+Per a fer el producte de dos conjunts relació, $A \times B$, cal que
+tots dos tinguin diferent capçalera. A diferència del producte de
+conjunts, la relació resultant no és un conjunt de parells de tuples
+sinó un conjunt de tuples. 
+
+
+Definim el producte de dues sèries temporals, les qual en forma
+canònica tinguin els mateixos atributs $t$ i $v$, com una sèrie
+temporal amb atributs $t_1$, $v_1$, $t_2$ i $v_2$.
+\begin{definition}[producte]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, el producte de les dues sèries
+  temporals $S_1 \text{ producte } S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
+  m_k\}$ que conté la unió de totes les parelles de mesures de $S_1$ i
+  $S_2$: $S_1 \text{ producte } S_2 = \{ (t_1,v_1,t_2,v_2) | (t_1,v_1) \in S_1
+  \wedge (t_2,v_2) \in S_2 \}$
+\end{definition}
+
+Propietats del producte:
+\begin{itemize}
+\item No commutatiu
+\item El cardinal resultant és $|S|=k_1k_2$
+\item El grau resultant és $4$
+\end{itemize}
+
+
+Per a sèries temporals, el producte resulta en una sèrie temporals amb
+dos atributs de temps. Per aquest fet l'anomenem sèrie temporal doble.
+\begin{definition}[Sèrie temporal doble]
+  Anomenem sèrie temporal doble a una sèrie temporal que té dos
+  atributs de temps i dos atributs de valors. Sigui $S =\{m_0, \dotsc,
+  m_k\}$ una sèrie temporal és doble si i només si cada mesura $m_i$
+  és un tuple $m_i=(t_1,v_1,t_2,v_2)$ a on $t_1$ i $t_2$ són instants
+  de temps i $v_1$ i $v_2$ són valors. De la mateixa manera, a aquesta
+  mesura $m_i$ l'anomenem mesura doble.  Una sèrie temporal doble no
+  té dues parelles de temps repetides $|\{(t_1,t_2) | t_1,t_2\in S\}|
+  = |S|$.
+\end{definition}
+
+La sèrie temporal doble prové d'un producte de dues sèries
+temporals. Està pensada com a càlcul intermedi d'altres operacions com
+per exemple la fusió o el mapatge.  No és una forma habitual de les
+sèries temporals, la seva forma canònica es correspondria de manera
+semblant a l'exemple de la
+\autoref{fig:model:serietemporal:serietemporal}.
+
+
+
+
+La fusió de dos conjunts relació, $A \text{ join } B$, es defineix com
+una selecció sobre el producte $A \times B$. Per a les sèries
+temporals, definim la fusió com la selecció dels temps iguals sobre la
+sèrie temporal doble resultant del producte. El resultat de la fusió
+és una sèrie temporal multivaluada.
+\begin{definition}[fusió]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la fusió de les dues sèries
+  temporals $S_1 \text{ fusió } S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que selecciona del producte de $S_1$ amb $S_2$ les
+  mesures dobles amb temps iguals: $S_1 \text{ fusió } S_2 = \{
+  (t,v_1,v_2) | (t_1,v_1,t_2,v_2) \in \text{producte}(S_1,S_2),
+  t=t_1=t_2 \}$.
+\end{definition}
+
+
+Propietats de la fusió:
+\begin{itemize}
+\item No commutativa si els atributs originals no tenen nom?
+\item El cardinal resultant és $|S|\leq\min(k_1,k_2)$
+\item El grau resultant és $2$ (en forma canònica).
+\end{itemize}
+
 
 
 \subsubsection{Reanomena}
 
-Es pot aplicar el reanomena relacional.
+Es pot aplicar el reanomena relacional. 
 
 
 
