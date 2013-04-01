@@ -201,6 +201,21 @@ With reference to the operators, the add and consolidate in a multiresolution da
 \subsection{Consultes}
 
 
+
+Operadors per fer consultes sobre una base de dades multiresolució. 
+
+Mostrar com s'utilitzen els operadors dels SGST quan tenim multiresolució.
+
+
+* Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
+
+* Fer una unió temporal de tots els discs de la BDM i treballar sobre aquest senyal.
+
+* Pensar com operar (per exemple sumar) amb sèries temporals de diferents BDM. 
+
+
+
+
 Abstracció d'una BDSTM com a sèrie temporal
 
 És possible treballar amb una BDSTM com si fos una sèrie temporal?
@@ -478,6 +493,16 @@ Temes que després es poden aprofitar a les implementacions
 
 % Nota: les operacions no són equivalents, l'operació $\text{SerieTotal}(M)[i]^r$ és molt més potent que la $\text{ResolucióRegular}(M,T)$.
 
+
+
+
+\subsection{Comparació d'operacions dels SGSTM amb les dels SGST}
+
+Tinc una sèries temporal $S$ i l'emmagatzemo a una base de dades multiresolució $M$ amb atributs de mitjana. 
+
+* mitjana(S) = mitjana(serieTotal(M)) ?
+
+* Operació O, afegeix(M',O(S)) = O(serieTotal(M))?
 
 
 
