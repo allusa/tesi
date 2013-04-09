@@ -1,0 +1,210 @@
+\chapter{Usos de SGSTM}
+
+
+
+\section{Estructures interessants}
+
+
+
+\subsection{Discos enllaçats}
+
+
+
+\paragraph{Exemple 2}
+
+Les taules es poden veure a la \autoref{fig:model:mtsdb:cadena} a on la base de dades multiresolució és la vista-relació 
+\begin{verbatim}
+M_2 = ( ((M_2' RENAME S'_B AS S') JOIN (M^{series}_2 RENAME S AS S_B)) RENAME S'_D AS S') JOIN (M^{series}_2 RENAME S AS S_D)
+\end{verbatim}
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M'_2$} \\ \hline
+    $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 2 & mitjana  \\
+    $S_{D1}$ & $S_{D2}$ & 40 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}\qquad
+  \begin{tabular}{|c|c|c|}
+    \multicolumn{3}{c}{$M^{series}_{2}$} \\ \hline
+    \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
+    & $t$      & $v$  \\ \hline
+    \multirow{3}{*}{$S_{B1}$} & 46 & 0 \\ 
+    & 48 & 0 \\ 
+    & 49 & 0 \\ \hline
+    \multirow{2}{*}{$S_{D1}$} & 40 & 0 \\ 
+    & 45 & 0 \\ \hline
+    \multirow{4}{*}{$S_{D2}$} & 10 & 0 \\ 
+    & 20 & 0 \\ 
+    & 30 & 0 \\ 
+    & 40 & 0 \\ \hline
+  \end{tabular}
+  \caption{Taula d'una mtsdb en cadena}
+  \label{fig:model:mtsdb:cadena}
+\end{figure}
+
+\todo{per a fer l'exemple falta conèixer els operadors estructurals}
+
+\todo{falta definir qui són els buffer d'entrada de mesures}
+definir una $M^{in}_2$.
+
+
+
+
+
+Respecte a l'estructura general, l'estructura enllaçada restringeix
+els períodes de consolidació de les sèries temporals: aquests són
+múltiples dels discs anteriors.
+
+
+
+\subsection{Data stream}
+
+
+
+Base de dades multiresolució a on les sèries temporals dels buffers
+només tenen una mesura; és a dir tenen cardinal afitat a 1.
+
+
+Per a orientar a streams els buffers s'han de canviar els operadors
+d'afegir i consolidar:
+
+Es canvia l'operador d'afegir per tal que incorpori el càlcul orientat
+a stream cada cop:
+\[
+\text{addB}^{\text{stream}}: B \times m \longrightarrow B' =
+(streamB(S,m),\tau,\delta,f)
+\]
+
+Es canvia l'operador de consolidar per tal que reconegui la sèrie
+temporal del buffer com a consolidada amb stream.
+
+  \[
+  \text{consolidaB}^{\text{stream}}: B \longrightarrow B' \times m'
+  \]
+  \[
+  B'= (S',\tau+\delta,\delta,f)
+  \]
+  \[
+  S' = S(\tau+\delta,\infty)
+  \]
+  \[
+  m' \in S(\tau,\tau+\delta] 
+  \]
+
+
+Per a orientar a streams els buffers es defineix un nou operador
+\[
+\text{streamB}: S \times m \longrightarrow S' = \{f^{\text{stream}}(m_o,m)\}
+\]
+\[
+m_o \in S
+\]
+\[
+f^{\text{stream}} \text{ és un agregador d'atributs orientat a streams}
+\]
+ 
+
+Aleshores els agregadors d'atributs funcionen orientats a stream;
+nota: no tots els agregadors d'atributs es poden definir com a
+streams.
+
+
+Per exemple l'interpolador mitjana orientat a stream:
+
+\[
+\text{mitjana}^{\text{stream}}: m_o \times m_n \longrightarrow m' = (T(m_n),v')
+\]
+\[
+\text{a on } v' = (V(m_0) + V^1(m_n), V^2(m_n) + 1 )
+\]
+
+
+\subsection{Compartició de buffers}
+
+
+Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
+
+
+
+
+
+\subsection{Arquitectura RRDtool}
+
+
+RRDtool té una estructura multiresolució amb un buffer únic d'entrada
+i buffers orientats a stream; segons es va avaluar anteriorment per
+\textcite{llusa11:tfm}.
+
+
+
+
+
+
+\section{Operacions habituals en les sèries temporals}
+
+
+\paragraph{Semblança de dues sèries temporals}
+
+
+Similarity Measures for Time Series
+
+Hi ha varis mètodes, [keogh08:vldb] n'avalua uns quants i els generalitza amb:
+
+Given two
+time series T1 and T2 , a similarity function Dist calcu-
+lates the distance between the two time series, denoted by
+Dist(T1 , T2 ).
+
+Exemplifiquem amb la distància euclídia, [keogh08:vldb] nota que és
+competitiva amb les altres.
+
+Distancia euclídia segons [faloutsous94-sigmod]
+
+
+\[
+D(S,Q) = \left( \sum_{i=1}^{l} (S[i]-Q[i])^2  \right)^{1/2}
+\]
+
+\begin{gather*}
+  D: S \times Q \longrightarrow v: \\
+  S' = map(fusio(S,Q),(t,v_1,v_2)\mapsto(t,(v_1-v_2)^2)), \\
+  S'' = fold(quad,(0,0),(t^1,v^1,t^2,v^2)\mapsto(t^1,v^1+v^2)), \\
+  v = \sqrt{V(m)}:m\in S''
+\end{gather*}
+
+
+S i Q haurien de ser regulars entre elles, sinó cal aplicar una fusió amb representació/interpretació.
+
+Amb la multiresolució la fusió es pot fer de forma eficient. Per altra banda, es podria crear un disc resolució amb agregador de semblança.
+
+
+\paragraph{Semblança de dues sèries temporals amb offset}
+
+Aquí es descriu la solució general del problema (SequentialScan),
+[faloutsous94-sigmod] n'estudia implementacions amb certes
+heurístiques que aconsegueixen més eficiència.
+
+
+
+
+
+\paragraph{Filtratge senzill per mitjana mòbil}
+
+Sigui $p$ la mida de la finestra mòbil
+\begin{gather*}
+  \text{MitMobil}: S \times \text{p} \longrightarrow S':\\
+  \text{map}(S,(t,v)\mapsto \text{mitjanaV}(S[t,t+p]))
+\end{gather*}
+
+
+Mitjana mòbil sobre la multiresolució
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+% LocalWords:  SGSTM
