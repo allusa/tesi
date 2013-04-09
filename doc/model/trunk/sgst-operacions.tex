@@ -245,6 +245,15 @@ Es pot aplicar el reanomena relacional.
 
 \subsubsection{Map i fold}
 
+
+* map equivalent a extend
+
+* fold equivalent a aggregate operator
+
+* mapfold equivalent a summarize?
+
+
+
 \begin{align*}
   \text{map}:& S \times f \longrightarrow S' = \{\forall m\in S : f(m) \}, \\
              & \text{a on } f: m \mapsto m' 
@@ -252,7 +261,10 @@ Es pot aplicar el reanomena relacional.
 
 
 
-
+Sigui $f$ una funció de dues mesures 
+\[
+f: m_i \times m \longrightarrow m' 
+\]
 
 \begin{align*}
   \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
@@ -260,32 +272,45 @@ Es pot aplicar el reanomena relacional.
                & \text{a on } f: m_a \times m_b \mapsto m'
 \end{align*}
 
-
 Noteu que $\text{fold}(\{\},m_i,f) \mapsto m_i$ 
 
-
-
-% \[
-% \text{fold}: S \times m_i \times f(m,m_i) \longrightarrow m' =
-% \begin{cases}
-%   m_i & si |S|=0 \\
-%   f_m & altrament
-% \end{cases},
-% \text{ a on}
-% \]
-% \[
-% f_m=m_a\in S : \text{fold}( S-\{m_a\},f(m_a,m_i),f)
-% \]
+Més compactament descrit amb
+\begin{align*}
+  \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
+  & \begin{cases}
+    m_i & \text{si} |S|=0, \\
+    \text{fold}(S_1,f(m_i,m_1),f) & \text{altrament}
+  \end{cases}:\\
+  & m_1 \in S, S_1 = S - \{m_1\}
+\end{align*}
 
 
 
+Faltaria un OrderFold equivalent a l'OrderBy, sigui $o$ una funció que treu una mesura d'una sèrie temporal
+\[
+o: S \longrightarrow m'
+\]
 
+
+\begin{align*}
+  \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \times o \longrightarrow m'= \\
+  & \begin{cases}
+    m_i & \text{si} |S|=0, \\
+    \text{fold}(S_1,f(m_i,m_1),f) & \text{altrament}
+  \end{cases}:\\
+  & m_1 \in S, S_1 = S - \{m_1\}
+\end{align*}
+
+
+
+Podem fer una funció més general?
 \begin{align*}
   \text{mapfold}: & S=\{m_0,\dotsc,m_k\} \times S_i \times f \longrightarrow S'= \\
                  =& f(\dots(f(f(f(S_i\times\{m_0\})\times\{m_1\})\times\{m_2\})\dots)\times\{m_k\}), \\
                   & \text{a on } f: \{S_a \times S_b \}\mapsto S'\\
                   & \text{és a dir? } =map( \{S_a \times S_b \},f)
 \end{align*}\todo{s'ha de definir l'operació producte $S_1 \times S_2 \rightarrow S*$ S* pq no és totalment una sèrie temporal?}
+
 
 
 
@@ -305,7 +330,10 @@ Propietats d'operacions mapfold:\todo{comprovar}
   \{m_a \times m_b\} \mapsto \{m'\})$
 
 \item Totes les map es poden implementar com a mapfold$(\{(0,0)\},S,
-  \{m_a\} \times  \{\} \mapsto \{m'\})$
+  \{m_a\} \times  \{\} \mapsto \{m'\})$.
+
+\item Les map es poden implementar com a fold? $\text{map}(S,f) \equiv
+  \text{fold}(S,(0,0),f')$ a on $f': (t^i,v^i,t,v) \mapsto \{f(t,v)\} \cup S_i$. Sí, però les fold haurien de saber treballar amb S en comptes de m.
 \end{itemize}
 
 
