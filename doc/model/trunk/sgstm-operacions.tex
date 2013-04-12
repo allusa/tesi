@@ -323,6 +323,20 @@ Quin és el lapse temporal d'un disc?
     T_0 = \tau - k\delta,  T_f = \tau
   \end{gather*}
 
+Quina és la durada del lapse temporal d'un disc?
+  \begin{gather*}
+    \text{duradaR}: R \longrightarrow k\delta
+  \end{gather*}
+
+Nota sobre lapse i durada, donat un disc resolució la durada sempre és fixa i el lapse que cobreix té una certa variació que es correspon a $t_{actual}-\tau$.
+
+De fet sigui $[T_0,T_f] = lapseR(R)$ la  $\text{duradaR}\equiv T_f -T_0$
+\[
+    [T_0,T_f] = lapseR(R): T_f = \tau, T_0 = \tau - k\delta,: T_f-T_0 =\tau -( \tau - k\delta) =  k\delta \equiv \text{duradaR}
+\]
+
+Així doncs podem dir que un disc resolució ens cobreix un span temporal de  $\text{duradaR}(R)$. Es posiciona absolutament des de $\tau$ enrere. Això vol dir que tindrem un temps recent no cobert de $t_{actual}-\tau$, el qual habitualment com a màxim serà de $\delta$ ($t_{actual}-\tau \leq \delta$) i com a mínim de zero si consolidem la multiresolució periòdicament.
+
 
 
 
@@ -504,6 +518,14 @@ Tinc una sèries temporal $S$ i l'emmagatzemo a una base de dades multiresoluci�
 
 * Operació O, afegeix(M',O(S)) = O(serieTotal(M))?
 
+
+\begin{align*}
+s   \qquad   &  s'=ST(M(s))\\
+r=O(s) \qquad& r'=O(s') \\
+\epsilon(r,r')?
+\end{align*}
+
+on $O$ és una consulta, per exemple pot ser O=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
 
 
 
