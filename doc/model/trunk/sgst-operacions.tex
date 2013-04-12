@@ -248,9 +248,13 @@ Es pot aplicar el reanomena relacional.
 
 * map equivalent a extend
 
-* fold equivalent a aggregate operator
+* fold equivalent a aggregate operator \todo{potser dir-li agregador}
 
-* mapfold equivalent a summarize?
+* mapfold equivalent a un aggregate operator general, que retorna conjunts \todo{potser dir-li fold}
+
+* En sèries temporals no té sentit el summarize perquè l'atribut temps no pot tenir valors repetits i per tant no se'n poden fer grups. Tot i així es pot aplicat summarizes per agrupar per valors: summarize S per S {v} add ...
+però això ja no mapa a una sèrie temporal.
+
 
 
 
@@ -293,23 +297,47 @@ o: S \longrightarrow m'
 
 
 \begin{align*}
-  \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \times o \longrightarrow m'= \\
+  \text{OrderFold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \times o \longrightarrow m'= \\
   & \begin{cases}
     m_i & \text{si} |S|=0, \\
-    \text{fold}(S_1,f(m_i,m_1),f) & \text{altrament}
+    \text{OrderFold}(S_1,f(m_i,m_1),f,o) & \text{altrament}
   \end{cases}:\\
-  & m_1 \in S, S_1 = S - \{m_1\}
+  & m_1 = o(S), S_1 = S - \{m_1\}
 \end{align*}
+
+L'OrderFold és important quan la funció $f$ no és associativa ni
+commutativa ja que llavors l'ordre dels càlculs importa.  De fet un
+fold és un OrderFold amb $o=aleatori(S)$.
 
 
 
 Podem fer una funció més general?
+
+
+Sigui $f$ una funció de dues sèries temporals
+\[
+f: S_i \times S \longrightarrow S' 
+\]
+
 \begin{align*}
-  \text{mapfold}: & S=\{m_0,\dotsc,m_k\} \times S_i \times f \longrightarrow S'= \\
-                 =& f(\dots(f(f(f(S_i\times\{m_0\})\times\{m_1\})\times\{m_2\})\dots)\times\{m_k\}), \\
-                  & \text{a on } f: \{S_a \times S_b \}\mapsto S'\\
-                  & \text{és a dir? } =map( \{S_a \times S_b \},f)
-\end{align*}\todo{s'ha de definir l'operació producte $S_1 \times S_2 \rightarrow S*$ S* pq no és totalment una sèrie temporal?}
+  \text{mapfoldaleatori}: & S \times S_i \times f \longrightarrow m'= \\
+               =& f(\dots(f(f(f(S_i,S_0),S_1),S_2)\dots),S_k), \\
+               & \text{a on } S_0 = \{m_0\}, \dotsc , S_k=\{m_k\} 
+\end{align*}
+
+i definint una funció $o$ per a l'ordre
+\[
+o: S \longrightarrow m' 
+\]
+
+\begin{align*}
+  \text{mapfold}: & S \times S_i \times f \times o \longrightarrow S'= \\
+  &= \begin{cases}
+    S_i & \text{si} |S|=0, \\
+    \text{OrderFold}(S_1,f(S_i,\{m_1\}),f,o) & \text{altrament}
+  \end{cases}:\\
+  & m_1 = o(S), S_1 = S - \{m_1\}
+\end{align*}
 
 
 
@@ -332,8 +360,13 @@ Propietats d'operacions mapfold:\todo{comprovar}
 \item Totes les map es poden implementar com a mapfold$(\{(0,0)\},S,
   \{m_a\} \times  \{\} \mapsto \{m'\})$.
 
+
+\item La funció unió en la mapfold permet fer la identitat:  $S \equiv
+  \text{mapfold}(S,\{\},(S_i,S_1) \mapsto S_i \cup S_1)$.
+
 \item Les map es poden implementar com a fold? $\text{map}(S,f) \equiv
   \text{fold}(S,(0,0),f')$ a on $f': (t^i,v^i,t,v) \mapsto \{f(t,v)\} \cup S_i$. Sí, però les fold haurien de saber treballar amb S en comptes de m.
+
 \end{itemize}
 
 
