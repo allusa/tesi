@@ -209,12 +209,24 @@ Mitjana mòbil sobre la multiresolució
 Jo tinc una sèrie temporal i vull que entre dues mesures no hi hagi més d'un cert temps. Si no es compleix dic que té forats. 
 
 Sigui $S$ una sèrie temporal, aquesta té forats de més durada que $d$
-si alguna mesura compleix $\text{forats} = selecciona(difT(S),v>d \bigwedge v\neq\infty)$ a on $difT(S) = \text{map}(\text{tpredecessors}(S),(t,v)\mapsto(t,t-v))$.
-
-* Com farciria els forats manualment?
-
+si alguna mesura compleix $\text{forats}(S,d) = \text{selecciona}(difT(S),v>d \bigwedge v\neq\infty)$ a on $difT(S) = \text{map}(\text{tpredecessors}(S),(t,v)\mapsto(t,t-v))$.
 
 Amb la multiresolució el farciment de forats és natural a l'estructura i és controlat per la funció agregadora d'atributs.
+
+
+* Com farciria els forats manualment a una sèrie temporal?
+
+1. Passar-ho per un esquema de multiresolució
+
+2. Treballar sobre la sèrie temporal:
+
+a partir del càlcul de forats anterior $\text{forats}(S,d)$ per
+exemple apliquem un farciment amb representació
+zohe. $\text{farciment}(S,d) = \text{unio}(S,S')$ a on fem la selecció
+de resolució $S' = S[T]^{\text{zohe}}$, $\forall (t,v) \in
+\text{forats}(S,d): T = \{ \tau = t - dn |
+\tau\in(t-v,t),n\in\mathbb{N} \}$.
+
 
 
 
