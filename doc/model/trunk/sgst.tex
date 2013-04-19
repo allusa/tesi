@@ -286,6 +286,126 @@ ordre ni en les tuples ni en els atributs a diferència de les
 relacions matemàtiques que tenen un ordre d'esquerra a
 dreta \parencite[sec.\ 5.3]{date:introduction}.
 
+
+
+
+\subsubsection{Possibles representacions}
+
+
+A continuació atenem a les possibles representacions d'una sèrie
+temporal com a relació seguint el concepte de possibles
+representacions proposat per \textcite[cap.~5]{date:introduction}.
+
+\begin{definition}[Representació canònica]
+  Sigui $S = \{ m_0, m_1 , \dotsc, m_k \}$ una sèrie temporal amb
+  domini $\bar{\mathbb{R}}$ pels temps i els valors de les mesures,
+  modelada com a relació s'escriu com $S = ( \{t: \bar{\mathbb{R}}, v:
+  \bar{\mathbb{R}}\}, \{ \{t:t_0,v:v_0\}, \{t:t_1,v:v_1\}, \dotsc,
+  \{t:t_k,v:v_k\} \} )$; és a dir com a parella capçalera i conjunt de
+  valors certs. A aquesta representació l'anomenem forma canònica.
+
+  Així doncs, sigui $S_{\emptyset} = \{ \}$ una sèrie temporal buida,
+  modelada com a relació s'escriu com $S_{\emptyset} = ( \{t:
+  \bar{\mathbb{R}}, v: \bar{\mathbb{R}}\}, \{ \} )$.
+\end{definition}
+
+
+Degut al format esquemàtic de les sèries temporals, en simplifiquem
+l'escriptura de la forma canònica com a conjunt de tuples $(t,v)$ a on
+$t$ és el temps i $v$ és el valor. Així doncs quan no hi ha dubte
+sobre els dominis ni els noms d'atributs, una sèrie temporal es pot
+escriure de manera simplificada com a $S = \{ (t_0,v_0), (t_1,v_1),
+\dotsc, (t_k,v_k) \}$, la qual es correspon amb el model de conjunts
+inicial.
+
+Tal com s'utilitza en les relacions, les sèries temporals es poden
+visualitzar com a taules. La sèrie temporal $S$ i la $S_{\emptyset}$
+es visualitzen com a taula a la
+\autoref{fig:model:serietemporal:taula}.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    $t_0$  & $v_0$ \\
+    $t_1$  & $v_1$ \\
+    $\dots$  & $\dots$ \\ 
+    $t_k$  & $v_k$ \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_{\emptyset}$} \\ \hline
+    $t$  & $v$ \\ \hline
+      &  \\ \hline
+  \end{tabular}
+  \caption{Visualització com a taula d'una sèrie temporal}
+  \label{fig:model:serietemporal:taula}
+\end{figure}
+
+
+
+
+\begin{definition}[Representació multivaluada]
+  Anomenem sèrie temporal multivaluada a una sèrie temporal que té més
+  d'un atribut de valors.  Sigui $S = \{ m_0, m_1 , \dotsc, m_k \}$
+  una sèrie temporal és multivaluada si cada mesura $m_i$ és un tuple
+  $m_i=(t,v_1,v_2,\dotsc,v_n)$ a on $t$ és un instant de temps i
+  $v_1$, $v_2$, \dots, $v_n$ són valors. 
+
+  La representació com a relació d'una sèrie temporal multivaluada buida és
+  $S_{\emptyset} = ( \{t: \bar{\mathbb{R}}, v_1: \bar{\mathbb{R}}\,
+  v_2: \bar{\mathbb{R}}, \dotsc, v_n: \bar{\mathbb{R}}\}, \{ \} )$
+
+  Una sèrie temporal multivaluada es pot escriure en forma canònica de
+  parelles $(t,v)$. És a dir, la sèrie temporal multivaluada en
+  representació canònica és $S_{\emptyset} = ( \{t: \bar{\mathbb{R}},
+  v: V \}, \{ \} )$ a on el domini de l'atribut valor és el tipus
+  relació $V = \{ v_1: \bar{\mathbb{R}}\, v_2: \bar{\mathbb{R}},
+  \dotsc, v_n \}$ amb restricció que els valors relació que hi
+  pertanyen només poden tenir un tuple $r \in V: |r| = 1$.
+\end{definition}
+
+La forma canònica s'utilitza per a generalitzar les sèries temporals
+multivaluades en les operacions on el valor multivaluat no és
+rellevant. En altres operacions, per exemple la selecció o la fusió,
+el multivalor és rellevant per treballar-hi o perquè el resultat és
+una sèrie temporals multivaluada. \todo{citar formes normals de les relacions [Date]}
+
+
+Com succeeix en les relacions, el nom dels atributs d'una sèrie
+temporal pot ser decidit per l'usuari. Per exemple una sèrie temporal
+multivaluada amb tres atributs amb nom: $S_{\emptyset} = ( \{t:
+\bar{\mathbb{R}}, \text{temperatura}: \bar{\mathbb{R}}\,
+\text{consum}: \bar{\mathbb{R}}, \text{volum}: \bar{\mathbb{R}}\}, \{
+\} )$.
+
+
+
+\begin{definition}[Sèrie temporal doble]
+  Anomenem sèrie temporal doble a una sèrie temporal que té dos
+  atributs de temps i dos atributs de valors. Sigui $S =\{m_0, \dotsc,
+  m_k\}$ una sèrie temporal és doble si cada mesura $m_i$ és un tuple
+  $m_i=(t_1,v_1,t_2,v_2)$ a on $t_1$ i $t_2$ són instants de temps i
+  $v_1$ i $v_2$ són valors. De la mateixa manera, a aquesta mesura
+  $m_i$ l'anomenem mesura doble.  Una sèrie temporal doble no té dues
+  parelles de temps repetides $|\{(t_1,t_2) | t_1,t_2\in S\}| = |S|$.
+
+  La representació com a relació d'una sèrie temporal doble buida és
+  $S_{\emptyset} = ( \{t_1: \bar{\mathbb{R}}, v_1: \bar{\mathbb{R}}\,
+  t_2: \bar{\mathbb{R}}, v_2: \bar{\mathbb{R}}\}, \{ \} )$
+\end{definition}
+
+La sèrie temporal doble prové d'un producte de dues sèries
+temporals. Està pensada com a càlcul intermedi d'altres operacions com
+per exemple la fusió o el mapatge.  No és una forma habitual de les
+sèries temporals, la seva forma canònica es correspondria de manera
+semblant a l'exemple de la
+\autoref{fig:model:serietemporal:serietemporal}.
+
+
+
+
+
 \subsection{Exemples}
 
 \pgfplotsset{
@@ -306,14 +426,21 @@ dreta \parencite[sec.\ 5.3]{date:introduction}.
 
 
 
-\paragraph{Exemple 1} \emph{Valors reals}.
-Sèrie temporal $S_1$ on el temps i els valors pertanyen a $\bar{\mathbb{R}}$. Conté la mesura de valor 1 en el temps 5, la mesura de valor 3 en el temps 7 i la mesura de valor 1 en el temps 10. Modelada com a relació, és a dir com a parella capçalera i conjunt de valors certs, s'escriu com 
-$S_1 = ( \{temps: \bar{\mathbb{R}}, valor: \bar{\mathbb{R}}\}, \{ \{temps:5,valor:1\}, \{temps:7,valor:3\}, \{temps:10,valor:1\} \} )$.
+\paragraph{Exemple 1} \emph{Valors reals}.  Sèrie temporal $S_1$ on el
+temps i els valors pertanyen a $\bar{\mathbb{R}}$. Conté la mesura de
+valor 1 en el temps 5, la mesura de valor 3 en el temps 7 i la mesura
+de valor 1 en el temps 10. 
 
-Degut al format esquemàtic, simplifiquem l'escriptura de les sèries temporals com a conjunt de tuples $(t,v)$ a on $t$ és el temps i $v$ és el valor. Així doncs la sèrie temporal $S$ es pot escriure de manera simplificada com a 
-$S = \{ (5,1), (7,3), (10,1) \}$.
+En la forma canònica completa s'escriu com $S_1 = ( \{t:
+\bar{\mathbb{R}}, v: \bar{\mathbb{R}}\}, \{ \{t:5,v:1\}, \{t:7,v:3\},
+\{t:10,v:1\} \} )$. També es pot escriure de manera simplificada com a
+$S_1 = \{ (5,1), (7,3), (10,1) \}$.
 
-Tal com s'utilitza en les relacions, les sèries temporals es poden visualitzar com a taules. La sèrie temporal $S_1$ es visualitza com a taula a la \autoref{fig:model:serietemporal:real}.
+
+La sèrie temporal $S_1$ es visualitza com a taula a la
+\autoref{fig:model:serietemporal:real}, a la qual hi afegim una
+visualització com diagrama de dispersió amb el temps a l'eix
+horitzontal i el valor a l'eix vertical.
 
 \begin{figure}[tp]
   \centering
@@ -341,39 +468,56 @@ Tal com s'utilitza en les relacions, les sèries temporals es poden visualitzar 
 \end{figure}
 
 
-\paragraph{Exemple 2} \emph{Sèrie temporal multivaluada}.
-Sèrie temporal $S_2$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a  $\bar{\mathbb{R}}^3$; és a dir és un vector. Conté el valor (1,2,3) en el temps 5, el valor (3,4,5) en el temps 7 i el valor (1,2,3) en el temps 10.
+\paragraph{Exemple 2} \emph{Valors caràcters}.  Sèrie temporal $S_2$
+on el temps pertany a $\bar{\mathbb{R}}$ i els valors són caràcters
+que pertanyen a $C=\{a,b,\dotsc,z,\infty\}$. Conté el caràcters $a$,
+$c$ i $a$ mesurats respectivament en els temps $2$, $3$ i
+$6$. 
 
-De manera simplificada s'escriu com 
-$S_2 = \{ (5,(1,2,3)), (7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula a la \autoref{fig:model:serietemporal:vector}. No obstant, es pot visualitzar de forma més còmode com a $S_2^b = \{ (5,1,2,3), (7,3,4,5), (10,1,2,3) \}$
-\todo{citar formes normals de les relacions [Date]}
+De manera simplificada s'escriu com $S_2 = \{ (2,a), (3,c), (6,a) \}$.
+La sèrie temporal $S_2$ es visualitza com a taula a la
+\autoref{fig:model:serietemporal:caracter}, a la qual hi afegim una
+visualització com diagrama de dispersió amb el temps a l'eix
+horitzontal i el valor a l'eix vertical no continu.
 
 \begin{figure}[tp]
   \centering
-  \begin{tabular}{|c|c|}
-    \multicolumn{2}{c}{$S_2$} \\ \hline
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_4$} \\ \hline
     $t$  & $v$ \\ \hline
-    5  & (1,2,3) \\
-    7  & (3,4,5) \\
-    10 & (1,2,3) \\ \hline
+    2  & a \\
+    3  & c \\
+    6  & a \\ \hline
   \end{tabular} \qquad
-  \begin{tabular}[tp]{|c|c|c|c|}
-   \multicolumn{4}{c}{$S_2^b$} \\ \hline
-    $t$  & $v_1$ & $v_2$ & $v_3$ \\ \hline
-    5  & 1 & 2 & 3 \\
-    7  & 3 & 4 & 5 \\
-    10 & 1 & 2 & 3 \\ \hline
-  \end{tabular}
-
-  \caption{Taula d'una sèrie temporal amb valors vectors}
-  \label{fig:model:serietemporal:vector}
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_4$,
+        yticklabels={0,0,a,b,c},
+        ]
+    \addplot[only marks,mark=*,blue] coordinates {
+        (2,1)
+        (3,3)
+        (6,1)
+    };
+    \end{axis}
+   \end{tikzpicture}
+  \caption{Taula i gràfic d'una sèrie temporal amb valors caràcters}
+  \label{fig:model:serietemporal:caracter}
 \end{figure}
 
 
 
 
-\paragraph{Exemple 2b} \emph{Sèrie temporal multivaluada amb noms}.
+\paragraph{Exemple 3} \emph{Sèrie temporal multivaluada}.  Sèrie
+temporal $S_3$ on el temps pertany a $\bar{\mathbb{R}}$ i hi ha tres
+atributs de valors on cadascun pertany a $\bar{\mathbb{R}}$.  Conté
+el caràcters $a$, $c$ i $a$ mesurats respectivament en els temps $2$,
+$3$ i $6$.
 
+Conté el caràcters $a$,
+$c$ i $a$ mesurats respectivament en els temps $2$, $3$ i
+$6$. 
 
 Els atributs han de poder tenir noms agradables per a l'usuari
 
@@ -386,7 +530,115 @@ La forma canònica serà una sèrie temporal $(t,v)$, és a dir  $S^C_{2b} = ( (
 La forma canònica s'utilitza en algunes operacions on el valor no és important, per a generalitzar per a sèries temporals multivaluades. En algunes operacions el multivalor és important, per exemple en la fusió o en el producte.
 
 
-\todo{repensar si vector i multivaluat ha de ser el mateix o representen coses diferents: el gràfic d'un vector seria $R^n$ en canvi el gràfic d'una multivaluada seria un multigràfic}
+repensar si vector i multivaluat ha de ser el mateix o representen coses diferents: 
+
+El gràfic d'una multivaluada: es poden pintar dos eixos verticals quan les diferències d'escala siguin molt grans.
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[tp]{|c|c|c|c|}
+   \multicolumn{4}{c}{$S_3$} \\ \hline
+    $t$  & $v_1$ & $v_2$ & $v_3$ \\ \hline
+    2  & 1 & 2 & 3 \\
+    3  & 3 & 4 & 5 \\
+    6 & 1 & 2 & 3 \\ \hline
+  \end{tabular}\qquad
+  \begin{tabular}{|c|ccc|}
+    \multicolumn{4}{c}{$S_3^c$} \\ \hline
+    \multirow{2}{*}{$t$}  & \multicolumn{3}{c|}{$v$} \\ \cline{2-4}
+       & $v_1$ & $v_2$ & $v_3$ \\ \hline
+    2  & 1 & 2 & 3 \\
+    3  & 2 & 1 & 0 \\
+    6  & 1 & 2 & 3 \\ \hline
+  \end{tabular} 
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_3$,
+        axis y line*=right,
+        legend columns = 4,
+        every axis legend/.append style={
+          at={(1,-0.1)},
+          anchor=north east,
+          draw = none},
+        ]
+    \addplot[only marks,mark=*,blue] coordinates {
+        (2,1)
+        (3,2)
+        (6,1)
+    };
+    \addplot[only marks,mark=*,red] coordinates {
+        (2,2)
+        (3,1)
+        (6,2)
+    };
+  \end{axis}
+  \begin{axis}[
+    timeseriesrel,
+    axis y line*=left,
+    ]
+    \addplot[only marks,mark=*,green] coordinates {
+        (2,3)
+        (3,1)
+        (6,3)
+    };
+%    \legend{$v_1$,$v_2$,$v_3$}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Taula d'una sèrie temporal multivaluada}
+  \label{fig:model:serietemporal:multivaluada}
+\end{figure}
+
+
+
+
+
+\paragraph{Exemple 4} \emph{Valors vectors}.
+Sèrie temporal $S_4$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a  $\bar{\mathbb{R}}^3$; és a dir és un vector. Conté el valor (1,2,3) en el temps 2, el valor (3,4,5) en el temps 4 i el valor (1,2,3) en el temps 6.
+
+De manera simplificada s'escriu com $S_2 = \{ (5,(1,2,3)),
+(7,(3,4,5)), (10,(1,2,3)) \}$ i es visualitza com a taula i com a
+gràfic a la \autoref{fig:model:serietemporal:vector}.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|}
+    \multicolumn{2}{c}{$S_4$} \\ \hline
+    $t$  & $v$ \\ \hline
+    2  & (1,2,3) \\
+    4  & (3,4,5) \\
+    6  & (1,2,3) \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+\begin{axis}[
+        timeseriesrel,
+        nodes near coords,
+        title=$S_4$,
+        yticklabels={},
+        axis y line=none,
+        ]
+        \addplot+[only marks,mark=none,blue, point meta=explicit symbolic]
+        coordinates {
+          (2,0)  [\rotatebox{45}{(1,2,3)}]
+          (4,0)  [\rotatebox{45}{(3,4,5)}]
+          (5,1)  [\mbox{}]
+          (6,0) [\rotatebox{45}{(1,2,3)}]
+        };
+      \end{axis}
+    \end{tikzpicture}
+    \caption{Taula d'una sèrie temporal amb valors vectors}
+  \label{fig:model:serietemporal:vector}
+\end{figure}
+
+\todo{}
+NO! confondre-la amb una sèrie temporal multivaluada. El domini d'unes
+són vectors i el d'altres són relacions d'una sol tuple en els que es
+pot operar cada atribut per separat. En els vectors de forma general
+no es poden operar cada component per separat. Cal fixar-se que la
+diferència és semàntica: si considerem que mesurem vectors o atributs diferents.
+
+el gràfic d'un vector seria $R^n$ en canvi el gràfic d'una multivaluada seria un multigràfic
 a més un vector és $R^n$ però una multivaluada vull que sigui de diferents tipus $R\times C \times Bool$
 
 
@@ -445,36 +697,7 @@ desplegar-la $S^b_3 = \{ (1,5,1), (1,7,3), (1,10,1), (2,5,1),
 
 
 
-\paragraph{Exemple 4} \emph{Valors caràcters}.
-Sèrie temporal $S_4$ on el temps pertany a $\bar{\mathbb{R}}$ i els valors són caràcters que pertanyen a $C=\{a,b,\dotsc,z,\infty\}$. $S_4 = \{ (2,a), (3,c), (6,a) \}$.
 
-La sèrie temporal $S_4$ es visualitza com a taula a la \autoref{fig:model:serietemporal:caracter}.
-
-\begin{figure}[tp]
-  \centering
-  \begin{tabular}[c]{|c|c|}
-    \multicolumn{2}{c}{$S_4$} \\ \hline
-    $t$  & $v$ \\ \hline
-    2  & a \\
-    3  & c \\
-    6  & a \\ \hline
-  \end{tabular} \qquad
-  \begin{tikzpicture}[baseline=(current bounding box.center)]
-    \begin{axis}[
-        timeseriesrel,
-        title=$S_4$,
-        yticklabels={0,0,a,b,c},
-        ]
-    \addplot[only marks,mark=*,blue] coordinates {
-        (2,1)
-        (3,3)
-        (6,1)
-    };
-    \end{axis}
-   \end{tikzpicture}
-  \caption{Taula i gràfic d'una sèrie temporal amb valors caràcters}
-  \label{fig:model:serietemporal:caracter}
-\end{figure}
 
 
 
@@ -532,4 +755,4 @@ $S_4 =  (N RENAME valor as nom) JOIN R$
 
 
 
-% LocalWords:  SGST
+% LocalWords:  SGST multivaluada
