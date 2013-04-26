@@ -1,8 +1,6 @@
 \chapter{Model SGSTM}
 
 
-En aquest capítol es defineixen els operadors que permeten modelar el comportament i la manipulació de les dades.
-
 
 \todo{Proposta de noms}
 
@@ -97,45 +95,62 @@ La definició de buffer buit (def.~\ref{def:model:buffer_buit}) i de disc buit (
 \end{definition}
 
 
+\subsection{Sèrie temporal multiresolució}
+
+Una sèrie temporal multiresolució és un conjunt de discs resolució que
+comparteixen l'entrada de mesures, les quals provenen d'una mateixa
+sèrie temporal. La sèrie temporal queda regularitzada i distribuïda en
+els diferents discs resolució amb resolucions diferents, tal com s'ha
+vist a la \autoref{fig:model:bdstm}
 
 
-\subsection{Base de dades multiresolució}\label{sec:model:bdstm}
-
-Una base de dades multiresolució és un conjunt de discs resolució que comparteixen l'entrada de mesures, les quals provenen d'una mateixa sèrie temporal. La sèrie temporal queda regularitzada i distribuïda  en els diferents discs resolució amb resolucions diferents, tal com s'ha vist a la \autoref{fig:model:bdstm}
-
-
-\begin{definition}[Base de dades multiresolució]
-  Definim \emph{base de dades multiresolució} com el conjunt de discs resolució
-  $M=\{R_0,\dotsc,R_d\}$.
+\begin{definition}[Sèrie temporal multiresolució]
+  Definim \emph{sèrie temporal multiresolució} com el conjunt de discs
+  resolució $M=\{R_0,\dotsc,R_d\}$.
 \end{definition}
 
-A partir de la definició de disc resolució buit (def.~\ref{def:model:disc_resolucio_buit}) és defineix la base de dades multiresolució buida. 
+A partir de la definició de disc resolució buit
+(def.~\ref{def:model:disc_resolucio_buit}) és defineix la sèrie
+temporal multiresolució buida.
  
-\begin{definition}\label{def:model:bd_multiresolucio_buit}
-  Definim base de dades multiresolució buida com el conjunt de discs
+\begin{definition}\label{def:model:st_multiresolucio_buit}
+  Definim sèrie temporal multiresolució buida com el conjunt de discs
   resolució buits
   $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$.
 \end{definition}
 
-Normalment, en una base de dades multiresolució no hi ha dos discs
+Normalment, en una sèrie temporal multiresolució no hi ha dos discs
 resolució amb la mateixa informació. És a dir, donats dos discs
-resolució $R_a = (B_a, D_a)$ i $R_b = (B_b, D_b)$, 
-els seus respectius buffers 
-$B_a=(S_a,\tau_a,\delta_a,f_a)$ i
+resolució $R_a = (B_a, D_a)$ i $R_b = (B_b, D_b)$, els seus respectius
+buffers $B_a=(S_a,\tau_a,\delta_a,f_a)$ i
 $B_b=(S_b,\tau_b,\delta_b,f_b)$ no tenen el mateix interval de
-consolidació i agregador d'atributs: 
-$\delta_a \neq \delta_b \wedge f_a \neq f_b$.
+consolidació i agregador d'atributs: $\delta_a \neq \delta_b \wedge
+f_a \neq f_b$.
 
 
 
 
-\section{Relació multiresolució}
+\subsection{Base de dades de sèries temporals
+  multiresolució}\label{sec:model:bdstm}
+
+Una base de dades de sèries temporals multiresolució (BDSTM) és un
+conjunt de sèries temporal multiresolució.
+
+Les sèries temporals es poden emmagatzemar exclusivament en una BDSTM
+o poden conviure amb tipus de dades en bases de dades que tinguin
+capacitats de BDSTM.
 
 
 
-Una base de dades multiresolució és una relació de buffers i discs. A cada parella buffer-disc l'anomenem disc resolució. Així doncs, una base de dades multiresolució és un conjunt de discs resolució.
+\subsection{Relació sèrie temporal multiresolució}
 
-Com a conjunt de discs resolució, una base de dades multiresolució
+
+
+Una sèrie temporal multiresolució és una relació de buffers i discs. A
+cada parella buffer-disc l'anomenem disc resolució. Així doncs, una
+sèrie temporal multiresolució és un conjunt de discs resolució.
+
+Com a conjunt de discs resolució, una sèrie temporal multiresolució
 s'observa com una relació de grau sis a on la capçalera conté els
 atributs
 \begin{itemize}
@@ -148,7 +163,7 @@ atributs
 \end{itemize}
 
 Una restricció habitual és que $\delta$ i $f$ no estiguin repetits; és
-a dir que són els atributs clau de la base de dades multiresolució.
+a dir que són els atributs clau de la relació sèrie temporal multiresolució.
 
 
 
@@ -156,28 +171,94 @@ a dir que són els atributs clau de la base de dades multiresolució.
 
 \subsection{Exemples}
 
-\paragraph{Exemple 1}
+\paragraph{Exemple 1} \emph{Sèrie temporal multiresolució}
+
+Una sèrie temporal multiresolució en un instant de temps que podria
+ser entre el 27 i el 30.
 
 
-S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} sobre valors relació).
+%S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} sobre valors relació).
 
 \begin{figure}[tp]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
     \multicolumn{2}{c}{$M_1$} \\ \hline
     $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
-    $S_{B1}$ & $S_{D1}$ & 0 & 5  & 2 & mitjana  \\
-    $S_{B2}$ & $S_{D2}$ & 0 & 10 & 4 & mitjana  \\ \hline
+      \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         26  & 0 \\
+         27 & 0 \\\hline
+       \end{tabular} & 
+      \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         10  & 0 \\
+         15  & 0 \\
+         20 & 0 \\ 
+         25 & 0 \\\hline
+       \end{tabular} 
+       & 25 & 5  & 4 & mitjana  \\ \hline
+       \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         22  & 0 \\
+         26  & 0 \\
+         27 & 0 \\\hline
+       \end{tabular} & 
+      \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         10  & 0 \\
+         20  & 0 \\\hline
+       \end{tabular}  
+       & 20 & 10 & 2 & mitjana  \\ \hline
   \end{tabular}
-  \caption{Taula d'una mtsdb independent}
-  \label{fig:model:mtsdb:independent}
+  \caption{Taula d'una sèrie temporal multiresolució}
+  \label{fig:model:stm}
 \end{figure}
 
 
 
 
+\paragraph{Exemple 2} \emph{Sèrie temporal multiresolució amb vistes}
+
+És el mateix que la sèrie temporal multiresolució de l'exemple 1 però
+organitzat de forma més còmode amb vistes relacionals.
 
 
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M'_2$} \\ \hline
+    $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 2 & mitjana  \\
+    $S_{B2}$ & $S_{D2}$ & 40 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}\qquad
+  \begin{tabular}{|c|c|c|}
+    \multicolumn{3}{c}{$M^{\text{series}}_{2}$} \\ \hline
+    \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
+    & $t$      & $v$  \\ \hline
+    \multirow{2}{*}{$S_{B1}$} 
+    & 26 & 0 \\ 
+    & 27 & 0 \\ \hline
+    \multirow{3}{*}{$S_{B2}$} 
+    & 22 & 0 \\ 
+    & 26 & 0 \\ 
+    & 27 & 0 \\ \hline
+    \multirow{4}{*}{$S_{D1}$} 
+    & 10 & 0 \\ 
+    & 15 & 0 \\ 
+    & 20 & 0 \\ 
+    & 25 & 0 \\ \hline
+    \multirow{2}{*}{$S_{D2}$} 
+    & 10 & 0 \\ 
+    & 20 & 0 \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal multiresolució amb vistes}
+  \label{fig:model:stm:vistes}
+\end{figure}
 
 
 
