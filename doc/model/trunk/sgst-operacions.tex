@@ -1,7 +1,7 @@
 \section{Model d'operacions}
 
-
-
+En aquesta secció es defineixen els operadors que permeten modelar el
+comportament i la manipulació de les sèries temporals.
 
 
 
@@ -10,6 +10,9 @@
 \subsection{Bàsiques de conjunts}
 
 Aplicació d'operadors relacionals [Date] a les sèries temporals.
+En les definicions no es fan servir les capçaleres, s'escriuen les
+sèries temporals de forma simplificada com a conjunts.
+
 
 
 \subsubsection{Pertinença}
@@ -188,24 +191,6 @@ Propietats del producte:
 
 Per a sèries temporals, el producte resulta en una sèrie temporals amb
 dos atributs de temps. Per aquest fet l'anomenem sèrie temporal doble.
-\begin{definition}[Sèrie temporal doble]
-  Anomenem sèrie temporal doble a una sèrie temporal que té dos
-  atributs de temps i dos atributs de valors. Sigui $S =\{m_0, \dotsc,
-  m_k\}$ una sèrie temporal és doble si i només si cada mesura $m_i$
-  és un tuple $m_i=(t_1,v_1,t_2,v_2)$ a on $t_1$ i $t_2$ són instants
-  de temps i $v_1$ i $v_2$ són valors. De la mateixa manera, a aquesta
-  mesura $m_i$ l'anomenem mesura doble.  Una sèrie temporal doble no
-  té dues parelles de temps repetides $|\{(t_1,t_2) | t_1,t_2\in S\}|
-  = |S|$.
-\end{definition}
-
-La sèrie temporal doble prové d'un producte de dues sèries
-temporals. Està pensada com a càlcul intermedi d'altres operacions com
-per exemple la fusió o el mapatge.  No és una forma habitual de les
-sèries temporals, la seva forma canònica es correspondria de manera
-semblant a l'exemple de la
-\autoref{fig:model:serietemporal:serietemporal}.
-
 
 
 
@@ -414,6 +399,10 @@ Exemple d'operacions mapfold:
 
 
 \subsection{Operadors de valors per dues sèries temporals}
+
+Tal com es fa en els conjunts, per exemple A + B, com s'opera amb
+l'atribut valor de dues sèries temporals.
+
 A partir de map i la fusió es pot operar amb els valors de dues sèries
 temporals.  Operadors en els valors entre dues sèries temporals que
 tinguin el mateix vector de temps; és a dir regulars entre elles (v.\
@@ -421,15 +410,14 @@ def.~\ref{def:st:regular}). Si no tenen el mateix vector de temps,
 s'ha d'aplicar operacions temporals. \todo{ref més endavant}
 
 \[
-valueop: S_1 \times S_2 \times op \longrightarrow S'
+valueop: S_1 \times S_2 \times \text{op} \longrightarrow S'
 \]
 \[
 \text{a on } \{t^1|t^1\in S_1\} = \{t^2|t^2\in S_2\}, 
 \]
-
-\begin{verbatim} 
-( ((S1 rename v as v1) join (S2 rename v as v2)) extend add v as v1 op v2 ) {t,v}
-\end{verbatim}
+\[
+S' = \map(\text{fusio}(S_1,S_2),(t,v^1,v^2)\mapsto(t^1,v^1 \text{ op } v^2))
+\]
 
 
 

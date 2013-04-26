@@ -1,6 +1,9 @@
 \section{Model d'operacions}
 
 
+En aquesta secció es defineixen els operadors que permeten modelar el comportament i la manipulació de les dades.
+
+
 \subsection{Estructurals}
 
 \subsubsection{Buffer}
@@ -207,21 +210,17 @@ Operadors per fer consultes sobre una base de dades multiresolució.
 Mostrar com s'utilitzen els operadors dels SGST quan tenim multiresolució.
 
 
-* Abans de fer una consulta temporal pot fer falta fer una selecció dels discs Round Robin amb el mateix interpolador.
+* Abans de fer una consulta temporal pot fer falta fer una selecció dels discs resolució amb el mateix interpolador.
 
-* Fer una unió temporal de tots els discs de la BDM i treballar sobre aquest senyal.
+* Fer una unió temporal de tots els discs de la BDM i treballar sobre aquest senyal $\longrightarrow$ Abstracció d'una BDSTM com a sèrie temporal; és possible treballar amb una BDSTM com si fos una sèrie temporal?
+
+  - Com a consulta total: $\text{SerieTotal}(M)$
+
+  - Com a consulta amb informació multiresolució: $\text{DiscSelecció}(M,\delta,f)$
 
 * Pensar com operar (per exemple sumar) amb sèries temporals de diferents BDM. 
 
 
-
-
-Abstracció d'una BDSTM com a sèrie temporal
-
-És possible treballar amb una BDSTM com si fos una sèrie temporal?
-
-Com a consulta total: $\text{SerieTotal}(M)$
-Com a consulta amb informació multiresolució: $\text{DiscSelecció}(M,\delta,f)$
 
 
 \subsubsection{Selecció de disc}
@@ -293,8 +292,30 @@ temps.
 \subsection{Operacions sobre l'estructura}
 
 * Fusió d'esquemes de BDM
+
 * Canvis d'esquemes de BDM (afegir multivaluat, canvi de delta d'un disc,canvi de la k,...)
-* Estudiar Push o pull?
+
+* Estudiar Push o pull
+
+
+
+\subsubsection{Recorreguts en l'esquema}
+
+Aplicació de map a una BDM.
+\begin{gather*}
+  \text{map}: M \times f \longrightarrow M' = \{ f(R_0), \dotsc, f(R_k) \} :\\
+   \text{a on } f: R_a \mapsto R'
+ \end{gather*}
+ 
+Aplicació de fold a una BDM
+\begin{gather*}
+  \text{fold}: M \times M_i \times f \longrightarrow M' :\\
+  = f(\dots(f(f(f(M_i,R_0),R_1),R_2)\dots),R_k), \\
+   \text{a on } f: M_a \times R_b \mapsto M'
+\end{gather*}
+
+
+
 
 
 
@@ -400,8 +421,10 @@ Afegeix un multivalor per a emmagatzemar sèries temporals multivaluades
 
 
 
+\subsubsection{Treball amb dues BDM}
 
-\subsubsection{Unió de multiresolució}
+
+\paragraph{Unió de multiresolució}
 
 Cas típic:
 Mesuro una sèrie temporal. Durant un temps emmagatzemo valors a una
@@ -445,7 +468,7 @@ intersectin, podem definir la unió multiresolució com la unió que sap unir el
 
 
 
-\subsubsection{Fusió de multiresolució}
+\paragraph{Fusió de multiresolució}
 
 Tinc una sèrie temporal en una base de dades, i una altra sèrie temporal en una altra base de dades. Vull emmagatzemar-les totes dues en una mateixa base de dades amb una sèrie temporal multivaluada.
 
