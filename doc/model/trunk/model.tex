@@ -1,10 +1,27 @@
-\chapter[Model RRD]{Model dels SGBD Round Robin}\label{cap:model-rrd}
+\chapter{Introducció als models}
 
-En aquest capítol es dissenya un model matemàtic per a les bases de dades Round Robin (RRD). Aquest model està inspirat en el sistema de gestió de bases de dades RRDtool i és el resultat de l'abstracció dels conceptes que s'han exposat als capítols %\ref{cap:rrdtool} i \ref{cap:rrdtool-etapes}. 
 
-A l'inici del capítol, s'introdueix el concepte de model matemàtic per a les bases de dades. 
-A continuació, es defineixen els conceptes necessaris per a finalment definir una base de dades Round Robin. 
-Al final del capítol, es resumeix breument la informació exposada.
+En els capítols següents es dissenya un model matemàtic pels sistemes
+de gestió de bases de dades multiresolució per a sèries
+temporals. 
+
+
+En aquest capítol, s'introdueix el concepte de model matemàtic
+pels sistemes de gestió de bases de dades.  
+
+
+En els següents capítols es defineixen els objectes que ens permeten
+modelar l'estructura de les dades i els operadors que s'hi poden
+aplicar.
+
+La definició del model s'estructura en dues parts:
+
+\begin{itemize}
+\item Un model pels (SGST)  que defineix mesura i sèrie temporals.
+\item Un model pels (SGSTM) que defineix buffer, disc i disc
+  resolució, el qual treballa sobre el model de SGST.
+\end{itemize}
+
 
   
 
@@ -16,84 +33,49 @@ Per complir aquests objectius, els SGBD ofereixen a l'usuari diferents operacion
 Els SGBD es basen en teories matemàtiques que reben el nom de model de dades, un SGBD és una implementació d'un model de dades.
 Segons Date, ``un model de dades és una definició abstracta, auto continguda i lògica dels objectes, de les operacions i  de la resta que conjuntament constitueixen la màquina abstracta amb la que els usuaris interactuen. Els objectes permeten modelar l'estructura de les dades. Les operacions permeten modelar el comportament''.
 
-Les bases de dades Round Robin són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
-El model de dades Round Robin és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
-
-El model de dades Round Robin es dissenya per primera vegada en aquest capítol. 
-Actualment existeix un SGBD, RRDtool, que implementa conceptes susceptibles d'esdevenir un model de dades però enlloc s'ha recollit com a tal. A partir de l'anàlisi i l'abstracció profunda dels conceptes de RRDtool s'ha dissenyat el model de dades Round Robin, batejat segons el nom que té a RRDtool (\emph{Round Robin Database tool}). Els conceptes de RRDtool s'han exposat detalladament als capítols %\ref{cap:rrdtool} i \ref{cap:rrdtool-etapes}. 
+Les bases de dades multiresolució per a sèries temporals són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
+El model de dades multiresolució és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
 
 
-Així doncs, a continuació es presenta el model de dades Round Robin. 
-Es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les \emph{mesures} són dades mesurades en un instant de temps i les \emph{sèries temporals} són co\l.leccions de mesures, a cada base de dades Round Robin hi ha emmagatzemada una sèrie temporal. 
-
-El model de dades Round Robin s'estructura a partir de \emph{discs Round Robin}, els quals  acumulen temporalment les \emph{mesures} en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre \emph{mesures} amb l'objectiu de compactar la informació de la sèrie temporal.
-Així doncs, la sèrie temporal queda emmagatzemada en intervals de temps diferents, repartits en els \emph{discs Round Robin}. 
-
-Pel que fa a les operacions, és indispensable que el model Round Robin pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{interpolació} i \emph{consolidació}. En el model de dades Round Robin d'aquest capítol també es defineixen operacions per crear una base de dades Round Robin, per inserir-hi mesures i per representar sèries temporals.
-
-
-
-\section{Sèrie temporal}
+El model de dades per a sèries temporals es dissenya en el
+capítol~\ref{cap:model:sgst}. El disseny d'aquest model és necessari
+per a comprendre i construir el model multiresolució.  El model de
+dades multiresolució es dissenya en el capítol~\ref{cap:model:sgstm}.
+El concepte de multiresolució prové d'estudis anteriors
+\parencite{llusa12:ptd}, el qual es va formalitzar com a abstracció
+d'una característica essencial de l'SGBD
+RRDtool \parencite{rrdtool}. Aquesta abstracció es va realitzar a
+partir d'una anàlisi profunda dels conceptes de RRDtool duta a terme
+en una tesi de màster \parencite{llusa11:tfm}.
 
 
 
+Així doncs, a continuació es presenten els model de dades.
+
+En el model per a sèries temporals es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les mesures són dades mesurades en un instant de temps i les sèries temporals són co\l.leccions de mesures.
+
+El model de dades multiresolució s'estructura a partir de \emph{discs resolució}, els quals  acumulen temporalment les mesures en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre mesures amb l'objectiu de compactar la informació de la sèrie temporal.
+Així doncs, la sèrie temporal queda emmagatzemada en intervals de temps diferents, repartits en els discs resolució. 
+
+Pel que fa a les operacions, és indispensable que el model multiresolució pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{interpolació} i \emph{consolidació}. En el model de dades multiresolució es defineixen els operadors específics per a aquestes tasques anomenats \emph{agregadors d'atributs}
 
 
-
-\section{Resum}
-
-Aquest capítol s'acaba amb un resum dels conceptes exposats en el model de dades Round Robin. Una base de dades Round Robin és un sistema informàtic d'emmagatzematge d'una sèrie temporal entesa com una  una co\l.lecció de dades mesurades en diferents instants de temps.
-
-A la base de dades, la sèrie temporal queda estructurada com s'ha esquematitzat a  la figura~\ref{fig:model:bdstm}. És una forma compacta d'emmagatzemar la sèrie temporal de manera que queda repartida segons diferents funcions d'interpolació i períodes de mostreig. Aquest repartiment té lloc en els diferents discs Round Robin, els quals fan ús del seu buffer per interpolar les mesures i fan ús del seu disc per consolidar-les. 
-
-El conjunt de discs Round Robin constitueixen la part principal d'una base de dades Round Robin tot i que, com a l'esquema, hi pot haver un buffer d'entrada de mesures comú per tal de regularitzar la sèrie temporal des d'un principi, ja que el pas de no regular a regular requereix interpoladors més complicats.
-
-
-En el capítol%~\ref{cap:roundrobinson},
- utilitzant el llenguatge de programació Python es dissenya, a nivell acadèmic, un sistema de gestió de bases de dades que implementa el model de dades Round Robin tal com s'ha definit en aquest capítol.
-
-
-En resum, a partir del model de dades Round Robin descrit en aquest capítol per una banda es poden estudiar quin efecte té una configuració determinada de paràmetres i per altra banda es poden dissenyar sistemes de gestió de bases de dades assegurant que implementen el model i per tant que tenen el funcionament desitjat.
+A banda de les estructures, en el model també es defineixen els
+operadors que permeten tractar les dades; ja sigui per operar amb les
+estructures o bé per a fer consultes.
 
 
 
 
-% \section{Tractament dels desconeguts}
 
 
-%operacions amb nan de octave i matlab
-%http://biosig-consulting.com/matlab/NaN/
-% The NaN-toolbox v2.0: A statistics and machine learning toolbox for Octave and Matlab®
-% for data with and w/o MISSING VALUES encoded as NaN's.
 
 
-% La censura per interval és una verificació possible. En aquesta, un valor $v$ es considera desconegut quan $v<L_{m}$ o $v>L_{M}$.
 
 
-% Sigui $m=(v,t)$ una mesura, $m$ és desconeguda si $v$ és desconegut.
-
-% Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $H$ un termini de temps, una mesura $m_i=(v_i,t_i)\in S$ és desconeguda si, donada la mesura anterior $m_{i-1}=(v_{i-1},t_{i-1})$, $t_i - t_{i-1} > H$.
 
 
-% Sigui $f$ un interpolador, en el moment de calcular la mesura de consolidació $f$ decideix si és desconeguda
-% \[
-% desconeguda?: \text{Sèrie temporal} \times \text{interval} \longrightarrow \text{Mesura}
-% \]
 
-% Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $f$ un interpolador, $i=[T_0,T_f]$ un interval de temps i $\alpha$ un llindar, la mesura de consolidació calculada per l'interpolador $f$ és desconeguda ssi  
-% \[
-% \frac{t_d }{T_f - T_0} > \alpha :
-% \]
-% \[
-% :t_d = t_{d0} + t_{df} + \sum\limits_{i=1}^{k-1}(t_i-t_{i-1}) : v_k = 'desconegut':
-% \]
-% \[
-% : t_{d0} = \left\{\begin{array}{l} t_0-T_0 \text{ si } v_0 = 'desconegut' \\ 0\end{array}\right. ,
-% t_{df} = \left\{\begin{array}{l} T_f-t_{k-1} \text{ si } v_k = 'desconegut' \\ 0\end{array}\right. :
-% \]
-% \[
-% :k=|S|-1,(v_k,t_k)=m_k\in S' :S'= S_{T_0:T_f} \cup \{min(S_{T_f:\infty})\}
-% \]
 
 
 
@@ -115,10 +97,13 @@ En resum, a partir del model de dades Round Robin descrit en aquest capítol per
 % \int_a^b \dotsi   with integrals
 % A_1\dotso A_N     other dots
 
+
+
+
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-% LocalWords:  Round  buffer buffers
+% LocalWords: buffer buffers
 
 
 
