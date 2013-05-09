@@ -1,17 +1,43 @@
 \section{Model d'operacions}
 
-En aquesta secció es defineixen els operadors que permeten modelar el
-comportament i la manipulació de les sèries temporals.
+Una sèrie temporal té un atribut de temps que ha de ser tingut en
+compte pels operadors que la manipulin.  Així, atenent a aquest
+atribut de temps, el comportament d'una sèrie temporal pot tenir
+naturaleses diferents:
+\begin{itemize}
+\item Conjunt, és a dir els operadors només atenen a la forma
+  estructural bàsica.
+\item Seqüència, en la qual els operadors la tracten com a conjunts
+  amb ordre.
+\item Funció temporal, en la qual els operadors treballen tenint en
+  compte que una sèrie temporal és la representació d'un funció
+  contínua.
+\end{itemize}
 
 
+En el disseny del model d'operacions següent es distingeix el
+comportament per als tres casos anteriors.  Es dissenyen les
+operacions bàsiques que permeten que posteriorment es combinin per
+elaborar-ne de més complexes.
 
 
 
 \subsection{Bàsiques de conjunts}
 
-Aplicació d'operadors relacionals [Date] a les sèries temporals.
-En les definicions no es fan servir les capçaleres, s'escriuen les
-sèries temporals de forma simplificada com a conjunts.
+En el model estructural de SGST hem definit les sèries temporals
+utilitzant conjunts. En aquest apartat definim operadors per a les
+sèries temporals recollint els operadors habituals que tenen els
+conjunts.
+
+El model relacional de SGBD defineix els seus operadors bàsics a
+partir de l'àlgebra de
+conjunts \parencite[cap.~6]{date:introduction}. En aquest apartat
+apliquem el mateix estudi per al model de SGST. Tot i així de manera
+simplificada, a les definicions no es descriuen les sèries temporals
+com a relacions amb capçaleres sinó que s'escriuen només els conjunts
+de valors. 
+
+
 
 
 

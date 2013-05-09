@@ -233,6 +233,34 @@ de resolució $S' = S[T]^{\text{zohe}}$, $\forall (t,v) \in
 
 
 
+
+
+
+
+\section{Resum}
+
+Aquest capítol s'acaba amb un resum dels conceptes exposats en el
+model de dades. Una base de dades per sèries temporals multiresolució
+és un sistema informàtic d'emmagatzematge d'una sèrie temporal entesa
+com una una co\l.lecció de dades mesurades en diferents instants de
+temps.
+
+A la base de dades, la sèrie temporal queda estructurada com s'ha esquematitzat a  la figura~\ref{fig:model:bdstm}. És una forma compacta d'emmagatzemar la sèrie temporal de manera que queda repartida segons diferents funcions d'interpolació i períodes de mostreig. Aquest repartiment té lloc en els diferents discs resolució, els quals fan ús del seu buffer per interpolar les mesures i fan ús del seu disc per consolidar-les. 
+
+El conjunt de discs resolució constitueixen la part principal d'una base de dades multiresolució tot i que hi pot haver variacions en aquest esquema, com per exemple un buffer d'entrada de mesures comú que regularitzi la sèrie temporal des d'un principi i simplifiqui els interpoladors que són complicats quan es fa el pas de sèrie temporal no regular a regular.
+
+
+En el capítol \todo{? més endavant}
+ utilitzant el llenguatge de programació Python es dissenya, a nivell acadèmic, un sistema de gestió de bases de dades que implementa el model de dades tal com s'ha definit en aquest capítol.
+
+
+En resum, a partir del model de dades multiresolució descrit en aquest capítol per una banda es poden estudiar quin efecte té una configuració determinada de paràmetres i per altra banda es poden dissenyar sistemes de gestió de bases de dades assegurant que implementen el model i per tant que tenen el funcionament desitjat.
+
+
+
+
+
+
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:

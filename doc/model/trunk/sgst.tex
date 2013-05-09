@@ -1,15 +1,25 @@
 
 \chapter{Model SGST}
+\label{cap:model:sgst}
 
 
-En aquests capítols es defineixen els objectes que ens permeten modelar l'estructura de les dades.
+En aquest capítol es defineix un model dels sistemes de gestió de
+bases de dades per a sèries temporals (SGST). Aquest model
+s'estructura en dos objectes principals, mesures i sèries temporals,
+els quals tenen un atribut de temps que requereix un tractament
+adequat. El model es dissenya en dues parts.
 
-Dos models estructurals:
+\begin{itemize}
+\item Primer, es defineix el model d'estructura de les dades, és a
+  dir, la forma que prenen les mesures i les sèries temporals.  
+\item Segon, es defineix el model d'operacions sobre les dades, és a
+  dir, els operadors bàsics que permeten modelar el comportament i la
+  manipulació de les sèries temporals.
+\end{itemize}
 
-* Hi ha un model pels SGST (TSMS) que inclou mesura i sèries temporals.
-
-* Hi ha un model pels SGSTM (MTSMS) que té buffer, discs i mtsdb, els quals inclouen el model de sèrie temporal del SGST.
-
+Les sèries temporals tenen una naturalesa específica, deguda a
+l'atribut temps, que permet tractar-les com a funció contínua. Aquesta
+tipologia s'expressa més clarament al final del capítol.
 
 
 
@@ -236,11 +246,10 @@ indefinides presents.
 
 Les sèries temporals són seqüències de mesures ordenades en el temps.
 Tradicionalment s'anomenen sèries temporals tot i que també s'anomenen
-seqüències temporals, per exemple a \cite{last:hetland}. \todo{les sèries temporals són mesures del mateix fenomen}
-\todo{Observe that, because measures in
-S are of the same phenomena, the type of S values is
-homogeneous.
-}
+seqüències temporals, per exemple a \cite{last:hetland}.  Les sèries
+temporals són mesures del mateix fenomen i com a conseqüència el tipus
+dels valors de les sèries temporals és homogeni.
+
 
 \begin{definition}[Sèrie temporal]
   \label{def:serie_temporal}
@@ -266,6 +275,9 @@ Per ser un conjunt, les sèries temporals tenen mesura de cardinalitat.
 A continuació atenem a les possibles formes d'una sèrie
 temporal.
 
+La forma bàsica d'una sèrie temporal és la de parelles de temps i
+valor a la qual anomenem forma canònica.
+
 \begin{definition}[Forma canònica]
   Sigui $S = \{ m_0, m_1 , \dotsc, m_k \}$ una sèrie temporal,
   s'escriu com $S =  \{
@@ -274,6 +286,10 @@ temporal.
   forma l'anomenem canònica.
 \end{definition}
 
+
+Les sèries temporals poden mesurar alhora més d'un fenomen quan
+aquests comparteixen els instants de temps de mesura. Aquestes sèries
+temporals tenen forma de sèrie temporal multivaluada.
 
 \begin{definition}[Sèrie temporal multivaluada]
   Anomenem sèrie temporal multivaluada a una sèrie temporal que té més
@@ -295,6 +311,9 @@ el multivalor és rellevant per treballar-hi o perquè el resultat és
 una sèrie temporals multivaluada. 
 
 
+
+Hi ha una forma no habitual de les sèries temporals que es dóna quan
+tenen dos atributs de temps i a la qual anomenem forma doble.
 
 \begin{definition}[Sèrie temporal doble]
   Anomenem sèrie temporal doble a una sèrie temporal que té dos
@@ -356,6 +375,8 @@ temporal segons les formes que tinguin.
 % Com a relació seguint el concepte de possibles
 % representacions proposat per \textcite[cap.~5]{date:introduction} ?
 % i les formes normals de les relacions [Date]?
+
+
 
 \begin{definition}[Representació canònica]
   Sigui $S = \{ m_0, m_1 , \dotsc, m_k \}$ una sèrie temporal amb
@@ -642,9 +663,9 @@ diferent.
 
 \paragraph{Exemple 4} \emph{Valors vectors}.  Sèrie temporal $S_4$ on
 el temps pertany a $\bar{\mathbb{R}}$ i el valor pertany a
-$\bar{\mathbb{R}}^3$; és a dir és un vector. Conté el valor $(1,2,3)$
-en el temps $2$, el valor $(3,4,5)$ en el temps $4$ i el valor
-$(1,2,3)$ en el temps $6$.
+$\bar{\mathbb{R}}^3$; és a dir és un vector representat amb un
+tuple. Conté el valor $(1,2,3)$ en el temps $2$, el valor $(3,4,5)$ en
+el temps $4$ i el valor $(1,2,3)$ en el temps $6$.
 
 De manera simplificada s'escriu com $S_4 = \{ (2,(1,2,3)),
 (3,(3,4,5)), (6,(1,2,3)) \}$ i es visualitza com a taula i com a
@@ -680,67 +701,72 @@ gràfic a la \autoref{fig:model:serietemporal:vector}.
   \label{fig:model:serietemporal:vector}
 \end{figure}
 
-\todo{}
-NO! confondre-la amb una sèrie temporal multivaluada. El domini d'unes
-són vectors i el d'altres són relacions d'una sol tuple en els que es
-pot operar cada atribut per separat. En els vectors de forma general
-no es poden operar cada component per separat. Cal fixar-se que la
-diferència és semàntica: si considerem que mesurem vectors o atributs diferents.
-
-el gràfic d'un vector seria $R^n$ en canvi el gràfic d'una multivaluada seria un multigràfic
-a més un vector és $R^n$ però una multivaluada vull que sigui de diferents tipus $R\times C \times Bool$
 
 
+S'observa que una sèrie temporal amb valors vectors és diferent d'una
+sèrie temporal multivaluada. El domini de la primera són vectors i el
+de la segona són relacions d'un sol tuple en els que es pot operar
+cada atribut per separat. En els vectors de forma general no es poden
+operar cada component per separat sinó que formen una unitat
+semàntica. Aquesta diferència de significat prové de si es considera
+que es mesuren vectors o atributs diferents, el qual s'observa en la
+visualització: el gràfic d'un vector és un espai $R^n$ en canvi el
+gràfic d'una sèrie temporal multivaluada és un multigràfic, un gràfic
+per a cada atribut.
 
-\paragraph{Exemple 5} \emph{Valors relació}. \label{par:model:exemple-relvalues}
-Sèrie temporal $S_3$ on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una sèrie temporal del mateix format que en l'exemple 1. Conté les tuples de $S_1$ com a valors en el temps 1 i 2. 
 
-De manera simplificada s'escriu com
-$S_3 =  \{ (1,\{ (5,1), (7,3), (10,1) \}), 
-(2,\{ (5,1),$ $(7,3),$ $(10,1) \}) \}$
-i es visualitza com a taula a la \autoref{fig:model:serietemporal:serietemporal}.
 
-\todo{notar que en la forma multivaluada canònica ja s'ha vist una relació amb valors relació}
+
+
+\paragraph{Exemple 5} \emph{Valors sèrie
+  temporal}. \label{par:model:exemple-relvalues} Sèrie temporal $S_5$
+on el temps pertany a $\bar{\mathbb{R}}$ i el valor és una sèrie
+temporal del mateix format que en l'exemple 1. Conté els tuples de
+$S_1$ com a valors en el temps $1$ i $2$.
+
+De manera simplificada s'escriu com $S_5 = \{ (1,\{ (2,1), (3,3),
+(6,1) \}), (2,\{ (2,1),$ $(3,3),$ $(6,1) \}) \}$ i es visualitza com a
+taula a la \autoref{fig:model:serietemporal:serietemporal}.
+
 
 \begin{figure}[tp]
   \centering
   \begin{tabular}{|c|c|}
-    \multicolumn{2}{c}{$S_3$} \\ \hline
+    \multicolumn{2}{c}{$S_5$} \\ \hline
     $t$  & $v$ \\ \hline
     1 &   
        \begin{tabular}{|c|c|}
          \hline
          $t$  & $v$ \\ \hline
-         5  & 1 \\
-         7  & 3 \\
-         10 & 1 \\ \hline
+         2  & 1 \\
+         3  & 3 \\
+         6  & 1 \\ \hline
        \end{tabular} \\ \hline
     2 & 
        \begin{tabular}{|c|c|}
          \hline
          $t$  & $v$ \\ \hline
-         5  & 1 \\
-         7  & 3 \\
-         10 & 1 \\ \hline
+         2  & 1 \\
+         3  & 3 \\
+         6  & 1 \\ \hline
        \end{tabular} \\ \hline
   \end{tabular}
   \caption{Taula d'una sèrie temporal amb valors sèrie temporal}
   \label{fig:model:serietemporal:serietemporal}
 \end{figure}
 
+S'observa que la capçalera de $S_5$ és $\{t:\bar{\mathbb{R}},v:
+\{t:\bar{\mathbb{R}},v:\bar{\mathbb{R}}\}\}$. És a dir, el valor és
+una altra relació, com es descriu per \textcite[sec.\
+5.3]{date:introduction}, a on el temps i el valor pertanyen a
+$\bar{\mathbb{R}}$. Per tant, el valor de $S_5$ és de tipus sèrie
+temporal amb valors reals. Tot i així, aquest és un valor especial i
+si es desplega la relació s'obté una sèrie temporal doble amb
+capçalera $\{t^1,t^2,v\}$.
 
-S'observa que la capçalera de $S3$ és $\{temps:\bar{\mathbb{R}},valor:
-relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}\}$ \parencite[sec.\ 5.3]{date:introduction}. És a dir, el valor és de tipus relació que es defineix amb la capçalera de la relació on el temps i el valor pertanyen a $\bar{\mathbb{R}}$. Per tant, el valor de $S3$ és de tipus sèrie temporal amb valors reals. Cal insistir que \emph{tots} el valors de $S3$ han de pertànyer al mateix domini \parencite[sec.\ 5.4]{date:introduction}, el qual és $relacio\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}$.
-
-
-\todo{S'ha de mirar a [Date] com es treballen les formes normals amb
-  restriccions} En aquesta relació no es pot aplicar el mateix que a
-l'exemple 2 de formes normals ja que hi ha una restricció de $S_3\{t\}$
-única i cada subsèrie també la té.  Així doncs no seria correcte
-desplegar-la $S^b_3 = \{ (1,5,1), (1,7,3), (1,10,1), (2,5,1),
-(2,7,3),(2,10,1)\}$ ja que no es compleix la unicitat de $S^b_3 \{t\}$; en tot cas s'hauria de canviar la restricció a $S^b_3 \{t^1,t^2\}$
-
-
+% Cal insistir que \emph{tots} el valors de $S_5$ han de pertànyer al
+% mateix domini \parencite[sec.\ 5.4]{date:introduction}, el qual és
+% $\{temps:\bar{\mathbb{R}},valor:\bar{\mathbb{R}}\}$.
 
 
 
