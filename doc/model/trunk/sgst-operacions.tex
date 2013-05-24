@@ -34,17 +34,37 @@ partir de l'àlgebra de
 conjunts \parencite[cap.~6]{date:introduction}. En aquest apartat
 apliquem el mateix estudi per al model de SGST. Tot i així de manera
 simplificada, a les definicions no es descriuen les sèries temporals
-com a relacions amb capçaleres sinó que s'escriuen només els conjunts
-de valors. 
+com a relacions amb capçaleres sinó que se n'escriuen només els
+conjunts de valors. Seguint el model de \citeauthor{date:introduction}
+es poden estendre les definicions i introduir el model complet de
+relacions.
 
 
 
 
+\subsubsection{Pertinença i inclusió}
 
-\subsubsection{Pertinença}
+La pertinença determina si un element pertany a un conjunt.  Sigui
+$S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m$ una mesura, es
+defineix de la mateixa manera que en els conjunts la pertinença de la
+mesura a la sèrie temporal $m \in S$. Atenent a l'atribut de temps, es
+defineix la pertinença temporal d'una mesura a una sèrie temporal.
+\begin{definition}[Pertinença temporal]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m=(t,v)$ una
+  mesura.  Direm que la mesura pertany temporalment a la sèrie
+  temporal $m \inst S$ si i només si $\exists m_a \in S : T(m) =
+  T(m_a)$.
+\end{definition}
 
 
-$ m \in S_1$
+La inclusió determina si tots els elements d'un conjunt pertanyen a un
+altre conjunt. Siguin $S_1=\{m_0^1,\ldots,m_k^1\}$ i
+$S_2=\{m_0^2,\ldots,m_l^2\}$ dues sèries temporals, la primera sèrie
+temporal està inclosa en la segona $S_1 \subseteq S_2$ si $\forall m
+\in S_1: m \in S_2$. Aleshores, $S_1$ és una subsèrie temporal de
+$S_2$. Aquesta definició d'inclusió determina un ordre parcial entre
+les sèries temporals.
+
 
 
 \subsubsection{Màxim i suprem}
@@ -89,97 +109,202 @@ respectivament.
 
 \subsubsection{Unió}
 
-Per a poder unir dos conjunts relació, $A \cup B$, cal que tots dos
-tinguin la mateixa estructura; és a dir, en termes de SGBDR cal que
-$A$ i $B$ tinguin la mateixa capçalera.
+La unió de dos conjunts és un conjunt que conté tots els elements
+d'ambdós conjunts.  Per a poder unir dos conjunts amb estructura de
+relació, $A \cup B$, cal que tots dos tinguin la mateixa estructura;
+és a dir, en termes de SGBDR cal que $A$ i $B$ tinguin la mateixa
+capçalera.
 
+Per tal que l'operació d'unió de conjunts sigui vàlida per a les
+sèries temporals cal, a més, tenir en compte quan dues sèries
+temporals tenen mesures en el mateix instant de temps. En cas
+d'utilitzar l'operació d'unió de conjunts la sèrie temporal resultant
+no compliria amb la definició \ref{def:serie_temporal} ja que
+contindria mesures amb temps repetits. Com a conseqüència, es
+defineixen dues operacions d'unió per a les sèries temporals que
+resolen la restricció del temps de forma diferent.
 
-Per tal que l'operació d'unió de conjunts sigui vàlida per les sèries
-temporals cal tenir en compte quan dues sèries temporals tenen mesures
-en el mateix instant de temps. En cas d'utilitzar l'operació d'unió de
-conjunts la sèrie temporal resultant no compliria amb la definició
-\ref{def:serie_temporal} ja que contindria mesures amb temps
-repetits. Com a conseqüència, es defineix l'operació d'unió per les
-sèries temporals.
-
-
-En primer lloc, es defineix la unió exclusiva de dues sèries temporals.  La
-unió exclusiva és la unió de dues sèries temporals sense tenir en
-compte les mesures que tenen el mateix instant de temps.
-
-\begin{definition}[unió exclusiva]
+En primer lloc, es defineix la unió de dues sèries temporals que
+escull les mesures del primer operand en cas de mesures repetides.
+\begin{definition}[unió]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la unió exclusiva de les dues
-  sèries temporals $S_1 \text{unió}^x S_2$ és una sèrie temporal
-  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures no repetides de $S_1$
-  i de $S_2$: $S_1 \text{unió}^x S_2 = \{ (t^1,v^1) \in S_1 | \forall
-  (t^2,v^2)\in S_1 : t^2 \neq t^1 \} \cup \{ (t^2,v^2) \in S_2 |
-  \forall (t^1,v^1)\in S_1 : t^1 \neq t^2 \}$.
+  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues
+  sèries temporals $S_1 \cup S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
+  $S_2$ no repetides: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2
+  | m^2 \notinst S_1 \}$.
 \end{definition}
 
-Propietats de la unió exclusiva de sèries temporals:
+Propietats de la unió de sèries temporals:
+\begin{itemize}
+\item La dimensió $k$ de la sèrie temporal resultant està fitada a
+  $k_1 \leq k \leq k_1 + k_2$. 
+\item No commutativa. En general
+  $S_1\cup S_2 \neq S_2\cup S_1$ tot i que sí que es compleix
+  l'equivalència respecte al cardinal $|S_1 \cup S_2| = |S_2\cup S_1|$.
+\end{itemize}
+
+En segon lloc, es defineix la unió temporal de dues sèries temporals
+que és la unió sense tenir en compte les mesures que tenen el mateix
+instant de temps i diferent valor.
+\begin{definition}[unió temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió temporal de les dues
+  sèries temporals $S_1 \cupt S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté les mesures de $S_1$ i de $S_2$ excloent
+  les que només comparteixen el temps: $S_1 \cupt S_2 = \{ m^1 \in S_1
+  \vee m^2 \in S_2 | m^1 \notinst S_2 \vee m^1 \in S_2, m^2 \notinst
+  S_1 \}$.
+\end{definition}
+
+
+Propietats de la unió temporal:
 \begin{itemize}
 \item Commutativa
 \end{itemize}
 
 
-En segon lloc, es defineix la unió de dues sèries temporals que escull
-les mesures del primer operand en cas de mesures repetides.
 
-\begin{definition}[unió]
+\subsubsection{Diferència}
+
+La diferència de dos conjunts és un conjunt que conté tots els
+elements del primer conjunt que no pertanyen al segon.  Per a poder
+restar dos conjunts amb estructura de relació, $A - B$, cal que
+tots dos tinguin la mateixa estructura; és a dir, en termes de SGBDR
+cal que $A$ i $B$ tinguin la mateixa capçalera.
+
+En la definició de l'operació de diferència cal tenir en compte les
+dues pertinences possibles.
+
+En primer lloc, es defineix la diferència atenent a la pertinença
+estricta de conjunts. És a dir s'aplica la diferència de
+conjunts a les sèries temporals.
+\begin{definition}[diferència]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
-  temporals $S_1 \text{unió} S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
-  m_k\}$ que conté totes les mesures de $S_1$ i les mesures de $S_2$
-  no repetides: $S_1 \text{unió} S_2 = S_1 \cup (S_1 \text{unió}^x S_2)$. 
-
+  m_{k_2}^2\}$ dues sèries temporals, la diferència de les dues
+  sèries temporals $S_1 - S_2$ és una sèrie temporal $S=\{m_0,
+  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ que no pertanyen a
+  $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin S_2  \}$.
 \end{definition}
 
-Propietats de la unió:
+En segon lloc, es defineix la diferència atenent a la pertinença
+temporal.
+\begin{definition}[diferència temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència temporal de les
+  dues sèries temporals $S_1 -^t S_2$ és una sèrie temporal
+  $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de $S_1$ que no
+  pertanyen temporalment a $S_2$: $S_1 -^t S_2 = \{ m \in S_1 | m
+  \notinst S_2 \}$.
+\end{definition}
 
-\begin{itemize}
-\item La dimensió $k$ de la sèrie temporal resultant està fitada a
-  $k_1 \leq k \leq k_1 + k_2$. Nota: a la definició, la dimensió $k$ és
-  proporcional al cardinal $|S_1\cup S_2| = k+1$.
-\item La unió de sèries temporals no és commutativa. En general
-  $S_1\cup S_2 \neq S_2\cup S_1$ tot i que sí que es compleix
-  l'equivalència respecte al cardinal $|S_1\cup S_2| = |S_2\cup S_1|$.
-\end{itemize}
 
 
 
 \subsubsection{Intersecció}
 
-Per tal que l'operació d'intersecció de conjunts sigui vàlida per les sèries
-temporals cal tenir en compte quan dues sèries temporals tenen mesures
-en el mateix instant de temps.
+La intersecció de dos conjunts és un conjunt que conté els elements
+comuns als dos conjunts.  Per a poder intersecar dos conjunts amb estructura
+de relació, $A \cap B$, cal que tots dos tinguin la mateixa
+estructura; és a dir, en termes de SGBDR cal que $A$ i $B$ tinguin la
+mateixa capçalera.
 
+En la definició de l'operació d'intersecció cal tenir en compte les
+dues pertinences possibles.
+
+En primer lloc, es defineix la diferència atenent a la pertinença
+estricta de conjunts. És a dir s'aplica l'operació d'intersecció de
+conjunts.
 \begin{definition}[intersecció]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la intersecció de les dues
   sèries temporals $S_1 \cap S_2$ és una sèrie temporal $S=\{m_0,
   \dotsc, m_k\}$ que conté les mesures de $S_1$ repetides a $S_2$:
-  $S_1 \cap S_2 = \{ m^1 = (t^1,v^1) \in S_1 | \exists (t^2,v^2)\in
-  S_2 : t^1 = t^2\}$.
+  $S_1 \cap S_2 = \{ m \in S_1 | m \in S_2 \}$.
 \end{definition}
 
+En segon lloc, es defineix la intersecció atenent a la pertinença
+temporal tenint en compte quan dues sèries temporals tenen mesures en
+el mateix instant de temps però de valor diferent.
+\begin{definition}[intersecció temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la intersecció temporal de les
+  dues sèries temporals $S_1 \capt S_2$ és una sèrie temporal
+  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ repetides
+  temporalment a $S_2$: $S_1 \capt S_2 = \{ m \in S_1 | m \inst S_2
+  \}$.
+\end{definition}
 
-\subsubsection{Diferència}
+Propietats de la intersecció:
+\begin{itemize}
+\item La intersecció és commutativa però la intersecció temporal no és
+  commutativa.
+\item A partir de la diferència es pot definir la intersecció: $S_1
+  \cap S_2 \equiv S_1 - (S_1 - S_2)$.
+\end{itemize}
 
-A partir de la unió i la intersecció es pot definir la diferència.
+
+\subsubsection{Diferència simètrica}
+
+La diferència simètrica de dos conjunts és un conjunt que conté els
+elements no comuns dels dos conjunts. La diferència simètrica de dos
+conjunts $A \ominus B$ es defineix a partir de la diferència i la
+unió:
+\begin{align*}
+A \ominus B  & \equiv (A-B)\cup(B-A)\\
+             & \equiv (A\cup B)-(A\cap B)  \\
+A \ominus B  & \subseteq A\cup B
+\end{align*}
+
+Seguint aquestes propietats es defineixen dues diferències
+simètriques: una a partir de la diferència i la unió de sèries
+temporals i una altra a partir de la diferència temporal i la unió
+temporal.  Per tal que l'operació de diferència simètrica sigui vàlida
+per a les sèries temporals cal tenir en compte quan dues sèries
+temporals tenen mesures en el mateix instant de temps.
+
+En primer lloc, es defineix la diferència simètrica excloent les
+mesures amb el mateix temps però de valor diferent.
+\begin{definition}[diferència simètrica]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència simètrica de les
+  dues sèries temporals $S_1 \ominus S_2$ és una sèrie temporal
+  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ o
+  exclusivament les de $S_2$: $S_1 \ominus S_2 = \{ m^1 \in S_1 \vee
+  m^2 \in S_2 | m^1 \notinst S_2, m^2 \notin S_1 \}$.
+\end{definition}
+
+En segon lloc, es defineix la diferència simètrica temporal excloent les
+mesures amb el mateix temps.
+\begin{definition}[diferència simètrica temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència simètrica de les
+  dues sèries temporals $S_1 \ominus S_2$ és una sèrie temporal
+  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ o
+  exclusivament les de $S_2$: $S_1 \ominus S_2 = \{ m^1 \in S_1 \vee
+  m^2 \in S_2 | m^1 \notinst S_2, m^2 \notinst S_1 \}$.
+\end{definition}
 
 
 
 \subsubsection{Projecció}
 
+La projecció és una operació dels SGBDR que selecciona uns atributs
+determinats d'un conjunt. Es pot aplicar la projecció a les sèries
+temporals.
 
-Es pot aplicar la projecció relacional.
+
+
+
+
 
 
 \subsubsection{Selecció}
 
+La selecció és una operació dels SGBDR que selecciona uns tuples
+determinats d'un conjunt. Es pot aplicar la selecció a les sèries
+temporals.
 
-Es pot aplicar la selecció relacional.
 
 
 
