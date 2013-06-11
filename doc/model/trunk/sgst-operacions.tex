@@ -22,6 +22,7 @@ elaborar-ne de més complexes.
 
 
 
+
 \subsection{Bàsiques de conjunts}
 
 En el model estructural de SGST hem definit les sèries temporals
@@ -38,7 +39,6 @@ com a relacions amb capçaleres sinó que se n'escriuen només els
 conjunts de valors. Seguint el model de \citeauthor{date:introduction}
 es poden estendre les definicions i introduir el model complet de
 relacions.
-
 
 
 
@@ -90,7 +90,7 @@ canvi, el suprem i l'ínfim estan definits per qualsevol
 sèrie temporal tal com passa amb el conjunt estès de nombres reals,
 \cite{cantrell:extendedreal}.  
 
-\begin{definition}[Suprem i ínfim]
+\begin{definition}[Suprem i ínfim]\label{def:sgst:sup}\label{def:sgst:inf}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
   mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
   $n=\max(S)$ en cas que el màxim estigui definit o
@@ -291,10 +291,12 @@ mesures amb el mateix temps.
 
 La projecció és una operació dels SGBDR que selecciona uns atributs
 determinats d'un conjunt. Es pot aplicar la projecció a les sèries
-temporals.
+temporals de la mateixa manera que als
+SGBDR \parencite{date:introduction}. 
 
-
-
+Sigui $S =\{m_0, \dotsc, m_k\}$ una sèrie temporal i $A=\{a_0, \dotsc,
+a_n\}$ un conjunt de noms d'atributs, la projecció de $S$ en $A$
+s'escriu com $S\{a_0, \dotsc, a_n\}$.
 
 
 
@@ -303,9 +305,24 @@ temporals.
 
 La selecció és una operació dels SGBDR que selecciona uns tuples
 determinats d'un conjunt. Es pot aplicar la selecció a les sèries
-temporals.
+temporals de la mateixa manera que als
+SGBDR \parencite{date:introduction}. 
+
+Sigui $S =\{m_0, \dotsc, m_k\}$ una sèrie temporal, $a_1$ i $a_2$ dos
+noms d'atributs que pertanyen a $S$, i $a_1 \Theta a_2$ una expressió
+booleana sobre $a_1$ i $a_2$, la selecció de $S$ per l'expressió
+booleana s'escriu com $S \where a_1 \Theta a_2$.
 
 
+\subsubsection{Reanomena}
+
+El reanomena és una operació dels SGBDR que canvia el nom dels
+atributs. Es pot aplicar el reanomena les sèries temporals de la
+mateixa manera que als SGBDR \parencite{date:introduction}.
+
+Sigui $S =\{m_0, \dotsc, m_k\}$ una sèrie temporal, $a$ un nom
+d'atribut que pertany a $S$ i $b$ un que no hi pertany, el reanomenat
+de $a$ per $b$ s'escriu com $S \rename a \as b$.
 
 
 
@@ -313,232 +330,245 @@ temporals.
 
 \subsubsection{Producte i fusió}
 
+El producte cartesià de dos conjunts és un conjunt que conté totes les
+parelles possibles d'elements d'ambdós conjunts.  Per a poder
+multiplicar dos conjunts amb estructura de relació, $A \times B$, en
+termes de SGBDR cal que $A$ i $B$ no tinguin en comú noms d'atributs.
+En els SGBDR, a diferència del producte de conjunts, el conjunt
+resultant no és un conjunt de parells de tuples sinó un conjunt de
+tuples.
 
-Per a fer el producte de dos conjunts relació, $A \times B$, cal que
-tots dos tinguin diferent capçalera. A diferència del producte de
-conjunts, la relació resultant no és un conjunt de parells de tuples
-sinó un conjunt de tuples. 
-
-
-Definim el producte de dues sèries temporals, les qual en forma
-canònica tinguin els mateixos atributs $t$ i $v$, com una sèrie
-temporal amb atributs $t_1$, $v_1$, $t_2$ i $v_2$.
+\todo{} Definim el producte de dues sèries temporals, les qual en
+forma canònica tinguin els atributs $t$ i $v$, com una sèrie temporal
+amb atributs $t_1$, $v_1$, $t_2$ i $v_2$. Així doncs, per a sèries
+temporals el producte resulta en una sèrie temporals amb dos atributs
+de temps. Per aquest fet l'anomenem sèrie temporal doble
+(v.\ \autoref{def:sgst:st-doble}).
 \begin{definition}[producte]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, el producte de les dues sèries
-  temporals $S_1 \text{ producte } S_2$ és una sèrie temporal $S=\{m_0, \dotsc,
-  m_k\}$ que conté la unió de totes les parelles de mesures de $S_1$ i
-  $S_2$: $S_1 \text{ producte } S_2 = \{ (t_1,v_1,t_2,v_2) | (t_1,v_1) \in S_1
-  \wedge (t_2,v_2) \in S_2 \}$
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica, el producte de
+  les dues sèries temporals $S_1 \times S_2$ és una sèrie temporal
+  doble $S=\{m_0, \dotsc, m_k\}$ que conté la unió de totes les
+  parelles de mesures de $S_1$ i $S_2$: $S_1 \times S_2 = \{
+  (t_1,v_1,t_2,v_2) | (t_1,v_1) \in S_1 \wedge (t_2,v_2) \in S_2 \}$
 \end{definition}
 
 Propietats del producte:
 \begin{itemize}
-\item No commutatiu
 \item El cardinal resultant és $|S|=k_1k_2$
 \item El grau resultant és $4$
 \end{itemize}
 
 
-Per a sèries temporals, el producte resulta en una sèrie temporals amb
-dos atributs de temps. Per aquest fet l'anomenem sèrie temporal doble.
+
+La fusió de dos conjunts és un conjunt que conté les parelles
+d'elements d'ambdós conjunts que tenen el mateix valor per als
+atributs comuns.  La fusió de dos conjunts amb estructura de relació,
+$A \join B$, es defineix com una selecció sobre el
+producte \parencite{date:introduction}.
 
 
-
-La fusió de dos conjunts relació, $A \text{ join } B$, es defineix com
-una selecció sobre el producte $A \times B$. Per a les sèries
-temporals, definim la fusió com la selecció dels temps iguals sobre la
-sèrie temporal doble resultant del producte. El resultat de la fusió
-és una sèrie temporal multivaluada.
+Per a les sèries temporals, definim la fusió com la selecció per les
+parelles que tenen el mateix atribut de temps en la sèrie temporal
+doble resultant del producte. El resultat de la fusió és una sèrie
+temporal multivaluada.
 \begin{definition}[fusió]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la fusió de les dues sèries
-  temporals $S_1 \text{ fusió } S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que selecciona del producte de $S_1$ amb $S_2$ les
-  mesures dobles amb temps iguals: $S_1 \text{ fusió } S_2 = \{
-  (t,v_1,v_2) | (t_1,v_1,t_2,v_2) \in \text{producte}(S_1,S_2),
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica, la fusió de
+  les dues sèries temporals $S_1 \join S_2$ és una sèrie temporal
+  multivaluada $S=\{m_0, \dotsc, m_k\}$ que selecciona del producte de
+  $S_1$ amb $S_2$ les mesures dobles amb temps iguals: $S_1 \join S_2
+  = \{ (t,v_1,v_2) | (t_1,v_1,t_2,v_2) \in S_1\times S_2 \wedge
   t=t_1=t_2 \}$.
 \end{definition}
 
 
 Propietats de la fusió:
 \begin{itemize}
-\item No commutativa si els atributs originals no tenen nom?
 \item El cardinal resultant és $|S|\leq\min(k_1,k_2)$
-\item El grau resultant és $2$ (en forma canònica).
 \end{itemize}
 
 
 
-\subsubsection{Reanomena}
-
-Es pot aplicar el reanomena relacional. 
 
 
 
 
+\subsubsection{Computacionals: mapa, agregat i plec}
 
+Per a poder operar amb els conjunts, a més de l'àlgebra definida fins
+ara, es necessiten operadors amb funcionalitats computacionals; és a
+dir, operadors que calculin amb els valors continguts en els conjunts. 
 
-\subsubsection{Map i fold}
+En els SGBDR els operadors computacionals bàsics són \emph{extend},
+\emph{aggregate} i \emph{summarize} \parencite{date:introduction}.
+Per a les sèries temporals definim operacions equivalents a les dues
+primeres de la manera amb que habitualment s'utilitzen per als
+conjunts. La tercera, el \emph{summarize}, és una operació creada a
+partir de les altres dues que s'utilitza per a sintetitzar per grups i
+per tant en les sèries temporals no té sentit perquè l'atribut temps
+d'una sèrie temporal no pot tenir instants repetits i per tant no se'n
+poden fer grups d'instants compartits.
+% No obstant, es pot aplicar el \emph{summarize} per a l'atribut de
+% valors: summarize S per S {v} add ...  però això ja no mapa a una
+% sèrie temporal.
 
+% De l'operador \emph{aggregate} dels SGBDR definit per
+% \textcite{date:introduction} cal tenir en compte que en defineix
+% dues vessants. Per una banda, defineix els \emph{aggregate operator
+% invocation} que retornen valors escalars. Per altra banda, defineix
+% els \emph{aggregate operator invocation} que serveixen per a
+% treballar amb el \emph{summarize}.
 
-* map equivalent a extend
-
-* fold equivalent a aggregate operator \todo{potser dir-li agregador}
-
-* mapfold equivalent a un aggregate operator general, que retorna conjunts \todo{potser dir-li fold}
-
-* En sèries temporals no té sentit el summarize perquè l'atribut temps no pot tenir valors repetits i per tant no se'n poden fer grups. Tot i així es pot aplicat summarizes per agrupar per valors: summarize S per S {v} add ...
-però això ja no mapa a una sèrie temporal.
-
-
-summarize, to (resumir; sintetitzar; sumaritzar)
-
-Reduir un conjunt de dades per mitjà d'estadístics.
-
-
-
-\begin{align*}
-  \text{map}:& S \times f \longrightarrow S' = \{\forall m\in S : f(m) \}, \\
-             & \text{a on } f: m \mapsto m' 
-\end{align*}
-
-
-
-Sigui $f$ una funció de dues mesures 
-\[
-f: m_i \times m \longrightarrow m' 
-\]
-
-\begin{align*}
-  \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
-               =& f(\dots(f(f(f(m_i,m_0),m_1),m_2)\dots),m_k), \\
-               & \text{a on } f: m_a \times m_b \mapsto m'
-\end{align*}
-
-Noteu que $\text{fold}(\{\},m_i,f) \mapsto m_i$ 
-
-Més compactament descrit amb
-\begin{align*}
-  \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
-  & \begin{cases}
-    m_i & \text{si} |S|=0, \\
-    \text{fold}(S_1,f(m_i,m_1),f) & \text{altrament}
-  \end{cases}:\\
-  & m_1 \in S, S_1 = S - \{m_1\}
-\end{align*}
-
-
-
-Faltaria un OrderFold equivalent a l'OrderBy, sigui $o$ una funció que treu una mesura d'una sèrie temporal
-\[
-o: S \longrightarrow m'
-\]
-
-
-\begin{align*}
-  \text{OrderFold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \times o \longrightarrow m'= \\
-  & \begin{cases}
-    m_i & \text{si} |S|=0, \\
-    \text{OrderFold}(S_1,f(m_i,m_1),f,o) & \text{altrament}
-  \end{cases}:\\
-  & m_1 = o(S), S_1 = S - \{m_1\}
-\end{align*}
-
-L'OrderFold és important quan la funció $f$ no és associativa ni
-commutativa ja que llavors l'ordre dels càlculs importa.  De fet un
-fold és un OrderFold amb $o=aleatori(S)$.
-
-
-
-Podem fer una funció més general?
-
-
-Sigui $f$ una funció de dues sèries temporals
-\[
-f: S_i \times S \longrightarrow S' 
-\]
-
-\begin{align*}
-  \text{mapfoldaleatori}: & S \times S_i \times f \longrightarrow m'= \\
-               =& f(\dots(f(f(f(S_i,S_0),S_1),S_2)\dots),S_k), \\
-               & \text{a on } S_0 = \{m_0\}, \dotsc , S_k=\{m_k\} 
-\end{align*}
-
-i definint una funció $o$ per a l'ordre
-\[
-o: S \longrightarrow m' 
-\]
-
-\begin{align*}
-  \text{mapfold}: & S \times S_i \times f \times o \longrightarrow S'= \\
-  &= \begin{cases}
-    S_i & \text{si} |S|=0, \\
-    \text{OrderFold}(S_1,f(S_i,\{m_1\}),f,o) & \text{altrament}
-  \end{cases}:\\
-  & m_1 = o(S), S_1 = S - \{m_1\}
-\end{align*}
+Així doncs, a continuació es defineix l'operador mapa (\emph{map}) com
+a equivalent a l'\emph{extend}, l'operador agregat (\emph{aggregate})
+com a equivalent a l'\emph{aggregate} i l'operador plec (\emph{fold})
+com una forma més general de calcular recursivament amb les mesures
+que l'\emph{aggregate}.
 
 
 
 
-Propietats d'operacions mapfold:\todo{comprovar}
+L'operació de mapatge aplica una funció a cada element del conjunt.
+\begin{definition}[mapa]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal i $f$ una funció
+  sobre una mesura a on $f:m\mapsto m'$, el mapa de $f$ a $S$ és una
+  sèrie temporal $S'=\{m_0', \dotsc, m_k'\}$ amb la funció aplicada a
+  cada mesura: $\map(S,f) = \{\forall m\in S : f(m) \}$.
+\end{definition}
+
+
+L'operació d'agregació agrupa en una mesura els elements del conjunt
+segons un criteri, per exemple estadístics.
+\begin{definition}[agregat]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $m_i$ una mesura
+  i $f$ una funció de dues mesures a on $f: m_a \times m_b \mapsto
+  m_r$, l'agregat de $S$ segons $f$ amb valor inicial $m_i$ és una
+  mesura $m' = (t',v')$ amb l'agrupament de les mesures seguint el
+  criteri de la funció: $\agg(S,m_i,f) = f(\dots(
+  f(f(f(m_i,m_0),m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
+\end{definition}
+
+% Més compactament descrit amb
+% \begin{align*}
+%   \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
+%   & \begin{cases}
+%     m_i & \text{si} |S|=0, \\
+%     \text{fold}(S_1,f(m_i,m_1),f) & \text{altrament}
+%   \end{cases}\\
+%   \text{ a on } & m_1 \in S, S_1 = S - \{m_1\}
+% \end{align*}
+
+
+L'operació de plegament combina recursivament els elements del conjunt
+segons un criteri.
+\begin{definition}[plec]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ i $S_i=\{m_{i0}, \dotsc, m_{ik}\}$
+  dues sèries temporals i $f$ una funció de dues sèries temporals a on
+  $f: S_a \times S_b \mapsto S_r$, el plec de $S$ segons $f$ amb valor
+  inicial $S_i$ és una sèrie temporal $S'= \{m_0', \dotsc, m_k'\}$ amb
+  l'agrupament de les mesures seguint el criteri de la funció:
+  $\fold(S,S_i,f) = f(\dots( f(f(f(S_i,S_0),S_1),\allowbreak S_2
+  )\dots),\allowbreak S_k)$ a on $S_0 = \{m_0\}, \dotsc ,
+  S_k=\{m_k\}$.
+\end{definition}
+
+
+Les operacions d'agregació i plegament tal com s'han definit es
+realitzen en ordre aleatori de mesures. Segons el criteri que
+s'utilitzi, l'ordre és important i per tant cal una operació que
+computi tenint-lo en compte. A tal efecte, a continuació s'amplia la
+funció de plegament. Per a la funció d'agregació es pot aplicar el
+mateix concepte d'ordre.
+\begin{definition}[plec amb ordre]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ i $S_i=\{m_{i0}, \dotsc, m_{ik}\}$
+  dues sèries temporals, $f$ una funció de dues sèries temporals a on
+  $f: S_a \times S_b \mapsto S_r$ i $o$ una funció que treu una mesura
+  d'una sèrie temporal a on $o: S_c \mapsto m_c$, el plec de $S$
+  segons $f$ amb valor inicial $S_i$ i ordre $o$ és una sèrie temporal
+  $S'= \{m_0', \dotsc, m_k'\}$ amb l'agrupament de les mesures seguint
+  el criteri i l'ordre de les funcions: $\fold(S,S_i,f,o) =
+  \begin{cases}
+    S_i & \text{si } |S|=0, \\
+    \fold(S_o,f(S_i,\{m_o\}),f,o) & \text{altrament}
+  \end{cases}$ a on $m_o = o(S)$ i $S_o = S - \{m_o\}$.
+\end{definition}
+
+El plec amb ordre és necessari quan la funció $f$ no és associativa ni
+commutativa perquè llavors l'ordre dels càlculs importa. Es pot
+observar que el plec sense ordre és un plec amb ordre aleatori:
+$\fold(S,S_i,f)\equiv \fold(S,S_i,f,o)$ a on $o=\text{aleatori}(S)$.
+De manera semblant $\agg(S,m_i,f)\equiv \agg(S,m_i,f,o)$ a on
+$o=\text{aleatori}(S)$.
+
+
+
+Propietats d'operacions de plegament:
 \begin{itemize}
-\item mapfold:$S \times \{\} \times f \mapsto \{\}$ 
+\item El plec d'una sèrie temporal buida és la sèrie inicial; $\fold:
+  \{\} \times f \times S_i \mapsto S_i$.
 
-\item mapfold:$\{\} \times S_i \times f \mapsto S_i$ 
+\item El plec per una funció que sempre retorni la sèrie inicial és la
+  sèrie inicial; $\fold: S \times S_i \times f \mapsto S_i$ a on
+  $f=\map([S\times S_i],(t,v,t^i,v^i)\mapsto(t^i,v^i))$.
 
-\item mapfold:$S \times S_i \times
-  \map([S_a\times S_b],(t^1,v^1,t^2,v^2)\mapsto(t^1,v^1)) \mapsto S_i$
-
-\item mapfold:$S \times S_i \times \map([S_a\times
-  S_b],(t^1,v^1,t^2,v^2)\mapsto(t^2,v^2)) \mapsto S'$ a on $|S'|=1$
-
-\item Totes les fold es poden implementar com a mapfold$(S,\{m_i\},
-  \{m_a \times m_b\} \mapsto \{m'\})$
-
-\item Totes les map es poden implementar com a mapfold$(\{(0,0)\},S,
-  \{m_a\} \times  \{\} \mapsto \{m'\})$.
+\item El plec per una funció que sempre retorni la sèrie original és
+  una sèrie amb una sola mesura; $\fold: S \times S_i \times f \mapsto
+  S'$ a on $f=\map([S\times S_i],(t,v,t^i,v^i)\mapsto(t,v))$ i
+  $|S'|=1$.
 
 
-\item La funció unió en la mapfold permet fer la identitat:  $S \equiv
-  \text{mapfold}(S,\{\},(S_i,S_1) \mapsto S_i \cup S_1)$.
+\item La funció d'unió en el plegament permet fer la identitat, $S
+  \equiv \fold(S,\{\},(S_i,S_1) \mapsto S_i \cup S_1)$.
 
-\item Les map es poden implementar com a fold? $\text{map}(S,f) \equiv
-  \text{fold}(S,(0,0),f')$ a on $f': (t^i,v^i,t,v) \mapsto \{f(t,v)\} \cup S_i$. Sí, però les fold haurien de saber treballar amb S en comptes de m.
+
+\item Els mapes es poden implementar com a plecs; $\map(S,f) \ equiv
+  \fold(S,\{\},f')$ a on $f': \{m_a\} \times S_i \mapsto \{f(m_a)\}
+  \cup S_i$.
+
+\item Els agregats es poden implementar com a plecs; $\agg(S,m_i,f) \
+  equiv \fold(S,\{m_i\},f')$ a on $f': \{m_a\} \times \{m_i\} \mapsto
+  \{f(m_a,m_i)\}$.
 
 \end{itemize}
 
 
+\paragraph{Exemples} Definicions de funcions d'exemple a partir de les
+operacions computacionals.
 
-Exemple d'operacions map:
+Exemple d'operacions de mapatge:
 \begin{itemize}
-\item $\text{igual}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,v))$
-\item $\text{intercanvia}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(v,t))$
+\item $\text{identitat}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,v))$
+\item $\text{intercanvi}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(v,t))$
 \item $\text{translació}: S \times \delta \mapsto S'$ a on $S'=
   \map(S,(t,v)\mapsto(t+\delta,v))$
-\item $\text{pes}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,t*v))$
+\item $\text{t$\times$v}: S \mapsto S'$ a on $S'= \map(S,(t,v)\mapsto(t,t\cdot v))$
 \item $\text{tpredecessors}_{v1}: S \mapsto S'$ a on $S'= \map(S,(t,v)
-  \mapsto (t,T(\ant_S(m)))$ \todo{ant no definit encara}
+  \mapsto (t,T(\ant_S(m)))$, usant l'operació predecessor de la
+  \autoref{def:sgst:ant}
 \item $\text{vpredecessors}: S \mapsto S'$ a on $S'= \map(S,(t,v)
-  \mapsto (t,V(\ant_S(m)))$
+  \mapsto (t,V(\ant_S(m)))$, usant l'operació predecessor de la
+  \autoref{def:sgst:ant}
 \end{itemize}
 
-Exemple d'operacions fold:
+Exemple d'operacions d'agregació:
 \begin{itemize}
 \item $\text{cardinal}: S \mapsto m'$ a on $m'=
-  \fold(S,(0,0),(t^1,v^1)\times(t^2,v^2)\mapsto(t^2,v^2+1)$
+  \agg(S,(0,0),(t,v)\times(t^i,v^i)\mapsto(t^i,v^i+1)$
 \item $\text{sumaV}: S \mapsto m'$ a on $m'=
-  \fold(S,(0,0),(t^1,v^1)\times(t^2,v^2)\mapsto(t^1,v^1+v^2))$
-\item $\text{sup}: S \times m \mapsto m'$ a on $m'=
-  \fold(S,(-\infty,\infty),(t^1,v^1)\times(t^2,v^2)\mapsto [(t^1,v^1)
-  \text{ if } t^2 < t^1 \text{ else } (t^2,v^2) ])$
+  \agg(S,(0,0),(t,v)\times(t^i,v^i)\mapsto(t,v+v^i))$
+\item $\text{sup}: S \mapsto m'$ a on $m'=
+  \agg(S,(-\infty,\infty),(t,v)\times(t^i,v^i)\mapsto [(t^i,v^i)
+  \text{ if } t < t^i \text{ else } (t,v) ])$, implementant l'operació
+  suprem de la \autoref{def:sgst:sup} a partir de l'agregació
 \item $\text{antM}: S \times m \mapsto m'$ a on $m'=
   \fold(S,(-\infty,\infty),(t^1,v^1)\times(t^2,v^2)\mapsto [(t^1,v^1)
-  \text{ if } t^2 < t^1 < T(m) \text{ else } (t^2,v^2) ])$
+  \text{ if } t^2 < t^1 < T(m) \text{ else } (t^2,v^2) ])$,
+  implementant l'operació predecessor de la \autoref{def:sgst:ant} a
+  partir de l'agregació \todo{}
 \end{itemize}
 
-
+\todo{}
 Exemple d'operacions mapfold:
 \begin{itemize}
 \item $\text{tpredecessors}_{v2}: S \mapsto S'$ a on $S'=
@@ -547,6 +577,8 @@ Exemple d'operacions mapfold:
   S^2],(t^1,v^1,t^2,v^2)\mapsto (t^1,v^2) \text{ if } v^1<t^2<t^1
   \text{ else } (t^1,v^1))$
 \end{itemize}
+
+
 
 
 \subsection{Operadors de valors per dues sèries temporals}
@@ -620,7 +652,8 @@ També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, 
 defineix el concepte de mesura següent i mesura anterior en una
 seqüència.
 
-\begin{definition}[Successor i predecessor]
+\begin{definition}[Successor i
+  predecessor]\label{def:sgst:seg}\label{def:sgst:ant}
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
   mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
   com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
