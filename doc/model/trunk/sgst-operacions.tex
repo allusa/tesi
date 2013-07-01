@@ -917,7 +917,7 @@ temporal de dues sèries temporals ajunta parelles de mesures
 seleccionant el mateix atribut de temps en ambdues sèries temporals.
 
 
-\begin{definition}[junció temporal]
+\begin{definition}[junció temporal]\label{def:sgst:joint}
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ una
   funció de representació, la junció temporal de les dues sèries
@@ -939,17 +939,27 @@ Propietats de la junció temporal:
 
 
 
-\todo{}
 També es defineix l'operació de semijunció temporal que és una junció
 no commutativa a on la primera sèrie temporal marca el vector de temps
-de fusió,
+de fusió.
 
-\todo{}
-Semifusió de dues sèries temporals $S_1 \text{ semifusió } S_2$, a on la primera sèrie temporal marca el vector de temps de fusió, 
-\[
-S_1 \text{ semifusió } S_2 = S_1 \text{ fusió } S_2[S_1\{t\}]^r
-\]
+\begin{definition}[semijunció temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ una
+  funció de representació, la semijunció temporal de les dues sèries
+  temporals amb representació $r$, $S_1 \semijoin^r S_2$, és una sèrie
+  temporal multivaluada $S=\{m_0, \dotsc, m_{k_1}\}$ que ajunta les
+  mesures de la primera sèrie temporal a les mesures de la segona
+  segons la funció de representació; $S_1 \semijoin^r S_2 = S_1
+  \join^r S_2[S_1\{t\}]^r$.
+\end{definition}
 
+
+Propietats de la semijunció temporal:
+\begin{itemize}
+\item El cardinal resultant és $|S'| = k_1$.
+\item No és commutativa.
+\end{itemize}
 
 
 
