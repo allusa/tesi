@@ -1,0 +1,113 @@
+%--------------------
+% document principal
+%--------------------
+% cal compilar amb `pdflatex main.tex`
+%--------------------
+\documentclass[paper=a4,parskip=half,
+fontsize=11pt, %%format web
+]{scrartcl}
+%%%%BCOR12mm  factor de correcció per enquadernació en rústica
+%%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
+%------------- capçalera ----------------------
+\input{capçalera.default}
+\bibliography{bibliografia}
+\ExecuteBibliographyOptions{
+%  annotation=true
+%backref=true, 
+urldate=long, abbreviate=false,%%format web 
+% isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true %%format en paper
+}
+\bibitemsep 1mm
+%\bibitemsep 0cm \biblabelsep 0cm \bibhang 0cm \renewcommand{\bibfont}{\normalfont\footnotesize}
+%---------- Mode esborrany --------------------
+%\includeonly{resum}
+\usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
+%\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
+%%\renewcommand{\headrulewidth}{0pt}
+%----------------------------------------------
+
+%------------- format -------------------------
+%%ús coma decimal sense espais:  2{,}5
+\newtheorem{definition}{Definició}
+\def\figureautorefname{figura} %ús: \autoref{}
+\def\tableautorefname{taula} %ús: \autoref{}
+
+
+\usepackage{bold-extra}
+%\usepackage{gantt}
+\usepackage{pgfgantt}
+%-------------- dades --------------------------
+\hypersetup{
+    pdftitle={Disseny i modelització d'un sistema de gestió multiresolució de sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    pdfcreator={DiPSE--UPC},
+    pdfsubject={Progrés pla de treball 2013},
+    pdfkeywords={sèries temporals; sistemes de gestió de bases de dades; SGBD per a sèries temporals; SGST; dades temporals; adquisició de dades},
+    pdflang=ca,
+}
+\title{Disseny i modelització d'un sistema de gestió 
+  multiresolució de sèries temporals}
+\author{Aleix Llusà Serra}
+%----------------------------------------------
+
+
+
+
+
+\begin{document}
+
+\include{portada}
+
+\input{objectius}
+
+\input{planificacio}
+
+
+%------- Bibliografia ------
+%\cleardoublepage
+%\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+\pdfbookmark{\bibname}{bookmark:bibliografia}
+\printbibliography
+%----------------------------------------------
+
+
+\appendix
+
+\include{direccio}
+
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Model d'un sistema de gestió multiresolució de sèries temporals.
+%
+% Copyright (C) 2011-2013 Aleix Llusà Serra.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
