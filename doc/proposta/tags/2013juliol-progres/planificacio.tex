@@ -1,264 +1,305 @@
 \section{Tasques realitzades}
 
-
-
-\todo{s'ha obtingut beca AGAUR}
-
-
-
-\subsection{Planificació 2012}
-
-
 Per tal d'assolir els objectius detallats a la secció
-\ref{sec:objectius}, a continuació es proposen les tasques a
-realitzar.  A la figura \ref{fig:pla:futur} es detalla el pla de
-treball amb temps estimat.
+\ref{sec:objectius}, el juliol de 2012 es va proposar un seguit de
+tasques a realitzar.  A la figura \ref{fig:pla:actual} es detalla
+l'estat d'aquell pla de treball a dia d'avui.
 
 
-
-
-
-\begin{enumerate}
-
-
-\item Estudi d'aplicacions de les sèries temporals. Per a assolir
-  l'objectiu~1 estudiarem recerca actual de sèries temporals.
-  Consultarem articles i llibres que tinguin les sèries temporals com
-  a temàtica principal. També cercarem l'existència de programari que
-  tingui en els seus objectius el tractament de sèries temporals.
-
-\item Estudi del model relacional. Per a l'objectiu~2 estudiarem el
-  model relacional com a referent pels models de SGBD. Ens basarem en
-  l'estudi dels llibres de
-  \textcite{date:introduction,date06,date:dictionary}. Usarem
-  \emph{rel} \parencite{rel} com a implementació de referència ja que
-  incorpora el llenguatge \emph{Tutorial D}, el qual és utilitzat per
-  Date en els seus exemples.
-
-\item Estudi de la gestió d'intervals temporals. Per a l'objectiu~3
-  estudiarem la recerca que ha conduit a incorporar els interval
-  temporals en els SGBD per a gestionar històrics. Ens basarem en
-  l'estudi que relaciona el model relacional amb els intervals
-  temporals de \textcite{date02:_tempor_data_relat_model}.
-
-\item Disseny d'un model de SGBD per sèries temporals. Per a la
-  primera part de l'objectiu 4 dissenyarem un model per als SGBD de
-  sèries temporals formalitzat amb expressions algebraiques. A partir
-  de l'estudi de l'estat de l'art de les sèries temporals, observarem
-  les propietats interessants de ser modelitzades i les operacions que
-  precisen els SGBD per sèries temporals.
-
-\item Disseny d'un model de SGBD multiresolució per sèries
-  temporals. Per a la segona part de l'objectiu 4 dissenyarem un model
-  que contempli la multiresolució de les sèries temporals. Aquest
-  model utilitzarà propietats del model anterior per les sèries
-  temporals. La mulitresolució té l'objectiu d'emmagatzemar les sèries
-  temporals de forma compacta, així es preveu que alguns conceptes de la recerca
-  en \emph{data streams} poden prendre-hi sentit.
-
-\item Implementació de referència. Per a l'objectiu~5 s'implementaran
-  els models anteriors utilitzant un llenguatge de programació adequat
-  per a models, com per exemple \texttt{Python} o \texttt{Prolog}.  Es
-  prioritzarà la implementació correcte del model enfront a una
-  implementació que contempli un bon rendiment. 
-
-\item Experimentació amb dades. Per a complementar l'objectiu~5 es
-  provarà la implementació amb dades experimentals per alguna
-  aplicació concreta.
-
-\end{enumerate}
 
 \begin{figure}[tp]
   \centering
-%[xunitlength=0.8cm,fontsize=\small,titlefontsize=\small]
+  \scalebox{0.8}{
   \begin{ganttchart}[
     vgrid,
     x unit=0.8cm,
     today=6,
     today label=PRESENT,
     title label font=\small,
-    title height=1]
+    title height=1,
+    bar label font = \small,
+    bar/.style={draw=none, fill=black},
+    %incomplete/.style={fill=lightgray},
+    progress label text =,
+    ]
     {12}{12}
     \gantttitle{2012}{4}
     \gantttitle{2013}{4}
     \gantttitle{2014}{4} \\
     \gantttitlelist{1,...,4}{1}\gantttitlelist{1,...,4}{1}\gantttitlelist{1,...,4}{1} \\
 
-    \ganttmilestone[milestone/.style={fill=green}]{Proposta de tesi}{2} \\
+    \ganttmilestone{Proposta de tesi}{2} \\
 
     \ganttgroup{Estudi}{1}{4} \\
     \ganttbar[progress=100]{1. Aplicacions}{1}{2} \\
     \ganttbar{2. Model relacional}{1}{4} \\
     \ganttbar[progress=50]{3. Intervals temporals}{3}{4} \\
 
-    \ganttgroup{Disseny models}{5}{7} \\
-    \ganttbar{4. Sèries temporals}{5}{7} \\
-    \ganttbar{5. Multiresolució}{6}{7} \\
+    \ganttgroup[progress=66]{Disseny models}{5}{7} \\
+    \ganttbar[progress=75]{4. Sèries temporals}{5}{7} \\
+    \ganttbar[progress=75]{5. Multiresolució}{6}{7} \\
 
-    \ganttgroup{Experimentació}{8}{9} \\
-    \ganttbar{6. Implementació}{8}{9} \\
+    \ganttgroup[progress=0]{Experimentació}{8}{9} \\
+    \ganttbar[progress=0]{6. Implementació}{8}{9} \\
     \ganttlink{elem5}{elem9}
-    \ganttbar{7. Dades experimentals}{9}{9} \\
+    \ganttbar[progress=0]{7. Dades experimentals}{9}{9} \\
 
-    \ganttbar{8. Redacció memòria}{9}{10} \\
 
-    \ganttlinkedmilestone{Lectura de tesi}{10}
+
+    \ganttgroup[progress=20]{Redacció}{2}{10} \\
+
+    \ganttbar[progress=0]{8. Redacció memòria}{9}{10} \\
+    \ganttlinkedmilestone[milestone/.style={fill=lightgray}]{Lectura de tesi}{10} \\
+
+    \ganttbar[progress=100]{9. Redacció articles}{4}{4} \\
+    \ganttlinkedmilestone{Informe de recerca}{4} \\
+
+    \ganttmilestone{AIKED'13}{4.5}
   \end{ganttchart}
-  
-%\scalebox{0.8}{
-%\begin{ganttchart}%[xunitlength=0.8cm,fontsize=\small,titlefontsize=\small]{15}{12}
-  % \begin{ganttitle}
-  %   \numtitle{2012}{1}{2014}{4}
-  % \end{ganttitle}
-  % \begin{ganttitle}
-  %   \numtitle{1}{1}{4}{1}
-  %   \numtitle{1}{1}{4}{1}
-  %   \numtitle{1}{1}{4}{1}
-  % \end{ganttitle}
-
-  % \ganttmilestone[color=green]{Proposta de tesi}{2}
-
-  % \ganttgroup{Estudi}{0}{4}
-  % \ganttbar[color=green]{1. Aplicacions}{0}{2}
-  % \ganttbar[color=green]{2. Model relacional}{0}{4}
-  % \ganttbar{3. Intervals temporals}{2}{2}
-
-  % \ganttgroup{Disseny models}{4}{3}
-  % \ganttbar[color=green]{4. Sèries temporals}{4}{3}
-  % \ganttbar[color=green]{5. Multiresolució}{5}{2}
-  % \ganttbar[color=green]{5. Multiresolució}{7}{2}
-  % \ganttcon{7}{7}{7}{11}
-
-  % \ganttgroup{Experimentació}{7}{2}
-  % \ganttbar{6. Implementació}{7}{2}
-  % \ganttbar{7. Dades experimentals}{8}{1}
-
-  % \ganttbar{8. Redacció memòria}{8}{2}
-
-  % \ganttmilestonecon{Lectura de tesi}{10}
-
-%\end{ganttchart}
-%}
+  }
 \caption{Tasques completades del treball}
-\label{fig:pla:futur}
+\label{fig:pla:actual}
 \end{figure}
 
 
 
-\subsection{Treball realitzat}
+\begin{enumerate}
+
+\item Estudi d'aplicacions de les sèries temporals. Per a assolir
+  l'objectiu~1 s'ha estudiat recerca actual de sèries temporals.  S'ha
+  realitzat una tasca de recerca bibliogràfica i estudi dels treballs
+  existents en l'àmbit de la gestió i emmagatzemat de dades provinents
+  de sèries temporals. També s'ha cercat l'existència de programari
+  que tingui en els seus objectius el tractament de sèries
+  temporals. El resultat d'aquesta tasca es va reflectir a la proposta
+  de tesi \parencite{llusa12:ptd}. Anteriorment a la tesi de
+  màster \parencite{llusa11:tfm} també s'havia estudiat profundament
+  \emph{RRDtool} \parencite{rrdtool}, un sistema de gestió de bases de
+  dades (SGBD) específic per a sèries temporals.
 
 
-La tesi de màster \parencite{llusa11:tfm} va consistir en l'estudi de
-\emph{RRDtool} \parencite{rrdtool}, un sistema de gestió de bases de
-dades (SGBD) específic per a sèries temporals.
-%
-Fruit d'aquest estudi es va formalitzar el model de \emph{RRDtool} i es va
-dissenyar i implementar un prototip software que responia a la
-formalització.
-%
-Aquest treball va permetre concloure que:
-\begin{itemize}
-\item Els SGBD aplicats a sèries temporals tenen aspectes propis que
-  els converteixen en objecte d'estudi de \emph{per se}.
-\item El concepte de multiresolució és interessant en moltes
-  aplicacions reals, especialment quan existeixen restriccions d'espai
-  per emmagatzemar dades.
-\item El model proposat per a \emph{RDDtool} és susceptible de ser millorat
-  com a mínim en el següents aspectes:
-  \begin{itemize}
-  \item Generalització. El model que es va presentar estava fortament
-    lligat a \emph{RDDtool}. Generalitzar el model de forma que encabeixi
-    altres concepcions.
-  \item Incorporació d'operacions. El model presentat únicament feia
-    referència a les dades. Per completar el
-    model cal també considerar les operacions.
-  \item Contextualització. Cal interrelacionar i descriure el model el
-    context d'altres models existents per a SGBD. Específicament cal
-    comparar-lo amb el model relacional usat en els SGBD
-    convencionals.
-  \end{itemize}
-\item És convenient estudiar la feina feta per altres autors en
-  l'àmbit de l'emmagatzemat i gestió de dades provinents de sèries
+\item Estudi del model relacional. Per a l'objectiu~2 s'ha estudiat en
+  profunditat el model relacional, prenent-lo com a referent pels
+  models de SGBD. Atesa la preeminència d'aquest model en els SGBD
+  actuals, es va considerar imprescindible tenir-ne un bon coneixement
+  que permetés estudiar les seves deficiències per la gestió de sèries
+  temporals i en quina forma poden ser superades. Aquest estudi s'ha
+  utilitzat a l'objectiu~4 i ha servit per establir el punt de partida
+  del model de SGST i la referència de conceptes bàsics pels SGBD.
+
+
+\item Estudi de la gestió d'intervals temporals. Per a l'objectiu~3
+  s'ha estudiat la recerca que ha conduit a incorporar els interval
+  temporals en els SGBD per a gestionar històrics. Ens hem basat en
+  l'estudi que relaciona el model relacional amb els intervals
+  temporals de \textcite{date02:_tempor_data_relat_model}.  Aquest
+  estudi ha servit per a complementar l'estudi del model relacional,
+  ja que es detalla com es poden modelar els intervals temporals
+  prenent com a base els SGBD relacionals. Tot i així, en un principi
+  presenten molta diferència amb les propietats de les sèries
+  temporals i s'ha trobat més adequat deixar aquest estudi fins que
+  s'hagi acabat el disseny del model de SGST per aleshores poder-los
+  comparar entre ells quan tinguem més detall sobre la naturalesa de
+  les sèries temporals.
+
+
+
+\item Disseny d'un model de SGBD per sèries temporals (SGST). Per a la
+  primera part de l'objectiu 4 s'ha dissenyat un model per als SGBD de
+  sèries temporals formalitzat amb expressions algebraiques. Aquest
+  model, com ja s'ha dit, està fortament basat amb els conceptes de
+  SGBD que descriu el model relacional. A partir de l'estudi de
+  l'estat de l'art de les sèries temporals, hem observat que els SGBD
+  per sèries temporals precisen d'operacions de tres naturaleses
+  diferents: com a conjunts, com a seqüències i com a funció temporal.
+  Aquesta última ha comportat la planificació d'un estudi a part com
+  es detalla a les tasques futures.  Així, a excepció d'aquesta tasca
+  separada, el model de SGST s'ha descrit completament i actualment s'està
+  revisant.
+
+
+
+\item Disseny d'un model de SGBD multiresolució per sèries temporals
+  (SGSTM). Per a la segona part de l'objectiu 4 s'ha dissenyat un
+  model que contempla la multiresolució de les sèries
+  temporals. Aquest model s'ha descrit i actualment s'està refent per
+  a utilitzar operacions definides en el model anterior per les sèries
   temporals.
-\end{itemize}
 
-Arrel de la feina anterior, s'ha treballat en els següents aspectes:
+
+\item[9.] Redacció d'articles i informes. A partir de l'estudi fet a
+  la proposta de tesi, es va iniciar la redacció d'un informe de
+  recerca a on constés les mancances que observem que tenen els SGBD
+  per a les sèries temporals, les propietats i requisits que han de
+  complir i la idea bàsica de la nostra proposta d'un nou model
+  multiresolució per a sèries temporals. Para\l.lelament també es va
+  preparar un article per a congrés per tal de donar a conèixer de
+  forma resumida el model multiresolució que volem dissenyar. Aquestes
+  dues tasques han conclòs amb dues publicacions que es detallen a
+  l'apartat següent.
+
+\end{enumerate}
+
+
+\subsection{Publicacions realitzades}
+
 \begin{itemize}
-\item S'ha realitzat una tasca de recerca bibliogràfica i estudi dels
-  treballs existents en l'àmbit de la gestió i emmagatzemat de dades
-  provinents de sèries temporals. El resultat d'aquesta tasca s'ha
-  reflectit a la proposta de tesi \parencite{llusa12:ptd}.
-\item S'ha estudiat en profunditat el model relacional. Atesa la
-  preeminència d'aquest model en els SGBD actuals, s'ha considerat
-  imprescindible tenir-ne un bon coneixement que permetés estudiar les
-  seves deficiències per la gestió de sèries temporals i en quina
-  forma poden ser superades.
-\item S'està refent el model de SGBD per sèries temporals.  S'ha
-  dividit el model en dues parts ben diferenciades:
-  \begin{enumerate}
-  \item La primera és el model general. Aquest defineix la gestió de
-    sèries temporals enteses com a co\l.lecció de dades mesurades en
-    diferents instants de temps. Es basa en els conceptes de temps,
-    mesura i sèrie temporal.
-  \item La segona és el model de multiresolució. Aquest model explica
-    la forma d'emmagatzemar una sèrie temporal amb diferents
-    resolucions temporals.
-  \end{enumerate}
+
+\item Informe de recerca \parencite{llusa12:report} conjuntament amb
+  la Teresa Escobet-Canal i el Sebastià Vila-Marta, publicat el 17 de
+  desembre de 2012 al departament de Disseny i Programació de
+  Sistemes Electrònics de la Universitat Politècnica de Catalunya.
+
+
+\item Ponència a congrés \parencite{llusa13:aiked} conjuntament amb la
+  Teresa Escobet-Canal i el Sebastià Vila-Marta, realitzada al
+  ``International Conference on Artificial Intelligence, Knowledge
+  Engineering and Data Bases'' (AIKED '13) a Cambridge (UK) els dies
+  20--22 de febrer de 2013.
 \end{itemize}
 
 
 
-\subsection{Eines utilitzades}
 
-Eines informàtiques de programació:
+\section{Tasques futures}
 
-Eines de gestió de documentació: s'està fent la documentació a escriny.epsem.upc.edu/rrb
-
-
-
-
-
-\section{Nova planificació}
-
+Seguint el pla del juliol de 2012 queden tot un seguit de tasques a
+realitzar. A més, com a resultat del treball dut a terme fins ara, s'ha
+actualitzat alguns dels objectius detallats a la secció
+\ref{sec:objectius}.  A la figura \ref{fig:pla:futur} es detalla aquest
+pla de treball futur.
 
 \begin{figure}[tp]
 \centering
-% \scalebox{0.8}{
-% \begin{gantt}[xunitlength=0.8cm,fontsize=\small,titlefontsize=\small]{15}{12}
-%   \begin{ganttitle}
-%     \numtitle{2012}{1}{2014}{4}
-%   \end{ganttitle}
-%   \begin{ganttitle}
-%     \numtitle{1}{1}{4}{1}
-%     \numtitle{1}{1}{4}{1}
-%     \numtitle{1}{1}{4}{1}
-%   \end{ganttitle}
+  \scalebox{0.8}{
+  \begin{ganttchart}[
+    vgrid,
+    x unit=0.8cm,
+    today=6,
+    today label=PRESENT,
+    title label font=\small,
+    title height=1,
+    bar label font = \small,
+    bar/.style={draw=none, fill=black},
+    %incomplete/.style={fill=lightgray},
+    progress label text =,
+    ]
+    {12}{12}
+    \gantttitle{2012}{4}
+    \gantttitle{2013}{4}
+    \gantttitle{2014}{4} \\
+    \gantttitlelist{1,...,4}{1}\gantttitlelist{1,...,4}{1}\gantttitlelist{1,...,4}{1} \\
 
-%   \ganttmilestone{Proposta de tesi}{2}
+    \ganttmilestone{Proposta de tesi}{2} \\
 
-%   \ganttgroup{Estudi}{0}{4}
-%   \ganttbar{1. Aplicacions}{0}{2}
-%   \ganttbar{2. Model relacional}{0}{4}
-%   \ganttbar{3. Intervals temporals}{2}{2}
+    \ganttgroup{Estudi}{1}{4} \\
+    \ganttbar[progress=100]{1. Aplicacions}{1}{2} \\
+    \ganttbar{2. Model relacional}{1}{4} \\
+    \ganttbar[progress=50]{%3. Intervals temporals
+}{3}{4} 
+    \ganttbar[bar/.style={fill=white}]{3. Naturalesa ST}{7}{7} \\
 
-%   \ganttgroup{Disseny models}{4}{3}
-%   \ganttbar{4. Sèries temporals}{4}{3}
-%   \ganttbar{5. Multiresolució}{5}{2}
-%   \ganttcon{7}{7}{7}{11}
+    \ganttgroup[progress=66]{Disseny models}{5}{8} \\
+    \ganttbar[progress=75]{4. Sèries temporals}{5}{7} \\
+    \ganttbar[progress=75]{5. Multiresolució}{6}{7} \\
+    \ganttbar[bar/.style={fill=white}]{5.b Estructures}{8}{8} \\
 
-%   \ganttgroup{Experimentació}{7}{2}
-%   \ganttbar{6. Implementació}{7}{2}
-%   \ganttbar{7. Dades experimentals}{8}{1}
+    \ganttgroup[progress=0]{Experimentació}{8}{9} \\
+    \ganttbar[progress=0]{6. Implementació}{8}{9} \\
+    \ganttlink{elem8}{elem11}
+    \ganttbar[progress=0]{7. Dades experimentals}{9}{9} \\
 
-%   \ganttbar{8. Redacció memòria}{8}{2}
 
-%   \ganttmilestonecon{Lectura de tesi}{10}
 
-% \end{gantt}
-% }
+
+   \ganttgroup[progress=20]{Redacció}{2}{10} \\
+
+    \ganttbar[progress=0]{8. Redacció memòria}{9}{10} \\
+    \ganttlinkedmilestone[milestone/.style={fill=lightgray}]{Lectura de tesi}{10} \\
+
+    \ganttbar[progress=100]{9. Redacció articles}{4}{4} 
+    \ganttbar[bar/.style={fill=white}]{}{9}{9} \\
+
+    \ganttmilestone{Informe de recerca}{4} \\
+    \ganttlink{elem16}{elem18}
+
+    \ganttmilestone{AIKED'13}{4.5}
+  \end{ganttchart}
+  }
 \caption{Planificació del treball pendent}
 \label{fig:pla:futur}
 \end{figure}
+
+
+\begin{itemize}
+
+\item[3.] Durant el disseny del model de SGST s'ha vist que la
+  naturalesa com a funció temporal de les sèries temporals hi té un
+  paper important; és a dir que aleshores els operadors han de
+  treballar tenint en compte que una sèrie temporal és la
+  representació d'un funció contínua. Així doncs, cal estudiar més
+  profundament aquesta propietat de les sèries temporals conjuntament
+  amb les patologies que pot presentar. 
+
+
+\item[4.] Per al disseny del model de SGST queda, com ja s'ha dit,
+  incorporar-hi l'estudi i modelització del comportament que tenen com
+  a funció temporal. Tot i així, en el model estructural i
+  d'operacions de SGST s'ha pogut separar-ho i per tant el model s'ha
+  pogut completar independentment. Així doncs, es preveu que en el
+  model de SGST la funció temporal d'una sèrie temporal hi figuri com
+  un apartat separat en el qual també es descriuran altres patologies
+  que poden tenir les sèries temporals: regularitat del temps entre
+  mesures, forats de temps, etc.
+
+
+\item[5.b] Durant l'estudi de l'estat actual de les sèries temporals es va observar que alguns càlculs es resolen de formes especials. Això ha comportat la definició d'una tercera part en l'objectiu~4.
+
+\todo{}
+c) Avaluaci  de diferents estructures de SGSTM. El model de SGSTM s’hi poden
+fer modificacions o simplificacions per tal d’aconseguir diferents estructures.
+Per exemple bases de dades multiresoluci  que comparteixin informaci , que
+treballin amb flux de dades (data stream) o b que s’especialitzin per a un
+tipus determinat de sries temporals.
+
+
+La multiresolució té l'objectiu d'emmagatzemar
+  les sèries temporals de forma compacta, així es preveu que alguns
+  conceptes de la recerca en \emph{data streams} poden prendre-hi
+  sentit.
+
+
+
+
+\item[6.] Implementació de referència. Per a l'objectiu~5 s'implementaran
+  els models de SGST i SGSTM utilitzant un llenguatge de programació adequat
+  per a models, com per exemple \texttt{Python} o \texttt{Prolog}.  Es
+  prioritzarà la implementació correcte del model enfront a una
+  implementació que contempli un bon rendiment. 
+
+
+\item[7.] Experimentació amb dades. Per a complementar l'objectiu~5 es
+  provarà la implementació amb dades experimentals per alguna
+  aplicació concreta. \todo{}
+    La participació en el projecte NAPS(TEC2012-35571) afegeix l'objectiu~6 en el qual es vol  implementació en VHDL
+    També el suport del projecte i-Sense aporta dades que són sèries temporals i són candidates a experimentar amb elles.
+
+
+01/01/2013: Concessió del projecte d'investigació TEC2012-35571 Nuevas
+aplicaciones del principio superregenerativo a comunicaciones por
+radiofrecuencia (NASP). Investigador principal: Pere Palà Schönwälder. Final
+projecte 31/12/2015. Agraïments: "Subvencionado por el  Ministerio de Economía y Competitividad proyecto BIA2012****/FEDER".
+
+
+
+\item[9.] Redacció d'articles i informes. Un cop s'hagi completat el
+  disseny del model de SGBD per a sèries temporals, es pot presentar
+  com a article en l'àmbit de les bases de dades.  També en pot
+  resultar un article un cop s'hagi realitzat la implementació.
+
+
+\end{itemize}
+
 
 
 
@@ -266,3 +307,4 @@ Eines de gestió de documentació: s'està fent la documentació a escriny.epsem
 %%% mode: latex
 %%% TeX-master: "main"
 %%% End: 
+% LocalWords:  multiresolució
