@@ -1,138 +1,176 @@
 \section{Model d'operacions}
 
+En aquesta secció es defineixen els operadors que permeten modelar el
+comportament i la manipulació de les dades en el model de SGSTM.
 
-En aquesta secció es defineixen els operadors que permeten modelar el comportament i la manipulació de les dades.
+Per a treballar amb les sèries temporals multiresolució s'utilitzen
+els conceptes descrits al model d'operacions de SGST. El model de
+SGSTM es defineix a partir del model de SGST i per tant les operacions
+dels SGSTM també hi estan basades. Tot i així cal tenir en compte dues
+particularitats.
 
+Per una banda, el model de SGSTM treballa amb sèries temporals
+multiresolució. Així, es defineixen operadors que permeten extreure
+les sèries temporals emmagatzemades en aquestes bases de dades amb
+l'objectiu d'aplicar-hi posteriorment els operadors dels SGST.
 
-\subsection{Estructurals}
-
-\subsubsection{Buffer}
-
-
-Abans de consolidar, però, cal que la sèrie temporal contingui mesures. L'operació \emph{afegeix} permet afegir una mesura a un buffer.
-
-\begin{definition}
-  L'operació \emph{afegeix} afegeix una mesura a la sèrie temporal del buffer:
-  \[
-  \text{afegeix}: \text{Buffer} \times \text{Mesura} \longrightarrow \text{Buffer}
-  \]
-  \[
-   B \times m \longrightarrow B'= B \cup \{m\}
-   \]
-\end{definition}
-
-Cada cop que s'afegeix una mesura a un buffer es pot comprovar si el buffer ja és consolidable mitjançant un predicat que ens retorna un booleà: cert o fals. 
-
-\begin{definition}
-  Un buffer és consolidable quan el temps d'una mesura de la sèrie temporal és més gran que el proper instant de temps de consolidació:
-  \[
-  \text{consolidable?}: \text{Buffer} \longrightarrow \text{Booleà}
-  \]
-  Sigui $B=(S,\tau,\delta,f)$ un buffer i $m=\max(S)$ la mesura màxima, $B$ és consolidable si i només si $T(m) \geq \tau+\delta$
-\end{definition}
+Per altra banda, el model de SGSTM té una estructura específica que
+requereix ser manipulada coherentment. Així, es defineixen operadors
+que saben treballar amb aquesta estructura agrupats en dos grups.  El
+primer grup són els operadors requerits pel model estructural;
+operadors que són inseparables de l'estructura i són utilitzats en el
+procés d'emmagatzemar les mesures. El segon grup són els operadors
+necessaris per a manipular l'estructura; és a dir operadors que
+permeten fer canvis en l'esquema de la base de dades o consultar
+paràmetres de l'esquema actual.
 
 
-
-Propietats:
+En el disseny del model d'operacions següent es distingeixen tres
+grups d'operadors segons els casos anteriors:
 
 \begin{itemize}
-\item Les mesures habitualment s'insereixen ordenades en el temps,
-  sinó un cop duta a terme la consolidació les mesures inserides
-  desordenades poden no ser tingudes en compte.
+\item Estructurals: operadors requerits pel model estructural.
+\item Manipulació: operadors per a manipular l'esquema de multiresolució.
+\item Consultes: operadors per a extreure les sèries temporals.
+  emmagatzemades
 \end{itemize}
 
 
 
-\subsubsection{Consolidació}
 
-Quan un buffer és consolidable, es pot calcular una mesura de consolidació de la sèrie temporal per cada interval de temps consolidable. De manera simplificada, a cada consolidació només es té en compte l'interval que comença al darrer temps de consolidació del buffer. 
 
-Sigui $B=(S,\tau,\delta,f)$ un buffer consolidable, la mesura de consolidació de $B$ en l'interval de temps $i=[\tau,\tau+\delta]$ és $m'=(v,\tau+\delta)$ on $m'=f(S,i)$ i $f$ és un agregador d'atributs. L'operació \emph{consolida} permet consolidar la sèrie temporal del buffer calculant-ne la mesura de consolidació.
+\subsection{Estructurals}
+\label{sec:model:sgstm-estructurals}
 
-\begin{definition}
-  L'operació \emph{consolida} calcula la mesura de consolidació i treu
-  les mesures consolidades de la sèrie temporal del buffer, en
-  l'interval de consolidació actual:
-  \[
-  \text{consolida}: \text{Buffer} \longrightarrow \text{Buffer} \times \text{Mesura}
-  \]
-  \[
-  B=(S,\tau,\delta,f) \longrightarrow B' \times m'
-  \]
-  \[
-  B'= (S',\tau+\delta,\delta,f)
-  \]
-  \[
-  S' = S(\tau+\delta,\infty)
-  \]
-  \[
-  m' = f(S,[\tau,\tau+\delta]): f \text{ és un agregador d'atributs}
-  \]
+En el model estructural de SGSTM hem definit les sèries temporals
+multiresolució com un conjunt de subsèries resolució a les quals es
+van afegint mesures compactant-les i consolidant-les. En aquest
+apartat definim els operadors que permeten inserir mesures noves i
+consolidar-les al seu lloc corresponent en l'estructura.
+
+A continuació es descriuen els operadors associats a cada objecte del
+model de SGSTM.
+
+
+\subsubsection{Buffer}
+
+Els buffers reben les noves mesures i les consoliden a cada instant de
+consolidació. Així, tenen dos operadors associats: un per afegir noves
+mesures al buffer i un altre per consolidar-les.
+
+
+L'operació d'afegir una mesura al buffer consisteix en afegir-la a la
+sèrie temporal pendent de consolidar.
+\begin{definition}[Afegeix mesura al buffer]
+  Sigui $B=(S,\tau,\delta,f)$ un buffer i $m=(t,v)$ una mesura, la
+  inserció de la mesura al buffer $\addB(B,m)$ és un buffer
+  $B'=(S',\tau,\delta,f)$ amb la mesura afegida a la sèrie temporal
+  del buffer: $\addB(B,m) = (S',\tau,\delta,f)$ a on $S'=S\cup \{m\}$.
 \end{definition}
-\todo{$S'$ pot ser $S$ en el model, en tot cas fer una nota que en la implementació normalment es reduirà per no ocupar espai}
 
 
+L'operació de consolidació d'un buffer consisteix en compactar les
+mesures segons els intervals de consolidació i la funció d'agregació i
+a suprimir la part ja consolidada de la sèrie temporal.  Així doncs,
+la consolidació d'un buffer per cada interval de temps
+$i=[\tau,\tau+\delta]$ dóna com a resultat una mesura calculada en
+funció de l'agregador d'atributs i un nou buffer amb la sèrie temporal
+reduïda.
+\begin{definition}[Consolida el buffer]
+  Sigui $B=(S,\tau,\delta,f)$ un buffer, la consolidació del buffer
+  $\consB(B,m)$ en l'interval de temps $[\tau,\tau+\delta]$ és un
+  buffer $B'=(S',\tau',\delta,f)$, amb el nou instant de consolidació,
+  i la mesura $m'=(t',v')$ resultant de la consolidació: $\consB(B) =
+  (S',\tau+\delta',\delta,f) \times m'$ a on
+  $m'=f(S,[\tau,\tau+\delta])$ i $S'$ és el resultat d'eliminar les
+  dades històriques que no es necessiten més. 
+
+  \emph{Nota}: En el model teòric es pot donar $S'=S$ tot i que a les
+  implementacions normalment caldrà eliminar les dades ja no
+  necessàries per no ocupar espai amb per exemple $S'=
+  S[\tau+\delta,+\infty]$.
+\end{definition}
+
+De manera simplificada, hem definit que cada consolidació només
+s'aplica a l'interval de consolidació actual; així la consolidació
+total del buffer és l'aplicació successiva de l'operació de
+consolidació.
+
+Aquesta consolidació successiva requereix que les mesures s'insereixen
+al buffer ordenades en el temps, sinó un cop duta a terme la
+consolidació les mesures inserides desordenades poden no ser tingudes
+en compte. Si es duu a terme aquesta inserció ordenada, aleshores un
+buffer té l'estat de consolidable quan el temps d'una mesura de la
+sèrie temporal és més gran que el següent instant de temps de
+consolidació del buffer.
+\begin{definition}[Buffer consolidable]\label{def:model:buffer_consolidable}
+  Sigui $B=(S,\tau,\delta,f)$ un buffer, definim que $B$ és
+  consolidable si i només si $T(m) \geq \tau+\delta$ a on $m=\sup(S)$
+  és la mesura suprema de la sèrie temporal del buffer.
+\end{definition}
 
 
 
 \subsubsection{Disc}
 
-L'operació \emph{afegeix} permet afegir una mesura a un disc, controlant-ne el cardinal màxim.
+Els discs reben les mesures consolidades per a emmagatzemar-les de
+forma acotada. Així, tenen un operador associat que afegeix noves
+mesures al disc mantenint sota control el seu cardinal.
 
-\begin{definition}
-  L'operació \emph{afegeix} afegeix una mesura a la sèrie temporal del disc:
-  \[
-  \text{afegeix}: \text{Disc} \times \text{Mesura} \longrightarrow \text{Disc}
-  \]
-  \[
-  D=(S,k) \times m \longrightarrow D'= (S',k)
-  \]
-  \[
-  S' =  
+
+L'operació d'afegir una mesura al disc consisteix en afegir-la a la
+sèrie temporal i a eliminar la mesura mínima d'aquesta si se supera el
+cardinal permès.
+\begin{definition}[Afegeix mesura al disc]
+  Sigui $D=(S,k)$ un disc i $m=(t,v)$ una mesura, la inserció de la
+  mesura al disc $\addD(D,m)$ és un disc $D'=(S',k)$ amb la mesura
+  afegida a la sèrie temporal del disc mantenint el cardinal màxim:
+  $\addD(S,m) = (S',k)$ a on $S'=
   \begin{cases}
       S\cup\{m\} &\text{si }  |S|<k\\
-      (S-\{\min(S)\}) \cup \{m\} 
-    \end{cases}  \
-  \]
+      (S-\{\min(S)\}) \cup \{m\} &\text{altrament}
+    \end{cases}$.
 \end{definition}
 
 
 
 
+\subsubsection{Subsèrie resolució}
 
-\subsubsection{Disc resolució}
+Les subsèries resolució són l'aparellament d'un buffer amb un disc.
+Així tenen dos operadors associats, els quals treballen amb els
+operadors del buffer i del disc : un per afegir una mesura al buffer i
+un altre per consolidar el buffer i afegir la mesura resultant al disc
 
 
-Per altra banda, les operacions dels buffers i dels discs estan relacionades amb les operacions dels discs Round Robin. 
-
-L'operació \emph{afegeix} permet afegir una mesura a un disc Round Robin.
-
-\begin{definition}
-  L'operació \emph{afegeix} afegeix una mesura al buffer del disc Round Robin:
-  \[
-  \text{afegir}: \text{Disc Round Robin} \times \text{Mesura} \longrightarrow \text{Disc Round Robin}
-  \]
-  \[
-  R=(B,D) \times m \longrightarrow R'= (B',D)
-  \]
-  \[
-  B'= B \text{ afegeix } m
-  \]
-\end{definition}
-
-Cada cop que s'afegeix una mesura a un disc Round Robin es pot comprovar si ja és consolidable. 
-
-\begin{definition}
-  Un disc Round Robin és consolidable quan el seu buffer és consolidable:
-  \[
-  \text{consolidable?}: \text{Disc Round Robin} \longrightarrow \text{Booleà}
-  \]
-  Sigui $R=(B,D)$ un disc Round Robin, $R$ és consolidable si i només
-  si $B$ és consolidable.
+L'operació d'afegir una mesura a la subsèrie resolució consisteix en
+afegir-la al buffer.
+\begin{definition}[Afegeix mesura a la subsèrie resolució]
+  Sigui $R=(B,D)$ una subsèrie resolució i $m=(t,v)$ una mesura, la
+  inserció de la mesura a la subsèrie resolució $\addR(R,m)$ és una
+  subsèrie resolució $R'=(B',D)$ amb la mesura afegida al buffer:
+  $\addR(R,m) = (B',D)$ a on $B'=\addB=(B,m)$.
 \end{definition}
 
 
-Quan un disc Round Robin és consolidable, es pot consolidar amb l'operació \emph{consolida}. 
+L'operació de consolidar una subsèrie resolució consisteix en calcular
+una mesura de consolidació del buffer, en l'interval de consolidació
+actual, i desar-la al disc. Una subsèrie resolució és consolidable
+quan ho és el seu buffer.
+\begin{definition}[Consolida la subsèrie resolució]
+  Sigui $R=(B,D)$ una subsèrie resolució, la consolidació de la
+  subsèrie resolució $\consR(R)$ és una subsèrie resolució
+  $R'=(B',D')$ \todo{}
+\end{definition}
+
+
+
+% (ii) The consolidation of the resolution disc by consoli-
+% dating its buffer and adding the consolidation measure
+% to its disc, consolidateRD : R = (B, D) → R where
+% R = (B , D ) and (B , m ) = consolidateBuffer(B) and
+% D = addDisc(B, m ).
+
 
 \begin{definition}
   L'operació \emph{consolida} calcula una  mesura de consolidació del buffer, en
@@ -196,6 +234,227 @@ With reference to the operators, the add and consolidate in a multiresolution da
   \end{cases}\big\}
   \]
 \end{definition}
+
+
+
+
+
+
+
+\subsection{Manipulació}
+
+* Fusió d'esquemes de BDM
+
+* Canvis d'esquemes de BDM (afegir multivaluat, canvi de delta d'un disc,canvi de la k,...)
+
+* Estudiar Push o pull
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Estudis en l'esquema}
+
+Quin és el període de la sèrie temporal d'un disc?
+  \begin{gather*}
+    \text{periodeR}: R \longrightarrow \delta':\\
+    \delta'=
+    \begin{cases}
+      \delta_r &\text{si } S_D \text{ regular o temps real amb } \delta_r\\
+      \delta &\text{altrament}
+    \end{cases}
+  \end{gather*}
+  
+Quin és el l'interval temporal de la sèrie temporal d'un disc?
+  \begin{gather*}
+    \text{intervalR}: R \longrightarrow [T_0,T_f] :\\
+    T_0 = T(\min(S_D)),     T_f = T(\max(S_D))
+  \end{gather*}
+
+Quin és el lapse temporal d'un disc?
+  \begin{gather*}
+    \text{lapseR}: R \longrightarrow [T_0,T_f] :\\
+    T_0 = \tau - k\delta,  T_f = \tau
+  \end{gather*}
+
+Quina és la durada del lapse temporal d'un disc?
+  \begin{gather*}
+    \text{duradaR}: R \longrightarrow k\delta
+  \end{gather*}
+
+Nota sobre lapse i durada, donat un disc resolució la durada sempre és fixa i el lapse que cobreix té una certa variació que es correspon a $t_{actual}-\tau$.
+
+De fet sigui $[T_0,T_f] = lapseR(R)$ la  $\text{duradaR}\equiv T_f -T_0$
+\[
+    [T_0,T_f] = lapseR(R): T_f = \tau, T_0 = \tau - k\delta,: T_f-T_0 =\tau -( \tau - k\delta) =  k\delta \equiv \text{duradaR}
+\]
+
+Així doncs podem dir que un disc resolució ens cobreix un span temporal de  $\text{duradaR}(R)$. Es posiciona absolutament des de $\tau$ enrere. Això vol dir que tindrem un temps recent no cobert de $t_{actual}-\tau$, el qual habitualment com a màxim serà de $\delta$ ($t_{actual}-\tau \leq \delta$) i com a mínim de zero si consolidem la multiresolució periòdicament.
+
+
+
+
+Quin disc conté més resolució?
+  \begin{gather*}
+    \text{maxR}: R_1 \times R_2 \longrightarrow R_i' | d_i = \max(d_1,d_2) : \\
+    d_1 = periodeR(R_1), d_2 = periodeR(R_1)
+  \end{gather*}
+  
+
+
+
+
+
+\subsubsection{Canvis en l'esquema d'un disc resolució}
+
+
+Redueix o augmenta la mida d'un disc
+  \begin{gather*}
+    \text{CanviaK}: R \times k' \longrightarrow R': \\
+    R' = (S_B,S'_D,\delta,\tau,k',f) : \\
+    k_d = |S_D|:\\
+    S'_D = \begin{cases}
+      S_D         & \text{si } k' \geq k_d   \\
+      treuN(S_D,k_d-k')    & \text{altrament}
+    \end{cases}, \\
+    treuN: S \times n \mapsto S'=  
+    \begin{cases}
+      S                & \text{si } n=0   \\
+      treuN(S - \{\min(S)\},n-1)  & \text{altrament}
+    \end{cases}
+\end{gather*}
+
+
+Redueix o augmenta el pas de consolidació d'un disc (sense canviar la sèrie temporal emmagatzemada; ja s'anirà canviant quan es consolidin noves mesures)
+  \begin{gather*}
+    \text{Canvia}\delta: R \times \delta' \longrightarrow R': \\
+    R' = (S_B,S_D,\delta',\tau,k,f)
+  \end{gather*}
+
+
+Redueix o augmenta alhora el pas de consolidació i la mida d'un disc
+  \begin{gather*}
+    \text{CanviaK}\delta: R \times k' \times \delta' \longrightarrow R': \\
+    R' = (S_B,S_D',\delta',\tau,k',f): \\    
+    t = \{ \tau-n\delta' | n\in\mathbb{N},n<k' \} \\
+    S_D' = \text{seleccioResolucio}(S_D,t)
+  \end{gather*}
+
+
+
+
+Afegeix un multivalor per a emmagatzemar sèries temporals multivaluades
+  \begin{gather*}
+    \text{afegeixMultivalor}: R \longrightarrow R': \\
+    R' = (S'_{B},S'_{D},\delta,\tau,k,f): \\
+    S'_{B} = \text{map}(S_B,(t,v)\mapsto(t,v,\infty)), \\
+    S'_{D} = \text{map}(S_D,(t,v)\mapsto(t,v,\infty))
+  \end{gather*}\todo{s'ha de fer amb extends i les v han de poder tenir nom}
+
+
+
+
+\subsubsection{Canvis en l'esquema d'una sèrie temporal multiresolució}
+
+Aplicació de map a una BDM.
+\begin{gather*}
+  \text{map}: M \times f \longrightarrow M' = \{ f(R_0), \dotsc, f(R_k) \} :\\
+   \text{a on } f: R_a \mapsto R'
+ \end{gather*}
+ 
+Aplicació de fold a una BDM
+\begin{gather*}
+  \text{fold}: M \times M_i \times f \longrightarrow M' :\\
+  = f(\dots(f(f(f(M_i,R_0),R_1),R_2)\dots),R_k), \\
+   \text{a on } f: M_a \times R_b \mapsto M'
+\end{gather*}
+
+
+
+
+
+\subsubsection{Treball amb dues BDM}
+
+
+\paragraph{Unió de multiresolució}
+
+Cas típic:
+Mesuro una sèrie temporal. Durant un temps emmagatzemo valors a una
+base de dades i després els emmagatzemo a una altra base de dades. Al final vull unir les dues bases de dades.
+
+
+Unió de dos discs resolució que tenen el mateix $\delta$ i $f$ és un
+disc resolució que conté la unió de les sèries de cada un.  Sigui
+$R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
+$R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$
+  \begin{gather*}
+    \text{unioR}: R_1^* \times R_2^* \longrightarrow R': \\
+    R' = (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k_1+k_2,f), \\
+    S_{Di}, S_{Dj} | R_i = \text{maxR}(R_1,R_2), j \neq i:  \\
+    S'_B = \text{unio}(S_{B1},S_{B2})\\
+    S'_D = \text{unio}^r(S_{Di},S_{Dj})
+\end{gather*}
+
+També es pot unir dos discs resolució amb diferent $\delta$ i $f$,
+però llavors s'ha de determinar quins són els $\delta'$ i $f'$
+resultants.
+
+
+Com a relacions multiresolució, dues bases de dades multiresolució es
+poden unir si no intersecten en les claus $(\delta,f)$.  En cas que
+intersectin, podem definir la unió multiresolució com la unió que sap unir els discs resolució repetits.
+
+\begin{gather*}
+    \text{UnioM}: M_1 \times M_2 \longrightarrow M': \\
+    K_1 = \{(delta_1,f_1) \in M_1\},K_2 = \{(delta_2,f_2) \in M_2\}, \\
+    K_a = K_1 \cap K_2, K_u =  (K_1 \cup K_2) - K_a : \\
+    M_{u1}'= seleccio(M_1, (delta,f) \in K_u)\\
+    M_{u2}'= seleccio(M_2, (delta,f) \in K_u)\\
+    M_a = \{\forall R_1\in M_1,R_2\in M_2: unioR(R_1,R_2) |
+       (delta_1,f_1) = (delta_2,f_2) \} \\
+    M' =  M_{a} \cup  M'_{1}  \cup  M'_{2}     
+\end{gather*}
+
+
+
+
+
+
+\paragraph{Fusió de multiresolució}
+
+Tinc una sèrie temporal en una base de dades, i una altra sèrie temporal en una altra base de dades. Vull emmagatzemar-les totes dues en una mateixa base de dades amb una sèrie temporal multivaluada.
+
+
+Fusió de dos discs resolució que tenen el mateix $\delta$ i $f$.
+Sigui $R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
+$R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$
+  \begin{gather*}
+    \text{FusioR}: R_1^* \times R_2^* \longrightarrow R': \\
+    R' = (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k_1+k_2,f), \\
+    S'_B = \text{fusio}^r(S_{B1},S_{B2})\\
+    S'_D = \text{fusio}^r(S_{D1},S_{D2})
+\end{gather*}
+
+
+Fusió de dues bases de dades multiresolució
+\begin{gather*}
+    \text{FusioM}: M_1 \times M_2 \longrightarrow M': \\
+    K_1 = \{(delta_1,f_1) \in M_1\},K_2 = \{(delta_2,f_2) \in M_2\}, \\
+    K_a = K_1 \cap K_2, K_u =  (K_1 \cup K_2) - K_a : \\
+    M_{u1} =\text{afegeixMultivalor}(seleccio(M_1, (delta,f) \in K_u))\\
+    M_{u2} =\text{afegeixMultivalor}^{v0} (seleccio(M_2, (delta,f) \in K_u))\\
+    M_1 = seleccio(M_1, (delta,f) \in K_f) \\
+    M_2 = seleccio(M_2, (delta,f) \in K_f) \\
+    M_a = \{\forall R_1\in M_1,R_2\in M_2: fusioR(R_1,R_2) |
+       (delta_1,f_1) = (delta_2,f_2) \} \\
+    M' =  M_{a} \cup  M_{u1}  \cup  M_{u2}     
+\end{gather*}
+
 
 
 
@@ -289,218 +548,6 @@ temps.
 
 
 
-\subsection{Operacions sobre l'estructura}
-
-* Fusió d'esquemes de BDM
-
-* Canvis d'esquemes de BDM (afegir multivaluat, canvi de delta d'un disc,canvi de la k,...)
-
-* Estudiar Push o pull
-
-
-
-\subsubsection{Recorreguts en l'esquema}
-
-Aplicació de map a una BDM.
-\begin{gather*}
-  \text{map}: M \times f \longrightarrow M' = \{ f(R_0), \dotsc, f(R_k) \} :\\
-   \text{a on } f: R_a \mapsto R'
- \end{gather*}
- 
-Aplicació de fold a una BDM
-\begin{gather*}
-  \text{fold}: M \times M_i \times f \longrightarrow M' :\\
-  = f(\dots(f(f(f(M_i,R_0),R_1),R_2)\dots),R_k), \\
-   \text{a on } f: M_a \times R_b \mapsto M'
-\end{gather*}
-
-
-
-
-
-
-
-\subsubsection{Estudis en l'esquema}
-
-Quin és el període de la sèrie temporal d'un disc?
-  \begin{gather*}
-    \text{periodeR}: R \longrightarrow \delta':\\
-    \delta'=
-    \begin{cases}
-      \delta_r &\text{si } S_D \text{ regular o temps real amb } \delta_r\\
-      \delta &\text{altrament}
-    \end{cases}
-  \end{gather*}
-  
-Quin és el l'interval temporal de la sèrie temporal d'un disc?
-  \begin{gather*}
-    \text{intervalR}: R \longrightarrow [T_0,T_f] :\\
-    T_0 = T(\min(S_D)),     T_f = T(\max(S_D))
-  \end{gather*}
-
-Quin és el lapse temporal d'un disc?
-  \begin{gather*}
-    \text{lapseR}: R \longrightarrow [T_0,T_f] :\\
-    T_0 = \tau - k\delta,  T_f = \tau
-  \end{gather*}
-
-Quina és la durada del lapse temporal d'un disc?
-  \begin{gather*}
-    \text{duradaR}: R \longrightarrow k\delta
-  \end{gather*}
-
-Nota sobre lapse i durada, donat un disc resolució la durada sempre és fixa i el lapse que cobreix té una certa variació que es correspon a $t_{actual}-\tau$.
-
-De fet sigui $[T_0,T_f] = lapseR(R)$ la  $\text{duradaR}\equiv T_f -T_0$
-\[
-    [T_0,T_f] = lapseR(R): T_f = \tau, T_0 = \tau - k\delta,: T_f-T_0 =\tau -( \tau - k\delta) =  k\delta \equiv \text{duradaR}
-\]
-
-Així doncs podem dir que un disc resolució ens cobreix un span temporal de  $\text{duradaR}(R)$. Es posiciona absolutament des de $\tau$ enrere. Això vol dir que tindrem un temps recent no cobert de $t_{actual}-\tau$, el qual habitualment com a màxim serà de $\delta$ ($t_{actual}-\tau \leq \delta$) i com a mínim de zero si consolidem la multiresolució periòdicament.
-
-
-
-
-Quin disc conté més resolució?
-  \begin{gather*}
-    \text{maxR}: R_1 \times R_2 \longrightarrow R_i' | d_i = \max(d_1,d_2) : \\
-    d_1 = periodeR(R_1), d_2 = periodeR(R_1)
-  \end{gather*}
-  
-
-
-
-
-
-\subsubsection{Canvis en l'esquema}
-
-
-Redueix o augmenta la mida d'un disc
-  \begin{gather*}
-    \text{CanviaK}: R \times k' \longrightarrow R': \\
-    R' = (S_B,S'_D,\delta,\tau,k',f) : \\
-    k_d = |S_D|:\\
-    S'_D = \begin{cases}
-      S_D         & \text{si } k' \geq k_d   \\
-      treuN(S_D,k_d-k')    & \text{altrament}
-    \end{cases}, \\
-    treuN: S \times n \mapsto S'=  
-    \begin{cases}
-      S                & \text{si } n=0   \\
-      treuN(S - \{\min(S)\},n-1)  & \text{altrament}
-    \end{cases}
-\end{gather*}
-
-
-Redueix o augmenta el pas de consolidació d'un disc (sense canviar la sèrie temporal emmagatzemada; ja s'anirà canviant quan es consolidin noves mesures)
-  \begin{gather*}
-    \text{Canvia}\delta: R \times \delta' \longrightarrow R': \\
-    R' = (S_B,S_D,\delta',\tau,k,f)
-  \end{gather*}
-
-
-Redueix o augmenta alhora el pas de consolidació i la mida d'un disc
-  \begin{gather*}
-    \text{CanviaK}\delta: R \times k' \times \delta' \longrightarrow R': \\
-    R' = (S_B,S_D',\delta',\tau,k',f): \\    
-    t = \{ \tau-n\delta' | n\in\mathbb{N},n<k' \} \\
-    S_D' = \text{seleccioResolucio}(S_D,t)
-  \end{gather*}
-
-
-
-
-Afegeix un multivalor per a emmagatzemar sèries temporals multivaluades
-  \begin{gather*}
-    \text{afegeixMultivalor}: R \longrightarrow R': \\
-    R' = (S'_{B},S'_{D},\delta,\tau,k,f): \\
-    S'_{B} = \text{map}(S_B,(t,v)\mapsto(t,v,\infty)), \\
-    S'_{D} = \text{map}(S_D,(t,v)\mapsto(t,v,\infty))
-  \end{gather*}\todo{s'ha de fer amb extends i les v han de poder tenir nom}
-
-
-
-
-\subsubsection{Treball amb dues BDM}
-
-
-\paragraph{Unió de multiresolució}
-
-Cas típic:
-Mesuro una sèrie temporal. Durant un temps emmagatzemo valors a una
-base de dades i després els emmagatzemo a una altra base de dades. Al final vull unir les dues bases de dades.
-
-
-Unió de dos discs resolució que tenen el mateix $\delta$ i $f$ és un
-disc resolució que conté la unió de les sèries de cada un.  Sigui
-$R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
-$R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$
-  \begin{gather*}
-    \text{unioR}: R_1^* \times R_2^* \longrightarrow R': \\
-    R' = (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k_1+k_2,f), \\
-    S_{Di}, S_{Dj} | R_i = \text{maxR}(R_1,R_2), j \neq i:  \\
-    S'_B = \text{unio}(S_{B1},S_{B2})\\
-    S'_D = \text{unio}^r(S_{Di},S_{Dj})
-\end{gather*}
-
-També es pot unir dos discs resolució amb diferent $\delta$ i $f$,
-però llavors s'ha de determinar quins són els $\delta'$ i $f'$
-resultants.
-
-
-Com a relacions multiresolució, dues bases de dades multiresolució es
-poden unir si no intersecten en les claus $(\delta,f)$.  En cas que
-intersectin, podem definir la unió multiresolució com la unió que sap unir els discs resolució repetits.
-
-\begin{gather*}
-    \text{UnioM}: M_1 \times M_2 \longrightarrow M': \\
-    K_1 = \{(delta_1,f_1) \in M_1\},K_2 = \{(delta_2,f_2) \in M_2\}, \\
-    K_a = K_1 \cap K_2, K_u =  (K_1 \cup K_2) - K_a : \\
-    M_{u1}'= seleccio(M_1, (delta,f) \in K_u)\\
-    M_{u2}'= seleccio(M_2, (delta,f) \in K_u)\\
-    M_a = \{\forall R_1\in M_1,R_2\in M_2: unioR(R_1,R_2) |
-       (delta_1,f_1) = (delta_2,f_2) \} \\
-    M' =  M_{a} \cup  M'_{1}  \cup  M'_{2}     
-\end{gather*}
-
-
-
-
-
-
-\paragraph{Fusió de multiresolució}
-
-Tinc una sèrie temporal en una base de dades, i una altra sèrie temporal en una altra base de dades. Vull emmagatzemar-les totes dues en una mateixa base de dades amb una sèrie temporal multivaluada.
-
-
-Fusió de dos discs resolució que tenen el mateix $\delta$ i $f$.
-Sigui $R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
-$R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$
-  \begin{gather*}
-    \text{FusioR}: R_1^* \times R_2^* \longrightarrow R': \\
-    R' = (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k_1+k_2,f), \\
-    S'_B = \text{fusio}^r(S_{B1},S_{B2})\\
-    S'_D = \text{fusio}^r(S_{D1},S_{D2})
-\end{gather*}
-
-
-Fusió de dues bases de dades multiresolució
-\begin{gather*}
-    \text{FusioM}: M_1 \times M_2 \longrightarrow M': \\
-    K_1 = \{(delta_1,f_1) \in M_1\},K_2 = \{(delta_2,f_2) \in M_2\}, \\
-    K_a = K_1 \cap K_2, K_u =  (K_1 \cup K_2) - K_a : \\
-    M_{u1} =\text{afegeixMultivalor}(seleccio(M_1, (delta,f) \in K_u))\\
-    M_{u2} =\text{afegeixMultivalor}^{v0} (seleccio(M_2, (delta,f) \in K_u))\\
-    M_1 = seleccio(M_1, (delta,f) \in K_f) \\
-    M_2 = seleccio(M_2, (delta,f) \in K_f) \\
-    M_a = \{\forall R_1\in M_1,R_2\in M_2: fusioR(R_1,R_2) |
-       (delta_1,f_1) = (delta_2,f_2) \} \\
-    M' =  M_{a} \cup  M_{u1}  \cup  M_{u2}     
-\end{gather*}
-
-
-
-
 \subsection{Com treure profit de les operacions dels SGSTM}
 
 Temes que després es poden aprofitar a les implementacions
@@ -557,4 +604,4 @@ on $O$ és una consulta, per exemple pot ser O=Creix la sèrie temporal? Si la r
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-% LocalWords:  SGSTM
+% LocalWords:  SGSTM l'agregador buffer
