@@ -18,7 +18,7 @@ twoside,fontsize=11pt,BCOR12mm,
 \ExecuteBibliographyOptions{annotation=true,backref=true,backend=biber}
 %backref=true, urldate=long, abbreviate=false,%%format web 
 %---------- Mode esborrany --------------------
-\includeonly{sgstm,sgstm-operacions,sgstm-aplicacions}
+%\includeonly{}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\color{gray}{esborrany}}}
 %%\renewcommand{\headrulewidth}{0pt}
@@ -49,12 +49,6 @@ twoside,fontsize=11pt,BCOR12mm,
 %SGST-seq
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
-%SGSTM
-\DeclareMathOperator*{\addB}{afegeixB}
-\DeclareMathOperator*{\addD}{afegeixD}
-\DeclareMathOperator*{\addR}{afegeixR}
-\DeclareMathOperator*{\consB}{consolidaB}
-\DeclareMathOperator*{\consR}{consolidaR}
 
 
 
@@ -64,24 +58,17 @@ twoside,fontsize=11pt,BCOR12mm,
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usetikzlibrary{arrows}
+
+\usepackage{tikz-timing}[2009/05/15]
+
+\usetikzlibrary{circuits.logic}
+\usetikzlibrary{circuits.logic.IEC}
 
 
-%glossaris
-\usepackage[
-          acronym,
-          %nonumberlist,
-          %toc,
-          section,
-          numberedsection=autolabel,
-          sanitize=none, %pels accents en el vegeu
-          ]{glossaries}
-%\renewcommand*{\glspostdescription}{}%anul·la el punt final
-\renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
-%Índex d'abreviacions?? si conté abreviatures o símbols
-% \short<type>name,
-\input{vocabulari/glossari.tex}
-\loadglsentries{vocabulari/abreviacions.tex}
-\loadglsentries[notation]{vocabulari/notacio.tex}
+
+
+
 
 %-------------- dades --------------------------
 \hypersetup{
@@ -127,33 +114,13 @@ twoside,fontsize=11pt,BCOR12mm,
 %\frontmatter
 %\mainmatter
 
-\include{model}
+\include{implementacio}
 
-\include{sgst}
-\include{sgst-operacions}
-\include{sgst-naturalesa}
-
-\include{sgstm}
-\include{sgstm-operacions}
-\include{sgstm-interpoladors}
-\include{sgstm-aplicacions}
+\include{vhdl}
 
 
-%\include{implementacio-relacional}
 
 
-%------- Annexos ------
-\appendix
-
-%------- Glossari ------
-% \cleardoublepage
-% %\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
-% %\pdfbookmark{\glossaryname}{bookmark:glossari}
-% \chapter{Nomenclatura i abreviacions}
-% \glsaddall
-% \printglossary
-% \printglossary[type=\acronymtype]
-% \printglossary[type=notation,nonumberlist,style=estil-notation]
 %------- Bibliografia ------
 \cleardoublepage
 %\phantomsection\addcontentsline{toc}{chapter}{\bibname}
