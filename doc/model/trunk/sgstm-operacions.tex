@@ -31,8 +31,8 @@ grups d'operadors segons els casos anteriors:
 \begin{itemize}
 \item Estructurals: operadors requerits pel model estructural.
 \item Manipulació: operadors per a manipular l'esquema de multiresolució.
-\item Consultes: operadors per a extreure les sèries temporals.
-  emmagatzemades
+\item Consultes: operadors per a extreure les sèries temporals
+  emmagatzemades.
 \end{itemize}
 
 
@@ -78,7 +78,7 @@ funció de l'agregador d'atributs i un nou buffer amb la sèrie temporal
 reduïda.
 \begin{definition}[Consolida el buffer]
   Sigui $B=(S,\tau,\delta,f)$ un buffer, la consolidació del buffer
-  $\consB(B,m)$ en l'interval de temps $[\tau,\tau+\delta]$ és un
+  $\consB(B)$ en l'interval de temps $[\tau,\tau+\delta]$ és un
   buffer $B'=(S',\tau',\delta,f)$, amb el nou instant de consolidació,
   i la mesura $m'=(t',v')$ resultant de la consolidació: $\consB(B) =
   (S',\tau+\delta',\delta,f) \times m'$ a on
@@ -160,82 +160,49 @@ quan ho és el seu buffer.
 \begin{definition}[Consolida la subsèrie resolució]
   Sigui $R=(B,D)$ una subsèrie resolució, la consolidació de la
   subsèrie resolució $\consR(R)$ és una subsèrie resolució
-  $R'=(B',D')$ \todo{}
-\end{definition}
-
-
-
-% (ii) The consolidation of the resolution disc by consoli-
-% dating its buffer and adding the consolidation measure
-% to its disc, consolidateRD : R = (B, D) → R where
-% R = (B , D ) and (B , m ) = consolidateBuffer(B) and
-% D = addDisc(B, m ).
-
-
-\begin{definition}
-  L'operació \emph{consolida} calcula una  mesura de consolidació del buffer, en
-  l'interval de consolidació actual, i la desa al disc. 
-  \[
-  \text{consolida}: \text{Disc Round Robin} \longrightarrow \text{Disc Round Robin}
-  \]
-  \[
-  R=(B,D) \longrightarrow R'= (B',D')
-  \]
-  \[
-  B' \times m'= \text{ consolida } B 
-  \]
-  \[
-  D'= D \text{ afegeix } m'
-  \]
+  $R'=(B',D')$ a on $(B',m') = \consB(B)$ i $D'=\addD(D,m')$.
 \end{definition}
 
 
 
 
 
-\subsubsection{Base de dades multiresolució}
+\subsubsection{Sèrie temporal multiresolució}
+
+Les sèries temporals multiresolució són un conjunt de subsèries
+resolució. Així tenen dos operadors per a treballar globalment amb
+totes les subèries que contingui: un per a afegir una mesura a cada
+subsèrie i un altre per a consolidar cadascuna de les subsèries.
 
 
-
-With reference to the operators, the add and consolidate in a multiresolution database are applied to every resolution disc it contains.
-
-
-\begin{definition}
-  Operator \emph{add} adds a measure to every resolution disc:
-  \[
-  \text{add}: \text{multiresolution database} \times \text{Measure}
-  \longrightarrow \text{multiresolution database}
-  \]
-  \[
-  M=\{R_0,\dotsc,R_d\} \times m \mapsto M' 
-  \]
-  \[  
-  M'= \{ \forall R_i\in M: R_i \text{ add } m \}
-  \]
+L'operació d'afegir una mesura a la sèrie temporal multiresolució
+consisteix en afegir-la a cadascuna de les subsèries resolució.
+\begin{definition}[Afegeix mesura a la sèrie temporal multiresolució]
+  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució i
+  $m=(t,v)$ una mesura, la inserció de la mesura a la sèrie temporal
+  multiresolució $\addM(M,m)$ és una sèrie temporal multiresolució
+  $M'=\{R_0',\dotsc,R_d'\}$ amb la mesura afegida a cada subsèrie
+  resolució: $\addM(M,m) = \{ \forall R_i\in M: \addR(R_i,m) \}$.
 \end{definition}
 
 
-\begin{definition}
-  Operator \emph{consolidate} consolidates the resolution discs that
-  are ready to consolidate.
+L'operació de consolidar una sèrie temporal multiresolució consisteix
+en consolidar cadascuna de les subsèries resolució que siguin
+consolidables.
+
+\begin{definition}[Consolida la sèrie temporal multiresolució]
+  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució, la
+  consolidació de la sèrie temporal multiresolució $\consM(M)$ és una
+  sèrie temporal multiresolució $M'=\{R_0',\dotsc,R_d'\}$ que
+  consolida les subsèries resolució consolidables:
   \[
-  \text{consolidate}: \text{multiresolution database} \longrightarrow
-  \text{multiresolution database}
-  \]
-  \[
-  M=\{R_0,\dotsc,R_d\} \mapsto M'
-  \]
-  \[
-  M'= \big\{
-  \forall R_i\in M: 
+  \consM(M) = \big\{ \forall R_i\in M:
   \begin{cases}
-    \text{ consolidate } R_i & \text{if } R_i \text{ ready to consolidate} \\
-    R_i & \text{else }
+    \consR(R_i) & \text{si } R_i \text{ és consolidable} \\
+    R_i & \text{altrament}
   \end{cases}\big\}
-  \]
+  \].
 \end{definition}
-
-
 
 
 
@@ -243,11 +210,35 @@ With reference to the operators, the add and consolidate in a multiresolution da
 
 \subsection{Manipulació}
 
+
+
+\todo{}
+
+El model de SGSTM 
+
+
+Per altra banda, el model de SGSTM t ́ una estructura espec ́
+e
+ıfica que requereix
+ser manipulada coherentment. Aix ́ es defineixen operadors que saben treballar
+ı,
+amb aquesta estructura agrupats en dos grups.
+
+
+operadors per a manipular l’esquema de multiresolució
+;  ́s a dir operadors que permeten fer canvis
+e
+en l’esquema de la base de dades o consultar par`metres de l’esquema actual.
+a
+
+
+
+
 * Fusió d'esquemes de BDM
 
 * Canvis d'esquemes de BDM (afegir multivaluat, canvi de delta d'un disc,canvi de la k,...)
 
-* Estudiar Push o pull
+
 
 
 
@@ -604,4 +595,5 @@ on $O$ és una consulta, per exemple pot ser O=Creix la sèrie temporal? Si la r
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-% LocalWords:  SGSTM l'agregador buffer
+% LocalWords:  SGSTM l'agregador buffer multiresolució subsèries
+% LocalWords:  subsèrie

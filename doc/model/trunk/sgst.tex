@@ -89,53 +89,102 @@ del concepte temps \parencite{iep:time}.
   de temps es defineixin com a reals, $t^i_i , t^i_j \in \bar{\R{}}$,
   aleshores $t^d = t^i_i - t^i_j$.
 
-  Sigui $T$ el domini del temps, definim un instant de temps $t^i$ com un
-  element del conjunt $T$. \todo{...}
-  
-  Sigui $t^d$ una durada i $t^{R}$ un instant de temps marc de
-  referència, definim un instant de temps $t^i$ com un valor $t^i
-  \in\bar{\R{}}$ que mesura la quantitat de temps respecte al temps de
-  referència $t^i= t^{R} + t^d$ . Aquest valor de referència
-  $t^{R}\in\R{}$ és també un instant de temps però que permet definir
-  unívocament la posició de qualsevol altre instant de temps. \todo{potser quedaria més clar si un instant de temps fos un tuple $(t^i,t^R)$ a on  $t^i= t^{R} + t^d$?}
+  Sigui $T$ el domini del temps, definim un instant de temps $I$ com
+  un element del conjunt $I \in T$. Així, un instant de temps és
+  l'etiqueta d'un punt en la línia temporal. Seguint la definició de
+  sistema de coordenades i prenent els nombres reals com a domini del
+  temps, sigui $t^{R}$ un instant de temps marc de referència,
+  aleshores els instants de temps es defineixen com un valor $t^i
+  \in\bar{\R{}}$ que indica la distància de temps amb signe respecte a
+  l'instant de temps de referència $t^i= d(t^{R},I)$ a on $d$ és la
+  mètrica del conjunt $T$.
 \end{definition}
 
 En resum, els instants de temps es poden veure com una seqüència de
 valors reals que indiquen esdeveniments amb ordre clarament definit i
-entre dos instants de temps sempre hi ha una durada. Tant els instants
-de temps com les durades s'expressen amb un real que té unitats de
+entre dos instants de temps sempre hi ha una durada. Expressarem tant
+els instants de temps com les durades amb un real que té unitats de
 temps. Aquestes unitats són 'segons' en sistema internacional.
+
+% El marc de referència és un instant de temps que permet definir
+% unívocament la posició de qualsevol altre instant de temps en un
+% sistema de coordenades.
+
+
+
+\subsubsection{Estàndards de temps}
+
+Els estàndards de temps especifiquen com s'ha de mesurar el pas del
+temps i com s'han d'assenyalar els instants de temps.
+\textcite{allen:timescales} recull diferents estàndards de temps
+que existeixen, dels quals a continuació comentem els més habituals.
+
+Actualment l'estàndard de temps habitual per mesurar el pas del temps
+és el Temps Atòmic Internacional (TAI), del qual se'n deriva un altre
+estàndard més conegut que és el Temps Universal Coordinat (UTC).
+Ambdós estàndards assenyalen el instants de temps segons el calendari
+Gregorià i el calendari julià. Actualment, de forma genèrica s'utilitza
+UTC per a sincronitzar rellotges tot i que en el futur es podria
+canviar per un nou estàndard, el Temps Internacional (TI), el qual
+també es base en el TAI.
+
+El calendari julià utilitza un estàndard de comptar el temps com a
+nombre de dies que han passat des d'una data concreta, la qual
+s'anomena època. L'època es correspon amb el concepte d'instant de
+temps marc de referència de la \autoref{def:model:temps}. Per defecte
+l'època se situa a l'inici del Període Julià tot i que també se solen
+utilitzar altres dates assenyalades.
+
+Un altre estàndard semblant al julià és l'Hora POSIX o Hora Unix, el
+qual compta el nombre de segons des de l'1 de gener de 1970 basant-se
+en el les mesures d'UTC. L'Hora Unix és l'estàndard de temps habitual
+en els sistemes operatius de la família Unix. No obstant, aquest
+estàndard presenta un problema d'ambigüitat a causa que no té no té en
+compte els segons addicionals d'UTC.
+
+
 
 
 
 \subsubsection{Calendari}
+
+Un cas particular del temps és el calendari. Els calendaris són
+definicions pel domini temps que consisteixen en noms per als punts de
+la línia de temps i regles per establir la durada entre ells per tal
+de que el temps tingui certa relació amb la rotació de la Terra. A
+l'apartat anterior hem definit el domini temps de manera general
+amb el conjunt de reals, els quals exemplifiquen més clarament el
+concepte de sistema de coordenades de temps absolut.
+
 \textcite{dreyer94} situen els calendaris i les seves operacions com a
 essencials en els SGST. Tanmateix, pot no ser necessari modelar les
-dates de calendari en el model de temps. El temps és la línia contínua
-de temps, el calendari són noms especials a certs punts de la línia de
-temps. Només cal una eina que sigui capaç de convertir de noms a
-instants de temps.
+dates i regles de calendari en el model de temps. Els calendaris es
+poden observar com a noms que fan referència a instants de temps
+quantificables, com els de la \autoref{def:model:temps}. Aleshores,
+només cal una eina que sigui capaç de convertir els noms de calendari
+a instants de temps.
 
-Per una banda, no afecta al model SGST que els calendaris siguin més o
-menys complicats, en aquest cas només es veuen complicades les
-funcions de conversió de temps a calendari i viceversa.  Per altra
-banda, tampoc afecta que els calendaris siguin ambigus (p.ex.\ dos
-noms per al mateix instant o instants sense nom) o que continguin
-propietats impredictibles (p.ex.\ cas dels segons addicionals
-(intercalats) en UTC) ja que la responsabilitat d'aquests problemes
-correspon a la bona definició dels sistemes de calendari.
+El fet de que un calendari sigui més o menys complicat no afecta al
+model de SGST, sols té incidència en les funcions de conversió
+d'instant de temps a calendari i viceversa. Tampoc afecta que els
+calendaris siguin ambigus (p.ex.\ dos noms per al mateix instant o
+instants sense nom) o que continguin propietats impredictibles (p.ex.\
+cas dels segons addicionals en UTC) ja que aquests casos es
+corresponen amb la bona definició dels sistemes de calendari.
 
-\todo{}
-Unix time (posix) no incorpora els leap seconds.
-Millor TAI, unix time (right), ja que és una mesura totalment lineal del temps. 
-Unix time, UTC i TAI: http://lwn.net/Articles/504744/
+Així doncs, els calendaris en el model de SGST es poden implementar
+com una extensió del model de temps. El tipus de dades ordinal de
+calendari Gregorià implementat per
+\textcite[cap.~16]{date02:_tempor_data_relat_model} pot servir com a
+guia per a la implementació dels calendaris en els SGST.
 
-Pel que fa a calendari, es pot aprofitar el que fan servir \cite{date02:_tempor_data_relat_model}?
 
 
 
 \subsection{Valor}
 \label{sec:sgst:valor}
+
+\todo{T: refer tota la secció}
 
 El \gls{terme:SGBDR:valor} és qualsevol element que és d'un
 \gls{terme:SGBDR:tipus}; és a dir, un objecte que
