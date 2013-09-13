@@ -40,7 +40,7 @@ Una base de dades de sèries temporals multiresolució (BDSTM) és un
 conjunt de sèries temporals multiresolució a on cada una és una
 relació de buffers amb discs.
 
-\todo{descriure l'arquitectura}
+\todo{descriure l'arquitectura. Dir que l'arquitectura té tot de paràmetres variables i que configurar-los és el que anomenem definir l'esquema multiresolució?}
 \begin{figure}[tp]
 \centering
 \input{imatges/model/mtsms-arquitectura_interna.tex}
@@ -108,7 +108,7 @@ primer de sortir.
 
 \begin{definition}[Disc]
   Definim \emph{disc} com el tuple $(S,k)$, en el que $S$
-  és una sèrie temporal i $k\in\mathbb{N}$ és el cardinal màxim de $S$.
+  és una sèrie temporal i $k\in\N{}$ és el cardinal màxim de $S$.
 \end{definition}
 
 A l'inici, un disc no conté mesures però cal que estigui caracteritzat
@@ -205,16 +205,16 @@ capacitats de BDSTM.
 
 
 Una sèrie temporal multiresolució és una relació de buffers i discs. A
-cada parella buffer-disc l'anomenem disc resolució. Així doncs, una
-sèrie temporal multiresolució és un conjunt de discs resolució.
+cada parella buffer-disc l'anomenem subsèrie resolució. Així doncs, una
+sèrie temporal multiresolució és un conjunt de subsèries resolució.
 
-Com a conjunt de discs resolució, una sèrie temporal multiresolució
+Com a conjunt de subsèries resolució, una sèrie temporal multiresolució
 s'observa com una relació de grau sis a on la capçalera conté els
 atributs
 \begin{itemize}
 \item sèrie temporal del buffer ($S_B$),
 \item sèrie temporal del disc ($S_D$),
-\item últim instant de consolidació ($\tau$),
+\item darrer instant de consolidació ($\tau$),
 \item pas de consolidació ($\delta$),
 \item màxim cardinal del disc ($k$),
 \item i funció d'agregació d'atributs ($f$).
@@ -223,6 +223,27 @@ atributs
 Una restricció habitual és que $\delta$ i $f$ no estiguin repetits; és
 a dir que són els atributs clau de la relació sèrie temporal multiresolució.
 
+Així doncs observada com a relació, tal com s'ha fet en el model de
+SGST, podem escriure una sèrie temporal multiresolució
+\begin{definition}[Representació sèrie temporal multiresolució]
+  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució a on
+  $R_i =(B_i,D_i)$ són subsèries resolució amb domini de sèrie
+  temporal per les sèries temporals, de $\bar{\R{}}$ pels temps, de
+  $\N{}$ pel pas de consolidació i de funció per a la funció
+  d'agregació d'atributs; representada com a relació s'escriu com $ M
+  = ( S_B: \text{Sèrie Temporal}, S_D: \text{Sèrie Temporal}, \tau:
+  \R{}, \delta: \R{}, k: \N{}, f: \text{funció}\}, \{ \{ S_B: S_{B_0}
+  , S_D : S_{D_0} , \tau : \tau_{B_0}, \delta : \delta_{B_0}, k:
+  k_{D_0}, f : f_{B_0} \} , \dotsc, \{ S_B: S_{B_d} , S_D : S_{D_d} ,
+  \tau : \tau_{B_d}, \delta : \delta_{B_d}, k: k_{D_d}, f : f_{B_d} \}
+  \} )$.
+\end{definition}
+
+De la mateixa manera que per a les sèries temporals en el model de
+SGST, una sèrie temporal multiresolució es pot escriure de manera
+simplificada com al conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} ,
+\tau_{B_0}, \delta_{B_0}, k_{D_0}, f_{B_0} ), \dotsc, (S_{B_d},
+S_{D_d} , \tau_{B_d}, \delta_{B_d}, k_{D_d}, f_{B_d} ) \}$.
 
 
 
@@ -230,6 +251,11 @@ a dir que són els atributs clau de la relació sèrie temporal multiresolució.
 \subsection{Exemples}
 
 \paragraph{Exemple 1} \emph{Sèrie temporal multiresolució}
+
+\todo{}
+
+$M^1 = \{ ( \{(26,0),(27,0)\}  , \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , ( \{(22,0),(26,0),(27,0)\} , \{(10,0),(20,0)\} , 20 , 10 ,2 , \text{mitjana} ) \}$
+
 
 Una sèrie temporal multiresolució fotografiada en un instant de temps que podria
 ser entre el 27 i el 30.
@@ -281,6 +307,8 @@ ser entre el 27 i el 30.
 
 \paragraph{Exemple 2} \emph{Sèrie temporal multiresolució amb vistes}
 
+\todo{}
+
 És el mateix que la sèrie temporal multiresolució de l'exemple 1 però
 organitzat de forma més còmode amb vistes relacionals.
 \todo{escriure l'expressió relacional de les vistes}
@@ -326,4 +354,4 @@ organitzat de forma més còmode amb vistes relacionals.
 %%% TeX-master: "main"
 %%% End: 
 
-% LocalWords:  buffers multiresolució agregador l'agregador
+% LocalWords:  buffers multiresolució agregador l'agregador subsèries
