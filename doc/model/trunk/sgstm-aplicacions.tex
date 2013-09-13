@@ -234,6 +234,66 @@ de resolució $S' = S[T]^{\text{zohe}}$, $\forall (t,v) \in
 
 
 
+\subsection{Com treure profit de les operacions dels SGSTM}
+
+Temes que després es poden aprofitar a les implementacions
+
+* No hi ha updates --> les sèries temporals no s'han de canviar
+
+* Per exemple, vull calcular la mitjana de  BDSTM(a,b] si tinc un disc resolució amb $\delta=b-a$ i $f=$mitjana aquest seria l'adequat en comptes de calcular mitjana(SerieTotal(M)(a,b])
+
+%??
+% No obstant, la base de dades multiresolució conté informació sobre la
+% resolució de les subsèries i per tant aquesta operació és susceptible
+% d'implementar-se aprofitant aquesta informació.  A tall d'exemple es
+% defineix una operació per extreure de la base de dades multiresolució
+% una sèrie temporal regular amb període $T$:
+
+
+% \begin{definition}[Selecció de resolució regular]
+%   \begin{gather*}
+%     \text{ResolucióRegular}: M^* \times T \times r \longrightarrow S'\\
+%     \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
+%     d_i = T - \delta_i , \\
+%     0 \geq d_0 > d_1 \dots > d_a, 0 < d_{a+1} < \dots < d_d: \\
+%     S'' = S_{D0} || S_{D1} || \dotsb || S_{Da}  ||  S_{Da+1} || \dotsb || S_{Dd}, \\
+%     S' = S''[i]^r: i = {t|0+nT,n\in\mathbb{N}}
+%   \end{gather*}
+% \end{definition}
+
+% Nota: les operacions no són equivalents, l'operació $\text{SerieTotal}(M)[i]^r$ és molt més potent que la $\text{ResolucióRegular}(M,T)$.
+
+
+
+
+\subsection{Comparació d'operacions dels SGSTM amb les dels SGST}
+
+Tinc una sèries temporal $S$ i l'emmagatzemo a una base de dades multiresolució $M$ amb atributs de mitjana. 
+
+* mitjana(S) = mitjana(serieTotal(M)) ?
+
+* Operació O, afegeix(M',O(S)) = O(serieTotal(M))?
+
+
+\begin{align*}
+s   \qquad   &  s'=ST(M(s))\\
+r=O(s) \qquad& r'=O(s') \\
+\epsilon(r,r')?
+\end{align*}
+
+on $O$ és una consulta, per exemple pot ser O=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

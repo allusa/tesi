@@ -30,7 +30,8 @@ grups d'operadors segons els casos anteriors:
 
 \begin{itemize}
 \item Estructurals: operadors requerits pel model estructural.
-\item Manipulació: operadors per a manipular l'esquema de multiresolució.
+\item Manipulació de l'esquema: operadors per a manipular l'esquema de
+  multiresolució.
 \item Consultes: operadors per a extreure les sèries temporals
   emmagatzemades.
 \end{itemize}
@@ -208,48 +209,81 @@ consolidables.
 
 
 
-\subsection{Manipulació}
+\subsection{Manipulació de l'esquema}
 
+El model de SGSTM associa a cada sèrie temporal un esquema de
+multiresolució. En aquest apartat definim els operadors que permeten
+consultar i manipular aquest esquema de multiresolució de forma
+coherent amb el model de SGSTM.
+
+L'esquema de multiresolució de cada sèrie temporal multiresolució
+consisteix en quatre paràmetres variables: el darrer instant de
+consolidació ($\tau$), el pas de consolidació ($\delta$), el cardinal
+màxim ($k$) i la funció d'agregació d'atributs ($f$).
+
+Així doncs, quan es manipula una base de dades multiresolució cal
+conservar o tractar adequadament aquest esquema de multiresolució.  A
+continuació es descriuen operadors per a poder estudiar aquest
+esquema, operadors per a canviar-lo i operadors per a unir o ajuntar
+dos esquemes.
+
+
+
+\subsubsection{Propietats de l'esquema}
+
+La configuració dels quatre paràmetres variables de l'esquema de
+multiresolució confereix una sèrie de propietats als objectes d'una
+base de dades multiresolució. A continuació definim algunes propietats
+que es poden estudiar a partir d'un esquema de multiresolució.
+
+
+
+
+Una propietat de l'esquema de multiresolució és el cronograma que se'n deriva. Així, donat un esquema de multiresolució podem dibuixar la situació relativa en el temps que prendran les mesures.
+\todo{fer dibuix aclaridor}
 
 
 \todo{}
 
-El model de SGSTM 
-
-
-Per altra banda, el model de SGSTM t ́ una estructura espec ́
-e
-ıfica que requereix
-ser manipulada coherentment. Aix ́ es defineixen operadors que saben treballar
-ı,
-amb aquesta estructura agrupats en dos grups.
-
-
-operadors per a manipular l’esquema de multiresolució
-;  ́s a dir operadors que permeten fer canvis
-e
-en l’esquema de la base de dades o consultar par`metres de l’esquema actual.
-a
+  
+Els paràmetres $k$, $\delta$ i $f$ d'una subsèrie resolució són fixats
+per l'esquema, mentre que el paràmetre $\tau$ és fixat a un valor
+inicial i va sent canviat per l'operació de consolidar. Així doncs,
+les propietats que impliquin a $\tau$ dependran de l'instant temporal
+en que es faci la consulta i les que no l'impliquin seran fixes per a
+cada esquema.
 
 
 
+La primera propietat que observem és el lapse temporal d'una subsèrie
+resolució; és a dir una mesura de la mida temporal que ocupa la
+subsèrie temporal emmagatzemada en el seu disc.
+\begin{definition}[Lapse de la subsèrie resolució] %angl. span
+  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució, el seu
+  lapse $\text{lapseR}(R)$ és una durada de temps $t^d$ que mesura la
+  mida de l'interval que ocupa el disc: $\text{lapseR}(R) = k\delta$.
+\end{definition}
 
-* Fusió d'esquemes de BDM
-
-* Canvis d'esquemes de BDM (afegir multivaluat, canvi de delta d'un disc,canvi de la k,...)
-
-
-
-
+\todo{} Si definim l'interval del lapse com a $[\tau - k\delta, \tau]$
+i l'interval temporal real de la sèrie temporal del disc com a
+$[\min(S_D),\max(S_D)]$, aleshores normalment en el cas que $\max(S_D)=\tau$ es compleix que $\min(S_D)=\tau - (k-1)\delta $: fixem-nos que això pot no complir-se (perquè la sèrie temporal no sigui regular, perquè $\tau$ i $\max(S_D)$ no coincideixin, etc.)
+ fixem-nos que el lapse pot no coincidir amb
+l'interval temporal real de la sèrie temporal del disc,
 
 
 
+Com en diem a la certa variació que es correspon a $t_{actual}-\tau$?
 
 
 
 
 
-\subsubsection{Estudis en l'esquema}
+Així doncs podem dir que un disc resolució ens cobreix un span temporal de  $\text{duradaR}(R)$. Es posiciona absolutament des de $\tau$ enrere (si no hi ha iffset). Això vol dir que tindrem un temps recent no cobert de $t_{actual}-\tau$ (anomenar-lo desfasament o retard, en angl. offset), el qual habitualment com a màxim serà de $\delta$ ($t_{actual}-\tau \leq \delta$) i com a mínim de zero si consolidem la multiresolució periòdicament.
+
+
+
+
+
 
 Quin és el període de la sèrie temporal d'un disc?
   \begin{gather*}
@@ -260,34 +294,6 @@ Quin és el període de la sèrie temporal d'un disc?
       \delta &\text{altrament}
     \end{cases}
   \end{gather*}
-  
-Quin és el l'interval temporal de la sèrie temporal d'un disc?
-  \begin{gather*}
-    \text{intervalR}: R \longrightarrow [T_0,T_f] :\\
-    T_0 = T(\min(S_D)),     T_f = T(\max(S_D))
-  \end{gather*}
-
-Quin és el lapse temporal d'un disc?
-  \begin{gather*}
-    \text{lapseR}: R \longrightarrow [T_0,T_f] :\\
-    T_0 = \tau - k\delta,  T_f = \tau
-  \end{gather*}
-
-Quina és la durada del lapse temporal d'un disc?
-  \begin{gather*}
-    \text{duradaR}: R \longrightarrow k\delta
-  \end{gather*}
-
-Nota sobre lapse i durada, donat un disc resolució la durada sempre és fixa i el lapse que cobreix té una certa variació que es correspon a $t_{actual}-\tau$.
-
-De fet sigui $[T_0,T_f] = lapseR(R)$ la  $\text{duradaR}\equiv T_f -T_0$
-\[
-    [T_0,T_f] = lapseR(R): T_f = \tau, T_0 = \tau - k\delta,: T_f-T_0 =\tau -( \tau - k\delta) =  k\delta \equiv \text{duradaR}
-\]
-
-Així doncs podem dir que un disc resolució ens cobreix un span temporal de  $\text{duradaR}(R)$. Es posiciona absolutament des de $\tau$ enrere. Això vol dir que tindrem un temps recent no cobert de $t_{actual}-\tau$, el qual habitualment com a màxim serà de $\delta$ ($t_{actual}-\tau \leq \delta$) i com a mínim de zero si consolidem la multiresolució periòdicament.
-
-
 
 
 Quin disc conté més resolució?
@@ -295,9 +301,6 @@ Quin disc conté més resolució?
     \text{maxR}: R_1 \times R_2 \longrightarrow R_i' | d_i = \max(d_1,d_2) : \\
     d_1 = periodeR(R_1), d_2 = periodeR(R_1)
   \end{gather*}
-  
-
-
 
 
 
@@ -369,7 +372,7 @@ Aplicació de fold a una BDM
 
 
 
-\subsubsection{Treball amb dues BDM}
+\subsubsection{Treball amb dos esquemes}
 
 
 \paragraph{Unió de multiresolució}
@@ -416,7 +419,9 @@ intersectin, podem definir la unió multiresolució com la unió que sap unir el
 
 
 
-\paragraph{Fusió de multiresolució}
+\paragraph{Junció de multiresolució}
+
+\todo{canviar fusió per junció}
 
 Tinc una sèrie temporal en una base de dades, i una altra sèrie temporal en una altra base de dades. Vull emmagatzemar-les totes dues en una mateixa base de dades amb una sèrie temporal multivaluada.
 
@@ -534,59 +539,6 @@ temporal total i s'aplica una selecció de resolució
 $\text{SerieTotal}(M)[i]^r$ a on $i$ és el conjunt d'instants de
 temps.
 
-
-
-
-
-
-\subsection{Com treure profit de les operacions dels SGSTM}
-
-Temes que després es poden aprofitar a les implementacions
-
-* No hi ha updates --> les sèries temporals no s'han de canviar
-
-* Per exemple, vull calcular la mitjana de  BDSTM(a,b] si tinc un disc resolució amb $\delta=b-a$ i $f=$mitjana aquest seria l'adequat en comptes de calcular mitjana(SerieTotal(M)(a,b])
-
-%??
-% No obstant, la base de dades multiresolució conté informació sobre la
-% resolució de les subsèries i per tant aquesta operació és susceptible
-% d'implementar-se aprofitant aquesta informació.  A tall d'exemple es
-% defineix una operació per extreure de la base de dades multiresolució
-% una sèrie temporal regular amb període $T$:
-
-
-% \begin{definition}[Selecció de resolució regular]
-%   \begin{gather*}
-%     \text{ResolucióRegular}: M^* \times T \times r \longrightarrow S'\\
-%     \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
-%     d_i = T - \delta_i , \\
-%     0 \geq d_0 > d_1 \dots > d_a, 0 < d_{a+1} < \dots < d_d: \\
-%     S'' = S_{D0} || S_{D1} || \dotsb || S_{Da}  ||  S_{Da+1} || \dotsb || S_{Dd}, \\
-%     S' = S''[i]^r: i = {t|0+nT,n\in\mathbb{N}}
-%   \end{gather*}
-% \end{definition}
-
-% Nota: les operacions no són equivalents, l'operació $\text{SerieTotal}(M)[i]^r$ és molt més potent que la $\text{ResolucióRegular}(M,T)$.
-
-
-
-
-\subsection{Comparació d'operacions dels SGSTM amb les dels SGST}
-
-Tinc una sèries temporal $S$ i l'emmagatzemo a una base de dades multiresolució $M$ amb atributs de mitjana. 
-
-* mitjana(S) = mitjana(serieTotal(M)) ?
-
-* Operació O, afegeix(M',O(S)) = O(serieTotal(M))?
-
-
-\begin{align*}
-s   \qquad   &  s'=ST(M(s))\\
-r=O(s) \qquad& r'=O(s') \\
-\epsilon(r,r')?
-\end{align*}
-
-on $O$ és una consulta, per exemple pot ser O=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
 
 
 
