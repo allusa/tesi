@@ -1,0 +1,149 @@
+  % * Sèries temporals (històrics, predicció, diagnosis, prognosis, etc.)
+  % * Mostreig: docs quan període de mostreig no regular
+  % * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
+
+\section{Preliminaries}
+
+Obtaining information from environment is a complex task that has a user, either human or machine, as the final target as stated in figure \ref{fig:monitoring_system}. Mainly, the processes between data acquisition and user information can be divided into three focus.
+
+
+Monitoring systems recollect data from sensors eventually from events and periodically from measures, in the latter case some problems arise when monitoring can not be done at regular intervals. Then the recollected data is used in different application fields. There is intensive research in applying techniques to obtain information from this data.
+
+Time series data mining analyses the storage of chronological data from which relevant information want to be retrieved. Sometimes, this extraction of information is also referred as knowledge discovery or artificial intelligence.
+In the monitoring context, the data collected can be considered as a time series.
+
+Database management systems are the computer systems implementing storage and retrieval of information. Time series data mining techniques must be implemented in these systems paying attention to their especial needs. Then, they are known as time series database management systems.
+
+
+
+\subsection{Monitoring and applications}
+
+Monitoring sensor data and processing the data to achieve diagnosis,
+prognosis and prediction is a common task in many fields such as
+prognosis in degradation models \parencite{yu11}, navy
+vessels \parencite{palmer07} or water distribution
+networks \parencite{quevedo10}.  A monitoring system recollects a
+large amount of data so only a little can be observed online and the
+data stored is also too big to process \parencite{keogh97}.
+
+\textcite{quevedo10} show the enormous information residing in complex remote systems. This information comes from many sensors that are distributed in the area. A SCADA is the system responsible for periodically recollect and centralise the sensing values. During the recollection time two problems may appear: some values that have not been obtained and values that are erroneous. The database managers can not cope with such data as the historical information would be inconsistent. Therefore, a validation process must be taken in order to assure that stored data is correct. If data is invalid, a reconstruction process may take place in order to modify values to estimated ones. In \cite{quevedo10} validation and reconstruction techniques are applied to water distribution networks. 
+
+
+
+
+
+%docs quan període de mostreig no és regular
+ 
+Data acquisition comes from the processes. However, processes can be controlled by control system, which take control of the data acquisition process. That is, the monitoring system must obey to the time requirements of control loops. This is especially critical in real-time embedded control systems. Then, the monitoring system cannot impose time constraints different that the ones that have been calculated for the control loops. \textcite{lozoya08} show that care must be taken with input and output at periodic tasks in real time systems. Control system performance degrades if it is not considered that input and output operations are subject to sampling and latency jitter. This problem affects monitoring systems in two ways. On the one hand, monitoring systems  have an acquisition part controlled by real time control applications so the resulting sampling period seen by the monitor is not regular. On the other hand, monitoring data analysis applications can suffer performance degradation if they do not consider that data acquisition can be irregular, which would be similar to the drawback stated in \cite{lozoya08} that discrete control design approach considers to periodically sample and actuate but real time can violate this mandated periodicity.
+
+
+
+
+\subsection{Time series data mining}
+
+In the monitoring context, the data collected can be considered as a time
+series.  Time series theory formalises the analysis methods such as the validations and reconstruction processes.
+
+The analysis of time series includes different activities such as prediction in economics, weather forecasts, quality control in business, etc. In this context, time series data mining is the study and management of large collections of chronological data. Furthermore, this data is continually increasing in size as time goes on.
+
+Mining research in time series has increased the last decade as shown in \textcite{fu11}. Fu summarises exhaustively the current state of the art in time series data mining  and concludes that there is still room to further investigate and develop. Mining tasks have had intensively research but the problem of  time series representation needs better solutions because of high volume of time data. Furthermore, it is said to be one of the ten challenging problems in data mining \parencite{yangwu06}.
+ 
+Time series data mining research  is given at mainly four tasks \parencite{keogh02}: indexing, clustering, classification and segmentation. In order to solve these tasks, lots of experimental algorithms have been proposed by different authors. \textcite{keogh02} compare and evaluate some of these algorithms with the same datasets and they recommend the time series data mining community to follow the same benchmark when evaluating the performance of similar algorithms. 
+
+Representation of time series is a common step done before the above four tasks.
+\emph{Piecewise Linear Representation} (PLR) \parencite{keogh97,keogh98}  is one representation widely used as it is noted that human vision segments curvatures into lineal segments. In \textcite{keogh00,keogh01} time series representation is studied in order to reduce the high dimension component and to index more efficiently. Two representation based on PLR are proposed: \emph{Piecewise Aggregate Aproximation} (PAA) and \emph{Adaptive Piecewise Constant Approximation} (APCA). Keogh concludes that both approximations are closer to the original time series and they have better computing time than other complicated techniques such as \emph{Discrete Fourier Transform} (DFT), \emph{Singular Value Decomposition} (SVD), or \emph{Discrete Wavelet Transform} (DWT).
+
+
+
+\subsection{Database management systems}
+
+According to \textcite{date}, a database is a computer container for a data collection. The computer systems that manage databases are called database management systems (DBMS). Their objective is to storage information and allow an user to add and retrieve this information. DBMS implement several operations such as create a database, add data, consult information, etc.
+
+DBMS rely on formal theories called DBMS model, so a DBMS is an implementation of a model an a database can be seen as an instance of a DBMS. According to Date, ``a data model is an abstract definition, self contained and logical of the objects, operations and the rest that together constitutes the abstract machine where users interact. The objects allow modelling the data structure. The operations allow modelling the behaviour''.
+
+A common DBMS are the ones based on the relational model, which is a consolidated mathematical model. In the context of DBMS, the relational systems set a goal that has had an important subsequent relevance. Mainly, the success of relational systems comes from having a consolidated mathematical model \parencite{date}.
+
+Time series, as a collection of data measured in different instants in time, need an adequate management by the DBMS. The special need of time series is mainly caused by its high dimension and that the time is a principal component that must be always taken into account. 
+ 
+
+%\todo{docs quan la memòria és finita}
+
+In DBMS the high dimension of data is also found in other fields. \textcite{mylopoulos96} states that there is a need for large knowledge databases in diverse areas such as CAD, software engineering, real-time process control, corporate repositories, and digital libraries. DBMS that treat high quantity of data are known as very large databases (VLDB) and they must construct, access, and manage large data efficiently.
+
+In the last decade, hardware has improved both technological and economical speaking as stated by \textcite{deligiannakis07}. This has allowed to deploy high dimension sensor networks which recollect a high number of data. They focus on the information transmission in sensor networks and how to exploit correlations among sensor measurements sending the historical information compressed. The compression is achieved with \emph{aggregation} (simple statistics) and \emph{approximation} functions. 
+
+
+\textcite{ogras06}  consider that current solutions in VLDB focus on data in the database being static. However, time series are usually dynamic, that is continuous and unbounded in nature. As a consequence, ``since the data points arrive sequentially, storing each data point and performing an offline analysis is prohibitive and random access to the data is not allowed, unlike the traditional approaches.'' They propose summarising dynamic time series with summaries techniques utilised in many other applications of large databases.
+       
+
+
+\subsubsection{Time series DBMS}
+
+Time series analysis techniques must be computed in specific DBMS in order to process data efficiently. Moreover, the amount of data is increasing as data acquisition becomes easier and there is more storage capacity. 
+Mainly, time series data is different from other data types in the sense that the series values are dependent from another variable: the time. Consequently, DBMS can not process independently values and times; it can be generally stated that they must keep the temporal coherence. 
+
+
+As said in \textcite{assfalg08:thesis}, the temporal coherence can be divided in two types. Firstly, there is  \emph{bitemporal data} which consists in storing the valid time during which an event is true and storing the transaction time in which the event is stored in the database. That is, two states -- true or false -- are annotated for each observation.  Secondly, there is \emph{time series data} which consists in describing a collection of data that depends from time. He also says that the first type can be expressed in terms of second type.
+
+Relational DBMS can implement \emph{bitemporal data}. Then they are known as temporal databases \parencite[ch.\ 22]{date}. However, relational DBMS are not adequate for time series. The relational model is capable to describe time series when they are thought as historical data but the design of relational DBMS would difficult the operations  needed by time series \parencite{schmidt95}. Theses time series operations are mainly based in time ranges and need time zones conversions, rotations of table registers and file size maintained at bounded levels.
+
+When a DBMS implements especial operations for time series they can be called \emph{Time Series Database Management Systems} (TSMS). TSMS are optimised to process data with time and rotation operations, which are very common in time series management. Moreover the growth of the data must be under control and the fetch operations must be flexible and fast \parencite{keogh10:isax}. As instance, the temporal changes either for a week or for a year must be processed and it can not take very long.
+
+A TSMS could be implemented in a relational system considering the improvement proposed by \textcite{stonebraker86} that allows the inclusion of new types and operations to relational DBMS. However, it is difficult to evaluate this solution as there is no consolidated data model  for time series. 
+
+\textcite{dreyer94} propose the development of TSMS as other DBMS are not suited for handling time series.  After comparing temporal DBMS and TSMS \parencite{schmidt95} they ask whether temporal DBMS and TSMS will meet or they need to be manage by different systems despite both working with time aspects.
+However, as far as we know, TSMS properties have not been further investigated as research has concentrated on data mining tasks. For instance, \textcite{last01} study a  general methodology for knowledge discovery in TSMS and they briefly note the existence of a TSMS data model  %Last01: TSMS discovering temporal patterns (groups of events ordered by time) and temporal rules (cause-effect relationships between events).
+
+
+
+
+
+
+\subsubsection{Similar systems}
+Next, we summarise some current TSMS.
+
+\paragraph{Calanda} \textcite{dreyer94} propose the requirements of special purpose TSMS and they  base the model on four basic structural elements: events, time series, groups, metadata and the time series bases. They implement a special purpose TSMS \parencite{dreyer94b,dreyer95,dreyer95b} called Calanda which has calendar operations, can group time series and make simple queries. They exemplify it with financial data. In \cite{schmidt95} Calanda is compared with temporal databases systems designed for time series.
+
+
+\paragraph{T-Time}  \textcite{assfalg08:thesis} shows a TSMS that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
+
+ 
+\paragraph{iSAX} \textcite{keogh08:isax,keogh10:isax} analyse and index massive collections of time series. They describe that the main problem is in the indexing of time series and they propose methods that process efficiently. The first method proposed is based on the constant piecewise approximation, the PAA \parencite{keogh00}. It is implemented in a data management structure called \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. The time series representation obtained with this tool allows to reduce the stored space and to index faster and with the same quality as other more complex representation methods.
+ 
+
+\paragraph{TSDS} \textcite{weigel10} notice the necessity to show the data over its full time range and not only subsets of data as it is usually provided. 
+They develop  the software package \emph{Time Series Data Server} (TSDS) \parencite{tsds} where time series data can be entered and then requested by date ranges or by applying different filters and operations to the time series data.
+
+
+\paragraph{RRDtool} RRDtool from \textcite{rrdtool} is a professional TSMS extremely used by the free software community. \emph{Projects using RRDtool} in \cite{rrdtool} lists some projects that are currently using RRDtool in different fields. Among others, it is used in professional monitoring systems such as Nagios \parencite{nagios} or Icinga \parencite{icinga}, both also popular in the free software community, or  in the Multi Router Traffic Grapher (MRTG) \parencite{mrtg}, which is a monitor from the same creator of RRDtool. 
+These monitors explore the possibilities of RRDtool to its limits and they transfer to RRDtool the data storing and operations of the data stored . 
+Using RRDtool allow the monitors to focus on the data acquisition and warnings management. RRDTool has also an adaptation into Java called \emph{JRobin} \parencite{jrobin}.
+
+
+In the evolution of RRDtool there are two improvements that must be noticed.
+Firstly, the RRDtool management system was separated from MRTG monitoring system by \textcite{lisa98:oetiker} and designed with his characteristically Round Robin structure. Secondly, \textcite{lisa00:brutlag} extended RRDtool with smoothing and Holt-Winters algorithms which allows RRDtool to predict and detect aberrant behaviour in data.  
+Nowadays, RRDtool efficiency and speed when processing time series is being improved. \textcite{carder:rrdcached} have designed \emph{rrdcached}, an apllication to improve RRDtool's performance, which in \cite{lisa07:plonka} is shown  in systems with large amount of databases working simultaneously.
+It is noticeable the emerging use of RRDtool in testing environments. As instance, \textcite{zhang07} and \textcite{chilingaryan10} use RRDtool for storing experimental data and then predicting or validating the data.
+
+
+\subsubsection{Overview}
+
+Current TSMS are mainly concerned with the time series analysis problems. However, the relation between database and monitoring system are not addressed. That is, mainly speaking, the problems inferred from data acquisition which  must be treated properly, such as holes in data, false data or sampling time irregularities. 
+The latter is one of the most overlooked problem by TSMS as samples are typically considered equi-spaced, although computer monitoring systems present some variation and delays in sampling times. 
+
+RRDtool is an exception as being a productive system makes its data processing and storing closer to monitoring systems. Nevertheless, it is focused to a particular kind of data, gauges and counters, and it has not so general time series operations as the others TSMS.
+
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "article"
+%%% ispell-local-dictionary: "british"
+%%% End: 
+
+
+% LocalWords:  RRDtool TSMS DBMS
