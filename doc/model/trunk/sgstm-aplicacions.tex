@@ -144,6 +144,29 @@ i buffers orientats a stream; segons es va avaluar anteriorment per
 Estudiar Push o pull aplicada als SGSTM i quines implicacions pot tenir.
 
 
+\subsection{Què fer sense coneixements a priori}
+
+Una base de dades multiresolució requereix tenir un coneixement de l'entorn a priori per a poder establir-ne l'esquema de multiresolució. Perquè un cop establit aquest esquema només s'emmagatzemen els atributs seleccionats i es perd informació sobre la sèrie temporal original.
+
+Per això si la informació és crítica una bona estructura de base de dades consistiria en un magatzem total de la informació recollida i un magatzem multiresolució amb un esquema inicial. La base de dades multiresolució s'utilitzaria per a les consultes habituals que s'haguessin de resoldre de forma ràpida, en cas que les respostes no fossin suficients es podria anar a buscar la informació al magatzem total, a on la resolució de la consulta tindria un temps més elevat. 
+Aleshores si aquestes consultes esdevinguessin habituals es podria definir un nou esquema de multiresolució i iniciar-lo amb les dades del magatzem total (això tardaria un cert temps) per a després executar-hi les consultes de forma ràpida.
+
+
+Tot i així cal notar que en moltes aplicacions les dades històriques
+són prescindibles i es pot canviar l'esquema de multiresolució sense
+gaires preocupacions. Per exemple un sistema de monitoratge de la
+bateria que tenim disponible al portàtil.
+
+ 
+
+
+
+
+
+
+
+
+
 \section{Operacions habituals en les sèries temporals}
 
 
