@@ -236,179 +236,31 @@ multiresolució confereix una sèrie de propietats als objectes d'una
 base de dades multiresolució. A continuació definim algunes propietats
 que es poden estudiar a partir d'un esquema de multiresolució.
 
-Una propietat de l'esquema de multiresolució és el cronograma que se'n
-deriva. Així, donat un esquema de multiresolució podem dibuixar la
-situació relativa en el temps que prendran les mesures.  
+
+Donat un esquema de multiresolució podem dibuixar la situació relativa
+en el temps que prendran les mesures. A aquest dibuix de l'esquema de
+multiresolució l'anomenem cronograma. Per exemple, sigui la sèrie
+temporal multiresolució $M^d=\{R_0,R_1\}$ de l'\autoref{ex:model:bdm-desfasaments} a on les subsèries resolució tenen els paràmetres 
+$\delta_0=5$, $\delta_1=10$, $k_1=4$, $k_2=3$, $f_1=\text{mitjana}$ i $f_2=\text{mitjanad1}$. La funció $\text{mitjanad1}$ té un desfasament de $5$ unitats de temps. 
 
 
-\todo{fer  dibuix aclaridor}
+dibuixem el seu cronograma a la \autoref{fig:model:cronograma}.
+
+instant de temps $30$ just abans de la seva consolidació (a on es compleix la propietat$\text{periodeB}(R_i)=\text{lapseB}(R_i)$)
+
+(unitat de temps)
+
+
+\todo{fer  dibuix aclaridor, citar i explicar dibuixos}
 
 
 
 \begin{figure}[tp]
   \centering
-%  \input{imatges/mtsms_sequence.tex}
-
-%\usetikzlibrary{positioning}
-\begin{tikzpicture}
-
-  %referencia
-  \def\ut{1.2}
-  \node (-10) {};
-
-  \foreach \x in {-9,...,0}
-  {
-    \pgfmathparse{int(\x-1)}
-    \let\antx=\pgfmathresult
-    \node[align=center] (\x) [right=\ut cm of \antx.center,anchor=center] {\x};
-    \node [above=0mm of \x] {\tiny$\vert$};
-  }
-
-
-  %eixos
-  \node (et0) [above=0mm of 0] {};
-  \node (eti) [left=11cm of et0] {};
-  \node (etf) [right=0.5cm of et0] {};
-  \node [right=0mm of etf] {temps (u.t.)};
-  \draw[->] (eti) to (etf);
-
-  \node (ara) [above=4cm of et0] {};
-  \node (ara2) [below=5mm of et0] {};
-  \draw[-] (ara) to (ara2);
-  \node (ara3) [below=-2mm of ara2] {};
-
-  
-
-
- %R1 d2 k4 tau0 f-1
-  \node (R1) [above=1cm of 0] {};
-  \node[ellipse,draw,minimum width=3*\ut cm] (R1b) [left=0mm of R1.center, anchor=east] {$S_{B1}$};
-  \node[rectangle,draw,minimum width=2*\ut cm] (R1d1) [left=0mm of R1b.west, anchor=east] {$S_{D1}^1$};
-  \node[rectangle,draw,minimum width=2*\ut cm,align=center] (R1d2) [left=0mm of R1d1.west, anchor=east] {$S_{D1}^2$};
-  \node[rectangle,draw,minimum width=2*\ut cm,align=center] (R1d3) [left=0mm of R1d2.west, anchor=east] {$S_{D1}^3$};
-
-
-
-  %R0 d1 k4 tau0
-  \node (R0) [above=2.5cm of R1.center] {};
-  \node[ellipse,draw,minimum width=\ut cm,align=center] (R0b) [left=0mm of R0.center, anchor=east] {$S_{B1}$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d1) [left=0mm of R0b.west, anchor=east] {$S_{D0}^1$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d2) [left=0mm of R0d1.west, anchor=east] {$S_{D0}^2$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d3) [left=0mm of R0d2.west, anchor=east] {$S_{D0}^3$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d4) [left=0mm of R0d3.west, anchor=east] {$S_{D0}^4$};
-
-
-  %definicions
-  \node (R0la) [above=5mm of R0d4.west] {};
-  \node (R0lb) [above=5mm of R0d1.east] {};
-  \draw[<->] (R0la.center) -- (R0lb.center) node [above,sloped,midway] {$lapseR(R_0)$};
-
-  \node (R1la) [above=5mm of R1d3.west] {};
-  \node (R1lb) [above=5mm of R1d1.east] {};
-  \draw[<->] (R1la) -- (R1lb) node [above,sloped,midway] {$lapseR(R_1)$};
-
-
-  \node (R0ba) [above=5mm of R0b.west] {};
-  \node (R0bb) [above=5mm of R0b.east] {};
-  \draw[<->] (R0ba) -- (R0bb) node [above,sloped,midway] {$periodeB(R_0)$};
-
-  \node (R1ba) [above=12mm of R1b.west] {};
-  \node (R1bb) [above=12mm of R1b.east] {};
-  \draw[<->] (R1ba) -- (R1bb) node [above,sloped,midway] {$periodeB(R_1)$};
-
-  \node (R1da) [above=5mm of R1b.west] {};
-  \node (R1db) [above=5mm of -2] {};
-  \draw[<->] (R1da.center) -- (R1da-|R1db) node [above,sloped,midway] {$desfasamentB(R_1)$};
-
-  \node [below=0mm of -1] {$\tau_0$};
-  \node [below=0mm of -2] {$\tau_1$};
-  \node (tau0d) [below=0mm of 0] {$\tau_0+\delta_0$};
-  \node [below=0mm of tau0d] {$\tau_1+\delta_1$};
-
-\end{tikzpicture}
-
-
+  \input{imatges/model/sgstm-cronograma.tex}
   \caption{Cronograma d'un esquema multiresolució just abans de la consolidació, a on $\text{periodeB}(R_i)=\text{lapseB}(R_i)$}
   \label{fig:model:cronograma}
 \end{figure}
-
-
-
-%   \caption{Cronograma d'un esquema multiresolució just després de la consolidació, a on $\text{periodeB}(R_i)=\text{desfasament}(R_i)$}
-%   \label{fig:model:cronograma}
-% \end{figure}
-
-
-\begin{figure}[tp]
-  \centering
-
-\begin{tikzpicture}
-
-  %R0
-  \node[circle,draw,minimum width=2 cm] (R0d) {$\delta_{0}$};
-  \draw [->] (R0d.center)++(.4:.4cm) arc(0:180:.4cm);
-
-  \node[circle,draw] [left=0mm of R0d.north,anchor=center] {};
-  \node[circle,draw] [left=0mm of R0d.east,anchor=center] {};
-  \node[circle,draw] [left=0mm of R0d.south,anchor=center] {};
-  \node[circle,draw] [left=0mm of R0d.west,anchor=center] {};
-
-  %R1
-  \node[circle,draw,minimum width=2 cm] (R1d) [right=of R0d] {$\delta_{1}$};
-  \draw [->] (R1d.center)++(.4:.4cm) arc(0:180:.4cm);
-
-  \node[circle,draw] [left=0mm of R1d.north,anchor=center] {};
-  \node[circle,draw] [left=0mm of R1d.south west,anchor=center] {};
-  \node[circle,draw] [left=0mm of R1d.south east,anchor=center] {};
-
-\end{tikzpicture}
-\begin{tikzpicture}
-
-  %referencia
-  \def\ut{1.2}
-  \node (-10) {};
-
-  \foreach \x in {-9,...,0}
-  {
-    \pgfmathparse{int(\x-1)}
-    \let\antx=\pgfmathresult
-    \node[align=center] (\x) [right=\ut cm of \antx.center,anchor=center] {\x};
-    \node [above=0mm of \x] {\tiny$\vert$};
-  }
-
-
-  %eixos
-  \node (et0) [above=0mm of 0] {};
-  \node (eti) [left=11cm of et0] {};
-  \node (etf) [right=0.5cm of et0] {};
-  \node [right=0mm of etf] {temps (u.t.)};
-  \draw[->] (eti) to (etf);
-
-  \node (ara) [above=3cm of et0] {};
-  \node (ara2) [below=5mm of et0] {};
-  \draw[-] (ara) to (ara2);
-  \node (ara3) [below=-2mm of ara2] {};
-
-  
-
-
- %R1 d2 k4 tau0 f-1
-  \node (R1) [above=1cm of 0] {};
-  \node[rectangle,draw,minimum width=6*\ut cm] (R1d) [left=\ut cm of R1.west, anchor=east] {$\text{lapseR}(R_1)$};
-
-
-
-
-  %R0 d1 k4 tau0
-  \node (R0) [above= of R1.center] {};
-  \node[rectangle,draw,minimum width=4*\ut cm] (R0d) [left=0 cm of R0.center, anchor=east] {$\text{lapseR}(R_0)$};
-\end{tikzpicture}
-
-
-  \caption{Cronograma simplificat d'un esquema multiresolució}
-  \label{fig:model:cronograma-simplificat}
-\end{figure}
-
 
 
 Els paràmetres $k$, $\delta$ i $f$ d'una subsèrie resolució són fixats
@@ -488,6 +340,32 @@ $\text{lapseR}(R)$ el qual es posiciona absolutament des de $\tau +
 té informació no consolidada al davant de la consolidada per un
 interval de mida $\text{periodeB}(R)$ i de com a màxim
 $\text{lapseB}(R)$.
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgstm-cronograma-consolidat.tex}
+  \caption{Cronograma d'un esquema multiresolució just després de la consolidació, a on $\text{periodeB}(R_i)=\text{desfasament}(R_i)$}
+  \label{fig:model:cronograma-consolidat}
+\end{figure}
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgstm-cronograma-simplificat.tex}
+  \caption{Cronograma periòdic d'un esquema multiresolució}
+  \label{fig:model:cronograma-simplificat}
+\end{figure}
+
+
+\todo{}
+Així doncs, el cronograma canvia amb el temps com es pot veure a la
+\autoref{fig:model:cronograma} a on s'ha dibuixat l'exemple anterior a
+instant de temps $30$ just després de la seva consolidació (a on es compleix la propietat$\text{periodeB}(R_i)=\text{desfasament}(R_i)$). 
+
+No obstant, les formes es repeteixen periòdicament en el temps: el període de repetició és de $\delta$ per a cada subsèrie resolució. Per a simplificar dibuixarem un cronograma que només mostri la informació periòdica; així establirem l'instant 0 com aquell on totes les subsèries resolució es consoliden al mateix temps i dibuixarem els lapses enrere en el temps. A la \autoref{fig:model:cronograma-simplificat} es pot veure el cronograma periòdic per als exemples anteriors.
+\todo{}
+
+
 
 
 

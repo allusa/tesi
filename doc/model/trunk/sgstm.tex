@@ -251,15 +251,28 @@ S_{D_d} , \tau_{B_d}, \delta_{B_d}, k_{D_d}, f_{B_d} ) \}$.
 
 \subsection{Exemples}
 
-\paragraph{Exemple 1} \emph{Sèrie temporal multiresolució}
+\begin{example} [Sèrie temporal multiresolució]
+\label{ex:model:bdm1}%ATENCIÓ als canvis: les dades d'aquest exemple s'utilitzen en altres apartat.
 
-\todo{}
 
-$M^1 = \{ ( \{(26,0),(27,0)\}  , \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , ( \{(22,0),(26,0),(27,0)\} , \{(10,0),(20,0)\} , 20 , 10 ,2 , \text{mitjana} ) \}$
+\todo{cal explicar en que consisteix l'exemple}
+
+$M^1 = \{ ( \{(26,0),(27,0)\}  , \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , ( \{(22,0),(26,0),(27,0)\} , \{(0,0),(10,0),(20,0)\} , 20 , 10 ,3 , \text{mitjana} ) \}$
 
 
 Una sèrie temporal multiresolució fotografiada en un instant de temps que podria
-ser entre el 27 i el 30.
+ser entre el 27 i el 30. Tots els valors valen zero per tal de facilitar la comprensió de l'exemple.
+
+
+\begin{figure}[tp]
+\centering
+\input{imatges/model/sgstm-exemple1-arquitectura.tex}
+\caption{Arquitectura de SGSTM particular per l'\autoref{ex:model:bdm1}}
+\label{fig:model:ex1}
+\end{figure}\todo{cal canviar buffer, disc, etc. pels paràmetres addients}
+
+L'arquitectura de la base de dades que conté aquesta sèrie temporal multiresolució es pot veure a la \autoref{fig:model:ex1}.
+
 
 
 %S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} sobre valors relació).
@@ -294,25 +307,27 @@ ser entre el 27 i el 30.
       \begin{tabular}{|c|c|}
          \hline
          $t$  & $v$ \\ \hline
+          0  & 0 \\
          10  & 0 \\
          20  & 0 \\\hline
        \end{tabular}  
-       & 20 & 10 & 2 & mitjana  \\ \hline
+       & 20 & 10 & 3 & mitjana  \\ \hline
   \end{tabular}
   \caption{Taula d'una sèrie temporal multiresolució}
   \label{fig:model:stm}
 \end{figure}
 
+\end{example}
 
 
-
-\paragraph{Exemple 2} \emph{Sèrie temporal multiresolució amb vistes}
+\begin{example} [Sèrie temporal multiresolució amb vistes]
 
 \todo{}
 
-És el mateix que la sèrie temporal multiresolució de l'exemple 1 però
-organitzat de forma més còmode amb vistes relacionals.
-\todo{escriure l'expressió relacional de les vistes}
+És el mateix que la sèrie temporal multiresolució de
+l'\autoref{ex:model:bdm1} però organitzat de forma més còmode amb
+vistes relacionals.  \todo{escriure l'expressió relacional de les
+  vistes}
 
 
 \begin{figure}[tp]
@@ -320,8 +335,8 @@ organitzat de forma més còmode amb vistes relacionals.
   \begin{tabular}{|c|c|c|c|c|c|}
     \multicolumn{2}{c}{$M'_2$} \\ \hline
     $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
-    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 2 & mitjana  \\
-    $S_{B2}$ & $S_{D2}$ & 40 & 10 & 4 & mitjana  \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 4 & mitjana  \\
+    $S_{B2}$ & $S_{D2}$ & 40 & 10 & 3 & mitjana  \\ \hline
   \end{tabular}\qquad
   \begin{tabular}{|c|c|c|}
     \multicolumn{3}{c}{$M^{\text{series}}_{2}$} \\ \hline
@@ -340,6 +355,7 @@ organitzat de forma més còmode amb vistes relacionals.
     & 20 & 0 \\ 
     & 25 & 0 \\ \hline
     \multirow{2}{*}{$S_{D2}$} 
+    &  0 & 0 \\ 
     & 10 & 0 \\ 
     & 20 & 0 \\ \hline
   \end{tabular}
@@ -347,7 +363,77 @@ organitzat de forma més còmode amb vistes relacionals.
   \label{fig:model:stm:vistes}
 \end{figure}
 
+\end{example}
 
+
+
+\begin{example} [Sèrie temporal multiresolució amb desfasaments]
+\label{ex:model:bdm-desfasaments}
+
+\todo{}
+
+El mateix que l'\autoref{ex:model:bdm1} però ara canviem la funció de
+la segona subsèrie resolució per un agregador amb desfasament; és a
+dir que cada cop que consolida retorna una mesura amb un retard d'una certa durada. Aquest nou agregador també fa la mitjana però amb un desfasament de $5$ unitat de temps. \todo{potser dir que quan parlem dels esquemes multiresolució més endavant definirem amb precisió aquests conceptes?}
+
+De què pot servir la mitjanad1? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal? \todo{}
+
+
+$M^3 = \{ ( \{(26,0),(27,0)\}  , \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , ( \{(19,0),(22,0),(26,0),(27,0)\} , \{(5,0),(15,0)\} , 20 , 10 ,3 , \text{mitjanad1} ) \}$
+
+
+
+
+Nota sobre la $S_{D2}$: encara no ha arribat al cardinal màxim de
+$k=3$ degut a que suposem que la base de dades s'inicia a l'instant de
+temps $0$. Nota sobre la $S_{B2}$: el buffer ara és 5 unitats més gran i emmagatzema mesures de l'interval [15,30].
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M_1$} \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+      \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         26  & 0 \\
+         27 & 0 \\\hline
+       \end{tabular} & 
+      \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         10  & 0 \\
+         15  & 0 \\
+         20 & 0 \\ 
+         25 & 0 \\\hline
+       \end{tabular} 
+       & 25 & 5  & 4 & mitjana  \\ \hline
+       \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+         19  & 0 \\
+         22  & 0 \\
+         26  & 0 \\
+         27 & 0 \\\hline
+       \end{tabular} & 
+      \begin{tabular}{|c|c|}
+         \hline
+         $t$  & $v$ \\ \hline
+          5  & 0 \\
+         15  & 0 \\\hline
+       \end{tabular}  
+       & 20 & 10 & 3 & mitjanad1  \\ \hline
+  \end{tabular}
+  \caption{Taula d'una sèrie temporal multiresolució amb desfasaments}
+  \label{fig:model:stm}
+\end{figure}
+
+
+
+
+
+\end{example}
 
 
 %%% Local Variables: 
