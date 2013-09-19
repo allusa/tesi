@@ -126,7 +126,7 @@ cardinal permès.
   Sigui $D=(S,k)$ un disc i $m=(t,v)$ una mesura, la inserció de la
   mesura al disc $\addD(D,m)$ és un disc $D'=(S',k)$ amb la mesura
   afegida a la sèrie temporal del disc mantenint el cardinal màxim:
-  $\addD(S,m) = (S',k)$ a on $S'=
+  $\addD(D,m) = (S',k)$ a on $S'=
   \begin{cases}
       S\cup\{m\} &\text{si }  |S|<k\\
       (S-\{\min(S)\}) \cup \{m\} &\text{altrament}
@@ -240,20 +240,14 @@ que es poden estudiar a partir d'un esquema de multiresolució.
 Donat un esquema de multiresolució podem dibuixar la situació relativa
 en el temps que prendran les mesures. A aquest dibuix de l'esquema de
 multiresolució l'anomenem cronograma. Per exemple, sigui la sèrie
-temporal multiresolució $M^d=\{R_0,R_1\}$ de l'\autoref{ex:model:bdm-desfasaments} a on les subsèries resolució tenen els paràmetres 
-$\delta_0=5$, $\delta_1=10$, $k_1=4$, $k_2=3$, $f_1=\text{mitjana}$ i $f_2=\text{mitjanad1}$. La funció $\text{mitjanad1}$ té un desfasament de $5$ unitats de temps. 
-
-
-dibuixem el seu cronograma a la \autoref{fig:model:cronograma}.
-
-instant de temps $30$ just abans de la seva consolidació (a on es compleix la propietat$\text{periodeB}(R_i)=\text{lapseB}(R_i)$)
-
-(unitat de temps)
-
-
-\todo{fer  dibuix aclaridor, citar i explicar dibuixos}
-
-
+temporal multiresolució $M^d=\{R_0,R_1\}$ de
+l'\autoref{ex:model:bdm-desfasaments} dibuixem el seu cronograma a la
+\autoref{fig:model:cronograma} per a l'instant de temps $30$, just
+abans de la seva consolidació. Les subsèries resolució de $M^d$ tenen
+els paràmetres $\delta_0=5$, $\delta_1=10$, $k_1=4$, $k_2=3$,
+$f_1=\text{mitjana}$ i $f_2=\text{mitjanad1}$ a on la funció
+$\text{mitjanad1}$ té un desfasament de $5$ unitats de temps. Tot
+seguit definim els conceptes que apareixen al cronograma.
 
 \begin{figure}[tp]
   \centering
@@ -333,42 +327,6 @@ i al màxim l'anomenem lapse de buffer de la subsèrie resolució.
 \end{definition}
 
 
-Així doncs, resumint, podem dir que una subsèrie resolució té, per una
-banda, informació consolidada per un lapse temporal de
-$\text{lapseR}(R)$ el qual es posiciona absolutament des de $\tau +
-\text{desfasamentR}(R)$ enrere. Per altra banda, la subsèrie resolució
-té informació no consolidada al davant de la consolidada per un
-interval de mida $\text{periodeB}(R)$ i de com a màxim
-$\text{lapseB}(R)$.
-
-\begin{figure}[tp]
-  \centering
-  \input{imatges/model/sgstm-cronograma-consolidat.tex}
-  \caption{Cronograma d'un esquema multiresolució just després de la consolidació, a on $\text{periodeB}(R_i)=\text{desfasament}(R_i)$}
-  \label{fig:model:cronograma-consolidat}
-\end{figure}
-
-
-\begin{figure}[tp]
-  \centering
-  \input{imatges/model/sgstm-cronograma-simplificat.tex}
-  \caption{Cronograma periòdic d'un esquema multiresolució}
-  \label{fig:model:cronograma-simplificat}
-\end{figure}
-
-
-\todo{}
-Així doncs, el cronograma canvia amb el temps com es pot veure a la
-\autoref{fig:model:cronograma} a on s'ha dibuixat l'exemple anterior a
-instant de temps $30$ just després de la seva consolidació (a on es compleix la propietat$\text{periodeB}(R_i)=\text{desfasament}(R_i)$). 
-
-No obstant, les formes es repeteixen periòdicament en el temps: el període de repetició és de $\delta$ per a cada subsèrie resolució. Per a simplificar dibuixarem un cronograma que només mostri la informació periòdica; així establirem l'instant 0 com aquell on totes les subsèries resolució es consoliden al mateix temps i dibuixarem els lapses enrere en el temps. A la \autoref{fig:model:cronograma-simplificat} es pot veure el cronograma periòdic per als exemples anteriors.
-\todo{}
-
-
-
-
-
 Una altra propietat de l'esquema de multiresolució és la
 regularització de les sèries temporals emmagatzemades en el disc. El
 període d'aquesta sèrie temporal del disc normalment es correspondrà
@@ -387,46 +345,110 @@ resolució.
 
 
 
+Resumint, podem dir que una subsèrie resolució té, per una
+banda, informació consolidada per un lapse temporal de
+$\text{lapseR}(R)$ el qual es posiciona absolutament des de $\tau +
+\text{desfasamentR}(R)$ enrere. Per altra banda, la subsèrie resolució
+té informació no consolidada al davant de la consolidada per un
+interval de mida $\text{periodeB}(R)$ i de com a màxim
+$\text{lapseB}(R)$. 
+
+A la \autoref{fig:model:cronograma} s'ha pogut observar totes les
+propietats definides pel cronograma multiresolució. Aquest cronograma
+mostra una fotografia a l'instant de temps determinat, el $30$, que es
+correspon amb un moment abans que es consolidin les dues subsèries
+resolució. Aquest és un moment a on es compleix la
+propietat$\text{periodeB}(R_i)=\text{lapseB}(R_i)$; és a dir a on el
+període de buffer té la mida màxima.
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgstm-cronograma-consolidat.tex}
+  \caption{Cronograma d'un esquema multiresolució just després de la consolidació, a on $\text{periodeB}(R_i)=\text{desfasament}(R_i)$}
+  \label{fig:model:cronograma-consolidat}
+\end{figure}
+
+El cronograma canvia amb el pas del temps; és a dir canvia la mida
+dels buffers i la posició temporal dels discs. Es pot veure a la
+\autoref{fig:model:cronograma-consolidat} a on s'ha dibuixat l'exemple anterior
+però en instant de temps $30$ just després de la consolidació de les
+dues subsèries resolució. Aquest és un moment a on es compleix la
+propietat $\text{periodeB}(R_i)=\text{desfasament}(R_i)$; és a dir a
+on el període de buffer té la mida mínima.  
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgstm-cronograma-simplificat.tex}
+  \caption{Cronograma periòdic d'un esquema multiresolució}
+  \label{fig:model:cronograma-simplificat}
+\end{figure}
+
+Així doncs, el cronograma evoluciona amb el temps i a cada instant
+determinat presenta una forma. No obstant, les formes es repeteixen
+periòdicament en el temps; el període de repetició és de $\delta$ per
+a cada subsèrie resolució. Per a simplificar dibuixarem un cronograma
+que només mostri aquesta informació periòdica; així establirem
+l'instant 0 com aquell on totes les subsèries resolució es consoliden
+al mateix temps i dibuixarem els lapses enrere en el temps. A la
+\autoref{fig:model:cronograma-simplificat} es pot veure el cronograma
+periòdic per als exemples anteriors a on l'eix del temps ens indica
+les durades i les posicions relatives dels discs de les subsèries
+resolució. La informació referent al pas de consolidació i la
+resolució dels discs es dibuixa a la part superior amb formes
+circulars, de manera que s'observa clarament quina subsèrie té més
+resolució.
+
+
+
+
+
+
 
 \subsubsection{Canvis de l'esquema}
 
 Canviar l'esquema multiresolució d'una sèrie temporal significa crear
 un esquema nou de multiresolució i emmagatzemar-hi les dades de
-l'esquema vell de forma que es conservi la coherència que tenien les
-dades. Així doncs, a continuació definim algunes operacions de canvi
-d'esquema que es poden aplicar als objectes d'una base de dades
-multiresolució de forma coherent amb les dades emmagatzemades.
+l'esquema vell de forma que es conservi la coherència que tenien
+aquestes dades. Així doncs, a continuació definim algunes operacions
+de canvi d'esquema que es poden aplicar als objectes d'una base de
+dades multiresolució de forma coherent amb les dades emmagatzemades.
 
 
+L'operació per canviar la mida del disc d'una subsèrie resolució ha de
+controlar que si la mida disminueix s'han d'eliminar dades.
+\begin{definition}[Canvi de mida d'una subsèrie resolució]
+  Sigui $R=(B,D)$ una subsèrie resolució, a on $D=(S_D,k)$ és el disc
+  de la subsèrie, i $k'$ un nou cardinal màxim el canvi de mida de la
+  subsèrie resolució $\text{canviaK}(R,k')$ és una nova subsèrie
+  resolució $R'=(B,D')$ amb les dades antigues afegides de nou al
+  disc: $\text{canviaK}(R,k')= (B,D')$ a on s'aplica l'operació
+  $\forall m_i \in S_D: \addD(D',m_i)$ amb $D'=(\{\},k')$ com a disc
+  inicial.
+\end{definition}
+
+
+L'operació per canviar el pas de consolidació d'una subsèrie resolució
+no cal que tingui en compte les dades ja que la sèrie temporal
+emmagatzemada s'anirà canviant quan es consolidin noves mesures.
+\begin{definition}[Canvi de pas de consolidació d'una subsèrie resolució]
+  Sigui $R = (S_B,S_D,\delta,\tau,k,f)$ una subsèrie resolució i
+  $\delta'$ un nou pas de consolidació, el canvi del pas de
+  consolidació de la subsèrie resolució
+  $\text{canvia}\delta(R,\delta')$ és la nova subsèrie resolució
+  $\text{canvia}\delta(R,\delta')=(S_B,S_D,\delta',\tau,k,f)$.
+\end{definition}
+
+L'operació per canviar la resolució d'una subsèrie resolució canvia
+alhora la mida i el pas de consolidació tenint en compte les dades; es
+a dir, canvia el període de la sèrie temporal emmagatzemada seguint el
+criteri de representació.
+
+$S[i]^r$ Selecció temporal
 \todo{}
-
-Redueix o augmenta la mida d'un disc
-  \begin{gather*}
-    \text{CanviaK}: R \times k' \longrightarrow R': \\
-    R' = (S_B,S'_D,\delta,\tau,k',f) : \\
-    k_d = |S_D|:\\
-    S'_D = \begin{cases}
-      S_D         & \text{si } k' \geq k_d   \\
-      treuN(S_D,k_d-k')    & \text{altrament}
-    \end{cases}, \\
-    treuN: S \times n \mapsto S'=  
-    \begin{cases}
-      S                & \text{si } n=0   \\
-      treuN(S - \{\min(S)\},n-1)  & \text{altrament}
-    \end{cases}
-\end{gather*}
-
-
-Redueix o augmenta el pas de consolidació d'un disc (sense canviar la sèrie temporal emmagatzemada; ja s'anirà canviant quan es consolidin noves mesures)
-  \begin{gather*}
-    \text{Canvia}\delta: R \times \delta' \longrightarrow R': \\
-    R' = (S_B,S_D,\delta',\tau,k,f)
-  \end{gather*}
-
-
 Redueix o augmenta alhora el pas de consolidació i la mida d'un disc
   \begin{gather*}
-    \text{CanviaK}\delta: R \times k' \times \delta' \longrightarrow R': \\
+    \text{CanviaResolucio}: R \times k' \times \delta' \longrightarrow R': \\
     R' = (S_B,S_D',\delta',\tau,k',f): \\    
     t = \{ \tau-n\delta' | n\in\mathbb{N},n<k' \} \\
     S_D' = \text{seleccioResolucio}(S_D,t)
