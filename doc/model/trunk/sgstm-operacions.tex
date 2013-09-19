@@ -228,6 +228,31 @@ esquema, operadors per a canviar-lo i operadors per a unir o ajuntar
 dos esquemes.
 
 
+A cada sèrie temporal multiresolució li correspon un esquema de
+multiresolució.  Una sèrie temporal multiresolució és un conjunt de
+subsèries resolució i per tant l'esquema de multiresolució és també un
+conjunt de l'esquema de cada subsèrie.  A continuació definim els
+operadors de manipulació per a les subsèries resolució, els quals es
+poden estendre fàcilment a una sèrie temporal multiresolució
+mitjançant l'operació de mapatge, de manera similar a la de les sèries
+temporals.
+ \begin{definition}[Mapa d'una sèrie temporal multiresolució] %angl. span
+   Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució i
+   $f$ una funció sobre una subsèrie resolució a on $f:R\mapsto R'$,
+   el mapa de $f$ a $M$ és una sèrie temporal multiresolució amb la
+   funció aplicada a cada subsèrie: $\map(M,f) = \{ f(R_0), \dotsc,
+   f(R_d) \}$.
+\end{definition}
+
+% Aplicació de fold a una BDM
+% \begin{gather*}
+%   \text{fold}: M \times M_i \times f \longrightarrow M' :\\
+%   = f(\dots(f(f(f(M_i,R_0),R_1),R_2)\dots),R_k), \\
+%    \text{a on } f: M_a \times R_b \mapsto M'
+% \end{gather*}
+
+
+
 
 \subsubsection{Propietats de l'esquema}
 
@@ -415,11 +440,11 @@ de canvi d'esquema que es poden aplicar als objectes d'una base de
 dades multiresolució de forma coherent amb les dades emmagatzemades.
 
 
-L'operació per canviar la mida del disc d'una subsèrie resolució ha de
+L'operació que canvia la mida del disc d'una subsèrie resolució ha de
 controlar que si la mida disminueix s'han d'eliminar dades.
 \begin{definition}[Canvi de mida d'una subsèrie resolució]
   Sigui $R=(B,D)$ una subsèrie resolució, a on $D=(S_D,k)$ és el disc
-  de la subsèrie, i $k'$ un nou cardinal màxim el canvi de mida de la
+  de la subsèrie, i $k'$ un nou cardinal màxim, el canvi de mida de la
   subsèrie resolució $\text{canviaK}(R,k')$ és una nova subsèrie
   resolució $R'=(B,D')$ amb les dades antigues afegides de nou al
   disc: $\text{canviaK}(R,k')= (B,D')$ a on s'aplica l'operació
@@ -428,7 +453,7 @@ controlar que si la mida disminueix s'han d'eliminar dades.
 \end{definition}
 
 
-L'operació per canviar el pas de consolidació d'una subsèrie resolució
+L'operació que canvia el pas de consolidació d'una subsèrie resolució
 no cal que tingui en compte les dades ja que la sèrie temporal
 emmagatzemada s'anirà canviant quan es consolidin noves mesures.
 \begin{definition}[Canvi de pas de consolidació d'una subsèrie resolució]
@@ -439,62 +464,109 @@ emmagatzemada s'anirà canviant quan es consolidin noves mesures.
   $\text{canvia}\delta(R,\delta')=(S_B,S_D,\delta',\tau,k,f)$.
 \end{definition}
 
-L'operació per canviar la resolució d'una subsèrie resolució canvia
-alhora la mida i el pas de consolidació tenint en compte les dades; es
+Hi ha altres canvis de l'esquema que tampoc no requereixen tenir en
+compte les dades, com per exemple canviar la funció d'agregació
+d'atribut. Atès que són molt semblants al canvi de pas de
+consolidació, no definim operadors específics per a aquestes
+operacions.
+
+
+L'operació que canvia la resolució d'una subsèrie resolució modifica
+alhora la mida i el pas de consolidació tenint en compte les dades; és
 a dir, canvia el període de la sèrie temporal emmagatzemada seguint el
 criteri de representació.
+\begin{definition}[Canvi de resolució d'una subsèrie resolució]
+  Sigui $R = (S_B,S_D,\delta,\tau,k,f)$ una subsèrie resolució, $r$
+  una funció de representació per a la sèrie temporal, $k'$ un nou
+  cardinal màxim i $\delta'$ un nou pas de consolidació, el canvi de
+  resolució de la subsèrie resolució
+  $\text{canviaResolucio}(R,k',\delta')$ és una nova subsèrie
+  resolució $R' = (S_B,S_D',\delta',\tau,k',f)$ amb una selecció
+  temporal segons el criteri de representació en el nou conjunt
+  regular de temps:
+  $\text{canviaResolucio}(R,k',\delta')=(S_B,S_D',\delta',\tau,k',f)$
+  a on $S_D' = S_D[T]^r$ i $T=\{ \tau-n\delta' | n\in\mathbb{N},n<k'
+  \}$.
+\end{definition}
 
-$S[i]^r$ Selecció temporal
+
+Per a treballar amb sèries temporals multivaluades cal que les sèries
+temporals emmagatzemades als buffers i al discs tinguin la mateixa
+forma. Així afegir un nou multivalor significa afegir un nou atribut a
+les sèries temporals del buffer i dels disc de cada subsèrie
+resolució. A continuació definim com afegir un multivalor a una
+subsèrie resolució considerant sèries temporals en la forma canònica;
+a la pràctica, per comoditat, habitualment cada atribut de multivalor
+tindrà un nom.
+\begin{definition}[Afegeix multivalor a una subsèrie resolució]
+  Sigui $R = (S_B,S_D,\delta,\tau,k,f)$ una subsèrie resolució,
+  l'addició d'un nou multivalor és una nova subsèrie resolució $R' =
+  (S_B',S_D',\delta,\tau,k,f)$ amb les sèries temporals ampliades amb
+  un nou atribut inicialment de valor indefinit $S'_{B} =
+  \map(S_B,(t,v)\mapsto(t,(v,\infty)))$ i $S'_{D} =
+  \map(S_D,(t,v)\mapsto(t,(v,\infty)))$.
+\end{definition}
+
+
+
+
+
+\subsubsection{Unió i junció de dos esquemes}
+
+Dos casos particulars de canvi d'esquema multiresolució són el d'unió
+i el de junció de dos esquemes. En aquests canvis cal crear un nou
+esquema tot conservant la coherència de dades emmagatzemades en dos
+esquemes diferents.
+
+Un exemple d'aplicació de la unió de dos esquemes és el següent. Es
+mesuren els valors d'una sèrie temporal i durant un temps
+s'emmagatzemen com a sèrie temporal multiresolució en una base de
+dades però durant un altre temps s'emmagatzemen en una altra base de
+dades. En acabar es volen unir els valors emmagatzemats a les dues
+bases de dades.
+
+Un exemple d'aplicació de la junció de dos esquemes és el següent.  Es
+mesuren els valors de dues sèries temporals diferents i s'emmagatzemen
+com a dues sèries temporals multiresolució diferents. En acabar es
+volen ajuntar els dos valors en una mateixa sèrie temporal
+multivaluada.
+
+
+
+
+
+
 \todo{}
-Redueix o augmenta alhora el pas de consolidació i la mida d'un disc
-  \begin{gather*}
-    \text{CanviaResolucio}: R \times k' \times \delta' \longrightarrow R': \\
-    R' = (S_B,S_D',\delta',\tau,k',f): \\    
-    t = \{ \tau-n\delta' | n\in\mathbb{N},n<k' \} \\
-    S_D' = \text{seleccioResolucio}(S_D,t)
-  \end{gather*}
+
+\begin{definition}[Unió de dues subsèries resolució]
+  Sigui $R_1^*=(S_{B1},S_{D1},\delta,\tau_1,k_1,f)$ i
+  $R_2^*=(S_{B2},S_{D2},\delta,\tau_2,k_2,f)$ dues subsèries resolució
+  amb el mateix pas de consolidació $\delta$ i el mateix agregador
+  d'atributs $f$, la unió de les dues subsèries resolució $R_1^* \cup
+  R_2^*$ és una subsèrie resolució $R' =
+  (S'_B,S'_D,\delta,\tau',k',f)$ que conté la unió de les sèries
+  temporals dels seus buffers i discs: $R_1^* \cup R_2^* =
+  (S'_B,S'_D,\delta,\max(\tau_1,\tau_2),k_1+k_2,f)$ a on $S'_B =
+  S_{B1} \cup S_{B2}$ i $S'_D = S_{D1} \cup S_{D2}$.
+\end{definition}
+
+Cal dir que no és commutatiu! degut a les unions de les sèries temporals; és a dir que en cas que les subsèries resolució continguin mesures en el mateix temps es creu més a la primera.
 
 
-
-
-Afegeix un multivalor per a emmagatzemar sèries temporals multivaluades
-  \begin{gather*}
-    \text{afegeixMultivalor}: R \longrightarrow R': \\
-    R' = (S'_{B},S'_{D},\delta,\tau,k,f): \\
-    S'_{B} = \text{map}(S_B,(t,v)\mapsto(t,v,\infty)), \\
-    S'_{D} = \text{map}(S_D,(t,v)\mapsto(t,v,\infty))
-  \end{gather*}\todo{s'ha de fer amb extends i les v han de poder tenir nom}
-
-
-
-
-\subsubsection{Canvis en l'esquema d'una sèrie temporal multiresolució}
-
-Aplicació de map a una BDM.
-\begin{gather*}
-  \text{map}: M \times f \longrightarrow M' = \{ f(R_0), \dotsc, f(R_k) \} :\\
-   \text{a on } f: R_a \mapsto R'
- \end{gather*}
+\todo{}
+\begin{definition}[Unió de dues sèries temporals  multiresolució]
+  Sigui $M^1=\{R_0^1,\dotsc,R_{d1}^1\}$ i $M^2=\{R_0^2,\dotsc,R_{d2}^2\}$
+  dues sèries temporals multiresolució, la unió de les dues $M^1 \cup
+  M^2$ és una sèrie temporal multiresolució
+  $M'=\{R_0',\dotsc,R_d'\}$ que conté la unió \todo{de què}: $M^1 \cup
+  M^2=$ 
  
-Aplicació de fold a una BDM
-\begin{gather*}
-  \text{fold}: M \times M_i \times f \longrightarrow M' :\\
-  = f(\dots(f(f(f(M_i,R_0),R_1),R_2)\dots),R_k), \\
-   \text{a on } f: M_a \times R_b \mapsto M'
-\end{gather*}
+\end{definition}
+
+Cal dir que degut a la no commutativitat de la unió anterior, aquesta
+tampoc ho és.
 
 
-
-
-
-\subsubsection{Treball amb dos esquemes}
-
-
-\paragraph{Unió de multiresolució}
-
-Cas típic:
-Mesuro una sèrie temporal. Durant un temps emmagatzemo valors a una
-base de dades i després els emmagatzemo a una altra base de dades. Al final vull unir les dues bases de dades.
 
 
 Unió de dos discs resolució que tenen el mateix $\delta$ i $f$ és un
@@ -538,7 +610,7 @@ intersectin, podem definir la unió multiresolució com la unió que sap unir el
 
 \todo{canviar fusió per junció}
 
-Tinc una sèrie temporal en una base de dades, i una altra sèrie temporal en una altra base de dades. Vull emmagatzemar-les totes dues en una mateixa base de dades amb una sèrie temporal multivaluada.
+
 
 
 Fusió de dos discs resolució que tenen el mateix $\delta$ i $f$.
