@@ -210,6 +210,7 @@ consolidables.
 
 
 \subsection{Manipulació de l'esquema}
+\label{sec:model:sgstm-manipulacio-esquema}
 
 El model de SGSTM associa a cada sèrie temporal un esquema de
 multiresolució. En aquest apartat definim els operadors que permeten
@@ -681,55 +682,77 @@ procedir de forma similar.
 \subsubsection{Sèrie temporal total}
 
 
-\todo{} 
-
-* Fer una unió temporal de tots els discs de la BDM i treballar sobre aquest senyal $\longrightarrow$ Abstracció d'una BDSTM com a sèrie temporal; és possible treballar amb una BDSTM com si fos una sèrie temporal?
-
-
+La sèrie temporal total és la sèrie temporal que ofereix la màxima
+resolució de la sèrie temporal multiresolució; és a dir que concatena
+les subsèries resolució tenint en compte el pas de consolidació de
+cada una. El resultat és una sèrie temporal amb períodes de mostreig
+regulars a trossos.
 \begin{definition}[Sèrie temporal total]
-  Sigui $M^*$ una base de dades multiresolució a on no hi ha $\delta$ repetits
-  \begin{gather*}
-    \text{SerieTotal}: M^* \longrightarrow S': \\
-    \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
-    \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : \\
-    S' = S_{D0} || S_{D1} || S_{D2} || \dotsb || S_{Dd}
-\end{gather*}
+  Sigui $M^*=\{R_0,\dotsc,R_{d}\}$ una sèrie temporal multiresolució a
+  on no hi ha $\delta$ repetits, la sèrie temporal total de la sèrie
+  temporal multiresolució $\text{SerieTotal}(M^*)$ és la sèrie
+  temporal que resulta de la concatenació de les sèries temporals dels
+  discs per ordre de pas de consolidació: $\text{SerieTotal}(M^*)=S'$
+  a on $S'= S_{D0} || S_{D1} || S_{D2} || \dotsb || S_{Dd}$
+  complint que $\forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in
+  M^* : \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d$.
 \end{definition}
 
-Prèviament es pot fer una selecció dels discs resolució que
-comparteixin un determinat agregador d'atributs. \todo{També hi podria
-  haver una operació estructural que sabés fusionar dos discs
-  resolució}
+La sèrie temporal total s'ha definit a partir d'una sèrie temporal
+multiresolució sense $\delta$ repetits. Con a conseqüència, els
+$\delta_i$ pertanyents a la sèrie temporal multiresolució tenen un
+ordre estricte i la sèrie temporal total resultant no és ambigua.
 
-* Abans de fer una consulta temporal pot fer falta fer una selecció dels discs resolució amb el mateix interpolador.
-
-
-L'operació de consulta de la sèrie temporal total també es pot aplicar
-tenint en compte la representació.
-\begin{definition}[Sèrie total amb representació]
-  Sigui $M^*$ una base de dades multiresolució a on no hi ha $\delta$
-  repetits i $r$ una representació
-  \begin{gather*}
-    \text{SerieTotal}: M^* \times r \longrightarrow S': \\
-    \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
-    \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : \\
-    S' = S_{D0} \cup^r S_{D1} \cup^r  S_{D2}  \cup^r \dotsb \cup^r  S_{Dd}
-\end{gather*}
-\end{definition}
+En el cas que una sèrie temporal multiresolució tingui $\delta$
+repetits, prèviament a l'obtenció de la sèrie temporal total cal
+decidir com seleccionar un conjunt únic de $\delta$. Proposem dos
+exemples de selecció prèvia:
+\begin{itemize}
+\item Una sèrie temporal multiresolució és un conjunt amb $(\delta,f)$
+  com a atributs clau i una selecció prèvia habitual pot ser la
+  selecció de les subsèries resolució que comparteixin un determinat
+  agregador d'atribut $f$.
+\item Un altra selecció prèvia possible és utilitzar l'operació d'unió
+  de subsèries resolució per a les subsèries que tinguin el mateix pas
+  de consolidació $\delta$.
+\end{itemize}
 
 
 
-\paragraph{Selecció de resolució}
+
+% L'operació de consulta de la sèrie temporal total també es pot aplicar
+% tenint en compte la representació.
+% \begin{definition}[Sèrie total amb representació]
+%   Sigui $M^*$ una base de dades multiresolució a on no hi ha $\delta$
+%   repetits i $r$ una representació
+%   \begin{gather*}
+%     \text{SerieTotal}: M^* \times r \longrightarrow S': \\
+%     \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
+%     \delta_0 < \delta_1 < \delta_2 < \dots < \delta_d : \\
+%     S' = S_{D0} ||^r S_{D1} ||^r  S_{D2}  ||^r \dotsb ||^r  S_{Dd}
+% \end{gather*}
+% \end{definition}
 
 
-Per a extreure una resolució determinada de la sèrie temporal
-emmagatzemada a la base de dades multiresolució, es consulta la sèrie
-temporal total i s'aplica una selecció de resolució
-$\text{SerieTotal}(M)[i]^r$ a on $i$ és el conjunt d'instants de
-temps.
 
 
+La sèrie temporal total és una abstracció d'una sèrie temporal
+multiresolució en forma de sèrie temporal. Aleshores es poden aplicar
+totes les operacions de les sèries temporals. En mostrem dos exemples:
 
+\begin{itemize}
+\item Per a extreure una resolució determinada de la sèrie temporal
+  emmagatzemada a una base de dades multiresolució, es consulta la
+  sèrie temporal total i s'aplica una selecció de resolució:
+  $\text{SerieTotal}(M)[i]^r$ a on $i$ és un conjunt d'instants de
+  temps i $r$ la representació de la sèrie temporal.
+
+\item Per a sumar dues sèries temporals emmagatzemades a una base de
+  dades multiresolució, es consulta la sèrie temporal total de cada
+  una i s'hi aplica l'operació computacional de sumar:
+  $\text{SerieTotal}(M_1)+\text{SerieTotal}(M_2)$.
+
+\end{itemize}
 
 
 
