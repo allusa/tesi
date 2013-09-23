@@ -2,57 +2,87 @@
 \label{cap:model:sgstm}
 
 
-\todo{Proposta de noms}
-\begin{itemize}
-\item Buffer
-\item Disc
-\item Subsèrie temporal resolució-atribut
-\item Sèrie temporal multiresolució
-\item Base de dades de sèries temporals multiresolució
-\end{itemize}
-
-
-
 En aquest capítol es defineix un model dels sistemes de gestió de
 bases de dades per a sèries temporals multiresolució (SGSTM). Aquest
-model s'estructura un objecte principal que són les sèries temporals
-multiresolució, les quals són conjunts de subsèries temporals
-resolució formades per discs i buffers. El model es dissenya en dues
-parts.
+model s'estructura en un objecte principal que són les sèries
+temporals multiresolució, les quals es defineixen com a conjunts de
+subsèries temporals resolució formades per discs i buffers. El model
+es dissenya en tres parts.
 
 \begin{itemize}
 \item Primer, es defineix el model d'estructura de les dades, és a
   dir, la forma que prenen els buffers, els discs, les subsèries
   resolució, les sèries temporals multiresolució i les bases de dades
   de sèries temporals multiresolució.
+
 \item Segon, es defineix el model d'operacions sobre les dades, és a
   dir, els operadors bàsics que permeten modelar el comportament i la
   manipulació de bases de dades multiresolució.
-\end{itemize}
 
+\item Tercer, s'expliquen amb més detall les funcions específiques del
+  model que permeten agregar diferents atributs de les sèries
+  temporals per a obtenir les multiresolucions. Les funcions
+  d'agregació d'atributs són requerides pel model però no hi estan
+  lligades.
+\end{itemize}
 
 
 
 
 \section{Model estructural de dades}
 
-Una base de dades de sèries temporals multiresolució (BDSTM) és un
-conjunt de sèries temporals multiresolució a on cada una és una
-relació de buffers amb discs.
+Els objectes estructurals principals d'un SGSTM, els quals es
+defineixen en aquesta secció, són els següents:
+\begin{itemize}
+\item Buffer
+\item Disc
+\item Subsèrie temporal resolució
+\item Sèrie temporal multiresolució
+\item Base de dades de sèries temporals multiresolució
+\end{itemize}
 
-\todo{descriure l'arquitectura. Dir que l'arquitectura té tot de paràmetres variables i que configurar-los és el que anomenem definir l'esquema multiresolució?}
+Amb aquest elements definim que en una base de dades per a sèries
+temporals multiresolució (BDSTM) hi ha sèries temporals multiresolució
+a on cada una és una subsèrie temporal resolució formada per una
+relació d'un buffer amb un disc. Aquests objectes tenen molta
+correspondència amb les sèries temporals i per tant amb el model de
+SGST.
+
+
 \begin{figure}[tp]
 \centering
 \input{imatges/model/mtsms-arquitectura_interna.tex}
-\caption{Arquitectura del model SGSTM}
+\caption{Arquitectura d'una BDSTM}
 \label{fig:model:bdstm}
 \end{figure}
 
 
-Aquí només es defineixen els conceptes referents a l'estructura del
-model. Aquesta estructura, però, requereix uns operadors específics
-per a emmagatzemar-hi les mesures, els quals es defineixen a
-l'apartat~\ref{sec:model:sgstm-estructurals}.
+Aquests objectes també permeten definir l'arquitectura d'una BDSTM com
+es pot veure a la \autoref{fig:model:bdstm}.  Un SGSTM és una solució
+d'emmagatzematge per a sèries temporals a on, resumint, la informació
+es distribueix mitjançant diferents resolucions temporals.  Una sèrie
+temporal multiresolució és una co\l.lecció de subsèries resolució, les
+quals acumulen temporalment mesures en un buffer a on són processades
+i finalment emmagatzemades en un disc. El processament de les dades té
+per objectiu canviar els intervals de temps entre les mesures per tal
+de compactar la informació de les sèries temporals. D'aquesta manera,
+les sèries temporals queden emmagatzemades en diferents resolucions
+temporals distribuïdes en els discs.
+
+Els discs tenen la mida limitada i només poden contenir un nombre
+fixat de mesures. Quan un disc no té més capacitat ha d'eliminar una
+mesura. Com a conseqüència una BDSTM té la mida fixada i les sèries
+temporals hi queden emmagatzemades a trossos; és a dir com a subsèries
+temporals. 
+
+
+En aquesta secció només es defineixen els conceptes referents a
+l'estructura del model. Aquesta estructura, però, requereix uns
+operadors específics per a emmagatzemar-hi i consolidar-hi les
+mesures, els quals es defineixen a
+l'apartat~\ref{sec:model:sgstm-estructurals}. També requereix unes
+funcions per a agregar els atributs de les sèries temporals, els quals
+es defineixen a l'apartat~\ref{sec:model:agregador}.
 
 
 
@@ -192,17 +222,24 @@ f_a \neq f_b$.
 \subsection{Base de dades de sèries temporals
   multiresolució}\label{sec:model:bdstm}
 
-Una base de dades de sèries temporals multiresolució (BDSTM) és un
-conjunt de sèries temporal multiresolució.
+Una base de dades de sèries temporals multiresolució (BDSTM) és una
+co\l.lecció de sèries temporal multiresolució.  Les sèries temporals
+es poden emmagatzemar exclusivament en una BDSTM o poden conviure amb
+altres tipus de dades en bases de dades que tinguin capacitats de
+BDSTM.
 
-Les sèries temporals es poden emmagatzemar exclusivament en una BDSTM
-o poden conviure amb altres tipus de dades en bases de dades que tinguin
-capacitats de BDSTM.
+
+Una BDSTM té uns paràmetres que cal configurar per a cada sèrie
+temporal multiresolució: pas de consolidació, funció d'agregació,
+etc. Anomenem esquema de multiresolució a l'efecte que produeixen les
+configuracions possibles d'aquests paràmetres. Així doncs, a cada
+BDSTM li podem observar i manipular els seus esquemes de
+multiresolució, el qual mostrem amb més detall a
+l'apartat~\ref{sec:model:sgstm-manipulacio-esquema}.
 
 
 
 \subsubsection{Relació sèrie temporal multiresolució}
-
 
 
 Una sèrie temporal multiresolució és una relació de buffers i discs. A
@@ -222,7 +259,8 @@ atributs
 \end{itemize}
 
 Una restricció habitual és que $\delta$ i $f$ no estiguin repetits; és
-a dir que són els atributs clau de la relació sèrie temporal multiresolució.
+a dir que ($\delta$,$f$) són els atributs clau de la relació sèrie
+temporal multiresolució.
 
 Així doncs observada com a relació, tal com s'ha fet en el model de
 SGST, podem escriure una sèrie temporal multiresolució
@@ -255,14 +293,16 @@ S_{D_d} , \tau_{B_d}, \delta_{B_d}, k_{D_d}, f_{B_d} ) \}$.
 \label{ex:model:bdm1}%ATENCIÓ als canvis: les dades d'aquest exemple s'utilitzen en altres apartat.
 
 
-\todo{cal explicar en que consisteix l'exemple}
-
-$M^1 = \{ ( \{(26,0),(27,0)\}  , \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , ( \{(22,0),(26,0),(27,0)\} , \{(0,0),(10,0),(20,0)\} , 20 , 10 ,3 , \text{mitjana} ) \}$
-
-
-Una sèrie temporal multiresolució fotografiada en un instant de temps que podria
-ser entre el 27 i el 30. Tots els valors valen zero per tal de facilitar la comprensió de l'exemple.
-
+Sèrie temporal multiresolució $M_1=\{R_0,R_1\}$ que té dues subsèries
+resolució amb els paràmetres següents:
+\begin{itemize}
+\item La subsèrie resolució $R_0$ té un pas de consolidació de 5
+  unitats de temps, una mida màxima de 4 mesures i una funció de
+  consolidació de 'mitjana' de les mesures.
+\item La subsèrie resolució $R_1$ té un pas de consolidació de 10
+  unitats de temps, una mida màxima de 3 mesures i una funció de
+  consolidació de 'mitjana' de les mesures.
+\end{itemize}
 
 \begin{figure}[tp]
 \centering
@@ -271,7 +311,33 @@ ser entre el 27 i el 30. Tots els valors valen zero per tal de facilitar la comp
 \label{fig:model:ex1}
 \end{figure}\todo{cal canviar buffer, disc, etc. pels paràmetres addients}
 
-L'arquitectura de la base de dades que conté aquesta sèrie temporal multiresolució es pot veure a la \autoref{fig:model:ex1}.
+L'arquitectura de la base de dades que conté aquesta sèrie temporal
+multiresolució es pot veure a la \autoref{fig:model:ex1}.
+
+
+Iniciem la base de dades a l'instant de temps 0, instant en el qual la
+sèrie temporal multiresolució és $M_1^0 = \{ ( \{\} , \{\} , 0 , 5 ,4
+, \text{mitjana} ) , ( \{\} , \{\} , 0 , 10 ,3 , \text{mitjana} ) \}$;
+és a dir amb les sèries temporals buides i els darrers instants de
+consolidació iniciats a 0.
+
+
+
+Afegim a la sèrie temporal multiresolució les mesures de la sèrie
+temporal $S_1=$\todo{} i la consolidem cada cop que sigui consolidable.
+
+Tots els valors valen zero per tal de facilitar la comprensió de l'exemple.
+
+
+\todo{cal explicar en que consisteix l'exemple}
+
+$M^1 = \{ ( \{(26,0),(27,0)\}  , \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , ( \{(22,0),(26,0),(27,0)\} , \{(0,0),(10,0),(20,0)\} , 20 , 10 ,3 , \text{mitjana} ) \}$
+
+
+Una sèrie temporal multiresolució fotografiada en un instant de temps que podria
+ser entre el 27 i el 30. 
+
+
 
 
 
