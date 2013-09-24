@@ -20,7 +20,7 @@ twoside,fontsize=11pt,BCOR12mm,
 %---------- Mode esborrany --------------------
 \includeonly
 %{sgst,sgst-operacions}
-{sgstm,sgstm-operacions,sgstm-interpoladors,sgstm-aplicacions}
+{sgstm,sgstm-operacions}%,sgstm-interpoladors,sgstm-aplicacions}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\color{gray}{esborrany}}}
 %%\renewcommand{\headrulewidth}{0pt}
@@ -29,6 +29,16 @@ twoside,fontsize=11pt,BCOR12mm,
 %\usetikzlibrary{calc}
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
+%per tal que trenqui la coma en math inline mode 
+%http://tex.stackexchange.com/questions/19094/allowing-line-break-at-in-inline-math-mode-breaks-citations/
+\AtBeginDocument{%
+  \mathchardef\mathcomma\mathcode`\,
+  \mathcode`\,="8000 
+}
+{\catcode`,=\active
+  \gdef,{\mathcomma\discretionary{}{}{}}
+}
+%teoremes
 \newtheorem{definition}{Definició}
 \newtheorem{example}{Exemple}
 \def\figureautorefname{figura} %ús: \autoref{}
@@ -147,7 +157,8 @@ twoside,fontsize=11pt,BCOR12mm,
 \include{sgstm}
 \include{sgstm-operacions}
 \include{sgstm-interpoladors}
-\include{sgstm-aplicacions}
+
+%\include{sgstm-aplicacions}
 
 
 %\include{implementacio-relacional}
