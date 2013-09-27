@@ -186,8 +186,6 @@ guia per a la implementació dels calendaris en els SGST.
 
 \todo{T: refer tota la secció}
 
-\todo{potser citar que el valor es tracta de manera semblant a l'extensió del model objecte-relacional?}
-
 El \gls{terme:SGBDR:valor} és qualsevol element que és d'un
 \gls{terme:SGBDR:tipus}; és a dir, un objecte que
 pertany a un determinat conjunt de valors i que té associat les
@@ -197,6 +195,7 @@ vectors, llistes o \glspl{terme:SGBDR:relacio}.
 
 \todo{Exemplificar més amb tipus que tenen valors i operacions que se'ls poden aplicar}
 
+%\todo{potser citar que el valor es tracta de manera semblant a l'extensió del model objecte-relacional?}
 
 El model de dades dels valors ha d'incloure una dada que defineixi el
 valor indefinit. Més endavant a la
@@ -221,7 +220,7 @@ temps, tal i com fa per exemple \textcite{assfalg08:thesis}.
 
 \subsection{Mesura}\label{sec:model:mesura} 
 
-Una mesura és una parella de temps i valor.
+Una mesura està formada per la parella de temps i valor.
 
 \begin{definition}[Mesura]
   \label{def:model:mesura}
@@ -238,8 +237,9 @@ L'instant de temps de les mesures indueix una relació d'ordre entre
 les mesures.
 \begin{definition}[Relació d'ordre]
   \label{def:model:mesura-relacio-ordre}
-  Sigui $m=(t_m,v_m)$ i $n=(t_n,v_n)$. Direm que $m\geq n$ si i solament
-  si $t_m\geq t_n$.
+  Sigui $m=(t_m,v_m)$ i $n=(t_n,v_n)$, direm que l'ordre de la mesura
+  $m$ és major o igual que $n$, $m\geq n$, si i solament si $t_m\geq
+  t_n$.
 \end{definition}
 
 
@@ -267,7 +267,7 @@ mesura indefinida.
   $t\in\{+\infty,-\infty\}$.
 \end{definition}
 
-Així doncs, sigui $m$ una mesura, es podrà notar la mesura de valor
+Així doncs, donada una mesura $m$, s'anota la mesura de valor
 indefinit com $m=(t,\infty)$ i les mesures indefinides com
 $m=(+\infty,v)$ per la positiva i $m=(-\infty,v)$ per la negativa, les
 quals normalment s'anotaran també amb valor indefinit:
@@ -297,7 +297,7 @@ indefinides presents.
 \label{sec:model:serietemporal}
 
 Les sèries temporals són seqüències de mesures ordenades en el temps.
-Tradicionalment s'anomenen sèries temporals tot i que també s'anomenen
+Tradicionalment s'anomenen sèries temporals tot i que alguns autors les anomenen
 seqüències temporals, per exemple a \cite{last:hetland}.  Les sèries
 temporals són mesures del mateix fenomen i com a conseqüència el tipus
 dels valors de les sèries temporals és homogeni.
@@ -306,7 +306,7 @@ dels valors de les sèries temporals és homogeni.
 \begin{definition}[Sèrie temporal]
   \label{def:serie_temporal}
   Una sèrie temporal $S$ és un conjunt de mesures
-  $S=\{m_0,\ldots,m_k\}$ sense temps repetits
+  $S=\{m_0,\ldots,m_k\}$ sense temps repetits en la qual
   $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$.
 \end{definition}
 
@@ -322,14 +322,15 @@ Per ser un conjunt, les sèries temporals tenen mesura de cardinalitat.
 
 
  
-\subsubsection{Formes possibles}
+\subsubsection{Formes d'una sèrie temporal}
 
-A continuació atenem a les formes possibles d'una sèrie
-temporal.
+Una sèrie temporal pot tenir formes diferents segons com s'expressi.
+A continuació diferenciem entre tres formes possibles d'una sèrie
+temporal: canònica, multivaluada i doble.
+
 
 La forma bàsica d'una sèrie temporal és la de parelles de temps i
 valor a la qual anomenem forma canònica.
-
 \begin{definition}[Forma canònica]
   Sigui $S = \{ m_0, m_1 , \dotsc, m_k \}$ una sèrie temporal,
   s'escriu com $S =  \{
@@ -380,9 +381,10 @@ tenen dos atributs de temps i a la qual anomenem forma doble.
 
 La sèrie temporal doble prové d'un producte de dues sèries
 temporals. Està pensada com a càlcul intermedi d'altres operacions com
-per exemple la junció o el mapatge. La seva forma canònica es
-correspondria de manera semblant a l'exemple de la
-\autoref{fig:model:serietemporal:serietemporal}.
+per exemple la junció o el mapatge. 
+% La seva forma canònica es
+% correspondria de manera semblant a l'exemple de la
+% \autoref{fig:model:serietemporal:serietemporal}.
 
 
 
@@ -392,9 +394,13 @@ correspondria de manera semblant a l'exemple de la
 
 
 
-\subsection{Relació sèrie temporal}
+\subsubsection{Relació sèrie temporal}
 
-Una sèrie temporal és una relació de temps i valors. A cada parella temps-valor l'anomenem mesura. Així doncs, una sèrie temporal és un conjunt de mesures.
+Una sèrie temporal s'expressa com un conjunt i com a tal és
+susceptible d'aplicar-hi els conceptes del model relacional dels
+SGBD. A continuació, el que s'ha descrit a l'apartat anterior es torna
+a expressar seguint el concepte de relació.
+
 
 Per ser un conjunt de mesures, s'observa una sèrie temporal com una
 relació de grau dos a on la capçalera conté els atributs temps i
@@ -404,7 +410,7 @@ exemple el tipus de dades 'reals estesos'. Les relacions de sèries
 temporals inclou algunes restriccions més que les relacions:
 
 \begin{itemize}
-\item Els temps no poden estar repetits: (key restriction {t})
+\item Els temps no poden estar repetits: (\emph{key restriction \{t\}})
 \item L'atribut de valor ha de contenir el mateix tipus d'objecte i ha
   d'estar associat al mateix fenomen o fenòmens.
 \end{itemize}
@@ -417,13 +423,11 @@ relacions matemàtiques que tenen un ordre d'esquerra a
 dreta \parencite[sec.\ 5.3]{date:introduction}.
 
 
+%\subsubsection{Possibles representacions}
 
-
-\subsubsection{Possibles representacions}
-
-
-A continuació atenem a les possibles representacions d'una sèrie
-temporal segons les formes que tinguin.
+A l'apartat anterior s'han descrit diverses formes d'una sèrie
+temporal.  A continuació atenem a les possibles representacions com a
+relació d'una sèrie temporal segons les formes que tinguin.
 
 % Com a relació seguint el concepte de possibles
 % representacions proposat per \textcite[cap.~5]{date:introduction} ?
@@ -494,7 +498,7 @@ es visualitzen com a taula a la
   pertanyen només poden tenir un tuple $r \in V: |r| = 1$.
 \end{definition}
 
-Com succeeix en les relacions, el nom dels atributs d'una sèrie
+Com ocorre en les relacions, el nom dels atributs d'una sèrie
 temporal pot ser decidit per l'usuari. Per exemple una sèrie temporal
 multivaluada amb tres atributs amb nom: $S_{\emptyset} = ( \{t:
 \bar{\R{}}, \text{temperatura}: \bar{\R{}}\,
@@ -502,11 +506,12 @@ multivaluada amb tres atributs amb nom: $S_{\emptyset} = ( \{t:
 \} )$.
 
 
-
-\begin{definition}[Sèrie temporal doble]
+Finalment, també representem una sèrie temporal doble en forma de
+relació.
+\begin{definition}[Representació doble]
   La representació com a relació d'una sèrie temporal doble buida és
   $S_{\emptyset} = ( \{t_1: \bar{\R{}}, v_1: \bar{\R{}}\,
-  t_2: \bar{\R{}}, v_2: \bar{\R{}}\}, \{ \} )$
+  t_2: \bar{\R{}}, v_2: \bar{\R{}}\}, \{ \} )$.
 \end{definition}
 
 
