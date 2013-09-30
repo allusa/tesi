@@ -1,0 +1,268 @@
+\chapter{Implementació relacional}
+
+
+
+
+
+\section{SGST relacional}
+
+
+
+\begin{verbatim}
+VAR timeseries BASE RELATION
+    { t RATIONAL, v RATIONAL }  KEY { t } ;
+
+OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
+return t FROM TUPLE FROM m;
+END OPERATOR;
+
+OPERATOR ts.v(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
+return v FROM TUPLE FROM m;
+END OPERATOR;
+\end{verbatim}
+
+
+
+\subsection{Màxim i suprem}
+
+Tutorial D:
+\begin{verbatim}
+OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
+END OPERATOR;
+
+OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
+END OPERATOR;
+\end{verbatim}
+
+
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1: 
+ts.max(ts1)
+\end{verbatim}
+\begin{verbatim}
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 1.0/0.0, v 1.0 }  //1.0/0.0 infinit
+ } AS ts2: 
+ts.max(ts2)
+\end{verbatim}
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1: 
+ts.sup(ts1)
+\end{verbatim}
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1: 
+ts.sup(timeseries)
+\end{verbatim}
+
+
+
+\subsection{Unió}
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+END OPERATOR;
+\end{verbatim}
+
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2: 
+ts.union(ts1,ts2)
+\end{verbatim}
+
+
+
+\subsection{Unió exclusiva}
+
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+END OPERATOR;
+\end{verbatim}
+
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2: 
+ts.xunion(ts1,ts2)
+\end{verbatim}
+
+
+\subsection{Selecció temporal}
+
+
+
+TutorialD:
+\begin{verbatim}
+OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+VAR x RATIONAL init(0.0);
+VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
+sp := RELATION {
+TUPLE {t h, v x}
+};
+return ts.union(ts.interval(s,l,h),sp);
+END;
+END OPERATOR;
+\end{verbatim}
+
+Exemple:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2:
+ts.temporal.select.zohe(ts1,1.0,5.0)
+\end{verbatim}
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 1.0, v 2.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts2:
+ts.temporal.select.zohe(ts1,-1.0/0.0,-1.0/0.0)
+\end{verbatim}
+
+
+
+\subsection{Map i fold}
+
+
+
+TutorialD:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+} AS ts1: 
+ts.map(ts1,'t','t*v/2.0')
+\end{verbatim}
+
+TutorialD:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 0.0, v 0.0}
+} AS mi: 
+ts.fold(ts1,mi,'t','v+vi')
+\end{verbatim}
+
+antM TutorialD:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t 5.0, v 0.0}
+} AS m: 
+ts.sup(ts1 WHERE t < ts.t(m))
+\end{verbatim}
+
+sup fold TutorialD:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+RELATION {
+TUPLE { t -1.0/0.0, v 1.0/0.0}
+} AS mi: 
+ts.fold(ts1,mi,'max {t,ti}','v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ti, v vi,  e False} } JOIN RELATION { TUPLE {e t > ti}})')
+\end{verbatim}
+
+predecessors mapfold TutorialD:
+\begin{verbatim}
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 4.0, v 2.0 },
+TUPLE { t 6.0, v 4.0 }
+ } AS ts1,
+EXTEND ts1 {t} ADD ( -1.0/0.0 as v)
+AS si: 
+ts.fold(ts1,si,'t','v FROM TUPLE FROM (RELATION { TUPLE {v ti, e True}, TUPLE {v v,  e False} } JOIN RELATION { TUPLE {e v < ti and ti<t}})')
+\end{verbatim}
+
+
+\section{SGSTM relacional}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

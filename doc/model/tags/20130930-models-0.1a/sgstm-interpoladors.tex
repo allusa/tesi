@@ -1,0 +1,469 @@
+\newcommand{\prev}{\ant}
+
+
+\section{Funcions d'agregació d'atributs}
+\label{sec:model:interpolador}
+\label{sec:model:agregador}
+
+
+
+
+\subsection{Interpolació (refer)}
+\todo{refer}
+
+Sigui $S$ una sèrie temporal i $T_0$ i $T_f$ dos instants de temps, un agregador d'atributs $f$ calcula la mesura que resumeix a $S$ en un interval de temps $i=[T_0,T_f]$. 
+\[
+f: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+
+Hi poden haver diferents agregadors d'atributs depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns agregador d'atributs per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
+
+
+\begin{definition}[Agregador mitjana aritmètica]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=[T_0,T_f]$ un interval de temps, l'agregador mitjana
+  aritmètica (MA) resumeix $S(t)$ amb una mesura que és la mitjana dels
+  valors de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MA: \text{Sèrie temporal} \times \text{interval de temps}
+\longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
+\]
+\end{definition}
+
+\begin{definition}[Agregador D'atributs màxim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs màxim
+  (MAX) resumeix $S(t)$ amb una mesura que és el màxim dels valors
+  de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MAX: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \max_{\forall m \in S'}(V(m))
+\]
+\end{definition}
+
+De manera dual es pot definir l'agregador d'atributs mínim (MIN) com el
+que resumeix $S(t)$ amb una mesura que és el mínim dels valors de les
+mesures al conjunt $S(T_0,T_f]$.
+
+
+\begin{definition}[Agregador D'atributs últim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs últim
+  (LAST) resumeix $S(t)$ amb una mesura que és la mesura màxima del
+  conjunt $S(T_0,T_f]$.
+\[
+LAST: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(\max(S(T_0:T_f]),T_f)
+\]
+\end{definition}
+
+
+
+\begin{definition}[Agregador D'atributs àrea]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs àrea
+  (AREA) resumeix $S(t)$ amb una mesura que conserva l'àrea sota la
+  corba de la representació \emph{zero-order hold} cap enrere del
+  conjunt $S(T_0,T_f]$.
+\[
+AREA: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+v' = 
+\frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}
+\]
+per $S(t)$ estar definida a trossos, $v'$ es pot expressar com
+\[
+o=\min(S(T_0:T_f]),
+S'= S(T_0:T_f] - \{o\},
+n=\seg\limits_S \max(S'): %equivalent a n=\min(S(T_f,\infty)) quan existeix S(T_f,\infty)
+\]
+\[
+:v'= \frac{(T(o)-T_0)V(o) 
++( T_f- T(\ant\limits_S n) )V(n) 
++\sum\limits_{\forall m \in S'}( T(m)- T(\ant\limits_S m) )V(m)}
+{T_f-T_0} 
+\]
+
+Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
+\end{definition}
+
+%Compte amb AREA S [t<T_0,T_0] que no està definida en la definició discreta
+
+%Quan una sèrie temporal és regular, l'intepolador mitjana aritmètica i l'interpolador àrea valen el mateix en l'interval $(T_o,n\delta]$.
+
+If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
+$$
+\int_a^b f(x)dx = f(x^*)(b-a)
+$$
+
+The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
+
+Weisstein, Eric W. "Average Function." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/AverageFunction.html
+
+
+
+
+
+
+\subsection{Agregador d'atributs (nova)}
+
+
+
+An attribute interpolation function is used when a buffer is
+consolidated in order to summarise information from the time series.
+Let $S$ be a time series and $t_0$ and $t_f$ two time instants, an
+attribute interpolation function $f$ calculates a measure that
+summarises an attribute of $S$ in the time interval $i=[T_0,T_f]$:
+\[
+f: \text{Time series} \times \text{time interval} \longrightarrow
+\text{Measure}
+\]
+\[
+f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
+\]
+
+There can be different attribute interpolation functions in order to
+summarise a time series. As instance, we may want to calculate
+statistics from a time series such as the maximum value, the average
+or apply digital signal processing operations as is done in
+\cite{zhang11}.  Furthermore, attribute interpolation functions copes
+with data validation, which we will discuss latter in this section.
+
+We can globally define the behaviour of attribute interpolation
+functions in the discrete (set) and continuous forms. However, $T(m')$
+rest undefined as the resulting consolidation time is subject to
+interpretation, which we discuss below. Next, we exemplify some
+operators for both cases. For simplicity, we present examples with
+real numbers but they could also be integers, strings or more
+elaborated structures such as arrays.
+
+
+First, purely discrete interpolation (d) which resembles typical set
+operators. We must define the consolidation interval depending on $i$,
+let $S'=S(T_0,T_f]$:
+\begin{itemize}
+\item maximum$^d$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall m
+    \in S'}(V(m))$. It summarises $S'$ with the maximum of
+  the measure values.
+\item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
+  summarises $S'$ with the maximum measure.
+\item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$. It
+  summarises $S'$ with the mean of the measure values.
+\end{itemize}
+
+
+Second, continuous interpolation (c). Note that we need a continuous
+function $S(t)$ which is discussed below. Let $t\in\mathbb{R}$:
+\begin{itemize}
+\item maximum$^c$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall t
+    \in [T_0,T_f]}(S(t))$. It summarises $S(t)$ with the maximum in
+  interval $i$.
+\item last$^c$: $S \times i \mapsto m'$ where $V(m') = S(T_f)$. It
+  summarises $S(t)$ with the last value in interval $i$.
+\item average$^c$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{\int_{T_0}^{T_f} S(t)dt}{T_f-T_0}$. It summarises $S(t)$ with
+  the average value, that is the area, in interval $i$. $S(t)$ must be
+  continuous on the closed interval.
+\end{itemize}
+
+
+In the design of the attribute interpolation function we can interpret
+a time series in different ways, that is what we call the
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite
+some possible representations for time series such as \emph{Fourier
+  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
+\emph{Piecewise Linear Representation} (PLR). This last is remarked as
+the most used owing to the most common representation is with linear
+functions \cite{keogh01}.
+
+The variety of time series representations results in a variety of the
+same attribute interpolation functions. As instance, a maximum
+attribute interpolation function may give different values if we
+consider a linear or a constant piecewise representation. Therefore,
+the time series representation results in attribute interpolation
+functions families.
+
+
+Next, we show two possible families for attribute interpolation
+functions: one for time series represented by a staircase function and
+another by a impulse train function.
+
+First, we show some attribute interpolation functions for time series
+represented by a staircase function, that is with a piecewise constant
+representation.  We define a new representation for time series called
+\emph{zero-order hold backwards}
+(zohe%from \emph{zero-order hold everted}
+) consisting in holding each value until the preceding value, which a
+similar representation is used by RRDtool \cite{lisa98:oetiker}.
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+$S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards}
+continuous representation along time $t$:
+%continuous definition of the time series using left-continuous step functions.
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t)^{\text{zohe}} =  
+\begin{cases}
+  \infty & \text{if } t > T(\max S) \\%\text{not defined}
+  V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
+\end{cases}
+\]
+
+
+We now define the \emph{zero-order hold backwards} attribute
+interpolation function family as the one interpreting the
+consolidation time interval left-continuous $i=(T_0,T_f]$ and the
+resulting interpolated measure's time always being $T_f$, in
+accordance to the \emph{zero-order hold backwards} representation
+being defined using left-continuous step functions.  Let
+$S=\{m_0,\ldots,m_k\}$ be a time series and $i=[T_0,T_f]$ be a time
+interval, the attribute interpolation function $f^{\text{zohe}}\in f$
+summarises $S$ with a measure, $f^{zohes}: S=\{m_0,\ldots,m_k\} \times
+i=[T_0,T_f] \mapsto m'$ where $m'=(v',T_f)$ and the resulting value
+$v'$ depends on the attribute interpolation function calculated from
+the subset $S^{zohe}=(S(T_0,T_f] \cup \{\min(S-S(-\infty,Tf))\}$.
+% hauria de ser seltemp:$S[t_0,t_f]^{zohe}$.
+
+On the one hand, purely discrete zohe interpolation functions (zohed)
+have $T(m')=T_f$ and remain with $V(m')$ as defined above except for
+$S'$, let now $S'=S^{zohe}$:
+\begin{itemize}
+\item maximum$^{zohed}$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
+\item last$^{zohed}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$ and
+  $T(m')=T_f$.
+\item arithmetic mean$^{zohed}$: $S \times i \mapsto m'$ where $V(m')
+  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
+  $T(m')=T_f$. 
+\end{itemize}
+On the other hand, continuous zohe interpolation functions (zohec)
+have also $T(m')=T_f$ and we must define $V(m')$ in the piecewise
+approach, let now $S'=S^{zohe}$:
+\begin{itemize}
+\item maximum$^{zohec}$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
+%Note: \emph{Minimum interpolation} can be defined dually.
+\item last$^{zohec}$: $S \times i \mapsto m'$ where $V(m') = \max(S')$
+  and $T(m')=T_f$.
+\item average$^{zohec}$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{1}{T_f-T_0} \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) +
+  \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]$,
+  $T(m')=T_f$, $o=\min(S')$, $n=\max(S')$, and $S''= S' - \{o\}$.
+% \[
+%   \begin{split}
+%   T(m')  = & \frac{1}{T_f-T_0} 
+%   \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) \\
+%     & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
+%    \end{split}
+%   \]
+\end{itemize}
+
+
+
+Second, we show attribute interpolation functions for time series
+represented by a impulse train function, that is by Dirac delta
+functions.  We define a new representation for time series called
+\emph{Dirac delta} ($\delta$) based on the Dirac delta, which is a
+function that is zero everywhere except at zero.
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define $S(t)^{\delta}$
+as its \emph{Dirac delta} continuous representation along time $t$:
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t)^{\delta} =  \sum V(m)\delta(t-T(m)) =
+\begin{cases}
+  V(m) & \text{if }  t=T(m) \\
+  0 & \text{else} 
+\end{cases}
+\]
+
+We now define the \emph{Dirac delta} attribute interpolation function
+family as the one interpreting the consolidation time interval closed
+$i=[T_0,T_f]$ and the resulting interpolated measure's time always
+being $\frac{T_f+T_0}{2}$.  Let $S=\{m_0,\ldots,m_k\}$ be a time
+series and $i=[T_0,T_f]$ be a time interval, the attribute
+interpolation function $f^{\delta}\in f$ summarises $S$ with a
+measure, $f^{\delta}: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto
+m'$ where $m'=(v',\frac{T_f+T_0}{2})$ and the resulting value
+$v'$ depends on the attribute interpolation function calculated from
+the subset $S^{\delta}=S-(S(-\infty,T_0)+S(T_f,+\infty))$.
+% equivalent a l'interval tancat S[T_0,T_f]
+
+On the one hand, purely discrete $\delta$ interpolation functions
+($\delta d$) have $T(m')=\frac{T_f+T_0}{2}$ and remain with $V(m')$ as
+defined above, let now $S'=S^{\delta}$:
+\begin{itemize}
+\item maximum$^{\delta d}$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$ and $T(m')=\frac{T_f+T_0}{2}$.
+\item last$^{\delta d}$: $S \times i \mapsto m'$ where $V(m') =
+  \max(S')$ and $T(m')=\frac{T_f+T_0}{2}$.
+\item arithmetic mean$^{\delta d}$: $S \times i \mapsto m'$ where $V(m')
+  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
+  $T(m')=\frac{T_f+T_0}{2}$. 
+\end{itemize}
+On the other hand, continuous $\delta$ interpolation functions
+($\delta c$) have also $T(m')=\frac{T_f+T_0}{2}$ and we must define
+$V(m')$ in the piecewise approach, let now $S'=S^{\delta}$:
+\begin{itemize}
+\item maximum$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') = \max(0,
+  \max_{\forall m \in S'}(V(m)))$ and $T(m')=\frac{T_f+T_0}{2}$.
+\item last$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') = 
+\begin{cases}
+V(m) & \text{if } m\in S':T(m)=T_f \\
+0 & \text{else}
+\end{cases}$ and $T(m')=\frac{T_f+T_0}{2}$.
+\item average$^{\delta c}$: $S \times i \mapsto m'$ where $V(m') =
+  \sum\limits_{\forall m \in S'} V(m)$ and
+  $T(m')=\frac{T_f+T_0}{2}$. Note that delta function has the
+  fundamental property $\int \delta(t)dt = 1$.
+\end{itemize}
+
+In these two families shown, the continuous and the discrete form for
+maximum and last functions coincide in the zohe interpretation but do
+not coincide in the $\delta$ interpretation. 
+
+
+\paragraph{Tractament/validació de dades}\todo{}
+
+With reference to data validation, attribute interpolation functions
+can cope with this process. When data has not been captured or has
+been captured erroneously, it must be treated as unknown data.
+\begin{itemize}
+\item When data has not been captured it is unknown by nature. For
+  example, we try to capture data from a sensor and there is no
+  response.
+\item When data is erroneously it must be marked as unknown. For
+  example, we capture data from a sensor but it responses in a not
+  reasonable time or we capture data that is clearly outside a
+  reasonable limits.
+\end{itemize}
+As a consequence, attribute interpolation functions deals with these
+two subprocesses: treating unknown data and marking data as
+unknown. Following with real numbers, let unknown value be represented
+by the improper element infinity ($\infty$).  
+
+An attribute interpolation functions treating unknown data is a one
+that can calculate a result when there are unknown values in the
+original time series, $f^u: S \times i \mapsto m'$ where $\exists m \in
+S: V(m)=\infty$. Although from a strict point of view
+operating with unknown data makes unknown result, interpolation
+functions are free to calculate whatever is needed such as time series
+analysis does with data reconstruction.
+
+For example, we can redefine the average$^{c}$ interpolation function
+into one capable of treating unknown values by keeping the known area;
+that is, total known area is spread on the time interval.
+average$^{cu}$: $S \times i \mapsto m'$ where $V(m') =
+\frac{\int_{T_0}^{T_f} S^u(t)dt}{T_f-T_0}$ and $S^u(t)=
+\begin{cases}
+  0 &\text{if }  S(t)=\infty\\
+  S(t) & \text{else }
+\end{cases}$.
+
+
+An attribute interpolation functions marking data as unknown is a one
+that can give unknown value as the resulting measure's value, $f^{mu}:
+S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
+
+For example, we can define a maximum interpolation, based on the
+maximum$^d$ interpolation, that returns unknown if there is a
+measure's value bigger than 2.  maximum$^{dmu2}$: $S \times i
+\mapsto m'$ where $V(m') = 
+\begin{cases}
+  \infty &\text{if }  m''>2\\
+  m'' & \text{else }
+\end{cases}$ and $m''=\text{maximum}^d(S,i)$.
+
+%Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
+    
+In conclusion, a huge amount of attribute interpolation functions can
+be defined and no global assumptions can be made. Therefore, MTSMS
+must give freedom to the users to define their own functions.
+
+
+
+
+% \section{Tractament dels desconeguts}
+
+
+%operacions amb nan de octave i matlab
+%http://biosig-consulting.com/matlab/NaN/
+% The NaN-toolbox v2.0: A statistics and machine learning toolbox for Octave and Matlab®
+% for data with and w/o MISSING VALUES encoded as NaN's.
+
+
+% La censura per interval és una verificació possible. En aquesta, un valor $v$ es considera desconegut quan $v<L_{m}$ o $v>L_{M}$.
+
+
+% Sigui $m=(v,t)$ una mesura, $m$ és desconeguda si $v$ és desconegut.
+
+% Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $H$ un termini de temps, una mesura $m_i=(v_i,t_i)\in S$ és desconeguda si, donada la mesura anterior $m_{i-1}=(v_{i-1},t_{i-1})$, $t_i - t_{i-1} > H$.
+
+
+% Sigui $f$ un interpolador, en el moment de calcular la mesura de consolidació $f$ decideix si és desconeguda
+% \[
+% desconeguda?: \text{Sèrie temporal} \times \text{interval} \longrightarrow \text{Mesura}
+% \]
+
+% Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $f$ un interpolador, $i=[T_0,T_f]$ un interval de temps i $\alpha$ un llindar, la mesura de consolidació calculada per l'interpolador $f$ és desconeguda ssi  
+% \[
+% \frac{t_d }{T_f - T_0} > \alpha :
+% \]
+% \[
+% :t_d = t_{d0} + t_{df} + \sum\limits_{i=1}^{k-1}(t_i-t_{i-1}) : v_k = 'desconegut':
+% \]
+% \[
+% : t_{d0} = \left\{\begin{array}{l} t_0-T_0 \text{ si } v_0 = 'desconegut' \\ 0\end{array}\right. ,
+% t_{df} = \left\{\begin{array}{l} T_f-t_{k-1} \text{ si } v_k = 'desconegut' \\ 0\end{array}\right. :
+% \]
+% \[
+% :k=|S|-1,(v_k,t_k)=m_k\in S' :S'= S_{T_0:T_f} \cup \{min(S_{T_f:\infty})\}
+% \]
+
+
+
+
+
+
+\subsection{Exemples}
+
+\todo{}
+Cal fer l'exemple de la mitjana1d descrita a \ref{ex:model:bdm-desfasaments}
+
+De què pot servir la mitjanad1? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal? \todo{}
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% ispell-local-dictionary: "british"
+%%% End:
+% LocalWords: buffer buffers  MTSMS multiresolution DBMS zohe
+
+
+
+
+
