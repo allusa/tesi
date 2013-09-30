@@ -3,16 +3,17 @@
 \newglossaryentry{not:sgst}{ name={Notació SGST}, description={\nopostdesc},sort=10}
 
 
-\newglossaryentry{not:temps}{ name={Temps}, description={$t\in\bar{\mathbb{R}}$},sort=20}
+\newglossaryentry{not:temps}{ name={Temps}, description={$t\in T$},sort=20}
 
 \newglossaryentry{not:instant}{name={$t^i$},description={Instant de temps}, parent={not:temps}, sort=1 }
 \newglossaryentry{not:duracio}{description={Duració},name={$t^d$},parent={not:temps}, sort=2 }
 \newglossaryentry{not:temps-referencia}{description={Temps de referència},name={$t^R$},parent={not:temps}, sort=3 }
 \newglossaryentry{not:temps-interval}{description={Interval de temps},name={$[t^i_a,t^i_b]$},parent={not:temps}, sort=4 }
+\newglossaryentry{not:temps-domini}{description={Domini del temps (ex.~$\bar{\mathbb{R}}$)},name={$T$},parent={not:temps}, sort=5 }
 
 
-
-\newglossaryentry{not:valor}{ name={Valor}, description={\nopostdesc},sort=30}
+\newglossaryentry{not:valor}{ name={Valor}, description={$v\in V$},sort=30}
+\newglossaryentry{not:valor-domini}{description={Domini del valor (ex.~$\mathbb{R}^*$)},name={$V$},parent={not:valor}, sort=5 }
 
 
 
@@ -22,36 +23,60 @@
 \newglossaryentry{not:mesura-valor}{description={Valor},name={$V(m)$},parent={not:mesura}, sort=2 }
 \newglossaryentry{not:mesura-ordre}{description={Ordre total},name={$m_a \leq m_b$},parent={not:mesura}, sort=3 }
 
+\newglossaryentry{not:mesura-vindefinit}{description={Valor indefinit},name={$(t,\infty)$},parent={not:mesura}, sort=4 }
+\newglossaryentry{not:mesura-indefinida}{description={Mesura indefinida},name={$(\pm\infty,\infty)$},parent={not:mesura}, sort=5 }
 
 
 
 
-\newglossaryentry{not:serietemporal}{ name={Sèrie temporal}, description={$\{m_0,\dotsc,m_k\}$},sort=50}
+\newglossaryentry{not:serietemporal}{ name={Sèrie temporal}, description={$S=\{m_0,\dotsc,m_k\}$},sort=50}
 
-\newglossaryentry{not:st-cardinal}{description={Cardinal},name={$|S|$},parent={not:serietemporal}, sort=1 }
-\newglossaryentry{not:st-max}{description={Màxim},name={$\max(S)$},parent={not:serietemporal}, sort=2 }
-\newglossaryentry{not:st-min}{description={Mínim},name={$\min(S)$},parent={not:serietemporal}, sort=3 }
-\newglossaryentry{not:st-interval}{description={Interval},name={$S(t^i_a,t^i_b]$},parent={not:serietemporal}, sort=4 }
-\newglossaryentry{not:st-interval-i}{description={Interval},name={$S[-\infty,t^i_b)$},parent={not:serietemporal}, sort=5 }
+\newglossaryentry{not:sgst-canonica}{description={Canònica},name={$( \{t, v\}, \{ \dots \} )$},parent={not:serietemporal}, sort=1 }
+\newglossaryentry{not:sgst-multivaluada}{description={Multivaluada},name={$( \{t, v_1,\dotsc, v_n\}, \{ \dots \} )$},parent={not:serietemporal}, sort=2 }
+\newglossaryentry{not:sgst-doble}{description={Doble},name={$( \{t_1, v_1,t_2,v_2\}, \{ \dots \} )$},parent={not:serietemporal}, sort=3 }
+\newglossaryentry{not:st-cardinal}{description={Cardinal},name={$|S|$},parent={not:serietemporal}, sort=4 }
+
+
+
+
+\newglossaryentry{not:op-conjunts}{name={Operacions de conjunts},description={\nopostdesc},sort=60 }
+
+\newglossaryentry{not:sgst:in}{description={Pertinença},name={$m\in S$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:int}{description={Pertinença temporal},name={$m\in^t S$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:sub}{description={Inclusió},name={$S_1\subseteq S_2$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:subt}{description={Inclusió temporal},name={$S_1\subseteq^t S_2$},parent={not:op-conjunts}}
+
+\newglossaryentry{not:sgst:max}{description={Màxim},name={$\max(S)$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:min}{description={Mínim},name={$\min(S)$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:sup}{description={Suprem},name={$\sup(S)$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:inf}{description={Ínfim},name={$\inf(S)$},parent={not:op-conjunts}}
+
+\newglossaryentry{not:sgst:unio}{description={Unió},name={$S_1\cup S_2$},parent={not:op-conjunts}}
+\newglossaryentry{not:sgst:uniot}{description={Unió temporal},name={$S_1\cup^t S_2$},parent={not:op-conjunts}}
+
+
+% \newglossaryentry{not:sgst:unio}{description={Unió exclusiva},name={$\operatorname{uni\acute{o}}^x$},parent={not:sgst}}
+% \newglossaryentry{not:sgst:uniot}{description={Unió prioritària},name={$\operatorname{uni\acute{o}}^p$},parent={not:sgst}}
+
+
+
+\newglossaryentry{not:op-sequencies}{name={Operacions de seqüències},description={\nopostdesc},sort=70 }
+
+\newglossaryentry{not:st-interval}{description={Interval},name={$S(t^i_a,t^i_b]$},parent={not:op-sequencies}}
+\newglossaryentry{not:st-interval-i}{description={Interval},name={$S[-\infty,t^i_b)$},parent={not:op-sequencies}}
+
+
+
+
+
+\newglossaryentry{not:sgstm}{ name={Notació SGSTM}, description={\nopostdesc},sort=80}
+
+
+
+
 
 
 %\newglossaryentry{not:}{description={},name={},parent={not:serietemporal}, sort= }
-
-
-
-\newglossaryentry{not:sgst:uniox}{description={Unió exclusiva},name={$\operatorname{uni\acute{o}}^x$},parent={not:sgst}}
-\newglossaryentry{not:sgst:uniop}{description={Unió prioritària},name={$\operatorname{uni\acute{o}}^p$},parent={not:sgst}}
-
-
-
-
-\newglossaryentry{not:sgstm}{ name={Notació SGSTM}, description={\nopostdesc},sort=60}
-
-
-
-
-
-
 
 
 % \section{Mathematical symbols}
@@ -131,5 +156,5 @@
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "main"
+%%% TeX-master: "../main"
 %%% End:
