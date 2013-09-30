@@ -1,0 +1,111 @@
+\chapter{Introducció als models}
+
+
+En els capítols següents es dissenya un model matemàtic pels sistemes
+de gestió de bases de dades multiresolució per a sèries
+temporals. 
+
+
+En aquest capítol, s'introdueix el concepte de model matemàtic
+pels sistemes de gestió de bases de dades.  
+
+
+En els següents capítols es defineixen els objectes que ens permeten
+modelar l'estructura de les dades i els operadors que s'hi poden
+aplicar.
+
+La definició del model s'estructura en dues parts:
+
+\begin{itemize}
+\item Un model pels (SGST)  que defineix mesura i sèrie temporals.
+\item Un model pels (SGSTM) que defineix buffer, disc i disc
+  resolució, el qual treballa sobre el model de SGST.
+\end{itemize}
+
+
+  
+
+\section{Introducció}
+
+Segons Date,~\cite{date:introduction}, ``una base de dades és un contenidor informàtic per a una co\l.lecció de dades''. El sistemes informàtics que tracten amb bases de dades s'anomenen sistemes de gestió de bases de dades (SGBD) i tenen l'objectiu d'emmagatzemar informació i permetre consultar i afegir aquesta informació  per part dels usuaris.
+Per complir aquests objectius, els SGBD ofereixen a l'usuari diferents operacions a fer amb la base de dades, com per exemple crear-la, afegir dades o consultar informació a partir de les dades emmagatzemades.
+
+Els SGBD es basen en teories matemàtiques que reben el nom de model de dades, un SGBD és una implementació d'un model de dades.
+Segons Date, ``un model de dades és una definició abstracta, auto continguda i lògica dels objectes, de les operacions i  de la resta que conjuntament constitueixen la màquina abstracta amb la que els usuaris interactuen. Els objectes permeten modelar l'estructura de les dades. Les operacions permeten modelar el comportament''.
+
+Les bases de dades multiresolució per a sèries temporals són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
+El model de dades multiresolució és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
+
+
+El model de dades per a sèries temporals es dissenya en el
+capítol~\ref{cap:model:sgst}. El disseny d'aquest model és necessari
+per a comprendre i construir el model multiresolució.  El model de
+dades multiresolució es dissenya en el capítol~\ref{cap:model:sgstm}.
+El concepte de multiresolució prové d'estudis anteriors
+\parencite{llusa12:ptd}, el qual es va formalitzar com a abstracció
+d'una característica essencial de l'SGBD
+RRDtool \parencite{rrdtool}. Aquesta abstracció es va realitzar a
+partir d'una anàlisi profunda dels conceptes de RRDtool duta a terme
+en una tesi de màster \parencite{llusa11:tfm}.
+
+
+
+Així doncs, a continuació es presenten els model de dades.
+
+En el model per a sèries temporals es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les mesures són dades mesurades en un instant de temps i les sèries temporals són co\l.leccions de mesures.
+
+El model de dades multiresolució s'estructura a partir de \emph{discs resolució}, els quals  acumulen temporalment les mesures en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre mesures amb l'objectiu de compactar la informació de la sèrie temporal.
+Així doncs, la sèrie temporal queda emmagatzemada en intervals de temps diferents, repartits en els discs resolució. 
+
+Pel que fa a les operacions, és indispensable que el model multiresolució pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{interpolació} i \emph{consolidació}. En el model de dades multiresolució es defineixen els operadors específics per a aquestes tasques anomenats \emph{agregadors d'atributs}
+
+
+A banda de les estructures, en el model també es defineixen els
+operadors que permeten tractar les dades; ja sigui per operar amb les
+estructures o bé per a fer consultes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \dots
+% \ldots
+% \cdots
+% \vdots
+% \ddots diagonal dots
+% \iddots  inverse diagonal dots (requires the mathdots package)
+% \hdotsfor{n} to be used in matrices, it creates a row of dots spanning n columns
+
+% A_1,A_2,\dotsc,   with commas
+% A_1+\dotsb+A_N    with binary operators/relations
+% A_1 \dotsm A_N    multiplication dots
+% \int_a^b \dotsi   with integrals
+% A_1\dotso A_N     other dots
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+% LocalWords: buffer buffers
+
+
+
+
+
