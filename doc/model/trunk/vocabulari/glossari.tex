@@ -2,7 +2,7 @@
 \newglossarystyle{estil-notation}{%
   \renewcommand{\glsgroupskip}{}% make nothing happen between groups
   \renewenvironment{theglossary}
-  {\begin{longtable}{ll}
+  {\begin{longtable}{lll}
       % \caption{Notació dels SGSTM \label{tab:sgstm-simbols}}
       % \endfirsthead
       % \caption[]{Notació dels SGSTM (continuació)}
@@ -11,11 +11,13 @@
           % \endlastfoot
     }{\end{longtable}}
   \renewcommand*{\glossarysubentryfield}[6]{%
-    \glstarget{##2}{##3}% the entry name
+    %\glstarget{##2}{##3}% the entry name
+    \glstarget{##2}{\Glsentryname{##2}}% the entry name
     &
-    % \space (##4)% the symbol in brackets
+     %\space (##5)% the symbol in brackets
     \space ##4% the description
-    % \space [##6]% the number list in square brackets
+    &
+    \space [##6]% the number list in square brackets
     \\
   }%
   \renewcommand*{\glossaryentryfield}[5]{%

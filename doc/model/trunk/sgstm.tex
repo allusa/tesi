@@ -1,13 +1,12 @@
 \chapter{Model SGSTM}
 \label{cap:model:sgstm}
 
-
-En aquest capítol es defineix un model dels sistemes de gestió de
-bases de dades per a sèries temporals multiresolució (SGSTM). Aquest
-model s'estructura en un objecte principal que són les sèries
-temporals multiresolució, les quals es defineixen com a conjunts de
-subsèries temporals resolució formades per discs i buffers. El model
-es dissenya en tres parts.
+En aquest capítol es defineix un \glsdispsec{not:sgstm}{model dels
+  sistemes de gestió de bases de dades per a sèries temporals
+  multiresolució (SGSTM)}. Aquest model s'estructura en un objecte
+principal que són les sèries temporals multiresolució, les quals es
+defineixen com a conjunts de subsèries temporals resolució formades
+per discs i buffers. El model es dissenya en tres parts.
 
 \begin{itemize}
 \item Primer, es defineix el model d'estructura de les dades, és a
@@ -92,10 +91,13 @@ es defineixen a l'apartat~\ref{sec:model:agregador}.
 Un buffer és un contenidor d'una sèrie temporal, regular o no regular, que mitjançant una funció permet regularitzar aquesta sèrie temporal amb un període de mostreig constant. A l'acció de regularitzar un interval d'una sèrie temporal l'anomenarem consolidació, al període de mostreig contant l'anomenarem pas de consolidació i a la funció de regularització l'anomenarem agregador d'atributs.
 
 \begin{definition}[Buffer]
-  Definim \emph{buffer} com el tuple $(S,\tau,\delta,f)$, en el que
-  $S$ és una sèrie temporal, $\tau$ és el darrer instant de temps de
-  consolidació, $\delta$ és la durada del pas de consolidació i $f$ és
-  un agregador d'atributs.
+  Definim \emph{buffer} com el tuple
+  \glsdispdef{not:buffer}{$(S,\tau,\delta,f)$}, en el que
+  \glsdispdef{not:sgstm:sb}{$S$} és una sèrie temporal,
+  \glsdispdef{not:sgstm:tau}{$\tau$} és el darrer instant de temps de
+  consolidació, \glsdispdef{not:sgstm:delta}{$\delta$} és la durada
+  del pas de consolidació i \glsdispdef{not:sgstm:f}{$f$} és un
+  agregador d'atributs.
 \end{definition}
 
 La consolidació d'una sèrie temporal s'inicia en un instant de temps
@@ -138,8 +140,9 @@ la sèrie temporal.  Així doncs, un disc és semblant a una cua
 primer de sortir.
 
 \begin{definition}[Disc]
-  Definim \emph{disc} com el tuple $(S,k)$, en el que $S$
-  és una sèrie temporal i $k\in\N{}$ és el cardinal màxim de $S$.
+  Definim \emph{disc} com el tuple \glsdispdef{not:disc}{$(S,k)$}, en
+  el que \glsdispdef{not:sgstm:sd}{$S$} és una sèrie temporal i
+  \glsdispdef{not:sgstm:k}{$k\in\N{}$} és el cardinal màxim de $S$.
 \end{definition}
 
 A l'inici, un disc no conté mesures però cal que estigui caracteritzat
@@ -164,8 +167,9 @@ amb el concepte descrit pels buffers.
 
 
 \begin{definition}[Subsèrie resolució]
-  Definim \emph{subsèrie resolució} com el tuple $(B,D)$, en el que
-  $B$ és un buffer i $D$ és un disc.
+  Definim \emph{subsèrie resolució} com el tuple
+  \glsdispdef{not:subserieresolucio}{$(B,D)$}, en el que $B$ és un buffer i $D$
+  és un disc.
 \end{definition}
  
 La definició de buffer buit (def.~\ref{def:model:buffer_buit}) i de
@@ -195,7 +199,7 @@ vist a la \autoref{fig:model:bdstm}
 
 \begin{definition}[Sèrie temporal multiresolució]
   Definim \emph{sèrie temporal multiresolució} com el conjunt de subsèries
-  resolució $M=\{R_0,\dotsc,R_d\}$.
+  resolució \glsdispdef{not:seriemultiresolucio}{$M=\{R_0,\dotsc,R_d\}$}.
 \end{definition}
 
 A partir de la definició de subsèrie resolució buida
@@ -269,13 +273,14 @@ SGST, podem escriure una sèrie temporal multiresolució
   $R_i =(B_i,D_i)$ són subsèries resolució amb domini de sèrie
   temporal per les sèries temporals, de $\bar{\R{}}$ pels temps, de
   $\N{}$ pel pas de consolidació i de funció per a la funció
-  d'agregació d'atributs; representada com a relació s'escriu com $ M
-  = ( S_B: \text{Sèrie Temporal}, S_D: \text{Sèrie Temporal}, \tau:
-  \R{}, \delta: \R{}, k: \N{}, f: \text{funció}\}, \{ \{ S_B: S_{B_0}
-  , S_D : S_{D_0} , \tau : \tau_{B_0}, \delta : \delta_{B_0}, k:
-  k_{D_0}, f : f_{B_0} \} , \dotsc, \{ S_B: S_{B_d} , S_D : S_{D_d} ,
-  \tau : \tau_{B_d}, \delta : \delta_{B_d}, k: k_{D_d}, f : f_{B_d} \}
-  \} )$.
+  d'agregació d'atributs;
+  \glsdispdef{not:sgstm:relaciomultiresolucio}{representada com a relació}
+  s'escriu com $ M = ( S_B: \text{Sèrie Temporal}, S_D: \text{Sèrie
+    Temporal}, \tau: \R{}, \delta: \R{}, k: \N{}, f: \text{funció}\},
+  \{ \{ S_B: S_{B_0} , S_D : S_{D_0} , \tau : \tau_{B_0}, \delta :
+  \delta_{B_0}, k: k_{D_0}, f : f_{B_0} \} , \dotsc, \{ S_B: S_{B_d} ,
+  S_D : S_{D_d} , \tau : \tau_{B_d}, \delta : \delta_{B_d}, k:
+  k_{D_d}, f : f_{B_d} \} \} )$.
 \end{definition}
 
 De la mateixa manera que per a les sèries temporals en el model de
