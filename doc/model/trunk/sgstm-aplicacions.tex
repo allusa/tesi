@@ -139,9 +139,25 @@ i buffers orientats a stream; segons es va avaluar anteriorment per
 \textcite{llusa11:tfm}.
 
 
+S'ha d'estudiar com es fan les consultes a RRDtool
+
+
 \subsection{Push i pull}
 
 Estudiar Push o pull aplicada als SGSTM i quines implicacions pot tenir.
+
+
+\subsection{Rellotge}
+
+Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
+
+* intern (pull): el SGSTM té un rellotge que li va marcant cada quan consolidar; per tant és ell que va decidint quines mesures s'agafaven i quines no i com. En diem de tipus pull perquè d'alguna forma és el SGSTM qui tiba les mesures; en aquest cas fins i tot es podrien contemplar escenaris a on el SGSTM reclamés mesures quan li semblés que no disposa de prou informació.
+
+* extern (push): el SGSTM no té rellotge sinó que les mesures que entren ja tenen un temps i s'assumeix que entren ordenades en el temps; aleshores d'aquesta entrada de mesures s'extreu el rellotge; és a dir que es van sabent els instants de consolidació a partir de les mesures. Això pot provocar un cert decalatge del temps del SGSTM amb el del rellotge real; ja que el primer només canvia quan té mesures noves. En diem de tipus push perquè les mesures són les que controlen el procés (bé el sistema de monitoratge extern). 
+
+* discret: tipus la cpu marca el rellotge; en aquest cas no hi ha un rellotge real sinó que es compten esdeveniments i el rellotge es crea relativament a aquest comptatge. Per exemple és el cas de sistemes encapsulats a on no hi ha RTC i el clock diu cada quan s'ha de consolidar (en aquest moment es consoliden les mesures de què es disposi, les quals potser tampoc tenen temps i per tant el rellotge del SGSTM serà relatiu) o bé un altre exemple és quan la consolidació d'una subsèrie resolució depèn d'una altra subsèrie (p.ex. es consolida cada cop que l'altre ha expulsat quatre mesures).
+
+
 
 
 \subsection{Què fer sense coneixements a priori}
