@@ -1,4 +1,40 @@
-\section{Naturalesa/tipologia/patologies de les sèries temporals}
+\section{Propietats (Naturalesa/tipologia/patologies) de les sèries temporals}
+
+
+\todo{}
+
+
+
+\subsection{Naturalesa de les sèries temporals}
+
+\todo{}
+
+
+segons el que es diu a la secció d'operacions (però això potser és més de model?):
+
+* conjunt
+* seqüència
+* funció temporal
+
+segons adquisició:
+
+* contínua
+* discreta
+
+
+segons tipus de dades mesurades:
+
+* comptadors -> conservar totals
+
+* soroll d'un senyal -> conservar mitjana
+
+* temperatura -> aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes (processat digital del senyal)
+
+
+El valor d’una magnitud física es pot calcular com el producte d’un valor nu-
+mèric per una unitat:
+magnitud física = valor numèric x unitat [llibreverd IEC-IUPAC]
+
 
 
 Perquè RRDtool diferencia entre comptadors i magnituds?
@@ -15,7 +51,359 @@ Perquè RRDtool diferencia entre comptadors i magnituds?
 
 
 
-\subsubsection{Regularitat de les sèries temporals} 
+
+
+
+
+
+
+
+\subsection{Graf i funció temporal de representació}
+\label{sec:model:repr}
+
+Una sèrie temporal és la representació discreta d'una funció contínua;
+la qual és una funció temporal atès que depèn del temps. El model de
+SGST definit anteriorment formalitza la sèrie temporal com aquesta
+representació discreta. Però a partir d'una sèrie temporal es pot
+voler interpretar quina era la funció contínua original; és a dir
+obtenir nous valors segons una funció a la que s'anomena graf d'una
+funció (\emph{graph of a function}), en el sentit de gràfic
+(\emph{plot}) que cal no confondre amb els grafs d'arestes i vèrtexs
+(\emph{vertex-edge graph}).
+
+\begin{definition}[Graf d'una sèrie temporal]%an. graph
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ un domini del
+  temps, es defineix el graf de la sèrie temporal
+  $\glssymboldef{not:sgst:graf} S(t)$ com un conjunt de parells
+  ordenats $(t,S(t)$ : $\glssymboldef{not:sgst:graf} S(t) = \{ (t,S(t)) |
+  t\in T \}$ a on $S(t)$ és una funció de representació de la sèrie
+  temporal.
+\end{definition}
+
+Per a calcular el graf d'una sèrie temporal es necessita una funció de
+representació. Mentre que la funció que permet canviar d'una funció
+contínua a una sèrie temporal s'anomena procés d'adquisició o
+mostreig, la funció que permet canviar d'una sèrie temporal a una
+funció contínua l'anomenem funció de representació.  Així doncs,
+donada una sèrie temporal es poden definir funcions amb el temps com a
+variable que calculin nous valors a partir de les mesures
+emmagatzemades.
+\begin{definition}[Funció de representació]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix $S(t)$
+  com la funció de representació de la sèrie temporal contínuament al
+  llarg del temps $t$; és a dir que per cada instant de temps la
+  funció pren un valor: $\forall t\in T: v(t) = S(t)$. 
+
+  Atenent a les operacions de càlcul que es facin per a obtenir $S(t)$
+  diem que hi ha diverses funcions de representació. Així per a cada
+  funció de representació indicarem a quina ens referim amb un
+  superíndex \glsdispdef{not:sgst:frepr}{$S^r(t)$} a on
+  \glssymboldef{not:sgst:repr} és el nom d'una funció de representació
+  de la sèrie temporal.
+\end{definition}
+
+La utilitat de les funcions de representació és diversa i per això les
+operacions de càlcul poden ser qualssevol. Una funció de
+representació es pot utilitzar per a interpolar valors d'una sèrie
+temporal però també per a extrapolar-los o per a canviar la resolució
+de la sèrie temporal. També es pot utilitzar per al problema aproximar
+la sèrie temporal a la funció original; és a dir donar una funció de
+representació que sigui la funció contínua que més s'aproxima a la
+funció temporal original.
+
+
+El lligam entre una sèrie temporal i la seva representació no és fix;
+és a dir que donada una sèrie temporal es pot representar amb una
+funció o amb una altra segons convingui.  Encara que en alguns àmbits,
+per exemple a teoria del senyal o en algunes aplicacions de l'anàlisi
+de sèries temporals, l'objectiu és cercar la parella de sèrie temporal
+i representació que més s'aproxima a la funció contínua original; en
+altres àmbits, com per exemple el del model multiresolució que definim
+posteriorment, l'objectiu està més orientat a utilitzar
+representacions de les sèries temporals segons els càlculs que es
+volen fer o segons la naturalesa que s'assumeixi de la sèrie temporal.
+
+
+No obstant, les funcions de representació s'han d'utilitzar amb
+criteri. Per exemple la naturalesa de la sèrie temporal indueix a unes
+possibles operacions de càlcul que es poden realitzar, per tant
+l'aplicació de qualsevol funció de representació a la sèrie temporal
+pot donar resultats incoherents. O bé un altre exemple és aplicar
+càlculs successius a una sèrie temporal seguint diferents funcions de
+representació.  Així i tot, en la formalització del model de funcions
+de representacions no hi definim cap criteri en concret per a, així,
+donar llibertat en les possibilitats de càlcul amb les sèries
+temporals.
+
+
+A continuació, definim diverses funcions de representació per a
+exemplificar-ne l'ús. Les agrupem per algunes de les seves
+característiques, a les qual podem veure com famílies de funcions de
+representació. Per a cada definició una oferim, quan es pugui, dues
+expressions equivalents: una en matemàtica contínua, que ajuda a
+comprendre el significat, i una en matemàtica discreta, que utilitza
+l'àlgebra del model de SGST.
+
+\todo{fer exemple de cada família: posar una sèrie temporal i dibuixar el graf segons cada representació}
+
+
+
+\subsubsection{Funcions parcials}
+\todo{no sé si aporten res les parcials? cal acabar la secció d'agregadors dels SGSTM i repensar això}
+
+Primerament, definim una funció de representació anomenada discreta
+pura que no és totalment contínua en el temps sinó que és una funció
+parcial.
+\begin{definition}[Funció de representació discreta pura]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix
+  $S^d(t)$ com la funció de representació discreta pura de la sèrie
+  temporal $\forall m \in S: S^d(t) =
+  \begin{cases}
+    V(m) & \text{si }  t=T(m) \\
+    \text{no definit} & \text{altrament}
+  \end{cases}$.
+\end{definition}
+
+Aquest és un cas especial de funció de representació perquè permet que
+el graf de la sèrie temporal sigui equivalent a les mesures de la
+sèrie temporal: $\glssymbol{not:sgst:graf} S^d(t) \equiv
+\{m_0,\ldots,m_k\}$.
+
+Es poden definir altres funcions de representació de la família
+parcial, però presenten el problema que el domini queda restringit a
+un subconjunt $T'$ del domini temps $T$; el domini queda restringit
+als instants de temps elegits $T'$ ja que per qualsevol altre instant de
+$T$ no hi ha imatge definida.
+
+Així doncs, és millor definir funcions totals que sempre seran
+funcions ben-definides per al domini temps; per això a la definició de
+funcions de representació hem preferit parlar només de funcions
+contínues al llarg del temps. 
+\todo{sinó, es poden trobar equivalents en les contínues?}
+
+
+
+
+\subsubsection{A impulsos}
+
+Una família de funcions contínues que recorda a la funció discreta són
+les funcions d'impulsos (\emph{impulse train function}).  A
+continuació ho exemplifiquem amb una representació que anomenem delta
+de Dirac ($\delta$) perquè es basa en la funció homònima, la qual val
+zero a tot arreu excepte en el punt zero.
+
+\begin{definition}[Funció de representació delta de Dirac]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\delta(t)$ com la funció de representació
+  delta de Dirac al llarg del temps, $\forall m \in S:$
+  \begin{align*}
+    S^\delta(t) = &  \\
+    = & \sum V(m) \delta(t-T(m))  \\
+    = & \begin{cases}
+      V(m) & \text{si }  t=T(m) \\
+      0 & \text{altrament}
+    \end{cases}
+         \end{align*}.
+\end{definition}
+
+
+
+
+
+\subsubsection{A trossos constants}
+
+Una altra família de funcions són les que es basen en funcions
+definides a trossos constants (\emph{piecewise constant functions}).
+A continuació ho exemplifiquem amb tres representacions basades en la
+funció graó (\emph{staircase function}).
+
+
+
+
+\todo{}
+
+
+
+
+
+
+A continuació,  la representació  d'una sèrie temporal segons el model de \emph{zero-order hold} s'estén per diferents continuïtats en els intervals de temps de representació.
+
+Sigui $S$ una sèrie temporal, es defineix $S(t)$ com la representació
+de la sèrie temporal contínuament al llarg del temps $t$.  En primer
+lloc, es representa amb \emph{zero-order hold} a partir de funcions
+graó contínues per la dreta (\emph{right-continuous}).
+
+\begin{definition}[Representació amb \emph{zero-order hold}]
+Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació  $S(t)$ amb \emph{zero-order hold} es defineix
+\[
+\forall t \in \mathbb{R} ,\forall m \in S: S(t) =
+\begin{cases}
+  V(\min S) & \text{si } t < T(\min S) \\
+  V(m) & \text{si }  t\in [T(m),T(\seg m))
+\end{cases}
+\]
+\end{definition}
+
+En segon lloc, es representa $S(t)$ amb \emph{zero-order hold} centrada en
+l'interval, definit també a partir de funcions graó contínues per la
+dreta.
+
+\begin{definition}[Representació amb \emph{zero-order hold} centrada en l'interval]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
+  $S(t)$ amb \emph{zero-order hold} centrada en l'interval es defineix
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t) =  
+\begin{cases}
+  V(m) & \text{si } t = \frac{T(\ant m)+T(m)}{2} \\
+  V(m) & \text{si } t\in \left( \frac{T(\ant m)+T(m)}{2},\frac{T(m)+T(\seg m)}{2} \right) \
+\end{cases}
+\]
+\end{definition}
+
+
+En tercer lloc, es representa $S(t)$ amb \emph{zero-order hold} cap enrere, ara definit a partir de funcions graó contínues per l'esquerra.
+\begin{definition}[Representació en \emph{zero-order hold} cap enrere]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
+  $S(t)$ amb \emph{zero-order hold} cap enrere es defineix
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t) =  
+\begin{cases}
+  V(\max S) & \text{si } t > T(\max S) \\
+  V(m) & \text{si }  t\in (T(\ant m),T(m)]
+\end{cases}
+\]
+\end{definition}
+
+Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores la representació de $S(t)$ amb \emph{zero-order hold} és la mateixa que la de $S(t-\delta)$ amb \emph{zero-order hold} cap enrere i és la mateixa que la de $S(t-\frac{\delta}{2})$ centrada en l'interval. 
+
+
+
+
+
+We define a new representation for time series called
+\emph{zero-order hold backwards}
+(zohe%from \emph{zero-order hold everted}
+) consisting in holding each value until the preceding value, which a
+similar representation is used by RRDtool \cite{lisa98:oetiker}.
+
+
+
+
+
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+$S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards}
+continuous representation along time $t$:
+%continuous definition of the time series using left-continuous step functions.
+\[
+\forall t \in \mathbb{R}  ,\forall m \in S:
+S(t)^{\text{zohe}} =  
+% \begin{cases}
+%   \infty & \text{if } t > T(\max S) \\%\text{not defined}
+%   V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
+% \end{cases}
+\]
+
+
+
+
+
+\subsubsection{A trossos lineals}
+
+\todo{}
+
+
+
+\subsubsection{Altres}
+
+\todo{}
+
+
+In the design of the attribute interpolation function we can interpret
+a time series in different ways, that is what we call the
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite
+some possible representations for time series such as \emph{Fourier
+  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
+\emph{Piecewise Linear Representation} (PLR). This last is remarked as
+the most used owing to the most common representation is with linear
+functions \cite{keogh01}.
+
+\paragraph{Representació de sèries temporals}
+
+\textcite{last:keogh}, cita vàries representacions per les sèries temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} o \emph{Piecewise Linear Representation} (PLR), però assenyala aquesta última com la representació més utilitzada. 
+La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
+Per aproximar el segment $S(t_a:t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
+
+Però també es pot representar una sèrie temporal amb una funció esglaó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
+La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
+El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
+
+%http://en.wikipedia.org/wiki/Piecewise
+
+%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
+
+%http://en.wikipedia.org/wiki/Rectangular_function
+
+%http://en.wikipedia.org/wiki/Step_function
+
+% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
+
+% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
+
+
+
+\subsubsection{Ús de la representació en els operadors}
+
+\todo{}
+
+Com lliguen els operadors de sèries temporals amb les funcions de
+representació? De fet no poden utilitzar-se mútuament: les funcions de
+representació són una funció contínua i voler que això aparegués al
+model voldria dir aplicar mètodes numèrics. És a dir és incompatible
+amb l'àlgebra? Així el que fem és definir les funcions de
+representació per a estudiar exactament què estem fent i després
+agafant-ne el significat s'implementen les operacions que siguin
+necessàries (de fet només és necessari implementar l'operació
+d'interval temporal per a cada representació (com a exemple la def d'interval temporal zohe): les altres es defineixen
+a partir d'aquesta.
+
+Per  altra banda,  les representacions  també es  tindran en  compte a
+l'hora de definir les interpretacions pels agregadors d'atributs en el
+model de SGSTM \todo{ref capítol}
+
+We now define the \emph{zero-order hold backwards} attribute
+interpolation function family as the one interpreting the
+consolidation time interval left-continuous $i=(T_0,T_f]$ and the
+resulting interpolated measure's time always being $T_f$, in
+accordance to the \emph{zero-order hold backwards} representation
+being defined using left-continuous step functions.  
+
+
+\subsubsection{Equivalència en representació}
+representació o graf?
+
+$S_1=\{(1,1),(3,0),(5,1)\}$ i $S_2=\{(1,1),(2,0),(3,0)(4,1),(5,1)\}$ són equivalents amb representació zohe però no són equivalents amb representació lineal ja que hauria de ser $S_2'=\{(1,1),(2, 0{,}5 ),(3,0),(4, 0{,}5),(5,1)\}$. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Regularitat de les sèries temporals} 
+\todo{fer-ho subsecció de les patologies}
+
 
 Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
 temps i $\delta$ una durada de temps, les mesures de la sèrie temporal
@@ -91,110 +479,42 @@ Si $D=\delta$, es pot anomenar que $S$ és una sèrie temporal de temps real sen
 
 
 
-\subsubsection{Representació de les sèries temporals}
-
-
-
-La naturalesa indueix representacions?
-Jo puc utilitzar qualsevol representació donada una sèrie temporal, però això em pot causa perjudici si no s'adiu amb la naturalesa.
-
-
-La representació serveix per interpolar:
-
-zoh, zoh cap enrere, lineal, etc.
-
-
-Una sèrie temporal és la representació discreta d'una funció contínua. A partir de la sèrie temporal es pot definir una funció contínua. 
-
-A teoria de senyal s'estudia com fer que aquesta s'aproximi a la real. Estudiant com a senyal fan: donada una sèrie temporal dir quina funció s'hi 'ajusta' més. 
-
-Però jo puc preguntar donada una sèrie temporal quina funció representa i puc dir per representar a zohe és tal, per representar a lineal és qual. 
-
-Potser millor dir-li interpretació?
-
-
-
-\paragraph{Representació de sèries temporals}
-
-\textcite{last:keogh}, cita vàries representacions per les sèries temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} o \emph{Piecewise Linear Representation} (PLR), però assenyala aquesta última com la representació més utilitzada. 
-La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
-Per aproximar el segment $S(t_a:t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
-
-Però també es pot representar una sèrie temporal amb una funció esglaó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
-La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
-El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
-
-%http://en.wikipedia.org/wiki/Piecewise
-
-%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
-
-%http://en.wikipedia.org/wiki/Rectangular_function
-
-%http://en.wikipedia.org/wiki/Step_function
-
-% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
-
-% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
-
-A continuació,  la representació  d'una sèrie temporal segons el model de \emph{zero-order hold} s'estén per diferents continuïtats en els intervals de temps de representació.
-
-Sigui $S$ una sèrie temporal, es defineix $S(t)$ com la representació
-de la sèrie temporal contínuament al llarg del temps $t$.  En primer
-lloc, es representa amb \emph{zero-order hold} a partir de funcions
-graó contínues per la dreta (\emph{right-continuous}).
-
-\begin{definition}[Representació amb \emph{zero-order hold}]
-Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació  $S(t)$ amb \emph{zero-order hold} es defineix
-\[
-\forall t \in \mathbb{R} ,\forall m \in S: S(t) =
-\begin{cases}
-  V(\min S) & \text{si } t < T(\min S) \\
-  V(m) & \text{si }  t\in [T(m),T(\seg m))
-\end{cases}
-\]
-\end{definition}
-
-En segon lloc, es representa $S(t)$ amb \emph{zero-order hold} centrada en
-l'interval, definit també a partir de funcions graó contínues per la
-dreta.
-
-\begin{definition}[Representació amb \emph{zero-order hold} centrada en l'interval]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
-  $S(t)$ amb \emph{zero-order hold} centrada en l'interval es defineix
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t) =  
-\begin{cases}
-  V(m) & \text{si } t = \frac{T(\ant m)+T(m)}{2} \\
-  V(m) & \text{si } t\in \left( \frac{T(\ant m)+T(m)}{2},\frac{T(m)+T(\seg m)}{2} \right) \
-\end{cases}
-\]
-\end{definition}
-
-
-En tercer lloc, es representa $S(t)$ amb \emph{zero-order hold} cap enrere, ara definit a partir de funcions graó contínues per l'esquerra.
-\begin{definition}[Representació en \emph{zero-order hold} cap enrere]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
-  $S(t)$ amb \emph{zero-order hold} cap enrere es defineix
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t) =  
-\begin{cases}
-  V(\max S) & \text{si } t > T(\max S) \\
-  V(m) & \text{si }  t\in (T(\ant m),T(m)]
-\end{cases}
-\]
-\end{definition}
-
-Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores la representació de $S(t)$ amb \emph{zero-order hold} és la mateixa que la de $S(t-\delta)$ amb \emph{zero-order hold} cap enrere i és la mateixa que la de $S(t-\frac{\delta}{2})$ centrada en l'interval. 
 
 
 
 
-\subsubsection{Equivalència en representació}
 
 
-$S_1=\{(1,1),(3,0),(5,1)\}$ i $S_2=\{(1,1),(2,0),(3,0)(4,1),(5,1)\}$ són equivalents amb representació zohe però no són equivalents amb representació lineal ja que hauria de ser $S_2'=\{(1,1),(2, 0{,}5 ),(3,0),(4, 0{,}5),(5,1)\}$. 
+
+
+\subsection{Patologies de les sèries temporals}
+\todo{?}
+
+* Problemes en l'adquisició
+
+* Problemes en el rellotge
+
+
+
+* Tractament/validació de dades
+
+With reference to data validation, attribute interpolation functions
+can cope with this process. When data has not been captured or has
+been captured erroneously, it must be treated as unknown data.
+\begin{itemize}
+\item When data has not been captured it is unknown by nature. For
+  example, we try to capture data from a sensor and there is no
+  response.
+\item When data is erroneously it must be marked as unknown. For
+  example, we capture data from a sensor but it responses in a not
+  reasonable time or we capture data that is clearly outside a
+  reasonable limits.
+\end{itemize}
+As a consequence, attribute interpolation functions deals with these
+two subprocesses: treating unknown data and marking data as
+unknown. Following with real numbers, let unknown value be represented
+by the improper element infinity ($\infty$).  
+
 
 
 
@@ -209,4 +529,4 @@ $S_1=\{(1,1),(3,0),(5,1)\}$ i $S_2=\{(1,1),(2,0),(3,0)(4,1),(5,1)\}$ són equiva
 
 
 
-% LocalWords:  SGST
+% LocalWords:  SGST Dirac
