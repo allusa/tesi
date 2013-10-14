@@ -198,7 +198,7 @@ zero a tot arreu excepte en el punt zero.
   delta de Dirac al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\delta(t) = &  \\
-    = & \sum V(m) \delta(t-T(m))  \\
+    = & \sum_{t\in T} V(m) \delta(t-T(m))  \\
     = & \begin{cases}
       V(m) & \text{si }  t=T(m) \\
       0 & \text{altrament}
@@ -214,40 +214,71 @@ zero a tot arreu excepte en el punt zero.
 
 Una altra família de funcions són les que es basen en funcions
 definides a trossos constants (\emph{piecewise constant functions}).
-A continuació ho exemplifiquem amb tres representacions basades en la
-funció graó (\emph{staircase function}).
+A continuació ho exemplifiquem amb quatre representacions basades en la
+funció graó (\emph{step function} o \emph{staircase function}) atenent
+a quatre de les possibles continuïtats en els intervals de temps. 
 
 
 
-
-\todo{}
-
-
-
-
-
-
-A continuació,  la representació  d'una sèrie temporal segons el model de \emph{zero-order hold} s'estén per diferents continuïtats en els intervals de temps de representació.
-
-Sigui $S$ una sèrie temporal, es defineix $S(t)$ com la representació
-de la sèrie temporal contínuament al llarg del temps $t$.  En primer
-lloc, es representa amb \emph{zero-order hold} a partir de funcions
-graó contínues per la dreta (\emph{right-continuous}).
-
-\begin{definition}[Representació amb \emph{zero-order hold}]
-Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació  $S(t)$ amb \emph{zero-order hold} es defineix
-\[
-\forall t \in \mathbb{R} ,\forall m \in S: S(t) =
-\begin{cases}
-  V(\min S) & \text{si } t < T(\min S) \\
-  V(m) & \text{si }  t\in [T(m),T(\seg m))
-\end{cases}
-\]
+%(\emph{right-continuous})
+En primer lloc, definim una representació en base a funcions graó
+contínues per la dreta. L'anomenem representació \emph{zero-order
+  hold}(ZOH) a causa de la semblança que té amb el model utilitzat en
+electrònica per a reconstruir senyals, el qual consisteix en mantenir
+constant cada valor fins al proper.
+\begin{definition}[Funció de representació \emph{zero-order hold}]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{ZOH}(t)$ com la funció de representació
+  \emph{zero-order hold} al llarg del temps, $\forall m \in S:$
+  \begin{align*}
+    S^\text{ZOH}(t) = &  \\
+    = & \sum_{t\in T} V(m) X_d(t): X_d(t) = 
+    \begin{cases}
+      1 & \text{si } t\in \big[T(m),T(\glssymbol{not:sgst:next}(m))\big) \\
+      0 & \text{altrament}
+    \end{cases} \\
+    = & \begin{cases}
+      0 & \text{si }  t<T(\min(S)) \\
+      V(m) & \text{si } t\in \big[T(m),T(\glssymbol{not:sgst:next}(m))\big)
+    \end{cases}
+         \end{align*}.
 \end{definition}
 
-En segon lloc, es representa $S(t)$ amb \emph{zero-order hold} centrada en
-l'interval, definit també a partir de funcions graó contínues per la
-dreta.
+
+
+En segon lloc, definim una representació en base a funcions graó
+contínues per l'esquerra. L'anomenem representació \emph{zero-order
+  hold} cap enrere (ZOHE) perquè consisteix en mantenir constant cada
+valor fins al predecessor. Una representació similar s'utilitza a
+\gls{RRDtool} \parencite{lisa98:oetiker}.
+\begin{definition}[Funció de representació \emph{zero-order hold} cap
+  enrere]%\emph{zero-order hold backwards}(zohe%from \emph{zero-order
+         %hold everted}
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{ZOHE}(t)$ com la funció de representació
+  \emph{zero-order hold} cap enrere al llarg del temps, $\forall m \in S:$
+  \begin{align*}
+    S^\text{ZOHE}(t) = &  \\
+    = & \sum_{t\in T} V(m) X_e(t): X_e(t) = 
+    \begin{cases}
+      1 & \text{si } t\in \big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big] \\
+      0 & \text{altrament}
+    \end{cases} \\
+    = & \begin{cases}
+      0 & \text{si }  t > T(\max(S)) \\
+      V(m) & \text{si } t\in \big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]
+    \end{cases}
+         \end{align*}.
+\end{definition}
+
+
+
+En tercer lloc, definim una representació en base a funcions graó
+contínues per la dreta centrades en l'interval. L'anomenem
+representació \emph{zero-order hold} centrada en l'interval (ZOHC).
+
+
+
 
 \begin{definition}[Representació amb \emph{zero-order hold} centrada en l'interval]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
@@ -263,19 +294,63 @@ S(t) =
 \end{definition}
 
 
-En tercer lloc, es representa $S(t)$ amb \emph{zero-order hold} cap enrere, ara definit a partir de funcions graó contínues per l'esquerra.
-\begin{definition}[Representació en \emph{zero-order hold} cap enrere]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
-  $S(t)$ amb \emph{zero-order hold} cap enrere es defineix
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t) =  
-\begin{cases}
-  V(\max S) & \text{si } t > T(\max S) \\
-  V(m) & \text{si }  t\in (T(\ant m),T(m)]
-\end{cases}
-\]
+
+\begin{definition}[Funció de representació \emph{zero-order hold}
+  centrada en l'interval]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{ZOHC}(t)$ com la funció de representació
+  \emph{zero-order hold} centrada en l'interval al llarg del temps,
+  $\forall m \in S:$
+  \begin{align*}
+    S^\text{ZOHC}(t) = &  \\
+   = & \sum_{t\in T} V(m) X_c(t):
+    X_c(t) = 
+    \begin{cases}
+      1 & \text{si } t\in \left[
+        \frac{T(\glssymbol{not:sgst:prev}(m))+T(m)}{2},
+        \frac{T(m)+T(\glssymbol{not:sgst:next}(m))}{2}
+      \right) \\
+      0 & \text{altrament}
+    \end{cases}  \\
+    = & V(m): t\in \left[
+        \frac{T(\glssymbol{not:sgst:prev}(m))+T(m)}{2},
+        \frac{T(m)+T(\glssymbol{not:sgst:next}(m))}{2} \right)
+         \end{align*}.
 \end{definition}
+
+
+
+
+En quart lloc, representem la sèrie temporal en base a la funció
+rectangular. La funció rectangular és un cas especial de les funcions
+graó a on s'especifiquen valors simètrics per als punts de
+discontinuïtat.
+\begin{definition}[Funció de representació rectangular]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{rect}(t)$ com la funció de representació
+  rectangular al llarg del temps, $\forall m \in S:$
+  \begin{align*}
+    S^\text{rect}(t) = &  \\
+    = & \sum_{t\in T} V(m) \operatorname{rect}(t):  \operatorname{rect}(t) = 
+    \begin{cases}
+      1 & \text{si } t\in \big(T(m),T(\glssymbol{not:sgst:next}(m))\big) \\
+      \frac{1}{2}& \text{si } t = T(m) \vee t=T(\glssymbol{not:sgst:next}(m)) \\
+      0 & \text{altrament}
+    \end{cases} \\
+    = & \begin{cases}
+      0 & \text{si }  t<T(\min(S)) \\
+      V(m) & \text{si } t\in \big(T(m),T(\glssymbol{not:sgst:next}(m))\big) \\
+      \frac{V(m)+V(\ant(m))}{2} & \text{si } t = T(m) \wedge t > T(\min(S)) \\
+      \frac{V(m)}{2} & \text{si } t = T(\min(S)) \\
+    \end{cases}
+         \end{align*}.
+\end{definition}
+
+
+
+
+\todo{descriure la propietat de translació de les tres representacions}
+i dir que la rect només n'hem definit una però que també té les tres translacions possibles.
 
 Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores la representació de $S(t)$ amb \emph{zero-order hold} és la mateixa que la de $S(t-\delta)$ amb \emph{zero-order hold} cap enrere i és la mateixa que la de $S(t-\frac{\delta}{2})$ centrada en l'interval. 
 
@@ -283,30 +358,16 @@ Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores 
 
 
 
-We define a new representation for time series called
-\emph{zero-order hold backwards}
-(zohe%from \emph{zero-order hold everted}
-) consisting in holding each value until the preceding value, which a
-similar representation is used by RRDtool \cite{lisa98:oetiker}.
+
+\begin{example}[Sèrie temporal amb representació ZOHE]
+  Sigui la sèrie temporal $S=\{ (1,1), (3,3), (4,2), (8,1) \}$, la seva representació ZOHE és  $S^\text{ZOHE}(t) = 1X_{(-\infty,1}+3X_{1,3}+2X_{3,4}+1X_{4,8}+3X_{8,+\infty}$
 
 
+ el
+  graf de la seva representació ZOHE, $\glssymbol{not:sgst:graf}
+  S^\text{ZOHE}(t)$ es mostra a la figura\todo{}.
 
-
-
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
-$S(t)^{\text{zohe}}$ as its \emph{zero-order hold backwards}
-continuous representation along time $t$:
-%continuous definition of the time series using left-continuous step functions.
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t)^{\text{zohe}} =  
-% \begin{cases}
-%   \infty & \text{if } t > T(\max S) \\%\text{not defined}
-%   V(m) & \text{if }  t\in (T(\prev_S m),T(m)]
-% \end{cases}
-\]
-
+\end{example}
 
 
 
@@ -315,11 +376,18 @@ S(t)^{\text{zohe}} =
 
 \todo{}
 
+%http://en.wikipedia.org/wiki/First-order_hold
+
+
+
 
 
 \subsubsection{Altres}
 
 \todo{}
+
+
+\todo{potser posar-ho a estat de l'art tot això?}
 
 
 In the design of the attribute interpolation function we can interpret
@@ -337,7 +405,7 @@ functions \cite{keogh01}.
 La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
 Per aproximar el segment $S(t_a:t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
 
-Però també es pot representar una sèrie temporal amb una funció esglaó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
+Però també es pot representar una sèrie temporal amb una funció graó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
 La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
 El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
 
