@@ -144,8 +144,6 @@ expressions equivalents: una en matemàtica contínua, que ajuda a
 comprendre el significat, i una en matemàtica discreta, que utilitza
 l'àlgebra del model de SGST.
 
-\todo{fer exemple de cada família: posar una sèrie temporal i dibuixar el graf segons cada representació}
-
 
 
 \subsubsection{Funcions parcials}
@@ -183,22 +181,68 @@ contínues al llarg del temps.
 
 
 
+\begin{example}[Sèrie temporal amb representació discreta pura]
+  Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, el
+  graf de la representació discreta pura és $\glssymbol{not:sgst:graf}
+  S^d(t)=\{ (3,1), (4,3), (6,2), (9,1) \}$, el qual es mostra a la
+  \autoref{fig:model:repr:d}.
+
+
+  \begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    3  & 1 \\
+    4  & 3 \\
+    6  & 2 \\
+    9  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^d$,
+        ]
+    \addplot[mark=*,blue,only marks] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+
+
+
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Taula d'una sèrie temporal $S$ i
+     $\glssymbol{not:sgst:graf} S^d(t)$}
+  \label{fig:model:repr:d}
+  \end{figure}
+\end{example}
+
+
+
 
 \subsubsection{A impulsos}
 
 Una família de funcions contínues que recorda a la funció discreta són
 les funcions d'impulsos (\emph{impulse train function}).  A
 continuació ho exemplifiquem amb una representació que anomenem delta
-de Dirac ($\delta$) perquè es basa en la funció homònima, la qual val
+($\delta$) perquè es basa en la funció delta de Dirac, la qual val
 zero a tot arreu excepte en el punt zero.
 
-\begin{definition}[Funció de representació delta de Dirac]
+\begin{definition}[Funció de representació delta]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
   temps, es defineix $S^\delta(t)$ com la funció de representació
-  delta de Dirac al llarg del temps, $\forall m \in S:$
+  delta al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\delta(t) = &  \\
-    = & \sum_{t\in T} V(m) \delta(t-T(m))  \\
+    = & \sum_{t\in T} V(m) \delta(t-T(m)): \delta(t)= 
+      \begin{cases}
+        1 & \text{si }  t=0 \\
+        0 & \text{altrament}
+      \end{cases} \\
     = & \begin{cases}
       V(m) & \text{si }  t=T(m) \\
       0 & \text{altrament}
@@ -208,6 +252,66 @@ zero a tot arreu excepte en el punt zero.
 
 
 
+\begin{example}[Sèrie temporal amb representació delta]
+  Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
+  seva representació delta és $S^\delta(t) = 0 +1\delta(t-3)
+  +3\delta(t-4) +2\delta(t-6) +1\delta(t-9)$. El graf d'aquesta
+  representació, $\glssymbol{not:sgst:graf} S^\delta(t)$, es mostra a
+  la \autoref{fig:model:repr:delta}.
+
+
+  \begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    3  & 1 \\
+    4  & 3 \\
+    6  & 2 \\
+    9  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^\delta$,
+        xmin=0,
+        xmax=11,
+        xtickmin=0,
+        xtickmax=10,
+        try min ticks=6,
+        ]
+    \addplot[mark=*,blue,ycomb] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+    \addplot[mark=o,blue,only marks] coordinates { 
+        (3,0)
+        (4,0)
+        (6,0)
+        (9,0)
+    };
+
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{0.5}{0}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{12}{0}}%
+      \pgfsetarrowsstart{latex}
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Taula d'una sèrie temporal $S$ i
+     $\glssymbol{not:sgst:graf} S^\delta(t)$}
+  \label{fig:model:repr:delta}
+  \end{figure}
+\end{example}
 
 
 \subsubsection{A trossos constants}
@@ -217,6 +321,18 @@ definides a trossos constants (\emph{piecewise constant functions}).
 A continuació ho exemplifiquem amb quatre representacions basades en la
 funció graó (\emph{step function} o \emph{staircase function}) atenent
 a quatre de les possibles continuïtats en els intervals de temps. 
+
+
+A les definicions següents s'utilitza la notació de funció
+característica $\glssymbol{not:Ia}_A(t)$ per a indicar quan un instant
+de temps pertany a un determinat interval de temps:
+\[
+\glssymbol{not:Ia}_A(t) = 
+   \begin{cases}
+      1 & \text{si } t\in A \\
+      0 & \text{altrament}
+    \end{cases}
+\]
 
 
 
@@ -232,14 +348,11 @@ constant cada valor fins al proper.
   \emph{zero-order hold} al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\text{ZOH}(t) = &  \\
-    = & \sum_{t\in T} V(m) X_d(t): X_d(t) = 
-    \begin{cases}
-      1 & \text{si } t\in \big[T(m),T(\glssymbol{not:sgst:next}(m))\big) \\
-      0 & \text{altrament}
-    \end{cases} \\
+    = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big[T(m), T(\glssymbol{not:sgst:next}(m)) \big)}(t)\\
     = & \begin{cases}
       0 & \text{si }  t<T(\min(S)) \\
-      V(m) & \text{si } t\in \big[T(m),T(\glssymbol{not:sgst:next}(m))\big)
+      V(m) & \text{si } t\in
+      \big[T(m),T(\glssymbol{not:sgst:next}(m))\big)
     \end{cases}
          \end{align*}.
 \end{definition}
@@ -259,11 +372,7 @@ valor fins al predecessor. Una representació similar s'utilitza a
   \emph{zero-order hold} cap enrere al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\text{ZOHE}(t) = &  \\
-    = & \sum_{t\in T} V(m) X_e(t): X_e(t) = 
-    \begin{cases}
-      1 & \text{si } t\in \big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big] \\
-      0 & \text{altrament}
-    \end{cases} \\
+    = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
     = & \begin{cases}
       0 & \text{si }  t > T(\max(S)) \\
       V(m) & \text{si } t\in \big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]
@@ -276,25 +385,6 @@ valor fins al predecessor. Una representació similar s'utilitza a
 En tercer lloc, definim una representació en base a funcions graó
 contínues per la dreta centrades en l'interval. L'anomenem
 representació \emph{zero-order hold} centrada en l'interval (ZOHC).
-
-
-
-
-\begin{definition}[Representació amb \emph{zero-order hold} centrada en l'interval]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, la representació
-  $S(t)$ amb \emph{zero-order hold} centrada en l'interval es defineix
-\[
-\forall t \in \mathbb{R}  ,\forall m \in S:
-S(t) =  
-\begin{cases}
-  V(m) & \text{si } t = \frac{T(\ant m)+T(m)}{2} \\
-  V(m) & \text{si } t\in \left( \frac{T(\ant m)+T(m)}{2},\frac{T(m)+T(\seg m)}{2} \right) \
-\end{cases}
-\]
-\end{definition}
-
-
-
 \begin{definition}[Funció de representació \emph{zero-order hold}
   centrada en l'interval]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
@@ -303,15 +393,10 @@ S(t) =
   $\forall m \in S:$
   \begin{align*}
     S^\text{ZOHC}(t) = &  \\
-   = & \sum_{t\in T} V(m) X_c(t):
-    X_c(t) = 
-    \begin{cases}
-      1 & \text{si } t\in \left[
+   = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\left[
         \frac{T(\glssymbol{not:sgst:prev}(m))+T(m)}{2},
         \frac{T(m)+T(\glssymbol{not:sgst:next}(m))}{2}
-      \right) \\
-      0 & \text{altrament}
-    \end{cases}  \\
+      \right)}(t) \\
     = & V(m): t\in \left[
         \frac{T(\glssymbol{not:sgst:prev}(m))+T(m)}{2},
         \frac{T(m)+T(\glssymbol{not:sgst:next}(m))}{2} \right)
@@ -347,27 +432,176 @@ discontinuïtat.
 \end{definition}
 
 
-
-
-\todo{descriure la propietat de translació de les tres representacions}
-i dir que la rect només n'hem definit una però que també té les tres translacions possibles.
-
-Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores la representació de $S(t)$ amb \emph{zero-order hold} és la mateixa que la de $S(t-\delta)$ amb \emph{zero-order hold} cap enrere i és la mateixa que la de $S(t-\frac{\delta}{2})$ centrada en l'interval. 
-
-
-
+% En la representació rectangular només hem definit un cas semblant al
+% del la representació ZOH. També podríem definir variacions de la
+% rectangular com s'ha fet per la ZOH: la ZOHE i la ZOHC. 
+% La variació entre la ZOH i la ZOHC o la ZOHE no és només una translació. 
 
 
 
 \begin{example}[Sèrie temporal amb representació ZOHE]
-  Sigui la sèrie temporal $S=\{ (1,1), (3,3), (4,2), (8,1) \}$, la seva representació ZOHE és  $S^\text{ZOHE}(t) = 1X_{(-\infty,1}+3X_{1,3}+2X_{3,4}+1X_{4,8}+3X_{8,+\infty}$
+  Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
+  seva representació ZOHE és $S^\text{ZOHE}(t) =
+  1\glssymbol{not:Ia}_{(-\infty,3]} +3\glssymbol{not:Ia}_{(3,4]}
+  +2\glssymbol{not:Ia}_{(4,6]} +1\glssymbol{not:Ia}_{(6,9]}
+  +0\glssymbol{not:Ia}_{(9,+\infty)}$. El graf d'aquesta
+  representació, $\glssymbol{not:sgst:graf} S^\text{ZOHE}(t)$, es
+  mostra a la \autoref{fig:model:repr:zohe}.
 
 
- el
-  graf de la seva representació ZOHE, $\glssymbol{not:sgst:graf}
-  S^\text{ZOHE}(t)$ es mostra a la figura\todo{}.
+  \begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    3  & 1 \\
+    4  & 3 \\
+    6  & 2 \\
+    9  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^\text{ZOHE}$,
+        xmin=0,
+        xmax=11,
+        xtickmin=0,
+        xtickmax=10,
+        try min ticks=6,
+        ]
+    \addplot[mark=*,blue,const plot mark right] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+    \addplot[mark=o,blue,only marks] coordinates { 
+        (3,3)
+        (4,2)
+        (6,1)
+        (9,0)
+    };
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{9}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{9}{0}}%
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{9}{0}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{12}{0}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{0.5}{1}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Taula d'una sèrie temporal $S$ i
+     $\glssymbol{not:sgst:graf} S^\text{ZOHE}(t)$}
+  \label{fig:model:repr:zohe}
+  \end{figure}
+\end{example}
+
+
+
+\begin{example}[Sèrie temporal amb representació rectangular]
+  Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
+  seva representació rectangular és $S^\text{rect}(t) =
+  0\glssymbol{not:Ia}_{(-\infty,3)} +0{,}5\glssymbol{not:Ia}_{[3,3]}
+  +1\glssymbol{not:Ia}_{(3,4)} +2\glssymbol{not:Ia}_{[4,4]}
+  +3\glssymbol{not:Ia}_{(4,6)} +2{,}5\glssymbol{not:Ia}_{[6,6]}
+  +2\glssymbol{not:Ia}_{(6,9)} +1{,}5\glssymbol{not:Ia}_{[9,9]}
+  +1\glssymbol{not:Ia}_{(9,+\infty)}$. El graf d'aquesta
+  representació, $\glssymbol{not:sgst:graf} S^\text{rect}(t)$, es
+  mostra a la \autoref{fig:model:repr:rect}.
+
+
+  \begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    3  & 1 \\
+    4  & 3 \\
+    6  & 2 \\
+    9  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^\text{rect}$,
+        xmin=0,
+        xmax=11,
+        xtickmin=0,
+        xtickmax=10,
+        try min ticks=6,
+        ]
+    \addplot[mark=o,blue,const plot mark left] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+    \addplot[mark=o,blue,only marks] coordinates { 
+        (3,0)
+        (4,1)
+        (6,3)
+        (9,2)
+    };
+
+    \addplot[mark=*,blue,only marks] coordinates { 
+        (3,0.5)
+        (4,2)
+        (6,2.5)
+        (9,1.5)
+    };
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{3}{0}}%
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{9}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{12}{1}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{0}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{0.5}{0}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Taula d'una sèrie temporal $S$ i
+     $\glssymbol{not:sgst:graf} S^\text{rect}(t)$}
+  \label{fig:model:repr:rect}
+  \end{figure}
 
 \end{example}
+
+
 
 
 
@@ -378,6 +612,124 @@ Sigui $S$ una sèrie temporal regular i $\delta$ una durada de temps, aleshores 
 
 %http://en.wikipedia.org/wiki/First-order_hold
 
+
+
+\begin{definition}[Funció de representació \emph{first-order hold}]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{FOH}(t)$ com la funció de representació
+  \emph{first-order hold} al llarg del temps, $\forall m \in S:$
+  \begin{align*}
+    S^\text{FOH}(t) = &  \\
+    = & \begin{cases}
+      0 & \text{si }  t<T(\min(S)) \vee t\geq T(\max(S))  \\
+      \frac{y_2-y_1}{x_2-x_1}(t-x_1)+y_1
+      & \text{si } t\in \big[x_1,x_2\big)
+    \end{cases}\\
+      &: x_1=T(m), y_1=V(m), x_2=T(m_2), y_2=V(m_2),
+      m_2=\glssymbol{not:sgst:next}(m)
+         \end{align*}.
+\end{definition}
+
+
+La definició del FOH amb funcions matemàtiques contínues es construeix
+a partir de la funció triangular $\operatorname{tri}(t)$
+\[
+\operatorname{tri}(t) = 
+\begin{cases}
+  1-|t| & \text{si } |t| < 1\\
+  0 & \text{altrament}
+\end{cases}
+\]
+
+A continuació ho mostrem per al cas particular de sèries temporals
+regulars\todo{ref}. Per a sèries temporals no regulars s'ha de construir a
+partir de funcions triangulars no simètriques.
+\begin{definition}[Funció de representació \emph{first-order hold} per
+  a sèrie regular]
+  Sigui $S_R=\{m_0,\ldots,m_k\}$ una sèrie temporal regular amb
+  període $P$ i $T$ el domini del temps, es defineix
+  $S^\text{FOH}_ R(t)$ com la funció de representació
+  \emph{first-order hold} al llarg del temps, $\forall m \in S:$
+  \begin{align*}
+    S^\text{FOH}(t) = &  \\
+    = & \sum_{t\in T} V(m) \operatorname{tri}(\frac{t-T(m)}{P})\\
+    = & \begin{cases}
+      0 & \text{si }  t<T(\min(S)) \vee t\geq T(\max(S))  \\
+      \frac{y_2-y_1}{x_2-x_1}(t-x_1)+y_1
+      & \text{si } t\in \big[x_1,x_2\big)
+    \end{cases}\\
+      &: x_1=T(m), y_1=V(m), x_2=T(m_2), y_2=V(m_2),
+      m_2=\glssymbol{not:sgst:next}(m)
+         \end{align*}.
+\end{definition}\todo{refer segona part def}
+
+
+
+\begin{example}[Sèrie temporal amb representació FOH]
+  Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
+  seva representació amb FOH és $S^\text{FOH}(t) =
+  % 0\glssymbol{not:Ia}_{(-\infty,3)} +0{,}5\glssymbol{not:Ia}_{[3,3]}
+  % +1\glssymbol{not:Ia}_{(3,4)} +2\glssymbol{not:Ia}_{[4,4]}
+  % +3\glssymbol{not:Ia}_{(4,6)} +2{,}5\glssymbol{not:Ia}_{[6,6]}
+  % +2\glssymbol{not:Ia}_{(6,9)} +1{,}5\glssymbol{not:Ia}_{[9,9]}
+  +1\glssymbol{not:Ia}_{(9,+\infty)}$. El graf d'aquesta
+  representació, $\glssymbol{not:sgst:graf} S^\text{FOH}(t)$, es
+  mostra a la \autoref{fig:model:repr:foh}.\todo{}
+
+
+  \begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    3  & 1 \\
+    4  & 3 \\
+    6  & 2 \\
+    9  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^\text{FOH}$,
+        xmin=0,
+        xmax=11,
+        xtickmin=0,
+        xtickmax=10,
+        try min ticks=6,
+        ]
+    \addplot[mark=*,blue] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{9}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{12}{1}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{0}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{0.5}{0}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Taula d'una sèrie temporal $S$ i
+     $\glssymbol{not:sgst:graf} S^\text{FOH}(t)$}
+  \label{fig:model:repr:foh}
+  \end{figure}
+
+\end{example}
 
 
 
