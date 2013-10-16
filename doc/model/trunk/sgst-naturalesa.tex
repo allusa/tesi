@@ -58,6 +58,122 @@ Perquè RRDtool diferencia entre comptadors i magnituds?
 
 
 
+\subsection{Regularitat de les sèries temporals} 
+\todo{fer-ho subsecció de les patologies}
+
+
+Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
+temps i $\delta$ una durada de temps, les mesures de la sèrie temporal
+es poden localitzar en l'interval de temps $i_0=[t,t+\delta]$ i els
+seus múltiples $i_j=[t+j\delta \,,\, t+(j+1)\delta]$ per $j=0,1,2,\ldots$.
+En processat de senyal aquests intervals de temps s'anomenen intervals
+de mostreig, $\delta$ s'anomena període de mostreig i $t$ s'anomena
+temps inicial del mostreig.  La sèrie temporal $S$ és de naturalesa
+diferent segons la situació dels temps $T(m_i)$ en els intervals de
+temps $i_j$.
+
+Una sèrie temporal és regular quan les mesures són equidistants en el
+temps, tal com ho anomenen a \cite{last:hetland}.
+
+\begin{definition}[Sèrie temporal regular]
+  \label{def:st:regular}
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
+  temps i $\delta$ una durada de temps. Direm que $S$ és regular si i
+  només si $\forall m \in S(T(\min(S),\infty):T(m) - T(\ant(m)) =
+  \delta$ i $T(\min(S))=t$.
+\end{definition}
+
+Si una sèrie temporal és regular, l'anomenem sèrie temporal mostrejada
+regularment amb període de mostreig $\delta$ iniciada a $t$. Si el $t$
+pot ser qualsevol llavors simplement l'anomenem sèrie temporal
+mostrejada regularment amb període de mostreig $\delta$.
+
+Noteu que si es complís
+la definició excepte que no s'iniciés en el temps que exigim
+$T(\min(S))=t$, aleshores la sèrie temporal seria equidistant però a
+efectes de mostreig no la podríem anomenar regular; sí que seria una
+sèrie temporal de temps real (v.\ def.~\ref{def:st:tempsreal}).
+
+
+Una sèrie temporal és no regular quan no és regular. 
+En les sèries temporals no regulars es poden distingir tres casos: temps real, ultramostreig i inframostreig.
+
+Una sèrie temporal és de temps real quan a cada interval de mostreig hi ha una i només una mesura. L'interval de mostreig pot estar acotat per una durada anomenada termini.
+
+\begin{definition}[Sèrie temporal de temps real]\label{def:st:tempsreal}
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t$ un instant de
+  temps, $\delta$ una durada de temps i $D$ una durada que indica
+  termini. Direm que $S$ és de temps real si i només si $D\leq\delta$
+  i $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
+  S(t+n\delta,t+n\delta+D]$.  Aleshores la sèrie temporal està
+  mostrejada en temps real per al temps de mostreig $\delta$ amb
+  compliment del termini $D$.
+\end{definition}
+
+Si una sèrie temporal és de temps real, l'anomenem  sèrie temporal mostrejada
+en temps real amb període de mostreig $\delta$ i compliment del termini $D$.
+Si $D=\delta$, es pot anomenar que $S$ és una sèrie temporal de temps real sense termini.
+
+
+% \paragraph{Ultramostreig} Una sèrie temporal està ultramostrejada (\emph{upsampling}) quan a cada interval de mostreig hi ha una mesura o més d'una. 
+% \[
+% \text{Ultramostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
+% \]
+
+% Una sèrie temporal $S$ està ultramostrejada ssi $S$ no és de temps real i $\exists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
+
+% \paragraph{Inframostreig} Una sèrie temporal està inframostrejada (\emph{downsampling}) quan en algun interval de mostreig no hi ha cap mesura. 
+% \[
+% \text{Inframostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
+% \]
+
+% Una sèrie temporal $S$ està inframostrejada ssi $\nexists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Patologies de les sèries temporals}
+\todo{?}
+
+* Problemes en l'adquisició
+
+* Problemes en el rellotge
+
+
+
+* Tractament/validació de dades
+
+With reference to data validation, attribute interpolation functions
+can cope with this process. When data has not been captured or has
+been captured erroneously, it must be treated as unknown data.
+\begin{itemize}
+\item When data has not been captured it is unknown by nature. For
+  example, we try to capture data from a sensor and there is no
+  response.
+\item When data is erroneously it must be marked as unknown. For
+  example, we capture data from a sensor but it responses in a not
+  reasonable time or we capture data that is clearly outside a
+  reasonable limits.
+\end{itemize}
+As a consequence, attribute interpolation functions deals with these
+two subprocesses: treating unknown data and marking data as
+unknown. Following with real numbers, let unknown value be represented
+by the improper element infinity ($\infty$).  
+
+
+
+
+
+
+
+
 \subsection{Graf i funció temporal de representació}
 \label{sec:model:repr}
 
@@ -130,19 +246,27 @@ possibles operacions de càlcul que es poden realitzar, per tant
 l'aplicació de qualsevol funció de representació a la sèrie temporal
 pot donar resultats incoherents. O bé un altre exemple és aplicar
 càlculs successius a una sèrie temporal seguint diferents funcions de
-representació.  Així i tot, en la formalització del model de funcions
-de representacions no hi definim cap criteri en concret per a, així,
+representació.  
+
+Així i tot, en la formalització del model de funcions de
+representacions no hi definim cap criteri en concret per a, així,
 donar llibertat en les possibilitats de càlcul amb les sèries
-temporals.
+temporals. Al capítol \todo{ref} d'estat actual ja s'ha vist que en
+l'anàlisi de sèries temporals hi ha diversitat en els algoritmes de
+representació que s'utilitzen.
+% entre els quals destaquen els que es basen en aproximació als valors
+% de la sèrie temporal. Aquí ens centrem en els algoritmes
+% d'interpolació exactes, els quals són més senzills de comprendre.
 
-
+,
 A continuació, definim diverses funcions de representació per a
 exemplificar-ne l'ús. Les agrupem per algunes de les seves
 característiques, a les qual podem veure com famílies de funcions de
-representació. Per a cada definició una oferim, quan es pugui, dues
-expressions equivalents: una en matemàtica contínua, que ajuda a
-comprendre el significat, i una en matemàtica discreta, que utilitza
-l'àlgebra del model de SGST.
+representació, i de cada una en definim les més representatives. Per a
+cada definició una oferim, quan es pugui, dues expressions
+equivalents: una en matemàtica contínua, que ajuda a comprendre el
+significat, i una en matemàtica discreta, que utilitza l'àlgebra del
+model de SGST.
 
 
 
@@ -174,9 +298,7 @@ als instants de temps elegits $T'$ ja que per qualsevol altre instant de
 $T$ no hi ha imatge definida.
 
 Així doncs, és millor definir funcions totals que sempre seran
-funcions ben-definides per al domini temps; per això a la definició de
-funcions de representació hem preferit parlar només de funcions
-contínues al llarg del temps. 
+funcions ben-definides per al domini temps.
 \todo{sinó, es poden trobar equivalents en les contínues?}
 
 
@@ -608,27 +730,13 @@ discontinuïtat.
 
 \subsubsection{A trossos lineals}
 
-\todo{}
-
-%http://en.wikipedia.org/wiki/First-order_hold
-
-
-
-\begin{definition}[Funció de representació \emph{first-order hold}]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\text{FOH}(t)$ com la funció de representació
-  \emph{first-order hold} al llarg del temps, $\forall m \in S:$
-  \begin{align*}
-    S^\text{FOH}(t) = &  \\
-    = & \begin{cases}
-      0 & \text{si }  t<T(\min(S)) \vee t\geq T(\max(S))  \\
-      \frac{y_2-y_1}{x_2-x_1}(t-x_1)+y_1
-      & \text{si } t\in \big[x_1,x_2\big)
-    \end{cases}\\
-      &: x_1=T(m), y_1=V(m), x_2=T(m_2), y_2=V(m_2),
-      m_2=\glssymbol{not:sgst:next}(m)
-         \end{align*}.
-\end{definition}
+Una família de funcions d'un ordre superior a les de trossos constants
+són les que es basen en funcions definides a trossos lineals
+(\emph{piecewise linear functions}).  A continuació ho exemplifiquem
+amb una representació basada en la funció triangular (\emph{triangular
+  function}). Seguint amb l'analogia electrònica l'anomenem
+representació \emph{first-order hold}(FOH), el qual consisteix en
+interpolar linealment cada valor fins al proper.
 
 
 La definició del FOH amb funcions matemàtiques contínues es construeix
@@ -641,40 +749,77 @@ a partir de la funció triangular $\operatorname{tri}(t)$
 \end{cases}
 \]
 
-A continuació ho mostrem per al cas particular de sèries temporals
-regulars\todo{ref}. Per a sèries temporals no regulars s'ha de construir a
-partir de funcions triangulars no simètriques.
-\begin{definition}[Funció de representació \emph{first-order hold} per
-  a sèrie regular]
-  Sigui $S_R=\{m_0,\ldots,m_k\}$ una sèrie temporal regular amb
-  període $P$ i $T$ el domini del temps, es defineix
-  $S^\text{FOH}_ R(t)$ com la funció de representació
+Per al cas particular de sèries temporals regulars, es pot
+utilitzar directament la funció triangular general.  Sigui
+$S_R=\{m_0,\ldots,m_k\}$ una sèrie temporal regular amb període $P$ i
+sigui $T$ el domini del temps, es defineix $S^\text{FOH}_ R(t)$ com la
+funció de representació \emph{first-order hold} al llarg del temps,
+$\forall m \in S:$
+\[
+S_ R^\text{FOH}(t) = \sum_{t\in T} V(m)
+\operatorname{tri}\left(\frac{t-T(m)}{P}\right)
+\]
+
+
+
+Per al cas general, tant per a sèries temporals regulars com per a no
+regulars, s'ha de construir a partir de funcions triangulars no
+simètriques:
+\[
+\operatorname{tri}^{-1}(t) = 
+\begin{cases}
+  1-|t| & \text{si } -1 < t < 0\\
+  0 & \text{altrament}
+\end{cases}
+\quad
+\operatorname{tri}^1(t) = 
+\begin{cases}
+  1-|t| & \text{si } 0 \leq t < 1\\
+  0 & \text{altrament}
+\end{cases}
+\]
+
+
+\begin{definition}[Funció de representació \emph{first-order hold}]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{FOH}(t)$ com la funció de representació
   \emph{first-order hold} al llarg del temps, $\forall m \in S:$
   \begin{align*}
-    S^\text{FOH}(t) = &  \\
-    = & \sum_{t\in T} V(m) \operatorname{tri}(\frac{t-T(m)}{P})\\
+    :\; & x_1=T(m), y_1=V(m), \\
+    & m_2=\glssymbol{not:sgst:next}(m), x_2=T(m_s), y_2=V(m_s),\\
+    & m_0=\glssymbol{not:sgst:prev}(m), x_0=T(m_a), y_0=V(m_a) :\\
+    S^\text{FOH}(t) = & \\
+    = & \sum_{t\in T} y_1
+    \left(
+      \operatorname{tri}^{-1}\left(\frac{t-x_1}{x_1-x_0}\right)
+      +\operatorname{tri}^1\left(\frac{t-x_1}{x_2-x_1}\right)
+    \right)  \\
     = & \begin{cases}
-      0 & \text{si }  t<T(\min(S)) \vee t\geq T(\max(S))  \\
-      \frac{y_2-y_1}{x_2-x_1}(t-x_1)+y_1
-      & \text{si } t\in \big[x_1,x_2\big)
-    \end{cases}\\
-      &: x_1=T(m), y_1=V(m), x_2=T(m_2), y_2=V(m_2),
-      m_2=\glssymbol{not:sgst:next}(m)
-         \end{align*}.
-\end{definition}\todo{refer segona part def}
+      V(\min(S)) & \text{si } t<T(\min(S) )\\
+      V(\max(S)) & \text{si } t> T(\max(S))  \\
+      \frac{y_2-y_1}{x_2-x_1}(t-x_1)+y_1 & \text{si } t\in
+      \big[x_1,x_2\big) \wedge t \leq T(\max(S))
+    \end{cases}
+  \end{align*}.
+\end{definition}
+
 
 
 
 \begin{example}[Sèrie temporal amb representació FOH]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
   seva representació amb FOH és $S^\text{FOH}(t) =
-  % 0\glssymbol{not:Ia}_{(-\infty,3)} +0{,}5\glssymbol{not:Ia}_{[3,3]}
-  % +1\glssymbol{not:Ia}_{(3,4)} +2\glssymbol{not:Ia}_{[4,4]}
-  % +3\glssymbol{not:Ia}_{(4,6)} +2{,}5\glssymbol{not:Ia}_{[6,6]}
-  % +2\glssymbol{not:Ia}_{(6,9)} +1{,}5\glssymbol{not:Ia}_{[9,9]}
-  +1\glssymbol{not:Ia}_{(9,+\infty)}$. El graf d'aquesta
-  representació, $\glssymbol{not:sgst:graf} S^\text{FOH}(t)$, es
-  mostra a la \autoref{fig:model:repr:foh}.\todo{}
+  1\operatorname{tri}^{-1}\left(\frac{t-3}{3-(-\infty)}\right) +
+  1\operatorname{tri}^1\left(\frac{t-3}{4-3}\right)
+  +3\operatorname{tri}^{-1}\left(\frac{t-4}{4-3}\right) +
+  3\operatorname{tri}^1\left(\frac{t-4}{6-4}\right)
+  +2\operatorname{tri}^{-1}\left(\frac{t-6}{6-4}\right) +
+  2\operatorname{tri}^1\left(\frac{t-6}{9-6}\right)
+  +1\operatorname{tri}^{-1}\left(\frac{t-9}{9-6}\right) +
+  1\operatorname{tri}^1\left(\frac{t-9}{+\infty-9}\right)$. El graf
+  d'aquesta representació, $\glssymbol{not:sgst:graf}
+  S^\text{FOH}(t)$, es mostra a la
+  \autoref{fig:model:repr:foh}.
 
 
   \begin{figure}[tp]
@@ -693,6 +838,7 @@ partir de funcions triangulars no simètriques.
         title=$S^\text{FOH}$,
         xmin=0,
         xmax=11,
+        ymin=0,
         xtickmin=0,
         xtickmax=10,
         try min ticks=6,
@@ -701,6 +847,25 @@ partir de funcions triangulars no simètriques.
         (3,1) 
         (4,3)
         (6,2)
+        (9,1)
+    };
+
+    \addplot[lightgray] coordinates { 
+        (3,1) 
+        (4,0)
+    };
+     \addplot[lightgray] coordinates { 
+        (3,0)
+        (4,3)
+        (6,0)
+    };
+    \addplot[lightgray] coordinates { 
+        (4,0)
+        (6,2)
+        (9,0)
+    };
+    \addplot[lightgray] coordinates { 
+        (6,0)
         (9,1)
     };
 
@@ -715,8 +880,8 @@ partir de funcions triangulars no simètriques.
     }
 
     \pgfplotsextra{%
-      \pgfpathmoveto{\pgfplotspointaxisxy{3}{0}}%
-      \pgfpathlineto{\pgfplotspointaxisxy{0.5}{0}}%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{0.5}{1}}%
       \pgfsetarrowsend{latex}
       \pgfsetcolor{blue}
       \pgfusepath{stroke}%
@@ -734,206 +899,63 @@ partir de funcions triangulars no simètriques.
 
 
 
-\subsubsection{Altres}
 
-\todo{}
+\subsubsection{Ús en els operadors de funció temporal}
 
+Alguns operadors dels SGST presenten particularitats a causa del
+fenomen de representació, aleshores els anomenem operadors de funció
+temporal (v.\ l'apartat~\ref{sec:sgst:operadors-temporals}).
 
-\todo{potser posar-ho a estat de l'art tot això?}
 
+Els operadors de funció temporal han d'operar tenint en compte les
+funcions de representació; així aquestes esdevenen paràmetres
+d'aquests operadors. Això no obstant, no podem definir un lligam
+directe entre els operadors de funció temporal i les funcions de
+representació: aquestes darreres són una funció contínua al llarg del
+temps i la interpolació genèrica com a $S(t)$ implica mètodes
+numèrics, cosa que no encaixa amb el model definit basat en l'àlgebra.
 
-In the design of the attribute interpolation function we can interpret
-a time series in different ways, that is what we call the
-representation of a time series. Keogh et al.\ \cite{last:keogh} cite
-some possible representations for time series such as \emph{Fourier
-  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
-\emph{Piecewise Linear Representation} (PLR). This last is remarked as
-the most used owing to the most common representation is with linear
-functions \cite{keogh01}.
+Així doncs, el lligam que modelem entre els operadors de funció
+temporal i les funcions de representació és simbòlic: en els operadors
+de funció temporal, el paràmetre de representació és un nom que indica
+el concepte de representació en el que es basen els càlculs de
+l'operació. Per tant, per a cada parella d'operació de funció temporal
+i nom de representació cal definir quins càlculs s'han de dur a terme
+tot interpretant el significat de la funció de representació
+associada. Si bé, generalment, només és necessari implementar
+l'operació d'interval temporal per a cada representació atès que les
+altres operacions es defineixen a partir d'aquesta. Un exemple d'això
+és la definició d'interval temporal amb representació ZOHE
+(v.\ def.~\ref{def:sgst:interval-temporal-zohe}).
 
-\paragraph{Representació de sèries temporals}
+ 
+D'altra banda, les funcions de representació també es tindran en
+compte a l'hora de definir interpretacions pels agregadors d'atributs
+en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
 
-\textcite{last:keogh}, cita vàries representacions per les sèries temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} o \emph{Piecewise Linear Representation} (PLR), però assenyala aquesta última com la representació més utilitzada. 
-La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
-Per aproximar el segment $S(t_a:t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
 
-Però també es pot representar una sèrie temporal amb una funció graó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
-La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
-El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
 
-%http://en.wikipedia.org/wiki/Piecewise
+En conclusió, es defineixen les funcions de representació per a
+estudiar exactament els grafs que es poden obtenir de la sèrie
+temporal i posteriorment, agafant-ne el significat, s'implementen les
+operacions que siguin necessàries
 
-%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
 
-%http://en.wikipedia.org/wiki/Rectangular_function
 
-%http://en.wikipedia.org/wiki/Step_function
+% \subsubsection{Equivalència en grafs}
+% \todo{}
 
-% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
+% El graf de $S_1=\{(1,1),(3,0),(5,1)\}$ i $S_2=\{(1,1),(2,0),(3,0)(4,1),(5,1)\}$ són equivalents amb representació zohe però no són equivalents amb representació lineal ja que hauria de ser $S_2'=\{(1,1),(2, 0{,}5 ),(3,0),(4, 0{,}5),(5,1)\}$. 
 
-% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
 
 
 
-\subsubsection{Ús de la representació en els operadors}
 
-\todo{}
 
-Com lliguen els operadors de sèries temporals amb les funcions de
-representació? De fet no poden utilitzar-se mútuament: les funcions de
-representació són una funció contínua i voler que això aparegués al
-model voldria dir aplicar mètodes numèrics. És a dir és incompatible
-amb l'àlgebra? Així el que fem és definir les funcions de
-representació per a estudiar exactament què estem fent i després
-agafant-ne el significat s'implementen les operacions que siguin
-necessàries (de fet només és necessari implementar l'operació
-d'interval temporal per a cada representació (com a exemple la def d'interval temporal zohe): les altres es defineixen
-a partir d'aquesta.
 
-Per  altra banda,  les representacions  també es  tindran en  compte a
-l'hora de definir les interpretacions pels agregadors d'atributs en el
-model de SGSTM \todo{ref capítol}
 
-We now define the \emph{zero-order hold backwards} attribute
-interpolation function family as the one interpreting the
-consolidation time interval left-continuous $i=(T_0,T_f]$ and the
-resulting interpolated measure's time always being $T_f$, in
-accordance to the \emph{zero-order hold backwards} representation
-being defined using left-continuous step functions.  
 
 
-\subsubsection{Equivalència en representació}
-representació o graf?
-
-$S_1=\{(1,1),(3,0),(5,1)\}$ i $S_2=\{(1,1),(2,0),(3,0)(4,1),(5,1)\}$ són equivalents amb representació zohe però no són equivalents amb representació lineal ja que hauria de ser $S_2'=\{(1,1),(2, 0{,}5 ),(3,0),(4, 0{,}5),(5,1)\}$. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Regularitat de les sèries temporals} 
-\todo{fer-ho subsecció de les patologies}
-
-
-Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
-temps i $\delta$ una durada de temps, les mesures de la sèrie temporal
-es poden localitzar en l'interval de temps $i_0=[t,t+\delta]$ i els
-seus múltiples $i_j=[t+j\delta \,,\, t+(j+1)\delta]$ per $j=0,1,2,\ldots$.
-En processat de senyal aquests intervals de temps s'anomenen intervals
-de mostreig, $\delta$ s'anomena període de mostreig i $t$ s'anomena
-temps inicial del mostreig.  La sèrie temporal $S$ és de naturalesa
-diferent segons la situació dels temps $T(m_i)$ en els intervals de
-temps $i_j$.
-
-Una sèrie temporal és regular quan les mesures són equidistants en el
-temps, tal com ho anomenen a \cite{last:hetland}.
-
-\begin{definition}[Sèrie temporal regular]
-  \label{def:st:regular}
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
-  temps i $\delta$ una durada de temps. Direm que $S$ és regular si i
-  només si $\forall m \in S(T(\min(S),\infty):T(m) - T(\ant(m)) =
-  \delta$ i $T(\min(S))=t$.
-\end{definition}
-
-Si una sèrie temporal és regular, l'anomenem sèrie temporal mostrejada
-regularment amb període de mostreig $\delta$ iniciada a $t$. Si el $t$
-pot ser qualsevol llavors simplement l'anomenem sèrie temporal
-mostrejada regularment amb període de mostreig $\delta$.
-
-Noteu que si es complís
-la definició excepte que no s'iniciés en el temps que exigim
-$T(\min(S))=t$, aleshores la sèrie temporal seria equidistant però a
-efectes de mostreig no la podríem anomenar regular; sí que seria una
-sèrie temporal de temps real (v.\ def.~\ref{def:st:tempsreal}).
-
-
-Una sèrie temporal és no regular quan no és regular. 
-En les sèries temporals no regulars es poden distingir tres casos: temps real, ultramostreig i inframostreig.
-
-Una sèrie temporal és de temps real quan a cada interval de mostreig hi ha una i només una mesura. L'interval de mostreig pot estar acotat per una durada anomenada termini.
-
-\begin{definition}[Sèrie temporal de temps real]\label{def:st:tempsreal}
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t$ un instant de
-  temps, $\delta$ una durada de temps i $D$ una durada que indica
-  termini. Direm que $S$ és de temps real si i només si $D\leq\delta$
-  i $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
-  S(t+n\delta,t+n\delta+D]$.  Aleshores la sèrie temporal està
-  mostrejada en temps real per al temps de mostreig $\delta$ amb
-  compliment del termini $D$.
-\end{definition}
-
-Si una sèrie temporal és de temps real, l'anomenem  sèrie temporal mostrejada
-en temps real amb període de mostreig $\delta$ i compliment del termini $D$.
-Si $D=\delta$, es pot anomenar que $S$ és una sèrie temporal de temps real sense termini.
-
-
-% \paragraph{Ultramostreig} Una sèrie temporal està ultramostrejada (\emph{upsampling}) quan a cada interval de mostreig hi ha una mesura o més d'una. 
-% \[
-% \text{Ultramostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
-% \]
-
-% Una sèrie temporal $S$ està ultramostrejada ssi $S$ no és de temps real i $\exists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
-
-% \paragraph{Inframostreig} Una sèrie temporal està inframostrejada (\emph{downsampling}) quan en algun interval de mostreig no hi ha cap mesura. 
-% \[
-% \text{Inframostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
-% \]
-
-% Una sèrie temporal $S$ està inframostrejada ssi $\nexists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Patologies de les sèries temporals}
-\todo{?}
-
-* Problemes en l'adquisició
-
-* Problemes en el rellotge
-
-
-
-* Tractament/validació de dades
-
-With reference to data validation, attribute interpolation functions
-can cope with this process. When data has not been captured or has
-been captured erroneously, it must be treated as unknown data.
-\begin{itemize}
-\item When data has not been captured it is unknown by nature. For
-  example, we try to capture data from a sensor and there is no
-  response.
-\item When data is erroneously it must be marked as unknown. For
-  example, we capture data from a sensor but it responses in a not
-  reasonable time or we capture data that is clearly outside a
-  reasonable limits.
-\end{itemize}
-As a consequence, attribute interpolation functions deals with these
-two subprocesses: treating unknown data and marking data as
-unknown. Following with real numbers, let unknown value be represented
-by the improper element infinity ($\infty$).  
 
 
 

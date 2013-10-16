@@ -261,8 +261,41 @@ La representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise L
 Després de definir la PLR, \textcite{keogh00,keogh01} exploren altres representacions de sèries temporals per tal de reduir la mida d'una sèrie temporal i poder-la indexar més fàcilment. Proposen dues tècniques eficients en el càlcul: la \emph{Piecewise Aggregate Aproximation} i la \emph{Adaptive Piecewise Constant Approximation}, ambdues basades en la representació a trossos constants de la sèrie temporal. 
 D'aquestes dues tècniques, \citeauthor{keogh00,keogh01} conclouen que mantenen una bona aproximació a la sèrie temporal i que a més  tenen molt menys cost de càlcul que altres de més complicades, com ara la \emph{Discrete Fourier Transform},  la  \emph{Singular Value Decomposition} o la \emph{Discrete Wavelet Transform}.
 
+\todo{arreglar perquè quedi ben explicat; després en el model fem menció d'aquestes representacions}
+
+\todo{potser posar-ho a estat de l'art tot això?}
 
 
+In the design of the attribute interpolation function we can interpret
+a time series in different ways, that is what we call the
+representation of a time series. Keogh et al.\ \cite{last:keogh} cite
+some possible representations for time series such as \emph{Fourier
+  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
+\emph{Piecewise Linear Representation} (PLR). This last is remarked as
+the most used owing to the most common representation is with linear
+functions \cite{keogh01}.
+
+\paragraph{Representació de sèries temporals}
+
+\textcite{last:keogh}, cita vàries representacions per les sèries temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} o \emph{Piecewise Linear Representation} (PLR), però assenyala aquesta última com la representació més utilitzada. 
+La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
+Per aproximar el segment $S(t_a,t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
+
+Però també es pot representar una sèrie temporal amb una funció graó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
+La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
+El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
+
+%http://en.wikipedia.org/wiki/Piecewise
+
+%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
+
+%http://en.wikipedia.org/wiki/Rectangular_function
+
+%http://en.wikipedia.org/wiki/Step_function
+
+% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
+
+% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
 
 
 
