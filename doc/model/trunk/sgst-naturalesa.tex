@@ -24,7 +24,7 @@ segons adquisició:
 
 segons tipus de dades mesurades:
 
-* comptadors -> conservar totals
+* comptadors -> conservar totals (comptador: monòton, doble, relatiu)
 
 * soroll d'un senyal -> conservar mitjana
 
@@ -55,11 +55,53 @@ Perquè RRDtool diferencia entre comptadors i magnituds?
 
 
 
+\subsection{Patologies de les sèries temporals}
+\todo{?}
+
+* Problemes en l'adquisició
+
+* Problemes en el rellotge
+
+* Valors estant limitats en un rang
+En el nostra cas els valors estaran associats a una variable física, per tant seran conjunt finits i acotats, per tant podrem definir una cota inferior màxima (ínfim) i una cota màxima (suprem). Donat el conjunt de valors V, definim la conta mínima del conjunt com     (això ja ho tenies fet no!!!)
+
+. El primer problema  és la gestió d’una quantitat enorme de dades.
+
+El segon problema  es el de la necessitat de censurar les dades,  es a dir validar que les dades
+siguin correctes i en cas contrari rebutjar-les o reconstruir-les.
+
+El tercer problema es dóna quan el període de mostreig no  és regular,  és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
+
+En el moment  de recol lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos.
 
 
 
-\subsection{Regularitat de les sèries temporals} 
-\todo{fer-ho subsecció de les patologies}
+* Tractament/validació de dades
+
+With reference to data validation, attribute interpolation functions
+can cope with this process. When data has not been captured or has
+been captured erroneously, it must be treated as unknown data.
+\begin{itemize}
+\item When data has not been captured it is unknown by nature. For
+  example, we try to capture data from a sensor and there is no
+  response.
+\item When data is erroneously it must be marked as unknown. For
+  example, we capture data from a sensor but it responses in a not
+  reasonable time or we capture data that is clearly outside a
+  reasonable limits.
+\end{itemize}
+As a consequence, attribute interpolation functions deals with these
+two subprocesses: treating unknown data and marking data as
+unknown. Following with real numbers, let unknown value be represented
+by the improper element infinity ($\infty$).  
+
+
+
+* dades desconegudes: mesura inexistent, temps de termini, límits (rang dels valors)
+
+
+\subsubsection{Regularitat de les sèries temporals} 
+\todo{arreglar}
 
 
 Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
@@ -133,47 +175,6 @@ Si $D=\delta$, es pot anomenar que $S$ és una sèrie temporal de temps real sen
 
 
 
-
-
-
-
-
-
-\subsection{Patologies de les sèries temporals}
-\todo{?}
-
-* Problemes en l'adquisició
-
-* Problemes en el rellotge
-
-
-
-* Tractament/validació de dades
-
-With reference to data validation, attribute interpolation functions
-can cope with this process. When data has not been captured or has
-been captured erroneously, it must be treated as unknown data.
-\begin{itemize}
-\item When data has not been captured it is unknown by nature. For
-  example, we try to capture data from a sensor and there is no
-  response.
-\item When data is erroneously it must be marked as unknown. For
-  example, we capture data from a sensor but it responses in a not
-  reasonable time or we capture data that is clearly outside a
-  reasonable limits.
-\end{itemize}
-As a consequence, attribute interpolation functions deals with these
-two subprocesses: treating unknown data and marking data as
-unknown. Following with real numbers, let unknown value be represented
-by the improper element infinity ($\infty$).  
-
-
-
-
-
-
-
-
 \subsection{Graf i funció temporal de representació}
 \label{sec:model:repr}
 
@@ -219,13 +220,13 @@ emmagatzemades.
 \end{definition}
 
 La utilitat de les funcions de representació és diversa i per això les
-operacions de càlcul poden ser qualssevol. Una funció de
-representació es pot utilitzar per a interpolar valors d'una sèrie
-temporal però també per a extrapolar-los o per a canviar la resolució
-de la sèrie temporal. També es pot utilitzar per al problema aproximar
-la sèrie temporal a la funció original; és a dir donar una funció de
-representació que sigui la funció contínua que més s'aproxima a la
-funció temporal original.
+operacions de càlcul poden ser qualssevol. Una funció de representació
+es pot utilitzar per a interpolar valors d'una sèrie temporal però
+també per a extrapolar-los i fer prediccions o per a canviar la
+resolució de la sèrie temporal. També es pot utilitzar per al problema
+aproximar la sèrie temporal a la funció original; és a dir donar una
+funció de representació que sigui la funció contínua que més
+s'aproxima a la funció temporal original.
 
 
 El lligam entre una sèrie temporal i la seva representació no és fix;
@@ -489,6 +490,7 @@ valor fins al predecessor. Una representació similar s'utilitza a
 \begin{definition}[Funció de representació \emph{zero-order hold} cap
   enrere]%\emph{zero-order hold backwards}(zohe%from \emph{zero-order
          %hold everted}
+  \label{def:model:zohe}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
   temps, es defineix $S^\text{ZOHE}(t)$ com la funció de representació
   \emph{zero-order hold} cap enrere al llarg del temps, $\forall m \in S:$
@@ -531,7 +533,10 @@ representació \emph{zero-order hold} centrada en l'interval (ZOHC).
 En quart lloc, representem la sèrie temporal en base a la funció
 rectangular. La funció rectangular és un cas especial de les funcions
 graó a on s'especifiquen valors simètrics per als punts de
-discontinuïtat.
+discontinuïtat. Definim el rectangle amb manteniment del valor cap a
+la dreta, de manera similar al ZOH, tot i que també es possible
+definir altres translacions del rectangle com s'ha fet per la funció
+graó en el cas del ZOHE i el ZOHC.
 \begin{definition}[Funció de representació rectangular]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
   temps, es defineix $S^\text{rect}(t)$ com la funció de representació
@@ -900,20 +905,165 @@ simètriques:
 
 
 
+\subsubsection{D'ajustament lineal de corbes}
+
+Una família de funcions que també treballa amb polinomis de primer
+ordre, com les de trossos lineals, són les funcions d'ajustament
+lineal de corbes.  L'ajustament de corbes (\emph{curve fitting}) és
+una tècnica que es basa en l'aproximació als punts donats, a
+diferència de les funcions definides a trossos que es basen en
+interpolacions que passin exactament pels punts donats.  A continuació
+ho exemplifiquem amb una representació basada en l'aproximació lineal
+per mínims quadrats; és a dir la regressió lineal (\emph{linear
+  regression}).
+
+
+Definim una representació que consisteix en trobar la recta d'ajust
+mínima quadràtica a les mesures de la sèrie temporal. L'anomenem
+representació \emph{lineal} de la sèrie temporal.
+\begin{definition}[Funció de representació lineal]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
+  temps, es defineix $S^\text{lineal}(t)$ com la funció de
+  representació de regressió lineal al llarg del temps, $\forall m \in
+  S:$
+  \begin{align*}
+    S^\text{lineal}(t) = & \alpha + \beta t \\
+    :\; & 
+    \left[\begin{array}{c}
+        \alpha \\
+        \beta
+      \end{array}\right] 
+    = (A^TA)^{-1}A^TB, \\
+    & A=\left[\begin{array}{cc}
+        1 & T(m_0) \\
+        \vdots & \vdots \\
+        1 & T(m_k)
+      \end{array}\right],
+    B=\left[\begin{array}{c}
+        V(m_0) \\
+        \vdots \\
+        V(m_k)
+      \end{array}\right]       
+   \end{align*}.
+\end{definition}
+
+
+
+\begin{example}[Sèrie temporal amb representació lineal]
+  Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
+  seva representació lineal és $S^\text{lineal}(t) =
+  2{,}405-0{,}119t$.  El graf d'aquesta representació,
+  $\glssymbol{not:sgst:graf} S^\text{lineal}(t)$, es mostra a la
+  \autoref{fig:model:repr:lineal}.
+
+  Els paràmetres de la regressió lineal provenen de la resolució del
+  sistema d'equacions:
+  \begin{gather*}
+    S^\text{lineal}(t) =  \alpha + \beta t \\
+     A= \left[\begin{array}{cc}
+        1 & 3 \\
+        1 & 4 \\
+        1 & 6 \\
+        1 & 9 
+      \end{array}\right],
+    B=\left[\begin{array}{c}
+        1 \\
+        3 \\
+        2 \\
+        1
+      \end{array}\right]\\     
+    \left[\begin{array}{c}
+        \alpha \\
+        \beta
+      \end{array}\right] 
+    =  (A^TA)^{-1}A^TB =
+    \left[\begin{array}{c}
+        2{,}405 \\
+        0{,}119
+      \end{array}\right]   
+   \end{gather*}
+
+
+
+
+  \begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    3  & 1 \\
+    4  & 3 \\
+    6  & 2 \\
+    9  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^\text{lineal}$,
+        xmin=0,
+        xmax=11,
+        ymin=0,
+        xtickmin=0,
+        xtickmax=10,
+        try min ticks=6,
+        ]
+    \addplot[mark=o,lightgray,only marks] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+
+%    \addplot[blue] {-0.119*x +2.405};
+    \addplot[blue] coordinates { 
+        (3,2.048) 
+        (10,1.215)
+    };
+
+
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{10}{1.215}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{12}{0.977}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{2.048}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{1}{2.286}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Taula d'una sèrie temporal $S$ i
+     $\glssymbol{not:sgst:graf} S^\text{lineal}(t)$}
+  \label{fig:model:repr:lineal}
+  \end{figure}
+
+\end{example}
+
+
 \subsubsection{Ús en els operadors de funció temporal}
 
 Alguns operadors dels SGST presenten particularitats a causa del
 fenomen de representació, aleshores els anomenem operadors de funció
 temporal (v.\ l'apartat~\ref{sec:sgst:operadors-temporals}).
 
-
 Els operadors de funció temporal han d'operar tenint en compte les
 funcions de representació; així aquestes esdevenen paràmetres
 d'aquests operadors. Això no obstant, no podem definir un lligam
-directe entre els operadors de funció temporal i les funcions de
+genèric entre els operadors de funció temporal i les funcions de
 representació: aquestes darreres són una funció contínua al llarg del
-temps i la interpolació genèrica com a $S(t)$ implica mètodes
-numèrics, cosa que no encaixa amb el model definit basat en l'àlgebra.
+temps mentre que els operadors de funció temporal defineixen com
+manipular les mesures de la sèrie temporal.
+% la interpolació genèrica com a $S(t)$ implica mètodes
+% numèrics, cosa que no encaixa amb el model definit basat en l'àlgebra.
 
 Així doncs, el lligam que modelem entre els operadors de funció
 temporal i les funcions de representació és simbòlic: en els operadors
@@ -922,16 +1072,31 @@ el concepte de representació en el que es basen els càlculs de
 l'operació. Per tant, per a cada parella d'operació de funció temporal
 i nom de representació cal definir quins càlculs s'han de dur a terme
 tot interpretant el significat de la funció de representació
-associada. Si bé, generalment, només és necessari implementar
-l'operació d'interval temporal per a cada representació atès que les
-altres operacions es defineixen a partir d'aquesta. Un exemple d'això
-és la definició d'interval temporal amb representació ZOHE
-(v.\ def.~\ref{def:sgst:interval-temporal-zohe}).
+associada. Si bé només és necessari implementar l'operació d'interval
+temporal per a cada representació atès que les altres operacions es
+defineixen a partir d'aquesta. Un exemple d'això és la definició
+d'interval temporal amb representació ZOHE (v.\
+def.~\ref{def:sgst:interval-temporal-zohe}).
 
- 
-D'altra banda, les funcions de representació també es tindran en
-compte a l'hora de definir interpretacions pels agregadors d'atributs
-en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
+A continuació es mostren dos exemples més de l'interval temporal
+segons la representació FOH i la lineal.
+\begin{definition}[Interval temporal FOH]
+  \label{def:sgst:interval-temporal-foh}
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
+  $S^\text{FOH}(t)$ la representació FOH, es defineix la subsèrie
+  $S[t_0,t_f]^{\text{FOH}}$ com la sèrie temporal
+  $S[t_0,t_f]^{\text{FOH}} = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$ a
+  on $m_0=(t_0,S^{\text{FOH}}(t_0))$ i $m_f=(t_f,S^{\text{FOH}}(t_f))$.
+\end{definition}
+
+\begin{definition}[Interval temporal lineal]
+  \label{def:sgst:interval-temporal-lineal}
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
+  $S^\text{lineal}(t)$ la representació lineal, es defineix la subsèrie
+  $S[t_0,t_f]^{\text{lineal}}$ com la sèrie temporal
+  $S[t_0,t_f]^{\text{lineal}} = \{m_0\} \cup \{m_f\}$ a
+  on $m_0=(t_0,S^{\text{lineal}}(t_0))$ i $m_f=(t_f,S^{\text{lineal}}(t_f))$.
+\end{definition}
 
 
 
@@ -939,6 +1104,11 @@ En conclusió, es defineixen les funcions de representació per a
 estudiar exactament els grafs que es poden obtenir de la sèrie
 temporal i posteriorment, agafant-ne el significat, s'implementen les
 operacions que siguin necessàries
+
+
+D'altra banda, les funcions de representació també es tindran en
+compte a l'hora de definir interpretacions pels agregadors d'atributs
+en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
 
 
 
