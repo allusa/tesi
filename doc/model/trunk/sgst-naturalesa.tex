@@ -1,30 +1,313 @@
-\section{Propietats (Naturalesa/tipologia/patologies) de les sèries temporals}
+\section{Propietats de les sèries temporals}
+
+\todo{}
+ (Trets semàntics/patologies/representacions(tipus/funció temporal))
 
 
+
+\subsection{Trets semàntics de les sèries temporals}
+
+Una sèrie temporal pot provenir d'àmbits varis i per tant tenir un
+significat variat. És el que anomenem trets semàntics de les sèries
+temporals.
+
+
+En el model d'operacions s'ha vist que l'atribut de temps de les
+sèries temporals indueix vàries naturaleses en el comportament dels
+operadors: com a conjunts, com a seqüències o com a funcions
+temporals. Però aquesta distinció de significat és des del punt de
+vista de formalització matemàtica per l'estructura de les sèries
+temporals.
+
+A continuació distingim el significat de les sèries temporals segons
+l'origen; és a dir com s'han adquirit o de quin entorn
+provenen. Aquesta distinció és important per a determinar quines
+operacions tenen sentit de ser aplicades i quines no a una sèrie
+temporal en particular. Així \textcite{segev87:sigmod} anomena
+comportament semàntic (\emph{semantic behavior}) a la varietat de
+formes que pot prendre una sèrie temporal segons l'àmbit on
+s'apliquen.
+
+
+
+Classifiquem els trets semàntics a grosso modo
 \todo{}
 
 
+Un primer tret semàntic de les sèries temporals és deu al procés
+d'adquisició. Així una sèrie temporal es pot classificar segons si
+s'ha adquirit mostrejant un senyal continu cada cert període o si
+prové d'una acumulació o d'un comptatge d'esdeveniments en un cert
+període de temps. Aquests són els dos orígens principals que poden
+tenir els senyals discrets segons
+\textcite[cap.~1]{proakismanolakis96}.  En aquest tret es distingeix
+segons l'adquisició en l'eix del temps, també es pot distingir segons
+si l'adquisició en l'eix de valors és contínua o discreta però això és
+un tret propi dels valors i, com a característica, pertany al domini
+dels valors. Aquest procés s'anomena quantització del senyal però
+sovint, per simplificar, no es té en
+compte \parencite[cap.~1]{proakismanolakis96}.  %S1.4.7
 
-\subsection{Naturalesa de les sèries temporals}
-
-\todo{}
 
 
-segons el que es diu a la secció d'operacions (però això potser és més de model?):
 
-* conjunt
-* seqüència
-* funció temporal
+  \todo{però aquí no volem parlar d'adquisició sinó de
+  naturalesa: magnituds i comptadors} 
+
+
+
+Mesures vs increments d'un comptador vs gràfics barres (eix y: freqüència) i histograma (eix y: densitat de freqüència)
+
+
+\begin{figure}[tp]
+  \centering
+
+  \begin{subfigure}{\textwidth}
+    \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_m$} \\ \hline
+    $t$  & $v$ \\ \hline
+    0   & 0 \\
+    2   & 1 \\
+    4   & 3 \\
+    5   & 4 \\
+    9   & 10 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_\Delta$} \\ \hline
+    $t$  & $v$ \\ \hline
+    0   & 0 \\
+    2 & 1 \\
+    4 & 2 \\
+    5 & 1 \\
+    9 & 6 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_v$} \\ \hline
+    $t$  & $v$ \\ \hline
+    0   & 0 \\
+    2 & 0{,}5 \\
+    4 & 1 \\
+    5 & 1 \\
+    9 & 2 \\ \hline
+  \end{tabular}
+  \caption{Taules de valors}
+  \end{subfigure}
+
+  \begin{subfigure}{0.3\textwidth}
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_m$,
+        ]
+    \addplot[blue] coordinates {
+        (0,0)
+        (2,1)
+        (4,3)
+        (5,4)
+        (9,10)
+    };
+    %\addlegendentry{Valor absolut}
+    \addplot[only marks,mark=*,red] coordinates {
+        (0,0)
+        (2,1)
+        (4,3)
+        (5,4)
+        (9,10)
+    };
+    % \addlegendentry{Punts de mesura}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Valor absolut}
+  \end{subfigure}
+  \begin{subfigure}{0.3\textwidth}
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_\Delta$,
+        ]
+    \addplot[ycomb,blue,mark=-] coordinates {
+        (0,0)
+        (2,1)
+        (4,2)
+        (5,1)
+        (9,6)
+    };
+    %\addlegendentry{Increments}
+    \addplot[only marks,mark=*,red] coordinates {
+        (0,0)
+        (2,1)
+        (4,2)
+        (5,1)
+        (9,6)
+    };
+    %\addlegendentry{Punts de mesura}
+
+    \addplot[gray,dashed] coordinates {
+        (0,0)
+        (2,1)
+        (4,2)
+        (5,1)
+        (9,6)
+    };
+    % \addlegendentry{Tendència}
+
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Increments}
+  \end{subfigure}
+ \begin{subfigure}{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+%        timeseriesrel,
+        height=4cm,
+        %width=10cm,scale only axis, height=5cm,
+        ymax = 10,
+        xtick = data,
+        xticklabel interval boundaries,
+        x tick label style= {rotate=90,anchor=east},
+        x label style ={ at={(1,0)},left,yshift=0pt},
+        ]
+    \addplot[ybar interval,blue,fill=blue!30!white] coordinates{
+        (0,1)
+        (2,2)
+        (4,1)
+        (5,6)
+        (9,6)
+    }; 
+    % \addlegendentry{Increments}
+
+    \node[color=blue,above] at (axis cs:1,1) {1};
+    \node[color=blue,above] at (axis cs:3,2) {2};
+    \node[color=blue,above] at (axis cs:4.5,1) {1};
+    \node[color=blue,above] at (axis cs:7,6) {6};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Gràfic de barres}
+  \end{subfigure}
+
+  \begin{subfigure}{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_\Delta$
+        ]
+    \addplot[blue] coordinates {
+        (0,0)
+        (2,1)
+        (2,0)
+        (4,2)
+        (4,0)
+        (5,1)
+        (5,0)
+        (9,6)
+        (9,0)
+    };
+    %\addlegendentry{Valor relatiu}
+    \addplot[only marks,mark=*,red] coordinates {
+        (0,0)
+        (2,1)
+        (4,2)
+        (5,1)
+        (9,6)
+    };
+    %\addlegendentry{Punts de mesura}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Valor relatiu}
+  \end{subfigure}
+  \begin{subfigure}{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_v$,
+        ]
+    \addplot[const plot mark right,blue] coordinates {
+        (0,0)
+        (2,0.5)
+        (4,1)
+        (5,1)
+        (9,2)
+    };
+    %\addlegendentry{Velocitat mitjana}
+
+   \addplot[only marks,mark=*,red] coordinates {
+        (0,0)
+        (2,0.5)
+        (4,1)
+        (5,1)
+        (9,2)
+    };
+    %\addlegendentry{Punts de mesura}
+
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Velocitat}
+   \end{subfigure}
+  \begin{subfigure}{0.3\textwidth}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        height=4cm,
+        ymax=2.7,
+        ]
+    \addplot[ybar interval,blue,fill=blue!30!white,mark=none] coordinates {
+        (0,0.5)
+        (2,1)
+        (4,1)
+        (5,2)
+        (9,2)
+    };
+    %\addlegendentry{distribució d'increments}
+
+    \node[color=blue] at (axis cs:1,0.39) {\scriptsize 1};
+    \node[color=blue] at (axis cs:3,0.6) {2};
+    \node[color=blue] at (axis cs:4.5,0.6) {1};
+    \node[color=blue] at (axis cs:7,0.6) {6};
+     \end{axis}
+  \end{tikzpicture}
+  \caption{Histograma}
+  \end{subfigure}
+
+
+\caption{Formes d'un comptador monòton}
+  \label{fig:velocitats:counter}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+A caus ad'aquesta classificació ens apareixen les magnituds i els comptadors? Dir que alerta! quan tractem els comptadors com a sèries temporals i fer tot el discurs de varietat de formes i cal que tractar-les amb sentit. Les magnituds no presenten tants problemes d'interpretació
+
+
+
+[segev87] diferencia entre step-wise constant, discret (potser aquest tal com se'l defineix són intervals temporals), continu. Ho anomena (semantic behavior, property, interpret)
+ tipus de la sèrie temporal i diu que es poden definir interpolacions per cada una.
+
+
 
 segons adquisició:
 
 * contínua
-* discreta
+* discreta (en base a clock?)
 
 
 segons tipus de dades mesurades:
 
 * comptadors -> conservar totals (comptador: monòton, doble, relatiu)
+usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
+
 
 * soroll d'un senyal -> conservar mitjana
 
@@ -37,17 +320,20 @@ magnitud física = valor numèric x unitat [llibreverd IEC-IUPAC]
 
 
 
+segons timestamp vs time span:
+
+* timestamp: el típic de sèries temporals
+* time span: ex. $S=\{(gen,1),(feb,4),(mar,0)\}$: això són sèries temporals? o són dades intervals temporals? Es poden expressar/entendre com a sèries temporals via timestamps amb granularitat? Es poden expressar/entendre com a sèries temporals via tractar-les com a compadors?  
+altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
+
+
+
+
+
+
 Perquè RRDtool diferencia entre comptadors i magnituds?
 
-[segev87] diferencia entre step-wise constant, discret (potser aquest tal com se'l defineix són intervals temporals), continu. Ho anomena (semantic behavior, property, interpret)
- tipus de la sèrie temporal i diu que es poden definir interpolacions per cada una.
 
-
-
-
-[John G. Proakis, Dimitris G. Manolakis 2007 Tratamiento digital de señales/Digital signal processing 4a ed pp11-12(segons wikipedia)] Acquisition: Discrete signals may have several origins, but can usually be classified into one of two groups:[1]
-*By acquiring values of an analog signal at constant or variable rate. This process is called sampling.[2]
-*By recording the number of events of a given kind over finite time periods. For example, this could be the number of people taking a certain elevator every day.
 
 
 
@@ -56,6 +342,10 @@ Perquè RRDtool diferencia entre comptadors i magnituds?
 
 
 \subsection{Patologies de les sèries temporals}
+
+
+
+
 \todo{?}
 
 * Problemes en l'adquisició
@@ -101,82 +391,164 @@ by the improper element infinity ($\infty$).
 
 
 \subsubsection{Regularitat de les sèries temporals} 
-\todo{arreglar}
 
-
-Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
-temps i $\delta$ una durada de temps, les mesures de la sèrie temporal
-es poden localitzar en l'interval de temps $i_0=[t,t+\delta]$ i els
-seus múltiples $i_j=[t+j\delta \,,\, t+(j+1)\delta]$ per $j=0,1,2,\ldots$.
-En processat de senyal aquests intervals de temps s'anomenen intervals
-de mostreig, $\delta$ s'anomena període de mostreig i $t$ s'anomena
-temps inicial del mostreig.  La sèrie temporal $S$ és de naturalesa
-diferent segons la situació dels temps $T(m_i)$ en els intervals de
+Per a determinar la regularitat d'una sèrie temporal es defineix un
+interval de temps $i_0=[t_I,t_I+\delta]$, a on $t_I$ és un instant de
+temps i $\delta$ una durada de temps, i els seus intervals múltiples
+$i_j=[t_I+j\delta\, ,\, t_I+(j+1)\delta]$ per
+$j=0,1,2\ldots$. Aleshores, la regularitat de la sèrie temporal depèn
+de la situació dels temps de les seves mesures en aquests intervals de
 temps $i_j$.
+ 
+Quan la situació temporal de les mesures prové del sistema
+d'adquisició de dades aleshores cal notar que, en l'àmbit de
+teoria del senyal, aquests intervals de temps s'anomenen intervals de
+mostreig, $\delta$ s'anomena període de mostreig i $t_I$ s'anomena
+temps inicial del mostreig.
+
 
 Una sèrie temporal és regular quan les mesures són equidistants en el
-temps, tal com ho anomenen a \cite{last:hetland}.
-
+temps, tal com ho anomenen \textcite{last:hetland}.  La regularitat
+d'una sèrie temporal és crítica en algunes operacions perquè hi ha
+algoritmes d'anàlisi de sèrie temporals que només es poden aplicar a
+sèries temporals regulars.
 \begin{definition}[Sèrie temporal regular]
   \label{def:st:regular}
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t$ un instant de
-  temps i $\delta$ una durada de temps. Direm que $S$ és regular si i
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps i $\delta$ una durada de temps, $S$ és regular si i
   només si $\forall m \in S(T(\min(S),\infty):T(m) - T(\ant(m)) =
-  \delta$ i $T(\min(S))=t$.
+  \delta$ a on definim $t_I=T(\min(S))$.
 \end{definition}
 
-Si una sèrie temporal és regular, l'anomenem sèrie temporal mostrejada
-regularment amb període de mostreig $\delta$ iniciada a $t$. Si el $t$
-pot ser qualsevol llavors simplement l'anomenem sèrie temporal
-mostrejada regularment amb període de mostreig $\delta$.
-
-Noteu que si es complís
-la definició excepte que no s'iniciés en el temps que exigim
-$T(\min(S))=t$, aleshores la sèrie temporal seria equidistant però a
-efectes de mostreig no la podríem anomenar regular; sí que seria una
-sèrie temporal de temps real (v.\ def.~\ref{def:st:tempsreal}).
+Si una sèrie temporal és regular, l'anomenem sèrie temporal regular de
+període de $\delta$ iniciada a $t_I$. Si el $t_I$ pot ser qualsevol
+llavors simplement l'anomenem sèrie temporal regular de període
+$\delta$.  Si notem l'àmbit de teoria del senyal, aquest període té
+relació amb el període de mostreig.
 
 
-Una sèrie temporal és no regular quan no és regular. 
-En les sèries temporals no regulars es poden distingir tres casos: temps real, ultramostreig i inframostreig.
+Així doncs, per contraposició definim que una sèrie temporal és
+\emph{no regular} o \emph{irregular} quan no és regular.  A
+continuació distingim tres característiques que poden presentar les
+sèries temporals no regulars: temps real, ultramostreig i inframostreig.
 
-Una sèrie temporal és de temps real quan a cada interval de mostreig hi ha una i només una mesura. L'interval de mostreig pot estar acotat per una durada anomenada termini.
+\todo{} L'adquisició de les mesures pot estar lligada a un sistema de
+control de temps real, el qual sol ser el que mana sobre el temps atès
+que les periodicitats del mostreig per a control són més elevades que
+les del mostreig per als humans (aquests tenen un temps de resposta
+més lent) \todo{citar el llibre de real time}.  El temps real causa
+que tinguem sèries temporals no regulars però amb unes certes
+característiques de periodicitat.  Així, seguint el vocabulari de
+temps real, en les sèries temporals no regulars es poden distingir els
+tres casos mencionats
 
-\begin{definition}[Sèrie temporal de temps real]\label{def:st:tempsreal}
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t$ un instant de
+
+Una sèrie temporal és de temps real quan a cada interval de mostreig
+hi ha una i només una mesura. A més, l'interval de mostreig pot estar
+fitar per una durada anomenada termini.
+\begin{definition}[Sèrie temporal de temps real]
+  \label{def:st:tempsreal}
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
   temps, $\delta$ una durada de temps i $D$ una durada que indica
-  termini. Direm que $S$ és de temps real si i només si $D\leq\delta$
-  i $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
-  S(t+n\delta,t+n\delta+D]$.  Aleshores la sèrie temporal està
-  mostrejada en temps real per al temps de mostreig $\delta$ amb
-  compliment del termini $D$.
+  termini, $S$ és de temps real si i només si $D\leq\delta$
+  i $\forall n\in\{0,\ldots,|S|-1\}: |S[t_I+n\delta,t_I+n\delta+D)| = 1$. 
+  % Altrament $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
+  % S[t_I+n\delta,t_I+n\delta+D)$
 \end{definition}
 
-Si una sèrie temporal és de temps real, l'anomenem  sèrie temporal mostrejada
-en temps real amb període de mostreig $\delta$ i compliment del termini $D$.
-Si $D=\delta$, es pot anomenar que $S$ és una sèrie temporal de temps real sense termini.
+Si una sèrie temporal és de temps real, l'anomenem sèrie temporal
+mostrejada en temps real de període $\delta$ iniciada a $t_I$ i
+compliment del termini $D$.  Si $D=\delta$, es pot anomenar que $S$ és
+una sèrie temporal de temps real sense termini.
+
+Pel que fa al temps inicial $t_I$, en el cas de les sèries temporals
+de temps reals pot estar situat entre $T(\min(S))-\delta < t_I \leq
+T(\min(S))$.  Així doncs, una sèrie temporal regular és també de temps
+real. En el cas que una sèrie temporal compleixi els requeriments de
+regular a excepció de $T(\min(S))=t_I$, és a dir de la qual les
+mesures són equidistants però no té el temps inicial demanat,
+aleshores només és una sèrie temporal de temps real.
 
 
-% \paragraph{Ultramostreig} Una sèrie temporal està ultramostrejada (\emph{upsampling}) quan a cada interval de mostreig hi ha una mesura o més d'una. 
-% \[
-% \text{Ultramostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
-% \]
 
-% Una sèrie temporal $S$ està ultramostrejada ssi $S$ no és de temps real i $\exists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
-
-% \paragraph{Inframostreig} Una sèrie temporal està inframostrejada (\emph{downsampling}) quan en algun interval de mostreig no hi ha cap mesura. 
-% \[
-% \text{Inframostrejada?}: \text{Sèrie temporal} \times T_0 \times \delta \longrightarrow \text{Booleà}
-% \]
-
-% Una sèrie temporal $S$ està inframostrejada ssi $\nexists m_i=(v_i,t_i)\in S:T_0+(n-1)\delta \leq t_i < T_0+n\delta:\forall n\in\{1,\ldots,|S|\}$.
+Seguint en l'àmbit de temps real, quan no es compleix que a cada
+interval de mostreig hi ha una i només una mesura pot succeir que hi
+hagi un, o més d'un, interval amb cap mesura o amb més
+d'una. Respectivament, ho anomenem interval inframostrejat i interval
+ultramostrejat. 
 
 
+
+Una sèrie temporal té intervals amb ultramostreig (\emph{upsampling})
+quan en alguns intervals de mostreig hi ha una mesura o més d'una.
+\begin{definition}[Sèrie temporal amb ultramostreig]
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps i $\delta$ una durada de temps, els intervals amb
+  ultramostreig de $S$ són aquells que
+  $|S[t_I+n\delta,t_I+(n+1)\delta)|>1$ a on $n\in\N$.
+\end{definition}
+
+Una sèrie temporal té intervals amb inframostreig
+(\emph{downsampling}) quan en alguns intervals de mostreig no hi ha
+cap mesura.
+\begin{definition}[Sèrie temporal amb inframostreig]
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps i $\delta$ una durada de temps, els intervals amb
+  inframostreig de $S$ són aquells que
+  $|S[t_I+n\delta,t_I+(n+1)\delta)|=0$ a on $n\in\N$.
+\end{definition}
+
+Així doncs, una sèrie temporal no regular es pot classificar segons si
+és de temps real i en el cas que no ho sigui es pot indicar si té
+intervals amb ultramostreig o si en té amb inframostreig, sent aquests
+dos darrers casos possibles alhora.
+
+
+
+
+
+\subsubsection{Regularització de sèries temporals}
+
+Com es regularitza una sèrie temporal amb els operadors de SGST? O com es canvia el període d'una sèrie temporal?
+
+S'han d'utilitzar operadors de funció temporal. 
+
+Així, com ja s'ha notat en les propietats del mateix operador, la
+selecció temporal d'una sèrie temporal en un conjunt de temps
+equi-espaiat $i = \{t_I+n\delta | n\in\mathbb{N}, n\leq s \}$ és una
+sèrie temporal regular de període $\delta$ iniciada a $t_I$: $S[i]^r
+\equiv \{ (t_I, v_0), (t_I+\delta,v_1), \dotsc , (t_I+s\delta,v_s)\}$
+a on $r$ és una funció de representació.
+
+
+Així doncs, la gràcia de regularitzar rau en la funció de representació.
+
+
+\todo{descriure tècniques per regularitzar les de temps real, les d'inframostreig, les d'ultramostreig}
+
+temps real: cas simple de regularització és aplicar representacions a trossos constants; si és de temps real es pot interpretar que en certa manera la mesura és vàlida per a tot l'interval.
+
+ultramostreig: cas simple de regularització és agregar els intervals amb ultramostreig amb la mitjana, el màxim, etc.
+
+inframostreig: cas simple es pot utilitzar el valor del següent o de l'anterior interval, és a dir també amb representacions a trossos constants. Aquest cas ja s'ha d'interpretat més aviat com una reconstrucció a diferència del temps real que interpretem com a vàlid.
+\todo{el termini també podria ser relatiu entre mesures (temps de heartbeat)}
+El termini $D$ descrit fins ara té relació amb el concepte de termini utilitza a temps real. També es poden utilitzar altres conceptes de termini com per exemple una fita del temps entre mesures. Això pot ampliar la validesa en el cas de l'inframostreig; és a dir si hi ha heartbeat més gran que el temps de mostreig vol dir que es permet l'inframostreig.
+
+
+
+Més sobre això en els agregadors dels atributs del model de SGSTM que és on regularitzem sèries temporals...
+
+
+\todo{potser es poden regularitzar fàcilment les de temps real,inframostreig i ultramostreig?}
+es poden acceptar com a regulars, per exemple les de temps real es canvien els instants fent que siguin els del període de mostreig teòric, les d'ultramostreig se suprimeixin els punts ultramostrejats, els d'inframostreig es farceixen els forats ...
+
+es plantegen com a planificació per a la posterior regularització; és a dir es planteja mostrejar una sèrie temporal a temps real i així després lligar-ho amb un mètode per a regularitzar-la.
 
 
 
 \subsection{Graf i funció temporal de representació}
 \label{sec:model:repr}
+\todo{segev87 parla de tipus de la sèrie temporal}
 
 Una sèrie temporal és la representació discreta d'una funció contínua;
 la qual és una funció temporal atès que depèn del temps. El model de
@@ -1141,4 +1513,4 @@ en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
 
 
 
-% LocalWords:  SGST Dirac
+% LocalWords:  SGST Dirac ultramostreig inframostreig

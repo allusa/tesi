@@ -1,3 +1,7 @@
+\todo{dir}
+dir que en el nostre model no ens ocupem de l'etapa d'adquisició/mostreig de les sèries temporals sinó que tenim unes mesures que s'han capturat d'alguna manera. Si bé cal destacar que alguns SGST sí que influeixen al procés d'adquisició, per exemple poden controlar obtenir més mostres si veuen coses rares, no mostrejar més si és tranquil, canviar paràmetres, etc.
+
+
 \section{Sèries temporals}
 
 Una sèrie temporal és un conjunt de valors cadascun dels quals té
@@ -343,6 +347,7 @@ Altres estudis proposen tractar les sèries temporals com a tipus que tenen ordr
 També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95,ogras06}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
 %Data Stream Management System (DSMS) is an extension of Data Base Management System  
 
+\todo{tot i així sembla que el concepte de bases de dades científiques ja apareix des de fa força temps \cite{segev87:sigmod}} 
 En els SGBD per matrius \emph{arrays} destaquen els anomenats sistemes
 de gestió de bases de dades científiques, camp en el qual les sèries
 temporals hi tenen un paper de primer
@@ -437,6 +442,16 @@ http://stackoverflow.com/questions/4814167/storing-time-series-data-relational-o
 Streaming data analysis in real time is becoming the fastest and most efficient way to obtain useful knowledge from what is happening now, allowing organizations to react quickly when problems appear or to detect new trends helping to improve their performance. In this talk, we present SAMOA, an upcoming platform for mining big data streams. SAMOA is a platform for online mining in a cluster/cloud environment. It features a pluggable architecture that allows it to run on several distributed stream processing engines such as S4 and Storm. SAMOA includes algorithms for the most common machine learning tasks such as classification and clustering. 
 
 
+
+
+
+
+\todo{} També hi ha molts sistemes propis d'empreses que van lligats
+amb els seus productes. Ara bé ofereixen molt poques capacitats de
+SGST i les que ofereixen són molt restringides a l'àmbit a on estan
+dirigits els productes; és a dir que no són genèrics i són més aviat
+controladors del procés d'adquisició. Per exemple Keller
+\url{http://www.catsensors.com/ca/productes/varis__software/logger_4x}, permet desar dades cada un cert període amb estructura d'anell (és a dir eliminant les més antigues quan és ple) però només té un anell. A banda permet detectar certs esdeveniments i aleshores canviar el període de mostreig. A banda permet també emmatgazemar alguns estadístics de les dades: mitjana i rang cada certs segons.
 
 
 \subsection{Conclusió}

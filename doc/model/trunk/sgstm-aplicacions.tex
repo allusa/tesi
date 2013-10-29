@@ -129,6 +129,17 @@ Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
 
 
 
+\subsection{Lapses de buffer o no lapses}
+
+Podem tenir esquemes de multiresolució a on les diferents subsèries
+resolució coincideixin en els temps recents o a on no coincideixin:
+les subsèries més velles acabin on comencen les noves de manera
+semblant a l'estructura de buffers enllaçats.
+
+La primera opció pot servir per quan hi ha moltes dades tenir diferents resums preparats per a ser visualitzats, així permet triar ràpidament entre diferents zooms de les dades.
+
+La segona opció serveix per aprofitar al màxim la resolució i l'espai d'emmagatzematge, sense que cap subsèrie desi informació per al mateix interval de temps. Així permet conservar una sèrie temporal al llarg del seu temps amb diferents resolucions. També pot servir per usar la informació d'altres buffers i no haver de repetir emmagatzematge de buffers.
+
 
 
 \subsection{Arquitectura RRDtool}
@@ -179,6 +190,11 @@ Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
 * discret: tipus la cpu marca el rellotge; en aquest cas no hi ha un rellotge real sinó que es compten esdeveniments i el rellotge es crea relativament a aquest comptatge. Per exemple és el cas de sistemes encapsulats a on no hi ha RTC i el clock diu cada quan s'ha de consolidar (en aquest moment es consoliden les mesures de què es disposi, les quals potser tampoc tenen temps i per tant el rellotge del SGSTM serà relatiu) o bé un altre exemple és quan la consolidació d'una subsèrie resolució depèn d'una altra subsèrie (p.ex. es consolida cada cop que l'altre ha expulsat quatre mesures).
 
 
+
+
+\todo{}
+* orientat a esdeveniments (event triggered)
+* amb rellotge (time triggered)
 
 
 \subsection{Què fer sense coneixements a priori}

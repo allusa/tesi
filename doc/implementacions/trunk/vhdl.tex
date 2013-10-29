@@ -144,7 +144,7 @@ Estructures alternatives:
 \item timestamps absoluts: $\delta$ creats a partir de RTC
 \item timestamps relatius: $\delta$ creats a partir del clock
 \item timestamps creixents: l'RTC el marca el temps de la mesura
-\item Memòria estàtica en comptes de volàtil
+\item Memòria estàtica en comptes de volàtil. Útil per a: a) tenir dades permanents en cas d'apagada o b) per a poder consumir menys (?)   ->  tot això no seria millor fer-ho per programa (CPU) que implementat físicament (aleshores seria més reprogramable)?
 \end{itemize}
 
 
@@ -307,6 +307,24 @@ Base de dades amb discs resolució enllaçats:
   Clock 128\,MHz 180\degr  & C   12{2C} G \\ % ends with edge
   Clock 128\,MHz 270\degr  &     12{2C} C \\
 \end{tikztimingtable}
+
+
+
+
+
+\subsection{Possibles aplicacions}
+
+Exemple d'aparell encastat molt petit, per exemple un aparell que
+s'hagi de posar dins del cos per a mesurar la temperatura, a on hi ha
+molt poc espai disponible i només permet emmagatzemar 100 dades. Es
+poden desar 100 valors cada hora = 4 dies, o bé es pot aplicar una
+solució de multiresolució i desa 75 valors cada hora = 2 dies i 25
+valors cada dia = 25 dies. Així si no s'és a temps de recuperar les
+dades en quatre dies sempre hi haurà alguna informació.
+
+Exemple de la implementació de circuits integrats en materials molt prims i doblegables.
+
+
 
 
 
