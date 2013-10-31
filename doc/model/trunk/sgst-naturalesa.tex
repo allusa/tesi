@@ -34,7 +34,7 @@ Classifiquem els trets semàntics a grosso modo
 \todo{}
 
 
-Un primer tret semàntic de les sèries temporals és deu al procés
+Un primer tret semàntic de les sèries temporals és deu al mètode
 d'adquisició. Així una sèrie temporal es pot classificar segons si
 s'ha adquirit mostrejant un senyal continu cada cert període o si
 prové d'una acumulació o d'un comptatge d'esdeveniments en un cert
@@ -44,256 +44,84 @@ tenir els senyals discrets segons
 segons l'adquisició en l'eix del temps, també es pot distingir segons
 si l'adquisició en l'eix de valors és contínua o discreta però això és
 un tret propi dels valors i, com a característica, pertany al domini
-dels valors. Aquest procés s'anomena quantització del senyal però
-sovint, per simplificar, no es té en
-compte \parencite[cap.~1]{proakismanolakis96}.  %S1.4.7
+dels valors. Aquest procés en l'eix de valors s'anomena quantització
+del senyal però sovint, per simplificar, no es té en
+compte \parencite{proakismanolakis96}.%S1.4.7
 
 
 
 
-  \todo{però aquí no volem parlar d'adquisició sinó de
+ \todo{però aquí no volem parlar d'adquisició sinó de
   naturalesa: magnituds i comptadors} 
 
+Així doncs segons el mètode d'adquisició, classifiquem una sèrie
+temporal amb trets de magnitud o de comptador. Aquest tret
+semàntic cal tenir-lo en compte ja que quan s'adquireix una magnitud
+es veu el seu estat instantani actual, mentre que quan s'adquireix un
+comptador ofereix informació de la seva variació respecte a
+l'adquisició anterior. 
+
+Els comptadors poden oferir la informació de diverses formes: en valor
+absolut, en valor relatiu i en velocitat. 
 
 
-Mesures vs increments d'un comptador vs gràfics barres (eix y: freqüència) i histograma (eix y: densitat de freqüència)
+Mesures vs increments d'un comptador vs gràfics barres (eix y: freqüència) i histograma (eix y: densitat de freqüència) \autoref{fig:model:comptador-formes}
+
+$S_m = \{(0,0),(2,1),(4,3),(5,4),(9,10)\}$
+
+$S_\Delta = \glssymbol{not:sgst:gradient}(S_m) = \{(0,0),(2,1),(4,2),(5,1),(9,6)\}$
+
+$S_v = S_\Delta / \glssymbol{not:sgst:gradient}(S_m map(t,t)) =
+\glssymbol{not:sgst:gradient}(S_m) = \{(0,0),(2,0{,}5),(4,1),(5,1),(9,2)\}$ \todo{faltar definir la funcio map (t,v)->(t,t), dir-ne funció temps?}
 
 
 \begin{figure}[tp]
   \centering
-
-  \begin{subfigure}{\textwidth}
-    \centering
-  \begin{tabular}[c]{|c|c|}
-    \multicolumn{2}{c}{$S_m$} \\ \hline
-    $t$  & $v$ \\ \hline
-    0   & 0 \\
-    2   & 1 \\
-    4   & 3 \\
-    5   & 4 \\
-    9   & 10 \\ \hline
-  \end{tabular} \qquad
-  \begin{tabular}[c]{|c|c|}
-    \multicolumn{2}{c}{$S_\Delta$} \\ \hline
-    $t$  & $v$ \\ \hline
-    0   & 0 \\
-    2 & 1 \\
-    4 & 2 \\
-    5 & 1 \\
-    9 & 6 \\ \hline
-  \end{tabular} \qquad
-  \begin{tabular}[c]{|c|c|}
-    \multicolumn{2}{c}{$S_v$} \\ \hline
-    $t$  & $v$ \\ \hline
-    0   & 0 \\
-    2 & 0{,}5 \\
-    4 & 1 \\
-    5 & 1 \\
-    9 & 2 \\ \hline
-  \end{tabular}
-  \caption{Taules de valors}
-  \end{subfigure}
-
-  \begin{subfigure}{0.3\textwidth}
-  \begin{tikzpicture}
-    \begin{axis}[
-        timeseriesrel,
-        title=$S_m$,
-        ]
-    \addplot[blue] coordinates {
-        (0,0)
-        (2,1)
-        (4,3)
-        (5,4)
-        (9,10)
-    };
-    %\addlegendentry{Valor absolut}
-    \addplot[only marks,mark=*,red] coordinates {
-        (0,0)
-        (2,1)
-        (4,3)
-        (5,4)
-        (9,10)
-    };
-    % \addlegendentry{Punts de mesura}
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Valor absolut}
-  \end{subfigure}
-  \begin{subfigure}{0.3\textwidth}
-  \begin{tikzpicture}
-    \begin{axis}[
-        timeseriesrel,
-        title=$S_\Delta$,
-        ]
-    \addplot[ycomb,blue,mark=-] coordinates {
-        (0,0)
-        (2,1)
-        (4,2)
-        (5,1)
-        (9,6)
-    };
-    %\addlegendentry{Increments}
-    \addplot[only marks,mark=*,red] coordinates {
-        (0,0)
-        (2,1)
-        (4,2)
-        (5,1)
-        (9,6)
-    };
-    %\addlegendentry{Punts de mesura}
-
-    \addplot[gray,dashed] coordinates {
-        (0,0)
-        (2,1)
-        (4,2)
-        (5,1)
-        (9,6)
-    };
-    % \addlegendentry{Tendència}
-
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Increments}
-  \end{subfigure}
- \begin{subfigure}{0.3\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-%        timeseriesrel,
-        height=4cm,
-        %width=10cm,scale only axis, height=5cm,
-        ymax = 10,
-        xtick = data,
-        xticklabel interval boundaries,
-        x tick label style= {rotate=90,anchor=east},
-        x label style ={ at={(1,0)},left,yshift=0pt},
-        ]
-    \addplot[ybar interval,blue,fill=blue!30!white] coordinates{
-        (0,1)
-        (2,2)
-        (4,1)
-        (5,6)
-        (9,6)
-    }; 
-    % \addlegendentry{Increments}
-
-    \node[color=blue,above] at (axis cs:1,1) {1};
-    \node[color=blue,above] at (axis cs:3,2) {2};
-    \node[color=blue,above] at (axis cs:4.5,1) {1};
-    \node[color=blue,above] at (axis cs:7,6) {6};
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Gràfic de barres}
-  \end{subfigure}
-
-  \begin{subfigure}{0.3\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-        timeseriesrel,
-        title=$S_\Delta$
-        ]
-    \addplot[blue] coordinates {
-        (0,0)
-        (2,1)
-        (2,0)
-        (4,2)
-        (4,0)
-        (5,1)
-        (5,0)
-        (9,6)
-        (9,0)
-    };
-    %\addlegendentry{Valor relatiu}
-    \addplot[only marks,mark=*,red] coordinates {
-        (0,0)
-        (2,1)
-        (4,2)
-        (5,1)
-        (9,6)
-    };
-    %\addlegendentry{Punts de mesura}
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Valor relatiu}
-  \end{subfigure}
-  \begin{subfigure}{0.3\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-        timeseriesrel,
-        title=$S_v$,
-        ]
-    \addplot[const plot mark right,blue] coordinates {
-        (0,0)
-        (2,0.5)
-        (4,1)
-        (5,1)
-        (9,2)
-    };
-    %\addlegendentry{Velocitat mitjana}
-
-   \addplot[only marks,mark=*,red] coordinates {
-        (0,0)
-        (2,0.5)
-        (4,1)
-        (5,1)
-        (9,2)
-    };
-    %\addlegendentry{Punts de mesura}
-
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Velocitat}
-   \end{subfigure}
-  \begin{subfigure}{0.3\textwidth}
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-        height=4cm,
-        ymax=2.7,
-        ]
-    \addplot[ybar interval,blue,fill=blue!30!white,mark=none] coordinates {
-        (0,0.5)
-        (2,1)
-        (4,1)
-        (5,2)
-        (9,2)
-    };
-    %\addlegendentry{distribució d'increments}
-
-    \node[color=blue] at (axis cs:1,0.39) {\scriptsize 1};
-    \node[color=blue] at (axis cs:3,0.6) {2};
-    \node[color=blue] at (axis cs:4.5,0.6) {1};
-    \node[color=blue] at (axis cs:7,0.6) {6};
-     \end{axis}
-  \end{tikzpicture}
-  \caption{Histograma}
-  \end{subfigure}
-
-
-\caption{Formes d'un comptador monòton}
-  \label{fig:velocitats:counter}
+  \input{imatges/model/sgst-comptador-formes.tex}
+  \caption{Formes d'un comptador monòton}
+  \label{fig:model:comptador-formes}
 \end{figure}
 
 
 
 
+\todo{explicar que d'una magnitud també es poden calcular els increments, etc. peo això no vol dir que siguin comptadors perquè no sabme què ha passat entremig}
+i al revés tampoc: podem tenir un comptador però no recuperar-ne la magnitud (els valors instantanis) 
+
+Els comptadors tenen fons d'escala, per tant l'eix de valors és circular
+
+Els comptadors físics normalment són digitals però no té perquè ser així
+
+
+
+
+
+* comptadors -> conservar totals (comptador: monòton, doble, relatiu)
+usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
 
 
 
 
 
 
+\begin{example}
+  
+Un exemple de sèrie temporal amb tret de magnitud és la potència
+instantània elèctrica i un exemple de comptador és la quantitat
+d'energia elèctrica.
+
+Exemple amb energia elèctrica:  
+
+* magnitud: potència instantània
+* comptador valor absolut: energia 
+* comptador d'increments/valor relatiu/gràfic de barres: energia amb reset a cada lectura
+* comptador de velocitat/histograma: potència mitjana
+
+\end{example}
 
 
-A caus ad'aquesta classificació ens apareixen les magnituds i els comptadors? Dir que alerta! quan tractem els comptadors com a sèries temporals i fer tot el discurs de varietat de formes i cal que tractar-les amb sentit. Les magnituds no presenten tants problemes d'interpretació
 
 
-
-[segev87] diferencia entre step-wise constant, discret (potser aquest tal com se'l defineix són intervals temporals), continu. Ho anomena (semantic behavior, property, interpret)
- tipus de la sèrie temporal i diu que es poden definir interpolacions per cada una.
 
 
 
@@ -303,15 +131,8 @@ segons adquisició:
 * discreta (en base a clock?)
 
 
-segons tipus de dades mesurades:
-
-* comptadors -> conservar totals (comptador: monòton, doble, relatiu)
-usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
 
 
-* soroll d'un senyal -> conservar mitjana
-
-* temperatura -> aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes (processat digital del senyal)
 
 
 El valor d’una magnitud física es pot calcular com el producte d’un valor nu-
@@ -323,8 +144,10 @@ magnitud física = valor numèric x unitat [llibreverd IEC-IUPAC]
 segons timestamp vs time span:
 
 * timestamp: el típic de sèries temporals
-* time span: ex. $S=\{(gen,1),(feb,4),(mar,0)\}$: això són sèries temporals? o són dades intervals temporals? Es poden expressar/entendre com a sèries temporals via timestamps amb granularitat? Es poden expressar/entendre com a sèries temporals via tractar-les com a compadors?  
-altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
+* time span: 
+- ex. $S=\{(gen,1),(feb,4),(mar,0)\}$: això són sèries temporals? o són dades intervals temporals? Es poden expressar/entendre com a sèries temporals via timestamps amb granularitat? Es poden expressar/entendre com a sèries temporals via tractar-les com a compadors?  
+- també cal pensar en les sèries temporals de tipus temperatures mitjanes dels mesos d'octubre  $S=\{(oct98,1),(oct99,4),(oct00,0)\}$. Això com encaixa amb el nostre model de sèries temporals? això sí que s'anomenen sèries temporals, tot i que els escau molt bé la definició de seqüències temporals, i s'hi apliquen mètodes d'anàlisi de sèries temporals
+- altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
 
 
 
