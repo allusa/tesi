@@ -4,6 +4,14 @@
  (Trets semàntics/patologies/representacions(tipus/funció temporal))
 
 
+En el model de SGST proposat les sèries temporals tenen una única estructura i uns únics operadors independentment del context a on s'apliquin. De fet aquest és l'objectiu principal de definir-ne un model lògic. No obstant això, en la seva aplicació les sèries temporals van associades a un context; és a dir que els valors prenen un determinat significat. En aquesta secció avaluem les propietats que poden prendre les sèries temporals quan es troben en context:
+
+* Trets semàntics
+* Patologies
+* Grafs i representacions
+
+
+
 
 \subsection{Trets semàntics de les sèries temporals}
 
@@ -31,15 +39,17 @@ s'apliquen.
 
 
 Classifiquem els trets semàntics a grosso modo
-\todo{}
+\todo{enumerar-los}
 
+
+\subsubsection{Aparell de mesura}
 
 Un primer tret semàntic de les sèries temporals és deu al mètode
-d'adquisició. Així una sèrie temporal es pot classificar segons si
-s'ha adquirit mostrejant un senyal continu cada cert període o si
-prové d'una acumulació o d'un comptatge d'esdeveniments en un cert
-període de temps. Aquests són els dos orígens principals que poden
-tenir els senyals discrets segons
+d'adquisició segons l'aparell de mesura. Així una sèrie temporal es
+pot classificar segons si s'ha adquirit mostrejant un senyal continu
+cada cert període o si prové d'una acumulació o d'un comptatge
+d'esdeveniments en un cert període de temps. Aquests són els dos
+orígens principals que poden tenir els senyals discrets segons
 \textcite[cap.~1]{proakismanolakis96}.  En aquest tret es distingeix
 segons l'adquisició en l'eix del temps, també es pot distingir segons
 si l'adquisició en l'eix de valors és contínua o discreta però això és
@@ -50,30 +60,20 @@ compte \parencite{proakismanolakis96}.%S1.4.7
 
 
 
-
- \todo{però aquí no volem parlar d'adquisició sinó de
-  naturalesa: magnituds i comptadors} 
-
-Així doncs segons el mètode d'adquisició, classifiquem una sèrie
-temporal amb trets de magnitud o de comptador. Aquest tret
-semàntic cal tenir-lo en compte ja que quan s'adquireix una magnitud
-es veu el seu estat instantani actual, mentre que quan s'adquireix un
-comptador ofereix informació de la seva variació respecte a
-l'adquisició anterior. 
-
-Els comptadors poden oferir la informació de diverses formes: en valor
-absolut, en valor relatiu i en velocitat. 
+Així doncs segons l'aparell de mesura, classifiquem una sèrie
+temporal amb trets de magnitud física o de comptador de magnitud
+física. Aquest tret semàntic cal tenir-lo en compte ja que quan
+s'adquireix una magnitud es veu el seu estat instantani actual, mentre
+que quan s'adquireix un comptador ofereix informació de la seva
+variació respecte a l'adquisició anterior.
 
 
-Mesures vs increments d'un comptador vs gràfics barres (eix y: freqüència) i histograma (eix y: densitat de freqüència) \autoref{fig:model:comptador-formes}
-
-$S_m = \{(0,0),(2,1),(4,3),(5,4),(9,10)\}$
-
-$S_\Delta = \glssymbol{not:sgst:gradient}(S_m) = \{(0,0),(2,1),(4,2),(5,1),(9,6)\}$
-
-$S_v = S_\Delta / \glssymbol{not:sgst:gradient}(S_m map(t,t)) =
-\glssymbol{not:sgst:gradient}(S_m) = \{(0,0),(2,0{,}5),(4,1),(5,1),(9,2)\}$ \todo{faltar definir la funcio map (t,v)->(t,t), dir-ne funció temps?}
-
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgst-magnitud.tex}
+  \caption{Magnitud física}
+  \label{fig:model:magnitud}
+\end{figure}
 
 \begin{figure}[tp]
   \centering
@@ -84,69 +84,144 @@ $S_v = S_\Delta / \glssymbol{not:sgst:gradient}(S_m map(t,t)) =
 
 
 
-
-\todo{explicar que d'una magnitud també es poden calcular els increments, etc. peo això no vol dir que siguin comptadors perquè no sabme què ha passat entremig}
-i al revés tampoc: podem tenir un comptador però no recuperar-ne la magnitud (els valors instantanis) 
-
-Els comptadors tenen fons d'escala, per tant l'eix de valors és circular
-
-Els comptadors físics normalment són digitals però no té perquè ser així
-
+Les magnituds ofereixen la informació d'una forma: l'estat de la
+variable. A la \autoref{fig:model:magnitud} es mostra aquesta forma
+amb una sèrie temporal d'exemple: $S_a = \{(0,0),(2,1),(3,
+1{,}5),(4,0),(5,2),(8,2)\}$. De manera general, el valor d’una
+magnitud física és defineix com el producte d’un valor numèric per una
+unitat.
 
 
+Els comptadors poden oferir la informació de diverses formes : en
+valor absolut, en valor relatiu i en velocitat. A la
+\autoref{fig:model:comptador-formes} es mostren aquestes formes amb
+tres sèries temporals d'exemple: $S_a =
+\{(0,0),(2,1),(4,3),(5,4),(8,10)\}$ són els valors absoluts del
+comptador, $S_\Delta = \{(0,0)\} \cup
+\glssymbol{not:sgst:gradient}(S_a) =
+\{(0,0),(2,1),(4,2),(5,1),(8,6)\}$ són els valors relatius del
+comptador i $S_v = S_\Delta /
+\glssymbol{not:sgst:gradient}(\glssymbol{not:sgst:duplica-t}(S_\Delta))
+= \{(0,0),(2,0{,}5),(4,1),(5,1),(8,2)\}$ són els valors de velocitat
+del comptador.
 
 
-* comptadors -> conservar totals (comptador: monòton, doble, relatiu)
-usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
+
+El gràfic de valor absolut, en aquest cas es tracta d'un comptador
+monòton creixent, mostra la interpolació lineal del valor acumulat que
+va prenent la variable mesurada. A partir del valor absolut es poden
+calcular els increments del comptador, és a dir la quantitat relativa
+de cada període. En el gràfic d'increments es mostra en línia
+discontínua la tendència dels increments, és a dir la interpolació
+lineal del comptatge absolut com si el comptador fos una
+magnitud, que cal no confondre amb el gràfic de valor relatiu que
+mostra la interpolació lineal que va prenent la variable mesurada
+relativament, és a dir amb el pas per zero com si a cada lectura
+s'inicialitza de nou el valor acumulat del comptador. El gràfic de
+velocitat mostra els pendents lineals del gràfic de valor relatiu, és
+a dir la velocitat mitjana de comptatge a cada període.
+
+El significat del gràfic de valor absolut i el d'increments es
+visualitza bé en un gràfic de barres en el que l'eix vertical mostra
+freqüència i en el que l'alçària de les barres mostra la quantitat que
+ha augmentat el comptador a cada interval. En canvi el gràfic de valor
+relatiu i el de velocitat es visualitzen més bé en un gràfic
+d'histograma en el que l'eix vertical mostra densitat de freqüència i en el
+que l'àrea de les barres equival a la quantitat comptada i l'alçària
+de cada una mostra la velocitat del comptatge.
 
 
+En conclusió, un comptador pot oferir les dades en qualsevol de les
+tres formes i a partir d'una d'aquestes es poden calcular les
+altres. També es possible d'aplicar les mateixes operacions a les
+magnituds, és a dir calcular-ne els increments o la velocitat mitjana
+de cada període, tenint en compte que aleshores es perd la referència
+absoluta llevat que es conservi a part. La diferència principal
+d'ambdós rau en el fet que l'objectiu de les magnituds és observar el
+valor instantani d'una variable i per tant se sol obtenir en aquesta
+forma mentre que l'objectiu dels comptadors és precisament el de
+mesurar els comptatges totals de les variables en els períodes
+seleccionats, i això es pot mostrar en les tres formes descrites. És a
+dir, el tret semàntic de mètode d'adquisició està lligat al tipus
+d'aparell de mesura: una magnitud ben mostrejada té informació
+suficient per a calcular-ne els comptatges mentre que un comptador
+inherentment mesura els totals però perd la noció del valor
+instantani.
 
+Altrament, tot i que els comptadors solen presentar un comportament
+monòton, creixent o decreixent, també poden ser dobles i tenir
+increments tant positius com negatius. Un efecte que també cal tenir
+en compte dels comptadors, sobretot dels monòtons, és el fons
+d'escala, que quan s'assoleix es torna a comptar des de l'inici i per
+tant tenen un comportament semblant al de valor relatiu.
 
-
+% * comptadors -> conservar totals (comptador: monòton, doble, relatiu)
+% usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
 
 \begin{example}
-  
-Un exemple de sèrie temporal amb tret de magnitud és la potència
-instantània elèctrica i un exemple de comptador és la quantitat
-d'energia elèctrica.
+  Un exemple de sèrie temporal amb tret de magnitud és la potència
+  instantània elèctrica i un exemple de comptador és la quantitat
+  d'energia elèctrica. Així doncs mesurant electricitat poden
+  aparèixer sèries temporals amb els trets següents:
 
-Exemple amb energia elèctrica:  
+  \begin{itemize}
+  \item Magnitud: potència instantània elèctrica.  Per exemple la
+    sèrie $S_m$ amb unitats als valors de watts.
+  \item Comptador de valor absolut: energia elèctrica. Per exemple la
+    sèrie $S_a$ amb unitats als valors de watts$\times$hora o bé de
+    joules.
+  \item Comptador de valor relatiu: energia elèctrica amb posada a
+    zero a cada lectura. Per exemple la sèrie $S_\Delta$ amb unitats
+    als valors de watts$\times$hora o bé de joules.
+  \item Comptador de velocitat: potència mitjana elèctrica. Per
+    exemple la sèrie $S_v$ amb unitats als valors de watts o bé de
+    watts$\times$hora$/$hora.
+  \end{itemize}
 
-* magnitud: potència instantània
-* comptador valor absolut: energia 
-* comptador d'increments/valor relatiu/gràfic de barres: energia amb reset a cada lectura
-* comptador de velocitat/histograma: potència mitjana
-
+  Si la potència instantània és periòdica es pot mostrejar
+  correctament per a saber el total d'energia elèctrica, si no és
+  periòdica difícilment es pot determinar la quantitat amb exactitud.
+  En canvi, mentre que un aparell de comptatge mesura exactament la
+  quantitat d'energia, no es pot recuperar la potència instantània si
+  no es coneix quina forma té. 
 \end{example}
 
 
 
+\subsubsection{Rellotge}
+
+Un segon tret semàntic de les sèries temporals també es deu al mètode
+d'adquisició però en aquest cas segons el rellotge que mesuri.
 
 
+\textcite{furia10:modeling_time} distingeix entre temps dens
+(\emph{dense time}) i temps discret (\emph{discrete time}) segons si
+entre dos instants de temps n'hi pot haver un de tercer o si els
+instants de temps son punts aïllats. Un exemple de domini del temps
+com a conjunt dens són els reals $T\in \glssymbol{not:Rb}$ i com a
+conjunt discret són els naturals $T\in \N$.
+
+\textcite[cap.~3]{kopetz11:realtime} descriu conceptes similars tot i que els
+anomena \emph{dense time} i \emph{sparse time} i ho fa des del punt de
+vista d'esdeveniments de temps real. Així fa notar que els
+esdeveniments es produeixen amb \emph{sparse time} quan hi ha un
+sistema que controla el rellotge però que els esdeveniments que són
+externs a aquest control sempre es produeixen amb \emph{dense time}.
+% també parla dels processos amb representació cíclica del temps
 
 
-segons adquisició:
-
-* contínua
-* discreta (en base a clock?)
+\todo{}
 
 
-
-
-
-
-El valor d’una magnitud física es pot calcular com el producte d’un valor nu-
-mèric per una unitat:
-magnitud física = valor numèric x unitat [llibreverd IEC-IUPAC]
 
 
 
 segons timestamp vs time span:
 
 * timestamp: el típic de sèries temporals
-* time span: 
+* time span: -> molt molt relacionat amb les seqüències?
 - ex. $S=\{(gen,1),(feb,4),(mar,0)\}$: això són sèries temporals? o són dades intervals temporals? Es poden expressar/entendre com a sèries temporals via timestamps amb granularitat? Es poden expressar/entendre com a sèries temporals via tractar-les com a compadors?  
-- també cal pensar en les sèries temporals de tipus temperatures mitjanes dels mesos d'octubre  $S=\{(oct98,1),(oct99,4),(oct00,0)\}$. Això com encaixa amb el nostre model de sèries temporals? això sí que s'anomenen sèries temporals, tot i que els escau molt bé la definició de seqüències temporals, i s'hi apliquen mètodes d'anàlisi de sèries temporals
+- també cal pensar en les sèries temporals de tipus temperatures mitjanes dels mesos d'octubre  $S=\{(oct98,1),(oct99,4),(oct00,0)\}$. Això com encaixa amb el nostre model de sèries temporals? això sí que s'anomenen sèries temporals, tot i que els escau molt bé la definició de seqüències temporals, i s'hi apliquen mètodes d'anàlisi de sèries temporals. És una forma estranya de veure les sèries temporals? cal tenir en compte que és una mena d'agregació per intervals de temps no regulars (no tots tenen la mateixa duració) i l'eix de temps no és continu entre ells i per tant cal anar amb compte amb les operacions que s'hi apliquen ja que poden no ser certes.
 - altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
 
 
@@ -154,7 +229,10 @@ segons timestamp vs time span:
 
 
 
-Perquè RRDtool diferencia entre comptadors i magnituds?
+
+
+
+
 
 
 
@@ -173,7 +251,8 @@ Perquè RRDtool diferencia entre comptadors i magnituds?
 
 * Problemes en l'adquisició
 
-* Problemes en el rellotge
+* Problemes en el rellotge: citar Kopetz que parla de casos avançats del rellotge? (sincronització, tipus de rellotges, etc.)
+Problemes de granularitat  i de drift dels rellotges [kopetz]\todo{cita}, és a dir la duració mínima que un rellotge digital pot mesurar i la variació que pot tenir de les duracions (mesurades des d'un rellotge de referència). Això fa que sigui obligatòria la sincronitazació entre rellotges.
 
 * Valors estant limitats en un rang
 En el nostra cas els valors estaran associats a una variable física, per tant seran conjunt finits i acotats, per tant podrem definir una cota inferior màxima (ínfim) i una cota màxima (suprem). Donat el conjunt de valors V, definim la conta mínima del conjunt com     (això ja ho tenies fet no!!!)
@@ -259,7 +338,7 @@ sèries temporals no regulars: temps real, ultramostreig i inframostreig.
 control de temps real, el qual sol ser el que mana sobre el temps atès
 que les periodicitats del mostreig per a control són més elevades que
 les del mostreig per als humans (aquests tenen un temps de resposta
-més lent) \todo{citar el llibre de real time}.  El temps real causa
+més lent) \parencite[cap.~1]{kopetz11:realtime}.  El temps real causa
 que tinguem sèries temporals no regulars però amb unes certes
 característiques de periodicitat.  Així, seguint el vocabulari de
 temps real, en les sèries temporals no regulars es poden distingir els
@@ -331,6 +410,8 @@ dos darrers casos possibles alhora.
 
 
 \subsubsection{Regularització de sèries temporals}
+
+\todo{}
 
 Com es regularitza una sèrie temporal amb els operadors de SGST? O com es canvia el període d'una sèrie temporal?
 
