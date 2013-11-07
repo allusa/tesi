@@ -435,7 +435,7 @@ conjunts. La tercera, el \emph{summarize}, és una operació creada a
 partir de les altres dues que s'utilitza per a sintetitzar per grups i
 per tant en les sèries temporals no té sentit perquè l'atribut temps
 d'una sèrie temporal no pot tenir instants repetits i per tant no se'n
-poden fer grups d'instants compartits.
+poden fer grups d'instants compartits. \todo{Alerta! sí que es fan operacions d'agregació per intervals de temps, p.ex. $\{(gen,25),(feb,4),(mar,10)\}$, com es faria això?}
 % No obstant, es pot aplicar el \emph{summarize} per a l'atribut de
 % valors: summarize S per S {v} add ...  però això ja no mapa a una
 % sèrie temporal.
@@ -568,9 +568,11 @@ Exemple d'operacions de mapatge:
   \map(S,(t,v)\mapsto(t,v))$
 \item $\operatorname{intercanvi}: S \mapsto S'$ a on $S'=
   \map(S,(t,v)\mapsto(v,t))$
+\item $\glssymbolsec{not:sgst:duplica-t}: S \mapsto S'$ a on $S'=
+  \map(S,(t,v)\mapsto(t,t))$
 \item $\operatorname{translaci\acute{o}}: S \times \delta \mapsto S'$ a on $S'=
   \map(S,(t,v)\mapsto(t+\delta,v))$
-\item $\operatorname{t\times v}: S \mapsto S'$ a on $S'=
+\item $\operatorname{t\cdot v}: S \mapsto S'$ a on $S'=
   \map(S,(t,v)\mapsto(t,t\cdot v))$
 \item $\operatorname{tpredecessors_{v1}}: S \mapsto S'$ a on $S'= \map(S,(t,v)
   \mapsto (t,T(\ant_S(m)))$, usant l'operació predecessor de la
@@ -652,10 +654,13 @@ Exemples de l'aplicació d'operacions computacionals per a dues sèries
 temporals
 \begin{itemize}
 \item $S' = S_1 + S_2$
+\item $S' = S_1 / S_2$
 \item $\glssymbolsec{not:sgst:gradient}: S \mapsto S'$ a on $S'=
   \operatorname{subtraccio}(S, \operatorname{vpredecessors}(S))$ i
-  $\operatorname{subtraccio}$ és l'operació aritmètica de resta, indicada
-  així per no confondre-la amb l'operació de diferència de conjunts.
+  $\operatorname{subtraccio}$ és l'operació computacional de dues
+  sèries temporals corresponent a l'operació aritmètica de resta,
+  indicada pel nom complet per no confondre-la amb l'operació de diferència de
+  conjunts que té el guionet per símbol (\emph{-}).
 \end{itemize}
 
 
