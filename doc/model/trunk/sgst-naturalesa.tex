@@ -37,11 +37,6 @@ formes que pot prendre una sèrie temporal segons l'àmbit on
 s'apliquen.
 
 
-
-Classifiquem els trets semàntics a grosso modo
-\todo{enumerar-los}
-
-
 \subsubsection{Aparell de mesura}
 
 Un primer tret semàntic de les sèries temporals és deu al mètode
@@ -103,7 +98,7 @@ comptador, $S_\Delta = \{(0,0)\} \cup
 comptador i $S_v = S_\Delta /
 \glssymbol{not:sgst:gradient}(\glssymbol{not:sgst:duplica-t}(S_\Delta))
 = \{(0,0),(2,0{,}5),(4,1),(5,1),(8,2)\}$ són els valors de velocitat
-del comptador.
+del comptador, les unitats dels quals són de \emph{unitat$/$unitat de temps}.
 
 
 
@@ -188,11 +183,10 @@ tant tenen un comportament semblant al de valor relatiu.
 
 
 
-\subsubsection{Rellotge}
+\subsubsection{Temps}
 
 Un segon tret semàntic de les sèries temporals també es deu al mètode
-d'adquisició però en aquest cas segons el rellotge que mesuri.
-
+d'adquisició però en aquest cas segons la continuïtat del temps.
 
 \textcite{furia10:modeling_time} distingeix entre temps dens
 (\emph{dense time}) i temps discret (\emph{discrete time}) segons si
@@ -200,7 +194,6 @@ entre dos instants de temps n'hi pot haver un de tercer o si els
 instants de temps son punts aïllats. Un exemple de domini del temps
 com a conjunt dens són els reals $T\in \glssymbol{not:Rb}$ i com a
 conjunt discret són els naturals $T\in \N$.
-
 \textcite[cap.~3]{kopetz11:realtime} descriu conceptes similars tot i que els
 anomena \emph{dense time} i \emph{sparse time} i ho fa des del punt de
 vista d'esdeveniments de temps real. Així fa notar que els
@@ -209,23 +202,44 @@ sistema que controla el rellotge però que els esdeveniments que són
 externs a aquest control sempre es produeixen amb \emph{dense time}.
 % també parla dels processos amb representació cíclica del temps
 
+Així, segons la perspectiva de sistema de coordenades temps continu,
+el temps dens infereix als instants de temps un significat de punt
+(\emph{timestamp}) mentre que el temps discret infereix un significat
+de lapse de temps (\emph{time span}).  
+
+Un cas que observem amb tret discret són les sèries temporals que
+recullen agregacions d'intervals de temps. Per exemple una sèrie
+temporal que recull les temperatures mitjanes de cada mes
+$S=\{(\text{gen},10),(\text{feb},11),(\text{març},15),\dotsc\}$. En
+aquest cas el temps és discret i té el domini
+$T\in\{\text{gen},\text{feb},\text{març},\dotsc\}$ i cada instant de
+temps es pot observar com un lapse que dura tot el mes. 
+% aquestes no són comptadors, no tenen forma de valor relatiu ni
+% encara que tenen representació zoh/zohc/zohe no són velocitat perquè
+% no tenen unitats de unitats/u.t.
+
+
+Un altre cas que observem de sèries temporals amb trets de temps discret
+són les que tenen trets de seqüència. Les sèries temporals com a
+seqüències són habituals en l'anàlisi de sèries temporals ja que són
+una manera simple d'observar un conjunt de dades ordenades en el temps
+sense determinar-ne exactament la distància temporal entre elles. 
 
 \todo{}
 
-
-
-
-
-segons timestamp vs time span:
-
-* timestamp: el típic de sèries temporals
-* time span: -> molt molt relacionat amb les seqüències?
-- ex. $S=\{(gen,1),(feb,4),(mar,0)\}$: això són sèries temporals? o són dades intervals temporals? Es poden expressar/entendre com a sèries temporals via timestamps amb granularitat? Es poden expressar/entendre com a sèries temporals via tractar-les com a compadors?  
 - també cal pensar en les sèries temporals de tipus temperatures mitjanes dels mesos d'octubre  $S=\{(oct98,1),(oct99,4),(oct00,0)\}$. Això com encaixa amb el nostre model de sèries temporals? això sí que s'anomenen sèries temporals, tot i que els escau molt bé la definició de seqüències temporals, i s'hi apliquen mètodes d'anàlisi de sèries temporals. És una forma estranya de veure les sèries temporals? cal tenir en compte que és una mena d'agregació per intervals de temps no regulars (no tots tenen la mateixa duració) i l'eix de temps no és continu entre ells i per tant cal anar amb compte amb les operacions que s'hi apliquen ja que poden no ser certes.
+
+
+
+Per altra banda hi ha el que està a mig camí entre sèrie temporal i interval temporal. Però en aquest cas el temps és dens o discret? Jo diria que és dens perquè $T\in\R$
+
 - altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
 
+- interès:  $I=\{([1,2),0.1),([2,4),0.2),([5,7),0.1)\}$, com a sèrie temporal? $S=\{(1,0.1),(2,0.2),(4,0.1)\}$?
 
-
+No obstant això hi ha intervals temporals que tot i que es poden expressar amb sèries temporals, no és còmode de fer-ho.
+- Per exemple una agenda:  $I=\{([1,2),casa),([2,4),treballant),([5,7),dentista)\}$, com a sèrie temporal? $S=\{(1,casa),(2,treballant),(4,dentista)\}$ tot i que podem aplicar el mateix que en els exemples anteriors i descriure-ho amb una sèrie temporal amb representació, és millor el model d'intervals temporals
+- Per exemple un control de versions 
 
 
 
