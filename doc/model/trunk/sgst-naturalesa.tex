@@ -206,51 +206,88 @@ Així, segons la perspectiva de sistema de coordenades temps continu,
 el temps dens infereix als instants de temps un significat de punt
 (\emph{timestamp}) mentre que el temps discret infereix un significat
 de lapse de temps (\emph{time span}).  
+Un cas particular de sèries temporals amb trets de temps
+discret són les que tenen trets de seqüència. Les sèries temporals com
+a seqüències són habituals en l'anàlisi de sèries temporals ja que són
+una manera simple d'observar un conjunt de dades ordenades en el temps
+sense determinar-ne exactament la distància temporal entre elles.
 
-Un cas que observem amb tret discret són les sèries temporals que
+
+Un cas que observem amb tret de seqüència són les sèries temporals que
 recullen agregacions d'intervals de temps. Per exemple una sèrie
 temporal que recull les temperatures mitjanes de cada mes
 $S=\{(\text{gen},10),(\text{feb},11),(\text{març},15),\dotsc\}$. En
 aquest cas el temps és discret i té el domini
 $T\in\{\text{gen},\text{feb},\text{març},\dotsc\}$ i cada instant de
-temps es pot observar com un lapse que dura tot el mes. 
+temps es pot observar com un lapse que dura tot el mes. Això no
+obstant, aquestes sèries temporals s'expressen amb més exactitud amb
+temps dens, per exemple en el cas de les mitjanes s'hauran adquirit a
+final de mes i per tant els instants de temps poden ser més precisos
+$S=\{(\text{31-gen 23.59},10),(\text{28-feb 23.59},11),(\text{31-març
+  23.59},15),\dotsc\}$.
 % aquestes no són comptadors, no tenen forma de valor relatiu ni
 % encara que tenen representació zoh/zohc/zohe no són velocitat perquè
 % no tenen unitats de unitats/u.t.
 
-
-Un altre cas que observem de sèries temporals amb trets de temps discret
-són les que tenen trets de seqüència. Les sèries temporals com a
-seqüències són habituals en l'anàlisi de sèries temporals ja que són
-una manera simple d'observar un conjunt de dades ordenades en el temps
-sense determinar-ne exactament la distància temporal entre elles. 
-
-\todo{}
-
-- també cal pensar en les sèries temporals de tipus temperatures mitjanes dels mesos d'octubre  $S=\{(oct98,1),(oct99,4),(oct00,0)\}$. Això com encaixa amb el nostre model de sèries temporals? això sí que s'anomenen sèries temporals, tot i que els escau molt bé la definició de seqüències temporals, i s'hi apliquen mètodes d'anàlisi de sèries temporals. És una forma estranya de veure les sèries temporals? cal tenir en compte que és una mena d'agregació per intervals de temps no regulars (no tots tenen la mateixa duració) i l'eix de temps no és continu entre ells i per tant cal anar amb compte amb les operacions que s'hi apliquen ja que poden no ser certes.
-
-
-
-Per altra banda hi ha el que està a mig camí entre sèrie temporal i interval temporal. Però en aquest cas el temps és dens o discret? Jo diria que és dens perquè $T\in\R$
-
-- altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
-
-- interès:  $I=\{([1,2),0.1),([2,4),0.2),([5,7),0.1)\}$, com a sèrie temporal? $S=\{(1,0.1),(2,0.2),(4,0.1)\}$?
-
-No obstant això hi ha intervals temporals que tot i que es poden expressar amb sèries temporals, no és còmode de fer-ho.
-- Per exemple una agenda:  $I=\{([1,2),casa),([2,4),treballant),([5,7),dentista)\}$, com a sèrie temporal? $S=\{(1,casa),(2,treballant),(4,dentista)\}$ tot i que podem aplicar el mateix que en els exemples anteriors i descriure-ho amb una sèrie temporal amb representació, és millor el model d'intervals temporals
-- Per exemple un control de versions 
-
+Un cas que observem amb tret de seqüència són les sèries temporals que
+recullen agregacions d'intervals de temps no continus.  Per exemple
+una sèrie temporal que recull les temperatures mitjanes dels mesos
+d'octubre
+$S=\{(\text{oct98},15),(\text{oct99},10),(\text{oct00},13),\dotsc\}$.
+En aquest cas el temps és discret i té el domini
+$T\in\{\text{oct98},\text{oct99},\text{oct00},\dotsc\}$ i cada instant
+de temps es pot observar com un lapse que dura tot un mes d'octubre
+però no hi ha continuïtat del temps entre els mesos. Així doncs,
+aquestes sèries temporals presenten més dificultats a l'hora
+d'expressar-se amb temps dens, per exemple com en el cas anterior es
+pot precisar amb els instants de temps
+$S=\{(\text{31-oct-98},15),(\text{31-oct-99,10}),(\text{31-oct-00,13}),\dotsc\}$
+o bé refermar-ho amb valors indefinits
+$S=\{(\text{30-set-98},\infty),(\text{31-oct-98},15),(\text{30-set-99},\infty),(\text{31-oct-99,10}),\dotsc\}$,
+però cal anar en compte amb les operacions que s'hi apliquin ja que
+poden no adequar-se a la semàntica si no tenen en compte aquesta
+discontinuïtat del temps. 
+% De la mateixa manera, les operacions d'anàlisi de seqüències
+% temporals poden no ser totalment certes si no han tingut en compte
+% que el temps és continu, o discret però sense salts.
 
 
 
+\subsubsection{Intervals de temps}
+
+Finalment, hi ha dades que s'anoten en intervals de temps en comptes
+d'instants de temps. Aquests casos pertanyen al model d'intervals de
+temps, el qual és diferent del de sèries temporals. Algunes dades en
+intervals de temps es poden expressar perfectament en sèries temporals
+però altres no resulta tan còmode. Vegem-ne alguns exemples.
+
+%El temps pot ser tant dens, $T\in\R$, com discret
+
+Un primer exemple és el tipus d'interès que fixa el Banc Central
+Europeu. En aquest cas es fixen valors cadascun dels quals és vàlid
+durant un determinat interval de temps. Una expressió d'exemple
+possible, sense detallar el model d'intervals temporals, és
+$I=\{([1,2),0.25),([2,4),0.50),([5,7),0.75)\}$ amb els valors en
+unitats de tant per cent. Es pot expressar fàcilment en sèrie temporal
+$S=\{(1,0.25),(2,0.50),(4,0.75),(7,\infty)\}$, i acompanyar-ho amb una
+representació adequada com la ZOH (v.~\autoref{def:sgst:zoh}).
+
+
+Un segon exemple és una agenda, la qual fixa tasques en intervals de
+temps futurs. Per exemple expressat en intervals temporals
+$I=\{([7,8),\text{transport}),([8,15),\text{feina}),([17,18),
+\text{dentista})\}$. També com en el cas anterior es pot expressar en
+sèrie temporal $S=\{(7,\text{transport}),(8,\text{feina}), (15,\infty)
+,(17,\text{dentista}), (18,\infty)\}$. Tot i així, per a aquest
+exemple la sèrie temporal no és còmode i és millor el model
+d'intervals temporals que està més orientat a expressar
+el temps de validesa de cada tasca.
 
 
 
+%- Per exemple un control de versions 
 
-
-
-
+%- altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
 
 
 
@@ -258,26 +295,43 @@ No obstant això hi ha intervals temporals que tot i que es poden expressar amb 
 
 \subsection{Patologies de les sèries temporals}
 
+Les sèries temporals poden no ser ideals a causa de problemes en la
+seva adquisició o del seu tractament. Tot i que segueixen sent sèries
+temporals, tenen unes propietats que poden resultar problemàtiques a
+l'hora d'operar-hi i que anomenem patologies. A continuació expliquem
+algunes patologies habituals.
+
+
+
 
 
 
 \todo{?}
 
+Una primera patologia prové de problemes en el rellotge, com poden ser
+la precisió i l'exactitud en la mesura del
+temps. \textcite[cap.~3]{kopetz11:realtime} descriu en profunditat
+aquests problemes i conclou que la sincronitazació entre rellotges és
+obligatòria, de la qual en descriu les tècniques.
+
+
+
+
 * Problemes en l'adquisició
 
-* Problemes en el rellotge: citar Kopetz que parla de casos avançats del rellotge? (sincronització, tipus de rellotges, etc.)
-Problemes de granularitat  i de drift dels rellotges [kopetz]\todo{cita}, és a dir la duració mínima que un rellotge digital pot mesurar i la variació que pot tenir de les duracions (mesurades des d'un rellotge de referència). Això fa que sigui obligatòria la sincronitazació entre rellotges.
 
-* Valors estant limitats en un rang
-En el nostra cas els valors estaran associats a una variable física, per tant seran conjunt finits i acotats, per tant podrem definir una cota inferior màxima (ínfim) i una cota màxima (suprem). Donat el conjunt de valors V, definim la conta mínima del conjunt com     (això ja ho tenies fet no!!!)
+
+
+
+
 
 . El primer problema  és la gestió d’una quantitat enorme de dades.
 
+
+
+
 El segon problema  es el de la necessitat de censurar les dades,  es a dir validar que les dades
 siguin correctes i en cas contrari rebutjar-les o reconstruir-les.
-
-El tercer problema es dóna quan el període de mostreig no  és regular,  és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
-
 En el moment  de recol lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos.
 
 
@@ -301,9 +355,15 @@ two subprocesses: treating unknown data and marking data as
 unknown. Following with real numbers, let unknown value be represented
 by the improper element infinity ($\infty$).  
 
-
-
 * dades desconegudes: mesura inexistent, temps de termini, límits (rang dels valors)
+
+* Valors estant limitats en un rang
+En el nostra cas els valors estaran associats a una variable física, per tant seran conjunt finits i acotats, per tant podrem definir una cota inferior màxima (ínfim) i una cota màxima (suprem). Donat el conjunt de valors V, definim la conta mínima del conjunt com     (això ja ho tenies fet no!!!)
+
+
+El tercer problema es dóna quan el període de mostreig no  és regular,  és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
+
+
 
 
 \subsubsection{Regularitat de les sèries temporals} 
@@ -756,6 +816,7 @@ contínues per la dreta. L'anomenem representació \emph{zero-order
 electrònica per a reconstruir senyals, el qual consisteix en mantenir
 constant cada valor fins al proper.
 \begin{definition}[Funció de representació \emph{zero-order hold}]
+  \label{def:sgst:zoh}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
   temps, es defineix $S^\text{ZOH}(t)$ com la funció de representació
   \emph{zero-order hold} al llarg del temps, $\forall m \in S:$
