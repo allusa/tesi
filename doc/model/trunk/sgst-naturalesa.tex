@@ -1,14 +1,19 @@
 \section{Propietats de les sèries temporals}
 
-\todo{}
- (Trets semàntics/patologies/representacions(tipus/funció temporal))
-
-
-En el model de SGST proposat les sèries temporals tenen una única estructura i uns únics operadors independentment del context a on s'apliquin. De fet aquest és l'objectiu principal de definir-ne un model lògic. No obstant això, en la seva aplicació les sèries temporals van associades a un context; és a dir que els valors prenen un determinat significat. En aquesta secció avaluem les propietats que poden prendre les sèries temporals quan es troben en context:
-
-* Trets semàntics
-* Patologies
-* Grafs i representacions
+En el model de SGST descrit anteriorment, les sèries temporals tenen
+una única estructura i uns únics operadors independentment del context
+a on s'apliquin. De fet aquest és l'objectiu principal de definir-ne
+un model lògic. No obstant això, en la seva aplicació les sèries
+temporals tenen associat un context, és a dir que els valors prenen un
+determinat significat. En aquesta secció avaluem les propietats que
+poden prendre les sèries temporals quan es troben en context:
+\begin{itemize}
+\item Trets semàntics: el significat que tenen en
+  el seu àmbit d'aplicació
+\item Grafs i representacions: les visualitzacions i interpretacions
+  possibles
+\item Patologies: els casos problemàtics de les sèries temporals
+\end{itemize}
 
 
 
@@ -63,6 +68,7 @@ que quan s'adquireix un comptador ofereix informació de la seva
 variació respecte a l'adquisició anterior.
 
 
+
 \begin{figure}[tp]
   \centering
   \input{imatges/model/sgst-magnitud.tex}
@@ -99,7 +105,6 @@ comptador i $S_v = S_\Delta /
 \glssymbol{not:sgst:gradient}(\glssymbol{not:sgst:duplica-t}(S_\Delta))
 = \{(0,0),(2,0{,}5),(4,1),(5,1),(8,2)\}$ són els valors de velocitat
 del comptador, les unitats dels quals són de \emph{unitat$/$unitat de temps}.
-
 
 
 El gràfic de valor absolut, en aquest cas es tracta d'un comptador
@@ -280,7 +285,7 @@ $I=\{([7,8),\text{transport}),([8,15),\text{feina}),([17,18),
 sèrie temporal $S=\{(7,\text{transport}),(8,\text{feina}), (15,\infty)
 ,(17,\text{dentista}), (18,\infty)\}$. Tot i així, per a aquest
 exemple la sèrie temporal no és còmode i és millor el model
-d'intervals temporals que està més orientat a expressar
+d'intervals temporals, el qual està més orientat a expressar
 el temps de validesa de cada tasca.
 
 
@@ -293,244 +298,14 @@ el temps de validesa de cada tasca.
 
 
 
-\subsection{Patologies de les sèries temporals}
-
-Les sèries temporals poden no ser ideals a causa de problemes en la
-seva adquisició o del seu tractament. Tot i que segueixen sent sèries
-temporals, tenen unes propietats que poden resultar problemàtiques a
-l'hora d'operar-hi i que anomenem patologies. A continuació expliquem
-algunes patologies habituals.
-
-
-
-
-
-
-\todo{?}
-
-Una primera patologia prové de problemes en el rellotge, com poden ser
-la precisió i l'exactitud en la mesura del
-temps. \textcite[cap.~3]{kopetz11:realtime} descriu en profunditat
-aquests problemes i conclou que la sincronitazació entre rellotges és
-obligatòria, de la qual en descriu les tècniques.
-
-
-
-
-* Problemes en l'adquisició
-
-
-
-
-
-
-
-. El primer problema  és la gestió d’una quantitat enorme de dades.
-
-
-
-
-El segon problema  es el de la necessitat de censurar les dades,  es a dir validar que les dades
-siguin correctes i en cas contrari rebutjar-les o reconstruir-les.
-En el moment  de recol lecció de dades apareixen dos problemes: valors que en un instant de temps prefixat no s'han pogut recollir i valors que són falsos.
-
-
-
-* Tractament/validació de dades
-
-With reference to data validation, attribute interpolation functions
-can cope with this process. When data has not been captured or has
-been captured erroneously, it must be treated as unknown data.
-\begin{itemize}
-\item When data has not been captured it is unknown by nature. For
-  example, we try to capture data from a sensor and there is no
-  response.
-\item When data is erroneously it must be marked as unknown. For
-  example, we capture data from a sensor but it responses in a not
-  reasonable time or we capture data that is clearly outside a
-  reasonable limits.
-\end{itemize}
-As a consequence, attribute interpolation functions deals with these
-two subprocesses: treating unknown data and marking data as
-unknown. Following with real numbers, let unknown value be represented
-by the improper element infinity ($\infty$).  
-
-* dades desconegudes: mesura inexistent, temps de termini, límits (rang dels valors)
-
-* Valors estant limitats en un rang
-En el nostra cas els valors estaran associats a una variable física, per tant seran conjunt finits i acotats, per tant podrem definir una cota inferior màxima (ínfim) i una cota màxima (suprem). Donat el conjunt de valors V, definim la conta mínima del conjunt com     (això ja ho tenies fet no!!!)
-
-
-El tercer problema es dóna quan el període de mostreig no  és regular,  és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
-
-
-
-
-\subsubsection{Regularitat de les sèries temporals} 
-
-Per a determinar la regularitat d'una sèrie temporal es defineix un
-interval de temps $i_0=[t_I,t_I+\delta]$, a on $t_I$ és un instant de
-temps i $\delta$ una durada de temps, i els seus intervals múltiples
-$i_j=[t_I+j\delta\, ,\, t_I+(j+1)\delta]$ per
-$j=0,1,2\ldots$. Aleshores, la regularitat de la sèrie temporal depèn
-de la situació dels temps de les seves mesures en aquests intervals de
-temps $i_j$.
- 
-Quan la situació temporal de les mesures prové del sistema
-d'adquisició de dades aleshores cal notar que, en l'àmbit de
-teoria del senyal, aquests intervals de temps s'anomenen intervals de
-mostreig, $\delta$ s'anomena període de mostreig i $t_I$ s'anomena
-temps inicial del mostreig.
-
-
-Una sèrie temporal és regular quan les mesures són equidistants en el
-temps, tal com ho anomenen \textcite{last:hetland}.  La regularitat
-d'una sèrie temporal és crítica en algunes operacions perquè hi ha
-algoritmes d'anàlisi de sèrie temporals que només es poden aplicar a
-sèries temporals regulars.
-\begin{definition}[Sèrie temporal regular]
-  \label{def:st:regular}
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t_I$ un instant de
-  temps i $\delta$ una durada de temps, $S$ és regular si i
-  només si $\forall m \in S(T(\min(S),\infty):T(m) - T(\ant(m)) =
-  \delta$ a on definim $t_I=T(\min(S))$.
-\end{definition}
-
-Si una sèrie temporal és regular, l'anomenem sèrie temporal regular de
-període de $\delta$ iniciada a $t_I$. Si el $t_I$ pot ser qualsevol
-llavors simplement l'anomenem sèrie temporal regular de període
-$\delta$.  Si notem l'àmbit de teoria del senyal, aquest període té
-relació amb el període de mostreig.
-
-
-Així doncs, per contraposició definim que una sèrie temporal és
-\emph{no regular} o \emph{irregular} quan no és regular.  A
-continuació distingim tres característiques que poden presentar les
-sèries temporals no regulars: temps real, ultramostreig i inframostreig.
-
-\todo{} L'adquisició de les mesures pot estar lligada a un sistema de
-control de temps real, el qual sol ser el que mana sobre el temps atès
-que les periodicitats del mostreig per a control són més elevades que
-les del mostreig per als humans (aquests tenen un temps de resposta
-més lent) \parencite[cap.~1]{kopetz11:realtime}.  El temps real causa
-que tinguem sèries temporals no regulars però amb unes certes
-característiques de periodicitat.  Així, seguint el vocabulari de
-temps real, en les sèries temporals no regulars es poden distingir els
-tres casos mencionats
-
-
-Una sèrie temporal és de temps real quan a cada interval de mostreig
-hi ha una i només una mesura. A més, l'interval de mostreig pot estar
-fitar per una durada anomenada termini.
-\begin{definition}[Sèrie temporal de temps real]
-  \label{def:st:tempsreal}
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
-  temps, $\delta$ una durada de temps i $D$ una durada que indica
-  termini, $S$ és de temps real si i només si $D\leq\delta$
-  i $\forall n\in\{0,\ldots,|S|-1\}: |S[t_I+n\delta,t_I+n\delta+D)| = 1$. 
-  % Altrament $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
-  % S[t_I+n\delta,t_I+n\delta+D)$
-\end{definition}
-
-Si una sèrie temporal és de temps real, l'anomenem sèrie temporal
-mostrejada en temps real de període $\delta$ iniciada a $t_I$ i
-compliment del termini $D$.  Si $D=\delta$, es pot anomenar que $S$ és
-una sèrie temporal de temps real sense termini.
-
-Pel que fa al temps inicial $t_I$, en el cas de les sèries temporals
-de temps reals pot estar situat entre $T(\min(S))-\delta < t_I \leq
-T(\min(S))$.  Així doncs, una sèrie temporal regular és també de temps
-real. En el cas que una sèrie temporal compleixi els requeriments de
-regular a excepció de $T(\min(S))=t_I$, és a dir de la qual les
-mesures són equidistants però no té el temps inicial demanat,
-aleshores només és una sèrie temporal de temps real.
-
-
-
-Seguint en l'àmbit de temps real, quan no es compleix que a cada
-interval de mostreig hi ha una i només una mesura pot succeir que hi
-hagi un, o més d'un, interval amb cap mesura o amb més
-d'una. Respectivament, ho anomenem interval inframostrejat i interval
-ultramostrejat. 
-
-
-
-Una sèrie temporal té intervals amb ultramostreig (\emph{upsampling})
-quan en alguns intervals de mostreig hi ha una mesura o més d'una.
-\begin{definition}[Sèrie temporal amb ultramostreig]
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
-  temps i $\delta$ una durada de temps, els intervals amb
-  ultramostreig de $S$ són aquells que
-  $|S[t_I+n\delta,t_I+(n+1)\delta)|>1$ a on $n\in\N$.
-\end{definition}
-
-Una sèrie temporal té intervals amb inframostreig
-(\emph{downsampling}) quan en alguns intervals de mostreig no hi ha
-cap mesura.
-\begin{definition}[Sèrie temporal amb inframostreig]
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
-  temps i $\delta$ una durada de temps, els intervals amb
-  inframostreig de $S$ són aquells que
-  $|S[t_I+n\delta,t_I+(n+1)\delta)|=0$ a on $n\in\N$.
-\end{definition}
-
-Així doncs, una sèrie temporal no regular es pot classificar segons si
-és de temps real i en el cas que no ho sigui es pot indicar si té
-intervals amb ultramostreig o si en té amb inframostreig, sent aquests
-dos darrers casos possibles alhora.
-
-
-
-
-
-\subsubsection{Regularització de sèries temporals}
-
-\todo{}
-
-Com es regularitza una sèrie temporal amb els operadors de SGST? O com es canvia el període d'una sèrie temporal?
-
-S'han d'utilitzar operadors de funció temporal. 
-
-Així, com ja s'ha notat en les propietats del mateix operador, la
-selecció temporal d'una sèrie temporal en un conjunt de temps
-equi-espaiat $i = \{t_I+n\delta | n\in\mathbb{N}, n\leq s \}$ és una
-sèrie temporal regular de període $\delta$ iniciada a $t_I$: $S[i]^r
-\equiv \{ (t_I, v_0), (t_I+\delta,v_1), \dotsc , (t_I+s\delta,v_s)\}$
-a on $r$ és una funció de representació.
-
-
-Així doncs, la gràcia de regularitzar rau en la funció de representació.
-
-
-\todo{descriure tècniques per regularitzar les de temps real, les d'inframostreig, les d'ultramostreig}
-
-temps real: cas simple de regularització és aplicar representacions a trossos constants; si és de temps real es pot interpretar que en certa manera la mesura és vàlida per a tot l'interval.
-
-ultramostreig: cas simple de regularització és agregar els intervals amb ultramostreig amb la mitjana, el màxim, etc.
-
-inframostreig: cas simple es pot utilitzar el valor del següent o de l'anterior interval, és a dir també amb representacions a trossos constants. Aquest cas ja s'ha d'interpretat més aviat com una reconstrucció a diferència del temps real que interpretem com a vàlid.
-\todo{el termini també podria ser relatiu entre mesures (temps de heartbeat)}
-El termini $D$ descrit fins ara té relació amb el concepte de termini utilitza a temps real. També es poden utilitzar altres conceptes de termini com per exemple una fita del temps entre mesures. Això pot ampliar la validesa en el cas de l'inframostreig; és a dir si hi ha heartbeat més gran que el temps de mostreig vol dir que es permet l'inframostreig.
-
-
-
-Més sobre això en els agregadors dels atributs del model de SGSTM que és on regularitzem sèries temporals...
-
-
-\todo{potser es poden regularitzar fàcilment les de temps real,inframostreig i ultramostreig?}
-es poden acceptar com a regulars, per exemple les de temps real es canvien els instants fent que siguin els del període de mostreig teòric, les d'ultramostreig se suprimeixin els punts ultramostrejats, els d'inframostreig es farceixen els forats ...
-
-es plantegen com a planificació per a la posterior regularització; és a dir es planteja mostrejar una sèrie temporal a temps real i així després lligar-ho amb un mètode per a regularitzar-la.
-
 
 
 \subsection{Graf i funció temporal de representació}
 \label{sec:model:repr}
-\todo{segev87 parla de tipus de la sèrie temporal}
 
 Una sèrie temporal és la representació discreta d'una funció contínua;
 la qual és una funció temporal atès que depèn del temps. El model de
-SGST definit anteriorment formalitza la sèrie temporal com aquesta
+SGST definit formalitza la sèrie temporal com aquesta
 representació discreta. Però a partir d'una sèrie temporal es pot
 voler interpretar quina era la funció contínua original; és a dir
 obtenir nous valors segons una funció a la que s'anomena graf d'una
@@ -573,10 +348,10 @@ La utilitat de les funcions de representació és diversa i per això les
 operacions de càlcul poden ser qualssevol. Una funció de representació
 es pot utilitzar per a interpolar valors d'una sèrie temporal però
 també per a extrapolar-los i fer prediccions o per a canviar la
-resolució de la sèrie temporal. També es pot utilitzar per al problema
-aproximar la sèrie temporal a la funció original; és a dir donar una
-funció de representació que sigui la funció contínua que més
-s'aproxima a la funció temporal original.
+resolució de la sèrie temporal. També es pot utilitzar com a tècnica
+d'aproximar la sèrie temporal a la funció original; és a dir trobar
+una funció de representació que es correspongui amb la funció contínua
+que més s'aproxima a la funció temporal original.
 
 
 El lligam entre una sèrie temporal i la seva representació no és fix;
@@ -1105,12 +880,12 @@ a partir de la funció triangular $\operatorname{tri}(t)$
 \end{cases}
 \]
 
-Per al cas particular de sèries temporals regulars, es pot
-utilitzar directament la funció triangular general.  Sigui
-$S_R=\{m_0,\ldots,m_k\}$ una sèrie temporal regular amb període $P$ i
-sigui $T$ el domini del temps, es defineix $S^\text{FOH}_ R(t)$ com la
-funció de representació \emph{first-order hold} al llarg del temps,
-$\forall m \in S:$
+Per al cas particular de sèries temporals regulars
+(v.~\autoref{def:st:regular}), es pot utilitzar directament la funció
+triangular general.  Sigui $S_R=\{m_0,\ldots,m_k\}$ una sèrie temporal
+regular amb període $P$ i sigui $T$ el domini del temps, es defineix
+$S^\text{FOH}_ R(t)$ com la funció de representació \emph{first-order
+  hold} al llarg del temps, $\forall m \in S:$
 \[
 S_ R^\text{FOH}(t) = \sum_{t\in T} V(m)
 \operatorname{tri}\left(\frac{t-T(m)}{P}\right)
@@ -1451,10 +1226,10 @@ segons la representació FOH i la lineal.
 
 
 
-En conclusió, es defineixen les funcions de representació per a
+En conclusió, l'objectiu principal de les funcions de representació és
 estudiar exactament els grafs que es poden obtenir de la sèrie
-temporal i posteriorment, agafant-ne el significat, s'implementen les
-operacions que siguin necessàries
+temporal per a posteriorment, agafant-ne el significat, implementar
+les operacions que siguin necessàries
 
 
 D'altra banda, les funcions de representació també es tindran en
@@ -1473,6 +1248,234 @@ en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
 
 
 
+
+\subsection{Patologies de les sèries temporals}
+
+Les sèries temporals poden no ser ideals a causa de problemes en la
+seva adquisició o del seu tractament. Tot i que segueixen sent sèries
+temporals, tenen unes propietats que poden resultar problemàtiques a
+l'hora d'operar-hi i que anomenem patologies. A continuació expliquem
+algunes patologies habituals.
+
+
+
+Una primera patologia prové de problemes en el rellotge, com poden ser
+la precisió i l'exactitud en la mesura del
+temps. \textcite[cap.~3]{kopetz11:realtime} descriu en profunditat
+aquests problemes i conclou que els rellotges necessiten tècniques de
+sincronització, de les quals en descriu el funcionament.
+
+
+
+Una segona patologia és la de les dades desconegudes. Quan no s'han
+capturat dades o quan s'han capturat erròniament aleshores s'han de
+tractar com a dades desconegudes. És a dir, s'ha de validar que les
+dades siguin correctes i en cas contrari rebutjar-les, tot i que cal
+tenir en compte que en alguns casos posteriorment es poden aplicar
+processos de reconstrucció per a aquestes dades errònies.  La
+patologia de dades desconegudes presenta diversitat en les causes:
+\begin{itemize}
+
+\item Els valors de les magnituds físiques estan limitats en un
+  rang. Per tant, si s'adquireixen valors de fora del rang aquests no
+  són vàlids. Per exemple, es captura un valor d'un sensor que és
+  clarament fora d'uns límits raonables.
+
+\item En el moment de reco\l.lecció de dades pot aparèixer una mesura
+  inexistent ja sigui perquè s'ha recollit un valor incomprensible o
+  perquè no s'ha pogut recollir la mostra per manca de temps
+  d'execució. Per exemple, s'intenta capturar una dada d'un sensor
+  però aquest no respon o bé aquest respon amb un caràcter quan
+  s'esperava un nombre.
+
+\item S'ha definit un temps de termini de l'adquisició de mesures; és
+  a dir que si entre dues mesures hi ha una durada superior a un temps
+  anomenat termini la mesura no és vàlida. Per exemple, es captura una
+  dada d'un sensor però aquest no respon en un temps raonable.
+\end{itemize}
+
+
+Una tercera patologia és la gestió d’una quantitat enorme de dades.
+Les sèries temporal són els objectes que permeten gestionar de les
+dades recollides en els sistemes de monitoratge, que poden gestionar
+una gran quantitat de variables i en aquests casos pot haver-hi
+dificultats en l'operació i en la visualització de les sèries
+temporals.
+
+
+
+Una quarta patologia es dóna quan el període de mostreig no és
+regular, és a dir que les dades no es recullen de manera uniforme en
+el temps, però les aplicacions no ho contemplen o volen treballar amb
+dades a intervals regulars. A continuació aprofundim en aquest tema.
+
+
+
+% Proposem tractaments per algunes d'aquestes patologies al
+% capítol~\ref{cap:model:sgstm} amb un model SGST multiresolució.
+
+
+
+\subsubsection{Regularitat de les sèries temporals} 
+
+Per a determinar la regularitat d'una sèrie temporal es defineix un
+interval de temps $i_0=[t_I,t_I+\delta]$, a on $t_I$ és un instant de
+temps i $\delta$ una durada de temps, i els seus intervals múltiples
+$i_j=[t_I+j\delta\, ,\, t_I+(j+1)\delta]$ per
+$j=0,1,2\ldots$. Aleshores, la regularitat de la sèrie temporal depèn
+de la situació dels temps de les seves mesures en aquests intervals de
+temps $i_j$.
+ 
+Quan la situació temporal de les mesures prové del sistema
+d'adquisició de dades aleshores cal notar que, en l'àmbit de
+teoria del senyal, aquests intervals de temps s'anomenen intervals de
+mostreig, $\delta$ s'anomena període de mostreig i $t_I$ s'anomena
+temps inicial del mostreig.
+
+
+Una sèrie temporal és regular quan les mesures són equidistants en el
+temps, tal com ho anomenen \textcite{last:hetland}.  La regularitat
+d'una sèrie temporal és crítica en algunes operacions perquè hi ha
+algoritmes d'anàlisi de sèrie temporals que només es poden aplicar a
+sèries temporals regulars.
+\begin{definition}[Sèrie temporal regular]
+  \label{def:st:regular}
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps i $\delta$ una durada de temps, $S$ és regular si i
+  només si $\forall m \in S(T(\min(S),\infty):T(m) - T(\ant(m)) =
+  \delta$ a on definim $t_I=T(\min(S))$.
+\end{definition}
+
+Si una sèrie temporal és regular, l'anomenem sèrie temporal regular de
+període de $\delta$ iniciada a $t_I$. Si el $t_I$ pot ser qualsevol
+llavors simplement l'anomenem sèrie temporal regular de període
+$\delta$.  Si notem l'àmbit de teoria del senyal, aquest període té
+relació amb el període de mostreig.
+
+
+Així doncs, per contraposició definim que una sèrie temporal és
+\emph{no regular} o \emph{irregular} quan no és regular.  A
+continuació distingim tres característiques que poden presentar les
+sèries temporals no regulars: temps real, ultramostreig i inframostreig.
+
+L'adquisició de les mesures pot estar sotmesa a un sistema de
+control de temps real. Aquest sistema sol ser el que mana sobre el
+temps de mostreig ja que les periodicitats per a control són més
+elevades que per a altres necessitat, com per exemple la visualització
+de les dades per part de persones, les quals tenen un temps de
+resposta més lent \parencite[cap.~1]{kopetz11:realtime}.  El temps
+real causa que apareguin sèries temporals no regulars però amb unes
+certes característiques de periodicitat.  Així, seguint el vocabulari
+de temps real, en les sèries temporals no regulars podem distingir els
+tres casos mencionats
+
+
+Una sèrie temporal és de temps real quan a cada interval de mostreig
+hi ha una i només una mesura. A més, l'interval de mostreig pot estar
+fitar per una durada anomenada termini.
+\begin{definition}[Sèrie temporal de temps real]
+  \label{def:st:tempsreal}
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps, $\delta$ una durada de temps i $D$ una durada que indica
+  termini, $S$ és de temps real si i només si $D\leq\delta$ i la
+  subsèrie de cada interval amb termini només conté una mesura $\forall
+  n\in\{0,\ldots,|S|-1\}: |S[t_I+n\delta,t_I+n\delta+D)| = 1$.
+  % Altrament $\forall n\in\{0,\ldots,|S|-1\}: \exists!m \in
+  % S[t_I+n\delta,t_I+n\delta+D)$
+\end{definition}
+
+Si una sèrie temporal és de temps real, l'anomenem sèrie temporal
+mostrejada en temps real de període $\delta$ iniciada a $t_I$ i
+compliment del termini $D$.  Si $D=\delta$, es pot anomenar que $S$ és
+una sèrie temporal de temps real sense termini.
+
+Pel que fa al temps inicial $t_I$, en el cas de les sèries temporals
+de temps reals pot estar situat entre $T(\min(S))-\delta < t_I \leq
+T(\min(S))$.  Així doncs, una sèrie temporal regular és també de temps
+real. En el cas que una sèrie temporal compleixi els requeriments de
+regular a excepció de $T(\min(S))=t_I$, és a dir de la qual les
+mesures són equidistants però no té el temps inicial demanat,
+aleshores només és una sèrie temporal de temps real.
+
+
+
+Seguint en l'àmbit de temps real, quan no es compleix que a cada
+interval de mostreig hi ha una i només una mesura pot succeir que hi
+hagi un, o més d'un, interval amb cap mesura o amb més
+d'una. Respectivament, ho anomenem interval inframostrejat i interval
+ultramostrejat. 
+
+
+
+Una sèrie temporal té intervals amb ultramostreig (\emph{upsampling})
+quan en alguns intervals de mostreig hi ha una mesura o més d'una.
+\begin{definition}[Sèrie temporal amb ultramostreig]
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps i $\delta$ una durada de temps, els intervals amb
+  ultramostreig de $S$ són aquells en què la
+  subsèrie corresponent conté més d'una mesura
+  $|S[t_I+n\delta,t_I+(n+1)\delta)|>1$ a on $n\in\N$.
+\end{definition}
+
+Una sèrie temporal té intervals amb inframostreig
+(\emph{downsampling}) quan en alguns intervals de mostreig no hi ha
+cap mesura.
+\begin{definition}[Sèrie temporal amb inframostreig]
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $t_I$ un instant de
+  temps i $\delta$ una durada de temps, els intervals amb
+  inframostreig de $S$ són aquells en què la
+  subsèrie corresponent no conté cap mesura
+  $|S[t_I+n\delta,t_I+(n+1)\delta)|=0$ a on $n\in\N$.
+\end{definition}
+
+En conclusió, una sèrie temporal no regular es pot classificar segons
+si és de temps real i en el cas que no ho sigui es pot indicar si té
+intervals amb ultramostreig o si en té amb inframostreig. Aquests dos
+darrers casos són possibles alhora per una mateixa sèrie temporal però
+no en un mateix interval.
+
+
+\subsubsection{Regularització de sèries temporals}
+
+\todo{}
+
+Per a regularitzar una sèrie temporal, és a dir per a obtenir una
+sèrie temporal regular d'una no regular o per a canviar el període
+d'una regular, s'han d'utilitzar operadors de funció temporal. És a
+dir, la tècnica de regularitzar es basa fortament en les funcions de
+representació (v.\ sec.~\ref{sec:model:repr}).
+
+Així, com ja s'ha notat en les propietats del mateix operador i que
+ara podem clarificar amb el vocabulari de sèries temporals regulars,
+la selecció temporal d'una sèrie temporal en un conjunt de temps
+equi-espaiat $i = \{t_I+n\delta | n\in\mathbb{N}, n\leq s \}$ és una
+sèrie temporal regular de període $\delta$ iniciada a $t_I$: $S[i]^r
+\equiv \{ (t_I, v_0), (t_I+\delta,v_1), \dotsc , (t_I+s\delta,v_s)\}$
+a on $r$ és una funció de representació.
+
+
+
+
+
+\todo{descriure tècniques per regularitzar les de temps real, les d'inframostreig, les d'ultramostreig}
+
+temps real: cas simple de regularització és aplicar representacions a trossos constants; si és de temps real es pot interpretar que en certa manera la mesura és vàlida per a tot l'interval.
+
+ultramostreig: cas simple de regularització és agregar els intervals amb ultramostreig amb la mitjana, el màxim, etc.
+
+inframostreig: cas simple es pot utilitzar el valor del següent o de l'anterior interval, és a dir també amb representacions a trossos constants. Aquest cas ja s'ha d'interpretat més aviat com una reconstrucció a diferència del temps real que interpretem com a vàlid.
+\todo{el termini també podria ser relatiu entre mesures (temps de heartbeat)}
+El termini $D$ descrit fins ara té relació amb el concepte de termini utilitza a temps real. També es poden utilitzar altres conceptes de termini com per exemple una fita del temps entre mesures. Això pot ampliar la validesa en el cas de l'inframostreig; és a dir si hi ha heartbeat més gran que el temps de mostreig vol dir que es permet l'inframostreig.
+
+
+
+Més sobre això en els agregadors dels atributs del model de SGSTM que és on regularitzem sèries temporals...
+
+
+\todo{potser es poden regularitzar fàcilment les de temps real,inframostreig i ultramostreig?}
+es poden acceptar com a regulars, per exemple les de temps real es canvien els instants fent que siguin els del període de mostreig teòric, les d'ultramostreig se suprimeixin els punts ultramostrejats, els d'inframostreig es farceixen els forats ...
+
+es plantegen com a planificació per a la posterior regularització; és a dir es planteja mostrejar una sèrie temporal a temps real i així després lligar-ho amb un mètode per a regularitzar-la.
 
 
 
