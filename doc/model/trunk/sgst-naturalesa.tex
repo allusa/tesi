@@ -2,7 +2,7 @@
 
 En el model de SGST descrit anteriorment, les sèries temporals tenen
 una única estructura i uns únics operadors independentment del context
-a on s'apliquin. De fet aquest és l'objectiu principal de definir-ne
+on s'apliquin. De fet aquest és l'objectiu principal de definir-ne
 un model lògic. No obstant això, en la seva aplicació les sèries
 temporals tenen associat un context, és a dir que els valors prenen un
 determinat significat. En aquesta secció avaluem les propietats que
@@ -36,7 +36,7 @@ A continuació distingim el significat de les sèries temporals segons
 l'origen; és a dir com s'han adquirit o de quin entorn
 provenen. Aquesta distinció és important per a determinar quines
 operacions tenen sentit de ser aplicades i quines no a una sèrie
-temporal en particular. Així \textcite{segev87:sigmod} anomena
+temporal en particular. Així \textcite{segev87:sigmod} anomenen
 comportament semàntic (\emph{semantic behavior}) a la varietat de
 formes que pot prendre una sèrie temporal segons l'àmbit on
 s'apliquen.
@@ -1033,15 +1033,14 @@ simètriques:
 
 \subsubsection{D'ajustament lineal de corbes}
 
-Una família de funcions que també treballa amb polinomis de primer
-ordre, com les de trossos lineals, són les funcions d'ajustament
-lineal de corbes.  L'ajustament de corbes (\emph{curve fitting}) és
-una tècnica que es basa en l'aproximació als punts donats, a
-diferència de les funcions definides a trossos que es basen en
-interpolacions que passin exactament pels punts donats.  A continuació
-ho exemplifiquem amb una representació basada en l'aproximació lineal
-per mínims quadrats; és a dir la regressió lineal (\emph{linear
-  regression}).
+Una família de funcions diferents als casos anteriors són les funcions
+d'ajustament lineal de corbes amb polinomis.  L'ajustament de corbes
+(\emph{curve fitting}) és una tècnica que es basa en l'aproximació als
+punts donats, a diferència de les funcions definides a trossos que es
+basen en interpolacions que passin exactament pels punts donats.  A
+continuació ho exemplifiquem amb una representació basada en
+l'aproximació lineal per mínims quadrats; és a dir la regressió lineal
+(\emph{linear regression}).
 
 
 Definim una representació que consisteix en trobar la recta d'ajust
@@ -1175,6 +1174,55 @@ representació \emph{lineal} de la sèrie temporal.
 \end{example}
 
 
+
+
+
+% \subsubsection{D'ajustament lineal a trossos}
+
+% Una família de funcions derivada de l'ajustament lineal de corbes són
+% les que també ajusten però per a cada tros prèviament definit. Dins
+% d'aquesta família de funcions s'hi solen emmarcar els agregadors
+% estadístics que treballen per intervals.  A continuació ho
+% exemplifiquem amb una representació basada en l'aproximació a trossos
+% per la mitjana.
+
+
+
+% Definim una representació que consisteix en trobar la recta d'ajust
+% que correspon a la mitjana dels valors de les mesures que pertanyen a
+% uns determinats intervals de temps de la sèrie temporal. L'anomenem
+% representació \emph{mitjana} de la sèrie temporal.
+% \begin{definition}[Funció de representació mitjana]
+%   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal \todo{i sigui un conjunt d'instants de temps} i $T$ el domini del
+%   temps, es defineix $S^\text{mitjana}(t)$ com la funció de
+%   representació d'agregació mitjana a trossos al llarg del temps,
+%   $\forall m \in S:$
+%   \begin{align*}
+%     S^\text{mitjana}(t) = & \\
+%     = & \begin{cases}
+%       \glssymbol{not:sgst:mitjanav}(S[t_0,t_1))  & \text{si } t_0 \leq t < t_1 \\
+%       \ldots \\
+%       \glssymbol{not:sgst:mitjanav}(S[t_{r-1},t_{r})) & \text{si } t_{r-1} \leq t < t_r \\
+%       0 & \text{altrament}
+%     \end{cases}
+%   \end{align*}.
+% \end{definition}\todo{atenció a mitjana de la sèrie buida mitjanaV(\{\})}
+
+%\todo{fixem-nos que en aquest cas de la mitjana ens surt una cosa semblant al ZOH}
+
+
+% \begin{example}[Sèrie temporal amb representació mitjana]
+%   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
+%   seva representació mitjana a trossos $\{3,6,9\}$ és
+%   $S^\text{mitjana}(t) = 0\glssymbol{not:Ia}_{(-\infty,3)}
+%   +2\glssymbol{not:Ia}_{[3,6]} +2\glssymbol{not:Ia}_{[6,9]}
+%   +1\glssymbol{not:Ia}_{(9,+\infty)}$. 
+% \end{example}
+
+
+
+
+
 \subsubsection{Ús en els operadors de funció temporal}
 
 Alguns operadors dels SGST presenten particularitats a causa del
@@ -1224,6 +1272,15 @@ segons la representació FOH i la lineal.
   on $m_0=(t_0,S^{\text{lineal}}(t_0))$ i $m_f=(t_f,S^{\text{lineal}}(t_f))$.
 \end{definition}
 
+
+% \begin{definition}[Interval temporal mitjana]
+%   \label{def:sgst:interval-temporal-mitjana}
+%   Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
+%   $S^\text{mitjana}(t)$ la representació mitjana a trossos, es
+%   defineix la subsèrie $S[t_0,t_f]^{\text{mitjana}}$ com la sèrie
+%   temporal $S[t_0,t_f]^{\text{mitjana}} = \{(t_0,v_m)\}$ a on
+%   $v_m=\glssymbol{not:sgst:mitjanav}(S[t_0,t_f))$.
+% \end{definition}
 
 
 En conclusió, l'objectiu principal de les funcions de representació és
@@ -1355,8 +1412,9 @@ relació amb el període de mostreig.
 
 Així doncs, per contraposició definim que una sèrie temporal és
 \emph{no regular} o \emph{irregular} quan no és regular.  A
-continuació distingim tres característiques que poden presentar les
-sèries temporals no regulars: temps real, ultramostreig i inframostreig.
+continuació distingim tres característiques que es poden definir per a les
+sèries temporals no regulars: temps real, ultramostreig i
+inframostreig.
 
 L'adquisició de les mesures pot estar sotmesa a un sistema de
 control de temps real. Aquest sistema sol ser el que mana sobre el
@@ -1437,45 +1495,99 @@ no en un mateix interval.
 
 \subsubsection{Regularització de sèries temporals}
 
-\todo{}
-
 Per a regularitzar una sèrie temporal, és a dir per a obtenir una
 sèrie temporal regular d'una no regular o per a canviar el període
-d'una regular, s'han d'utilitzar operadors de funció temporal. És a
-dir, la tècnica de regularitzar es basa fortament en les funcions de
-representació (v.\ sec.~\ref{sec:model:repr}).
-
-Així, com ja s'ha notat en les propietats del mateix operador i que
-ara podem clarificar amb el vocabulari de sèries temporals regulars,
-la selecció temporal d'una sèrie temporal en un conjunt de temps
-equi-espaiat $i = \{t_I+n\delta | n\in\mathbb{N}, n\leq s \}$ és una
-sèrie temporal regular de període $\delta$ iniciada a $t_I$: $S[i]^r
-\equiv \{ (t_I, v_0), (t_I+\delta,v_1), \dotsc , (t_I+s\delta,v_s)\}$
-a on $r$ és una funció de representació.
+d'una regular, s'han d'utilitzar operadors per a generar noves mesures
+que compleixin amb les restriccions de temps regulars.
 
 
+Un dels operadors que faciliten la feina de regularitzar són els de
+funció temporal, en aquests casos la tècnica de regularitzar es basa
+fortament en les funcions de representació (v.\
+sec.~\ref{sec:model:repr}).  Com ja s'ha notat en les propietats del
+mateix operador i que ara podem clarificar amb el vocabulari de sèries
+temporals regulars, la selecció temporal d'una sèrie temporal en un
+conjunt de temps equi-espaiat $i = \{t_I+n\delta | n\in\mathbb{N},
+n\leq s \}$ és una sèrie temporal regular de període $\delta$ iniciada
+a $t_I$ fins a $t_I+s\delta$: $S[i]^r \equiv \{ (t_I, v_0),
+(t_I+\delta,v_1), \dotsc , (t_I+s\delta,v_s)\}$ a on $r$ és una funció
+de representació.
+
+
+A continuació mostrem algunes tècniques simples per a regularitzar les
+sèries temporals de temps real, les d'ultramostreig i les
+d'inframostreig. Aquestes tenen determinats paràmetres de periodicitat
+que faciliten la conversió a regular, o dit d'una altra manera es pot
+planificar des d'un inici el seu mostreig per a posteriorment
+associar-ho a un mètode de regularització adequat.
+
+
+En primer lloc, de manera senzilla es pot assumir que una sèrie de
+temps real és regular amb un marge d'error tolerable ja que és causat
+per la impossibilitat d'efectuar els mostrejos exactament en el moment
+desitjat. Així en una sèrie temporal de temps real es poden canviar
+els instants de temps de cada mesura a aquells que s'ajusten al
+període de mostreig teòric; és a dir es pot assumir que cada mesura és
+vàlida per a tot l'interval de mostreig. 
+
+Sigui $S$ una sèrie temporal de temps real de període $\delta$
+iniciada a $t_I$, una operació de funció temporal que regularitza de
+manera simple el temps real és la selecció temporal en els instants de
+temps de mostreig regulars $i_r=\{t_I+n\delta | n\in\mathbb{N},
+t_I+n\delta < T(\sup(S))\}$ amb representació ZOHE:
+$S[i_r]^\text{ZOHE}$.
+
+
+En segon lloc, de manera senzilla es pot assumir que una sèrie
+temporal amb ultramostreig és regular amb intervals en què s'ha
+adquirit més d'una mesura, els quals cal reduir-los a una de sola. El
+cas més simple és descartar les que es trobin més lluny de l'instant
+de temps de mostreig regular, per tant l'operació és la mateixa que en
+el cas anterior $S[i_r]^\text{ZOHE}$.
+
+Un altre cas, també simple, és el d'agregar les mesures dels intervals
+amb ultramostreig, per exemple amb la mitjana, el màxim, etc.
+Proposem un exemple pel cas de la mitjana.
+
+Sigui $S$ una sèrie temporal d'ultramostreig de període $\delta$
+iniciada a $t_I$, la regularització per agregació mitjana de cada
+interval regular $i_r$ és $\glssymbol{not:sgst:map}\big(S_r, (t,v)
+\mapsto (t,f(t,S,S_r))\big)$ a on
+$f(t,S,S_r)=\glssymbol{not:sgst:mitjanav}\big(S[t,
+\glssymbol{not:sgst:next}_{S_i}(t))\big)$ i $S_r=\{ (t_r,0) | t_r\in
+i_r \}$.
+
+Aquesta regularització també es pot expressar mitjançant operadors de
+funció temporal. Sigui la funció de representació de mitjana a trossos
+de la qual definim l'operador d'interval temporal com
+$S[t_0,t_f]^\text{mitjana}=\{(t_0,v_m)\}$ a on
+$v_m=\glssymbol{not:sgst:mitjanav}(S[t_0,t_f))$, l'operació temporal
+corresponent a la regularització per mitjana de l'ultramostreig és
+$S[i_r]^\text{mitjana}$.
+
+
+En tercer lloc, per a les sèries temporals amb inframostreig es poden
+aplicar tècniques de farciment de forats; és a dir tècniques de
+reconstrucció. Un cas simple de farciment és utilitzar el valor del
+següent interval. Per tant l'operació també és la mateixa que en els
+casos simples anteriors $S[i_r]^\text{ZOHE}$.
+
+En el cas de farcir forats inframostrejats normalment hi ha un durada
+vàlida per a fer el farciment, és a dir un temps de termini que indica
+a partir de la qual els intervals no es podran farcir i les mesures
+s'hauran de considerar desconegudes. Aquest temps de termini és
+diferent del concepte de termini $D$ de temps real descrit
+anteriorment ja que el primer és una durada entre mesures i el segon
+és una durada amb relació al període regular
+$\delta$. \Textcite{rrdtool} anomena \emph{heartbeat} a aquest temps
+de termini entre mesures.
 
 
 
-\todo{descriure tècniques per regularitzar les de temps real, les d'inframostreig, les d'ultramostreig}
 
-temps real: cas simple de regularització és aplicar representacions a trossos constants; si és de temps real es pot interpretar que en certa manera la mesura és vàlida per a tot l'interval.
-
-ultramostreig: cas simple de regularització és agregar els intervals amb ultramostreig amb la mitjana, el màxim, etc.
-
-inframostreig: cas simple es pot utilitzar el valor del següent o de l'anterior interval, és a dir també amb representacions a trossos constants. Aquest cas ja s'ha d'interpretat més aviat com una reconstrucció a diferència del temps real que interpretem com a vàlid.
-\todo{el termini també podria ser relatiu entre mesures (temps de heartbeat)}
-El termini $D$ descrit fins ara té relació amb el concepte de termini utilitza a temps real. També es poden utilitzar altres conceptes de termini com per exemple una fita del temps entre mesures. Això pot ampliar la validesa en el cas de l'inframostreig; és a dir si hi ha heartbeat més gran que el temps de mostreig vol dir que es permet l'inframostreig.
+%Més sobre això en els agregadors dels atributs del model de SGSTM que és on regularitzem sèries temporals...
 
 
-
-Més sobre això en els agregadors dels atributs del model de SGSTM que és on regularitzem sèries temporals...
-
-
-\todo{potser es poden regularitzar fàcilment les de temps real,inframostreig i ultramostreig?}
-es poden acceptar com a regulars, per exemple les de temps real es canvien els instants fent que siguin els del període de mostreig teòric, les d'ultramostreig se suprimeixin els punts ultramostrejats, els d'inframostreig es farceixen els forats ...
-
-es plantegen com a planificació per a la posterior regularització; és a dir es planteja mostrejar una sèrie temporal a temps real i així després lligar-ho amb un mètode per a regularitzar-la.
 
 
 

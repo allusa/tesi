@@ -586,13 +586,19 @@ Exemple d'operacions d'agregació:
 \begin{itemize}
 \item $\operatorname{cardinal}: S \mapsto m'$ a on $m'=
   \agg(S,(0,0),(t^i,v^i)\times(t,v)\mapsto(t^i,v^i+1)$
+
 \item $\operatorname{sumaV}: S \mapsto m'$ a on $m'=
   \agg(S,(0,0),(t^i,v^i)\times(t,v)\mapsto(t,v+v^i))$
+
+\item $\glssymbolsec{not:sgst:mitjanav}: S \mapsto v'$ a on $v'=
+  V(\operatorname{sumaV}(S)) / V(\operatorname{cardinal}(S))$ \todo{alerta amb 0/0, com solucionar-ho?}
+
 \item $\operatorname{sup}: S \mapsto m'$ a on $m'=
   \agg(S,(-\infty,\infty),(t^i,v^i)\times(t,v)\mapsto [(t^i,v^i)
   \text{ if } t < t^i \text{ else } (t,v) ])$, implementació de
   l'operació suprem de la \autoref{def:sgst:sup} a partir de
   l'agregació
+
 \item $\operatorname{ant}: S \times m \mapsto m'$ a on $m'=
   \agg(S,(-\infty,\infty),(t^i,v^i)\times(t,v)\mapsto [(t,v)
   \text{ if } t^i < t < T(m) \text{ else } (t^i,v^i) ])$,
@@ -832,23 +838,23 @@ temporal com una funció contínua.
 
 Sigui $S$ una sèrie temporal i $[t_0,t_f]$ un interval de temps, per
 una banda s'ha definit l'interval sobre la seqüència d'una sèrie
-temporal $S(t_0,t_f]$ (def.~\ref{def:model:st-interval}) i per altra
+temporal $S(t_0,t_f)$ (def.~\ref{def:model:st-interval}) i per altra
 banda s'ha definit la representació contínua $r$ d'una sèrie temporal
 $S(t)^r$ \todo{referenciar la definició de repr}.  Per seleccionar un
 interval temporal cal tenir en compte tant l'interval sobre la
 seqüència com la representació contínua, Aquest interval temporal
 s'anota com interval temporal de $S$ en $i$ amb representació $r$ o bé
-$S[t_o,t_f]^r$.
+$S[t_0,t_f]^r$.
 
 
 
 \begin{definition}[Interval temporal]
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal, $[t_0,t_f]$ un
   interval de temps i $r$ una funció de representació, l'interval
-  temporal de $S$ en $i$ amb representació $r$, $S[t_o,t_f]^r$, és una
+  temporal de $S$ en $i$ amb representació $r$, $S[t_0,t_f]^r$, és una
   sèrie temporal $S'=\{m_0, \ldots, m_{k'}\}$ amb les mesures que són
   dins del rang temporal $i$ segons marca la funció de representació:
-  $S[t_o,t_f]^r= \forall t \in [t_0,t_f] : S' = S(t)^r $
+  $S[t_0,t_f]^r= \forall t \in [t_0,t_f] : S' = S(t)^r $
 \end{definition}
 
 
@@ -856,7 +862,7 @@ A continuació s'exemplifica utilitzant la representació ZOHE (v.\
 def.~\ref{def:model:zohe}).
 \begin{definition}[Interval temporal ZOHE]
   \label{def:sgst:interval-temporal-zohe}
-  Sigui $S$ una sèrie temporal, $t_0,t_f]$ un interval de temps i
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
   $S^\text{ZOHE}(t)$ la representació ZOHE, es defineix la subsèrie
   $S[t_0,t_f]^{\text{ZOHE}}$ com la sèrie temporal
   $S[t_0,t_f]^{\text{ZOHE}} = S(t_0,t_f] \cup \{m\}$ a on $m=(t_f,v)$
@@ -886,7 +892,7 @@ conjunt d'instants de temps.
 
 Sigui $S$ una sèrie temporal, $i= \{t_0,t_1,\dotsc,t_n\}$ un conjunt
 d'instants de temps i la representació contínua $r$ de la sèrie
-temporal $S(t)$, la selecció de resolució s'anota com resolució de $S$
+temporal $S(t)$, la selecció de resolució s'anota com selecció de $S$
 en $i$ amb representació $r$ o bé $S[i]^r$.
 
 
