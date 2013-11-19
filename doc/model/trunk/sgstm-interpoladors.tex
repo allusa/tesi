@@ -6,6 +6,51 @@
 \label{sec:model:agregador}
 
 
+Les funcions d'agregació d'atributs s'utilitzen en la consolidació
+dels buffers per tal de compactar certa informació de la sèrie
+temporals. Sigui $S$ una sèrie temporal i $t_0$ i $t_f$ dos instants
+de temps, una funció d'agregació d'atributs $f$ calcula una mesura que
+resumeix la informació de $S$ en un interval de temps $i=[t_0,t_f]$:
+\[
+f: \text{sèrie temporal} \times \text{interval de temps}
+\longrightarrow \text{mesura}
+\]
+\[
+f: S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \longrightarrow  m'
+\]
+
+
+Atès que hi ha maneres diferents de resumir la informació d'una sèrie
+temporal, hi ha diferents funcions d'agregació d'atributs. Per
+exemple, es poden calcular estadístics de la sèrie temporal com el
+valor màxim o la mitjana o aplicar operacions de processament digital
+del senyal, com per exemple fan \textcite{zhang11}.
+
+
+\todo{descriure els subapartats de la secció}
+
+  Furthermore, attribute interpolation functions copes
+with data validation, which we will discuss latter in this section.
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Interpolació (refer)}
+\todo{refer}
+
+
+
+Hi poden haver diferents agregadors d'atributs depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns agregador d'atributs per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
+
+
 segons tipus de dades mesurades:
 
 * comptadors -> conservar totals (comptador: monòton, doble, relatiu)
@@ -17,15 +62,7 @@ usualment són digitals en naturalesa (compten amb naturals) però també poden 
 * temperatura -> aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes (processat digital del senyal)
 
 
-\subsection{Interpolació (refer)}
-\todo{refer}
 
-Sigui $S$ una sèrie temporal i $T_0$ i $T_f$ dos instants de temps, un agregador d'atributs $f$ calcula la mesura que resumeix a $S$ en un interval de temps $i=[T_0,T_f]$. 
-\[
-f: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
-\]
-
-Hi poden haver diferents agregadors d'atributs depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns agregador d'atributs per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
 
 
 \begin{definition}[Agregador mitjana aritmètica]
@@ -141,25 +178,6 @@ Weisstein, Eric W. "Average Function." From MathWorld--A Wolfram Web Resource. h
 
 
 
-An attribute interpolation function is used when a buffer is
-consolidated in order to summarise information from the time series.
-Let $S$ be a time series and $t_0$ and $t_f$ two time instants, an
-attribute interpolation function $f$ calculates a measure that
-summarises an attribute of $S$ in the time interval $i=[T_0,T_f]$:
-\[
-f: \text{Time series} \times \text{time interval} \longrightarrow
-\text{Measure}
-\]
-\[
-f: S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \mapsto m'
-\]
-
-There can be different attribute interpolation functions in order to
-summarise a time series. As instance, we may want to calculate
-statistics from a time series such as the maximum value, the average
-or apply digital signal processing operations as is done in
-\cite{zhang11}.  Furthermore, attribute interpolation functions copes
-with data validation, which we will discuss latter in this section.
 
 We can globally define the behaviour of attribute interpolation
 functions in the discrete (set) and continuous forms. However, $T(m')$
@@ -356,7 +374,12 @@ maximum and last functions coincide in the zohe interpretation but do
 not coincide in the $\delta$ interpretation. 
 
 
-\paragraph{Tractament/validació de dades}\todo{}
+
+
+
+
+
+\subsection{Tractament/validació de dades}\todo{}
 
 With reference to data validation, attribute interpolation functions
 can cope with this process. When data has not been captured or has
@@ -468,7 +491,6 @@ De què pot servir la mitjanad1? per calcular mitjanes centrades? estem fent una
 
 %%% Local Variables:
 %%% TeX-master: "main"
-%%% ispell-local-dictionary: "british"
 %%% End:
 % LocalWords: buffer buffers  MTSMS multiresolution DBMS zohe
 
