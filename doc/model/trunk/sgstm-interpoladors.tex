@@ -22,186 +22,75 @@ f: S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \longrightarrow  m'
 
 Atès que hi ha maneres diferents de resumir la informació d'una sèrie
 temporal, hi ha diferents funcions d'agregació d'atributs. Per
-exemple, es poden calcular estadístics de la sèrie temporal com el
-valor màxim o la mitjana o aplicar operacions de processament digital
-del senyal, com per exemple fan \textcite{zhang11}.
+exemple, es poden calcular estadístics de la sèrie temporal, com el
+valor màxim o la mitjana, o aplicar operacions de processament digital
+del senyal, com fan \textcite{zhang11}. 
+
+
+La representació de les sèries temporals afecta molt a la manera com s'han d'agregar
+
+
 
 
 \todo{descriure els subapartats de la secció}
 
+
+
+es poden utlitzar per a tractar les patologies vistes a la secció 2.3
+
   Furthermore, attribute interpolation functions copes
 with data validation, which we will discuss latter in this section.
 
+\todo{}
 
 
 
 
+\subsection{Agregació i representació}
+
+L'agregació d'una sèrie temporal es pot dur a terme en forma discreta
+o en forma contínua.  En la forma discreta es tracta la sèrie temporal
+com a conjunt o seqüència de mesures, és per tant semblant a la
+representació amb funcions parcials, i en canvi en la forma contínua
+es tracta la sèrie temporal com a funció temporal, per tant s'utilitza
+una representació contínua de la sèrie temporal.
+
+De forma general podem definir patrons per a les funcions d'agregació
+d'atributs en forma discreta i en forma contínua. Tot i així, en
+ambdós casos l'instant de temps d'agregació resultant $T(m')$ no queda
+definit sinó que es pot interpretar per a cada cas, cosa que es detalla
+més endavant.
 
 
-
-
-
-
-
-\subsection{Interpolació (refer)}
-\todo{refer}
-
-
-
-Hi poden haver diferents agregadors d'atributs depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns agregador d'atributs per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
-
-
-segons tipus de dades mesurades:
-
-* comptadors -> conservar totals (comptador: monòton, doble, relatiu)
-usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
-
-
-* soroll d'un senyal -> conservar mitjana
-
-* temperatura -> aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes (processat digital del senyal)
-
-
-
-
-
-\begin{definition}[Agregador mitjana aritmètica]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
-  representació de la sèrie temporal amb \emph{zero-order hold} cap
-  enrere i $i=[T_0,T_f]$ un interval de temps, l'agregador mitjana
-  aritmètica (MA) resumeix $S(t)$ amb una mesura que és la mitjana dels
-  valors de les mesures al conjunt $S(T_0,T_f]$.
-\[
-MA: \text{Sèrie temporal} \times \text{interval de temps}
-\longrightarrow \text{Mesura}
-\]
-\[
-S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \longrightarrow m'=(v',T_f)
-\]
-\[
-S'=S(T_0:T_f]:
-v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
-\]
-\end{definition}
-
-\begin{definition}[Agregador D'atributs màxim]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
-  representació de la sèrie temporal amb \emph{zero-order hold} cap
-  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs màxim
-  (MAX) resumeix $S(t)$ amb una mesura que és el màxim dels valors
-  de les mesures al conjunt $S(T_0,T_f]$.
-\[
-MAX: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
-\]
-\[
-S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
-\]
-\[
-S'=S(T_0:T_f]:
-v' = \max_{\forall m \in S'}(V(m))
-\]
-\end{definition}
-
-De manera dual es pot definir l'agregador d'atributs mínim (MIN) com el
-que resumeix $S(t)$ amb una mesura que és el mínim dels valors de les
-mesures al conjunt $S(T_0,T_f]$.
-
-
-\begin{definition}[Agregador D'atributs últim]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
-  representació de la sèrie temporal amb \emph{zero-order hold} cap
-  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs últim
-  (LAST) resumeix $S(t)$ amb una mesura que és la mesura màxima del
-  conjunt $S(T_0,T_f]$.
-\[
-LAST: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
-\]
-\[
-S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(\max(S(T_0:T_f]),T_f)
-\]
-\end{definition}
-
-
-
-\begin{definition}[Agregador D'atributs àrea]
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
-  representació de la sèrie temporal amb \emph{zero-order hold} cap
-  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs àrea
-  (AREA) resumeix $S(t)$ amb una mesura que conserva l'àrea sota la
-  corba de la representació \emph{zero-order hold} cap enrere del
-  conjunt $S(T_0,T_f]$.
-\[
-AREA: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
-\]
-\[
-S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
-\]
-\[
-v' = 
-\frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}
-\]
-per $S(t)$ estar definida a trossos, $v'$ es pot expressar com
-\[
-o=\min(S(T_0:T_f]),
-S'= S(T_0:T_f] - \{o\},
-n=\seg\limits_S \max(S'): %equivalent a n=\min(S(T_f,\infty)) quan existeix S(T_f,\infty)
-\]
-\[
-:v'= \frac{(T(o)-T_0)V(o) 
-+( T_f- T(\ant\limits_S n) )V(n) 
-+\sum\limits_{\forall m \in S'}( T(m)- T(\ant\limits_S m) )V(m)}
-{T_f-T_0} 
-\]
-
-Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
-\end{definition}
-
-%Compte amb AREA S [t<T_0,T_0] que no està definida en la definició discreta
-
-%Quan una sèrie temporal és regular, l'intepolador mitjana aritmètica i l'interpolador àrea valen el mateix en l'interval $(T_o,n\delta]$.
-
-If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
-$$
-\int_a^b f(x)dx = f(x^*)(b-a)
-$$
-
-The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
-
-Weisstein, Eric W. "Average Function." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/AverageFunction.html
-
-
-
-
-
-
-\subsection{Agregador d'atributs (nova)}
-
-
-
-
-We can globally define the behaviour of attribute interpolation
-functions in the discrete (set) and continuous forms. However, $T(m')$
-rest undefined as the resulting consolidation time is subject to
-interpretation, which we discuss below. Next, we exemplify some
-operators for both cases. For simplicity, we present examples with
-real numbers but they could also be integers, strings or more
-elaborated structures such as arrays.
-
-
-First, purely discrete interpolation (d) which resembles typical set
-operators. We must define the consolidation interval depending on $i$,
-let $S'=S(T_0,T_f]$:
+En primer lloc, les funcions d'agregació amb forma discreta (d)
+treballen amb operadors de conjunts sobre la sèrie temporal. En els
+patrons d'aquestes funcions, a més del temps d'agregació resultant
+$T(m')$, l'interval de consolidació $i=[t_0,t_f]$ també es pot
+interpretar per a cada cas. Així sigui $S$ la sèrie original, el
+resultat es pot calcular sobre una subsèrie amb interval obert
+$S'=S(t_0,t_f)$ , tancat $S'=S(t_0,t_f]$ o semiobert $S'=S(t_0,t_f]$ o
+$S'=S[t_0,t_f)$. A continuació es mostren alguns exemples de patrons
+per a resumir a determinats atributs:
 \begin{itemize}
-\item maximum$^d$: $S \times i \mapsto m'$ where $V(m') = \max_{\forall m
-    \in S'}(V(m))$. It summarises $S'$ with the maximum of
-  the measure values.
-\item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
-  summarises $S'$ with the maximum measure.
-\item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') =
-  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$. It
-  summarises $S'$ with the mean of the measure values.
+\item màxim$^d$: $S \times i \mapsto m'$ a on $V(m') = \max_{\forall m
+    \in S'}(V(m))$. Resumeix $S'$ amb el màxim dels valors de les
+  mesures.
+
+  % Amb operacions de SGST es pot calcular amb
+  % $V\big(\glssymbol{not:sgst:aggregate}(S',(0,\infty), (t^i,v^i)
+  % \times (t,v) \mapsto [(0,v^i) \text{ if } v < v^i \wedge
+  % v^i\neq\infty \text{ else } (0,v) ])\big)$.
+
+\item darrer$^d$: $S \times i \mapsto m'$ a on $V(m') =
+  \max(S')$. Resumeix $S'$ amb el valor de la mesura màxima.
+\item mitjana aritmètica$^d$: $S \times i \mapsto m'$ a on $V(m') =
+  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$, o bé $V(m') =
+  \glssymbol{not:sgst:mitjanav}(S')$ segons definit al model de
+  SGST. Resumeix $S'$ amb la mitjana dels valors de les mesures.
 \end{itemize}
 
+
+\todo{}
 
 Second, continuous interpolation (c). Note that we need a continuous
 function $S(t)$ which is discussed below. Let $t\in\mathbb{R}$:
@@ -218,14 +107,42 @@ function $S(t)$ which is discussed below. Let $t\in\mathbb{R}$:
 \end{itemize}
 
 
-In the design of the attribute interpolation function we can interpret
-a time series in different ways, that is what we call the
-representation of a time series. Keogh et al.\ \cite{last:keogh} cite
-some possible representations for time series such as \emph{Fourier
-  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
-\emph{Piecewise Linear Representation} (PLR). This last is remarked as
-the most used owing to the most common representation is with linear
-functions \cite{keogh01}.
+
+
+\subsubsection{Temps d'agregació resultant}
+\subsubsection{Agregació amb desfasament}
+
+
+
+Així doncs, l'objectiu de les funcions d'agregació d'atributs és determinar un instant de temps $T(m')$ i un valor $V(m')$. El càlcul del temps i del valor és independent. Tot i que pel temps $T(m')$  normalment serà $t_f$ per estar d'acord amb la consolidació del buffer, a vegades aquest $T(m')$ serà un altre i llavors tindrem el desfasament definit a def?; això pot passar per exemple quan per aquest temps es fa una interpretació adient a la representació que s'utilitza.\todo{} 
+
+
+Així sigui $S$ la sèrie original, el resultat es pot
+calcular sobre una subsèrie amb interval obert $S'=S(t_0,t_f)$ ,
+tancat $S'=S(t_0,t_f]$ o semiobert $S'=S(t_0,t_f]$ o
+$S'=S[t_0,t_f)$.
+També s'hauria de dir que $S'$ pot tenir desfasaments $S'=S[t_0-\delta,t_f-\delta)$
+
+
+\todo{}
+Cal fer l'exemple de la mitjana1d descrita a \ref{ex:model:bdm-desfasaments}
+
+De què pot servir la mitjanad1? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal? \todo{}
+
+
+
+
+
+
+
+\subsubsection{Agregació amb representació}
+
+
+
+
+
+
+
 
 The variety of time series representations results in a variety of the
 same attribute interpolation functions. As instance, a maximum
@@ -233,6 +150,8 @@ attribute interpolation function may give different values if we
 consider a linear or a constant piecewise representation. Therefore,
 the time series representation results in attribute interpolation
 functions families.
+
+
 
 
 Next, we show two possible families for attribute interpolation
@@ -379,6 +298,141 @@ not coincide in the $\delta$ interpretation.
 
 
 
+
+
+\subsection{Interpolació (refer)}
+\todo{refer}
+
+
+
+Hi poden haver diferents agregadors d'atributs depenent de com es vol resumir la sèrie temporal. A més, la representació de la sèrie temporal influeix en la manera d'interpolar. A continuació es defineixen alguns agregador d'atributs per a sèries temporals representades amb  \emph{zero-order hold} cap enrere, a on l'interval de temps d'interpolació $i$ s'interpreta continu per l'esquerra $(T_0,T_f]$. 
+
+
+
+
+
+\begin{definition}[Agregador mitjana aritmètica]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=[T_0,T_f]$ un interval de temps, l'agregador mitjana
+  aritmètica (MA) resumeix $S(t)$ amb una mesura que és la mitjana dels
+  valors de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MA: \text{Sèrie temporal} \times \text{interval de temps}
+\longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f] \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)
+\]
+\end{definition}
+
+\begin{definition}[Agregador D'atributs màxim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs màxim
+  (MAX) resumeix $S(t)$ amb una mesura que és el màxim dels valors
+  de les mesures al conjunt $S(T_0,T_f]$.
+\[
+MAX: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+S'=S(T_0:T_f]:
+v' = \max_{\forall m \in S'}(V(m))
+\]
+\end{definition}
+
+De manera dual es pot definir l'agregador d'atributs mínim (MIN) com el
+que resumeix $S(t)$ amb una mesura que és el mínim dels valors de les
+mesures al conjunt $S(T_0,T_f]$.
+
+
+\begin{definition}[Agregador D'atributs últim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs últim
+  (LAST) resumeix $S(t)$ amb una mesura que és la mesura màxima del
+  conjunt $S(T_0,T_f]$.
+\[
+LAST: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(\max(S(T_0:T_f]),T_f)
+\]
+\end{definition}
+
+
+
+\begin{definition}[Agregador D'atributs àrea]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $S(t)$ la
+  representació de la sèrie temporal amb \emph{zero-order hold} cap
+  enrere i $i=(T_0,T_f]$ un interval de temps, l'agregador d'atributs àrea
+  (AREA) resumeix $S(t)$ amb una mesura que conserva l'àrea sota la
+  corba de la representació \emph{zero-order hold} cap enrere del
+  conjunt $S(T_0,T_f]$.
+\[
+AREA: \text{Sèrie temporal} \times \text{interval de temps} \longrightarrow \text{Mesura}
+\]
+\[
+S=\{m_0,\ldots,m_k\} \times i=[T_0,T_f]  \longrightarrow m'=(v',T_f)
+\]
+\[
+v' = 
+\frac{\int_{T_0}^{T_f} S(t) dt}{T_f - T_0}
+\]
+per $S(t)$ estar definida a trossos, $v'$ es pot expressar com
+\[
+o=\min(S(T_0:T_f]),
+S'= S(T_0:T_f] - \{o\},
+n=\seg\limits_S \max(S'): %equivalent a n=\min(S(T_f,\infty)) quan existeix S(T_f,\infty)
+\]
+\[
+:v'= \frac{(T(o)-T_0)V(o) 
++( T_f- T(\ant\limits_S n) )V(n) 
++\sum\limits_{\forall m \in S'}( T(m)- T(\ant\limits_S m) )V(m)}
+{T_f-T_0} 
+\]
+
+Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
+\end{definition}
+
+%Compte amb AREA S [t<T_0,T_0] que no està definida en la definició discreta
+
+%Quan una sèrie temporal és regular, l'intepolador mitjana aritmètica i l'interpolador àrea valen el mateix en l'interval $(T_o,n\delta]$.
+
+If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
+$$
+\int_a^b f(x)dx = f(x^*)(b-a)
+$$
+
+The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
+
+Weisstein, Eric W. "Average Function." From MathWorld--A Wolfram Web Resource. http://mathworld.wolfram.com/AverageFunction.html
+
+
+
+També es poden tenir en compte
+els trets semàntics de la sèrie temporal com per exemple resumir
+conservant el comptatge total si les dades mesurades són comptadors o .
+
+
+segons tipus de dades mesurades:
+
+
+* soroll d'un senyal -> conservar mitjana
+
+* temperatura -> aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes (processat digital del senyal)
+
+
+
+
+
 \subsection{Tractament/validació de dades}\todo{}
 
 With reference to data validation, attribute interpolation functions
@@ -481,12 +535,6 @@ must give freedom to the users to define their own functions.
 
 
 
-\subsection{Exemples}
-
-\todo{}
-Cal fer l'exemple de la mitjana1d descrita a \ref{ex:model:bdm-desfasaments}
-
-De què pot servir la mitjanad1? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal? \todo{}
 
 
 %%% Local Variables:
