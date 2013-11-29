@@ -122,10 +122,18 @@ Per exemple l'interpolador mitjana orientat a stream:
 \]
 
 
+
+
+
+
 \subsection{Compartició de buffers}
 
 
 Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
+
+
+Tenir un buffer únic per a totes les subsèries i que no s'esborrin mesures.
+
 
 
 
@@ -196,6 +204,7 @@ Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
 * orientat a esdeveniments (event triggered)
 * amb rellotge (time triggered)
 
+* en cas de comptadors digitals, aquests cada cop que incrementen el valor poden fer un push a la base de dades. En comptadors analògics no ho poden fer perquè van incrementant contínuament i no discretament.
 
 \subsection{Què fer sense coneixements a priori}
 

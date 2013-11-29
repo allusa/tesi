@@ -399,6 +399,8 @@ model de SGST.
 
 \subsubsection{Funcions parcials}
 \todo{no sé si aporten res les parcials? cal acabar la secció d'agregadors dels SGSTM i repensar això}
+\todo{Les funcions parcials tenen a veure amb representacions per als casos que tractem les sèries temporals amb operadors de conjunts o seqüències. En aquests casos no hi ha una interpretació clara del què hi ha entre les mesures. Si des de les representacions volem observar aquests casos hem de definir funcions parcials, les quals no són totalment contínues en el temps}
+
 
 Primerament, definim una funció de representació anomenada discreta
 pura que no és totalment contínua en el temps sinó que és una funció
@@ -1253,8 +1255,18 @@ defineixen a partir d'aquesta. Un exemple d'això és la definició
 d'interval temporal amb representació ZOHE (v.\
 def.~\ref{def:sgst:interval-temporal-zohe}).
 
-A continuació es mostren dos exemples més de l'interval temporal
-segons la representació FOH i la lineal.
+A continuació es mostren tres exemples més de l'interval temporal
+segons la representació delta, la FOH i la lineal.
+
+\begin{definition}[Interval temporal delta]
+  \label{def:sgst:interval-temporal-delta}
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
+  $S^\delta(t)$ la representació delta, es defineix la subsèrie
+  $S[t_0,t_f]^\delta$ com la sèrie temporal
+  $S[t_0,t_f]^\delta = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$ a
+  on $m_0=(t_0,0)$ i $m_f=(t_f,0)$.
+\end{definition}
+
 \begin{definition}[Interval temporal FOH]
   \label{def:sgst:interval-temporal-foh}
   Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
@@ -1272,6 +1284,7 @@ segons la representació FOH i la lineal.
   $S[t_0,t_f]^{\text{lineal}} = \{m_0\} \cup \{m_f\}$ a
   on $m_0=(t_0,S^{\text{lineal}}(t_0))$ i $m_f=(t_f,S^{\text{lineal}}(t_f))$.
 \end{definition}
+
 
 
 % \begin{definition}[Interval temporal mitjana]
@@ -1308,6 +1321,7 @@ en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
 
 
 \subsection{Patologies de les sèries temporals}
+\label{sec:sgst:patologies}
 
 Les sèries temporals poden no ser ideals a causa de problemes en la
 seva adquisició o del seu tractament. Tot i que segueixen sent sèries
