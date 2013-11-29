@@ -327,6 +327,69 @@ Exemple de la implementació de circuits integrats en materials molt prims i dob
 
 
 
+Bàsicament en les implementacions a baix nivell d'un SGSTM tenim dues opcions:
+
+\begin{itemize}
+\item implementar-ho amb llenguatge de baix nivell (assemblador, C) en un microcontrolador. Aquesta seria la manera típica perquè dóna molta flexibilitat: es pot reconfigurar l'esquema de multiresolució quan es vulgui, es poden utilitzar les operacions que es vulgui, canviar la mida, etc. 
+
+\item implementar-ho amb hardware, per exemple dissenyar amb
+  VHDL. Inconvenients: gens flexible (un cop implementat no es pot
+  canviar), difícil de fer genèric (no es pot trobar un circuit que
+  serveixi per a fer varis càlculs, per això caldria un
+  microcontrolador). Avantatges: es pot compactar i encastar en
+  llocs petits, estructures de càlcul paral·leles (la feina no recau
+  en el microcontrolador), bases de dades distribuïdes. Per tant es fa
+  difícil pensar de vendre BDM genèriques hardware però sí que es
+  poden pensar algunes possibles aplicacions que només serien
+  exclusives de hardware:
+
+  \begin{itemize}
+  \item Sensors inte\l.ligents o totalment encastats. Actualment es
+    dissenyen sensors acompanyats de circuits digitals, tot encastat
+    en un xip petit. Fan filtratge dels senyal, tenen un bus de
+    comunicació senzill amb el controlador (I2C, 1-Wire, SPI, etc.), el
+    controlador pot indicar quan s'ha d'iniciar la captura d'un no
+    valor, s'emmagatzema el darrer valor capturat i el controlador el
+    consulta quan vol, poden establir uns llindars d'alarma... Així
+    doncs aquests sensors només emmagatzemen el darrer valor, es
+    podria proposar que emmagatzemessin amb esquema multiresolució, el
+    qual hauria de ser una mica configurable per exemple els períodes
+    de consolidació. No obstant això, la configuració seria molt poc
+    flexible i si es necessiten càlculs més complicats sempre és
+    millor seguir amb l'esquema habitual del microcontrolador captura
+    la dada i ell gestiona els càlculs. Ara bé, també es pot entendre
+    el sensor inte\l.ligent com que forma part d'una base de dades
+    distribuïda i ell té una part de l'emmagatzematge.
+    
+  \item Esquema multiresolució encastat en perifèrics per a monitorar
+    el seu funcionament: en una impressora en els comptadors
+    d'impressions, en una antena de comunicació sense fils en els
+    comptadors de bytes transmesos o la potència transmesa, etc.
+
+  \item Implementació de circuits integrats en llocs mai vistos:
+    materials molt prims i doblegables. Aquí segurament hi ha
+    problemes de la mida dels circuits que es poden implementar, per
+    tant poder-hi disposar d'esquemes multiresolució aniria bé.
+
+  \item Possibilitat de disseny de FPGA casolans. Si mai això fos
+    possible (sembla que ja és possible: exemple de FPGA a la
+    raspberry), els sensors intel·ligents o totalment encastats
+    prendrien molt sentit ja que serien reconfigurables o que fos molt
+    barat implementar en hardware un circuit i llençar-lo quan es
+    volgués canviar de configuració. Això llavors encaixaria amb
+    construir un xip per blocs: hi poso un bloc de comunicacions, un
+    bloc de tal i un bloc de base de dades multiresolució amb tal
+    esquema.
+
+  \end{itemize}
+
+
+\end{itemize}
+
+
+
+
+
 
 
 %%% Local Variables:
