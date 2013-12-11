@@ -10,7 +10,7 @@ Model estructural de sèries temporals
 Implementació del model estructural de Sèrie Temporal.
 """
 
-
+from measure import Measure
 
 
 
@@ -86,5 +86,44 @@ class TimeSeriesStructure(set):
         return set([m.t for m in self])
 
 
+
+    def sup(self):
+        """
+        Suprem de la sèrie temporal
+
+        :return: `sup(S)`, la mesura suprema de S
+        :rtype: :class:`measure.Measure`
+
+        >>> s = TimeSeriesStructure([Measure(3,2),Measure(1,2),Measure(2,2)])
+        >>> s.sup() == Measure(3,2)
+        True
+        >>> s2 = TimeSeriesStructure([])
+        >>> s2.sup().isundefinedn()
+        True
+        """
+        if len(self) == 0:
+            return Measure(-float("inf"),float("inf")) #S'hauria de fer independent del tipus de valor
+        else:
+            return max(self)
+
+
+    def inf(self):
+        """
+        Ínfim de la sèrie temporal
+
+        :returns: `inf(S)`, la mesura ínfima de S
+        :rtype: :class:`measure.Measure`
+
+        >>> s = TimeSeriesStructure([Measure(3,2),Measure(1,2),Measure(2,2)])
+        >>> s.inf() == Measure(1,2)
+        True
+        >>> s2 = TimeSeriesStructure([])
+        >>> s2.inf().isundefinedp()
+        True
+        """
+        if len(self) == 0:
+            return Measure(+float("inf"),float("inf"))
+        else:
+            return min(self)
 
 
