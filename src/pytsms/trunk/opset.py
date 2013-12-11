@@ -13,7 +13,7 @@ Implementació dels operadors de conjunts de Sèrie Temporal.
 
 
 from measure import Measure
-from structure import TimeSeriesStructure as TimeSeries
+from structure import TimeSeriesStructure
 
 
 # http://docs.python.org/2/reference/datamodel.html#special-method-lookup-for-old-style-classes
@@ -21,7 +21,7 @@ from structure import TimeSeriesStructure as TimeSeries
 # http://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
   
 
-class TimeSeriesSetOp(object):
+class TimeSeriesSetOp(TimeSeriesStructure):
     """
     Operadors de conjunts de Sèrie Temporal
     """
@@ -80,7 +80,7 @@ def membership(m,s):
     :returns: `m ∈ s`, m pertany a s
     :rtype: bool
 
-    >>> s = TimeSeries([Measure(1,2)])
+    >>> s = TimeSeriesSetOp([Measure(1,2)])
     >>> m1 = Measure(1,2)
     >>> m2 = Measure(1,1)
     >>> membership(m1,s)
@@ -110,7 +110,7 @@ def membership_temporal(m,s):
     :returns: `m ∈ᵗ s`, m pertany temporalment a s
     :rtype: bool
 
-    >>> s = TimeSeries([Measure(1,2)])
+    >>> s = TimeSeriesSetOp([Measure(1,2)])
     >>> m1 = Measure(1,2)
     >>> m2 = Measure(1,1)
     >>> membership_temporal(m1,s)
@@ -135,9 +135,9 @@ def subset(s1,s2):
     :returns: `s1 ⊆ s2`, s1 inclosa a s2
     :rtype: bool
 
-    >>> s1 = TimeSeries([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeries([Measure(3,2),Measure(1,2),Measure(2,1)])
-    >>> s3 = TimeSeries([Measure(1,5)])
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,1)])
+    >>> s3 = TimeSeriesSetOp([Measure(1,5)])
     >>> subset(s1,s2)
     True
     >>> subset(s2,s1)
@@ -167,9 +167,9 @@ def subset_temporal(s1,s2):
     :returns: `s1 ⊆ᵗ s2`, s1 inclosa temporalment a s2
     :rtype: bool
 
-    >>> s1 = TimeSeries([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeries([Measure(3,2),Measure(1,2),Measure(2,1)])
-    >>> s3 = TimeSeries([Measure(1,5)])
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,1)])
+    >>> s3 = TimeSeriesSetOp([Measure(1,5)])
     >>> subset_temporal(s1,s2)
     True
     >>> subset_temporal(s2,s1)
@@ -206,8 +206,8 @@ def union(s1,s2):
     :returns: `s1 ∪ s2`, s1 unió s2
     :rtype: :class:`TimeSeries`
 
-    >>> s1 = TimeSeries([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeries([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
     >>> union(s2,s1) == s2
     True
     >>> union(s1,s2) == TimeSeries([Measure(1,2), Measure(3,2), Measure(2,1)])
@@ -232,15 +232,15 @@ def union_temporal(s1,s2):
     :returns: `s1 ∪ᵗ s2`, s1 unió temporal s2
     :rtype: :class:`TimeSeries`
 
-    >>> s1 = TimeSeries([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeries([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
     >>> union(s2,s1) == s2
     True
     >>> union(s1,s2) == TimeSeries([Measure(1,2), Measure(3,2), Measure(2,1)])
     True
     """
     from timeseries import TimeSeries
-    s = TimeSeries()
+    s = type(s1)()
     for m1 in s1:
         if not membership_temporal(m1,s2):
             s.add(m1)

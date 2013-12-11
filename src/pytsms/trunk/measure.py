@@ -92,3 +92,38 @@ class Measure(object):
     
     def __repr__(self):
         return 'm({0},{1})'.format(self.t,self.v)
+
+
+
+
+
+    def isundefinedp(self):
+        """
+        És cert quan la mesura és indefinida positiva
+        """
+        return self.t == float("inf") #s'hauria de fer independent
+
+    def isundefinedn(self):
+        """
+        És cert quan la mesura és indefinida negativa
+        """
+        return self.t == float("-inf")
+
+
+
+
+class MeasureUndefinedP(Measure):
+    """
+    Mesura indefinida positiva
+    """
+    def __init__(self):      
+        self.v = float("inf")
+        self.t = float("inf")
+    
+class MeasureUndefinedN(Measure):
+    """
+    Mesura indefinida negativa
+    """
+    def __init__(self):      
+        self.v = float("inf")
+        self.t = float("-inf")

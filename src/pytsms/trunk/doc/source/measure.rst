@@ -1,0 +1,2 @@
+.. automodule:: measure
+   :members:
