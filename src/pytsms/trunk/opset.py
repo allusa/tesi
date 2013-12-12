@@ -21,33 +21,45 @@ from structure import TimeSeriesStructure
 # http://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
   
 
-class TimeSeriesSetOp(TimeSeriesStructure):
+
+
+class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
     """
-    Operadors de conjunts de Sèrie Temporal
+    Operadors de conjunts no temporals de Sèrie Temporal
     """
 
     def __or__(self, other):
         """
         Binary arithmetic operation union for sets, symbol `|`.
         """
-        return union(self,other)
-
-
+        return self.union(other)
 
 
 
 
     def union(self, other):
         """
-        Binary arithmetic operation union for sets, symbol `|`.
-        """
-        return union(self,other)
+        Operador d'unió. Sèrie temporal resultant d'unir la sèrie
+        tempora amb `other`.
 
-    def union_temporal(self, other):
+        :param other: 
+        :type other: :class:`TimeSeries`
+        :returns: `s1 ∪ s2`, s1 unió s2
+        :rtype: :class:`TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+        >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
+        >>> s2.union(s1) == s2
+        True
+        >>> s1.union(s2) == TimeSeriesSetOp([Measure(1,2), Measure(3,2), Measure(2,1)])
+        True
         """
-        Binary arithmetic operation temporal union for sets, symbol `|`.
-        """
-        return union_temporal(self,other)
+        s = self.copy()
+        for m2 in other:
+            if not membership_temporal(m2,s):
+                s.add(m2)
+        return s
+
 
 
 
@@ -60,9 +72,91 @@ class TimeSeriesSetOpTemporal(object):
         """
         Binary arithmetic operation union for sets, symbol `|`.
         """
-        return union_temporal(self,other)
+        return self.union_temporal(other)
 
 
+    def union_temporal(self, other):
+        """
+        Operador d'unió temporal. Sèrie temporal resultant d'unir
+        temporalment la sèries temporals amb `other`.
+
+        :param other: 
+        :type other: :class:`TimeSeries`
+        :returns: `s1 ∪ᵗ s2`, s1 unió temporal s2
+        :rtype: :class:`TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+        >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
+        >>> s2.union_temporal(s1) ==  TimeSeriesSetOp([Measure(3,2),Measure(1,2),])
+        True
+        >>> s1.union_temporal(s2) == s2.union_temporal(s1)
+        True
+        """
+        s = type(self)()
+        for m1 in self:
+            if not membership_temporal(m1,other):
+                s.add(m1)
+            elif membership(m1,other):
+                s.add(m1)
+
+        for m2 in other:
+            if not membership_temporal(m2,self):
+                s.add(m2)
+        return s
+
+
+
+
+
+class TimeSeriesSetOp(TimeSeriesSetOpNoTemporal,TimeSeriesSetOpTemporal):
+    """
+    Operadors de conjunts de Sèrie Temporal, inclou els Temporals i
+    els no Temporals.
+    """
+    pass
+
+
+
+
+
+
+
+
+
+class TimeSeriesNoTemporal(TimeSeriesSetOpNoTemporal,TimeSeriesSetOpTemporal):
+    """
+    >>> s1 = TimeSeriesNoTemporal([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesNoTemporal([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> s2 | s1 == s2
+    True
+    >>> s1 | s2 == TimeSeriesNoTemporal([Measure(1,2), Measure(3,2), Measure(2,1)])
+    True
+    >>> s1 | s2 == s1.union(s2)
+    True
+    >>> s1.temporal() | s2 == TimeSeriesNoTemporal([Measure(1,2), Measure(3,2)])
+    True
+    >>> s1.temporal() | s2 == s1.union_temporal(s2)
+    True
+    """
+    def temporal(self):
+        """
+        Per a cridar els operadors de conjunts temporals
+        """
+        s = self.copy()
+        s.__class__ = TimeSeriesTemporal
+        return s
+
+
+class TimeSeriesTemporal(TimeSeriesSetOpTemporal,TimeSeriesSetOpNoTemporal):
+
+
+    def _notemporal(self):
+        """
+        Per a no cridar els operadors de conjunts temporals
+        """
+        s = self.copy()
+        s.__class__ = TimeSeriesNoTemporal
+        return s
 
 
 
@@ -186,71 +280,6 @@ def subset_temporal(s1,s2):
 
 
 
-
-
-
-def _tb(s1,s2):
-    pass
-
-    
-
-def union(s1,s2):
-    """
-    Operador d'unió. Sèrie temporal resultant d'unir les sèries
-    temporals `s1` i `s2`.
-
-    :param s1: 
-    :type s1: :class:`TimeSeries`
-    :param s2: 
-    :type s2: :class:`TimeSeries`
-    :returns: `s1 ∪ s2`, s1 unió s2
-    :rtype: :class:`TimeSeries`
-
-    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
-    >>> union(s2,s1) == s2
-    True
-    >>> union(s1,s2) == TimeSeries([Measure(1,2), Measure(3,2), Measure(2,1)])
-    True
-    """
-    s = s1.copy()
-    for m2 in s2:
-        if not membership_temporal(m2,s):
-            s.add(m2)
-    return s
-
-
-def union_temporal(s1,s2):
-    """
-    Operador d'unió temporal. Sèrie temporal resultant d'unir
-    temporalment les sèries temporals `s1` i `s2`.
-
-    :param s1: 
-    :type s1: :class:`TimeSeries`
-    :param s2: 
-    :type s2: :class:`TimeSeries`
-    :returns: `s1 ∪ᵗ s2`, s1 unió temporal s2
-    :rtype: :class:`TimeSeries`
-
-    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
-    >>> union(s2,s1) == s2
-    True
-    >>> union(s1,s2) == TimeSeries([Measure(1,2), Measure(3,2), Measure(2,1)])
-    True
-    """
-    from timeseries import TimeSeries
-    s = type(s1)()
-    for m1 in s1:
-        if not membership_temporal(m1,s2):
-            s.add(m1)
-        elif membership(m1,s2):
-            s.add(m1)
-
-    for m2 in s2:
-        if not membership_temporal(m2,s1):
-            s.add(m2)
-    return s
 
 
 

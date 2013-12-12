@@ -26,7 +26,7 @@ Implementació de Sèrie Temporal.
 
 from measure import Measure
 from structure import TimeSeriesStructure
-from opset import TimeSeriesSetOp, TimeSeriesSetOpTemporal
+from opset import TimeSeriesSetOp
 from opseq import TimeSeriesSeqOp
 from opfunc import TimeSeriesFuncOp
 
@@ -44,42 +44,8 @@ class TimeSeries(TimeSeriesSetOp,TimeSeriesSeqOp,TimeSeriesFuncOp,TimeSeriesStru
     
     * union for sets, symbol `|` (or), method `union`
 
-
-    >>> s1 = TimeSeries([Measure(1,2),Measure(2,1)])
-    >>> s2 = TimeSeries([Measure(3,2),Measure(1,2),Measure(2,2)])
-    >>> s2 | s1 == s2
-    True
-    >>> s1 | s2 == TimeSeries([Measure(1,2), Measure(3,2), Measure(2,1)])
-    True
-    >>> s1 | s2 == s1.union(s2)
-    True
-    >>> s1.temporal() | s2 == TimeSeries([Measure(1,2), Measure(3,2)])
-    True
-    >>> s1.temporal() | s2 == s1.union_temporal(s2)
-    True
     """
-
-
-    def temporal(self):
-        """
-        Per a cridar els operadors de conjunts temporals
-        """
-        s = self.copy()
-        s.__class__ = TimeSeriesTemporal
-        return s
-
-
-
-class TimeSeriesTemporal(TimeSeriesSetOpTemporal,TimeSeries):
-
-
-    def _notemporal(self):
-        """
-        Per a no cridar els operadors de conjunts temporals
-        """
-        s = self.copy()
-        s.__class__ = TimeSeries
-        return s
+    pass
 
 
 
