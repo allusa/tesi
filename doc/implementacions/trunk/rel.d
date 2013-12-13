@@ -43,19 +43,23 @@ END OPERATOR;
 
 
 
-OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
-END OPERATOR;
+//------Conjunts--------
 
-OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 JOIN (s1 {t} INTERSECT s2 {t});
-END OPERATOR;
+//Perinença i inclusió
 
-OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
-END OPERATOR;
+//per fer
+//OPERATOR ts.in( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+//return ts.inf(ts.interval(s1,ts.t(m),1.0/0.0));
+//END OPERATOR;
+
+//OPERATOR ts.in.t( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+
+//inclusio
+//inclusio temporal
 
 
+
+//Màxim i suprem
 
 OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
@@ -65,8 +69,6 @@ OPERATOR ts.min(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS 
 return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MIN (t) AS t));
 END OPERATOR;
 
-
-
 OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
 END OPERATOR;
@@ -74,6 +76,56 @@ END OPERATOR;
 OPERATOR ts.inf(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return ts.min(ts.union(s1,(RELATION { TUPLE {t 1.0/0.0, v 1.0/0.0} })));
 END OPERATOR;
+
+
+
+//Unió
+OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+END OPERATOR;
+
+OPERATOR ts.union.t(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return (s1 JOIN (s1 {t} MINUS s2 {t})) UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+END OPERATOR;
+
+//Diferència
+OPERATOR ts.minus(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 MINUS s2;
+END OPERATOR;
+
+OPERATOR ts.minus.t(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 MINUS s2 MINUS (s1 JOIN (s1 {t} MINUS s2 {t}));
+END OPERATOR;
+
+//Intersecció
+OPERATOR ts.intersection(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 MINUS (s1 MINUS s2);
+END OPERATOR;
+
+OPERATOR ts.intersection.t(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 MINUS ts.minus.t(s1,s2);
+END OPERATOR;
+
+//Diferència simètrica
+
+
+
+
+
+
+
+
+OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 JOIN (s1 {t} INTERSECT s2 {t});
+END OPERATOR;
+
+
+OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+END OPERATOR;
+
+ 
+
 
 
 
