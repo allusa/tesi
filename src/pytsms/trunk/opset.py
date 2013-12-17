@@ -380,11 +380,169 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
                 pass
         return s
 
+    def selection(self,f):
+        """
+        Operador de selecció. Sèrie temporal resultant de seleccionar els
+        tuples (files) de la sèrie temporal segon la funció booleana
+        `f`.
+
+        :param f: funció booleana de selecció, f(m)->bool
+        :type f: function of Measure returns bool
+        :returns: `s where f`, selecció de s en f
+        :rtype: :class:`TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1),Measure(4,1)])
+        >>> def t_gt_1(m):
+        ...     return m.t > 1
+        >>> TimeSeriesSetOp([]).selection(t_gt_1) == set()
+        True
+        >>> s1.selection(t_gt_1) == TimeSeriesSetOp([Measure(2,1),Measure(4,1)])
+        True
+        >>> s1.selection(lambda m: m.t > 1) == TimeSeriesSetOp([Measure(2,1),Measure(4,1)])
+        True
+        """
+        s = filter(f,self)
+        return type(self)(s)
 
 
+    def product(self,other):
+        """
+        Operador de producte. Conjunt resultant de fer el producte
+        cartesià amb una altra sèrie temporal.
+
+        :param other:
+        :type other: :class:`TimeSeries`
+        :returns: `s1 x s2`, producte de s1 per s2
+        :rtype: set
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
+        >>> s2 = TimeSeriesSetOp([Measure(1,2),Measure(3,2)])
+        >>> s1.product(s2) == set([(1,1,1,2),(1,1,3,2),(2,1,1,2),(2,1,3,2)])
+        True
+        >>> s2.product(s1) == set([(1,2,1,1),(3,2,1,1),(1,2,2,1),(3,2,2,1)])
+        True
+        """
+        s = set()
+        for m1 in self:
+            for m2 in other:
+                s.add( (m1.t,m1.v,m2.t,m2.v) )
+        return s
+ 
+    def join(self,other):
+        """
+        Operador de junció. Sèrie temporal resultant d'ajuntar amb una
+        altra sèrie temporal.
+
+        :param other:
+        :type other: :class:`TimeSeries`
+        :returns: `s1 join s2`, junció de s1 amb s2
+        :rtype: :class:`TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
+        >>> s2 = TimeSeriesSetOp([Measure(1,2),Measure(3,2)])
+        >>> s1.join(s2) == TimeSeriesSetOp([Measure(1,(1,2))])
+        True
+        >>> s2.join(s1) == TimeSeriesSetOp([Measure(1,(2,1))])
+        True
+        """
+        s = type(self)()
+        p = self.product(other)
+        for (t1,v1,t2,v2) in p:
+            if t1==t2:
+                s.add(Measure(t1,(v1,v2)))
+        return s
 
 
+    def map(self,f):
+        """
+        Operador de mapa. Sèrie temporal resultant de mapar amb la
+        funció `f`.
 
+        :param f: funció de mapatge, f(m)->m
+        :type f: function of Measure returns Measure
+        :returns: `map(s,f)`, mapa de f a s
+        :rtype: :class:`TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
+        >>> s1.map(lambda m: Measure(m.t,m.v*2)) == TimeSeriesSetOp([Measure(1,2),Measure(2,2)])
+        True
+        """
+        return type(self)(map(f,self))
+
+    def aggregate(self,f,mi=None):
+        """
+        Operador d'agregació. Sèrie temporal resultant d'agregar amb
+        la funció `f` a partir de la mesura inicial `mi` (opcional en
+        alguns casos).
+
+        :param mi: mesura inicial, optional in some cases
+        :type mi: :class:`measure.Measure`
+        :param f: funció d'agregació, f(m1,m2)->m
+        :type f: function of two Measures returns Measure
+        :returns: `aggregate(s,mi,f)`, agregat de s segons f iniciat a mi
+        :rtype: :class:`measure.Measure`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
+        >>> s1.aggregate(lambda mi,m: Measure(0,mi.v+m.v), Measure(0,0)) == Measure(0,2)
+        True
+        >>> s1.aggregate(lambda mi,m: Measure(0,mi.v+m.v)) == Measure(0,2)
+        True
+        """
+        if mi is None:
+            return reduce(f,self)
+        return reduce(f,self,mi)
+
+    def fold(self,f,si=None):
+        """
+        Operador de plec. Sèrie temporal resultant de plegar amb
+        la funció `f` a partir de la sèrie temporal inicial `si` (per defecte la sèrie temporal buida).
+
+        :param si: sèrie temporal inicial, optional if empty si
+        :type si: :class:`timeseries.TimeSeries`
+        :param f: funció de plegament, f(s1,m)->s
+        :type f: function of TimeSeries x Measure returns TimeSeries
+        :returns: `fold(s,si,f)`, plec de s segons f iniciat a si
+        :rtype: :class:`timeseries.TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
+        >>> s1.fold(lambda s,m: s.union(TimeSeriesSetOp([m]))) == s1
+        True
+        >>> from timeseries import TimeSeries
+        >>> def tpredecessors(s):
+        ...     si = s.map(lambda m: Measure(m.t,float("-inf")))
+        ...     def f(si,m):
+        ...         t = m.t
+        ...         tp = si.selection(lambda m: m.t < t).sup().t
+        ...         a = TimeSeries([Measure(t,tp)])
+        ...         return a.union(si)
+        ...     return s.fold(f,si)
+        >>> tpredecessors(s1) == TimeSeriesSetOp([Measure(1,float("-inf")),Measure(2,1)])
+        True
+        """
+        if si is None:
+            si = type(self)()
+        return reduce(f,self,si)      
+
+
+    def op(self,other,f):
+        """
+        Operador computacional binari entre mesures comunes. Sèrie
+        temporal resultant d'aplicar l'operador `f` a la junció de la
+        sèrie temporal amb `other`.
+
+        :param other: 
+        :type other: :class:`timeseries.TimeSeries`
+        :param f: funció binària de mesures
+        :type f: function of two Measures returns Measure
+        :returns: `s1 op s2`, càlcul d'op als valors de les sèries temporals
+        :rtype: :class:`timeseries.TimeSeries`        
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1),Measure(3,1)])
+        >>> s2 = TimeSeriesSetOp([Measure(1,2),Measure(3,2),Measure(5,2)])
+        >>> s1.op(s2,lambda x,y: x+y) == TimeSeriesSetOp([Measure(1,3),Measure(3,3)])
+        True
+        """
+        return self.join(other).map(lambda m: Measure(m.t,f(m.v[0],m.v[1])))
 
 
 class TimeSeriesSetOp( TimeSeriesSetOpRelacional,TimeSeriesSetOpNoTemporal,TimeSeriesSetOpTemporal):
@@ -398,6 +556,14 @@ class TimeSeriesSetOp( TimeSeriesSetOpRelacional,TimeSeriesSetOpNoTemporal,TimeS
     True
     >>> s2 | s1 == s2.union(s1)
     True
+    >>> s1 - s2 == s1.difference(s2)
+    True
+    >>> s1 & s2 == s1.intersection(s2)
+    True
+    >>> s1 ^ s2 == s1.symmetric_difference(s2)
+    True
+    >>> s1 * s2 == s1.product(s2)
+    True
     """
     def __or__(self, other):
         """
@@ -405,13 +571,45 @@ class TimeSeriesSetOp( TimeSeriesSetOpRelacional,TimeSeriesSetOpNoTemporal,TimeS
         """
         return self.union(other)
 
+    def __sub__(self, other):
+        """
+        Binary arithmetic operation difference for sets, symbol `-`.
+        """
+        return self.difference(other)
+
+    def __and__(self, other):
+        """
+        Binary arithmetic operation intersection for sets, symbol `&`.
+        """
+        return self.intersection(other)
+
+    def __xor__(self, other):
+        """
+        Binary arithmetic operation symmetric difference for sets, symbol `^`.
+        """
+        return self.symmetric_difference(other)
+
+
+    def __mul__(self, other):
+        """
+        Binary arithmetic operation product, symbol `*`.
+        """
+        return self.product(other)
 
 
 
+    
+    def filter(self, f):
+        """
+        Functional programming tool filter is :meth:`TimeSeriesSetOpRelacional.selection`.
+        """
+        return self.selection(f)
 
-
-
-
+    def reduce(self, f, mi=None):
+        """
+        Functional programming tool reduce is :meth:`TimeSeriesSetOpRelacional.aggregate`.
+        """
+        return self.aggregate(f,mi)
 
 
 
