@@ -117,7 +117,7 @@ class Zohe(Representation):
 
     >>> from timeseries import TimeSeries
     >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
-    >>> s.set_representation(Zohe)
+    >>> s.set_rpr(Zohe)
     >>> s(2) == s.representation(2)
     True
     >>> s(4) == s.representation(4)
@@ -141,7 +141,7 @@ class Zohe(Representation):
 
         >>> from timeseries import TimeSeries
         >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
-        >>> s.set_representation(Zohe)
+        >>> s.set_rpr(Zohe)
         >>> s.interval_temporal(1,4) == TimeSeries([Measure(4,3),Measure(2,2)])
         True
         >>> s.interval_temporal(-5,0) == TimeSeries([Measure(0,1)])
@@ -168,7 +168,7 @@ class Zohe(Representation):
 
         >>> from timeseries import TimeSeries
         >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
-        >>> s.set_representation(Zohe)
+        >>> s.set_rpr(Zohe)
         >>> s.representation(2)
         2
         >>> s.representation(4)
@@ -203,8 +203,8 @@ class Zohe(Representation):
 
         >>> from timeseries import TimeSeries
         >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
-        >>> s.set_representation(Zohe)
-        >>> #s.get_representation().plot()
+        >>> s.set_rpr(Zohe)
+        >>> #s.rpr().plot()
         """
         s = self.get_ts()
         x = [] #x = [float("-inf")]

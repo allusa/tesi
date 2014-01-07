@@ -154,7 +154,7 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_open(1,1) == TimeSeriesSeqOp([])
         True
         """
-        r = type(self)()
+        r = self.empty()
         for m in self:
             if m.t > l and m.t < g:
                 r.add(m)
@@ -179,7 +179,7 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_closed(2,2) == TimeSeriesSeqOp([Measure(2,2)])
         True
         """
-        r = type(self)()
+        r = self.empty()
         for m in self:
             if m.t >= l and m.t <= g:
                 r.add(m)
@@ -206,7 +206,7 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_open_left(1,1) == TimeSeriesSeqOp([])
         True
         """
-        r = type(self)()
+        r = self.empty()
         for m in self:
             if m.t > l and m.t <= g:
                 r.add(m)
@@ -233,7 +233,7 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_open_right(1,1) == TimeSeriesSeqOp([])
         True
         """
-        r = type(self)()
+        r = self.empty()
         for m in self:
             if m.t >= l and m.t < g:
                 r.add(m)

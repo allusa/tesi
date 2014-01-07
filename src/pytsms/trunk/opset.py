@@ -104,7 +104,7 @@ class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
     def difference(self, other):
         """
         Operador de diferència Sèrie temporal resultant de treure
-        `other de la sèrie temporal.
+        `other` de la sèrie temporal.
 
         :param other: 
         :type other: :class:`TimeSeries`
@@ -120,7 +120,7 @@ class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
         >>> s2.difference(s1) == TimeSeriesSetOp([Measure(2,2),Measure(3,2)])
         True
         """
-        s = type(self)()
+        s = self.empty()
         for m1 in self:
             if not other.membership(m1):
                 s.add(m1)
@@ -129,7 +129,7 @@ class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
     def intersection(self, other):
         """
         Operador d'intersecció. Sèrie temporal resultant
-        d'interseccionar `other amb la sèrie temporal.
+        d'interseccionar `other` amb la sèrie temporal.
 
         :param other: 
         :type other: :class:`TimeSeries`
@@ -151,7 +151,7 @@ class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
     def symmetric_difference(self, other):
         """
         Operador de diferència simètrica. Sèrie temporal resultant
-        de la diferènca simètrica d'`other amb la sèrie temporal.
+        de la diferènca simètrica d'`other` amb la sèrie temporal.
 
         :param other: 
         :type other: :class:`TimeSeries`
@@ -253,7 +253,7 @@ class TimeSeriesSetOpTemporal(TimeSeriesStructure):
         >>> s1.union_temporal(s2) == s2.union_temporal(s1)
         True
         """
-        s = type(self)()
+        s = self.empty()
         for m1 in self:
             if not other.membership_temporal(m1):
                 s.add(m1)
@@ -268,7 +268,7 @@ class TimeSeriesSetOpTemporal(TimeSeriesStructure):
     def difference_temporal(self, other):
         """
         Operador de diferència temporal. Sèrie temporal resultant de
-        treure temporalment `other de la sèrie temporal.
+        treure temporalment `other` de la sèrie temporal.
 
         :param other: 
         :type other: :class:`TimeSeries`
@@ -284,7 +284,7 @@ class TimeSeriesSetOpTemporal(TimeSeriesStructure):
         >>> s2.difference_temporal(s1) == TimeSeriesSetOp([Measure(3,2)])
         True
         """
-        s = type(self)()
+        s = self.empty()
         for m1 in self:
             if not other.membership_temporal(m1):
                 s.add(m1)
@@ -293,7 +293,7 @@ class TimeSeriesSetOpTemporal(TimeSeriesStructure):
     def intersection_temporal(self, other):
         """
         Operador d'intersecció temporal. Sèrie temporal resultant
-        d'interseccionar temporalment `other amb la sèrie temporal.
+        d'interseccionar temporalment `other` amb la sèrie temporal.
 
         :param other: 
         :type other: :class:`TimeSeries`
@@ -315,7 +315,7 @@ class TimeSeriesSetOpTemporal(TimeSeriesStructure):
     def symmetric_difference_temporal(self, other):
         """
         Operador de diferència simètrica temporal. Sèrie temporal resultant
-        de la diferènca simètrica temporal d'`other amb la sèrie temporal.
+        de la diferènca simètrica temporal d'`other` amb la sèrie temporal.
 
         :param other: 
         :type other: :class:`TimeSeries`
@@ -401,8 +401,10 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
         >>> s1.selection(lambda m: m.t > 1) == TimeSeriesSetOp([Measure(2,1),Measure(4,1)])
         True
         """
-        s = filter(f,self)
-        return type(self)(s)
+        l = filter(f,self)
+        s = self.empty()
+        s.update(l)
+        return s
 
 
     def product(self,other):
@@ -445,7 +447,7 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
         >>> s2.join(s1) == TimeSeriesSetOp([Measure(1,(2,1))])
         True
         """
-        s = type(self)()
+        s = self.empty()
         p = self.product(other)
         for (t1,v1,t2,v2) in p:
             if t1==t2:
@@ -467,7 +469,9 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
         >>> s1.map(lambda m: Measure(m.t,m.v*2)) == TimeSeriesSetOp([Measure(1,2),Measure(2,2)])
         True
         """
-        return type(self)(map(f,self))
+        s = self.empty()
+        s.update(map(f,self))
+        return s
 
     def aggregate(self,f,mi=None):
         """
@@ -520,8 +524,44 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
         True
         """
         if si is None:
-            si = type(self)()
+            si = self.empty()
         return reduce(f,self,si)      
+
+
+    def orderfold(self,f,o,si=None):
+        """
+        Operador de plec amb ordre. Sèrie temporal resultant de plegar
+        amb la funció `f` i ordre `o` a partir de la sèrie temporal
+        inicial `si` (per defecte la sèrie temporal buida).
+
+        :param si: sèrie temporal inicial, optional if empty si
+        :type si: :class:`timeseries.TimeSeries`
+        :param f: funció de plegament, f(s1,m)->s
+        :type f: function of TimeSeries x Measure returns TimeSeries
+        :param o: funció d'ordre, o(s)->m
+        :type o: function of TimeSeries returns Measure
+        :returns: `fold(s,si,f,o)`, plec de s segons f i ordre o iniciat a si
+        :rtype: :class:`timeseries.TimeSeries`
+
+        >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
+        >>> s1.orderfold(lambda s,m: s.union(TimeSeriesSetOp([m])),max) == s1
+        True
+        >>> s1.orderfold(lambda s,m: s.union(TimeSeriesSetOp([m])),min) == s1
+        True
+        >>> s1.orderfold(lambda s,m: TimeSeriesSetOp([m]),min) == TimeSeriesSetOp([Measure(2,1)])
+        True
+        """
+        if si is None:
+            si = self.empty()
+
+        if len(self) == 0:
+            return si
+
+        m0 = o(self)
+        s0 = type(self)([m0])
+        so = self - s0
+        return so.orderfold(f,o,f(si,m0))        
+
 
 
     def op(self,other,f):

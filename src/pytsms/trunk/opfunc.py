@@ -31,36 +31,18 @@ class TimeSeriesFuncOp(object):
         return self.representation(t)
 
 
-    def set_representation(self,rpr):
-        """
-        Permet definir una representació per defecte de la sèrie
-        temporal. S'aplicarà per defecte a tots els operadors de
-        funció temporal.
-
-        :param rpr: Una representació per a la sèrie temporal
-        :type rpr: :class:`representation.Representation`
-        """        
-        self._representation = rpr(self)
-
-
-    def get_representation(self):
-        """
-        Permet obtenir la representació per defecte de la sèrie
-        temporal.
-
-        :return: La representació per a la sèrie temporal
-        :rtype: :class:`representation.Representation`
-        """        
-        return self._representation
-
-
-    def _rpr(self,rpr):
+    def rpr(self,rpr=None):
         """
         Returns rpr inited with self time series. If rpr is none uses
         the default representation.
+
+        :return: La representació per a la sèrie temporal
+        :rtype: :class:`representation.Representation`
         """
         if rpr is None:
-            return self.get_representation()
+            rpr = self.get_rpr()
+            if rpr is None:
+                raise AttributeError('rpr attibute has no been defined')
         return rpr(self)
 
 
@@ -73,7 +55,7 @@ class TimeSeriesFuncOp(object):
         :returns: `s(t)ᵗ`
         :rtype: :data:`timeseries.Value`
         """
-        return self._rpr(rpr).representation(t)
+        return self.rpr(rpr).representation(t)
 
 
     def graf(self,l,g,step):
@@ -114,7 +96,7 @@ class TimeSeriesFuncOp(object):
         >>> from timeseries import TimeSeries
         >>> from representation import Zohe
         >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
-        >>> s.set_representation(Zohe)
+        >>> s.set_rpr(Zohe)
         >>> s.interval_temporal(1,4) == TimeSeries([Measure(4,3),Measure(2,2)])
         True
         >>> s.interval_temporal(-5,0) == TimeSeries([Measure(0,1)])
@@ -122,7 +104,7 @@ class TimeSeriesFuncOp(object):
         >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,float("inf"))])
         True
         """
-        return self._rpr(rpr).interval_temporal(l,g)
+        return self.rpr(rpr).interval_temporal(l,g)
         
 
 
@@ -134,6 +116,8 @@ class TimeSeriesFuncOp(object):
 
         :param tt: Conjunt de temps
         :type tt: Iterable of :data:`timeseries.Time`
+        :param rpr: Representació de la sèrie temporal,
+        :type rpr: :class:`representation.Representation`
         :returns: `s{tt}ᵗ`, selecció temporal de s en tt
         :rtype: :class:`timeseries.TimeSeries`
 
@@ -144,11 +128,103 @@ class TimeSeriesFuncOp(object):
         >>> s.selection_temporal(tt,Zohe) == TimeSeries([Measure(5,3),Measure(1,1),Measure(3,3),Measure(7,3)])
         True
         """
-        s = type(self)()
+        s = self.empty()
         for t in tt:
             s = s.union(self.interval_temporal(t,t,rpr))
         return s
 
 
 
+    def concatenation_temporal(self,other,rpr=None):
+        """
+        Operador de concatenació temporal. Sèrie temporal resultant de
+        concatenar temporalment amb la sèrie temporal `other`.
 
+
+        :param other: 
+        :type other: :class:`timeseries.TimeSeries`
+        :param rpr: Representació de la sèrie temporal,
+        :type rpr: :class:`representation.Representation`
+        :returns: `s1 ||ᵗ s2`, concatenació temporal de s1 i s2
+        :rtype: :class:`timeseries.TimeSeries`
+
+        >>> from timeseries import TimeSeries
+        >>> from representation import Zohe
+        >>> s1 = TimeSeries([Measure(5,1),Measure(1,1),Measure(2,1)])
+        >>> s1.set_rpr(Zohe)
+        >>> s2 = TimeSeries([Measure(4,2),Measure(0,2),Measure(1,2),Measure(6,2)])
+        >>> s2.set_rpr(Zohe)
+        >>> s1.concatenation_temporal(s2) == TimeSeries([Measure(5,1),Measure(1,1),Measure(2,1),Measure(0,2),Measure(6,2)])
+        True
+        >>> s2.concatenation_temporal(s1) == s2
+        True
+        """
+        t1 = self.inf().t
+        t2 = self.sup().t
+
+        if rpr is None:
+            rpr = self.get_rpr()
+
+        s2 = other - other.interval_temporal(t1,t2,rpr)
+        return self.union(s2)
+
+
+
+    def join_temporal(self,other,rpr=None):
+        """
+        Operador de junció temporal. Sèrie temporal resultant
+        d'ajuntar temporalment amb la sèrie temporal `other`.
+
+
+        :param other: 
+        :type other: :class:`timeseries.TimeSeries`
+        :param rpr: Representació de la sèrie temporal,
+        :type rpr: :class:`representation.Representation`
+        :returns: `s1 joinᵗ s2`, junció temporal de s1 i s2
+        :rtype: :class:`timeseries.TimeSeries`
+
+        >>> from timeseries import TimeSeries
+        >>> from representation import Zohe
+        >>> s1 = TimeSeries([Measure(5,1),Measure(1,1),Measure(2,1)])
+        >>> s1.set_rpr(Zohe)
+        >>> s2 = TimeSeries([Measure(4,2),Measure(0,2),Measure(1,2),Measure(6,2)])
+        >>> s2.set_rpr(Zohe)
+        >>> s1.join_temporal(s2) == TimeSeries([Measure(0,(1,2)),Measure(1,(1,2)),Measure(2,(1,2)),Measure(4,(1,2)),Measure(5,(1,2)),Measure(6,(float("inf"),2))])
+        True
+        >>> s2.join_temporal(s1) == s1.join_temporal(s2)
+        True
+        """
+        tp = self.t().union(other.t())
+        s1tp = self.selection_temporal(tp,rpr)
+        s2tp = other.selection_temporal(tp,rpr)
+        
+        return s1tp.join(s2tp)
+
+
+    def semijoin_temporal(self,other,rpr=None):
+        """
+        Operador de semijunció temporal. Sèrie temporal resultant
+        de semiajuntar temporalment amb la sèrie temporal `other`.
+
+
+        :param other: 
+        :type other: :class:`timeseries.TimeSeries`
+        :param rpr: Representació de la sèrie temporal,
+        :type rpr: :class:`representation.Representation`
+        :returns: `s1 semijoinᵗ s2`, semijunció temporal de s1 i s2
+        :rtype: :class:`timeseries.TimeSeries`
+
+        >>> from timeseries import TimeSeries
+        >>> from representation import Zohe
+        >>> s1 = TimeSeries([Measure(5,1),Measure(1,1),Measure(2,1)])
+        >>> s1.set_rpr(Zohe)
+        >>> s2 = TimeSeries([Measure(4,2),Measure(0,2),Measure(1,2),Measure(6,2)])
+        >>> s2.set_rpr(Zohe)
+        >>> s1.semijoin_temporal(s2) == TimeSeries([Measure(1,(1,2)),Measure(2,(1,2)),Measure(5,(1,2))])
+        True
+        >>> s2.semijoin_temporal(s1) == TimeSeries([Measure(0,(2,1)),Measure(1,(2,1)),Measure(4,(2,1)),Measure(6,(2,float("inf")))])
+        True
+        """
+        tp = self.t()
+        s2 = other.selection_temporal(tp,rpr)
+        return self.join_temporal(s2,rpr)
