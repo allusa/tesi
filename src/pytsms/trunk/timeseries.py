@@ -50,7 +50,6 @@ class TimeSeries(TimeSeriesSetOp,TimeSeriesSeqOp,TimeSeriesFuncOp,TimeSeriesStru
 
 
 
-
 def _s1test():
     """
     Retorna una sèrie temporal de prova

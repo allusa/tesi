@@ -78,15 +78,6 @@ class TimeSeriesStructure(set):
     >>> s.ant(m2)
     m(1,10)
     """
-
-    def t(self):
-        """
-        Vector temps
-        """
-        return set([m.t for m in self])
-
-
-
     def sup(self):
         """
         Suprem de la sèrie temporal
@@ -127,3 +118,57 @@ class TimeSeriesStructure(set):
             return min(self)
 
 
+    #ALTRES
+
+
+    def t(self):
+        """
+        Vector temps
+        """
+        return set([m.t for m in self])
+
+
+    def empty(self):
+        """
+        Retorna una sèrie temporal buida del mateix tipus i amb els
+        mateixos atributs
+        """
+        s = type(self)()
+        s.set_rpr(self.get_rpr())
+        return s
+
+    def copy(self):
+        """
+        Sobrecàrrega del mètode copy
+        Retorna una còpia de la sèrie temporal amb els
+        mateixos atributs        
+        """
+        s = set.copy(self)
+        s.set_rpr(self.get_rpr())
+        return s    
+
+
+    def set_rpr(self,rpr):
+        """
+        Permet definir una representació per defecte de la sèrie
+        temporal. S'aplicarà per defecte a tots els operadors de
+        funció temporal.
+
+        :param rpr: Una representació per a la sèrie temporal
+        :type rpr: :class:`representation.Representation`
+        """        
+        self._rpr = rpr
+
+
+    def get_rpr(self):
+        """
+        Permet obtenir la representació per defecte de la sèrie
+        temporal.
+
+        :return: El tipus de representació per a la sèrie temporal
+        :rtype: :class:`representation.Representation` or None
+        """        
+        try:
+            return self._rpr
+        except AttributeError:
+            return None
