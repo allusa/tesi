@@ -21,7 +21,7 @@ from structure import TimeSeriesStructure
 # http://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
   
 
-#'isdisjoint', 'issubset', 'issuperset'
+#'isdisjoint', 'issubset', 'issuperset', __contains__
 
 class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
     """

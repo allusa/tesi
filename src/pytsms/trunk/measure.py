@@ -13,12 +13,6 @@ Implementació de les definicions de Mesura.
 
 
 
-class Mesura(object):
-    def __init__(self,v,t):
-        raise DeprecationWarning("Useu Measure")
-
-
-
 
 class Measure(object):
     """
@@ -40,14 +34,20 @@ class Measure(object):
     True
     >>> m2 < m1
     False
-    >>> m1 == m2
-    False
-    >>> m1 ==  Measure(1,20)
-    True
     >>> m1.eqnt(m2)
     False
     >>> m1.eqnt(Measure(1,20))
     False
+    >>> m1.eqt(m2)
+    False
+    >>> m1.eqt(Measure(1,20))
+    True
+    >>> m1 == m2
+    False
+    >>> m1 ==  Measure(1,20)
+    False
+    >>> m1 ==  Measure(1,10)
+    True
     """
     def __init__(self,t,v):
         """
@@ -62,27 +62,17 @@ class Measure(object):
         """
         return self.t > other.t 
     
-    def eqnt(self,other):        
-        """
-        Relació d'igualtat sense tenir en compte el temps
-        """
-        return isinstance(other,Measure) and self.t == other.t and self.v == other.v
-
-
     def __eq__(self,other):        
         """
-        Relació d'ordre induïda pel temps
+        Relació d'ordre parcial. Cal pensar si també hauria de ser la induïda pel temps i llavors seria total.
         """
-        return isinstance(other,Measure) and self.t == other.t
+        return self.eqnt(other)
 
     def __ne__(self,other):
         """
         Relació d'ordre induïda pel temps
         """
         return not self == other
-
-
-
 
     def __hash__(self):
         """
@@ -95,6 +85,18 @@ class Measure(object):
 
 
 
+
+    def eqnt(self,other):        
+        """
+        Relació d'igualtat sense tenir en compte el temps
+        """
+        return isinstance(other,Measure) and self.t == other.t and self.v == other.v
+
+    def eqt(self,other):        
+        """
+        Relació d'igualtat tenint en compte el temps
+        """
+        return isinstance(other,Measure) and self.t == other.t
 
 
     def isundefinedp(self):
