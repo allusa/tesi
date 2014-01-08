@@ -8,9 +8,10 @@ RoundRobinson
 :Author: Aleix Llusà Serra
 :Contact: aleix (a) dipse.upc.edu
 :Version: 0.3-dev
-:Date: 	2012-11-16
+:Date: 	2014-01-08
 :Abstract: Implementació en Python d'un SGBD per sèries temporals multiresolució (SGSTM). Python implementation for a Multiresolution Time Series DBMS (MTSMS).
 :Copyright: GPLv3
+:Depends: pytsms0.1-dev
 
 Implementació en Python d'un SGBD per sèries temporals multiresolució
 (SGSTM). És la implementació de referència del model de dades SGSTM

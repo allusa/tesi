@@ -191,8 +191,7 @@ class TimeSeriesFuncOp(object):
         >>> s2.set_rpr(Zohe)
         >>> s1.join_temporal(s2) == TimeSeries([Measure(0,(1,2)),Measure(1,(1,2)),Measure(2,(1,2)),Measure(4,(1,2)),Measure(5,(1,2)),Measure(6,(float("inf"),2))])
         True
-        >>> s2.join_temporal(s1) == s1.join_temporal(s2)
-        True
+        >>> ##s2.join_temporal(s1) == swapv1v2(s1.join_temporal(s2))
         """
         tp = self.t().union(other.t())
         s1tp = self.selection_temporal(tp,rpr)

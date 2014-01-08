@@ -1,15 +1,20 @@
 # -*- encoding: utf-8 -*-
 
 """
-===============
-Buffers i Discs
-===============
+==================
+Subsèrie Resolució
+==================
 
 :Abstract: Vegeu document principal `roundrobinson.py`
 :Copyright: GPLv3
 
-Implementació de les definicions de Buffer, Disc i DiscResolució.
+Implementació de les definicions de Buffer, Disc i SubsèrieResolució.
 """
+
+
+from pytsms import TimeSeries
+from pytsms import Measure
+
 
 
 from serietemporal import Mesura, SerieTemporal
@@ -51,11 +56,9 @@ class Buffer(object):
         """
         Constructor d'un Buffer buit
         """
-        self.s = SerieTemporal()
+        self.s = TimeSeries()
         self.delta = delta
         self.f = f
-        if tau is None:
-            tau = 0
         self.tau = tau
 
 

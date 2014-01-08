@@ -11,9 +11,10 @@ Contents:
 .. toctree::
    :maxdepth: 3
 
-   timeseries
    measure
-
+   timeseries
+   representation
+   properties
 
 
 Indices and tables
