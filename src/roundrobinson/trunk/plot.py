@@ -6,7 +6,6 @@ Multiresolution database plot tools
 import os
 
 from pytsms import Measure, TimeSeries
-from operadors import tauactual, sel_interpolador
 
 import datetime
 from matplotlib import pyplot as plt
@@ -14,15 +13,10 @@ from matplotlib.dates import DateFormatter
 from matplotlib.ticker import MaxNLocator
 
 
-
-
-
-
 def _test_crea_mrd(temps,valors,tzero=0,debug=False):
 
     from multiresolution import MultiresolutionSeries as MRD
     from aggregators import mean, maximum_zohe
-    from operadors import consolidatot
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -42,14 +36,14 @@ def _test_crea_mrd(temps,valors,tzero=0,debug=False):
     mrd.addResolution(d50,12,mean,zero)
 
     if debug:
-        print tauactual(mrd)
+        print mrd.str_taus()
 
     #farciment de mesures amb consolidació
     for t,v in zip(temps,valors):
         m = Measure(t,v)
         mrd.add(m)
 
-    consolidatot(mrd,debug)
+    mrd.consolidateTotal(debug)
 
     return mrd
 
@@ -58,7 +52,6 @@ def _test_crea_mrd2(temps,valors,tzero=0,debug=False):
 
     from multiresolution import MultiresolutionSeries as MRD
     from aggregators import mean, maximum_zohe
-    from operadors import consolidatot
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -80,14 +73,14 @@ def _test_crea_mrd2(temps,valors,tzero=0,debug=False):
     mrd.addResolution(h5,24,maximum_zohe,zero)
 
     if debug:
-        print tauactual(mrd)
+        print mrd.str_taus()
 
     #farciment de mesures amb consolidació
     for t,v in zip(temps,valors):
         m = Measure(t,v)
         mrd.add(m)
 
-    consolidatot(mrd,debug)
+    mrd.consolidateTotal(debug)
 
     return mrd
 
@@ -152,131 +145,6 @@ def _formatador(delta):
     return '%c'
 
 
-
-
-def plot_screen_consult(mrd):
-    """
-    Pinta els discs resolució d'una base de dades multiresolució
-
-    >>> ut = 3600
-    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    >>> #plot_screen_consult(mrd)
-    """
-    #figura amb tota la MRD
-    interpoladors = set()
-    for rd in mrd:
-        interpoladors.add(rd.B.f)
-
-    #pintem per cada interpolador en el mateix gràfic
-    fig2 = plt.figure()
-    ax2 = fig2.add_subplot(1,1,1)
-
-    for interpolador in interpoladors:
-
-        imrd = sel_interpolador(mrd,interpolador)
-
-        sttot = consulta(imrd)
-        vt = []
-        vv = []
-        while len(sttot):
-            m = min(sttot)
-            sttot.discard(m)
-            temps = datetime.datetime.fromtimestamp(m.t)
-            vt.append(temps)
-            vv.append(m.v)
-
-        ax2.plot(vt,vv,label=interpolador.__name__)
-
-    ax2.legend()
-    plt.show()
-
-
-def plot_screen(mrd):
-    """
-    Pinta els discs resolució d'una base de dades multiresolució
-
-    >>> ut = 3600
-    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    >>> #plot_screen(mrd)
-    """
-
-
-    #pinta
-    #import locale
-    #locale.setlocale(locale.LC_TIME, '') #activa els locales per defecte
-    fig = plt.figure(dpi=40)#figsize=(1,1)) #dpi=80 -> 80x80px
-
-
-    mida = len(mrd)
-    index = 1
-
-
-    #plot dades originals
-    #pyplot.plot(temps,valors)
-
-    #plot dades discs
-    mrdordenat = sorted(mrd)
-
-    for index,rd in enumerate(mrdordenat):
-        st = rd.D.s
-        vt = []
-        vv = []
-        antt = None
-        while len(st):
-            m = min(st)
-            st.discard(m)
-
-            #plot zohe
-            valor = m.v
-            temps = datetime.datetime.fromtimestamp(m.t)
-            if antt:
-                vt.append(antt)
-                vv.append(valor)
-            vt.append(temps)
-            vv.append(valor)
-
-            antt = temps
-
-
-        if len(vt) == 0:
-            #plot future delta
-            vt.append( datetime.datetime.fromtimestamp(rd.B.tau+rd.B.delta))
-            #vv.append(float("inf"))
-            vv.append(0)
-
-        if len(vt) == 1:
-            #plot point
-            vt = vt[0]
-            vv = vv[0]
-
-        #print vt,vv
-
-        ax = fig.add_subplot(mida,1,index+1)
-        ax.grid(True)
-        #ax.yaxis.set_label_text(u'Temp. (\u2103)')
-        format = DateFormatter(_formatador(rd.B.delta))
-        ax.xaxis.set_major_formatter(format)
-        locatx = MaxNLocator(8)
-        locaty = MaxNLocator(4)
-        ax.xaxis.set_major_locator(locatx)
-        ax.yaxis.set_major_locator(locaty)
-        plt.xticks(rotation=15)
-        fig.subplots_adjust(hspace=0.5)
-        etiqueta = "RD: {0} |{1}|".format(_timestamptostring(rd.B.delta),rd.D.k)
-        
-        ax.plot(vt,vv,label=etiqueta)
-        ax.legend()
-
-    ax.xaxis.set_label_text('Temps')
-
-
-    #fig.autofmt_xdate()
-    plt.show()
-
-
-
-
-
 def plot_coordinates(st):
     """
     Set of tuples (time formated,value) points for a time series.  
@@ -311,15 +179,143 @@ def plot_coordinates(st):
 
 
 
+class ScreenPlot(object):
+    """
+    Dibuixa una sèrie temporal multiresolució per pantalla amb el matplotlib
+    """
+
+    def __init__(self,mrd):
+        self._mrd = mrd
+
+    def plot_total(self):
+        """
+        Pinta les subsèries resolució d'una sèrie multiresolució
+
+        >>> ut = 3600
+        >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+        >>> sp = ScreenPlot(mrd)
+        >>> #sp.plot_total()
+        """
+        #figura amb tota la MRD
+        interpoladors = set()
+        for rd in self._mrd:
+            interpoladors.add(rd.B.f)
+
+        #pintem per cada interpolador en el mateix gràfic
+        fig2 = plt.figure()
+        ax2 = fig2.add_subplot(1,1,1)
+
+        for interpolador in interpoladors:
+            sttot = self._mrd.total(ff=[interpolador])
+            vt = []
+            vv = []
+            while len(sttot):
+                m = min(sttot)
+                sttot.discard(m)
+                temps = datetime.datetime.fromtimestamp(m.t)
+                vt.append(temps)
+                vv.append(m.v)
+
+            ax2.plot(vt,vv,label=interpolador.__name__)
+
+        ax2.legend()
+        plt.show()
+
+
+    def plot(self):
+        """
+        Pinta els discs resolució d'una base de dades multiresolució
+
+        >>> ut = 3600
+        >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+        >>> sp = ScreenPlot(mrd)
+        >>> #sp.plot()
+        """
+        #pinta
+        #import locale
+        #locale.setlocale(locale.LC_TIME, '') #activa els locales per defecte
+        fig = plt.figure(dpi=40)#figsize=(1,1)) #dpi=80 -> 80x80px
+
+
+        mida = len(self._mrd)
+        index = 1
+
+
+        #plot dades originals
+        #pyplot.plot(temps,valors)
+
+        #plot dades discs
+        mrdordenat = sorted(self._mrd)
+
+        for index,rd in enumerate(mrdordenat):
+            st = rd.D.s
+            vt = []
+            vv = []
+            antt = None
+            while len(st):
+                m = min(st)
+                st.discard(m)
+
+                #plot zohe
+                valor = m.v
+                temps = datetime.datetime.fromtimestamp(m.t)
+                if antt:
+                    vt.append(antt)
+                    vv.append(valor)
+                vt.append(temps)
+                vv.append(valor)
+
+                antt = temps
+
+
+            if len(vt) == 0:
+                #plot future delta
+                vt.append( datetime.datetime.fromtimestamp(rd.B.tau+rd.B.delta))
+                #vv.append(float("inf"))
+                vv.append(0)
+
+            if len(vt) == 1:
+                #plot point
+                vt = vt[0]
+                vv = vv[0]
+
+            #print vt,vv
+
+            ax = fig.add_subplot(mida,1,index+1)
+            ax.grid(True)
+            #ax.yaxis.set_label_text(u'Temp. (\u2103)')
+            format = DateFormatter(_formatador(rd.B.delta))
+            ax.xaxis.set_major_formatter(format)
+            locatx = MaxNLocator(8)
+            locaty = MaxNLocator(4)
+            ax.xaxis.set_major_locator(locatx)
+            ax.yaxis.set_major_locator(locaty)
+            plt.xticks(rotation=15)
+            fig.subplots_adjust(hspace=0.5)
+            etiqueta = "{0}/{2} |{1}|".format(_timestamptostring(rd.B.delta),rd.D.k,rd.B.f.__name__)
+
+            ax.plot(vt,vv,label=etiqueta)
+            ax.legend()
+
+        ax.xaxis.set_label_text('Temps')
+
+
+        #fig.autofmt_xdate()
+        plt.show()
+
+
+
+
 class FilePlot(object):
     """
     Write a mrd into filesytem
 
     >>> ut = 3600
     >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    >>> fp = FilePlot(mrd)
     >>> #os.mkdir('exemple')
-    >>> #plot_dir(mrd,'exemple')
-    >>> #plot_dir_total(mrd,'exemple')
+    >>> #fp.plot_dir('exemple')
+    >>> #fp.plot_dir_total('exemple')
     """
 
     def __init__(self,mrd):
@@ -397,8 +393,7 @@ class FilePlot(object):
 
         #pintem per cada interpolador en el mateix gràfic
         for i,interpolador in enumerate(interpoladors):
-            imrd = sel_interpolador(self._mrd,interpolador)
-            sttot = consulta(imrd)
+            sttot = self._mrd.total([interpolador])
 
             nom = '{0}{1}.csv'.format(basename,i)
             f = open(os.path.join(dirc,nom),'w')
