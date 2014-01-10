@@ -8,15 +8,16 @@ import datetime
 def tauactual(mrd):
     taus = []
     for rd in mrd:
-        taus.append( datetime.datetime.fromtimestamp(rd.B.tau).strftime("%Y-%m-%d") )
+        # temps = datetime.datetime.fromtimestamp(rd.B.tau).strftime("%Y-%m-%d")
+        temps = rd.B.tau
+        taus.append( temps )
     return taus
 
 def consolidatot(mrd,debug=False):
      while mrd.consolidable():
-        mrd.consolida()
-        if debug:
-            print tauactual(mrd)
-
+         mrd.consolidate()
+         if debug:
+             print tauactual(mrd)
 
 
 def llista_ordenada(mrd):

@@ -12,12 +12,7 @@ Implementació de les definicions de Buffer, Disc i SubsèrieResolució.
 """
 
 
-from pytsms import TimeSeries
-from pytsms import Measure
-
-
-
-from serietemporal import Mesura, SerieTemporal
+from pytsms import Measure, TimeSeries
                
             
 class Buffer(object):
@@ -28,29 +23,31 @@ class Buffer(object):
     :param f: L'interpolador associat al buffer
     :param tau: El temps de consolidació inicial, per defecte zero (enter)
 
-    >>> m1 = Mesura(10,1)
-    >>> m2 = Mesura(10,2)
-    >>> m3 = Mesura(40,5)
+    >>> m1 = Measure(1,10)
+    >>> m2 = Measure(2,10)
+    >>> m3 = Measure(5,40)
     >>> 
     >>> def mitjana(s,i):
-    ...     return Mesura((10+10+40) / 3 , i[1])
+    ...     sp = s.interval_open_left(i[0],i[1])
+    ...     v = sp.aggregate(lambda mi,m: Measure(mi.t+1, mi.v+m.v), Measure(0,0))
+    ...     return Measure(i[1], v.v / v.t )
     >>> B = Buffer(5,mitjana)
     >>> 
     >>> B.consolidable()
     False
-    >>> B.afegeix(m1)
+    >>> B.add(m1)
     >>> B.consolidable()
     False
-    >>> B.afegeix(m2)
+    >>> B.add(m2)
     >>> B.consolidable()
     False
-    >>> B.afegeix(m3)
+    >>> B.add(m3)
     >>> B.consolidable()
     True
-    >>> B.consolida()
-    m(20,5)
-    >>> B
-    Buffer(SerieTemporal([]),5,5)
+    >>> B.consolidate() == Measure(5,20)
+    True
+    >>> B.s == TimeSeries() and B.delta == 5 and B.tau == 5
+    True
     """
     def __init__(self,delta,f,tau=0):
         """
@@ -62,22 +59,38 @@ class Buffer(object):
         self.tau = tau
 
 
-    def afegeix(self,m):
+    def add(self,m):
         """
         Definició de l'operació afegeix
         """
         self.s.add(m)
 
+
+    def consolidation_times(self,n):
+        """
+        Retorna els n instants de temps de consolidació futurs
+
+        >>> m1 = Measure(1,10); m2 = Measure(2,10); m3 = Measure(5,40)
+        >>> B = Buffer(5,lambda s,i: max(s),0)
+        >>> B.consolidation_times(5)
+        [0, 5, 10, 15, 20]
+        """
+        return [self.tau + i*self.delta for i in range(n)]
+
+
+
+
     def consolidable(self):
         """
         Definició del predicat consolidable
         """
-        if self.s:
-            m = max(self.s)
-            return m.t >= (self.tau + self.delta)
-        return False
+        if len(self.s) < 1:
+            return False
+        m = self.s.sup()
+        return m.t >= (self.tau + self.delta)
 
-    def consolida(self):
+
+    def consolidate(self):
         """
         Definició de l'operació consolida
         """
@@ -86,15 +99,14 @@ class Buffer(object):
         interval = (self.tau,noutau)
         interpola = self.f(self.s, interval)
 
-        self.s = self.s[noutau:]
+        self.s = self.s[noutau::'l']
         self.tau = noutau
-        self.delta = self.delta
-
+ 
         return interpola
 
 
     def __repr__(self):
-        return 'Buffer({0},{1},{2})'.format(self.s,self.tau,self.delta)
+        return 'Buffer({0},delta= {1},f= {2},tau= {3})'.format(self.s,self.delta,self.f,self.tau)
 
 
 
@@ -105,46 +117,48 @@ class Disc(object):
 
     :param k: El cardinal màxim del disc
 
-    >>> m1 = Mesura(10,1)
-    >>> m2 = Mesura(10,2)
-    >>> m3 = Mesura(40,5)
+    >>> m1 = Measure(1,10)
+    >>> m2 = Measure(2,10)
+    >>> m3 = Measure(5,40)
     >>> D = Disc(2)
     >>> 
-    >>> D.afegeix(m1)
-    >>> D.s
-    SerieTemporal([m(10,1)])
-    >>> D.afegeix(m2)
-    >>> D.s
-    SerieTemporal([m(10,1), m(10,2)])
-    >>> D.afegeix(m3)
-    >>> D.s
-    SerieTemporal([m(10,2), m(40,5)])
+    >>> D.add(m1)
+    >>> D.s == TimeSeries([Measure(1,10)])
+    True
+    >>> D.add(m2)
+    >>> D.s == TimeSeries([Measure(1,10), Measure(2,10)])
+    True
+    >>> D.add(m3)
+    >>> D.s == TimeSeries([Measure(2,10), Measure(5,40)])
+    True
+    >>> D.k == 2
+    True
     """
     def __init__(self,k):
         """
         Constructor d'un Disc buit
         """
-        self.s = SerieTemporal()
+        self.s = TimeSeries()
         self.k = k
 
-    def afegeix(self,m):
+    def add(self,m):
         """
         Definició de l'operació `afegeix`
         """
         if len(self.s) < self.k:
             self.s.add(m)
         else:
-            smin = SerieTemporal()
+            smin = self.s.empty()
             smin.add( min(self.s) )
             
-            self.s -= smin
+            self.s = self.s - smin
             self.s.add(m)
 
     def __repr__(self):
         return 'Disc({0}, |{1}|)'.format(self.s,self.k)
 
 
-class ResolutionDisc(object):
+class ResolutionSubseries(object):
     """
     Disc Resolucio R = (B,D) on B és un buffer i D és un disc
     
@@ -153,38 +167,42 @@ class ResolutionDisc(object):
     :param f: funció d'interpolació
     :param tau: El temps de consolidació inicial, per defecte zero (enter)
 
-    >>> m1 = Mesura(10,1)
-    >>> m2 = Mesura(10,2)
-    >>> m3 = Mesura(40,5) 
+    >>> m1 = Measure(1,10)
+    >>> m2 = Measure(2,10)
+    >>> m3 = Measure(5,40) 
     >>> def mitjana(s,i):
-    ...     return Mesura((10+10+40) / 3 , i[1])
-    >>> R = ResolutionDisc(5,2,mitjana)
+    ...     sp = s.interval_open_left(i[0],i[1])
+    ...     v = sp.aggregate(lambda mi,m: Measure(mi.t+1, mi.v+m.v), Measure(0,0))
+    ...     return Measure(i[1], v.v / v.t )
+    >>> R = ResolutionSubseries(5,2,mitjana,0)
     >>>
-    >>> R.afegeix(m1)
+    >>> R.add(m1)
     >>> R.consolidable()
     False
-    >>> R.afegeix(m2)
+    >>> R.add(m2)
     >>> R.consolidable()
     False
-    >>> R.afegeix(m3)
+    >>> R.add(m3)
     >>> R.consolidable()
     True
-    >>> R.consolida()
-    >>> R
-    RD:Buffer(SerieTemporal([]),5,5),Disc(SerieTemporal([m(20,5)]), |2|)
+    >>> R.consolidate()
+    >>> R.B.s == TimeSeries() and R.B.delta == 5 and R.B.tau == 5
+    True
+    >>> R.D.s == TimeSeries([Measure(5,20)]) and R.D.k == 2
+    True
     """
-    def __init__(self,delta,k,f,tau=None):
+    def __init__(self,delta,k,f,tau=0):
         """
         Constructor d'un Disc Resolucio buit
         """
         self.B = Buffer(delta,f,tau)
         self.D = Disc(k)
 
-    def afegeix(self,m):
+    def add(self,m):
         """
         Definició de l'operació `afegeix`
         """
-        self.B.afegeix(m)
+        self.B.add(m)
 
     def consolidable(self):
         """
@@ -192,12 +210,12 @@ class ResolutionDisc(object):
         """
         return self.B.consolidable()
 
-    def consolida(self):
+    def consolidate(self):
         """
         Definició de l'operació `consolida`
         """
-        m = self.B.consolida()
-        self.D.afegeix(m)
+        m = self.B.consolidate()
+        self.D.add(m)
 
     def __repr__(self):
         return 'RD:{0},{1}'.format(self.B,self.D)
