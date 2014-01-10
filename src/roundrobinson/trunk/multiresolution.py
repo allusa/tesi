@@ -100,7 +100,11 @@ class MultiresolutionSeries(set):
     """
 
     def addResolution(self,delta,k,f,tau=0):
+        """
+        Add resolution by delta, k, f and tau
+        """
         set.add(self, ResolutionSubseries(delta,k,f,tau) )
+
 
     def add(self,m):
         """
@@ -119,11 +123,74 @@ class MultiresolutionSeries(set):
         return False
 
     def consolidate(self):
+        """
+        Fa una consolidació a totes les subsèries resolució consolidables
+        """
         for R in self:
             if R.consolidable():
                 R.consolidate()
 
 
+    def consolidateTotal(self, debug=False):
+        """
+        Consolida iterativament les subsèries mentre la sèrie multiresolució sigui consolidable. Amb debug permet mostrar l'evolució dels instants de consolidació de cada subsèrie
+
+        >>> from pytsms import Measure, TimeSeries
+        >>> m1 = Measure(1,10); m2 = Measure(5,10); m3 = Measure(10,40)
+        >>> M = MultiresolutionSeries()
+        >>> def zero(s,i): return Measure(0,0)
+        >>> M.addResolution(5,2,zero)
+        >>> M.addResolution(10,4,zero)
+        >>> M.add(m1); M.add(m2); M.add(m3)
+        >>> M.consolidateTotal(debug=True)
+        5/zero:5 | 10/zero:10
+        5/zero:10 | 10/zero:10
+        """
+        while self.consolidable():
+            self.consolidate()
+            if debug:
+                print self.str_taus()
+
+
+
+    #Esquema
+    def str_taus(self):
+        """
+        Retorna un string amb el tau de cada subsèrie resolució
+
+        >>> M = MultiresolutionSeries()
+        >>> def maxim(s,i): return None
+        >>> M.addResolution(5,2,maxim)
+        >>> M.addResolution(10,4,maxim)
+        >>> M.str_taus()
+        '5/maxim:0 | 10/maxim:0'
+        """
+        l = [ '{0}/{1}:{2}'.format(R.B.delta,R.B.f.__name__,R.B.tau) for R in sorted(self)]
+        return ' | '.join(l)
+
+
+    #CONSULTES
+    def discSeries(self,delta,f):
+        """
+        Retorna la sèrie temporal emmagatzemada de la resolució delta,f
+
+        >>> from pytsms import Measure, TimeSeries
+        >>> m1 = Measure(1,10); m2 = Measure(5,10); m3 = Measure(10,40)
+        >>> M = MultiresolutionSeries()
+        >>> maxim = lambda s,i: max(s[i[0]:i[1]:'c'])
+        >>> M.addResolution(5,2,maxim)
+        >>> M.addResolution(10,4,maxim)
+        >>> M.add(m1); M.add(m2); M.add(m3)
+        >>> M.consolidateTotal()
+        >>> M.discSeries(5,maxim) == TimeSeries([Measure(5,10),Measure(10,40)])
+        True
+        >>> M.discSeries(10,maxim) == TimeSeries([Measure(10,40)])
+        True
+        """
+        for R in self:
+            if R.B.delta == delta and R.B.f == R.B.f:
+                return R.D.s
+  
 
     def total(self,ff=None,rpr=None):
         """
@@ -164,7 +231,10 @@ class MultiresolutionSeries(set):
         True
         >>> M.total(ff=[]) == TimeSeries([])
         True
-        """
+        >>> M.addResolution(20,1,maxim)
+        >>> M.total() == TimeSeries([Measure(20,10),Measure(15,50),Measure(10,40)])
+        True
+        """ 
         M = self
         if ff is not None:
             M = filter(lambda R: R.B.f in ff,M)
@@ -172,8 +242,8 @@ class MultiresolutionSeries(set):
                 return TimeSeries()
 
         if rpr is None:
-            return reduce(lambda ra,rb: ra.D.s.concatenate(rb.D.s),sorted(M))
+            return reduce(lambda si,rb: si.concatenate(rb.D.s),sorted(M),TimeSeries())
         else:
-            return reduce(lambda ra,rb: ra.D.s.concatenate_temporal(rb.D.s,rpr),sorted(M))
+            return reduce(lambda si,rb: si.concatenate_temporal(rb.D.s,rpr),sorted(M),TimeSeries())
 
 
