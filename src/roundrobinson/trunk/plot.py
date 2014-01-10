@@ -5,8 +5,7 @@ Multiresolution database plot tools
 """
 import os
 
-from serietemporal import Mesura, SerieTemporal
-from consultes import consulta
+from pytsms import Measure, TimeSeries
 from operadors import tauactual, sel_interpolador
 
 import datetime
@@ -15,11 +14,14 @@ from matplotlib.dates import DateFormatter
 from matplotlib.ticker import MaxNLocator
 
 
+
+
+
+
 def _test_crea_mrd(temps,valors,tzero=0,debug=False):
 
-    from roundrobinson import MRD
-    from serietemporal import Mesura
-    from interpoladors import mitjana, zohed_maximum
+    from multiresolution import MultiresolutionSeries as MRD
+    from aggregators import mean, maximum_zohe
     from operadors import consolidatot
 
     #temps segons Unix Time Epoch (segons)
@@ -34,29 +36,28 @@ def _test_crea_mrd(temps,valors,tzero=0,debug=False):
     #configuració base de dades multiresolució
     mrd = MRD()
 
-    mrd.afegeix_disc(h5,24,mitjana,zero)
-    mrd.afegeix_disc(d2,20,mitjana,zero)
-    mrd.afegeix_disc(d15,12,mitjana,zero)
-    mrd.afegeix_disc(d50,12,mitjana,zero)
+    mrd.addResolution(h5,24,mean,zero)
+    mrd.addResolution(d2,20,mean,zero)
+    mrd.addResolution(d15,12,mean,zero)
+    mrd.addResolution(d50,12,mean,zero)
 
     if debug:
         print tauactual(mrd)
 
     #farciment de mesures amb consolidació
     for t,v in zip(temps,valors):
-        m = Mesura(v,t)
-        mrd.update(m)
+        m = Measure(t,v)
+        mrd.add(m)
 
-        consolidatot(mrd,debug)
+    consolidatot(mrd,debug)
 
     return mrd
 
 
 def _test_crea_mrd2(temps,valors,tzero=0,debug=False):
 
-    from roundrobinson import MRD
-    from serietemporal import Mesura
-    from interpoladors import mitjana, zohed_maximum
+    from multiresolution import MultiresolutionSeries as MRD
+    from aggregators import mean, maximum_zohe
     from operadors import consolidatot
 
     #temps segons Unix Time Epoch (segons)
@@ -71,22 +72,22 @@ def _test_crea_mrd2(temps,valors,tzero=0,debug=False):
     #configuració base de dades multiresolució
     mrd = MRD()
 
-    mrd.afegeix_disc(h5,24,mitjana,zero)
-    mrd.afegeix_disc(d2,20,mitjana,zero)
-    mrd.afegeix_disc(d15,12,mitjana,zero)
-    mrd.afegeix_disc(d50,12,mitjana,zero)
+    mrd.addResolution(h5,24,mean,zero)
+    mrd.addResolution(d2,20,mean,zero)
+    mrd.addResolution(d15,12,mean,zero)
+    mrd.addResolution(d50,12,mean,zero)
 
-    mrd.afegeix_disc(h5,24,zohed_maximum,zero)
+    mrd.addResolution(h5,24,maximum_zohe,zero)
 
     if debug:
         print tauactual(mrd)
 
     #farciment de mesures amb consolidació
     for t,v in zip(temps,valors):
-        m = Mesura(v,t)
-        mrd.update(m)
+        m = Measure(t,v)
+        mrd.add(m)
 
-        consolidatot(mrd,debug)
+    consolidatot(mrd,debug)
 
     return mrd
 
@@ -283,6 +284,11 @@ def plot_coordinates(st):
     :param st: Time Series
     :returns: Set of tuples formated for plotting
     :rtype: List of tuples
+
+    >>> m1 = Measure(0,5); m2 = Measure(1,6)
+    >>> s = TimeSeries([m1,m2])
+    >>> plot_coordinates(s)
+    [('1970-01-01 00:00:00', '5'), ('1970-01-01 00:00:01', '6')]
     """
     s = []
 
@@ -303,216 +309,234 @@ def plot_coordinates(st):
     return s
 
 
-def plot_file_coordinates(st,f):
+
+
+class FilePlot(object):
     """
-    Write in a file  time,value points for a time series.  
+    Write a mrd into filesytem
 
-    :param st: Time Series
-    :param f: Opened for writeing file
-    :type f: File
-    """
-    for t,v in plot_coordinates(st):
-        s = '{0},{1}\n'.format(t,v)
-        f.write(s)
-
-
-def _plot_file_rd_min(rd,f):
-    """
-    Write first unknown (infinite) value from the resolution disc
-    """
-    delta = rd.B.delta
-    st = rd.D.s
-
-    if len(st) == 0:
-        return
-
-    mmin = min(st) 
-    minf = Mesura(float('inf'), mmin.t-delta)
-    sinf = SerieTemporal()
-    sinf.add(minf)
-
-    plot_file_coordinates(sinf,f)
-
-
-def plot_dir(mrd,dirc,basename=''):
-    """
-    Write a mrd values into a filesystem. Directory `dirc`must be created.
-
-    :param dirc: Directory name
-    :type dirc: string
-    :param basename: Base name for files
-    :type basename: string
-    """
-    for i,rd in enumerate(sorted(mrd)):
-        nom = '{0}{1}.csv'.format(basename,i)
-        f = open(os.path.join(dirc,nom),'w')
-
-
-        delta = rd.B.delta
-        interpolador = rd.B.f.__name__
-        cardinal = rd.D.k
-        cap = '# RD: {0}s |{1}| {2}\n'.format(delta,cardinal,interpolador)
-        f.write(cap)
-        
-        _plot_file_rd_min(rd,f)
-        plot_file_coordinates(rd.D.s,f)
-
-        f.close()
-
-
-def plot_dir_consult(mrd,dirc,basename='union'):
-    """
-    Write a mrd consult operation values into a filesystem.
-    Consult is the all union for every interpolator.
-
-    :param dirc: Directory name
-    :type dirc: string
-    """
-    #figura amb tota la MRD
-    interpoladors = set()
-    for rd in mrd:
-        interpoladors.add(rd.B.f)
-
-    #pintem per cada interpolador en el mateix gràfic
-    for i,interpolador in enumerate(interpoladors):
-        imrd = sel_interpolador(mrd,interpolador)
-        sttot = consulta(imrd)
-
-        nom = '{0}{1}.csv'.format(basename,i)
-        f = open(os.path.join(dirc,nom),'w')
-
-        interpoladornom = interpolador.__name__
-        cap = '# TS: consult all {0}\n'.format(interpoladornom)
-        f.write(cap)
-        plot_file_coordinates(sttot,f)
-
-        f.close()
-
-
-def plot_latex_coordinates(st):
-    """
-    LaTeX pgfplot piece code for a time series.  
-
-    :param rd: Time Series
-    :rtype: string
     >>> ut = 3600
-    >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    >>> mrdo = sorted(mrd)
-    >>> print plot_latex_coordinates(mrdo[1].D.s)
-               (1970-01-03 00:00:00,3.5)
-               (1970-01-05 00:00:00,7.0)
-    <BLANKLINE>
-    >>> print plot_latex_coordinates(mrdo[0].D.s)
-               (1970-01-01 05:00:00,1.5)
-               (1970-01-01 10:00:00,3.0)
-               (1970-01-01 15:00:00,4.0)
-               (1970-01-01 20:00:00,5.0)
-               (1970-01-02 01:00:00,inf)
-               (1970-01-02 06:00:00,inf)
-               (1970-01-02 11:00:00,inf)
-               (1970-01-02 16:00:00,inf)
-               (1970-01-02 21:00:00,inf)
-               (1970-01-03 02:00:00,6.0)
-               (1970-01-03 07:00:00,inf)
-               (1970-01-03 12:00:00,inf)
-               (1970-01-03 17:00:00,inf)
-               (1970-01-03 22:00:00,inf)
-               (1970-01-04 03:00:00,inf)
-               (1970-01-04 08:00:00,inf)
-               (1970-01-04 13:00:00,inf)
-               (1970-01-04 18:00:00,inf)
-               (1970-01-04 23:00:00,inf)
-    <BLANKLINE>
-    >>> print plot_latex_coordinates(mrdo[2].D.s)
-               (1970-01-01 00:00:00,0)
-               (1970-01-02 00:00:00,1)
-    <BLANKLINE>
+    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    >>> #os.mkdir('exemple')
+    >>> #plot_dir(mrd,'exemple')
+    >>> #plot_dir_total(mrd,'exemple')
     """
 
-    s = ''
+    def __init__(self,mrd):
+        self._mrd = mrd
 
-    for t,v in plot_coordinates(st):
-        s += '           ({0},{1})\n'.format(t,v)
+    def plot_file_coordinates(self,st,f):
+        """
+        Write in a file  time,value points for a time series.  
 
-
-    return s
-
-
-def plot_latex_rd(rd):
-    """
-    LaTeX pgfplot piece code for a resolution disc.
-
-    :param rd: Resolution Disc
-    :rtype: string
-    """
-
-    st = rd.D.s    
-
-    if len(st) == 0:
-        return '\n'
+        :param st: Time Series
+        :param f: Opened for writring file
+        :type f: File
+        """
+        for t,v in plot_coordinates(st):
+            s = '{0},{1}\n'.format(t,v)
+            f.write(s)
 
 
-    #obertura
-    s = """\\begin{tikzpicture}
-    \\begin{axis}[
-        width = \\textwidth,
-        height = 3.5cm,
-        date coordinates in=x,
-"""
+    def _plot_file_rd_min(self,rd,f):
+        """
+        Write first unknown (infinite) value from the resolution disc
+        """
+        delta = rd.B.delta
+        st = rd.D.s
 
-    zero = datetime.datetime.utcfromtimestamp(rd.B.delta)
-    s += '        date ZERO={0},\n'.format(zero)
+        if len(st) == 0:
+            return
 
-    s += """        xticklabel style= {rotate=15,anchor=east},
-        xlabel=temps (UTC),
-        x label style={anchor=north west},
-        ylabel=quantitat (bytes),
-        ]
-"""    
+        mmin = min(st) 
+        minf = Measure(mmin.t-delta, float('inf'))
+        sinf = TimeSeries()
+        sinf.add(minf)
 
-
-    s += '     \\addplot[blue] coordinates{\n'
+        self.plot_file_coordinates(sinf,f)
 
 
-    #mig    
-    s += plot_latex_coordinates(st)
+    def plot_dir(self,dirc,basename=''):
+        """
+        Write a mrd values into a filesystem. Directory `dirc`must be created.
 
-    #tancament
-    s += '     };\n'
+        :param dirc: Directory name
+        :type dirc: string
+        :param basename: Base name for files
+        :type basename: string
+        """
+        for i,rd in enumerate(sorted(self._mrd)):
+            nom = '{0}{1}.csv'.format(basename,i)
+            f = open(os.path.join(dirc,nom),'w')
 
-    s += """
-  \end{axis}
-\end{tikzpicture}
-"""
 
-    return s
+            delta = rd.B.delta
+            interpolador = rd.B.f.__name__
+            cardinal = rd.D.k
+            cap = '# RD: {0}s |{1}| {2}\n'.format(delta,cardinal,interpolador)
+            f.write(cap)
 
-def plot_latex(mrd):
+            self._plot_file_rd_min(rd,f)
+            self.plot_file_coordinates(rd.D.s,f)
+
+            f.close()
+
+
+    def plot_dir_total(self,dirc,basename='total'):
+        """
+        Write a mrd total operation values into a filesystem.
+        Total is the all concatenation for every interpolator.
+
+        :param dirc: Directory name
+        :type dirc: string
+        """
+        #figura amb tota la MRD
+        interpoladors = set()
+        for rd in self._mrd:
+            interpoladors.add(rd.B.f)
+
+        #pintem per cada interpolador en el mateix gràfic
+        for i,interpolador in enumerate(interpoladors):
+            imrd = sel_interpolador(self._mrd,interpolador)
+            sttot = consulta(imrd)
+
+            nom = '{0}{1}.csv'.format(basename,i)
+            f = open(os.path.join(dirc,nom),'w')
+
+            interpoladornom = interpolador.__name__
+            cap = '# TS: consult all {0}\n'.format(interpoladornom)
+            f.write(cap)
+            self.plot_file_coordinates(sttot,f)
+
+            f.close()
+
+
+
+class PgfPlot(object):
     """
     LaTeX pgfplotv1.6 code for a mrd.
-
-    :rtype: string
-
-    >>> ut = 3600
-    >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    >>> #plot_latex(mrd)
     """
 
-    s = ''
-
-    for rd in sorted(mrd):
-        s += plot_latex_rd(rd)
-        s += '\n'
-
-    return s
+    def __init__(self,mrd):
+        self._mrd = mrd
 
 
+    def plot_latex_coordinates(self,st):
+        """
+        LaTeX pgfplot piece code for a time series.  
+
+        :param rd: Time Series
+        :rtype: string
+        >>> ut = 3600
+        >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+        >>> pp = PgfPlot(mrd)
+        >>> mrdo = sorted(mrd)
+        >>> print pp.plot_latex_coordinates(mrdo[1].D.s)
+                   (1970-01-03 00:00:00,3.5)
+                   (1970-01-05 00:00:00,7.0)
+        <BLANKLINE>
+        >>> print pp.plot_latex_coordinates(mrdo[0].D.s)
+                   (1970-01-01 05:00:00,1.5)
+                   (1970-01-01 10:00:00,3.0)
+                   (1970-01-01 15:00:00,4.0)
+                   (1970-01-01 20:00:00,5.0)
+                   (1970-01-02 01:00:00,inf)
+                   (1970-01-02 06:00:00,inf)
+                   (1970-01-02 11:00:00,inf)
+                   (1970-01-02 16:00:00,inf)
+                   (1970-01-02 21:00:00,inf)
+                   (1970-01-03 02:00:00,6.0)
+                   (1970-01-03 07:00:00,inf)
+                   (1970-01-03 12:00:00,inf)
+                   (1970-01-03 17:00:00,inf)
+                   (1970-01-03 22:00:00,inf)
+                   (1970-01-04 03:00:00,inf)
+                   (1970-01-04 08:00:00,inf)
+                   (1970-01-04 13:00:00,inf)
+                   (1970-01-04 18:00:00,inf)
+                   (1970-01-04 23:00:00,inf)
+        <BLANKLINE>
+        >>> print pp.plot_latex_coordinates(mrdo[2].D.s)
+                   (1970-01-01 00:00:00,0)
+                   (1970-01-02 00:00:00,1)
+        <BLANKLINE>
+        """
+        s = ''
+        for t,v in plot_coordinates(st):
+            s += '           ({0},{1})\n'.format(t,v)
+        return s
 
 
-if __name__ == '__main__':
-    ut = 3600
-    mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
-    print plot_latex(mrd)
-    #os.mkdir('exemple')
-    #plot_dir(mrd,'exemple')
-    #plot_dir_consult(mrd,'exemple')
+    def plot_latex_rd(self,rd):
+        """
+        LaTeX pgfplot piece code for a resolution disc.
+
+        :param rd: Resolution Disc
+        :rtype: string
+
+        >>> ut = 3600
+        >>> mrd = _test_crea_mrd([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+        >>> pp = PgfPlot(mrd)
+        >>> mrdo = sorted(mrd)
+        >>> pp.plot_latex_rd(mrdo[2])
+        '%% delta 0 k 12 aggregator mean: no data\\n'
+        """
+
+        st = rd.D.s    
+
+        if len(st) == 0:
+            return '%% delta {0} k {2} aggregator {1}: no data\n'.format(rd.B.tau,rd.B.f.__name__,rd.D.k)
+
+
+        #obertura
+        s = """\\begin{tikzpicture}
+        \\begin{axis}[
+            width = \\textwidth,
+            height = 3.5cm,
+            date coordinates in=x,
+    """
+
+        zero = datetime.datetime.utcfromtimestamp(rd.B.delta)
+        s += '        date ZERO={0},\n'.format(zero)
+
+        s += """        xticklabel style= {rotate=15,anchor=east},
+            xlabel=temps (UTC),
+            x label style={anchor=north west},
+            ylabel=quantitat (bytes),
+            ]
+    """    
+
+
+        s += '     \\addplot[blue] coordinates{\n'
+
+
+        #mig    
+        s += self.plot_latex_coordinates(st)
+
+        #tancament
+        s += '     };\n'
+
+        s += """
+      \end{axis}
+    \end{tikzpicture}
+    """
+
+        return s
+
+    def plot(self):
+        """
+        LaTeX pgfplotv1.6 code for a mrd.
+
+        :rtype: string
+
+        >>> ut = 3600
+        >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7]) 
+        >>> pp = PgfPlot(mrd)
+        >>> #print pp.plot()
+        """
+        s = ''
+        for rd in sorted(self._mrd):
+            s += self.plot_latex_rd(rd)
+            s += '\n'
+        return s
+

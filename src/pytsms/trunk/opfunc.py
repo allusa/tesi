@@ -135,7 +135,7 @@ class TimeSeriesFuncOp(object):
 
 
 
-    def concatenation_temporal(self,other,rpr=None):
+    def concatenate_temporal(self,other,rpr=None):
         """
         Operador de concatenació temporal. Sèrie temporal resultant de
         concatenar temporalment amb la sèrie temporal `other`.
@@ -154,9 +154,9 @@ class TimeSeriesFuncOp(object):
         >>> s1.set_rpr(Zohe)
         >>> s2 = TimeSeries([Measure(4,2),Measure(0,2),Measure(1,2),Measure(6,2)])
         >>> s2.set_rpr(Zohe)
-        >>> s1.concatenation_temporal(s2) == TimeSeries([Measure(5,1),Measure(1,1),Measure(2,1),Measure(0,2),Measure(6,2)])
+        >>> s1.concatenate_temporal(s2) == TimeSeries([Measure(5,1),Measure(1,1),Measure(2,1),Measure(0,2),Measure(6,2)])
         True
-        >>> s2.concatenation_temporal(s1) == s2
+        >>> s2.concatenate_temporal(s1) == s2
         True
         """
         t1 = self.inf().t

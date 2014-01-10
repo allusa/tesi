@@ -103,6 +103,7 @@ class Measure(object):
         """
         És cert quan la mesura és indefinida positiva
         """
+        #math.isinf(self.t) 
         return self.t == float("inf") #s'hauria de fer independent
 
     def isundefinedn(self):

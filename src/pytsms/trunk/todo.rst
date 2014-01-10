@@ -6,7 +6,7 @@ Mesures:
 
 * Igualtat de les mesures cal que sigui exacte però cal que en els conjunts es comprovi només pel temps
 * Valor indefinit ha de ser genèric en comptes de float("inf")
-
+* Haurien de ser més semblants als tuples (o conjunts), tal com les sèries temporals són conjunts
 
 
 Sèries temporals:
