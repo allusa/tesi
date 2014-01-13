@@ -7,119 +7,7 @@ Un disc resolució està format per un buffer, un disc i un controlador del temp
 
 \begin{figure}[htp]
 \centering
-\begin{tikzpicture}
-\tikzset{
-    maquina/.style={rectangle,rounded corners,draw=black, 
-      very thick, inner sep=1em, minimum size=3em, text centered,
-      groc},
-    interficie/.style={rectangle,rounded corners,draw=black, 
-       inner sep=0.2em, minimum size=1em, text centered,
-      verd},
-    modul/.style={rectangle,rounded corners,draw=black, 
-      very thick, inner sep=1em, minimum size=3em, text centered,
-      roig},   
-    myarrow/.style={->, >=latex', shorten >=1pt, thick},
-    fletxaswitch/.style={<->, >=latex',shorten >=10pt,shorten <=10pt, thick},
-    mylabel/.style={text width=7em, text centered},
-    groc/.style={top color=white, bottom color=yellow!50},
-    verd/.style={top color=white, bottom color=green!50},
-    roig/.style={top color=white, bottom color=red!50},
-  }  
-
-  
-   \node (discres) [draw, dotted, minimum width=9.5cm, text depth=9cm, rectangle] {Disc atribut};
-
-
-
-  \node[modul,text depth=3cm,below right=1cm and 1.5cm of discres.north west] (buffer) {Buffer};  
-
-  %entrades
-  \node[above left=-1.5cm and 2.5cm of buffer.north west] (buffer_valor)   {};
-  \draw[-] (buffer_valor) -- (buffer_valor-|buffer.west)
-   node[near end,above]{valor};
-
-   \node[below=0.5cm of buffer_valor] (buffer_nou)   {};
-   \draw[-] (buffer_nou) -- (buffer_nou-|buffer.west)
-   node[near end,above]{temps};
-
-   \node[above left=-3.5cm and 1cm of buffer.north west] (buffer_consolida) {};
-   \draw[-] (buffer_consolida) -- (buffer_consolida-|buffer.west)
-   node[pos=0.5,above]{reset};
-
-   %sortides
-   \node[above right=-1.5cm and 1.5cm of buffer.north east] (buffer_dada)   {};
-  \draw[-] (buffer_dada) -- (buffer_dada-|buffer.east)
-   node[pos=0.6,above]{dada};
-
-
-
-
-
-  \node[modul,right=3cm of buffer,text depth=3cm] (disc)   {Disc}; 
-
-  % entrades
-  \node[above left=-1.5cm and 2cm of disc.north west] (disc_valor)   {};
-  \draw[-] (disc_valor) -- (disc_valor-|disc.west)
-   node[near end,above]{valor};
-
-  \node[above left=-3.5cm and 1.96cm of disc.north west] (disc_consolida)   {};
-  \draw[-] (disc_consolida) -- (disc_consolida-|disc.west)
-   node[pos=0.58,above]{consolida};
-
-   % sortides
-   \node[above right=-1.5cm and 2.5cm of disc.north east] (disc_d0)   {};
-   \draw[-] (disc_d0) -- (disc_d0-|disc.east)
-   node[near end,above]{$D_0$};
-
-   \node[below=0.5cm of disc_d0] (disc_d1)   {};
-  \draw[-] (disc_d1) -- (disc_d1-|disc.east)
-   node[near end,above]{$D_1$};
-
-   \node[below=0.5cm of disc_d1] (disc_d2)   {};
-  \draw[-] (disc_d2) -- (disc_d2-|disc.east)
-   node[near end,above]{$\dots$};
-
-   \node[below=0.5cm of disc_d2] (disc_d3)   {};
-  \draw[-] (disc_d3) -- (disc_d3-|disc.east)
-   node[near end,above]{$D_k$};
-
-
-
-
-  \node[modul,below=1cm of buffer,text depth=1.5cm] (temps)   {Temps}; 
-
-  % entrades
-  \node[above left=-1cm and 2.5cm of temps.north west] (temps_rtc)   {};
-  \draw[-] (temps_rtc) -- (temps_rtc-|temps.west)
-   node[near end,above]{RTC};
-
-  % sortides
-   \node[above right=-1cm and 1cm of temps.north east] (temps_delta)   {};
-   \draw[-] (temps_delta) -- (temps_delta-|temps.east)
-   node[near end,above]{$\delta$};
-
-   \node[above right=-2cm and 7cm of temps.north east] (temps_tau)   {};
-   \draw[-] (temps_tau) -- (temps_tau-|temps.east)
-   node[pos=0.96,above]{$\tau$};
-
-
-
-
-
-
-
-
-   %connexions
-   \draw[-] (temps_delta.west) -- (disc_consolida.east); 
-   
-%   \node[above left=0.3cm and 1cm of temps.north west] (tau_reset)   {};
-   \node[below=1cm of buffer_consolida] (tau_reset)   {};
-   \draw[-*,shorten >=-2pt] (tau_reset) -- (tau_reset-|disc_consolida.east);
-   \draw[-] (tau_reset.east) -- (tau_reset.east|-buffer_consolida);
-
-
-
-\end{tikzpicture}
+\input{imatges/implementacio/sgstm_blocs_hard}
 \caption{Esquema genèric d'un disc resolució}
 \label{fig:vhdl:disc-resolucio}
 \end{figure}
@@ -373,13 +261,15 @@ Bàsicament en les implementacions a baix nivell d'un SGSTM tenim dues opcions:
 
   \item Possibilitat de disseny de FPGA casolans. Si mai això fos
     possible (sembla que ja és possible: exemple de FPGA a la
-    raspberry), els sensors intel·ligents o totalment encastats
-    prendrien molt sentit ja que serien reconfigurables o que fos molt
-    barat implementar en hardware un circuit i llençar-lo quan es
-    volgués canviar de configuració. Això llavors encaixaria amb
-    construir un xip per blocs: hi poso un bloc de comunicacions, un
-    bloc de tal i un bloc de base de dades multiresolució amb tal
-    esquema.
+    raspberry, System-on-Chip (SoC)), els sensors intel·ligents o
+    totalment encastats prendrien molt sentit ja que serien
+    reconfigurables o que fos molt barat implementar en hardware un
+    circuit i llençar-lo quan es volgués canviar de configuració. Això
+    llavors encaixaria amb construir un xip per blocs: hi poso un bloc
+    de comunicacions, un bloc de tal i un bloc de base de dades
+    multiresolució amb tal esquema. Tot i així, sembla que en els SoC
+    la idea és implementar-ho com a microcontrolador i fins i tot
+    implementar-hi sistemes operatius.
 
   \end{itemize}
 
@@ -387,9 +277,6 @@ Bàsicament en les implementacions a baix nivell d'un SGSTM tenim dues opcions:
 \end{itemize}
 
 En l'àmbit, no es veu clara la implementació de coses en VHDL. Sembla que es desaprofitar recursos perquè la feina ja la pot fer el microcontrolador. Potser l'aplicació útil i que s'ha de destacar és quan en els xips integrats no hi ha microcontrolador com poder-hi posar una base de dades?
-
-
-
 
 
 %%% Local Variables:
