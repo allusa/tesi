@@ -1,0 +1,45 @@
+
+\chapter{SGSTM i al teoria de la informació}
+
+
+Teoria de la informació: mesura de la entropia
+
+
+The theoretical background of compression is provided by information theory (which is closely related to algorithmic information theory) for lossless compression and rate–distortion theory for lossy compression. 
+
+Information-theoretical foundations for lossy data compression are provided by rate-distortion theory. Much like the use of probability in optimal coding theory, rate-distortion theory heavily draws on Bayesian estimation and decision theory in order to model perceptual distortion and even aesthetic judgment.
+
+
+\section{Compressió}
+
+La compressió redueix la mida original d'unes dades. 
+
+L'esquema és comprimir->emmagtzemar->descomprimir->visualitzar
+
+compressed data must be decompressed to use -> en els sgstm no? bé si vull veure tota la sèrie temporal sí que he de concatenar el que hi tinc i per tant es pot veure com una descompressió (al marge que hi pot haver una compressió/descompressió en els agregadors usats, per exemple si és un so emmatgatzemar la freqüència i després s'haurà de descomprimir a amplitud al llarg del temps).
+
+
+* Lossless compression -> per text i fitxers de dades
+* Lossy compression -> per multimèdia (àudio, vídeo, imatges)
+
+Ambdós redueixin la mida original, els lossless treuen la redundància que hi pugui haver en les dades (es conserva la informació però s'augmenta l'entropia) i els lossy descarten informació que es considera no essencial (per exemple en una imatge detalls que l'ull humà no pot apreciar) tot i que també poden tractar de cercar una millora representació de les dades (perceptual encoding, per exemple amb la freqüència del so es poden realitzar millor les operacions d'equalització ).
+
+The design of data compression schemes involves trade-offs among various factors, including the degree of compression, the amount of distortion introduced (e.g., when using lossy data compression), and the computational resources required to compress and uncompress the data.
+
+Un esquema de compressió típic és tenir un fitxer principal comprimit amb lossless i després altres de petits comprimits amb lossy per a cada aplicació (per exemple imatges web on hi ha la grossa per a ser descarregada però a la galeria d'imatges s'hi col·loquen de petites per no transmetre tanta informació inecessària).
+
+
+
+Developing lossy compression techniques as closely matched to human perception as possible is a complex task. Sometimes the ideal is a file that provides exactly the same perception as the original, with as much digital information as possible removed; other times, perceptible loss of quality is considered a valid trade-off for the reduced data.
+
+The advantage of lossy methods over lossless methods is that in some cases a lossy method can produce a much smaller compressed file than any lossless method, while still meeting the requirements of the application.
+
+Lossy methods are most often used for compressing sound, images or videos. This is because these types of data are intended for human interpretation where the mind can easily "fill in the blanks" or see past very minor errors or inconsistencies – ideally lossy compression is transparent (imperceptible), which can be verified via an ABX test. http://en.wikipedia.org/wiki/ABX_test
+
+Flaws caused by lossy compression that are noticeable to the human eye or ear are known as compression artifacts.
+
+
+
+\section{Rate–distortion theory}
+
+http://en.wikipedia.org/wiki/Rate-distortion_theory

@@ -1,42 +1,79 @@
-%biblatex-ieee
-%http://www.tex.ac.uk/tex-archive/macros/latex/contrib/biblatex-contrib/biblatex-ieee/ieee.bbx
 
-\documentclass[
-conference, %peerreviewca,
-%draft, %draftcls, draftclsnofoot,
-%onecolumn,
-]{IEEEtran}
 
+\documentclass{acm_proc_article-sp}
 
 \usepackage[utf8]{inputenc}
 
+\usepackage{todo}
 
 %\usepackage{url}
 
-\usepackage[cmex10]{amsmath}
-\usepackage{amssymb}
+
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+
+
+\usepackage{amsmath}
+\newtheorem{definition}{Definition}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+
+
+\usepackage[
+style=numeric-comp,
+sortcites=true,
+% backref=true,
+]{biblatex}
+\bibliography{bibliografia}
+\ExecuteBibliographyOptions{
+  isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
+}
+\bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
+
 
 
 \begin{document}
 
 
 
-\title{Multiresolution \\ Time Series}
+\title{Operating with a Multiresolution Model}
+\subtitle{[Extended Abstract]}
 
-
-\author{
-  \IEEEauthorblockN{
-    Aleix Llusà Serra%\IEEEauthorrefmark{1}
-    , Teresa Escobet Canal %\IEEEauthorrefmark{1}
-    and Sebastià Vila-Marta%\IEEEauthorrefmark{1}
-  }
-  \IEEEauthorblockA{
-    %\IEEEauthorrefmark{1}%
-    \{aleix,sebas\}@dipse.upc.edu, teresa.escobet@upc.edu\\
-    Department of Electronic System Design and Programming (DiPSE)\\
-    Universitat Politècnica de Catalunya, 08242 Manresa, Spain
-  }
+\numberofauthors{3} 
+\author{%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+\alignauthor
+Escobet Canal, Teresa\\
+       %\affaddr{Institute for Clarity in Documentation}\\
+       %\affaddr{1932 Wallamaloo Lane}\\
+       %\affaddr{Wallamaloo, New Zealand}\\
+       \email{teresa.escobet@upc.edu}
+% 2nd. author
+\alignauthor
+Llusà Serra, Aleix\\
+       \affaddr{Department of Electronic System Design and Programming}\\
+       \affaddr{Universitat Politècnica de Catalunya}\\
+       %\affaddr{Av.~Bases de Manresa 61--73}
+       \affaddr{08242 Manresa, ES-CT}\\
+       \email{aleix@dipse.upc.edu}
+% 3rd. author
+\alignauthor Vila-Marta, Sebastià\\
+       %\affaddr{The Th{\o}rv{\"a}ld Group}\\
+       %\affaddr{1 Th{\o}rv{\"a}ld Circle}\\
+       %\affaddr{Hekla, Iceland}\\
+       \email{sebas@dipse.upc.edu}
 }
+
 
 
 \maketitle
@@ -47,8 +84,26 @@ conference, %peerreviewca,
 The abstract goes here.
 \end{abstract}
 
+% A category with the (minimum) three required fields
+\category{H.4}{Information Systems Applications}{Miscellaneous}
+%A category including the fourth, optional field follows...
+\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
 
-\IEEEpeerreviewmaketitle
+\terms{Theory}
+
+\keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
+
+
+
+
+
+
+\include{model}
+
+
+
+
+\section{ALTRES}
 
 
 

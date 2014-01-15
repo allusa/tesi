@@ -1,0 +1,442 @@
+
+\section{Model}
+
+\acro{MTSMS}
+\acro{MTSM}
+
+
+La definició del model s'estructura en dues parts:
+
+\begin{itemize}
+\item Un model pels (SGST)  que defineix mesura i sèrie temporals.
+\item Un model pels (SGSTM) que defineix buffer, disc i subsèrie
+  resolució, el qual treballa sobre el model de SGST.
+\end{itemize}
+
+\todo{sobre tres nivells}
+A l'estat de l'art s'ha d'haver explicat els tres nivell de model de dades segons Date i deixar clar aquí que nosaltres definim un model pel segon nivell: nivell de model lògic. Els models lògics modelen les dades, en canvi els models conceptuals modelen la realitat, Fabian Pascal posa d'exemple conceptual el model E/RM.
+
+
+Objectius:
+
+En el model de SGST s'observen algunes patologies que poden presentar les sèries temporals. El model de SGSTM soluciona algunes d'aquestes patologies:
+
+\begin{itemize}
+\item Regularitza les sèries temporals
+\item Tracta i validar les sèries temporals: gestiona els casos de dades errònies o desconegudes i marca quan hi ha valors erronis.
+\item És una solució de compressió per a quantitats enormes de dades
+\end{itemize}
+
+
+Però el model de SGSTM també es pot fer servir per altres aplicacions:
+
+* Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
+
+* Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
+
+* Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
+
+
+
+
+\section{Time series preliminaries}
+\label{sec:model:preliminaries}
+
+% In this section we introduce some background concepts and the
+% nomenclature which we will use later.  First we define the main
+% objects of a \acro{MTSMS} which are measures and time series.
+
+% A \emph{measure} is a value measured in a time instant. More formally
+% it is a tuple $(v,t)$ where $v$ is the value of the measure and $t \in
+% \mathbb{R}$ is the time instant of measurement.  The values of a time
+% series can be of any type. For simplicity examples are presented with
+% integers or real numbers but can also be strings or vectors.  Let $m =
+% (v,t)$ be a measure, $v$ is written as $V(m)$ and $t$ is written as
+% $T(m)$.
+
+% The time value defines the canonical order between measures.  Let $m =
+% (v_m, t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if
+% and only if $t_m\geq t_n$.
+
+% A \emph{time series} is sequence of measures of the same phenomena
+% that are ordered in time.
+% \begin{definition}[Time series]
+%   A \emph{time series} $S$ is a a set of measures of the same
+%   phenomena $S = \{m_0, \ldots, m_k\}$ without repeated time values
+%   $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$. Given
+%   a time series $|S|$, we note its size by $|S|=k+1$. Observe that,
+%   because measures in $S$ are of the same phenomena, the type of $S$
+%   values is homogeneous.
+% \end{definition}
+
+% The order defined by measures implies a total order in a time
+% series. As a time series is a finite set, if it is not empty it has a
+% maximum and a minimum.  Let $S=\{m_0,\ldots,m_k\}$ be a time series
+% and $n\in S$ be a measure. The time series' maximum is $n=\max(S)$ if
+% and only if $\forall m \in S: n \geq m $.  Similarly, the time series'
+% minimum is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
+
+% Given the order defined by time, in a time series we define the
+% sequence interval following \cite{last:keogh,last:hetland}.  Let
+% $S=\{m_0, \ldots, m_k\}$ be a time series. We define the subset
+% $S(r,t] \subseteq S$ as the time series $S(r,t]=\{m\in S | r<T(m)\leq
+% t\}$, where $r$ and $t$ are two instants in time.  We also define the
+% subset $S(r,+\infty)\subseteq S$ as the time series $S(r,+\infty) =
+% \{m\in S | r< T(m) \leq T(\max(S))\}$ and the subset
+% $S(-\infty,t)\subseteq S$ as the time series $S(-\infty,t) = \{m\in S
+% | T(\min(S))\leq T(m) < t\}$.
+
+% The time order in time series also implies the sequence concept of
+% next and previous measure.  Let $S=\{m_0, \ldots, m_k\}$ be a time
+% series and $l\in S$ and $n$ be two measures. We define the next
+% measure of $n$ in $S$ as $l=\nex_S(n)$ where $l =
+% \min(S(T(n),+\infty))$. We define the previous measure of $n$ in $S$
+% as $l=\prev_S(n)$ where $l = \max(S(-\infty,T(n)))$.
+
+% Let $S$ be a time series, $t$ be a time instant and $\delta$ be a
+% time duration, then the time series' measures can be located in the
+% time interval $i_0=[t, t+\delta]$ and its multiples $i_j=[t+j\delta,
+% t+(j+1)\delta]$ for $j=0,1,2,\ldots$. When time series' measures are
+% equally spaced we say it to be regular.
+% \begin{definition}[Regular time series]
+%   Let $S=\{m_0,$ $ldots,$ $m_k\}$ be a time series and $\delta$ a time
+%   duration. $S$ is regular if and only if $\forall m \in
+%   S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = \delta$.
+% \end{definition}
+
+
+
+
+
+
+
+
+
+\section{Multiresolution model}
+\label{sec:MTSMS}
+
+The \acro{MTSMS} are \acro{TSMS} that store time series with a lossy
+compression approach, that is some information is selected and spread in
+different time resolutions. The \acro{MTSMS} model is based on the
+concepts of measures and time series as defined in
+Section~\ref{sec:model:preliminaries}.
+
+
+The multiresolution concept comes from thoroughly analysis of the
+RRDtool \cite{rrdtool} \acro{TSMS}. Our objective is to formalise its
+essential parts into an abstract model, where what we call
+multiresolution plays a main role, and to include more genericity in
+order to describe \acro{MTSMS} as fully \acro{TSMS}. Then we will be
+able to apply these systems to other applications.
+
+
+
+A \acro{MTSMS} stores multiresolution time series where each has a
+multiresolution schema as shown in Figure~\ref{fig:model:mtsdb}. A
+multiresolution time series is a collection of resolution subseries
+which temporarily accumulate measures in a buffer in order to select
+some information and finally store it in a disc. The information
+selection process changes the time intervals between measures to
+compact information by aggregating the time series attributes. 
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/mtsms-arquitectura_interna.tex}
+  \smallskip
+  \caption{Architecture of \acro{MTSMS} model}
+  \label{fig:model:mtsdb}
+\end{figure}
+
+
+In this way, the original time series gets stored spread in the discs,
+each with a different time resolution and attribute aggregation.
+Discs are size bounded so they only contain a fixed amount of
+measures. When a disc becomes full it discards a measure. Thus,
+multiresolution database is bounded in size and the time series gets
+stored in pieces, that is time subseries.
+
+Regarding to operations, \acro{MTSMS} structure needs operators to
+change the time intervals between measures and to select
+attributes. Mainly, these operators are measure additions and time
+series consolidations which some functionality is delegated to operators called 
+attribute aggregate functions.
+ Most of these operators
+are attribute aggregate functions and consolidation actions.
+the operations to
+create a multiresolution database, to add measures, and to consolidate
+time series.
+ Attribute aggregate functions are required but not linked
+to the model.\todo{}
+
+Following we define the \acro{MTSMS} model by: (i) four basic
+structure model elements ---buffer, disc, resolution subserie, and
+multiresolution time series--- with its structure operators, (ii) the
+operations to change and consult a multiresolution schema, and (iii)
+the attribute aggregate functions.
+
+
+
+\subsection{Structure}
+
+
+
+\subsection{operations}
+
+
+
+
+\section{The proposed data model}
+
+
+
+Regarding to operations, \acro{MTSMS} structure needs operators to
+change the time intervals between measures. Most of these operators
+are attribute aggregate functions and consolidation actions.
+
+In what follows we describe the basic \acro{MTSMS} model centered in:
+(i) the four basic data model elements ---buffer, disc, resolution
+disc, and multiresolution database---, and (ii) the operations to
+create a multiresolution database, to add measures, and to consolidate
+time series. Attribute aggregate functions are required but not linked
+to the model. They are defined in the
+Section~\ref{sec:model:interpolador}.
+
+A \emph{buffer} is a container for a regular or a no-regular time
+series. The buffer objective is to regularise the time series using a
+predetermined step and an attribute function. We name
+\emph{consolidation} to this action.
+\begin{definition}[Buffer]
+  A \emph{buffer} is defined as the tuple $(S,\tau,\delta,f)$ where
+  $S$ is a time series, $\tau$ is the last consolidation time,
+  $\delta$ is the duration of the consolidation step and $f$ is an
+  attribute aggregate function.
+
+  An empty buffer $B_{\emptyset} = (\emptyset,t_0, \delta, f)$ has an
+  empty time series, an initial consolidation time $t_0$ and
+  predetermined $\delta$ and $f$. From the $B_{\emptyset}$ all the
+  consolidation time instants can be calculated as $t_0+i\delta,
+  i\in\mathbb{N}$.
+\end{definition}
+
+Operator \emph{addBuffer} adds a measure to its time series:
+$\text{addBuffer}: B = (S,\tau,\delta,f) \times m \mapsto
+(S',\tau,\delta,f)$ where $S' = S \cup \{m\} $.
+
+A buffer is ready to consolidate when the time of some measure is
+bigger than the buffer's next consolidation time.  Let
+$B=(S,\tau,\delta,f)$ be a buffer and $m=\max(S)$ the maximum measure,
+$B$ is ready to consolidate if and only if $T(m) \geq \tau+\delta$.
+The consolidation of $B$ in the time interval $i=[\tau,\tau+\delta]$
+results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$ and $f$ is
+an attribute aggregate function $f$. Operator \emph{consolidateBuffer}
+consolidates a set of measures and removes the consolidated part of
+the time series from the buffer. Usually consolidateBuffer is only
+applied to the present consolidation interval and it is defined as
+follows: $\text{consolidateBuffer}: B=(S,\tau,\delta,f) \mapsto B'
+\times m' $ where $ B'= (S',\tau+\delta,\delta,f)$, $S' = S$ and $m' =
+f(S,[\tau,\tau+\delta])$. When historic data is not needed anymore the
+consolidated buffer measures can be removed applying $S' =
+S(\tau+\delta,\infty)$.
+
+A \emph{disc} is a finite capacity measures container. A time series
+stored in a disc has its cardinal bounded. When the cardinal of the
+time series is to overcome the limit, some measures need to be
+discarded.
+\begin{definition}[Disc]
+  A \emph{disc} is a tuple $(S,k)$ where $S$ is a time series and
+  $k\in\mathbb{N}$ is the maximum allowed cardinal of $S$.  An empty
+  disc $D_{\emptyset} = (\emptyset,k)$ has an empty time series and
+  the $k$ maximum cardinal allowed.
+\end{definition}
+
+The cardinal of the times series is kept under control by the add
+operator, $\text{addDisc}:D=(S,k)\times m\mapsto (S',k)$ where 
+$$
+S' = \begin{cases}
+  S\cup\{m\}                 & \text{if } |S|<k  \\
+  (S-\{\min(S)\}) \cup \{m\} & \text{otherwise}
+\end{cases}  
+$$
+
+A \emph{resolution disc} is a disc which stores a regular time
+series. It is composed of a buffer, that contains the partial time
+series to be regularised, and a disc, that contains the regularised
+time series.
+\begin{definition}[Resolution disc]
+  A \emph{resolution disc} is a tuple $(B,D)$ where $B$ is a buffer
+  and $D$ is a disc.  An empty buffer and empty disc imply an empty
+  resolution disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
+\end{definition}
+ 
+The operators of a resolution disc extend the buffer and disc ones:
+(i) The addition of a measure to the buffer of the resolution disc,
+$\text{addRD}:R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$, and
+$B'= \text{addBuffer}(B,m)$; (ii) The consolidation of the resolution
+disc by consolidating its buffer and adding the consolidation measure
+to its disc, $\text{consolidateRD}:R=(B,D) \mapsto R'$ where $R'=
+(B',D')$ and $(B',m') = \text{consolidateBuffer}(B)$ and $D'=
+\text{addDisc}(B,m')$.
+% \]
+
+A \emph{multiresolution database} is a set of resolution discs which
+share the input of measures, that is they store the same time
+series. A time series is stored regularised and distributed with
+different resolutions in the various resolution discs, as it was shown
+in the Figure~\ref{fig:model:mtsdb}.
+\begin{definition}[Multiresolution Database]
+  A \emph{Multi\-re\-solution Database} is a set of resolution discs
+  $M=\{R_0, \dots, R_d\}$.  An empty multiresolution database has
+  empty resolution discs $M_{\emptyset}=\{R_{0_\emptyset}, \dots,
+  R_{d_\emptyset}\}$.
+\end{definition}
+
+We define the addition of a measure to every resolution disc as
+$\text{addMD} : M=\{R_0, \dots, R_d\} \times m \mapsto \{R'_0, \dots,
+R'_d\}$ where $R'_i=\text{addRD}(R_i,m)$.
+
+The consolidation of all resolution discs can be defined as follows:
+$\text{consolidateMD}: M=\{R_0, \dots, R_d\} \mapsto \{R'_0, \dots,
+R'_d\}$ where
+$$ 
+R'_i = \begin{cases}
+  \text{consolidateRD}(R_i) & \text{if } R_i \text{ ready to consolidate} \\
+  R_i                       & \text{otherwise}
+\end{cases}
+$$.
+
+
+\subsection{Attribute aggregate function}
+\label{sec:model:interpolador}
+
+When a buffer is consolidated we summarise the time series information
+using an attribute aggregate function.  Let $S$ be a time series and
+$t_0$ and $t_f$ two time instants, an attribute aggregate function $f$
+calculates a measure that summarises the measures of $S$ included in
+the time interval $i=[T_0,T_f]$:
+\begin{align*}
+f&:S=\{m_0,\ldots,m_k\} \times [T_0,T_f] \mapsto m'
+\end{align*}
+
+To summarise a time series we can use different attribute aggregate
+functions.  For instance, we can calculate an statistic indicator of
+the time series such as the average or we can apply a more complex
+digital signal processing operation, \cite{zhang11}.
+
+Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
+\begin{itemize}
+\renewcommand{\labelitemi}{--}
+\item maximum$^d$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall m \in S'}(V(m))$. It summarises $S'$ with the maximum
+  of the measure values.
+\item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
+  summarises $S'$ with the maximum measure.
+\item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$. It
+  summarises $S'$ with the mean of the measure values.
+\end{itemize}
+
+% With reference to data validation, attribute aggregate functions
+% can cope with this process. When data has not been captured or has
+% been captured erroneously, it must be treated as unknown data.
+% \begin{itemize}
+% \item When data has not been captured it is unknown by nature. For
+%   example, we try to capture data from a sensor and there is no
+%   response.
+% \item When data is erroneously it must be marked as unknown. For
+%   example, we capture data from a sensor but it responses in a not
+%   reasonable time or we capture data that is clearly outside a
+%   reasonable limits.
+% \end{itemize}
+% As a consequence, attribute aggregate functions deals with these two
+% subprocesses: treating unknown data and marking data as
+% unknown. Following with real numbers example, we extend the
+% domain with a value that means 'unknown', let this unknown value be
+% represented by the improper element infinity ($\infty$).
+
+% An attribute aggregate functions treating unknown
+% data is a one that can calculate a result when there are unknown
+% values in the original time series, $f^u: S \times i \mapsto m'$ where
+% $\exists m \in S: V(m)=\infty$. Although from a strict point of view
+% operating with unknown data makes unknown result, aggregate functions
+% are free to calculate whatever is needed such as time series analysis
+% does with data reconstruction.
+
+% For example, arithmetic mean$^{d}$ aggregate function returns
+% $V(m')=\infty$ if $\exists m \in S: V(m)=\infty$.  We can define a new
+% mean function, based on the original arithmetic mean$^{d}$ aggregate,
+% that naively treats unknown values by keeping the
+% known mean; in other words, it ignores unknown values found in the time
+% interval: arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+% \text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq
+% \infty\}$.
+% % ignore$^{u}$: $S \mapsto S'$ where $S'= \{m''\in S':V(m'')\neq
+% % \infty\}$,
+% % arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
+% % \text{arithmetic mean}^{d}(\text{ignore}^u(S),i)$.
+
+% An attribute aggregate functions marking data as unknown is a one
+% that can give unknown value as the resulting measure's value, $f^{mu}:
+% S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
+
+% For example, we can define a maximum aggregate, based on the
+% maximum$^d$ aggregate, that returns unknown if there is a
+% measure's value bigger than 2:  maximum$^{dmu2}$: $S \times i
+% \mapsto m'$ where $V(m') = 
+% \begin{cases}
+%   \infty &\text{if }  m''>2\\
+%   m'' & \text{else }
+% \end{cases}$ and $m''=\text{maximum}^d(S,i)$.
+
+% %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
+
+In the design of the attribute aggregate function we can interpret a
+time series in different ways, that is what we call the representation
+of a time series. \citeauthor{last:keogh}, \cite{last:keogh}, cite
+some possible representations for time series such as Fourier
+transforms, wavelets, symbolic mappings or piecewise linear
+representation. The last one is very usual due to its simplicity,
+\cite{keogh01}.
+
+Time series representations can be taken into account when computing
+with the measures of the time series.  For example, a maximum
+attribute aggregate function may give different values if we consider
+a linear or a constant piecewise representation.
+
+Following we show a possible family of attribute aggregate functions
+for time series represented by a staircase function, that is with a
+piecewise constant representation.  We define a new representation for
+time series named \emph{zero-order hold backwards} (zohe). This
+representation holds back each value until the preceding value. 
+RRDtool, \cite{lisa98:oetiker}, has a similar aggregate function.
+
+Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+$S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
+$\forall t \in \mathbb{R} ,\forall m \in S:$
+\begin{equation}
+ S(t)^{\text{zohe}} =  
+\begin{cases}
+  \infty & \text{if } t > T(\max S) \\
+  V(m)   & \text{if } t\in (T(\prev_S m),T(m)]
+\end{cases}
+\label{eq:zohe}
+\end{equation}
+
+
+In conclusion, we can define many attribute aggregate functions and
+thus no global assumptions can be made about them. Each user has to
+decide which combination of aggregation and representation fits better
+with the measured phenomena.  Therefore, \acro{MTSMS} must allow to
+define user aggregate functions.
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+% LocalWords:  genericity

@@ -18,7 +18,7 @@ La definició del model s'estructura en dues parts:
 
 \begin{itemize}
 \item Un model pels (SGST)  que defineix mesura i sèrie temporals.
-\item Un model pels (SGSTM) que defineix buffer, disc i disc
+\item Un model pels (SGSTM) que defineix buffer, disc i subsèrie
   resolució, el qual treballa sobre el model de SGST.
 \end{itemize}
 
@@ -69,10 +69,10 @@ Així doncs, a continuació es presenten els model de dades.
 
 En el model per a sèries temporals es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les mesures són dades mesurades en un instant de temps i les sèries temporals són co\l.leccions de mesures.
 
-El model de dades multiresolució s'estructura a partir de \emph{discs resolució}, els quals  acumulen temporalment les mesures en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre mesures amb l'objectiu de compactar la informació de la sèrie temporal.
-Així doncs, la sèrie temporal queda emmagatzemada en intervals de temps diferents, repartits en els discs resolució. 
+El model de dades multiresolució s'estructura a partir de \emph{sèries temporals multiresolució} com a conjunt de \emph{subsèries resolució}, les quals  acumulen temporalment les mesures en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre mesures amb l'objectiu de compactar la informació de la sèrie temporal.
+Així doncs, la sèrie temporal queda emmagatzemada com una sèrie temporal multiresolució en intervals de temps diferents, repartits en les subsèries resolució. 
 
-Pel que fa a les operacions, és indispensable que el model multiresolució pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{interpolació} i \emph{consolidació}. En el model de dades multiresolució es defineixen els operadors específics per a aquestes tasques anomenats \emph{agregadors d'atributs}
+Pel que fa a les operacions, és indispensable que el model multiresolució pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{agregació} i \emph{consolidació}. En el model de dades multiresolució es defineixen els operadors específics per a aquestes tasques anomenats \emph{agregadors d'atributs}
 
 
 A banda de les estructures, en el model també es defineixen els
@@ -105,6 +105,13 @@ En el model de SGST s'observen algunes patologies que poden presentar les sèrie
 \end{itemize}
 
 
+Però el model de SGSTM també es pot fer servir per altres aplicacions:
+
+* Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
+
+* Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
+
+* Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
 
 
 
