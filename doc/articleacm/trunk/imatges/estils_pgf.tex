@@ -1,0 +1,54 @@
+%\usetikzlibrary{dateplot}  
+%\usetikzlibrary{pgfplots.groupplots}
+
+\pgfplotsset{
+   timeseries/.style={
+        date coordinates in=x,
+        ylabel=Temperature (K),
+        legend style={font=\footnotesize},
+        tick label style={font=\footnotesize},
+        every axis x label/.style={
+          at={(1.3,0)},
+          anchor=north,
+          },
+        label style={font=\footnotesize},
+        xticklabel style= {rotate=17,anchor=north east},
+%        every axis title shift=0pt,
+%        max space between ticks=15,
+        every mark/.append style={mark size=6},
+        major tick length=0.1cm,
+        minor tick length=0.066cm,
+        very thin,
+        every axis legend/.append style={
+          at={(1.2,0)},
+          anchor=south east,
+          draw = none},
+       legend columns = 4,
+    },
+    rd/.style={
+        timeseries,
+        every axis x label/.style={
+          at={(1.3,-1)},
+          anchor=north,
+          },
+        label style={font=\footnotesize},
+        ylabel = {},
+        width=17cm,
+        height=3.5cm,   
+        max space between ticks=50,
+        every axis legend/.append style={
+          at={(1,-1.1)},
+          anchor=north east,
+          draw = none},
+        title style={font=\small,below, at={(0.7,1.7)},anchor=north,fill=white},
+    }
+}
+
+
+%        unbounded coords=jump, %v>1.4
+%        unbounded coords=discard, %v>1.4
+
+
+%http://tex.stackexchange.com/questions/46422/axis-break-in-pgfplots
+
+%http://tex.stackexchange.com/questions/52409/insert-a-separate-mark-inside-a-pgfplots-graph
