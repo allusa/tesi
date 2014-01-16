@@ -4,7 +4,13 @@
 
 \usepackage[utf8]{inputenc}
 
-\usepackage{todo}
+%\usepackage{todo}
+\usepackage{todonotes}
+\presetkeys%
+{todonotes}
+{inline}
+{}
+
 
 %\usepackage{url}
 
@@ -18,21 +24,37 @@
 
 \usepackage{amsmath}
 \newtheorem{definition}{Definition}
+
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+\newcommand{\R}{\mathbb{R}} % the set of real numbers
+\newcommand{\N}{\mathbb{N}} % the set of natural
+
 \DeclareMathOperator*{\nex}{next}
 \DeclareMathOperator*{\prev}{prev}
-\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+\DeclareMathOperator{\addB}{addBuffer}
+\DeclareMathOperator{\consB}{consBuffer}
+\DeclareMathOperator{\addD}{addDisc}
+\DeclareMathOperator{\addR}{addR}
+\DeclareMathOperator{\consR}{consR}
+\DeclareMathOperator{\addM}{addM}
+\DeclareMathOperator{\consM}{consM}
+
+
 
 
 \usepackage[
 style=numeric-comp,
 sortcites=true,
 % backref=true,
+  backend=biber,
 ]{biblatex}
 \bibliography{bibliografia}
-\ExecuteBibliographyOptions{
-  isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
-}
-\bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
+% \ExecuteBibliographyOptions{
+%   isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
+% }
+% \bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
+
+\bibliography{bibliografia}
 
 
 
@@ -178,7 +200,7 @@ The authors would like to thank...
 
 
 
-
+\printbibliography
 
 
 \end{document}
