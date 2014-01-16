@@ -37,10 +37,16 @@ Però el model de SGSTM també es pot fer servir per altres aplicacions:
 * Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
 
 
+Dir que és interessant complementar els TSMS i MTSMS amb altra informació (localització del sensor, unitats del valors, etc.) però que aquesta informació és millor guardar-la en un SGBD relacional.
+
 
 
 \section{Time series preliminaries}
 \label{sec:model:preliminaries}
+
+\todo{vigilar que s'ha canviat l'ordre de les mesures a (t,v)}
+
+\todo{sobretot explicar les tres visions de les sèries temporals: conjunt, seqüència i funció}
 
 % In this section we introduce some background concepts and the
 % nomenclature which we will use later.  First we define the main
@@ -128,7 +134,7 @@ essential parts into an abstract model, where what we call
 multiresolution plays a main role, and to include more genericity in
 order to describe \acro{MTSMS} as fully \acro{TSMS}. Then we will be
 able to apply these systems to other applications.
-
+\todo{repassar paràgraf}
 
 
 A \acro{MTSMS} stores multiresolution time series where each has a
@@ -155,18 +161,13 @@ measures. When a disc becomes full it discards a measure. Thus,
 multiresolution database is bounded in size and the time series gets
 stored in pieces, that is time subseries.
 
-Regarding to operations, \acro{MTSMS} structure needs operators to
-change the time intervals between measures and to select
-attributes. Mainly, these operators are measure additions and time
-series consolidations which some functionality is delegated to operators called 
-attribute aggregate functions.
- Most of these operators
-are attribute aggregate functions and consolidation actions.
-the operations to
-create a multiresolution database, to add measures, and to consolidate
-time series.
- Attribute aggregate functions are required but not linked
-to the model.\todo{}
+Regarding operations, \acro{MTSMS} structure needs operators to change
+the time intervals between measures and to select attributes. Mainly,
+these operators are measure additions and time series consolidations,
+which some functionality is delegated to operators called attribute
+aggregate functions. Secondarily, there are operators to query the
+multiresolution schema and extract time series data.
+
 
 Following we define the \acro{MTSMS} model by: (i) four basic
 structure model elements ---buffer, disc, resolution subserie, and
@@ -178,131 +179,144 @@ the attribute aggregate functions.
 
 \subsection{Structure}
 
-
-
-\subsection{operations}
-
-
-
-
-\section{The proposed data model}
-
-
-
-Regarding to operations, \acro{MTSMS} structure needs operators to
-change the time intervals between measures. Most of these operators
-are attribute aggregate functions and consolidation actions.
-
-In what follows we describe the basic \acro{MTSMS} model centered in:
-(i) the four basic data model elements ---buffer, disc, resolution
-disc, and multiresolution database---, and (ii) the operations to
-create a multiresolution database, to add measures, and to consolidate
-time series. Attribute aggregate functions are required but not linked
-to the model. They are defined in the
-Section~\ref{sec:model:interpolador}.
-
 A \emph{buffer} is a container for a regular or a no-regular time
 series. The buffer objective is to regularise the time series using a
 predetermined step and an attribute function. We name
 \emph{consolidation} to this action.
 \begin{definition}[Buffer]
-  A \emph{buffer} is defined as the tuple $(S,\tau,\delta,f)$ where
-  $S$ is a time series, $\tau$ is the last consolidation time,
+  A \emph{buffer} is defined as the tuple $(S_B,\tau,\delta,f)$ where
+  $S_B$ is a time series, $\tau$ is the last consolidation time,
   $\delta$ is the duration of the consolidation step and $f$ is an
   attribute aggregate function.
 
   An empty buffer $B_{\emptyset} = (\emptyset,t_0, \delta, f)$ has an
   empty time series, an initial consolidation time $t_0$ and
-  predetermined $\delta$ and $f$. From the $B_{\emptyset}$ all the
-  consolidation time instants can be calculated as $t_0+i\delta,
-  i\in\mathbb{N}$.
+  predetermined $\delta$ and $f$.
 \end{definition}
 
 Operator \emph{addBuffer} adds a measure to its time series:
-$\text{addBuffer}: B = (S,\tau,\delta,f) \times m \mapsto
-(S',\tau,\delta,f)$ where $S' = S \cup \{m\} $.
+$\addB: B = (S_B,\tau,\delta,f) \times m \mapsto
+(S'_B,\tau,\delta,f)$ where $S'_B = S \cup \{m\} $.
 
-A buffer is ready to consolidate when the time of some measure is
-bigger than the buffer's next consolidation time.  Let
-$B=(S,\tau,\delta,f)$ be a buffer and $m=\max(S)$ the maximum measure,
-$B$ is ready to consolidate if and only if $T(m) \geq \tau+\delta$.
-The consolidation of $B$ in the time interval $i=[\tau,\tau+\delta]$
-results in a measure $m'=(v,\tau+\delta)$ where $m'=f(S,i)$ and $f$ is
-an attribute aggregate function $f$. Operator \emph{consolidateBuffer}
-consolidates a set of measures and removes the consolidated part of
-the time series from the buffer. Usually consolidateBuffer is only
-applied to the present consolidation interval and it is defined as
-follows: $\text{consolidateBuffer}: B=(S,\tau,\delta,f) \mapsto B'
-\times m' $ where $ B'= (S',\tau+\delta,\delta,f)$, $S' = S$ and $m' =
-f(S,[\tau,\tau+\delta])$. When historic data is not needed anymore the
-consolidated buffer measures can be removed applying $S' =
-S(\tau+\delta,\infty)$.
+From the $B_{\emptyset}$ all the consolidation time instants can be
+calculated as $t_0+i\delta, i\in\N$. The consolidation of $B$ in a
+time interval $i=[\tau,\tau+\delta]$ results in a measure
+$m'=f(S_B,i)$ where $f$ is an attribute aggregate function
+$f$. Operator \emph{consolidateBuffer} consolidates a set of measures
+and removes the consolidated part of the time series from the buffer:
+$\consB : B=(S_B,\tau,\delta,f) \mapsto B' \times m'$ where $ B'=
+(S'_B,\tau+\delta,\delta,f)$, $m' = f(S,[\tau,\tau+\delta])$, and
+$S'_B$ is the discarding of historic data not needed anymore, for example
+$S'_B = S[\tau+\delta,+\infty]$.
+
+On a simplified way, the $\consB$ is only applied to the present
+consolidation interval and the total consolidation is obtained by
+successive application of the operator. This requires measures to be
+added by time order and to consolidate the buffer when the time of
+some measure is bigger than the buffer's next consolidation time.  Let
+$B=(S_B,\tau,\delta,f)$ be a buffer and $m=\sup(S_B)$ the maximum
+measure, $B$ is consolidable if and only if $T(m) \geq
+\tau+\delta$.
+
+
+
 
 A \emph{disc} is a finite capacity measures container. A time series
 stored in a disc has its cardinal bounded. When the cardinal of the
 time series is to overcome the limit, some measures need to be
 discarded.
 \begin{definition}[Disc]
-  A \emph{disc} is a tuple $(S,k)$ where $S$ is a time series and
-  $k\in\mathbb{N}$ is the maximum allowed cardinal of $S$.  An empty
+  A \emph{disc} is a tuple $(S_D,k)$ where $S$ is a time series and
+  $k\in\N$ is the maximum allowed cardinal of $S_D$.  An empty
   disc $D_{\emptyset} = (\emptyset,k)$ has an empty time series and
   the $k$ maximum cardinal allowed.
 \end{definition}
 
 The cardinal of the times series is kept under control by the add
-operator, $\text{addDisc}:D=(S,k)\times m\mapsto (S',k)$ where 
-$$
-S' = \begin{cases}
-  S\cup\{m\}                 & \text{if } |S|<k  \\
-  (S-\{\min(S)\}) \cup \{m\} & \text{otherwise}
+operator, $\addD : D=(S_D,k)\times m\mapsto (S'_D,k)$ where %
+$
+ S_D' = \begin{cases}
+  S_D\cup\{m\}                 & \text{if } |S_D|<k  \\
+  (S_D-\{\min(S_D)\}) \cup \{m\} & \text{otherwise}
 \end{cases}  
-$$
+$.
 
-A \emph{resolution disc} is a disc which stores a regular time
-series. It is composed of a buffer, that contains the partial time
-series to be regularised, and a disc, that contains the regularised
-time series.
-\begin{definition}[Resolution disc]
-  A \emph{resolution disc} is a tuple $(B,D)$ where $B$ is a buffer
-  and $D$ is a disc.  An empty buffer and empty disc imply an empty
-  resolution disc $R_{\emptyset} = (B_{\emptyset},D_{\emptyset})$.
+
+A \emph{resolution subseries} is a structure that regularises and
+aggregates a time series. It is composed of a buffer, that contains
+the partial time series to be regularised, and a disc, that contains
+the regularised time series.
+\begin{definition}[Resolution subseries]
+  A \emph{resolution subseries} is a tuple $(B,D)$ where $B$ is a
+  buffer and $D$ is a disc.  An empty buffer and empty disc imply an
+  empty resolution subseries $R_{\emptyset} =
+  (B_{\emptyset},D_{\emptyset})$.
 \end{definition}
  
-The operators of a resolution disc extend the buffer and disc ones:
-(i) The addition of a measure to the buffer of the resolution disc,
-$\text{addRD}:R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$, and
-$B'= \text{addBuffer}(B,m)$; (ii) The consolidation of the resolution
-disc by consolidating its buffer and adding the consolidation measure
-to its disc, $\text{consolidateRD}:R=(B,D) \mapsto R'$ where $R'=
-(B',D')$ and $(B',m') = \text{consolidateBuffer}(B)$ and $D'=
-\text{addDisc}(B,m')$.
-% \]
+The operators of a resolution subseries extend the buffer and disc
+ones: (i) The addition of a measure to the buffer of the resolution
+subseries: $\addR : R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$,
+and $B'= \addB(B,m)$; (ii) The consolidation of the resolution
+subseries by consolidating its buffer and adding the consolidation
+measure to its disc: $\consR : R=(B,D) \mapsto R'$ where $R'=
+(B',D')$, $(B',m') = \consB(B)$, and $D'= \addD(D,m')$.  A resolution
+subseries is consolidable only when its buffer is consolidable.
 
-A \emph{multiresolution database} is a set of resolution discs which
-share the input of measures, that is they store the same time
+
+
+
+A \emph{multiresolution time series} is a set of resolution subseries
+which share the input of measures, that is they buffer the same time
 series. A time series is stored regularised and distributed with
-different resolutions in the various resolution discs, as it was shown
-in the Figure~\ref{fig:model:mtsdb}.
-\begin{definition}[Multiresolution Database]
-  A \emph{Multi\-re\-solution Database} is a set of resolution discs
-  $M=\{R_0, \dots, R_d\}$.  An empty multiresolution database has
-  empty resolution discs $M_{\emptyset}=\{R_{0_\emptyset}, \dots,
-  R_{d_\emptyset}\}$.
+different resolutions in the various resolution subseries, as
+previously shown in Figure~\ref{fig:model:mtsdb}.
+\begin{definition}[Multiresolution time series]
+  A \emph{Mul\-ti\-re\-solution time series} is a set of resolution
+  subseries $\{R_0, \dots, R_d\}$.  An empty multiresolution series
+  has empty resolution subseries $M_{\emptyset}=\{R_{0_\emptyset},
+  \dots, R_{d_\emptyset}\}$. Usually there are no repeated pairs of
+  ($\delta_i$,$f_i$) among a multiresolution series, so they act as a
+  key attributes.
 \end{definition}
 
-We define the addition of a measure to every resolution disc as
-$\text{addMD} : M=\{R_0, \dots, R_d\} \times m \mapsto \{R'_0, \dots,
-R'_d\}$ where $R'_i=\text{addRD}(R_i,m)$.
-
-The consolidation of all resolution discs can be defined as follows:
-$\text{consolidateMD}: M=\{R_0, \dots, R_d\} \mapsto \{R'_0, \dots,
-R'_d\}$ where
-$$ 
+The operators of a multiresolution time series apply to every
+resolution subseries contained: (i) The addition of a measure to every
+resolution subseries: $\addM : M=\{R_0, \dots, R_d\} \times m \mapsto
+\{R'_0, \dots, R'_d\}$ where $R'_i=\addR(R_i,m)$; (ii) The
+consolidation of all resolution subseries: $\consM : M=\{R_0, \dots,
+R_d\} \mapsto \{R'_0, \dots, R'_d\}$ where %
+$ 
 R'_i = \begin{cases}
-  \text{consolidateRD}(R_i) & \text{if } R_i \text{ ready to consolidate} \\
+  \consR(R_i) & \text{if } R_i \text{ consolidable} \\
   R_i                       & \text{otherwise}
 \end{cases}
-$$.
+$.
+
+
+
+
+\subsection{Queries}
+
+\todo{intro}
+
+\todo{tenim espai per a les operacions d'esquema?}
+
+
+There are two basic time series queries for a MTSMS: (i) extract a
+time subseries from a resolution subseries' disc or (ii) query for a
+total time series from all consolidated information.
+
+The first is a selection over a multiresolution time series, being $(\delta,f)$ the key attributes: 
+
+
+
+  
+
+
+
+
+
+
 
 
 \subsection{Attribute aggregate function}
@@ -434,9 +448,67 @@ define user aggregate functions.
 
 
 
+
+
+
+\todo{}
+
+
+\section{TODO}
+
+
+* MTSMS expressada com una consulta (1) sobre TSMS
+
+La sèrie temporal del disc d'una subsèrie resolució $R=(S_B,S_D,\tau,\delta,k,f)$ es pot expressar com un mapa, sigui $S$ la sèrie temporal original de la qual faríem $\forall m \in S: R.*addM(m)$: 
+  \begin{align*}
+    S_D \equiv &  \operatorname{map}(S_I, m_i\mapsto m') \text{ on }  \\
+    & m' = (T(m_i), f(S, i)), i = [T(\operatorname{prev}_{S_I}(m_i)),T(m_i)] \\
+    &  S_I = \{ (t,\infty) | t\in T_I  \}, T_I = \{ t_i = \tau+n\delta | n\in\N, t_M - k\delta < t_i \leq t_M \}, t_M = T(\max(S))
+  \end{align*}
+  
+En aquest cas hem suposat que la $f$ segueix sent un agregador d'atributs $f:S\times i\rightarrow m$. Però podríem simplificar dient que és un agregador que segueix la forma ja coneguda dels TSMS $f_a \equiv agg:S\times m_i \times f \rightarrow m'$ on $f:m_i\times m\rightarrow m''$ i aleshores ho podem veure dos mapes:
+  \begin{align*}
+    S_D \equiv &  \operatorname{map}(S', m_i\mapsto m') \text{ on }  \\
+    & m' = (T(m_i), f_a(V(m_i)))
+    & S' = \operatorname{map}(S_I, m_i\mapsto m'') \\
+    & m'' = (T(m_i), S[t_a,t_b]), t_a = T(\operatorname{prev}_{S_I}(m_i)), t_b=T(m_i) \\
+    &  S_I = \{ (t,\infty) | t\in T_I  \}, T_I = \{ t_i = \tau+n\delta | n\in\N, t_M - k\delta < t_i \leq t_M \}, t_M = T(\max(S))
+  \end{align*}
+de manera que la feina de treure les subsèries la fa el mapa sobre $S_i$ mentre que abans la feia cada funció d'agregació d'atributs
+
+
+
+* Dir que el rellotge del MTSMS el marquen les mesures tal com van entrant?
+
+* Dues variacions possibles interessants pels MTSMS:
+
+ 
+  - Buffers com a streams, sempre de mida fitada 
+  - Discos enllaçats
+
+* Esquema de treball amb TSMS i MTSMS:
+
+
+        +----+  consulta (1)
+        |TSMS| --------------> 
+     /  +----+
+addM                              fan el mateix les dues vies però
+     \  +-----+  total            a sota es pre-calcula com a stream
+        |MTSMS| -----------> 
+        +-----+
+
+
+
+
+
+
+
+
+
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% ispell-local-dictionary: "british"
 %%% End:
 
-% LocalWords:  genericity
+% LocalWords:  genericity multiresolution subseries consolidable
+
