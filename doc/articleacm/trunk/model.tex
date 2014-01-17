@@ -1,8 +1,12 @@
 
 \section{Model}
 
-\acro{MTSMS}
-\acro{MTSM}
+\todo{Definicions que cal tenir:}
+
+* \acro{MTSMS}
+* \acro{MTSM}
+* time series representation
+* time series pathologies
 
 
 La definició del model s'estructura en dues parts:
@@ -145,10 +149,10 @@ some information and finally store it in a disc. The information
 selection process changes the time intervals between measures to
 compact information by aggregating the time series attributes. 
 
-\begin{figure}[tp]
+\begin{figure}
   \centering
   \input{imatges/mtsms-arquitectura_interna.tex}
-  \smallskip
+  %\smallskip
   \caption{Architecture of \acro{MTSMS} model}
   \label{fig:model:mtsdb}
 \end{figure}
@@ -306,14 +310,32 @@ There are two basic time series queries for a MTSMS: (i) extract a
 time subseries from a resolution subseries' disc or (ii) query for a
 total time series from all consolidated information.
 
-The first is a selection over a multiresolution time series, being $(\delta,f)$ the key attributes: 
+The first is a selection of a disc over a multiresolution time series,
+being $(\delta,f)$ the key attributes: $\operatorname{SerieDisc}:
+M=\{R_0, \dots, R_d\} \times \delta \times f \mapsto S'_D$ where $S'_D
+= ( (S_B',\tau',\delta,f) , (S_D',k') ) \in M$
+
+The second is a concatenation of all discs' time subseries trying to
+obtain the most resolution as possible, which is to say by $\delta$
+order: $\totalseries: M*=\{R_0, \dots, R_d\} \mapsto S'$ where $S' =
+S_{D0} || S_{D1} || \cdots || S_{Dd}$ and $\delta_0 < \delta_1 <
+\cdots < \delta_d$. This states that $M*$ is a multiresolution time
+subseries where $R_i$ have a total order by its attribute
+$\delta_i$. Being $(\delta,f)$ the key attributes, the $M*$ can
+be obtained from $M$ by selecting resolution subseries with same $f$. If we
+operated a $\totalseries$ to a general $M$ then it could be ambiguous
+as it could contain repeated $\delta_i$.
 
 
 
-  
 
-
-
+From these two basic time series queries, more elaborated queries can
+be applied to MTSMS by using TSMS operations. For example, let $M_1$
+and $M_2$ be two multiresolution time series, we can compute the sum
+of both with $\totalseries(M_1) + \totalseries(M_2)$. 
+% This is the general algebraic expressions that describes the model,
+% but an implementation of the model could accomplish this operation
+% in a more efficient way.
 
 
 
@@ -322,11 +344,11 @@ The first is a selection over a multiresolution time series, being $(\delta,f)$ 
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-When a buffer is consolidated we summarise the time series information
-using an attribute aggregate function.  Let $S$ be a time series and
-$t_0$ and $t_f$ two time instants, an attribute aggregate function $f$
-calculates a measure that summarises the measures of $S$ included in
-the time interval $i=[T_0,T_f]$:
+Attribute aggregate function are used when consolidating a buffer in
+order to summarise the time series information. Let $S$ be a time
+series and $t_0$ and $t_f$ two time instants, an attribute aggregate
+function $f$ calculates a measure that summarises the measures of $S$
+included in the time interval $i=[T_0,T_f]$:
 \begin{align*}
 f&:S=\{m_0,\ldots,m_k\} \times [T_0,T_f] \mapsto m'
 \end{align*}
@@ -334,7 +356,14 @@ f&:S=\{m_0,\ldots,m_k\} \times [T_0,T_f] \mapsto m'
 To summarise a time series we can use different attribute aggregate
 functions.  For instance, we can calculate an statistic indicator of
 the time series such as the average or we can apply a more complex
-digital signal processing operation, \cite{zhang11}.
+digital signal processing operation, \cite{zhang11}. Furthermore, the
+possible representation for a time series and some of its pathologies
+can be considered during the aggregation process.
+
+
+
+\todo{revisat fins aquí}
+
 
 Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
 \begin{itemize}
@@ -405,7 +434,7 @@ Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
 
 In the design of the attribute aggregate function we can interpret a
 time series in different ways, that is what we call the representation
-of a time series. \citeauthor{last:keogh}, \cite{last:keogh}, cite
+of a time series. Keogh et al.\ \cite{last:keogh} cite
 some possible representations for time series such as Fourier
 transforms, wavelets, symbolic mappings or piecewise linear
 representation. The last one is very usual due to its simplicity,
@@ -510,5 +539,6 @@ addM                              fan el mateix les dues vies però
 %%% ispell-local-dictionary: "british"
 %%% End:
 
-% LocalWords:  genericity multiresolution subseries consolidable
+% LocalWords:  genericity multiresolution subseries consolidable MTSM
 
+% LocalWords:  pathologies MTSMS

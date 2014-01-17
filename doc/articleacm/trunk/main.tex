@@ -2,17 +2,16 @@
 
 \documentclass{acm_proc_article-sp}
 
-\usepackage[utf8]{inputenc}
 
-%\usepackage{todo}
+
+%TOT això s'ha de treure per ordres de l'acm?
+
 \usepackage{todonotes}
 \presetkeys%
 {todonotes}
 {inline}
 {}
 
-
-%\usepackage{url}
 
 
 
@@ -22,8 +21,6 @@
 \input{imatges/estils_pgf.tex}
 
 
-\usepackage{amsmath}
-\newtheorem{definition}{Definition}
 
 \newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
 \newcommand{\R}{\mathbb{R}} % the set of real numbers
@@ -38,27 +35,33 @@
 \DeclareMathOperator{\consR}{consR}
 \DeclareMathOperator{\addM}{addM}
 \DeclareMathOperator{\consM}{consM}
+\DeclareMathOperator{\totalseries}{TotalSeries}
 
 
 
 
-\usepackage[
-style=numeric-comp,
-sortcites=true,
-% backref=true,
-  backend=biber,
-]{biblatex}
-\bibliography{bibliografia}
-% \ExecuteBibliographyOptions{
-%   isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
-% }
-% \bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
+% \usepackage[
+% style=numeric-comp,
+% sortcites=true,
+% % backref=true,
+%   backend=biber,
+% ]{biblatex}
+% \bibliography{bibliografia}
+% % \ExecuteBibliographyOptions{
+% %   isbn=false,url=false,doi=false,eprint=false,alldates=terse,firstinits=true,abbreviate=true,maxnames=2,
+% % }
+% % \bibitemsep 0mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1mm \bibhang 0mm 
 
-\bibliography{bibliografia}
+% \bibliography{bibliografia}
 
 
 
 \begin{document}
+
+
+%%PARAMETRES
+\newdef{definition}{Definition}
+
 
 
 
@@ -116,6 +119,8 @@ The abstract goes here.
 \keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
 
 
+
+\section{Introduction}
 
 
 
@@ -189,20 +194,37 @@ Therefore, a spatial and temporal alignment is needed before the data can be fus
 
 
 
-\section{Conclusion}
+\section{Conclusions}
 The conclusion goes here.
 
 
-\section*{Acknowledgment}
+\section{Acknowledgements}
 
 
 The authors would like to thank...
 
 
 
-\printbibliography
+
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+\bibliographystyle{abbrv}
+%\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+\bibliography{bibliografia}
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
 
 
+
+
+
+\balancecolumns
 \end{document}
 
 
