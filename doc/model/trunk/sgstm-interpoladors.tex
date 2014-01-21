@@ -17,6 +17,8 @@ f: \text{sèrie temporal} \times \text{interval de temps}
 f: S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \longrightarrow  m'
 \]
 
+\todo{vist com dues operacions}
+where, generally, $m'$ results from two operations on the time series: (i) a time subseries selection $S'$ depending on the consolidating interval, for example $S' = S[t_0,t_f]$, and (ii) an aggregation over this time subseries  $m' = \agg(S',m_i a)$ with $a: m_i \times m\rightarrow m''$. \todo{mirar bé la sintaxi agg}
 
 Atès que hi ha maneres diferents de resumir la informació d'una sèrie
 temporal, hi ha diferents funcions d'agregació d'atributs. Per
@@ -155,8 +157,9 @@ l'apartat següent.
 
 Un exemple de funció d'agregació on temps i valor són dependents és
 una que retorni la primera mesura que troba, $\operatorname{primera}:
-S \times i \mapsto m'$ a on $m' = \min(S[t_0,t_f))$. En aquest cas la
-sèrie temporal resultant no és regular.
+S \times i \mapsto m'$ a on $m' = \min(S[t_0,t_f))$ i llavors el temps
+resultant pot ser $t_0 \leq T(m') < t_f$. En aquest cas la sèrie
+temporal resultant no és regular.
 
 
 Un exemple de funció d'agregació on temps i valor són independents i
@@ -192,7 +195,7 @@ en aquest cas altres interpretacions també es podrien considerar com
 per exemple $T(m')=t_f$. Així de forma general podem definir les
 funcions d'agregació d'atributs amb representació delta $f^\delta\in
 f$ com $f^\delta: S \times [t_0,t_f] \mapsto m'$ a on
-$m'=(v',\frac{t_f+t_0}{2})$ i el valor resultant depèn de l'atribut
+$m'=(\frac{t_f+t_0}{2},v')$ i el valor resultant depèn de l'atribut
 que es vulgui resumir calculat en l'interval temporal delta
 $S'=S[t_0,t_f]^\delta$:
 
@@ -205,7 +208,7 @@ $S'=S[t_0,t_f]^\delta$:
   \max(S')$ i $T(m')=\frac{t_f+t_0}{2}$.
 
 \item mitjana$^\delta$: $S \times i \mapsto m'$ a on $V(m') =
-  \sum\limits_{\forall m \in S'} V(m)$ i
+   \frac{1}{t_f-t_0}\sum\limits_{\forall m \in S'} V(m)$ i
   $T(m')=\frac{t_f+t_0}{2}$. Nota: la funció delta té la propietat
   fonamental $\int \delta(t)dt = 1$.
 \end{itemize}
@@ -217,7 +220,7 @@ d'agregació resultant com $T(m')=t_f$, atès que la representació ZOHE
 es defineix amb funcions graó contínues per l'esquerra. Així de forma
 general podem definir les funcions d'agregació d'atributs amb
 representació ZOHE $f^{\text{ZOHE}}\in f$ com $f^{\text{ZOHE}}: S
-\times [t_0,t_f] \mapsto m'$ a on $m'=(v',t_f)$ i el valor resultant
+\times [t_0,t_f] \mapsto m'$ a on $m'=(t_f,v')$ i el valor resultant
 depèn de l'atribut que es vulgui resumir calculat en l'interval
 temporal ZOHE $S'=S[t_0,t_f]^\text{ZOHE}$:
 \begin{itemize}
