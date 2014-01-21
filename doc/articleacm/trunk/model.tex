@@ -116,10 +116,38 @@ Dir que és interessant complementar els TSMS i MTSMS amb altra informació (loc
 
 
 
+%Representation:
+% In the design of the attribute aggregate function we can interpret a
+% time series in different ways, that is what we call the representation
+% of a time series. Keogh et al.\ \cite{last:keogh} cite
+% some possible representations for time series such as Fourier
+% transforms, wavelets, symbolic mappings or piecewise linear
+% representation. The last one is very usual due to its simplicity,
+% \cite{keogh01}.
 
+% Time series representations can be taken into account when computing
+% with the measures of the time series.  For example, a maximum
+% attribute aggregate function may give different values if we consider
+% a linear or a constant piecewise representation.
 
+% Following we show a possible family of attribute aggregate functions
+% for time series represented by a staircase function, that is with a
+% piecewise constant representation.  We define a new representation for
+% time series named \emph{zero-order hold backwards} (zohe). This
+% representation holds back each value until the preceding value. 
+% RRDtool, \cite{lisa98:oetiker}, has a similar aggregate function.
 
-
+% Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
+% $S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
+% $\forall t \in \mathbb{R} ,\forall m \in S:$
+% \begin{equation}
+%  S(t)^{\text{zohe}} =  
+% \begin{cases}
+%   \infty & \text{if } t > T(\max S) \\
+%   V(m)   & \text{if } t\in (T(\prev_S m),T(m)]
+% \end{cases}
+% \label{eq:zohe}
+% \end{equation}
 
 
 \section{Multiresolution model}
@@ -223,8 +251,6 @@ measure, $B$ is consolidable if and only if $T(m) \geq
 \tau+\delta$.
 
 
-
-
 A \emph{disc} is a finite capacity measures container. A time series
 stored in a disc has its cardinal bounded. When the cardinal of the
 time series is to overcome the limit, some measures need to be
@@ -297,13 +323,29 @@ R'_i = \begin{cases}
 $.
 
 
+The multiresolution consolidation operation should be applied
+regularly based on a consolidation clock. When the measure ordered
+addition approach is taken as explained in the buffer's consolidation,
+then there is no need for a clock in a MTSMS. The consolidation clock
+is induced by the measure's addition and then it is only necessary to
+check the multiresolution consolidation operation on new
+additions. However, there could be other approaches where the
+consolidation clock was given by an external clock or external
+events. Then the consolidable definitions would depend on this
+external clock.
+
+
+\todo{s'hauria de dir que cada R en una M es configura amb els parametres (delta,tau,f,k) si més no a data manipulation}
+
+
+\subsection{Data manipulation}
+
+
+\todo{tenim espai per a les operacions d'esquema? o potser deixar-ho per una altre article}
+
 
 
 \subsection{Queries}
-
-\todo{intro}
-
-\todo{tenim espai per a les operacions d'esquema?}
 
 
 There are two basic time series queries for a MTSMS: (i) extract a
@@ -311,7 +353,7 @@ time subseries from a resolution subseries' disc or (ii) query for a
 total time series from all consolidated information.
 
 The first is a selection of a disc over a multiresolution time series,
-being $(\delta,f)$ the key attributes: $\operatorname{SerieDisc}:
+being $(\delta,f)$ the key attributes: $\seriedisc:
 M=\{R_0, \dots, R_d\} \times \delta \times f \mapsto S'_D$ where $S'_D
 = ( (S_B',\tau',\delta,f) , (S_D',k') ) \in M$
 
@@ -325,8 +367,6 @@ $\delta_i$. Being $(\delta,f)$ the key attributes, the $M*$ can
 be obtained from $M$ by selecting resolution subseries with same $f$. If we
 operated a $\totalseries$ to a general $M$ then it could be ambiguous
 as it could contain repeated $\delta_i$.
-
-
 
 
 From these two basic time series queries, more elaborated queries can
@@ -348,10 +388,15 @@ Attribute aggregate function are used when consolidating a buffer in
 order to summarise the time series information. Let $S$ be a time
 series and $t_0$ and $t_f$ two time instants, an attribute aggregate
 function $f$ calculates a measure that summarises the measures of $S$
-included in the time interval $i=[T_0,T_f]$:
-\begin{align*}
-f&:S=\{m_0,\ldots,m_k\} \times [T_0,T_f] \mapsto m'
-\end{align*}
+included in the time interval $i=[t_0,t_f]$:
+\[
+f : S=\{m_0,\ldots,m_k\} \times [t_0,t_f] \mapsto m'
+\]
+where, generally, $m'$ results from two operations on the time series:
+(i) a time subseries selection $S'$ depending on the consolidating
+interval, for example $S' = S[t_0,t_f]$, and (ii) an aggregation over
+this time subseries $m' = \agg(S',m_i a)$ with $a: m_i \times
+m\rightarrow m''$.  \todo{mirar be sintaxi agg}
 
 To summarise a time series we can use different attribute aggregate
 functions.  For instance, we can calculate an statistic indicator of
@@ -361,13 +406,38 @@ possible representation for a time series and some of its pathologies
 can be considered during the aggregation process.
 
 
+In conclusion, we can define many attribute aggregate functions and
+thus no global assumptions can be made about them. Each user has to
+decide which combination of aggregation and representation fits better
+with the measured phenomena.  Therefore, \acro{MTSMS} must allow users to
+define aggregate functions.
 
-\todo{revisat fins aquí}
+We can classify attribute aggregate functions based on a discrete or
+continuous approach. For each approach we can define patterns that
+explain how the resulting value $V(m')$ is calculated but not the
+resulting time instant $T(m')$, which is subject to
+interpretation.  
 
 
-Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
+Regarding the resulting consolidation time, normally it will be
+$T(m')=t_f$ to be consistent with the consolidation operation of a
+buffer where $\tau' = \tau + \delta \equiv t_f$. However, as will be
+shown below on some examples, $T(m')$ can have an offset with buffer
+consolidating times. A trivial example of an offset is for an
+aggregate function that returns the first measure
+$m'=\min(S[t_0,t_f))$ as then $t_0 \leq T(m') < t_f$.
+
+
+First, discrete aggregation functions are based on set and sequence
+time series operators. The patterns of these functions leave $T(m')$
+undefined as well as the time subseries consolidating interval, that
+is the resulting measure can be aggregated from a time subseries $S'$
+with open interval $S'=S(t_0,t_f)$, closed interval $S'=S[t_0,t_f]$,
+or other combinations like $S'=S(t_0-d,t_f-d]$ where $d$ is a time
+duration. Next there are some attribute patterns examples, let the
+time be continuous on all the time domain $t\in T$:
 \begin{itemize}
-\renewcommand{\labelitemi}{--}
+%\renewcommand{\labelitemi}{--}
 \item maximum$^d$: $S \times i \mapsto m'$ where $V(m') =
   \max_{\forall m \in S'}(V(m))$. It summarises $S'$ with the maximum
   of the measure values.
@@ -377,6 +447,85 @@ Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
   \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$. It
   summarises $S'$ with the mean of the measure values.
 \end{itemize}
+
+
+Second, continuous aggregation functions are based on temporal
+function time series operators, that is the time series aggregated
+corresponds to a continuous function $S(t)^r$ where $r$ is a
+representation. The patterns of these functions leave $T(m')$
+undefined as well as the representation $r$ of the time series.  Next
+there are some attribute patterns examples, let the time be continuous
+on all the time domain $t\in T$:
+
+\begin{itemize}
+%\renewcommand{\labelitemi}{--}
+\item maximum$^c$: $S \times i \mapsto m'$ where $V(m') =
+  \max_{\forall t \in i}(S(t)^r)$. It summarises $S$ with the maximum
+  of the measure values in the interval $i$.
+\item last$^c$: $S \times i \mapsto m'$ where $V(m') = S(t_f)^r$. It
+  summarises $S$ with the value at $t_f$ time instant.
+\item mean$^c$: $S \times i \mapsto m'$ where $V(m') =
+  \frac{1}{t_f-t_0} \int\limits_{t_0}^{t_f} S(t)^r dt$. It summarises $S$
+  with the mean of the function in the interval $i$.
+\end{itemize}
+
+
+The continuous aggregation function patterns can be expressed with
+discrete mathematics for each particular representation, that is based
+on the temporal interval defined in TSMS. Next we exemplify it by
+defining the previous general continuous patterns for two particular
+representations: delta and \zohe{}.
+
+
+Delta attribute aggregation functions $f^\delta$ have a general form
+$f^\delta : S \times [t_0,t_f]\mapsto m'$ where $m'=(t',v')$, the
+resulting time is interpreted as centred on the interval
+$t'=\frac{t_f+t_0}{2}$ and the resulting value depends on the
+attribute, let $S'=S[t_0,t_f]^\delta$ be the selection of measures by
+delta temporal interval:
+\begin{itemize}
+%\renewcommand{\labelitemi}{--}
+\item maximum$^\delta$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
+\item last$^\delta$: $v' = \max(S')$.
+\item mean$^\delta$: $v' = \frac{1}{t_f-t_0} \sum\limits_{\forall m
+    \in S'} V(m)$, as delta function has property $\int\delta(t)dt=1$.
+\end{itemize}
+
+
+\zohe{} attribute aggregation functions $f^\zohe{}$ have a general
+form $f^\zohe{} : S \times [t_0,t_f]\mapsto m'$ where $m'=(t',v')$,
+the resulting time is interpreted as right limit of the interval
+$t'=t_f$ and the resulting value depends on the attribute, let
+$S'=S[t_0,t_f]^\zohe{}$ be the selection of measures by \zohe{} temporal
+interval:
+\begin{itemize}
+%\renewcommand{\labelitemi}{--}
+\item maximum$^\zohe{}$: $v' = \max_{\forall m \in S'}(V(m))$. 
+\item last$^\zohe{}$: $v' = \max(S')$.
+\item mean$^\zohe{}$: $v' = \frac{1}{t_f-t_0} \big[ (T(o)-t_0)V(o) +
+  \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S
+  m) )V(m) \big]$ where $o=\min(S')$ and $S''= S' - \{o\}$.
+\end{itemize}
+
+A similar aggregation function to mean$^\zohe{}$ is used by RRDtool
+\cite{rrdtool} in order to summarise information for velocity counter
+data by keeping the total counting information, as mean aggregation
+can be seen as one keeping the area below the original signal.
+
+
+In conclusion, some continuous patterns are very similar to discrete
+ones. As instance maximum and last attributes differ basically on the
+interval selection operation. However, other patterns have a more
+elaborated interpretation in a particular representation. As instance
+mean$^\zohe{}$ and mean$^\delta$ is an elaborated interpretation for
+the general integral definition.
+
+
+
+
+\subsubsection{Data validation}
+
+\todo{potser encara es verd aixo}
 
 % With reference to data validation, attribute aggregate functions
 % can cope with this process. When data has not been captured or has
@@ -432,44 +581,6 @@ Below there are some examples. Let $S'=S(T_0,T_f]$. Then:
 
 % %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
 
-In the design of the attribute aggregate function we can interpret a
-time series in different ways, that is what we call the representation
-of a time series. Keogh et al.\ \cite{last:keogh} cite
-some possible representations for time series such as Fourier
-transforms, wavelets, symbolic mappings or piecewise linear
-representation. The last one is very usual due to its simplicity,
-\cite{keogh01}.
-
-Time series representations can be taken into account when computing
-with the measures of the time series.  For example, a maximum
-attribute aggregate function may give different values if we consider
-a linear or a constant piecewise representation.
-
-Following we show a possible family of attribute aggregate functions
-for time series represented by a staircase function, that is with a
-piecewise constant representation.  We define a new representation for
-time series named \emph{zero-order hold backwards} (zohe). This
-representation holds back each value until the preceding value. 
-RRDtool, \cite{lisa98:oetiker}, has a similar aggregate function.
-
-Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
-$S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
-$\forall t \in \mathbb{R} ,\forall m \in S:$
-\begin{equation}
- S(t)^{\text{zohe}} =  
-\begin{cases}
-  \infty & \text{if } t > T(\max S) \\
-  V(m)   & \text{if } t\in (T(\prev_S m),T(m)]
-\end{cases}
-\label{eq:zohe}
-\end{equation}
-
-
-In conclusion, we can define many attribute aggregate functions and
-thus no global assumptions can be made about them. Each user has to
-decide which combination of aggregation and representation fits better
-with the measured phenomena.  Therefore, \acro{MTSMS} must allow to
-define user aggregate functions.
 
 
 
@@ -478,36 +589,58 @@ define user aggregate functions.
 
 
 
+\section{Multiresolution over TSMS}
+
+We have defined the MTSMS model as an structure based on time
+series. Now we express the multiresolution as a query on a time series
+using TSMS operations. 
+
+Given a time series $S$ and a multiresolution time series $M$, a MTSMS
+consolidates a multiresolution schema for $S$ by applying successively
+$\forall m \in S: M=\addM(M,m)$ and then $M=\consM(M')$ until $M$ is
+no more consolidable. Then over this consolidated $M$ we have defined
+two basic queries $\seriedisc(M,\delta,f)$ and $\totalseries(M)$.
+
+The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
+subseries' disc $R=(B,D)$ where $B=(S_D,\tau,\delta,f)$ and
+$D=(S_D,k)$ can be expressed with a map operation over the original
+time series $S$:
+\[
+\seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
+\]
+\[
+\dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
+\]
+\[
+ m' = (T(m_i), f(S, i)),\;  i = [T(\prev_{S_I}(m_i)),T(m_i)]
+\]
+\[
+ S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S))
+\]
+\[
+T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
+\]
 
 
-\todo{}
+The total time series $S'=\totalseries(M)$ is a concatenation of all $\seriedisc$ without repeated $\delta$, let $S_\delta = \{ (\delta_0,\tau_0,f_0,k_0)\ldots\}$ be the parameters of $M$ expressed as a multivalued time series \todo{}
+
+\[
+S' = \fold(S_\delta,\{\},f_c,\min) \text{ where }
+\]
+\[
+f_c: S_i \times (\delta_c,f_c,k_c) \mapsto S_i || \dmap(S,\delta_c,\tau_c,f_c,k_c)
+\]
+
+
+
+
+Summarising, a MTSMS and the multiresolution query are equivalent on functionality. 
 
 
 \section{TODO}
 
 
-* MTSMS expressada com una consulta (1) sobre TSMS
 
-La sèrie temporal del disc d'una subsèrie resolució $R=(S_B,S_D,\tau,\delta,k,f)$ es pot expressar com un mapa, sigui $S$ la sèrie temporal original de la qual faríem $\forall m \in S: R.*addM(m)$: 
-  \begin{align*}
-    S_D \equiv &  \operatorname{map}(S_I, m_i\mapsto m') \text{ on }  \\
-    & m' = (T(m_i), f(S, i)), i = [T(\operatorname{prev}_{S_I}(m_i)),T(m_i)] \\
-    &  S_I = \{ (t,\infty) | t\in T_I  \}, T_I = \{ t_i = \tau+n\delta | n\in\N, t_M - k\delta < t_i \leq t_M \}, t_M = T(\max(S))
-  \end{align*}
-  
-En aquest cas hem suposat que la $f$ segueix sent un agregador d'atributs $f:S\times i\rightarrow m$. Però podríem simplificar dient que és un agregador que segueix la forma ja coneguda dels TSMS $f_a \equiv agg:S\times m_i \times f \rightarrow m'$ on $f:m_i\times m\rightarrow m''$ i aleshores ho podem veure dos mapes:
-  \begin{align*}
-    S_D \equiv &  \operatorname{map}(S', m_i\mapsto m') \text{ on }  \\
-    & m' = (T(m_i), f_a(V(m_i)))
-    & S' = \operatorname{map}(S_I, m_i\mapsto m'') \\
-    & m'' = (T(m_i), S[t_a,t_b]), t_a = T(\operatorname{prev}_{S_I}(m_i)), t_b=T(m_i) \\
-    &  S_I = \{ (t,\infty) | t\in T_I  \}, T_I = \{ t_i = \tau+n\delta | n\in\N, t_M - k\delta < t_i \leq t_M \}, t_M = T(\max(S))
-  \end{align*}
-de manera que la feina de treure les subsèries la fa el mapa sobre $S_i$ mentre que abans la feia cada funció d'agregació d'atributs
-
-
-
-* Dir que el rellotge del MTSMS el marquen les mesures tal com van entrant?
 
 * Dues variacions possibles interessants pels MTSMS:
 
@@ -518,7 +651,7 @@ de manera que la feina de treure les subsèries la fa el mapa sobre $S_i$ mentre
 * Esquema de treball amb TSMS i MTSMS:
 
 
-        +----+  consulta (1)
+        +----+  consultaMultiresolution
         |TSMS| --------------> 
      /  +----+
 addM                              fan el mateix les dues vies però
@@ -541,4 +674,4 @@ addM                              fan el mateix les dues vies però
 
 % LocalWords:  genericity multiresolution subseries consolidable MTSM
 
-% LocalWords:  pathologies MTSMS
+% LocalWords:  pathologies MTSMS TSMS
