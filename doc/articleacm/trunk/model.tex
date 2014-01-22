@@ -4,7 +4,8 @@
 \todo{Definicions que cal tenir:}
 
 * \acro{MTSMS}
-* \acro{MTSM}
+* \acro{TSMS}
+* \acro{DBMS}
 * time series representation
 * time series pathologies
 
@@ -144,7 +145,10 @@ even other time series.
 
 %For simplicity
 In accordance to the time examples, for the value domain we use
-projectively extended real numbers $\R* \in \R \cup \{\infty\}$.
+projectively extended real numbers $\R* \in \R \cup \{\infty\}$.  This
+example is for scalar values but can be extended to the concept of
+multivalues $\R*^n$, which represent a collection of values measured
+at the same time instant \cite{assfalg08:thesis}.
 
 
 
@@ -170,18 +174,6 @@ contrary they have a partial order. Let $m = (t_m, v_m)$ and $n =
 only if $t_m\geq t_n$ and there is a partial order $m > n$ if and only
 if $t_m > t_n$ and  $m_n = n_n$ only if $(t_m, v_m) = (t_n, v_n)$.
 
-
-
-
-\todo{multivalor}
-mesura multivaluada o time series multivaluada
-En aquest exemple amb reals, el valor  ́s un escalar per` f`cilment es pot estendre
-e
-o a
-el concepte a valors multivaluats R∗ n que representin una col.lecci ́ de valors me-
-o
-surats en el mateix instant de temps, tal i com fa per exemple assfalg08:thesis,
-[assfalg08:thesis].
 
 
 
@@ -211,17 +203,48 @@ same phenomena, the type of $S$ values is homogeneous.
 
 
 
-
-\todo{revisat fins aquí}
+A time series can record more than one phenomena if they share the
+time instants of acquisition. Then we have a multivalued time series,
+which can be expressed by two forms. Let $S = \{m_0, \ldots, m_k\}$ be
+a time series, in one form we write measures as
+$m=(t,(v_1,v_2,\ldots,v_n))$, that is the value has domain $\R*^n$; in
+the other form we write measures directly as
+$m=(t,v_1,v_2,\ldots,v_n)$.
 
 
 
 
 \subsection{Operations}
 
+Time series have a time attribute that must be manipulated
+coherently. Owing to this time attribute, the behaviour of a time
+series can be of three types:
+\begin{itemize}
+\item Set operations that manipulate the set structure, including
+  relational operations.
+\item Sequence operations that consider the set with order.
+\item Temporal function operations that manipulate a time series
+  considering it is a representation for a continuous function.
+\end{itemize}
 
 
+\todo{dir que per raons d'espai describim els més importants?}
 
+
+\subsubsection{Set operations}
+
+We describe how common set operators can be applied to time series. We
+rely on how the relational model of DBMS describes operations based on
+set algebra \cite{date:introduction}.
+
+
+\todo{revisat fins aquí}
+
+\todo{diagremes de Venn?}
+
+\todo{pertinença i inclusió}
+
+\todo{Màxim i suprem}
 % The order defined by measures implies a total order in a time
 % series. As a time series is a finite set, if it is not empty it has a
 % maximum and a minimum.  Let $S=\{m_0,\ldots,m_k\}$ be a time series
@@ -229,22 +252,72 @@ same phenomena, the type of $S$ values is homogeneous.
 % and only if $\forall m \in S: n \geq m $.  Similarly, the time series'
 % minimum is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
 
-% Given the order defined by time, in a time series we define the
-% sequence interval following \cite{last:keogh,last:hetland}.  Let
-% $S=\{m_0, \ldots, m_k\}$ be a time series. We define the subset
-% $S(r,t] \subseteq S$ as the time series $S(r,t]=\{m\in S | r<T(m)\leq
-% t\}$, where $r$ and $t$ are two instants in time.  We also define the
-% subset $S(r,+\infty)\subseteq S$ as the time series $S(r,+\infty) =
-% \{m\in S | r< T(m) \leq T(\max(S))\}$ and the subset
-% $S(-\infty,t)\subseteq S$ as the time series $S(-\infty,t) = \{m\in S
-% | T(\min(S))\leq T(m) < t\}$.
+For extended real numbers $\Rb$ it can be shown that $\sup(\emptyset)=()$
 
-% The time order in time series also implies the sequence concept of
-% next and previous measure.  Let $S=\{m_0, \ldots, m_k\}$ be a time
-% series and $l\in S$ and $n$ be two measures. We define the next
-% measure of $n$ in $S$ as $l=\nex_S(n)$ where $l =
-% \min(S(T(n),+\infty))$. We define the previous measure of $n$ in $S$
-% as $l=\prev_S(n)$ where $l = \max(S(-\infty,T(n)))$.
+
+\todo{map}
+
+\todo{aggregate}
+
+\todo{orderfold}
+
+\todo{binary computacional}
+
+
+
+\subsubsection{Sequence operations}
+
+Sequence operations manipulate time series considering measures as
+being total ordered. Then we can define three basic operations:
+interval, successor and concatenation.
+
+
+The interval $(r,t)$, where $r$ and $t$ are two time instants, over a
+time series $S$ is a time subseries between the two time instants
+$S(r,t) \subseteq S$. Similarly as \cite{last:hetland}, we define the
+open interval as $S(r,t)=\{m\in S | r<T(m)<t\}$. Other intervals can
+be defined with different continuities in the limits: closed $S[r,t]$,
+left-open $S(r,t]$, and right-open $S[r,t)$.
+
+The time order in time series also implies the sequence concept of
+successor and predecessor.  Let $S=\{m_0, \ldots, m_k\}$ be a time
+series and $l\in S$ and $n$ be two measures. We say $l=\nex_S(n)$ is the next
+measure to $n$ in $S$ if and only if $l=\inf(S(T(n),+\infty])$.  We
+say $l=\prev_S(n)$ is the previous measure to $n$ in $S$ if and only if
+$l=\sup(S[-\infty,T(n)))$. 
+
+Infinite measures are obtained when next and previous are applied to
+supremum and infimum measure respectively: $\nex_S(\sup
+S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
+
+
+
+Concatenation comprises the measures of the first time series followed
+in time order by the measures of the second. It is similar to union
+for sets but considering the sequence interval. The concatenation
+requires both time series to have the same structure as seen with
+union operation.  Let $S_1$ and $S_2$ be two time series, the
+concatenation of both $S_1 || S_2$ is a time series $S$ containing all
+measures of $S_1$ and those of $S_2$ that not intersect in the
+interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2] )$ a
+on $t_1=T(\inf S_1)$ i $t_2=T(\sup S_1)$.
+
+
+
+
+\subsubsection{Temporal function operations}
+
+\todo{interval temporal}
+
+From temporal interval other operators can be defined such as temporal
+selection, temporal concatenation, or temporal join.
+
+
+\todo{}
+
+
+
+
 
 % Let $S$ be a time series, $t$ be a time instant and $\delta$ be a
 % time duration, then the time series' measures can be located in the
@@ -497,9 +570,9 @@ time subseries from a resolution subseries' disc or (ii) query for a
 total time series from all consolidated information.
 
 The first is a selection of a disc over a multiresolution time series,
-being $(\delta,f)$ the key attributes: $\seriedisc:
-M=\{R_0, \dots, R_d\} \times \delta \times f \mapsto S'_D$ where $S'_D
-= ( (S_B',\tau',\delta,f) , (S_D',k') ) \in M$
+being $(\delta,f)$ the key attributes: $\seriedisc: M=\{R_0, \dots,
+R_d\} \times \delta \times f \mapsto S'_D \in D' | (B',D') \in R',R' \in
+M$.
 
 The second is a concatenation of all discs' time subseries trying to
 obtain the most resolution as possible, which is to say by $\delta$
@@ -776,7 +849,7 @@ multivalued time series
 \totalseries(M) \equiv \multiresolution(S)
 \]
 \[
-\multiresolution(S) = \fold(S_\delta,\{\},f_c,\min) \text{ where }
+\multiresolution(S) = \orderfold(S_\delta,\{\},f_c,\min) \text{ where }
 \]
 \[
 f_c: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
@@ -850,4 +923,5 @@ addM                              fan el mateix les dues vies però
 
 % LocalWords:  genericity multiresolution subseries consolidable MTSM
 
-% LocalWords:  pathologies MTSMS TSMS cardinality
+% LocalWords:  pathologies MTSMS TSMS cardinality multivalued infimum
+% LocalWords:  multivalues supremum
