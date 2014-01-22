@@ -52,32 +52,175 @@ Dir que és interessant complementar els TSMS i MTSMS amb altra informació (loc
 
 \todo{sobretot explicar les tres visions de les sèries temporals: conjunt, seqüència i funció}
 
-% In this section we introduce some background concepts and the
-% nomenclature which we will use later.  First we define the main
-% objects of a \acro{MTSMS} which are measures and time series.
 
-% A \emph{measure} is a value measured in a time instant. More formally
-% it is a tuple $(v,t)$ where $v$ is the value of the measure and $t \in
-% \mathbb{R}$ is the time instant of measurement.  The values of a time
-% series can be of any type. For simplicity examples are presented with
-% integers or real numbers but can also be strings or vectors.  Let $m =
-% (v,t)$ be a measure, $v$ is written as $V(m)$ and $t$ is written as
-% $T(m)$.
+In this section we introduce some background concepts and the
+nomenclature which we will use later concerning TSMS. Measures and
+time series are the main objects of TSMS and their main characteristic
+is that they have a time attribute that requires a coherent
+treatment. We describe the TSMS model in three parts:
 
-% The time value defines the canonical order between measures.  Let $m =
-% (v_m, t_m)$ and $n = (v_n, t_n)$ be two measures, then $m\geq n$ if
-% and only if $t_m\geq t_n$.
+\begin{itemize}
+\item The data structure model of measures and time series.
+\item The manipulation and operation of time series.
+\item Specific properties of time series.
+\end{itemize}
 
-% A \emph{time series} is sequence of measures of the same phenomena
-% that are ordered in time.
-% \begin{definition}[Time series]
-%   A \emph{time series} $S$ is a a set of measures of the same
-%   phenomena $S = \{m_0, \ldots, m_k\}$ without repeated time values
-%   $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$. Given
-%   a time series $|S|$, we note its size by $|S|=k+1$. Observe that,
-%   because measures in $S$ are of the same phenomena, the type of $S$
-%   values is homogeneous.
-% \end{definition}
+
+
+
+
+\subsection{Structure}
+
+A \emph{time series} is a relation of times with values. Each pair of
+time-value is called \emph{measure}. Then, a time series is a set of
+measures. 
+
+Firstly we address time and value concepts and secondly we define formally
+measures and time series.
+
+
+\subsubsection{Time}
+
+Time is an attribute that indicates order between measures. We define
+$T$ as the \emph{time domain}. $T$ can be either a finite or an infinite set
+and normally it will be a closed set. As an example for the time
+domain $T$ we use the affinely extended real numbers $\Rb \in \R \cup
+\{+\infty,-\infty\}$ \cite{cantrell:extendedreal}.
+
+The real numbers set is a metric space as it has a distance function
+(or metric). Consequently, we can differentiate between time instants
+(the elements of the set) and durations (the metric). Time can be
+defined as a coordinate system
+\cite{iep:time-supplement,kopetz11:realtime} by noting time instants
+as points in the real line, durations as segments of the real line,
+and specifying a time instant as a reference system. Next, we define
+time in order we can (i) order events, (ii) measure events durations,
+and (iii) position when events happen. This is a naive approximation
+without complex details of the time concept.
+
+\begin{definition}(Time)
+  \label{def:model:temps}
+  Let $t^i_i$ and $t^i_j$ be two \emph{time instants} with same $t^R$
+  as \emph{reference time}, we define the \emph{quantity} or
+  \emph{duration of time} $t^d$ as a value $t^d \in\Rb$ which measures
+  the distance in time units between two time instants $t^d =
+  d(t^i_i,t^i_j)$ where $d$ is the metric of the set $T$. When time
+  instants are also real numbers $t^i_i , t^i_j \in \Rb$, then $t^d =
+  t^i_i - t^i_j$.
+
+  Let $T$ be the domain for time, we define a \emph{time instant} $I$
+  as an element of the set $I \in T$. Following with the definition of
+  a coordinate system and real numbers as time domain, let $t^{R}$ be
+  a \emph{reference time instant}, then we define \emph{time instants}
+  as a value $t^i \in\Rb$ that measures signed time distance from the
+  \emph{reference time instant} $t^i= d(t^{R},I)$ where $d$ is the
+  metric of the set $T$. $\square$
+\end{definition}
+
+Summarising, time instants are a sequence of real values which
+position and order events, moreover between two time instants there is
+a duration.  There are several time standards \cite{allen:timescales}
+which specify how time duration must be measured and how time instants
+positions must be noted. 
+
+Time standards deal with a similar concept of
+time coordinate system which we have illustrated with real
+numbers. There is also a calendar approach which define the time
+domain with names for the points in the time line and with rules for
+time durations. Usually the aim of calendars is to give a relation
+between time and Earth rotation. However, we do not see calendars as
+essential part of TSMS \cite{dreyer94} as maps can be established
+between a time coordinate system and a calendar system.
+
+
+\subsubsection{Value}
+
+Value is an attribute that indicates the magnitude of measures. The
+domain for values can be any data type, that is an object that belongs
+to a determined set of values and that has operations associated.
+This way valid examples for values are integers, real numbers,
+strings, and more elaborated data structures such as arrays, lists, or
+even other time series.
+
+%For simplicity
+In accordance to the time examples, for the value domain we use
+projectively extended real numbers $\R* \in \R \cup \{\infty\}$.
+
+
+
+
+\subsubsection{Measure}
+
+
+\begin{definition}
+  A \emph{measure} is defined as a tuple $(t,v)$ where $v$ is the
+  value of the measure and $t$ is the time instant when the measure
+  has been acquired.
+\end{definition}
+
+Let $m = (t,v)$ be a measure, $v$ is written as $V(m)$ and $t$ is
+written as $T(m)$.
+
+\todo{repensar la relacio d'ordre}
+\todo{potser: total order = temporal order; partial order = order}
+The time attribute defines the canonical order between measures. If
+only time is concerned then measures have a total order, on the
+contrary they have a partial order. Let $m = (t_m, v_m)$ and $n =
+(t_n, v_n)$ be two measures, there is a total order $m\geq n$ if and
+only if $t_m\geq t_n$ and there is a partial order $m > n$ if and only
+if $t_m > t_n$ and  $m_n = n_n$ only if $(t_m, v_m) = (t_n, v_n)$.
+
+
+
+
+\todo{multivalor}
+mesura multivaluada o time series multivaluada
+En aquest exemple amb reals, el valor  ́s un escalar per` f`cilment es pot estendre
+e
+o a
+el concepte a valors multivaluats R∗ n que representin una col.lecci ́ de valors me-
+o
+surats en el mateix instant de temps, tal i com fa per exemple assfalg08:thesis,
+[assfalg08:thesis].
+
+
+
+
+
+\subsubsection{Time series}
+
+Time series are sets of measures of the same phenomena that are
+ordered in time.  Sometimes they are also called time sequences
+\cite{last:hetland}.
+
+
+\begin{definition}
+  A \emph{time series} $S$ is a a set of measures $S = \{m_0, \ldots,
+  m_k\}$ without repeated time values $\forall i,j: i\leq k, j\leq k,
+  i\neq j : T(m_i)\neq T(m_j)$.
+\end{definition}
+
+As there are no repeated time values, measures in a time series have a
+total order.
+
+Given a time series $S$, we note its cardinality $|S|=k+1$.  A time
+series without measures is the empty time series
+$S_\emptyset=\emptyset=\{\}$ and has zero cardinality
+$|S_\emptyset|=0$.  Observe that, because measures in $S$ are of the
+same phenomena, the type of $S$ values is homogeneous.
+
+
+
+
+\todo{revisat fins aquí}
+
+
+
+
+\subsection{Operations}
+
+
+
 
 % The order defined by measures implies a total order in a time
 % series. As a time series is a finite set, if it is not empty it has a
@@ -153,6 +296,7 @@ Dir que és interessant complementar els TSMS i MTSMS amb altra informació (loc
 \section{Multiresolution model}
 \label{sec:MTSMS}
 
+
 The \acro{MTSMS} are \acro{TSMS} that store time series with a lossy
 compression approach, that is some information is selected and spread in
 different time resolutions. The \acro{MTSMS} model is based on the
@@ -181,7 +325,7 @@ compact information by aggregating the time series attributes.
   \centering
   \input{imatges/mtsms-arquitectura_interna.tex}
   %\smallskip
-  \caption{Architecture of \acro{MTSMS} model}
+  \caption{Architecture of MTSMS model}
   \label{fig:model:mtsdb}
 \end{figure}
 
@@ -215,7 +359,7 @@ A \emph{buffer} is a container for a regular or a no-regular time
 series. The buffer objective is to regularise the time series using a
 predetermined step and an attribute function. We name
 \emph{consolidation} to this action.
-\begin{definition}[Buffer]
+\begin{definition}%(Buffer)
   A \emph{buffer} is defined as the tuple $(S_B,\tau,\delta,f)$ where
   $S_B$ is a time series, $\tau$ is the last consolidation time,
   $\delta$ is the duration of the consolidation step and $f$ is an
@@ -255,7 +399,7 @@ A \emph{disc} is a finite capacity measures container. A time series
 stored in a disc has its cardinal bounded. When the cardinal of the
 time series is to overcome the limit, some measures need to be
 discarded.
-\begin{definition}[Disc]
+\begin{definition}%(Disc)
   A \emph{disc} is a tuple $(S_D,k)$ where $S$ is a time series and
   $k\in\N$ is the maximum allowed cardinal of $S_D$.  An empty
   disc $D_{\emptyset} = (\emptyset,k)$ has an empty time series and
@@ -276,7 +420,7 @@ A \emph{resolution subseries} is a structure that regularises and
 aggregates a time series. It is composed of a buffer, that contains
 the partial time series to be regularised, and a disc, that contains
 the regularised time series.
-\begin{definition}[Resolution subseries]
+\begin{definition}%(Resolution subseries)
   A \emph{resolution subseries} is a tuple $(B,D)$ where $B$ is a
   buffer and $D$ is a disc.  An empty buffer and empty disc imply an
   empty resolution subseries $R_{\emptyset} =
@@ -300,7 +444,7 @@ which share the input of measures, that is they buffer the same time
 series. A time series is stored regularised and distributed with
 different resolutions in the various resolution subseries, as
 previously shown in Figure~\ref{fig:model:mtsdb}.
-\begin{definition}[Multiresolution time series]
+\begin{definition}%(Multiresolution time series)
   A \emph{Mul\-ti\-re\-solution time series} is a set of resolution
   subseries $\{R_0, \dots, R_d\}$.  An empty multiresolution series
   has empty resolution subseries $M_{\emptyset}=\{R_{0_\emptyset},
@@ -602,8 +746,8 @@ no more consolidable. Then over this consolidated $M$ we have defined
 two basic queries $\seriedisc(M,\delta,f)$ and $\totalseries(M)$.
 
 The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
-subseries' disc $R=(B,D)$ where $B=(S_D,\tau,\delta,f)$ and
-$D=(S_D,k)$ can be expressed with a map operation over the original
+subseries' disc $R=(B,D)$, where $B=(S_D,\tau,\delta,f)$ and
+$D=(S_D,k)$, can be expressed with a map operation over the original
 time series $S$:
 \[
 \seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
@@ -612,42 +756,60 @@ time series $S$:
 \dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
 \]
 \[
- m' = (T(m_i), f(S, i)),\;  i = [T(\prev_{S_I}(m_i)),T(m_i)]
+ m' = (T(m_i), f(S, i)),\;  i = [T(\prev_{S_I}(m_i)),T(m_i)],
 \]
 \[
- S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S))
+ S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
 \]
 \[
 T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
 \]
 
 
-The total time series $S'=\totalseries(M)$ is a concatenation of all $\seriedisc$ without repeated $\delta$, let $S_\delta = \{ (\delta_0,\tau_0,f_0,k_0)\ldots\}$ be the parameters of $M$ expressed as a multivalued time series \todo{}
-
+The total time series $S'=\totalseries(M)$ is a concatenation of all
+$\seriedisc$ without repeated $\delta$ can be expressed with a fold
+operation over the original time series $S$. Let $S_\delta = \{
+(\delta_0,\tau_0,f_0,k_0), (\delta_1,\tau_1,f_1,k_1), \ldots,
+(\delta_d,\tau_d,f_d,k_d)\}$ be the parameters of $M$ expressed as a
+multivalued time series 
 \[
-S' = \fold(S_\delta,\{\},f_c,\min) \text{ where }
+\totalseries(M) \equiv \multiresolution(S)
 \]
 \[
-f_c: S_i \times (\delta_c,f_c,k_c) \mapsto S_i || \dmap(S,\delta_c,\tau_c,f_c,k_c)
+\multiresolution(S) = \fold(S_\delta,\{\},f_c,\min) \text{ where }
+\]
+\[
+f_c: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
+\dmap(S,\delta_c,\tau_c,f_c,k_c)
 \]
 
 
 
-
-Summarising, a MTSMS and the multiresolution query are equivalent on functionality. 
-
-
-\section{TODO}
+Summarising, a MTSMS and the multiresolution query are equivalent on
+functionality.
 
 
 
+\subsection{Two database structures}
 
-* Dues variacions possibles interessants pels MTSMS:
 
- 
-  - Buffers com a streams, sempre de mida fitada 
-  - Discos enllaçats
+\todo{citar stonebraker05 The 8 Requirements of Real-Time Stream Processing}
 
+
+\begin{figure}
+  \centering
+  \input{imatges/mtsms-tsms.tex}
+  \caption{Two forked TSMS+MTSMS}
+  \label{fig:model:mtsms-tsms}
+\end{figure}
+
+
+Figure~\ref{fig:model:mtsms-tsms}
+
+
+* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
+
+\todo{}
 * Esquema de treball amb TSMS i MTSMS:
 
 
@@ -658,6 +820,20 @@ addM                              fan el mateix les dues vies però
      \  +-----+  total            a sota es pre-calcula com a stream
         |MTSMS| -----------> 
         +-----+
+
+
+
+
+
+\subsection{Stream orientation}
+
+\todo{}
+* Dues variacions possibles interessants pels MTSMS:
+
+ 
+  - Buffers com a streams, sempre de mida fitada 
+  - Discos enllaçats
+
 
 
 
@@ -674,4 +850,4 @@ addM                              fan el mateix les dues vies però
 
 % LocalWords:  genericity multiresolution subseries consolidable MTSM
 
-% LocalWords:  pathologies MTSMS TSMS
+% LocalWords:  pathologies MTSMS TSMS cardinality
