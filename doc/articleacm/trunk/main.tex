@@ -2,8 +2,6 @@
 
 \documentclass{acm_proc_article-sp}
 
-
-
 %TOT això s'ha de treure per ordres de l'acm?
 
 \usepackage{todonotes}
@@ -28,12 +26,18 @@
 \newcommand{\N}{\mathbb{N}} % the set of natural
 \newcommand{\zohe}{\acro{zohe}}
 
-\DeclareMathOperator*{\nex}{next}
-\DeclareMathOperator*{\prev}{prev}
+\DeclareMathOperator*{\inst}{\in^t}
+\DeclareMathOperator*{\notinst}{\notin^t}
+\DeclareMathOperator*{\subseteqt}{\subseteq^t}
+\DeclareMathOperator*{\cupt}{\cup^t}
+\DeclareMathOperator*{\dift}{-^t}
+\DeclareMathOperator*{\join}{join}
 \DeclareMathOperator*{\map}{map}
+\DeclareMathOperator*{\fold}{fold}
 \DeclareMathOperator*{\agg}{aggregate}
 \DeclareMathOperator*{\orderfold}{orderfold}
-
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
 
 
 \DeclareMathOperator{\addB}{addBuffer}
@@ -53,8 +57,6 @@
 
 \usepackage[backend=biber]{biblatex}
 \bibliography{bibliografia}
-
-
 \begin{document}
 
 
@@ -85,10 +87,10 @@ Escobet Canal, Teresa\\
 % 2nd. author
 \alignauthor
 Llus\`{a} Serra, Aleix\\
-       \affaddr{Department of Electronic System Design and Programming}\\
-       \affaddr{Universitat Polit\`{e}cnica de Catalunya}\\
+%       \affaddr{Department of Electronic System Design and Programming}\\
+%       \affaddr{Universitat Polit\`{e}cnica de Catalunya}\\
        %\affaddr{Av.~Bases de Manresa 61--73}
-       \affaddr{08242 Manresa, ES-CT}\\
+%       \affaddr{08242 Manresa, ES-CT}\\
        \email{aleix@dipse.upc.edu}
 % 3rd. author
 \alignauthor Vila-Marta, Sebasti\`{a}\\
@@ -96,9 +98,15 @@ Llus\`{a} Serra, Aleix\\
        %\affaddr{1 Th{\o}rv{\"a}ld Circle}\\
        %\affaddr{Hekla, Iceland}\\
        \email{sebas@dipse.upc.edu}
+\and
+%\alignauthor
+%Llus\`{a} Serra, Aleix\\
+       \affaddr{Department of Electronic System Design and Programming}\\
+       \affaddr{Universitat Polit\`{e}cnica de Catalunya}\\
+       %\affaddr{Av.~Bases de Manresa 61--73}
+       \affaddr{08242 Manresa, ES-CT}\\
+%       \email{aleix@dipse.upc.edu}
 }
-
-
 
 \maketitle
 
@@ -121,9 +129,9 @@ The abstract goes here.
 
 \input{intro}
 
-\include{model}
+\input{model}
 
-\include{conclusions}
+\input{conclusions}
 
 
 

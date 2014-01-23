@@ -40,6 +40,55 @@ the time may be either valid time or transaction time.
 
 
 
+\todo{paper structure}
+
+
+\section{Features of multiresolution}
+
+
+\todo{Definicions que cal tenir:}
+
+* \acro{MTSMS}
+* \acro{TSMS}
+* \acro{DBMS}
+* time series representation
+* time series pathologies
+
+
+La definició del model s'estructura en dues parts:
+
+\begin{itemize}
+\item Un model pels (SGST)  que defineix mesura i sèrie temporals.
+\item Un model pels (SGSTM) que defineix buffer, disc i subsèrie
+  resolució, el qual treballa sobre el model de SGST.
+\end{itemize}
+
+% \todo{sobre tres nivells}
+% A l'estat de l'art s'ha d'haver explicat els tres nivell de model de dades segons Date i deixar clar aquí que nosaltres definim un model pel segon nivell: nivell de model lògic. Els models lògics modelen les dades, en canvi els models conceptuals modelen la realitat, Fabian Pascal posa d'exemple conceptual el model E/RM.
+
+
+Objectius:
+
+En el model de SGST s'observen algunes patologies que poden presentar les sèries temporals. El model de SGSTM soluciona algunes d'aquestes patologies:
+
+\begin{itemize}
+\item Regularitza les sèries temporals
+\item Tracta i validar les sèries temporals: gestiona els casos de dades errònies o desconegudes i marca quan hi ha valors erronis.
+\item És una solució de compressió per a quantitats enormes de dades
+\end{itemize}
+
+
+Però el model de SGSTM també es pot fer servir per altres aplicacions:
+
+* Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
+
+* Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
+
+* Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
+
+
+Dir que és interessant complementar els TSMS i MTSMS amb altra informació (localització del sensor, unitats del valors, etc.) però que aquesta informació és millor guardar-la en un SGBD relacional.
+
 
 
 

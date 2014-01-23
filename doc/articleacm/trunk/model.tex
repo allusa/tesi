@@ -1,57 +1,7 @@
 
-\section{Model}
-
-\todo{Definicions que cal tenir:}
-
-* \acro{MTSMS}
-* \acro{TSMS}
-* \acro{DBMS}
-* time series representation
-* time series pathologies
-
-
-La definició del model s'estructura en dues parts:
-
-\begin{itemize}
-\item Un model pels (SGST)  que defineix mesura i sèrie temporals.
-\item Un model pels (SGSTM) que defineix buffer, disc i subsèrie
-  resolució, el qual treballa sobre el model de SGST.
-\end{itemize}
-
-\todo{sobre tres nivells}
-A l'estat de l'art s'ha d'haver explicat els tres nivell de model de dades segons Date i deixar clar aquí que nosaltres definim un model pel segon nivell: nivell de model lògic. Els models lògics modelen les dades, en canvi els models conceptuals modelen la realitat, Fabian Pascal posa d'exemple conceptual el model E/RM.
-
-
-Objectius:
-
-En el model de SGST s'observen algunes patologies que poden presentar les sèries temporals. El model de SGSTM soluciona algunes d'aquestes patologies:
-
-\begin{itemize}
-\item Regularitza les sèries temporals
-\item Tracta i validar les sèries temporals: gestiona els casos de dades errònies o desconegudes i marca quan hi ha valors erronis.
-\item És una solució de compressió per a quantitats enormes de dades
-\end{itemize}
-
-
-Però el model de SGSTM també es pot fer servir per altres aplicacions:
-
-* Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
-
-* Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
-
-* Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
-
-
-Dir que és interessant complementar els TSMS i MTSMS amb altra informació (localització del sensor, unitats del valors, etc.) però que aquesta informació és millor guardar-la en un SGBD relacional.
-
-
 
 \section{Time series preliminaries}
 \label{sec:model:preliminaries}
-
-\todo{vigilar que s'ha canviat l'ordre de les mesures a (t,v)}
-
-\todo{sobretot explicar les tres visions de les sèries temporals: conjunt, seqüència i funció}
 
 
 In this section we introduce some background concepts and the
@@ -65,8 +15,6 @@ treatment. We describe the TSMS model in three parts:
 \item The manipulation and operation of time series.
 \item Specific properties of time series.
 \end{itemize}
-
-
 
 
 
@@ -165,15 +113,14 @@ at the same time instant \cite{assfalg08:thesis}.
 Let $m = (t,v)$ be a measure, $v$ is written as $V(m)$ and $t$ is
 written as $T(m)$.
 
-\todo{repensar la relacio d'ordre}
-\todo{potser: total order = temporal order; partial order = order}
-The time attribute defines the canonical order between measures. If
-only time is concerned then measures have a total order, on the
-contrary they have a partial order. Let $m = (t_m, v_m)$ and $n =
-(t_n, v_n)$ be two measures, there is a total order $m\geq n$ if and
-only if $t_m\geq t_n$ and there is a partial order $m > n$ if and only
-if $t_m > t_n$ and  $m_n = n_n$ only if $(t_m, v_m) = (t_n, v_n)$.
-
+The time attribute defines the canonical order relation between
+measures. If only time is concerned then measures have a \emph{total
+  order}, on the contrary they have a \emph{partial order}. Let $m =
+(t_m, v_m)$ and $n = (t_n, v_n)$ be two measures, there is a total
+order $m\geq n$ if and only if $t_m\geq t_n$ and there is a partial
+order $m > n$ if and only if $t_m > t_n$ and $m_n = n_n$ only if
+$(t_m, v_m) = (t_n, v_n)$.  We can call \emph{temporal order} to the
+total order as it only considers the time attribute in measures.
 
 
 
@@ -228,7 +175,7 @@ series can be of three types:
 \end{itemize}
 
 
-\todo{dir que per raons d'espai describim els més importants?}
+\todo{dir que per raons d'espai describim els més importants i de forma breu?}
 
 
 \subsubsection{Set operations}
@@ -237,31 +184,184 @@ We describe how common set operators can be applied to time series. We
 rely on how the relational model of DBMS describes operations based on
 set algebra \cite{date:introduction}.
 
+The two possible order relations of measures induces two operation
+definitions for some set operators. Mainly it induces two membership
+operations and so to all operations based on it. As we have a partial
+order and a total order called temporal order, respectively we call
+these operators with the normal name and with a \emph{temporal}
+prefix. In Figure~\ref{fig:model:venn} we show typical Venn diagrams
+for both cases, where $t_A$ and $t_b$ are subsets with measures that
+only share the time attribute between sets $A$ and $B$. The normal
+intersecting area indicates measures that share time and value
+attributes.
 
-\todo{revisat fins aquí}
-
-\todo{diagremes de Venn?}
-
-\todo{pertinença i inclusió}
-
-\todo{Màxim i suprem}
-% The order defined by measures implies a total order in a time
-% series. As a time series is a finite set, if it is not empty it has a
-% maximum and a minimum.  Let $S=\{m_0,\ldots,m_k\}$ be a time series
-% and $n\in S$ be a measure. The time series' maximum is $n=\max(S)$ if
-% and only if $\forall m \in S: n \geq m $.  Similarly, the time series'
-% minimum is $n=\min(S)$ if and only if $\forall m \in S: n \leq m$.
-
-For extended real numbers $\Rb$ it can be shown that $\sup(\emptyset)=()$
+\begin{figure}
+  \centering
+  \input{imatges/sgst-venn.tex}
+  \caption{Venn diagrams for set and temporal set operations of TSMS}
+  \label{fig:model:venn}
+\end{figure}
 
 
-\todo{map}
+The \emph{membership} defines when one measure belongs to a time
+series. Considering the partial order of measures, the normal set
+membership operation applies. Let $S$ be a time series and $m$ a
+measure, the \emph{membership} is denoted $m \in S$. Considering the
+temporal order of measures, we define the \emph{temporal membership}
+as $m \inst S$ when $\exists m_a \in S : T(m) = T(m_a)$.  Let $S_1$
+and $S_2$ be two time series, from membership operations we could
+define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
+  inclusion} $S_1\subseteqt S_2$.
 
-\todo{aggregate}
 
-\todo{orderfold}
+In a time series the measures have a total order.  As a time series is
+a finite set, if it is not empty it has a maximum and a minimum.  Let
+$S$ be a time series and $n\in S$ be a measure, the time series'
+\emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
+m $.  For extended real numbers the supremum is defined even when a
+set is empty $\sup(\emptyset)$ \cite{cantrell:extendedreal}, so
+applying this property we can say $n=\sup(S)$ is the \emph{supremum}
+of the time series where $n=\max(S)$ when defined and
+$n=(-\infty,\infty)$ otherwise.
+Dually, we can define \emph{minimum} $\min(S)$ and \emph{infimum} $\inf(S)$.
+
+
+
+The \emph{union} of two sets is a set containing elements from both
+sets. For time series it must consider when the result would have
+repeated measures so we define a non commutative operation and a
+commutative temporal operation. The union requires both time series to
+have the same structure and type as happens with union operation in
+relational DBMS \cite{date:introduction}. %
+Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
+time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
+repeated at $S_2$: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 |
+m^2 \notinst S_1 \}$. The \emph{temporal union} of both is a time
+series $S_1 \cupt S_2$ with all measures from $S_1$ and $S_2$
+excluding those that only share the time attribute: $S_1 \cupt S_2 =
+\{ m^1 \in S_1 \vee m^2 \in S_2 | m^1 \notinst S_2 \vee m^1 \in S_2,
+m^2 \notinst S_1 \}$.
+
+
+
+The \emph{difference} of two sets is a set containing all elements
+from first not contained in second. Like union, the difference
+requires both time series to have the same structure. %
+Let $S_1$ and $S_2$ be two time series. The \emph{difference} of first
+and second is a time series $S_1 - S_2$ with all measures of $S_1$ not
+belonging to $S_2$: $S_1 \cup S_2 = \{ m \in S_1 | m \notin S_2
+\}$. The \emph{temporal difference} of first and second is a time
+series $S_1 - S_2$ with all measures of $S_1$ not temporal belonging
+to $S_2$: $S_1 -^t S_2 = \{ m \in S_1 | m \notinst S_2 \}$.
+
+
+Based on union and difference we can define \emph{intersection} $S_1\cap
+S_2 \equiv S_1 - (S_1 - S_2)$ and \emph{symmetric difference} $S_1 \ominus
+S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$ operations as well as its
+temporal dual operations.
+
+
+Relational DBMS extend these set operators with specific ones like
+projection, selection, rename, product and join. They can be also used
+for time series. We show a definition for join operation.
+
+
+The \emph{join} of two time series is the grouping of pairs that share
+the same time attribute in both.  Let $S_1$ i $S_2$ be two time series,
+the \emph{join} of both time series $S_1 \join S_2$ is a multivalued
+time series $S_1 \join S_2 = \{ (t,v_1,v_2) | (t_1,v_1) \in S_1 \wedge
+(t_2,v_2) \in S_2 \wedge t=t_1=t_2 \}$.
+
+
+We need computational operations in addition to operations defined so
+far to be able to compute with the elements contained in time
+series. In relational DBMS these operators are extend, aggregate and
+summarise \cite{date:introduction}. We define a more general
+equivalent computational operators map and fold.
+
+
+Map applies a function to each measure of a time series.  Let $S$ be a
+time series and $f^m$ a function over a measure where $f^m:m_a\mapsto
+m_r$, the \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
+\{\forall m_i\in S : f^m(m_i) \}$.
+
+Fold combines recursively every measures of a time series.  Let
+$S=\{m_0, \dotsc, m_k\}$ and $S_i$ be two time series, and $f^f$ a
+function over a measure and a time series where $f^f: S_a \times m_b
+\mapsto S_r$. The fold of $S$ by $f^f$ with initial value $S_i$ is a
+time series $\fold(S,S_i,f^f) = f^f(\dots(
+f^f(f^f(f^f(S_i,m_0),\allowbreak m_1),\allowbreak m_2
+)\dots),\allowbreak m_k)$.
+
+
+A simplified fold operation is \emph{aggregate} which
+is used for combining a time series into one measure, normally it is
+used to compute aggregate statistics.  Let $S$ be a time series, $m_i$
+a measure, and $f^a$ a function over two measures where $f^a: m_a
+\times m_b \mapsto m_r$.  \emph{Aggregate} can be defined based on
+fold operation: $\agg(S,m_i,f^a) \equiv \fold(S,\{m_i\},f')$ where $f':
+\{m_i\} \times m \mapsto \{f^a(m_i,m)\}$.
+
+A more generic version of fold is a fold considering order. In the
+previous fold the measures are computed in random order, however in
+some computational operations it is necessary to define the order,
+especially when $f^f$ is not commutative. We define a \emph{fold with
+  order} as an extension of fold with a function $o$ that selects
+measures in order where $o: S_a \mapsto m_r$
+\[
+ \orderfold(S,S_i,f^f,o) =
+  \begin{cases}
+    S_i  \text{ if } |S|=0, \\
+    \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ oth.}
+  \end{cases}
+\]
+ where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
+
+
+
+
+\todo{revisat fins aquí} 
 
 \todo{binary computacional}
+
+Finally, we describe how binary computational operation can be defined
+for two time series in order to operate with their value attributes.
+First it is required to join the two time series and then apply
+computational operations. 
+
+ 
+El producte i la junció són els operadors que permeten crear parelles
+de mesures de dues sèries temporals. Per a operar amb els valors de
+dues sèries temporals la junció és més adequada ja que permet ajuntar
+el valors que tenen temps comuns. Així doncs, per a aplicar un
+operador binari $\operatorname{op}$ que calculi amb els valors de
+dues sèries temporals:
+
+\[
+\operatorname{op}: S_1 \times S_2 \longrightarrow S'
+\]
+\[
+\text{a on } S' = \map(\join(S_1,S_2),(t,v^1,v^2)\mapsto(t,v^1
+\operatorname{op} v^2))
+\]
+
+Cal tenir en compte que la junció de  només
+sap operar amb dues sèries temporals que tinguin el mateix vector de
+temps; és a dir regulars entre elles (v.\
+def.~\ref{def:st:regular}). En el cas que no tinguin el mateix vector
+de temps, es pot aplicar la junció temporal
+
+
+Exemples de l'aplicació d'operacions computacionals per a dues sèries
+temporals
+\begin{itemize}
+\item $S' = S_1 + S_2$
+\item $S' = S_1 / S_2$
+\end{itemize}
+
+
+We use join, but when time series do not temporal intersect then we should use temporal functions operations which are defined below.
+
 
 
 
@@ -272,7 +372,7 @@ being total ordered. Then we can define three basic operations:
 interval, successor and concatenation.
 
 
-The interval $(r,t)$, where $r$ and $t$ are two time instants, over a
+The \emph{interval} $(r,t)$, where $r$ and $t$ are two time instants, over a
 time series $S$ is a time subseries between the two time instants
 $S(r,t) \subseteq S$. Similarly as \cite{last:hetland}, we define the
 open interval as $S(r,t)=\{m\in S | r<T(m)<t\}$. Other intervals can
@@ -280,19 +380,19 @@ be defined with different continuities in the limits: closed $S[r,t]$,
 left-open $S(r,t]$, and right-open $S[r,t)$.
 
 The time order in time series also implies the sequence concept of
-successor and predecessor.  Let $S=\{m_0, \ldots, m_k\}$ be a time
-series and $l\in S$ and $n$ be two measures. We say $l=\nex_S(n)$ is the next
-measure to $n$ in $S$ if and only if $l=\inf(S(T(n),+\infty])$.  We
-say $l=\prev_S(n)$ is the previous measure to $n$ in $S$ if and only if
-$l=\sup(S[-\infty,T(n)))$. 
-
+\emph{successor} and \emph{predecessor}.  Let $S=\{m_0, \ldots, m_k\}$
+be a time series and $l\in S$ and $n$ be two measures. We say
+$l=\nex_S(n)$ is the \emph{next} measure to $n$ in $S$ if and only if
+$l=\inf(S(T(n),+\infty])$.  We say $l=\prev_S(n)$ is the
+\emph{previous} measure to $n$ in $S$ if and only if
+$l=\sup(S[-\infty,T(n)))$. %
 Infinite measures are obtained when next and previous are applied to
 supremum and infimum measure respectively: $\nex_S(\sup
 S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
 
 
 
-Concatenation comprises the measures of the first time series followed
+\emph{Concatenation} comprises the measures of the first time series followed
 in time order by the measures of the second. It is similar to union
 for sets but considering the sequence interval. The concatenation
 requires both time series to have the same structure as seen with
@@ -309,8 +409,17 @@ on $t_1=T(\inf S_1)$ i $t_2=T(\sup S_1)$.
 
 \todo{interval temporal}
 
+\todo{interval temporal ZOHE}
+
+\todo{interval temporal delta}
+
 From temporal interval other operators can be defined such as temporal
 selection, temporal concatenation, or temporal join.
+
+
+
+
+\subsection{Properties}
 
 
 \todo{}
@@ -528,16 +637,13 @@ previously shown in Figure~\ref{fig:model:mtsdb}.
 
 The operators of a multiresolution time series apply to every
 resolution subseries contained: (i) The addition of a measure to every
-resolution subseries: $\addM : M=\{R_0, \dots, R_d\} \times m \mapsto
-\{R'_0, \dots, R'_d\}$ where $R'_i=\addR(R_i,m)$; (ii) The
-consolidation of all resolution subseries: $\consM : M=\{R_0, \dots,
-R_d\} \mapsto \{R'_0, \dots, R'_d\}$ where %
-$ 
-R'_i = \begin{cases}
-  \consR(R_i) & \text{if } R_i \text{ consolidable} \\
-  R_i                       & \text{otherwise}
-\end{cases}
-$.
+resolution subseries: $\addM : M=\{R_0,\allowbreak \dots,\allowbreak
+R_d\} \times m \mapsto \{R'_0, \dots,\allowbreak R'_d\}$ where
+$R'_i=\addR(R_i,m)$; (ii) The consolidation of all resolution
+subseries: $\consM : M=\{R_0,\allowbreak \dots,\allowbreak R_d\}
+\mapsto \{R'_0,\allowbreak \dots,\allowbreak R'_d\}$ where $R'_i =
+\consR(R_i)$ if $R_i$ $\text{ consolidable}$ and $R'_i=R_i$
+$\text{otherwise}$.
 
 
 The multiresolution consolidation operation should be applied
@@ -601,7 +707,7 @@ of both with $\totalseries(M_1) + \totalseries(M_2)$.
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-Attribute aggregate function are used when consolidating a buffer in
+Attribute aggregate functions are used when consolidating a buffer in
 order to summarise the time series information. Let $S$ be a time
 series and $t_0$ and $t_f$ two time instants, an attribute aggregate
 function $f$ calculates a measure that summarises the measures of $S$
@@ -656,12 +762,12 @@ time be continuous on all the time domain $t\in T$:
 \begin{itemize}
 %\renewcommand{\labelitemi}{--}
 \item maximum$^d$: $S \times i \mapsto m'$ where $V(m') =
-  \max_{\forall m \in S'}(V(m))$. It summarises $S'$ with the maximum
+  \max\limits_{\forall m \in S'}(V(m))$. It summarises $S'$ with the maximum
   of the measure values.
 \item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
   summarises $S'$ with the maximum measure.
-\item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') =
-  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$. It
+\item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') = 
+  \frac{1}{|S'|} \allowbreak \sum\limits_{\forall m\in S'} V(m)$. It
   summarises $S'$ with the mean of the measure values.
 \end{itemize}
 
@@ -677,7 +783,7 @@ on all the time domain $t\in T$:
 \begin{itemize}
 %\renewcommand{\labelitemi}{--}
 \item maximum$^c$: $S \times i \mapsto m'$ where $V(m') =
-  \max_{\forall t \in i}(S(t)^r)$. It summarises $S$ with the maximum
+  \max\limits_{\forall t \in i}(S(t)^r)$. It summarises $S$ with the maximum
   of the measure values in the interval $i$.
 \item last$^c$: $S \times i \mapsto m'$ where $V(m') = S(t_f)^r$. It
   summarises $S$ with the value at $t_f$ time instant.
