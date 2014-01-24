@@ -1,35 +1,185 @@
 
 
 \section{Related work}
+\label{sec:related-work}
 
 \todo{}
 
 
-SciQL defines time series as a mixture of array, set and sequence properties. We think that sequence and array are very similar in nature. 
+
+% SSDBM:
+
+% \cite{dreyer94b}
+
+
+% Jensen:
+
+% jensen99:temporaldata
+
+% jensen00:thesis
+
+% jensen98:temporal_database_glossary
+
+% atzeni13:relational_model_dead
+
+% Kersten:
+
+% sciql
+
+% zhang11
+
+% kersten11
 
 
 
-TSDB [deri] evaluates RRDtool performance which is not so good as expected. He only evaluates compression performance but We think that a global evaluation of compression plus descompression must be done. MTSMS are not aimed to be a replacement for offline long time storage systems that are rarely queried and then queries can be slow but have tot be exact. MTSMS are adequate to stream processing and resolving queries with less data than original and so they are quicker but give information previously selected.
+
+
+% There are some prior works concerning \acro{TSMS}.
+% %
+% RRDtool from Oetiker, \cite{rrdtool}, is a free software database
+% management system. It is designed to be used for monitoring
+% systems. Because of this, it is focused to a particular kind of data,
+% gauges and counters, and it lacks general time series
+% operations. RRDtool can store multiple time resolution data. The work
+% in this paper is partially inspired in RRDtool.
+
+% Cougar, \cite{bonnet01}, is a sensor database system. It has two main
+% structures: one for sensor properties stored into relational tables
+% and another for time series stored into data sequences from
+% sensors. Time series have specific operations and can combine
+% relations and sequences. Cougar target field is sensor networks, where
+% data is stored distributed in sensors. Queries are resolved combining
+% sensor data using a data stream abstraction that improves processing
+% performance.
+
+% SciDB, \cite{stonebraker09:scidb}, and SciQL, \cite{zhang11}, are
+% array database systems. These systems are intended for science
+% applications, in which time series play a principal role. They
+% structure time series into arrays in order to achieve multidimensional
+% analysis and allow tables to store other data.  SciDB is based on
+% arrays which, according to the authors, allow to represent time
+% series. However, it does not consider time series special needs: it
+% does not care for managing continuously voluminous data neither for
+% achieving temporal coherence.  In contrast, SciQL exhibits some time
+% series managing characteristics that include time series regularities,
+% interpolation or correlation queries.  However, difference between
+% tables and arrays seems too physical and leads to ambiguity when
+% representing time series.
+
+% Bitemporal \acro{DBMS} is another database field related with
+% time. Bitemporal data target is to keep historical events in the
+% database by associating time intervals to data.  Bitemporal data and
+% time series data are not exactly the same and so can not be treated
+% interchangeably, \cite{schmidt95}. However, there are some
+% similarities that can be considered. First, extending a relational
+% model to manage bitemporal data illustrate the extension of
+% \acro{RDMBS} with new types and how to model them. Second, bitemporal
+% data modelling settles some time-related concepts that can be extended
+% to time series.
+
+% The recent bitemporal data research in relational \acro{DBMS} model terms,
+% \cite{date02:_tempor_data_relat_model}, marks a promising
+% foundation. It models bitemporal data as relations extended with time
+% intervals attributes and extends relational operations in order to
+% deal with related time aspects.
 
 
 
-A Multiresolution Symbolic Representation of
-Time Series; Megalooikonomou, Faloutsos; 2005 proposes multiresolution by decomposing a signal in frequency subsequences and intended mainly to similarity searching. The objective is to reconstruct the original time series. 
+
+
+
+
+
+
+
+
+
+
+% SciQL defines time series as a mixture of array, set and sequence properties. We think that sequence and array are very similar in nature. 
+
+
+
+% TSDB [deri] evaluates RRDtool performance which is not so good as expected. He only evaluates compression performance but We think that a global evaluation of compression plus descompression must be done. MTSMS are not aimed to be a replacement for offline long time storage systems that are rarely queried and then queries can be slow but have tot be exact. MTSMS are adequate to stream processing and resolving queries with less data than original and so they are quicker but give information previously selected.
+
+
+
+% A Multiresolution Symbolic Representation of
+% Time Series; Megalooikonomou, Faloutsos; 2005 proposes multiresolution by decomposing a signal in frequency subsequences and intended mainly to similarity searching. The objective is to reconstruct the original time series. 
  
 
-Segev87 proposed TSMS deswcribed with SQL? we have gone a bit further and proposed TSMS with typical relational algebra including set, sequence and temporal function behaviour. 
+% Segev87 proposed TSMS deswcribed with SQL? we have gone a bit further and proposed TSMS with typical relational algebra including set, sequence and temporal function behaviour. 
 
 
 
+
+% Representation:
+% In the design of the attribute aggregate function we can interpret a
+% time series in different ways, that is what we call the representation
+% of a time series. Keogh et al.\ \cite{last:keogh} cite
+% some possible representations for time series such as Fourier
+% transforms, wavelets, symbolic mappings or piecewise linear
+% representation. The last one is very usual due to its simplicity,
+% \cite{keogh01}.
+
+
+
+
+
+% TSMS vs temporal data: While most databases tend to model reality at a point in time (at the
+% “current” time), temporal databases model the states of the real world
+% across time.
+%  The transaction time for a fact is the time interval during which the fact
+% is current within the database system.
+%  In a temporal relation, each tuple has an associated time when it is true;
+% the time may be either valid time or transaction time.
+%  A bi-temporal relation stores both valid and transaction time.
+
+
+% * Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS
+
+% El model de lorentzos i darwen situa en motl bon punt les temporal data, tan de bo que les sèries temporals també ho tinguessin
 
 
 
 \section{Conclusions}
+\label{sec:concl-future-work}
 
 \todo{}
 
-Tenim una consulta sobre els TSMS M=multiresolution(S) que ens permetrà estudiar que passa amb la multiresolució aplicada a una sèrie temporal, per exemple quina diferència hi ha entre fer S1+S2 i multiresolution(S1)+multiresolution(S2).
-Tenim un model MTSMS que dóna pistes de com implementar la multiresolució, de l'estructura que ha de tenir.
+
+
+% In this paper we have shown a \acro{MTSMS} model, including the
+% requirements for these special systems and how they can be applied to
+% an example time series. The main objective is to store compactly a
+% time series and manage consistently its temporal dimension.
+
+% Our \acro{MTSMS} model proposes to store a time series split into time
+% subseries, which we call resolution discs.  Each resolution disc has a
+% different resolution and is compacted with an attribute aggregate
+% function. Therefore, in a multiresolution database the configuration
+% parameters are the quantity of resolution discs and each of their
+% three parameters: the consolidation step, the attribute aggregate
+% function and the capacity.
+
+% The data model shown is the first step to develop a complete model for
+% a \acro{MTSMS}. In the future the operations will be defined. In this
+% context, there is a need for a model collecting generic properties for
+% the \acro{TSMS}, as it can be the time series union operation or the
+% time interval operations. Then, the multiresolution model would be
+% build upon the generic \acro{TSMS} model.
+
+% Concluding, in this paper we show that using \acro{TSMS} facilitates
+% substantially time series management. The current field interest makes
+% us optimistic to expect soon an adequate management in \acro{DBMS}.
+
+
+% Tenim una consulta sobre els TSMS M=multiresolution(S) que ens permetrà estudiar que passa amb la multiresolució aplicada a una sèrie temporal, per exemple quina diferència hi ha entre fer S1+S2 i multiresolution(S1)+multiresolution(S2).
+% Tenim un model MTSMS que dóna pistes de com implementar la multiresolució, de l'estructura que ha de tenir.
+
+
+
+%Ens podem considerar un DBMS NoSQL? 
+
 
 
 
@@ -40,7 +190,11 @@ Tenim un model MTSMS que dóna pistes de com implementar la multiresolució, de 
 The authors would like to thank...
 
 
-
+%  The research presented in this
+% paper has been supported by Spanish research project \textsc{nasp
+%   (TEC2012-35571)}, \textsc{sherecs (dpi2011-26243)}, the UE project
+% i-Sense ({\small FP7-ICT-270428}), and Universitat Polit\`{e}cnica de
+% Catalunya.
 
 
 

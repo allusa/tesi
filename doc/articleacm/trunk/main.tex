@@ -35,10 +35,10 @@
 \DeclareMathOperator*{\map}{map}
 \DeclareMathOperator*{\fold}{fold}
 \DeclareMathOperator*{\agg}{aggregate}
-\DeclareMathOperator*{\orderfold}{orderfold}
+\DeclareMathOperator*{\orderfold}{ofold}
 \DeclareMathOperator*{\nex}{next}
 \DeclareMathOperator*{\prev}{prev}
-
+\DeclareMathOperator*{\graph}{graph}
 
 \DeclareMathOperator{\addB}{addBuffer}
 \DeclareMathOperator{\consB}{consBuffer}
@@ -66,7 +66,7 @@
 
 
 
-\title{Operating with a Multiresolution Model}
+\title{Operating with a Multiresolution Time Series Model}
 \subtitle{[Extended Abstract]}
 
 \numberofauthors{3} 
@@ -114,6 +114,42 @@ Llus\`{a} Serra, Aleix\\
 \begin{abstract}
 %\boldmath
 The abstract goes here.
+
+% \begin{abstract}
+% In this paper we define a model for multiresolution time series
+% database management systems. The main objective is to store compactly
+% a time series and manage consistently its temporal dimension. It is
+% achieved by extracting different resolutions and attributes summaries
+% from the time series.  
+
+% Our work is concerned in putting together two areas of study: time
+% series analysis and database management systems (DBMS). Time series analysis
+% offers a great deal of methodologies and algorithms to process time
+% series data and database field provides software expertise in managing
+% data. Therefore it is of primary relevance that DBMS support time series.
+% \end{abstract}
+
+% {\bfseries Keywords:} time series, data model, database systems,
+% monitoring systems.
+
+    % In this paper we propose a model for multiresolution time series
+    % database management systems. This model stores compactly a time series
+    % and manages consistently its temporal dimension. This is achieved by
+    % extracting different resolutions and attributes summaries from the
+    % original time series.
+    % % 
+    % Our work is concerned in putting together two areas of study: time
+    % series analysis and database management systems. Time series analysis
+    % offers a great deal of methodologies and algorithms to process time
+    % series data. Database systems field provides software expertise in
+    % managing data. Therefore, for many applications it is of primary
+    % relevance that database systems support time series.
+    % % 
+    % \\[4mm] \textit{Key--Words:}
+    % % The key-words follow.
+    % time series, data model, database systems, monitoring systems.
+
+
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -132,61 +168,6 @@ The abstract goes here.
 \input{model}
 
 \input{conclusions}
-
-
-
-
-
-\section{ALTRES}
-
-
-This paper focuses on Data Base Management Systems (DBMS) that store
-and treat data as time series. Traditional DBMS, as is ones derived
-from relational model, are not adequate for these cases as they do not
-have enough facilities to manage and retrieve time series
-information.
-
-
-
-* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS
-
-* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
-
-* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
-
-*Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
-
-* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
-
-* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.)
-
-* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
-
-* Calendari, passa a segon terme. El temps es defineix com universal i constant (semblant a Unix Time Epoch). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
-
-* El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
-
-
-* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
-
-
-
-
-
- P.ex. a la Tesis Soriguera, APPENDIX A2 , 
-Requiem for Freeway Travel Time Estimation Methods Based
-on Blind Speed Interpolations between Point Measurements, parla d'interpolació entre mesures (compte, EN l'ESPAI NO EN EL TEMPS!! però seria un exemple de que els links compleixen amb la interfície temps?) amb diferents mètodes:  interpolacions constants (endavant, endarrere, optimistica), a trossos, lineal, quadràtica;    tot i que conclou que The present paper shows that all speed interpolation methods that omit traffic
-dynamics and queue evolution do not contribute to better travel time estimations. 
-%http://www.fundacioabertis.org/pdf/Editarium_FSoriguera.pdf
-Unlike in fusion 1, in the fusion 2 process the information is not provided by the same
-data source, and hence, the data will not be equally located in space and time. 
-Therefore, a spatial and temporal alignment is needed before the data can be fused.
-
-
-* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. (consultar si en deligiannakis en diu alguna cosa).
-
-%Multi-Sensor Data Fusion: An Introduction. Harvey B. Mitchell
-
 
 
 
