@@ -288,7 +288,7 @@ m_r$, the \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
 Fold combines recursively every measures of a time series.  Let
 $S=\{m_0, \dotsc, m_k\}$ and $S_i$ be two time series, and $f^f$ a
 function over a measure and a time series where $f^f: S_a \times m_b
-\mapsto S_r$. The fold of $S$ by $f^f$ with initial value $S_i$ is a
+\mapsto S_r$. The \emph{fold} of $S$ by $f^f$ with initial value $S_i$ is a
 time series $\fold(S,S_i,f^f) = f^f(\dots(
 f^f(f^f(f^f(S_i,m_0),\allowbreak m_1),\allowbreak m_2
 )\dots),\allowbreak m_k)$.
@@ -312,55 +312,29 @@ measures in order where $o: S_a \mapsto m_r$
  \orderfold(S,S_i,f^f,o) =
   \begin{cases}
     S_i  \text{ if } |S|=0, \\
-    \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ oth.}
+    \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ otherwise}
   \end{cases}
 \]
  where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
 
 
-
-
-\todo{revisat fins aquí} 
-
-\todo{binary computacional}
-
-Finally, we describe how binary computational operation can be defined
+Finally, we describe how \emph{binary computational} operation can be defined
 for two time series in order to operate with their value attributes.
 First it is required to join the two time series and then apply
-computational operations. 
+computational operations. Let $S_1$ and $S_2$ be two time series and
+$\operatorname{op}$ be a binary operation on the value domain, that is
+for two values $v1$ and $v_2$ it computes a new value
+$\operatorname{op}: v_1 + v_2 \mapsto v'$. The operator
+$\operatorname{op}$ can be applied to both time series as
+$\operatorname{op}: S_1 \times S_2 \mapsto S'$ where $S' =
+\map(S_1 \join S_2, (t,v^1,v^2)\mapsto(t,v^1 \operatorname{op} v^2))$.
 
- 
-El producte i la junció són els operadors que permeten crear parelles
-de mesures de dues sèries temporals. Per a operar amb els valors de
-dues sèries temporals la junció és més adequada ja que permet ajuntar
-el valors que tenen temps comuns. Així doncs, per a aplicar un
-operador binari $\operatorname{op}$ que calculi amb els valors de
-dues sèries temporals:
+For example, we can apply binary operations such as $S_1 + S_2$ or
+$S_1 / S_2$. It must be noted that join requires both time series to
+have exactly the same time attribute. When time series diverge too
+much then temporal function operations can be applied to fit the time
+instants to what is required.
 
-\[
-\operatorname{op}: S_1 \times S_2 \longrightarrow S'
-\]
-\[
-\text{a on } S' = \map(\join(S_1,S_2),(t,v^1,v^2)\mapsto(t,v^1
-\operatorname{op} v^2))
-\]
-
-Cal tenir en compte que la junció de  només
-sap operar amb dues sèries temporals que tinguin el mateix vector de
-temps; és a dir regulars entre elles (v.\
-def.~\ref{def:st:regular}). En el cas que no tinguin el mateix vector
-de temps, es pot aplicar la junció temporal
-
-
-Exemples de l'aplicació d'operacions computacionals per a dues sèries
-temporals
-\begin{itemize}
-\item $S' = S_1 + S_2$
-\item $S' = S_1 / S_2$
-\end{itemize}
-
-
-We use join, but when time series do not temporal intersect then we should use temporal functions operations which are defined below.
 
 
 
@@ -407,11 +381,103 @@ on $t_1=T(\inf S_1)$ i $t_2=T(\sup S_1)$.
 
 \subsubsection{Temporal function operations}
 
-\todo{interval temporal}
 
-\todo{interval temporal ZOHE}
+A time series is a discrete representation of a continuous function,
+which is a temporal function owing to its dependence on time. In this
+section we define operations that manipulate time series according to
+this temporal function nature.
 
-\todo{interval temporal delta}
+The \emph{graph of a function} allows to obtain and interpret the
+continuous nature of a time series, when the domain of time and value
+attributes can be plotted then the graph is equivalent to a graphical
+representation.  Let $S$ be a time series and $T$ the time domain, the
+\emph{graph} of the time series is a set of ordered pairs $\graph S =
+\{ (t,S(t)) | t\in T \}$ where $S(t)$ is a temporal representation
+function for the time series.
+
+The \emph{temporal representation function} $S(t)$ is a continuous
+function along variable $t$ in the domain of time and the output in
+the domain of values. $S(t)$ can be obtained by various methods, so
+there are several possible temporal representation
+functions. According to the representation method used we indicate its
+name $r$ with a superscript in all temporal function operations, as
+instance for representation function $S(t)^r$. Next we give two
+particular example of representation functions: one with impulse
+method and another with constant piecewise method.
+
+
+
+First, we exemplify a representation function with a method that we
+call \emph{delta} ($\delta$) as it is based on the Dirac delta. It is
+an impulse train function that is zero everywhere except at zero.  Let
+$S$ be a time series we define $S(t)^\delta$ as the \emph{delta
+  representation function}
+\[
+    \forall m \in S: S(t)^\delta
+% &  \\
+%     = & \sum_{t\in T} V(m) \delta(t-T(m)): \delta(t)= 
+%       \begin{cases}
+%         1 & \text{si }  t=0 \\
+%         0 & \text{altrament}
+%       \end{cases} \\
+    =  \begin{cases}
+      V(m) & \text{if }  t=T(m) \\
+      0 & \text{otherwise}
+    \end{cases}
+\]
+
+
+
+Second, we exemplify a representation function with a method that we
+call \emph{zero-order hold everted} (\zohe{}) as it is based on the
+\emph{zero-order hold} signal reconstruction methods. It is a
+piecewise constant function that has left-continuous step functions.
+Let $S$ be a time series we define $S(t)^\zohe$ as the \emph{\zohe{}
+  representation function}, $\forall m \in S:$
+\[
+    S(t)^\zohe 
+    % = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
+    = \begin{cases}
+      0 & \text{if }  t > T(\max(S)) \\
+      V(m) & \text{if } t\in \big(T(\prev_S(m)),T(m)\big]
+    \end{cases}
+\]
+  
+
+
+
+
+After defining the concept of representation, we reinterpret some set
+and sequence operators for the temporal function
+approach. Consequently, the result of each one will depend on a
+representation method, which is indicated as a parameter.
+
+
+
+Interval is a sequence operation and now we extend it in the temporal
+function approach with a representation method, we call it
+\emph{temporal interval}. It is similar to the concept of interval but
+with some measures computed that are not in the input time series.
+Let $S$ be a time series, $[t_0,t_f]$ a interval
+of two time instants and $r$ a representation function. The \emph{temporal
+interval} of $S$ in $i$ with representation $r$, noted as$
+S[t_0,t_f]^r$, is a time series with measures in the temporal range
+interpreted with the representation: $S[t_0,t_f]^r= \forall t \in
+[t_0,t_f] : S' = S(t)^r $. This is a general definition difficult to
+implement, so for every representation a particular temporal interval
+must be interpreted:
+
+\begin{itemize}
+\item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$, the
+  \emph{\zohe{} temporal interval} is $S[t_0,t_f]^\zohe{} = S(t_0,t_f]
+  \cup \{m\}$ where $m=(t_f,v)$ and $v= V(\inf( S[t_f,+\infty] ))$.
+
+\item Let $S(t)^\delta$ be the delta representation for $S$, the
+  \emph{delta temporal interval} is $S[t_0,t_f]^\delta = S[t_0,t_f]
+  \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_0,0)$ and $m_f=(t_f,0)$.
+\end{itemize}
+
+
 
 From temporal interval other operators can be defined such as temporal
 selection, temporal concatenation, or temporal join.
@@ -422,57 +488,57 @@ selection, temporal concatenation, or temporal join.
 \subsection{Properties}
 
 
-\todo{}
+We have so far described ideal definition of a time series. In this
+section we note some properties of time series that can be problematic
+when manipulating them.
+
+First, clock is a crucial measuring instrument in time
+series. Precision and accuracy is very important in timestamps.  In
+\cite{kopetz11:realtime} these concepts are well described as well as
+solving methods, especially clock synchronisation methods.
+
+
+Second, unknown data can corrupt the database. Unknown data appears
+when data has not been captured or when it has been acquired
+erroneously. Then data validation must be performed and reject new
+values if they are not correct or reconstruct this erroneous data.
+Data validation process considers when values are outside the possible
+range domain, when there has not been possible to acquire a sample,
+when the time of acquisition between measures is not considered
+freshness, etc. MTSMS can cope with this data validation process.
+
+
+Third, enormous quantity of data difficults computations.  Time series
+come from data recollected at monitoring systems and so its size gets
+very big as continuously new measures are added.  MTSMS is an storage
+solution with data size reduction.
 
 
 
+Forth, sample period irregularities difficult later time series
+analysis. That is when data has not been acquired uniformly at time it
+is harder to apply join operations between time series and it do not
+allow to apply time series analysis algorithms defined for sequences
+approaches.  MTSMS tries to storage regular time series.  Next we
+detail the regular concept for time series.
 
 
-% Let $S$ be a time series, $t$ be a time instant and $\delta$ be a
-% time duration, then the time series' measures can be located in the
-% time interval $i_0=[t, t+\delta]$ and its multiples $i_j=[t+j\delta,
-% t+(j+1)\delta]$ for $j=0,1,2,\ldots$. When time series' measures are
-% equally spaced we say it to be regular.
-% \begin{definition}[Regular time series]
-%   Let $S=\{m_0,$ $ldots,$ $m_k\}$ be a time series and $\delta$ a time
-%   duration. $S$ is regular if and only if $\forall m \in
-%   S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = \delta$.
-% \end{definition}
+A time series is regular when its measures are equi-spaced in time, as
+called by \textcite{last:hetland}. Let $S$ be a time series, $t_I$ be a
+time instant and $\delta$ be a time duration, then the time series'
+measures can be located in the time interval $i_0=[t_I, t_I+\delta]$ and
+its multiples $i_j=[t_I+j\delta, t_I+(j+1)\delta]$ for
+$j=0,1,2,\ldots$. When time series' measures are equally spaced we say
+it to be regular.
+
+\begin{definition}
+  Let $S=\{m_0,$ $\ldots,$ $m_k\}$ be a time series and $\delta$ a time
+  duration. $S$ is \emph{regular} if and only if $\forall m \in
+  S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = \delta$.
+\end{definition}
 
 
 
-%Representation:
-% In the design of the attribute aggregate function we can interpret a
-% time series in different ways, that is what we call the representation
-% of a time series. Keogh et al.\ \cite{last:keogh} cite
-% some possible representations for time series such as Fourier
-% transforms, wavelets, symbolic mappings or piecewise linear
-% representation. The last one is very usual due to its simplicity,
-% \cite{keogh01}.
-
-% Time series representations can be taken into account when computing
-% with the measures of the time series.  For example, a maximum
-% attribute aggregate function may give different values if we consider
-% a linear or a constant piecewise representation.
-
-% Following we show a possible family of attribute aggregate functions
-% for time series represented by a staircase function, that is with a
-% piecewise constant representation.  We define a new representation for
-% time series named \emph{zero-order hold backwards} (zohe). This
-% representation holds back each value until the preceding value. 
-% RRDtool, \cite{lisa98:oetiker}, has a similar aggregate function.
-
-% Let $S=\{m_0,\ldots,m_k\}$ be a time series, we define
-% $S(t)^{\text{zohe}}$ as its continuous representation along time $t$:
-% $\forall t \in \mathbb{R} ,\forall m \in S:$
-% \begin{equation}
-%  S(t)^{\text{zohe}} =  
-% \begin{cases}
-%   \infty & \text{if } t > T(\max S) \\
-%   V(m)   & \text{if } t\in (T(\prev_S m),T(m)]
-% \end{cases}
-% \label{eq:zohe}
-% \end{equation}
 
 
 \section{Multiresolution model}
@@ -484,15 +550,6 @@ compression approach, that is some information is selected and spread in
 different time resolutions. The \acro{MTSMS} model is based on the
 concepts of measures and time series as defined in
 Section~\ref{sec:model:preliminaries}.
-
-
-The multiresolution concept comes from thoroughly analysis of the
-RRDtool \cite{rrdtool} \acro{TSMS}. Our objective is to formalise its
-essential parts into an abstract model, where what we call
-multiresolution plays a main role, and to include more genericity in
-order to describe \acro{MTSMS} as fully \acro{TSMS}. Then we will be
-able to apply these systems to other applications.
-\todo{repassar paràgraf}
 
 
 A \acro{MTSMS} stores multiresolution time series where each has a
@@ -635,6 +692,11 @@ previously shown in Figure~\ref{fig:model:mtsdb}.
   key attributes.
 \end{definition}
 
+Therefore, defining a multiresolution time series consists basically
+in defining the quantity of resolution subseries and the $(delta,tau,f,k)$
+configuration parameters of each.
+
+
 The operators of a multiresolution time series apply to every
 resolution subseries contained: (i) The addition of a measure to every
 resolution subseries: $\addM : M=\{R_0,\allowbreak \dots,\allowbreak
@@ -656,9 +718,6 @@ additions. However, there could be other approaches where the
 consolidation clock was given by an external clock or external
 events. Then the consolidable definitions would depend on this
 external clock.
-
-
-\todo{s'hauria de dir que cada R en una M es configura amb els parametres (delta,tau,f,k) si més no a data manipulation}
 
 
 \subsection{Data manipulation}
@@ -718,8 +777,8 @@ f : S=\{m_0,\ldots,m_k\} \times [t_0,t_f] \mapsto m'
 where, generally, $m'$ results from two operations on the time series:
 (i) a time subseries selection $S'$ depending on the consolidating
 interval, for example $S' = S[t_0,t_f]$, and (ii) an aggregation over
-this time subseries $m' = \agg(S',m_i a)$ with $a: m_i \times
-m\rightarrow m''$.  \todo{mirar be sintaxi agg}
+this time subseries such as $m' = \agg(S',m_i, a)$ where $a: m_i \times
+m_b \rightarrow m''$.  
 
 To summarise a time series we can use different attribute aggregate
 functions.  For instance, we can calculate an statistic indicator of
@@ -796,8 +855,8 @@ on all the time domain $t\in T$:
 The continuous aggregation function patterns can be expressed with
 discrete mathematics for each particular representation, that is based
 on the temporal interval defined in TSMS. Next we exemplify it by
-defining the previous general continuous patterns for two particular
-representations: delta and \zohe{}.
+interpreting the general continuous patterns for two particular
+representations that have been defined previously: delta and \zohe{}.
 
 
 Delta attribute aggregation functions $f^\delta$ have a general form
@@ -913,6 +972,8 @@ the general integral definition.
 
 
 \section{Multiresolution over TSMS}
+\label{sec:M+TSMS}
+
 
 We have defined the MTSMS model as an structure based on time
 series. Now we express the multiresolution as a query on a time series
@@ -970,48 +1031,50 @@ functionality.
 
 
 \subsection{Two database structures}
+\todo{}
 
 
-\todo{citar stonebraker05 The 8 Requirements of Real-Time Stream Processing}
+%\todo{revisat fins aquí} 
+
+
+%\todo{citar stonebraker05 The 8 Requirements of Real-Time Stream Processing}
 
 
 \begin{figure}
   \centering
   \input{imatges/mtsms-tsms.tex}
-  \caption{Two forked TSMS+MTSMS}
+  \caption{DBMS forked into TSMS+MTSMS}
   \label{fig:model:mtsms-tsms}
 \end{figure}
 
-
-Figure~\ref{fig:model:mtsms-tsms}
-
-
-* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
-
-\todo{}
-* Esquema de treball amb TSMS i MTSMS:
-
-
-        +----+  consultaMultiresolution
-        |TSMS| --------------> 
-     /  +----+
-addM                              fan el mateix les dues vies però
-     \  +-----+  total            a sota es pre-calcula com a stream
-        |MTSMS| -----------> 
-        +-----+
+Figure~\ref{fig:model:mtsms-tsms}:
+Tenim dues vies: a dalt es una consulta sobre un TSMS i a baix es pre-calculat com a stream.
 
 
 
 
+%* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
 
-\subsection{Stream orientation}
 
-\todo{}
-* Dues variacions possibles interessants pels MTSMS:
+
+% Però el model de SGSTM també es pot fer servir per altres aplicacions:
+
+% * Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
+
+% * Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
+
+% * Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
+
+
+
+% \subsection{Stream orientation}
+
+% \todo{}
+% * Dues variacions possibles interessants pels MTSMS:
 
  
-  - Buffers com a streams, sempre de mida fitada 
-  - Discos enllaçats
+%   - Buffers com a streams, sempre de mida fitada 
+%   - Discos enllaçats
 
 
 
