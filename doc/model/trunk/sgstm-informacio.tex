@@ -40,6 +40,27 @@ Flaws caused by lossy compression that are noticeable to the human eye or ear ar
 
 
 
+
+
+
+The main drawback of lossy compression techniques is that they
+rely on specific patterns for providing a good approximation of the given time series.
+This is the main reason why lossy compression has been rarely applied to network
+monitoring contexts, where the patterns of time series can drastically change due to
+anomalous events or to transient networking issues.
+
+
+% Lossless data compression is a class of data compression algorithms that allows the original data to be perfectly reconstructed from the compressed data. By contrast, lossy data compression, permits reconstruction only of an approximation of the original data, though this usually allows for improved compression rates (and therefore smaller sized files).
+% Other approximation approaches are minimal lossy: they try to approximate to the original time series but subsequent compression would not achieve a lossed information. For example storing in the frequency domain is only working with same information in another domain which has a bijective relation to the original. If in this domain there is loss of information then the compression is lossy.
+
+% Lossy compression formats suffer from generation loss: repeatedly compressing and decompressing the file will cause it to progressively lose quality. This is in contrast with lossless data compression, where data will not be lost via the use of such a procedure.
+
+% Information-theoretical foundations for lossy data compression are provided by rate-distortion theory. Much like the use of probability in optimal coding theory, rate-distortion theory heavily draws on Bayesian estimation and decision theory in order to model perceptual distortion and even aesthetic judgment.
+
+
+
+
+
 \section{Rate–distortion theory}
 
 http://en.wikipedia.org/wiki/Rate-distortion_theory
