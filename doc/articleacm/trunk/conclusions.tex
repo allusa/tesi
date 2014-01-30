@@ -149,99 +149,83 @@ performance.
 \section{Conclusions}
 \label{sec:concl-future-work}
 
-\todo{}
+
+In this paper we have shown a \acro{MTSMS} model, including a
+motivation example for multiresolution and an application together
+with \acro{TSMS}. Our \acro{MTSMS} model is based on \acro{TSMS}
+notation which we have described firmly rooted on set and relational
+algebra. We have gone a bit further and proposed \acro{TSMS} including
+set, sequence and temporal function behaviour.
 
 
-Other TSMS solves the problem for finding compression storage that
-best approximates the original time series. We propose a solution that
+
+The main objective of a \acro{MTSMS} is to store compactly a time
+series and manage consistently its temporal dimension.  It stores
+multiresolution time series, that is time series split into time
+subseries called resolution subseries.  Each resolution subseries has
+a different resolution and is compacted with an attribute aggregate
+function. Therefore, each multiresolution time series is configured by
+the quantity of resolution subseries and four parameters for each: the
+consolidation step, the initial consolidation time, the attribute
+aggregate function, and the capacity.  These configuration parameters
+are are degrees of freedom for each application. Giving different
+values a multiresolution database is capable to keep the desired
+information from a time series.
+
+
+
+The queries over \acro{MTSMS} obtain time series from stored
+multiresolution time series. In this way \acro{TSMS} operators can be
+applied if needed.
+
+
+Compared to other \acro{TSMS} we propose a compression solution that
 stores only the information we will require by latter queries or by
-human visualisation.  Moreover, our multiresolution solution copes
-well with typical problematic properties we have found in time series:
-regularity, data validation and data volume.
-
-We then have showed a structure for manipulating in time order as then there are no updates in data and it can be managed more simpler. 
-
-The decompression time is minimal as data in discs get stored directly
-as a time series. Therefore, the queries or visualisation computing
-time is only due to the computation itself. Moreover, if the query is
-an aggregation and resolution already computed in MTSMS consolidation
-then the visualisation is immediate.
+human visualisation, instead of trying to reconstruct the original
+signal.  Moreover, our multiresolution solution copes well with
+typical problematic properties of time series: regularity, data
+validation and data volume.  The decompression time is minimal as data
+in discs get stored directly as a time series. As a consequence, the
+queries or visualisation computing time is only due to the computation
+itself. Moreover, if the query is an aggregation or resolution already
+computed in \acro{MTSMS} consolidation, then the visualisation is
+immediate.
 
 
-Our \acro{MTSMS} is based on \acro{TSMS} notation which we have
-described firmly rooted on set and relational algebra. We have gone a
-bit further and proposed \acro{TSMS} including set, sequence and
-temporal function behaviour.
-
-
-
-% A multiresolution database is an storage system for one time series, that
-% is a collection of data measured in different instants in time.  The
-% time series is compactly stored in the database as has been shown in
-% figure \ref{fig:model:mtsdb}. The principal part of a multiresolution
-% database is the set of resolution discs where the time series is
-% stored distributed by the different interpolation functions and
-% sampling periods. Each resolution disc uses its buffer to interpolate
-% the measures and uses its disc to consolidate the result. 
-
-% This system allows to reduce the storage space and the analysis time
-% needed for large collections of times series.  With the compactness of
-% the time series we have in mind the scalability for large monitoring
-% systems.
-
-% Interpolation functions and sampling periods are degrees
-% of freedom for each application. Giving different values a multiresolution
-% database is capable to keep the desired information from a time series.
-
-
-% \section{Future work}\label{sec:future}
-
-% In future work the retrieval operations will be defined. Mainly, how a
-% time series can be restored from joining the information stored
-% distributed in the resolution discs. And it also will be important
-% how data fusion can be obtained from two time series databases.
-
-% Then it will be possible to check the database management system with
-% experimental data such as the proposed by \cite{keogh02}.
-
-% The MTSMS imply a data information selection and the information not considered important is discarded.  Therefore, this systems are not adequate when all the monitored data must be kept as acquired. This happens either when it is not known a priori which interpolation functions will work better with the future data monitored or when detailed questions must be retrieved such as at what hour exactly an event triggered. This may be overcome with dual DBMS: one a TSMS for the common information retrieval and the other a large size database (VLDB) that is only consulted in occasional cases. 
-% However, the applications when a TSMS is not appropriate are to be better understood. 
-
-
-
-% In this paper we have shown a \acro{MTSMS} model, including the
-% requirements for these special systems and how they can be applied to
-% an example time series. The main objective is to store compactly a
-% time series and manage consistently its temporal dimension.
-
-% Our \acro{MTSMS} model proposes to store a time series split into time
-% subseries, which we call resolution discs.  Each resolution disc has a
-% different resolution and is compacted with an attribute aggregate
-% function. Therefore, in a multiresolution database the configuration
-% parameters are the quantity of resolution discs and each of their
-% three parameters: the consolidation step, the attribute aggregate
-% function and the capacity.
-
-% The data model shown is the first step to develop a complete model for
-% a \acro{MTSMS}. In the future the operations will be defined. In this
-% context, there is a need for a model collecting generic properties for
-% the \acro{TSMS}, as it can be the time series union operation or the
-% time interval operations. Then, the multiresolution model would be
-% build upon the generic \acro{TSMS} model.
-
-% Concluding, in this paper we show that using \acro{TSMS} facilitates
-% substantially time series management. The current field interest makes
-% us optimistic to expect soon an adequate management in \acro{DBMS}.
+\acro{MTSMS} imply a data information selection and so the information
+not considered important is discarded. When this is not possible, we
+have showed a dual structure of \acro{TSMS} and \acro{MTSMS}. Then a
+\acro{TSMS} stores losslessly and a \acro{MTSMS} takes advantages of
+manipulating data in time order in order to achieve pre-computed
+queries in a stream-like orientation.
 
 
 % Tenim una consulta sobre els TSMS M=multiresolution(S) que ens permetrà estudiar que passa amb la multiresolució aplicada a una sèrie temporal, per exemple quina diferència hi ha entre fer S1+S2 i multiresolution(S1)+multiresolution(S2).
 % Tenim un model MTSMS que dóna pistes de com implementar la multiresolució, de l'estructura que ha de tenir.
 
 
-
 %Ens podem considerar un DBMS NoSQL? 
-
 % We are working with a DBMS that could be considered as a NoSQL product but we formalise and root it heavily with traditional algebra theory.
+
+A \acro{MTSMS} could be implemented as a SQL \acro{DBMS} system or as
+a NoSQL one. As a reference implementation we are developing a
+\emph{Python} package centred on the basic algebra, that is without
+extended \acro{DBMS} capabilities. Regarding other implementations,
+\emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
+a NoSQL system, although Oetiker \cite{rrdtool} has not commented
+whether it can be considered as being NoSQL. However, regardless of
+the implementation backend, we have shown how a generic model for
+\acro{MTSMS} can be defined firmly rooted on \acro{DBMS} algebra
+theory.
+
+
+
+
+
+
+% Concluding, in this paper we show that using \acro{TSMS} facilitates
+% substantially time series management. The current field interest makes
+% us optimistic to expect soon an adequate management in \acro{DBMS}.
 
 
 
@@ -262,3 +246,5 @@ and Universitat Polit\`{e}cnica de Catalunya predoctoral grant.
 %%% ispell-local-dictionary: "british"
 %%% End:
 
+
+%  LocalWords:  multiresolution

@@ -1031,41 +1031,60 @@ functionality.
 
 
 \subsection{Two database structures}
-\todo{}
 
-
-%\todo{revisat fins aquí} 
-
-
-%\todo{citar stonebraker05 The 8 Requirements of Real-Time Stream Processing}
-
+\acro{MTSMS} imply a data information selection and so the information
+not considered important is discarded.  Therefore, this systems are
+not adequate when all the monitored data must be kept as
+acquired. This can happen for example when it is not known a priori
+which aggregate functions will work better with the future data
+monitored or when detailed questions must be retrieved such as at what
+hour exactly an event triggered. 
 
 \begin{figure}
   \centering
   \input{imatges/mtsms-tsms.tex}
-  \caption{DBMS forked into TSMS+MTSMS}
+  \caption{Dual TSMS+MTSMS}
   \label{fig:model:mtsms-tsms}
 \end{figure}
 
-Figure~\ref{fig:model:mtsms-tsms}:
-Tenim dues vies: a dalt es una consulta sobre un TSMS i a baix es pre-calculat com a stream.
+This may be overcome with dual \acro{DBMS} that share measure input,
+as shown in Figure~\ref{fig:model:mtsms-tsms}. One is a \acro{TSMS}
+for long-term deposit and only consulted in occasional cases, it can
+be \acro{TSMS} with other compression techniques or large size
+\acro{DBMS}. The other is a \acro{MTSMS} that lossy compresses time
+series.
+
+Then generic queries can be made from \acro{TSMS} information or from
+\acro{MTSMS} selected information, as instance by the $\totalseries$
+operation. In Figure~\ref{fig:model:mtsms-tsms} the logical
+equivalence of applying $S'=\totalseries(M)$ to \acro{MTSMS} and
+$S'=\multiresolution(S)$ to \acro{TSMS} is plotted, however the
+implementation consideration are different. If we regard the resulting
+time series $S'$ as a view of database information, then the
+$\multiresolution$ is a view that must be computed fully at every new
+measure addition and $\totalseries$ is a view that can be computed
+incrementally at every new addition as explained next.
 
 
 Time series data volume is very big and increases along time. However,
-this increase is due to a time ordered acquisition of data which can
-be taken into account in order to simplify the addition process. As a consequence we can design TSMS with a simplified  update operation where it only consists in adding new measures as there is no need for modifying past data.
+this increase is due to a continuous acquisition of data. When data
+comes as an ordered sequence of instances it is called data stream,
+then specific \acro{DBMS} are designed to manage data stream data
+\cite{stonebraker05:sigmod}.  \acro{MTSMS} can take advantage of data
+stream orientation in order to simplify the consolidation process.
+Assuming a time order acquisition of time series, the update of a
+\acro{MTSMS} only consists in the addition of new measures and the
+incremental consolidation of subseries.  As a consequence \acro{MTSMS}
+can be seen as a time series view pre-computing system for a pair of
+aggregation statistics and time resolution operations.  Then this
+pre-computation can be used for another queries, limited to the
+aggregations previously computed, or for graphical visualisations like
+the ones done by RRDtool \cite{rrdtool}.
+
+% We then have showed a structure for manipulating in time order as then there are no updates in data and it can be managed more simpler. 
 
 %* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
 
-
-
-% Però el model de SGSTM també es pot fer servir per altres aplicacions:
-
-% * Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
-
-% * Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
-
-% * Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
 
 
 
