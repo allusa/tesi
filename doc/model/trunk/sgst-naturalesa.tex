@@ -296,6 +296,22 @@ el temps de validesa de cada tasca.
 %- altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
 
 
+\todo{les dades bitemporals extenen el model relacional} En un SGST
+també podríem tenir històrics, és a dir una relació de capçalera
+(t,v,transaction time). No tindria sentit les dades bitemporal al
+complet (t,v,transaction time,valid time) ja que d'alguna forma
+l'atribut t ja fa de valid time (INTERESSANT això! aleshores les
+temporal data s'haurien classificar en dues: les d'interval temporal i
+les d'instant temporal. De fet per què tenen tant d'interès els de
+temporal data a tenir el model bitemporal tot junt, si l'interessant
+dels històrics és el transaction time?).  Aleshores en una sèrie
+temporal amb històrics podríem anar guardant si hi ha canvis: per
+exemple inicialment mesurem al temps 10: $S=\{(10,5,10)\}$ però si hi
+fem un canvi en el temps 20: $S=\{(10,5,10),(10,4,20)\}$ i un en el
+temps 25: $S=\{(10,5,10),(10,4,20),(11,4,25)\}$. Cal tenir en compte
+també que canviar les dades a posteriori d'una sèrie temporal ja
+adquirida és una cosa rara: però és clar que des del model no es pot
+prohibir.
 
 
 
