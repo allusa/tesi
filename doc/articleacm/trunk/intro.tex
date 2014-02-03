@@ -13,36 +13,39 @@ eventual sensor failures or malfunctions and possibly to reconstruct
 the incorrect signals. In all these instances, acquired data is
 associated with a time stamp, which implies that the correctness of
 those data depends not only on the measured value but also on the time
-as it is collected. When we have observations collected at specific
-time instants, we formalise it as time series.
+as it is collected. When observations are collected at specific
+time instants, they are formalised as time series.
 
 Time series are defined as a collection of observations made
-chronologically. Time series are usually stored and the
-managed by SQL relational database management systems. However, using
-SQL systems as a time series backend suffers some drawbacks
-\cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. SQL is also not
-adequate for other fields and NoSQL products are being developed as an
-alternative \cite{atzeni13:relational_model_dead,stonebraker10}.
+chronologically. Time series are usually stored and the managed by SQL
+relational database management systems. However, using SQL systems as
+a time series backend suffers some drawbacks
+\cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. SQL is also
+considered inadequate in other fields and NoSQL products are being
+developed as an alternative
+\cite{atzeni13:relational_model_dead,stonebraker10}.
 
-Time series come from a continuous nature in which they are recorded
-at regular intervals, such as hourly or daily, or at irregular
-intervals, such as recording when a pump is open or closed.  One
-problem when dealing with time series data results from the fact that
-these data are often voluminous \cite{fu11,keogh08:isax}. As a result,
-storing and accessing them can be complicated. Moreover, it is
+In general, time series come from a continuous nature in which they
+are recorded at regular intervals, such as hourly or daily, or at
+irregular intervals, such as recording when a pump is open or closed.
+One problem when dealing with time series data results from the fact
+that these data are often voluminous \cite{fu11,keogh08:isax}. As a
+result, storing and accessing them can be complicated. Moreover, it is
 specially critical when developing small embedded systems, whose
-resources (capacity, energy, processing, and communications) suffer a
-genuine restriction \cite{yaogehrke02}.  Another problem is that the
+resources (capacity, energy, processing and communications) suffer
+restrictions \cite{yaogehrke02}.  Another problem is that the
 procedure of processing and synthesising information becomes
 complicated if data is not equi-time spaced.
 
-
-Time series data mining is searching around the optimal solution
-approximation/cost to the original signal \cite{fu11,keogh01}. On
-another approach we propose a lossy storage solution that selects only
-the needed information. We call it multiresolution. The concept is
-similar to multimedia lossy compression methods, where information can
-be discarded in favour of size, but applied to time series.
+The propose of time series data mining is to apply time series
+analysis methods when having huge amount of data.  One approach is to
+find the optimal solution approximation/cost to the original signal
+and then compute analysis such as similarity or pattern search
+\cite{fu11,keogh01}. On another approach we propose a lossy storage
+solution that selects only the needed information. We call it
+multiresolution. The concept is similar to multimedia lossy
+compression methods, where information can be discarded in favour of
+size, but applied to time series.
 % In multimedia compression a dual storage can be used for a file: 
 % first it is lossless compressed to offline storage and rarely retrievals, and second it is lossy compressed to have less size and be more manageable.
 
@@ -50,25 +53,24 @@ be discarded in favour of size, but applied to time series.
 
 %TSMS
 
-This paper focuses on Data Base Management Systems (\acro{DBMS}) that
-store and treat data as time series. These are usually known as Time
-Series Data Base Management Systems (\acro{TSMS}), \cite{dreyer94}.
-We introduce a new data model named multiresolution \acro{TSMS}
-(\acro{MTSMS}). This model organises data in an aggregated way and it
-allows to store time series using different time resolutions. It is
-designed to cope well with bounded storage computers such as sensor
-systems.
+This paper focuses on Data Base Management Systems \linebreak[4]
+(\acro{DBMS}) that store and treat data as time series. These are
+usually known as Time Series Data Base Management Systems
+(\acro{TSMS}), \cite{dreyer94}.  We introduce a new data model named
+multiresolution \acro{TSMS} (\acro{MTSMS}). This model organises data
+in an aggregated way and it allows to store time series using
+different time resolutions. It is designed to cope well with bounded
+storage computers such as sensor systems.
 
 
 
 
 This manuscript is organised as follows.  A summary of multiresolution
 features is shown in Section~\ref{sec:features}. In
-Section~\ref{sec:model:preliminaries} we introduce the nomenclature
-preliminaries of \acro{TSMS} that we will use latter. The \acro{MTSMS}
-model is described as follows: the model is formulated in
-Section~\ref{sec:MTSMS} and in Section~\ref{sec:M+TSMS} we relate the
-\acro{MTSMS} and \acro{TSMS} models.
+Section~\ref{sec:model:preliminaries} nomenclature preliminaries of
+\acro{TSMS} are introduced. The \acro{MTSMS} model is presented in
+Section~\ref{sec:MTSMS} and in Section~\ref{sec:M+TSMS} the relation
+between \acro{MTSMS} and \acro{TSMS} models is highlighted.
 % Section~\ref{sec:example} is devoted to a real data multiresolution
 % database example.
 In Section~\ref{sec:related-work} some related work concerning
@@ -81,25 +83,24 @@ Section~\ref{sec:concl-future-work} offers some conclusions.
 \label{sec:features}
 
 A \acro{TSMS} is a special purpose \acro{DBMS} devoted to store and
-manage time series.  The main objective of \acro{TSMS} is to put
-together two areas of study: time series analysis and \acro{DBMS}.
-Time series analysis formalises a great amount of algorithms and
-methodologies that apply to time series, with a main focus on
-improving efficiency. \acro{DBMS} theory formalises systems that store
-and operate with data. Currently the relational model,
-\cite{date:introduction}, is the referent.
+manage time series.  The main objective of \acro{TSMS} is to gather
+two areas of study: time series analysis and \acro{DBMS}.  Time series
+analysis formalises a great amount of algorithms and methodologies
+that apply to time series, with a main focus on improving
+efficiency. \acro{DBMS} theory formalises systems that store and
+operate with data, currently the relational model is the referent
+\cite{date:introduction}.
 
-In time series analysis there are some common
-generic operations.  Most of these operations deal with the time given
-the nature of data.  Usual operations include the query of time
-intervals, to find time correlations, or to calculate distances
-between two time series. In all these operations \acro{TSMS} must
-consider the temporal coherence of the time series.  In the context of
-statistics, aggregation of time series is also a common
-operation. Aggregate means to summarise a time series subset by a
-smaller set of measures. Statistic indicators like the mean, the
-maximum, or the mode, for instance, summarise time series into a only
-measure.
+In time series analysis there are some common generic operations.
+Most of these operations deal with the time given the nature of data.
+Usual operations include the query of time intervals, to find time
+correlations, or to calculate distances between two time series. In
+all these operations \acro{TSMS} must consider the temporal coherence
+of the time series.  In the context of statistics, aggregation of time
+series is also a common operation. Aggregate means to summarise a time
+series subset by a smaller set of measures. Statistic indicators like
+the mean, the maximum, or the mode, for instance, summarise time
+series into an only measure.
 
 A time series is defined discrete as a set of value and time
 pairs. Furthermore, a time series has a continuous nature as it comes
@@ -109,15 +110,13 @@ interpolation or approximation.
 
 
 A \acro{MTSMS} is a \acro{TSMS} with multiresolution capabilities.  A
-\acro{MTSMS} schema represents a time series using a set of table like
-structures each of them representing the series at a different
-resolution.
-The multiresolution concept comes from thoroughly analysis of the
-RRDtool \cite{rrdtool} \acro{TSMS}. Our objective is to formalise its
-essential parts into an abstract model, where what we call
-multiresolution plays a main role, and to include more genericity in
-order to describe \acro{MTSMS} as fully \acro{TSMS}. Then we will be
-able to apply these systems to other applications.
+\acro{MTSMS} schema represents a time series using a set of different
+resolutions.  The multiresolution concept comes from thoroughly
+analysis of a TSMS called RRDtool \cite{rrdtool}. Our objective is to
+formalise the main concepts into an abstract model and to include more
+genericity in order to describe \acro{MTSMS} as fully \acro{TSMS}.
+
+%Then we will be able to apply these systems to other applications.
 
 
 \acro{MTSMS} improve \acro{TSMS} features in various aspects:
@@ -125,44 +124,47 @@ able to apply these systems to other applications.
 
 \item Voluminous data. Monitoring systems capture a huge amount of
   data from sensors. In order to be able to process this information,
-  data volume must be reduced. With the multiresolution approach only
-  the most interesting segments of data are stored. This segments are
-  seen as different resolutions for the same time series and the user
-  configures how they are extracted and summarised by defining
-  different consolidation steps and functions. Multiresolution can
-  also be useful at visualisation time as the user is able to select
-  the best time range and time step that fits into the screen; there
-  is no need to process with more quantity of data than the one that
-  can be shown.%  In figure~\ref{fig:mtsms:sequence} there is an example of
+  data volume must be reduced. One of the features of the
+  multiresolution approach is to select and store only the most
+  interesting segments of data. This segments are seen as different
+  resolutions for the same time series and the user can configure how
+  they are extracted and summarised by defining different time steps
+  and functions. Multiresolution can also be useful when graphing time
+  series allowing the user to select the best time range and time
+  step that fits into the screen; there is no need to process with
+  more quantity of data than the one that can be
+  shown.% In figure~\ref{fig:mtsms:sequence} there is an example of
   % extracting two resolutions: one every three units of time and
   % another every five.
 
 \item Data validation. Monitoring systems capture data but can occur
   some drawbacks that will affect later the process of time series
   analysis. Main problems are found when monitors can not capture
-  data, known as gaps, or capture data erroneously, such as outlayers.
-  The multiresolution attribute functions cope well with validating,
-  filtering and calculating with this unknown data in order to keep a
-  consistent historic.%  In figure~\ref{fig:mtsms:sequence-irregular} an
+  data, known as gaps, or capture data erroneously, such as outlayers \todo{ref}.
+  The multiresolution attribute functions is designed to cope well
+  with validating, filtering and reconstructing with this unknown data
+  in order to keep a consistent
+  historic.% In figure~\ref{fig:mtsms:sequence-irregular} an
   % example of a gap can be seen.
 
 \item Data time regularising. Another monitoring side effect happens
   when the sampling rate is not constant, that is when the resulting
   data is not equi-time spaced. This no regularities can come from
   sampling jitters in periodic sampling or from no periodic
-  event-based sampling. The multiresolution consolidation regularises
-  the time interval when processes a time series, therefore each
-  resulting time series segment has a regular time resolution. This
-  regularising approach could also be used when the user wants to
-  consult another resolution for a time series, such as changing
-  periodic data from a month to a year step. % In
+  event-based sampling \cite{kopetz11:realtime}. A multiresolution
+  consolidation objective is to regularise the time interval when
+  processing a time series, therefore each resulting time series
+  segment has a regular time resolution. This regularising approach
+  could also be used when the user wants to consult another resolution
+  for a time series, such as changing periodic data from a month to a
+  year step. % In
   % figure~\ref{fig:mtsms:sequence-irregular} an example of time
   % regularising can be seen.
 
 \item Information summaries. Time series analysis typically focuses on
   reconstructing the original signal. However, the user objective in a
   database system is to consult some information. The multiresolution
-  approach is a lossy compression storage solution for data. Therefore
+  approach allows a lossy compression storage solution for data. Therefore
   it can be regarded as to extracting the interesting information and
   then storing it. The selected information must be determined a
   priori assuming the context where the future queries will be done.
@@ -181,10 +183,18 @@ localisation, classification tags, last measured value, etc.
 
 
 \subsection{Motivation example}
-We give a motivation example of multiresolution applied to a time
-series.  Figure~\ref{fig:mtsms:sequence} shows a multiresolution
+%We give a motivation example of multiresolution applied to a time series.  
+
+Figure~\ref{fig:mtsms:sequence} shows an example of a multiresolution
 summary for a time series. It shows a snapshot in time, suppose
-between time 9 and 10.
+between time 9 and 10. At the top of the figure there is a plot of a
+time series with time axis in general units of time (u.t.) and with
+value axis in undetermined units. The 'now' point shows when the
+snapshot has been taken, so the time before is the past and the time
+after is the future, which is grey coloured. The \emph{init} point
+shows when the database system has started sampling, so data in time
+before is unknown; the starting point is indicated as zero u.t.\ and
+the earlier unknown time points have negative units.
 
 
 \begin{figure}
@@ -202,20 +212,13 @@ between time 9 and 10.
 %   \label{fig:mtsms:sequence-irregular}
 % \end{figure}
 
-At the top of the figure there is a plot of a time series with time
-axis in general units of time (u.t.) and with value axis in
-undetermined units. The 'now' point shows when the snapshot has been
-taken, so the time before is the past and the time after is the
-future, which is grey coloured. The 'init' point shows when the
-database system has started sampling, so data in time before is
-unknown; we indicate the starting point as being zero u.t.\ and unknown
-time points with negative units.
 
-At the bottom of the figure there is a digram showing the
-multiresolution action. The first row shows the numerical time series'
-values corresponding to the above plot; the time series is sampled
-every one unit of time. The second and the third row show a particular
-schema of a multiresolution database consisting in two time
+
+At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
+showing the multiresolution action. The first row shows the numerical
+time series' values corresponding to the above plot; the time series
+is sampled every one unit of time. The second and the third row show a
+particular schema of a multiresolution database consisting in two time
 resolutions for the time series: one computes the mean of the sampled
 values every three u.t.\ and the other computes the mean every five
 u.t. In this example, computing the mean acts as selecting information

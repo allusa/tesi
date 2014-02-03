@@ -311,7 +311,12 @@ fem un canvi en el temps 20: $S=\{(10,5,10),(10,4,20)\}$ i un en el
 temps 25: $S=\{(10,5,10),(10,4,20),(11,4,25)\}$. Cal tenir en compte
 també que canviar les dades a posteriori d'una sèrie temporal ja
 adquirida és una cosa rara: però és clar que des del model no es pot
-prohibir.
+prohibir. Cal notar que les dades bitemporals proposen el transaction
+time com un interval temporal
+$S=\{(10,5,[10,20]),(10,4,[20,25]),(11,4,[25,+\infty])\}$, això és
+indispensable per a poder esborrar dades, per exemple
+$S=\{(10,5,[10,20]),(10,4,[20,25]),(11,4,[25,+\infty]),(15,5,[15,20])\}$
+la dada $(15,5)$ queda esborrada.
 
 
 
@@ -1389,7 +1394,7 @@ dades recollides en els sistemes de monitoratge, que poden gestionar
 una gran quantitat de variables i en aquests casos pot haver-hi
 dificultats en l'operació i en la visualització de les sèries
 temporals.
-
+\todo{el gran volum també comporta lentitud en el càlcul d'operacions}
 
 
 Una quarta patologia es dóna quan el període de mostreig no és

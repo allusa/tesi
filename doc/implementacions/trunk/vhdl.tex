@@ -281,6 +281,10 @@ Bàsicament en les implementacions a baix nivell d'un SGSTM tenim dues opcions:
 
 En l'àmbit, no es veu clara la implementació de coses en VHDL. Sembla que es desaprofitar recursos perquè la feina ja la pot fer el microcontrolador. Potser l'aplicació útil i que s'ha de destacar és quan en els xips integrats no hi ha microcontrolador com poder-hi posar una base de dades?
 
+Però sí que hi pot haver un problema de temps de computació i per tant
+un aparell hardware seria necessari. Si prenem l'operació multiresolució sobre una sèrie temporal en un SGST, aquesta pot trigar molt a computar-se. Hi ha solucions en el món NoSQL, per exemple utilitzar MapReduce per a resoldre-ho en sistemes de computació para\l.lels. Però una altra solució de computació para\l.lela podria ser tenir el SGSTM implementat en hardware, aleshores aniria inserint les mesures en ordre temporal i al final obtindria el resultat; tot computat en un hardware para\l.lel. Tot i així cal notar que a més aquesta computació es pot fer en orientació stream si es coneix a priori l'operació de multiresolució que es vol fer.
+
+
 
 %%% Local Variables:
 %%% TeX-master: "main"
