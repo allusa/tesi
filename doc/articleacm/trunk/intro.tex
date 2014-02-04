@@ -39,9 +39,9 @@ complicated if data is not equi-time spaced.
 
 The propose of time series data mining is to apply time series
 analysis methods when having huge amount of data.  One approach is to
-find the optimal solution approximation/cost to the original signal
+find the optimal solution approximation versus cost to the original signal
 and then compute analysis such as similarity or pattern search
-\cite{fu11,keogh01}. On another approach we propose a lossy storage
+\cite{fu11,keogh01,last01}. On another approach we propose a lossy storage
 solution that selects only the needed information. We call it
 multiresolution. The concept is similar to multimedia lossy
 compression methods, where information can be discarded in favour of
@@ -56,7 +56,7 @@ size, but applied to time series.
 This paper focuses on Data Base Management Systems \linebreak[4]
 (\acro{DBMS}) that store and treat data as time series. These are
 usually known as Time Series Data Base Management Systems
-(\acro{TSMS}), \cite{dreyer94}.  We introduce a new data model named
+(\acro{TSMS}), \cite{dreyer94,last01}.  We introduce a new data model named
 multiresolution \acro{TSMS} (\acro{MTSMS}). This model organises data
 in an aggregated way and it allows to store time series using
 different time resolutions. It is designed to cope well with bounded
@@ -140,10 +140,10 @@ genericity in order to describe \acro{MTSMS} as fully \acro{TSMS}.
 \item Data validation. Monitoring systems capture data but can occur
   some drawbacks that will affect later the process of time series
   analysis. Main problems are found when monitors can not capture
-  data, known as gaps, or capture data erroneously, such as outlayers \todo{ref}.
-  The multiresolution attribute functions is designed to cope well
-  with validating, filtering and reconstructing with this unknown data
-  in order to keep a consistent
+  data, known as gaps, or capture data erroneously, such as outlayers
+  \cite{quevedo10}.  The multiresolution attribute functions is
+  designed to cope well with validating, filtering and reconstructing
+  with this unknown data in order to keep a consistent
   historic.% In figure~\ref{fig:mtsms:sequence-irregular} an
   % example of a gap can be seen.
 
@@ -222,15 +222,14 @@ particular schema of a multiresolution database consisting in two time
 resolutions for the time series: one computes the mean of the sampled
 values every three u.t.\ and the other computes the mean every five
 u.t. In this example, computing the mean acts as selecting information
-by aggregate statistics. All data stored before zero time, this
-included, is unknown as sampling had not started. For the future
-values we also simulate as having unknown stored values which will
-change as time advances.
+by aggregate statistics. All data stored before zero time is unknown
+(\emph{u}) as has not been acquired. For the future values it is also
+marked as \emph{u} until time advances.
 
-If we look at figure we see, drawn by arrows, that every three sampled
-values a mean is stored and independently every five values another
-mean is stored. For the future values we show in gray that if we
-advance the time one u.t.\ then value 10 is sampled an the mean for
+The arrows of the figure show that every three sampled
+values a mean is stored and, independently, every five values another
+mean is stored. For the future values, grey arrows show  that if time
+advances one u.t.\ then value 10 is sampled and the mean for
 time 10 can be computed resulting 8 but not yet the mean for time 12.
 
 % Fig.~\ref{fig:mtsms:sequence-irregular} is essentially the same but

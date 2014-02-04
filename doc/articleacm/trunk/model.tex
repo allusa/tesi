@@ -9,17 +9,22 @@
 
 Measures and time series are the main objects of TSMS and their main
 characteristic is that they have a time attribute that requires a
-coherent treatment. We describe the TSMS model in three parts: (i) the
-data structure model, (ii) time series manipulation and operation, and
-(iii) time series specific properties.
+coherent treatment. We describe the TSMS nomenclature in three parts:
+(i) the data structure model, (ii) time series manipulation and
+operation, and (iii) time series specific properties.
 
 
 
 \subsection{Structure}
 
-A \emph{time series} is a relation of times with values. Each pair of
-time-value is called \emph{measure}. Then, a time series is a set of
-measures. 
+
+A \emph{time series} is a set of observations collected at specific
+time instants. An observation may consist of a single attribute or
+multiple attributes collected at the same time instant.  Each pair of
+time and observed values is called \emph{measure}. Then, a time series
+is a relation of times with values described as a set of measures .
+
+
 
 % Firstly we address time and value concepts and secondly we define formally
 % measures and time series.
@@ -100,9 +105,12 @@ at the same time instant \cite{assfalg08:thesis}.
 
 \subsubsection{Measure}
 
+A measure associates the concepts of value measured in a particular
+time instant.  In a general form, a definition for single values is
+given and it can be extended to n-dimensional values.
 
 \begin{definition}
-  A \emph{measure} is defined as a tuple $(t,v)$ where $v$ is the
+  A \emph{measure} $m$ is defined as a tuple $m=(t,v)$ where $v$ is the
   value of the measure and $t$ is the time instant when the measure
   has been acquired.
 \end{definition}
@@ -111,15 +119,13 @@ Let $m = (t,v)$ be a measure, $v$ is written as $V(m)$ and $t$ is
 written as $T(m)$.
 
 The time attribute defines the canonical order relation between
-measures. If only time is concerned then measures have a \emph{total
-  order}, on the contrary they have a \emph{partial order}. Let $m =
-(t_m, v_m)$ and $n = (t_n, v_n)$ be two measures, there is a total
-order $m\geq n$ if and only if $t_m\geq t_n$ and there is a partial
-order $m > n$ if and only if $t_m > t_n$ and $m_n = n_n$ only if
-$(t_m, v_m) = (t_n, v_n)$.  We can call \emph{temporal order} to the
-total order as it only considers the time attribute in measures.
-
-
+measures. There are two possible order relations. Let $m = (t_m, v_m)$
+and $n = (t_n, v_n)$ be two measures.  (i) A \emph{total order} is
+obtained when only considering the time attribute, $m\geq n$ if and
+only if $t_m\geq t_n$.  (ii) A \emph{partial order} is obtained when
+considering measures as a whole, $m > n$ if and only if $t_m > t_n$,
+and the equality $m_n = n_n$ only if $(t_m, v_m) = (t_n, v_n)$.  We
+also call \emph{temporal order} to the total order.
 
 
 
@@ -132,25 +138,25 @@ ordered in time.  Sometimes they are also called time sequences
 
 \begin{definition}
   A \emph{time series} $S$ is a a set of measures $S = \{m_0, \ldots,
-  m_k\}$ without repeated time values $\forall i,j: i\leq k, j\leq k,
-  i\neq j : T(m_i)\neq T(m_j)$.
+  m_k\}$ without repeated time values $\forall i,j:i\neq j: T(m_i)\neq
+  T(m_j)$.
 \end{definition}
 
 As there are no repeated time values, measures in a time series have a
 total order.
 
-Given a time series $S$, we note its cardinality $|S|=k+1$.  A time
-series without measures is the empty time series
-$S_\emptyset=\emptyset=\{\}$ and has zero cardinality
+Given a time series $S$, its cardinality is noted as $|S|=k+1$.  A
+time series without measures is the empty time series,
+$S_\emptyset=\emptyset=\{\}$, and has zero cardinality,
 $|S_\emptyset|=0$.  Observe that, because measures in $S$ are of the
 same phenomena, the type of $S$ values is homogeneous.
 
 
 
 A time series can record more than one phenomena if they share the
-time instants of acquisition. Then we have a multivalued time series,
-which can be expressed by two forms. Let $S = \{m_0, \ldots, m_k\}$ be
-a time series, in one form we write measures as
+time instants of acquisition. Then it is a \emph{multivalued time
+series}, which can be expressed by two forms. Let $S = \{m_0, \ldots,
+m_k\}$ be a time series, in one form we write measures as
 $m=(t,(v_1,v_2,\ldots,v_n))$, that is the value has domain $\R*^n$; in
 the other form we write measures directly as
 $m=(t,v_1,v_2,\ldots,v_n)$.
@@ -177,8 +183,27 @@ rely on how the relational model of DBMS describes operations based on
 set algebra \cite{date:introduction}.
 
 
+
+
+In a time series the measures have a total order.  As a time series is
+a finite set, if it is not empty it has a maximum and a minimum.  Let
+$S$ be a time series and $n\in S$ be a measure, the time series'
+\emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
+m $.  We extend the maximum definition with a supremum one as for
+extended real numbers the supremum is defined even when a set is empty
+$\sup(\emptyset)$ \cite{cantrell:extendedreal}. So applying this
+property we can say $n=\sup(S)$ is the \emph{supremum} of the time
+series where $n=\max(S)$ when defined and $n=(-\infty,\infty)$
+otherwise, where $V(n)=\infty$ marks it as an improper measure \todo{}.  Dually, we can define \emph{minimum} $\min(S)$ and
+\emph{infimum} $\inf(S)$.
+
+
+
+
 \todo{explicar que per exemple en la unio de conjunts tradicional tenim problemes quan tenim una m1=(t,v1) i una m2=(t,v2) i ho podem solucionar amb dues unions}
 \todo{treure el dibuix de conjunts i fer nomes un exemple concret amb dades en el cas de la unio}
+
+However, between two time series the measures can have the two possible order relations, total and partial.
 
 The two possible order relations of measures induces two operation
 definitions for some set operators. Mainly it induces two membership
@@ -193,8 +218,9 @@ attributes.
 
 \begin{figure}
   \centering
-  \input{imatges/sgst-venn.tex}
-  \caption{Venn diagrams for set and temporal set operations of TSMS}
+  \input{imatges/sgst-union-venn.tex}
+  \caption{Venn diagrams examples for set and temporal set union
+    operation of TSMS}
   \label{fig:model:venn}
 \end{figure}
 
@@ -209,17 +235,6 @@ and $S_2$ be two time series, from membership operations we could
 define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
   inclusion} $S_1\subseteqt S_2$.
 
-
-In a time series the measures have a total order.  As a time series is
-a finite set, if it is not empty it has a maximum and a minimum.  Let
-$S$ be a time series and $n\in S$ be a measure, the time series'
-\emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
-m $.  For extended real numbers the supremum is defined even when a
-set is empty $\sup(\emptyset)$ \cite{cantrell:extendedreal}, so
-applying this property we can say $n=\sup(S)$ is the \emph{supremum}
-of the time series where $n=\max(S)$ when defined and
-$n=(-\infty,\infty)$ otherwise.
-Dually, we can define \emph{minimum} $\min(S)$ and \emph{infimum} $\inf(S)$.
 
 
 
