@@ -32,22 +32,22 @@ is a relation of times with values described as a set of measures .
 
 \subsubsection{Time}
 
-Time is an attribute that indicates order between measures. We define
+Time, $t$, is an attribute that indicates order between measures. We define
 $T$ as the \emph{time domain}. $T$ can be either a finite or an infinite set
 and normally it will be a closed set. As an example for the time
 domain $T$ we use the affinely extended real numbers $\Rb \in \R \cup
 \{+\infty,-\infty\}$ \cite{cantrell:extendedreal}.
 
 The real numbers set is a metric space as it has a distance function
-(or metric). Consequently, we can differentiate between time instants
-(the elements of the set) and durations (the metric). Time can be
-defined as a coordinate system
+also called metric. Consequently, we can differentiate between time
+instants (the elements of the set) and durations (the metric). In this
+way, time can be defined as a coordinate system
 \cite{iep:time-supplement,kopetz11:realtime} by noting time instants
 as points in the real line, durations as segments of the real line,
-and specifying a time instant as a reference system. Next, we define
-time in order we can (i) order events, (ii) measure events durations,
-and (iii) position when events happen. This is a naive approximation
-without complex details of the time concept.
+and specifying a time instant as a reference time. Next, a time
+definition is provided that allows to order events, measure events
+duration, and position when events happen. This is a naive
+approximation without complex details of the time concept.
 
 \begin{definition}(Time)
   \label{def:model:temps}
@@ -68,25 +68,25 @@ without complex details of the time concept.
   metric of the set $T$. $\square$
 \end{definition}
 
-Summarising, time instants are a sequence of real values which
-position and order events, moreover between two time instants there is
-a duration.  There are several time standards \cite{allen:timescales}
-which specify how time duration must be measured and how time instants
-positions must be noted. 
+Summarising, time instants position and order events, and between two
+time instants there is a duration.  There are several time standards
+\cite{allen:timescales} which specify how time duration must be
+measured and how time instants positions must be noted.
 
-Time standards deal with a similar concept of
-time coordinate system which we have illustrated with real
-numbers. There is also a calendar approach which define the time
-domain with names for the points in the time line and with rules for
-time durations. Usually the aim of calendars is to give a relation
-between time and Earth rotation. However, we do not see calendars as
-essential part of TSMS \cite{dreyer94} as maps can be established
-between a time coordinate system and a calendar system.
+Time standards deal with a similar concept of time coordinate system
+which has been illustrated with real numbers. There is also a calendar
+approach which define the time domain with names for the points in the
+time line and with rules for time durations. Usually the aim of
+calendars is to give a relation between time and Earth
+rotation. Sometimes calendars are seen as essential parts of TSMS
+\cite{dreyer94}, however maps can be established between a time
+coordinate system and a calendar system.
+
 
 
 \subsubsection{Value}
 
-Value is an attribute that indicates the magnitude of measures. The
+Value, $v$, is an attribute that indicates the magnitude of measures. The
 domain for values can be any data type, that is an object that belongs
 to a determined set of values and that has operations associated.
 This way valid examples for values are integers, real numbers,
@@ -94,11 +94,11 @@ strings, and more elaborated data structures such as arrays, lists, or
 even other time series.
 
 %For simplicity
-In accordance to the time examples, for the value domain we use
-projectively extended real numbers $\R* \in \R \cup \{\infty\}$.  This
-example is for scalar values but can be extended to the concept of
-multivalues $\R*^n$, which represent a collection of values measured
-at the same time instant \cite{assfalg08:thesis}.
+In accordance to the time examples, for the value domain the
+projectively extended real numbers $\R* \in \R \cup \{\infty\}$ can be
+used.  This example is for scalar values but can be extended to the
+concept of multivalues $\R*^n$, which represent a collection of values
+measured at the same time instant \cite{assfalg08:thesis}.
 
 
 
@@ -183,38 +183,54 @@ rely on how the relational model of DBMS describes operations based on
 set algebra \cite{date:introduction}.
 
 
-
-
 In a time series the measures have a total order.  As a time series is
 a finite set, if it is not empty it has a maximum and a minimum.  Let
 $S$ be a time series and $n\in S$ be a measure, the time series'
 \emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
 m $.  We extend the maximum definition with a supremum one as for
-extended real numbers the supremum is defined even when a set is empty
-$\sup(\emptyset)$ \cite{cantrell:extendedreal}. So applying this
-property we can say $n=\sup(S)$ is the \emph{supremum} of the time
-series where $n=\max(S)$ when defined and $n=(-\infty,\infty)$
-otherwise, where $V(n)=\infty$ marks it as an improper measure \todo{}.  Dually, we can define \emph{minimum} $\min(S)$ and
+extended real numbers the supremum is defined even when a set is
+empty, $\sup(\emptyset)=-\infty$ \cite{cantrell:extendedreal}. So
+applying this property we can say $n=\sup(S)$ is the \emph{supremum}
+of the time series where $n=\max(S)$ if defined and
+$n=(-\infty,\infty)$ otherwise; note that $V(n)=\infty$ is an
+indefinite value.  Dually, we can define \emph{minimum} $\min(S)$ and
 \emph{infimum} $\inf(S)$.
 
 
+In time series binary set operations, the measures can have the
+two possible order relations: total and partial. Consequently, this two
+possible order relations of measures induces two operation definitions
+for some set operators.  Mainly it induces two membership operations
+and so to all operations based on it. 
 
 
-\todo{explicar que per exemple en la unio de conjunts tradicional tenim problemes quan tenim una m1=(t,v1) i una m2=(t,v2) i ho podem solucionar amb dues unions}
-\todo{treure el dibuix de conjunts i fer nomes un exemple concret amb dades en el cas de la unio}
+The \emph{membership} defines when one measure belongs to a time
+series. Considering the partial order of measures, the set
+membership operation applies. Let $S$ be a time series and $m$ a
+measure, the \emph{membership} is denoted $m \in S$. Considering the
+temporal order of measures, we define the \emph{temporal membership}
+as $m \inst S$ when $\exists m_a \in S : T(m) = T(m_a)$.  Let $S_1$
+and $S_2$ be two time series, from membership operations we could
+define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
+  inclusion} $S_1\subseteqt S_2$.
 
-However, between two time series the measures can have the two possible order relations, total and partial.
 
-The two possible order relations of measures induces two operation
-definitions for some set operators. Mainly it induces two membership
-operations and so to all operations based on it. As we have a partial
-order and a total order called temporal order, respectively we call
-these operators with the normal name and with a \emph{temporal}
-prefix. In Figure~\ref{fig:model:venn} we show typical Venn diagrams
-for both cases, where $t_A$ and $t_b$ are subsets with measures that
-only share the time attribute between sets $A$ and $B$. The normal
-intersecting area indicates measures that share time and value
-attributes.
+The \emph{union} of two sets is a set containing elements from both
+sets. Plain set union operation can not be applied directly as the
+resulting time series could have repeated time values.  So we define a
+non commutative operation and a commutative temporal operation. The
+union requires both time series to have the same structure and type as
+happens with union operation in relational DBMS
+\cite{date:introduction}. %
+Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
+time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
+repeated at $S_2$: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 |
+m^2 \notinst S_1 \}$. The \emph{temporal union} of both is a time
+series $S_1 \cupt S_2$ with all measures from $S_1$ and $S_2$
+excluding those that only share the time attribute: $S_1 \cupt S_2 =
+\{ m^1 \in S_1 \vee m^2 \in S_2 | m^1 \notinst S_2 \vee m^1 \in S_2,
+m^2 \notinst S_1 \}$.
+
 
 \begin{figure}
   \centering
@@ -225,33 +241,22 @@ attributes.
 \end{figure}
 
 
-The \emph{membership} defines when one measure belongs to a time
-series. Considering the partial order of measures, the normal set
-membership operation applies. Let $S$ be a time series and $m$ a
-measure, the \emph{membership} is denoted $m \in S$. Considering the
-temporal order of measures, we define the \emph{temporal membership}
-as $m \inst S$ when $\exists m_a \in S : T(m) = T(m_a)$.  Let $S_1$
-and $S_2$ be two time series, from membership operations we could
-define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
-  inclusion} $S_1\subseteqt S_2$.
+\begin{example}
+  Let $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$ and $S_2=\{(2,2),\allowbreak
+  (3,2),(4,0),(6,2)\}$ be two time series. The union from first and
+  second results $S_1 \cup S_2 = \{(1,1),(2,2),\allowbreak
+  (3,1),\allowbreak (4,0),\allowbreak (5,1),(6,2)\}$. The temporal
+  union from both results $S_1 \cupt S_2 = S_2 \cupt S_1 =
+  \{(1,1),(2,2),(4,0),(5,1),\allowbreak (6,2)\}$. Venn diagrams for
+  both cases are shown in Figure~\ref{fig:model:venn}, where the
+  coloured area is the resulting time series. For each, the central
+  intersecting area indicates measures that share time and value
+  attributes, as instance $(2,0)$. The central left area are measures
+  from $S_1$ that only share the time attribute with a measure from
+  $S_2$, as instance $(3,1)$. Dually the central right area contains
+  $(3,2)$. The left and right outer areas are the remaining measures.
+ \end{example}
 
-
-
-
-The \emph{union} of two sets is a set containing elements from both
-sets. For time series it must consider when the result would have
-repeated measures so we define a non commutative operation and a
-commutative temporal operation. The union requires both time series to
-have the same structure and type as happens with union operation in
-relational DBMS \cite{date:introduction}. %
-Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
-time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
-repeated at $S_2$: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 |
-m^2 \notinst S_1 \}$. The \emph{temporal union} of both is a time
-series $S_1 \cupt S_2$ with all measures from $S_1$ and $S_2$
-excluding those that only share the time attribute: $S_1 \cupt S_2 =
-\{ m^1 \in S_1 \vee m^2 \in S_2 | m^1 \notinst S_2 \vee m^1 \in S_2,
-m^2 \notinst S_1 \}$.
 
 
 
@@ -296,7 +301,7 @@ time series and $f^m$ a function over a measure where $f^m:m_a\mapsto
 m_r$, the \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
 \{\forall m_i\in S : f^m(m_i) \}$.
 
-Fold combines recursively every measures of a time series.  Let
+Fold recursively combines every measures of a time series.  Let
 $S=\{m_0, \dotsc, m_k\}$ and $S_i$ be two time series, and $f^f$ a
 function over a measure and a time series where $f^f: S_a \times m_b
 \mapsto S_r$. The \emph{fold} of $S$ by $f^f$ with initial value $S_i$ is a
@@ -353,16 +358,16 @@ instants to what is required.
 \subsubsection{Sequence operations}
 
 Sequence operations manipulate time series considering measures as
-being total ordered. Then we can define three basic operations:
+being totally ordered. Then we can define three basic operations:
 interval, successor and concatenation.
 
 
-The \emph{interval} $(r,t)$, where $r$ and $t$ are two time instants, over a
-time series $S$ is a time subseries between the two time instants
-$S(r,t) \subseteq S$. Similarly as \cite{last:hetland}, we define the
-open interval as $S(r,t)=\{m\in S | r<T(m)<t\}$. Other intervals can
-be defined with different continuities in the limits: closed $S[r,t]$,
-left-open $S(r,t]$, and right-open $S[r,t)$.
+The \emph{interval} $(r,t)$, where $r$ and $t$ are two time instants,
+over a time series $S$ is a time subseries between the two time
+instants $S(r,t) \subseteq S$. Similarly as \cite{last:hetland}, we
+define the open interval as $S(r,t)=\{m\in S | r<T(m)<t\}$. Other
+intervals can be defined: closed $S[r,t]$, left-open $S(r,t]$, and
+right-open $S[r,t)$.
 
 The time order in time series also implies the sequence concept of
 \emph{successor} and \emph{predecessor}.  Let $S=\{m_0, \ldots, m_k\}$
