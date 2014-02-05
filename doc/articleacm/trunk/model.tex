@@ -46,8 +46,9 @@ way, time can be defined as a coordinate system
 as points in the real line, durations as segments of the real line,
 and specifying a time instant as a reference time. Next, a time
 definition is provided that allows to order events, measure events
-duration, and position when events happen. This is a naive
-approximation without complex details of the time concept.
+duration, and position when events happen. This naive approximation
+that avoids complex details of the time concept is enough for our
+purposes.
 
 \begin{definition}(Time)
   \label{def:model:temps}
@@ -59,12 +60,12 @@ approximation without complex details of the time concept.
   instants are also real numbers $t^i_i , t^i_j \in \Rb$, then $t^d =
   t^i_i - t^i_j$.
 
-  Let $T$ be the domain for time, we define a \emph{time instant} $I$
-  as an element of the set $I \in T$. Following with the definition of
+  Let $T$ be the domain for time, we define a \emph{time instant} $i$
+  as an element of the set $T$, $i \in T$. Following with the definition of
   a coordinate system and real numbers as time domain, let $t^{R}$ be
   a \emph{reference time instant}, then we define \emph{time instants}
   as a value $t^i \in\Rb$ that measures signed time distance from the
-  \emph{reference time instant} $t^i= d(t^{R},I)$ where $d$ is the
+  \emph{reference time instant} $t^i= d(t^{R},i)$ where $d$ is the
   metric of the set $T$. $\square$
 \end{definition}
 
@@ -278,8 +279,9 @@ temporal dual operations.
 
 
 Relational DBMS extend these set operators with specific ones like
-projection, selection, rename, product and join. They can be also used
-for time series. We show a definition for join operation.
+projection, selection, rename, product and join. These operators can
+be also used for time series. As example the definition of join
+operation is given.
 
 
 The \emph{join} of two time series is the grouping of pairs that share
@@ -289,10 +291,10 @@ time series $S_1 \join S_2 = \{ (t,v_1,v_2) | (t_1,v_1) \in S_1 \wedge
 (t_2,v_2) \in S_2 \wedge t=t_1=t_2 \}$.
 
 
-We need computational operations in addition to operations defined so
-far to be able to compute with the elements contained in time
-series. In relational DBMS these operators are extend, aggregate and
-summarise \cite{date:introduction}. We define a more general
+\acro{DBMS} need computational operations to be able to compute with
+the elements contained in time series. In relational \acro{DBMS} these
+operators are extend, aggregate and summarise
+\cite{date:introduction}. For time series, we define a more general
 equivalent computational operators map and fold.
 
 
@@ -303,27 +305,27 @@ m_r$, the \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
 
 Fold recursively combines every measures of a time series.  Let
 $S=\{m_0, \dotsc, m_k\}$ and $S_i$ be two time series, and $f^f$ a
-function over a measure and a time series where $f^f: S_a \times m_b
-\mapsto S_r$. The \emph{fold} of $S$ by $f^f$ with initial value $S_i$ is a
-time series $\fold(S,S_i,f^f) = f^f(\dots(
-f^f(f^f(f^f(S_i,m_0),\allowbreak m_1),\allowbreak m_2
-)\dots),\allowbreak m_k)$.
+function over a time series $S_a$ and a measure $m_b$ resulting in a
+time series $S_r$, $f^f: S_a \times m_b \mapsto S_r$. The \emph{fold}
+of $S$ by $f^f$ with initial value $S_i$ is a time series
+$\fold(S,S_i,f^f) = f^f(\dots( f^f(f^f(f^f(S_i,m_0),\allowbreak
+m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
 
 
-A simplified fold operation is \emph{aggregate} which
-is used for combining a time series into one measure, normally it is
-used to compute aggregate statistics.  Let $S$ be a time series, $m_i$
-a measure, and $f^a$ a function over two measures where $f^a: m_a
-\times m_b \mapsto m_r$.  \emph{Aggregate} can be defined based on
-fold operation: $\agg(S,m_i,f^a) \equiv \fold(S,\{m_i\},f')$ where $f':
+A simplified fold operation is \emph{aggregate} which is used for
+combining a time series into one measure, normally it is used to
+compute aggregate statistics.  Let $S$ be a time series, $m_i$ a
+measure, and $f^a$ a function over two measures where $f^a: m_a \times
+m_b \mapsto m_r$.  Based on fold operation \emph{aggregate} can be
+defined as: $\agg(S,m_i,f^a) \equiv \fold(S,\{m_i\},f')$ where $f':
 \{m_i\} \times m \mapsto \{f^a(m_i,m)\}$.
 
-A more generic version of fold is a fold considering order. In the
-previous fold the measures are computed in random order, however in
-some computational operations it is necessary to define the order,
-especially when $f^f$ is not commutative. We define a \emph{fold with
-  order} as an extension of fold with a function $o$ that selects
-measures in order where $o: S_a \mapsto m_r$
+%A more generic version of fold is a fold considering order. 
+In the previous fold the measures are computed in random order,
+however in some computational operations it is necessary to define the
+order, especially when $f^f$ is not commutative. We define a
+\emph{fold with order} as an extension of fold with a function $o$
+that selects measures in order where $o: S_a \mapsto m_r$
 \[
  \orderfold(S,S_i,f^f,o) =
   \begin{cases}
@@ -331,25 +333,25 @@ measures in order where $o: S_a \mapsto m_r$
     \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ otherwise}
   \end{cases}
 \]
- where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
+where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
 
 
-Finally, we describe how \emph{binary computational} operation can be defined
-for two time series in order to operate with their value attributes.
-First it is required to join the two time series and then apply
-computational operations. Let $S_1$ and $S_2$ be two time series and
-$\operatorname{op}$ be a binary operation on the value domain, that is
-for two values $v1$ and $v_2$ it computes a new value
-$\operatorname{op}: v_1 + v_2 \mapsto v'$. The operator
-$\operatorname{op}$ can be applied to both time series as
-$\operatorname{op}: S_1 \times S_2 \mapsto S'$ where $S' =
-\map(S_1 \join S_2, (t,v^1,v^2)\mapsto(t,v^1 \operatorname{op} v^2))$.
+Finally, we describe how \emph{binary computational} operation can be
+defined for two time series in order to operate with their value
+attributes.  First it is required to join the two time series and then
+apply computational operations. Let $S_1$ and $S_2$ be two time series
+and \emph{op} be a binary operation on the value domain, that is for
+two values $v1$ and $v_2$ it computes a new value $\operatorname{op}:
+v_1 + v_2 \mapsto v'$. The operator \emph{op} can be applied to both
+time series as: $\operatorname{op}: S_1 \times S_2 \mapsto S'$ where
+$S' = \map(S_1 \join S_2, (t,v^1,v^2)\mapsto(t,v^1 \operatorname{op}
+v^2))$.
 
-For example, we can apply binary operations such as $S_1 + S_2$ or
-$S_1 / S_2$. It must be noted that join requires both time series to
-have exactly the same time attribute. When time series diverge too
-much then temporal function operations can be applied to fit the time
-instants to what is required.
+For example, we can apply real numbers binary operations such as $S_1
++ S_2$ or $S_1 / S_2$. It must be noted that join requires both time
+series to have exactly the same time attribute. When time series
+diverge too much then temporal function operations can be applied to
+fit the time instants to what is required.
 
 
 
@@ -358,50 +360,49 @@ instants to what is required.
 \subsubsection{Sequence operations}
 
 Sequence operations manipulate time series considering measures as
-being totally ordered. Then we can define three basic operations:
+being totally ordered. Then three basic operations can be defined:
 interval, successor and concatenation.
 
 
-The \emph{interval} $(r,t)$, where $r$ and $t$ are two time instants,
-over a time series $S$ is a time subseries between the two time
-instants $S(r,t) \subseteq S$. Similarly as \cite{last:hetland}, we
-define the open interval as $S(r,t)=\{m\in S | r<T(m)<t\}$. Other
-intervals can be defined: closed $S[r,t]$, left-open $S(r,t]$, and
-right-open $S[r,t)$.
+The \emph{interval} $(t_i,t_f)$, where $t_i$ and $t_f$ are two time
+instants, over a time series $S$ is a time subseries between the two
+time instants $S(t_i,t_f) \subseteq S$. A similar interval concept
+is used by \cite{last:hetland}. The open interval is defined as
+$S(t_i,t_f)=\{m\in S | t_i<T(m)<t_f\}$. Other intervals can be
+defined: closed $S[t_i,t_f]$, left-open $S(t_i,t_f]$, and right-open
+$S[t_i,t_f)$.
 
 The time order in time series also implies the sequence concept of
 \emph{successor} and \emph{predecessor}.  Let $S=\{m_0, \ldots, m_k\}$
-be a time series and $l\in S$ and $n$ be two measures. We say
-$l=\nex_S(n)$ is the \emph{next} measure to $n$ in $S$ if and only if
-$l=\inf(S(T(n),+\infty])$.  We say $l=\prev_S(n)$ is the
-\emph{previous} measure to $n$ in $S$ if and only if
-$l=\sup(S[-\infty,T(n)))$. %
+be a time series and $m_S\in S$ and $m_a$ be two measures. We say
+$m_S=\nex_S(m_a)$ is the \emph{next} measure to $m_a$ in $S$ if and
+only if $m_S=\inf(S(T(m_a),+\infty])$.  We say $m_S=\prev_S(m_a)$ is
+the \emph{previous} measure to $m_a$ in $S$ if and only if
+$m_S=\sup(S[-\infty,T(m_a)))$. %
 Infinite measures are obtained when next and previous are applied to
 supremum and infimum measure respectively: $\nex_S(\sup
 S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
 
 
 
-\emph{Concatenation} comprises the measures of the first time series followed
-in time order by the measures of the second. It is similar to union
-for sets but considering the sequence interval. The concatenation
-requires both time series to have the same structure as seen with
-union operation.  Let $S_1$ and $S_2$ be two time series, the
-concatenation of both $S_1 || S_2$ is a time series $S$ containing all
-measures of $S_1$ and those of $S_2$ that not intersect in the
-interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2] )$ a
-on $t_1=T(\inf S_1)$ i $t_2=T(\sup S_1)$.
+\emph{Concatenation} comprises the measures of the first time series
+followed in time order by the measures of the second. It is similar to
+union for sets but considering the sequence interval. The
+concatenation requires both time series to have the same structure as
+seen with union operation.  Let $S_1$ and $S_2$ be two time series,
+the concatenation of both $S_1 || S_2$ is a time series $S$ containing
+all measures of $S_1$ and those of $S_2$ that not intersect in the
+time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2]
+)$ a on $t_1=T(\inf S_1)$ i $t_2=T(\sup S_1)$.
 
 
 
 
 \subsubsection{Temporal function operations}
-
-
 A time series is a discrete representation of a continuous function,
-which is a temporal function owing to its dependence on time. In this
-section we define operations that manipulate time series according to
-this temporal function nature.
+more precisely a temporal continuous function as time is the function
+domain. Operations that manipulate time series according to this
+temporal function nature can be defined.
 
 The \emph{graph of a function} allows to obtain and interpret the
 continuous nature of a time series, when the domain of time and value
@@ -412,22 +413,21 @@ representation.  Let $S$ be a time series and $T$ the time domain, the
 function for the time series.
 
 The \emph{temporal representation function} $S(t)$ is a continuous
-function along variable $t$ in the domain of time and the output in
+function along variable $t$ in the domain of time and the target in
 the domain of values. $S(t)$ can be obtained by various methods, so
-there are several possible temporal representation
-functions. According to the representation method used we indicate its
-name $r$ with a superscript in all temporal function operations, as
-instance for representation function $S(t)^r$. Next we give two
-particular example of representation functions: one with impulse
-method and another with constant piecewise method.
+there are several possible temporal representation functions. In all
+temporal function operations a superscript $r$ indicates the name $r$
+of the representation method used, as instance $S(t)^r$ is the
+representation function using method $r$. We exemplify the
+representation functions using two methods $r$ based on impulse and
+constant piecewise functions.
 
 
-
-First, we exemplify a representation function with a method that we
-call \emph{delta} ($\delta$) as it is based on the Dirac delta. It is
-an impulse train function that is zero everywhere except at zero.  Let
-$S$ be a time series we define $S(t)^\delta$ as the \emph{delta
-  representation function}
+\begin{example}
+  \emph{Delta} ($\delta$) is a method based on the Dirac delta
+  function. It is an impulse train function that is zero everywhere
+  except at zero.  Let $S$ be a time series we define $S(t)^\delta$ as
+  the \emph{delta representation function}
 \[
     \forall m \in S: S(t)^\delta
 % &  \\
@@ -441,15 +441,14 @@ $S$ be a time series we define $S(t)^\delta$ as the \emph{delta
       0 & \text{otherwise}
     \end{cases}
 \]
+\end{example}
 
-
-
-Second, we exemplify a representation function with a method that we
-call \emph{zero-order hold everted} (\zohe{}) as it is based on the
-\emph{zero-order hold} signal reconstruction methods. It is a
-piecewise constant function that has left-continuous step functions.
-Let $S$ be a time series we define $S(t)^\zohe$ as the \emph{\zohe{}
-  representation function}, $\forall m \in S:$
+\begin{example}
+  \emph{Zero-order hold everted} (\zohe{}) is a method based on the
+  \emph{zero-order hold} signal reconstruction methods. It is a
+  piecewise constant function that has left-continuous step functions.
+  Let $S$ be a time series we define $S(t)^\zohe$ as the \emph{\zohe{}
+    representation function}, $\forall m \in S:$
 \[
     S(t)^\zohe 
     % = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
@@ -458,39 +457,36 @@ Let $S$ be a time series we define $S(t)^\zohe$ as the \emph{\zohe{}
       V(m) & \text{if } t\in \big(T(\prev_S(m)),T(m)\big]
     \end{cases}
 \]
-  
+\end{example}  
 
 
 
 
-After defining the concept of representation, we reinterpret some set
-and sequence operators for the temporal function
-approach. Consequently, the result of each one will depend on a
-representation method, which is indicated as a parameter.
+The concept of representation is used for formalising some set and
+sequence operators as temporal operators. 
+
+%Consequently, the result of each one will depend on a representation method, which is indicated as a parameter.
 
 
-
-Interval is a sequence operation and now we extend it in the temporal
-function approach with a representation method, we call it
-\emph{temporal interval}. It is similar to the concept of interval but
-with some measures computed that are not in the input time series.
-Let $S$ be a time series, $[t_0,t_f]$ a interval
-of two time instants and $r$ a representation function. The \emph{temporal
-interval} of $S$ in $i$ with representation $r$, noted as$
-S[t_0,t_f]^r$, is a time series with measures in the temporal range
-interpreted with the representation: $S[t_0,t_f]^r= \forall t \in
-[t_0,t_f] : S' = S(t)^r $. This is a general definition difficult to
-implement, so for every representation a particular temporal interval
-must be interpreted:
+We define a temporal interval operation to introduce this
+concept.
+%Interval is a sequence operation and now we extend it in the temporal function approach with a representation method, we call it \emph{temporal interval}. 
+%It is similar to the concept of interval but with some measures computed that are not in the input time series.
+Let $S$ be a time series, $[t_i,t_f]$ a interval of two time instants
+and $r$ a representation function. The \emph{temporal interval} noted
+as $S[t_i,t_f]^r$ is a time series with measures in the interval
+temporal range: $S[t_i,t_f]^r= \forall t \in [t_i,t_f] : S' = S(t)^r
+$. This is a general definition difficult to implement, so for every
+representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
 \item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$, the
-  \emph{\zohe{} temporal interval} is $S[t_0,t_f]^\zohe{} = S(t_0,t_f]
+  \emph{\zohe{} temporal interval} is $S[t_i,t_f]^\zohe{} = S(t_i,t_f]
   \cup \{m\}$ where $m=(t_f,v)$ and $v= V(\inf( S[t_f,+\infty] ))$.
 
 \item Let $S(t)^\delta$ be the delta representation for $S$, the
-  \emph{delta temporal interval} is $S[t_0,t_f]^\delta = S[t_0,t_f]
-  \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_0,0)$ and $m_f=(t_f,0)$.
+  \emph{delta temporal interval} is $S[t_i,t_f]^\delta = S[t_i,t_f]
+  \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_i,0)$ and $m_f=(t_f,0)$.
 \end{itemize}
 
 
@@ -502,11 +498,11 @@ selection, temporal concatenation, or temporal join.
 
 
 \subsection{Properties}
-\label{sec:model:properties}
+\label{sec:model:properties} 
 
-We have so far described ideal definition of a time series. In this
-section we note some properties of time series that can be problematic
-when manipulating them.
+In the acquisition of data it is difficult to obtain ideal times
+series as described. Following we note some properties of time series
+that can be problematic when manipulating them.
 
 First, clock is a crucial measuring instrument in time
 series. Precision and accuracy is very important in timestamps.  In
@@ -516,13 +512,16 @@ solving methods, especially clock synchronisation methods.
 
 Second, unknown data can corrupt the database. Unknown data appears
 when data has not been captured or when it has been acquired
-erroneously. Then data validation must be performed and reject new
-values if they are not correct or reconstruct this erroneous data.
-Data validation process considers when values are outside the possible
-range domain, when there has not been possible to acquire a sample,
-when the time of acquisition between measures is not considered
-freshness, etc. MTSMS can cope with this data validation process.
+erroneously. Then data validation must be performed, which can result
+in rejecting new values if they are not correct or in reconstructing
+this erroneous data.  Data validation process has to consider when
+values are outside the possible range domain, when there has not been
+possible to acquire a sample, when the time of acquisition between
+measures is not considered freshness, etc. MTSMS has been designed to
+cope with this data validation process.
 
+
+\todo{revisar}
 
 Third, enormous quantity of data difficults computations.  Time series
 come from data recollected at monitoring systems and so its size gets
@@ -539,13 +538,13 @@ approaches.  MTSMS tries to storage regular time series.  Next we
 detail the regular concept for time series.
 
 
-A time series is regular when its measures are equi-spaced in time, as
-called by \textcite{last:hetland}. Let $S$ be a time series, $t_I$ be a
-time instant and $\delta$ be a time duration, then the time series'
-measures can be located in the time interval $i_0=[t_I, t_I+\delta]$ and
-its multiples $i_j=[t_I+j\delta, t_I+(j+1)\delta]$ for
-$j=0,1,2,\ldots$. When time series' measures are equally spaced we say
-it to be regular.
+A time series is regular when its measures are equi-spaced in time,
+according to \cite{last:hetland}. Let $S$ be a time series, $t_I$
+be a time instant and $\delta$ be a time duration, then the time
+series' measures can be located in the time interval $i_0=[t_I,
+t_I+\delta]$ and its multiples $i_j=[t_I+j\delta, t_I+(j+1)\delta]$
+for $j=0,1,2,\ldots$. When time series' measures are equally spaced we
+say it to be regular.
 
 \begin{definition}
   Let $S=\{m_0,$ $\ldots,$ $m_k\}$ be a time series and $\delta$ a time
