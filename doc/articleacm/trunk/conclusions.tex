@@ -60,18 +60,19 @@ requested by date ranges or by applying different filters and
 operations to the time series data.
 
 
-Deri et al.\ present \emph{tsdb}, a lossless compression storage \acro{TSMS}
-for time series that share the same time instants of
-acquisition. Different time series are stored grouped by new measures
-addition instead of each time series isolated.  They compare
-\emph{tsdb} to RRDtool and with a relational product. As a consequence
-of \emph{tsdb} structure, they achieve a better measure addition time
-but a worse global retrieval time as data has to be contiguously
-regrouped. However, when measures have same time this is seen as the
-same time series in a MTSMS, so it would be interesting to use this
-implementation architecture of shared time arrays in MTSMS for
-resolution subseries with same delta in order to achieve better
-performance requirements when having much equal acquired time series.
+Deri et al.\ \cite{deri12:tsdb_compressed_database} present
+\emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
+series that share the same time instants of acquisition. Different
+time series are stored grouped by new measures addition instead of
+each time series isolated.  They compare \emph{Tsdb} to \emph{RRDtool} and
+with a relational product. As a consequence of \emph{Tsdb} structure,
+they achieve a better measure addition time but a worse global
+retrieval time as data has to be contiguously regrouped. However, when
+measures have same time this is seen as the same time series in a
+MTSMS, so it would be interesting to use this implementation
+architecture of shared time arrays in MTSMS for resolution subseries
+with same delta in order to achieve better performance requirements
+when having much equal acquired time series.
 
 % Therefore, as it is a very different approach from RRDtool we find it difficult to compare both in these performance requirements. 
 % He only evaluates compression performance but we think that a global
@@ -94,8 +95,8 @@ simplicity and develop a system called \emph{iSAX}
 \cite{keogh08:isax,keogh10:isax} in order to analyse and index massive
 collections of time series. They describe that the main problem is in
 the indexing of time series and they propose methods that process
-efficiently. The first method proposed is based on the constant
-piecewise approximation, the PAA. The time
+efficiently. The first method proposed is based on a constant
+piecewise approximation. The time
 series representation obtained with \emph{iSAX} allows to reduce the
 stored space and to index faster and with the same quality as other
 more complex representation methods.
@@ -137,8 +138,8 @@ structures: one for sensor properties stored into relational tables
 and another for time series stored into data sequences from
 sensors. Time series have specific operations and can combine
 relations and sequences. \emph{Cougar} target field is sensor networks, where
-data is stored distributed in sensors. Queries are resolved combining
-sensor data using a data stream abstraction that improves processing
+data is stored distributed. Queries are resolved combining
+sensor data in a data stream abstraction that improves processing
 performance.
 
 
@@ -168,7 +169,7 @@ function. Therefore, each multiresolution time series is configured by
 the quantity of resolution subseries and four parameters for each: the
 consolidation step, the initial consolidation time, the attribute
 aggregate function, and the capacity.  These configuration parameters
-are are degrees of freedom for each application. Giving different
+are degrees of freedom for each application. Giving different
 values a multiresolution database is capable to keep the desired
 information from a time series.
 
@@ -230,6 +231,8 @@ theory.
 
 
 \section{Acknowledgements}
+
+\todo{incorrectes: T envia les noves}
 
 The research presented in this paper has been supported by Spanish
 research project \textsc{nasp (TEC2012-35571)}, \textsc{sherecs
