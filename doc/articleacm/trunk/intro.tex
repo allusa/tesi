@@ -3,26 +3,25 @@
 
 \section{Introduction}
 
-Information collection process are growing in quantity as a
+Information collection processes are growing in quantity as a
 consequence of the emergence of embedded systems and sensor networks.
-Nowadays it is possible to collect large amounts of data for
-monitoring and control of complex systems.
+Nowadays it is possible to collect large amounts of data to
+monitor and control complex systems.
 
 This information must be managed by systems in order to detect
 eventual sensor failures or malfunctions and possibly to reconstruct
-the incorrect signals. In all these instances, acquired data is
-associated with a time stamp, which implies that the correctness of
-those data depends not only on the measured value but also on the time
-as it is collected. When observations are collected at specific
-time instants, they are formalised as time series.
+the incorrect signals. Acquired data instance are bound to a time
+stamp, therefore correctness criteria must include both date and its
+time stamp. The sequences of data values collected at specific time
+instants are formalised as time series.
 
 Time series are defined as a collection of observations made
-chronologically. Time series are usually stored and the managed by SQL
+chronologically. Time series are usually stored and managed by SQL
 relational database management systems. However, using SQL systems as
 a time series backend suffers some drawbacks
-\cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}. SQL is also
-considered inadequate in other fields and NoSQL products are being
-developed as an alternative
+\cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}.  In other
+fields performance and flexibility of SQL systems is considered and
+alternative NoSQL products are being developed
 \cite{atzeni13:relational_model_dead,stonebraker10}.
 
 In general, time series come from a continuous nature in which they
@@ -30,12 +29,12 @@ are recorded at regular intervals, such as hourly or daily, or at
 irregular intervals, such as recording when a pump is open or closed.
 One problem when dealing with time series data results from the fact
 that these data are often voluminous \cite{fu11,keogh08:isax}. As a
-result, storing and accessing them can be complicated. Moreover, it is
+result, efficiently storing and accessing them can be complex. Moreover, this is
 specially critical when developing small embedded systems, whose
 resources (capacity, energy, processing and communications) suffer
 restrictions \cite{yaogehrke02}.  Another problem is that the
 procedure of processing and synthesising information becomes
-complicated if data is not equi-time spaced.
+difficult if data is not equi-time spaced.
 
 The propose of time series data mining is to apply time series
 analysis methods when having huge amount of data.  One approach is to
