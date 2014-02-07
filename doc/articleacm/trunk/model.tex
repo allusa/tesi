@@ -932,6 +932,38 @@ the general integral definition.
 
 
 
+
+\begin{example} Queries over a defined multiresolution schema for an
+  example time series.  Let $S = \{ (1,6),(5,2),\allowbreak
+  (8,5),(10,0),\allowbreak (14,1),\allowbreak (19,6),\allowbreak
+  (22,11),\allowbreak (26,6),(29,0) \}$ be a time series and
+  $M_\emptyset=\{R_0,R_1\}$ a multiresolution time series where each
+  resolution parameters are $\tau_0=0$ , $\delta_0=5$, $f_0 =\meanz$,
+  $k_0=4$ and $\tau_1=0$, $\delta_1=10$, $f_1 =\maxz$,
+  $k_1=2$. Therefore $R_0$ will be consolidated at time instants 5,
+  10, 15, 20, 25, 30\dots and $R_1$ at 10, 20, 30\dots
+
+  All measures of $S$ are added to $M_\emptyset$
+  %, $\forall m\in S: M'=\addM(M_\emptyset,m)$ %NOO, ha de ser recursiu
+  and then it is consolidated until it is no more consolidable. As
+  $T(\max(S))=29$, the last consolidation times are $\tau_0=25$ and
+  $\tau_1=20$, so we call $M_{29}$ to this multiresolution time series
+  at this state.
+
+  Then the two time subseries consolidated are obtained by querying
+  $\seriedisc(M_{29},5,\meanz)=\{(10,3),(15,2),(20,7),\allowbreak
+  (25,8)\}$ and $\seriedisc(M_{29},10,\maxz)=\{(10,5),\break
+  (20,11)\}$. Regarding buffers, note that $S_{B0_{29}}=
+  \{(26,6),\allowbreak (29,0)\}$ and $S_{B1_{29}}=\{(22,11),(26,6),(29,0)\}$.
+
+  In this particular example $\seriedisc(M_{29},5,\meanz)=\break
+  \totalseries(M_{29})$ as $R_0$ has double resolution than
+  $R_1$. $\square$
+\end{example}
+
+
+
+
 % \subsubsection{Data validation}
 
 % \todo{potser encara es verd aixo}
