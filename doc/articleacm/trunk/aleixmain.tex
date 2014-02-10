@@ -56,20 +56,8 @@
 \DeclareMathOperator{\meanz}{mean^\zohe}
 \DeclareMathOperator{\maxz}{maximum^\zohe}
 
-\usepackage[backend=biber,style=numeric-comp,sortcites=true,]{biblatex}
+\usepackage[backend=biber]{biblatex}
 \bibliography{bibliografia}
-
-\ExecuteBibliographyOptions{
-  isbn=false,url=false,doi=true,eprint=false,alldates=terse,firstinits=true,abbreviate=true,urldate=long,
-%maxnames=2,
-}
-\AtEveryBibitem{\clearfield{day}}
-%\renewbibmacro{in:}{}
-\bibitemsep 1mm \bibnamesep 0mm \bibinitsep 0mm \biblabelsep 1.5mm \bibhang 0mm 
-
-\usepackage{flushend}
-
-
 \begin{document}
 
 
@@ -161,8 +149,23 @@ Llus\`{a} Serra, Aleix\\
 \input{conclusions}
 
 
-\printbibliography[title={REFERENCES},heading=bibnumbered]
 
+
+
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+%\bibliographystyle{abbrv}
+%\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+%\bibliography{bibliografia}
+\printbibliography
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
 
 
 

@@ -119,14 +119,18 @@ given and it can be extended to n-dimensional values.
 Let $m = (t,v)$ be a measure, $v$ is written as $V(m)$ and $t$ is
 written as $T(m)$.
 
+
 The time attribute defines the canonical order relation between
-measures. There are two possible order relations. Let $m = (t_m, v_m)$
-and $n = (t_n, v_n)$ be two measures.  (i) A \emph{total order} is
-obtained when only considering the time attribute, $m\geq n$ if and
-only if $t_m\geq t_n$.  (ii) A \emph{partial order} is obtained when
-considering measures as a whole, $m > n$ if and only if $t_m > t_n$,
-and the equality $m_n = n_n$ only if $(t_m, v_m) = (t_n, v_n)$.  We
-also call \emph{temporal order} to the total order.
+measures. There are two possible order relations, attending the case
+when exists two measures with the same time but different value. Let
+$m = (t_m, v_m)$ and $n = (t_n, v_n)$ be two measures.  (i) A
+\emph{partial order} is obtained when both measures are equal as a
+whole, $m \geq n$ if and only if $t_m > t_n$ or $(t_m, v_m) = (t_n,
+v_n)$, as then two measures are not ordered when only $t_m =
+t_n$. (ii) A \emph{total order} is obtained when both measures are
+equal only considering the time attribute, $m\geq n$ if and only if
+$t_m\geq t_n$, as then measures are always ordered.  We also call
+\emph{temporal order} to the total order.
 
 
 
@@ -395,6 +399,7 @@ the concatenation of both $S_1 || S_2$ is a time series $S$ containing
 all measures of $S_1$ and those of $S_2$ that not intersect in the
 time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2]
 )$ where $t_1=T(\inf S_1)$ and $t_2=T(\sup S_1)$.
+
 
 
 \subsubsection{Temporal function operations}
