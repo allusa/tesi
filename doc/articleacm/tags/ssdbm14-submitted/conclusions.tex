@@ -1,0 +1,253 @@
+
+
+\section{Related work}
+\label{sec:related-work}
+
+Bitemporal \acro{DBMS}, sometimes referred directly as temporal data,
+is another database field related with time. Bitemporal data target is
+to keep historical events in the database by associating time
+intervals to data.  Bitemporal data and time series data are not
+exactly the same and so can not be treated interchangeably
+\cite{schmidt95}. However, there are some similarities that can be
+considered.  The recent bitemporal data research in \acro{DBMS} model
+terms \cite{jensen99:temporaldata,date02:_tempor_data_relat_model}
+marks a promising foundation. It models bitemporal data as relations
+extended with time intervals attributes and extends relational
+operations in order to deal with related time aspects.
+
+
+Therefore \acro{TSMS} are treated as a particular \acro{DBMS}
+field.  Segev and Shoshani \cite{segev87:sigmod} propose an structured
+language for querying \acro{TSMS}. Their time series structures
+include the notion of regularity and representation in time series and
+their operations are SQL-like.  Dreyer et al.\ \cite{dreyer94} propose
+the requirements of special purpose TSMS and they base the model on
+four basic structural elements: events, time series, groups, metadata
+and the time series bases. They implement a special purpose
+\acro{TSMS} called \emph{Calanda} which has calendar operations, can
+group time series and make simple queries. They exemplify it with
+financial data. In \cite{schmidt95} \emph{Calanda} is compared with
+temporal systems designed for time series.
+
+
+
+
+As \acro{TSMS} suffer from problematic properties of time
+series, like the ones we have described in
+Section~\ref{sec:model:properties} mainly the huge data volume,
+compression techniques are used.  Next, we summarise some current work
+in \acro{TSMS} with compression.
+
+
+
+\emph{RRDtool} from Oetiker, \cite{rrdtool,lisa98:oetiker}, is a free
+software database management system. It is designed to be used for
+monitoring systems. Because of this, it is focused to a particular
+kind of data, gauges and counters, and it lacks general time series
+operations. \emph{RRDtool} can store multiple time resolution data,
+however Plonka et al.\ \cite{lisa07:plonka} evaluated \emph{RRDtool}
+performance and found a limitation for storing huge number of
+different time series. They propose a caching system on top of
+\emph{RRDtool} as a solution.  \emph{RRDtool} is extremely used by the
+free software community so it inspired us to develop a model from its
+main characteristics, that is now what we call multiresolution. A
+similar approach is done by \cite{weigel10} in a system called
+\emph{TSDS} that caches queries by aggregate parameters. They notice
+the necessity to show the data over its full time range and not only
+subsets of data as it is usually provided.  They develop the software
+package \emph{TSDS} where time series are stored fully and then
+requested by date ranges or by applying different filters and
+operations to the time series data.
+
+
+Deri et al.\ \cite{deri12:tsdb_compressed_database} present
+\emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
+series that share the same time instants of acquisition. Different
+time series are stored grouped by new measures addition instead of
+each time series isolated.  They compare \emph{Tsdb} to \emph{RRDtool} and
+with a relational product. As a consequence of \emph{Tsdb} structure,
+they achieve a better measure addition time but a worse global
+retrieval time as data has to be contiguously regrouped. However, when
+measures have same time this is seen as the same time series in a
+MTSMS, so it would be interesting to use this implementation
+architecture of shared time arrays in MTSMS for resolution subseries
+with same delta in order to achieve better performance requirements
+when having much equal acquired time series.
+
+% Therefore, as it is a very different approach from RRDtool we find it difficult to compare both in these performance requirements. 
+% He only evaluates compression performance but we think that a global
+% evaluation of compression plus descompression must be done. MTSMS
+% are not aimed to be a replacement for offline long time storage
+% systems that are rarely queried and then queries can be slow but
+% have tot be exact. MTSMS are adequate to stream processing and
+% resolving queries with less data than original and so they are
+% quicker but give information previously selected.
+
+
+There are other lossy compression techniques for time series devoted
+to the optimal approximation representation, that is finding the
+compromise between least data that can reconstruct the original signal
+with least error. Keogh et al.\ \cite{keogh01} cite some possible
+approximation representations for time series such as Fourier
+transforms, wavelets, symbolic mappings or piecewise linear
+representation. They remark this last one as very usual due to its
+simplicity and develop a system called \emph{iSAX}
+\cite{keogh08:isax,keogh10:isax} in order to analyse and index massive
+collections of time series. They describe that the main problem is in
+the indexing of time series and they propose methods that process
+efficiently. The first method proposed is based on a constant
+piecewise approximation. The time
+series representation obtained with \emph{iSAX} allows to reduce the
+stored space and to index faster and with the same quality as other
+more complex representation methods.
+
+
+% A Multiresolution Symbolic Representation of
+% Time Series; Megalooikonomou, Faloutsos; 2005 proposes multiresolution by decomposing a signal in frequency subsequences and intended mainly to similarity searching. The objective is to reconstruct the original time series. 
+ 
+
+
+% \paragraph{T-Time}  \textcite{assfalg08:thesis} shows a TSMS that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
+
+ 
+
+ 
+Others implement \acro{TSMS} with array database approaches.
+\emph{SciDB} \cite{stonebraker09:scidb} and \emph{SciQL}
+\cite{zhang11} are array database systems intended for science
+applications, in which time series play a principal role. They
+structure time series into arrays in order to achieve multidimensional
+analysis and allow tables to store other data.  \emph{SciDB} is based
+on arrays which, according to the authors, allow to represent time
+series. However, it does not consider time series special needs: it
+does not care for managing continuously voluminous data neither for
+achieving temporal coherence.  In contrast, \emph{SciQL} defines time
+series as a mixture of array, set, and sequence properties and
+exhibits some time series managing characteristics that include time
+series regularities, interpolation or correlation queries.  However,
+difference between tables and arrays seems too physical and leads to
+ambiguity when representing time series.
+
+
+
+
+There are other \acro{TSMS} specifically designed for a particular
+field requirements.  \emph{Cougar}
+\cite{bonnet01} is a sensor database system. It has two main
+structures: one for sensor properties stored into relational tables
+and another for time series stored into data sequences from
+sensors. Time series have specific operations and can combine
+relations and sequences. \emph{Cougar} target field is sensor networks, where
+data is stored distributed. Queries are resolved combining
+sensor data in a data stream abstraction that improves processing
+performance.
+
+
+
+
+
+
+\section{Conclusions}
+\label{sec:concl-future-work}
+
+
+In this paper we have shown a \acro{MTSMS} model, including a
+motivation example for multiresolution and an application together
+with \acro{TSMS}. Our \acro{MTSMS} model is based on \acro{TSMS}
+notation which we have described firmly rooted on set and relational
+algebra. We have gone a bit further and proposed \acro{TSMS} including
+set, sequence and temporal function behaviour.
+
+
+
+The main objective of a \acro{MTSMS} is to store compactly a time
+series and manage consistently its temporal dimension.  It stores
+multiresolution time series, that is time series split into time
+subseries called resolution subseries.  Each resolution subseries has
+a different resolution and is compacted with an attribute aggregate
+function. Therefore, each multiresolution time series is configured by
+the quantity of resolution subseries and four parameters for each: the
+consolidation step, the initial consolidation time, the attribute
+aggregate function, and the capacity.  These configuration parameters
+are degrees of freedom for each application. Giving different
+values a multiresolution database is capable to keep the desired
+information from a time series.
+
+
+
+The queries over \acro{MTSMS} obtain time series from stored
+multiresolution time series. In this way \acro{TSMS} operators can be
+applied if needed.
+
+
+Compared to other \acro{TSMS} we propose a compression solution that
+stores only the information we will require by latter queries or by
+human visualisation, instead of trying to reconstruct the original
+signal.  Moreover, our multiresolution solution copes well with
+typical problematic properties of time series: regularity, data
+validation and data volume.  The decompression time is minimal as data
+in discs get stored directly as a time series. As a consequence, the
+queries or visualisation computing time is only due to the computation
+itself. Moreover, if the query is an aggregation or resolution already
+computed in \acro{MTSMS} consolidation, then the visualisation is
+immediate.
+
+
+\acro{MTSMS} imply a data information selection and so the information
+not considered important is discarded. When this is not possible, we
+have showed a dual structure of \acro{TSMS} and \acro{MTSMS}. Then a
+\acro{TSMS} stores losslessly and a \acro{MTSMS} takes advantages of
+manipulating data in time order in order to achieve pre-computed
+queries in a stream-like orientation.
+
+
+% Tenim una consulta sobre els TSMS M=multiresolution(S) que ens permetrà estudiar que passa amb la multiresolució aplicada a una sèrie temporal, per exemple quina diferència hi ha entre fer S1+S2 i multiresolution(S1)+multiresolution(S2).
+% Tenim un model MTSMS que dóna pistes de com implementar la multiresolució, de l'estructura que ha de tenir.
+
+
+%Ens podem considerar un DBMS NoSQL? 
+% We are working with a DBMS that could be considered as a NoSQL product but we formalise and root it heavily with traditional algebra theory.
+
+A \acro{MTSMS} could be implemented as a SQL \acro{DBMS} system or as
+a NoSQL one. As a reference implementation we are developing a
+\emph{Python} package centred on the basic algebra, that is without
+extended \acro{DBMS} capabilities. Regarding other implementations,
+\emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
+a NoSQL system, although Oetiker \cite{rrdtool} has not commented
+whether it can be considered as being NoSQL. However, regardless of
+the implementation backend, we have shown how a generic model for
+\acro{MTSMS} can be defined firmly rooted on \acro{DBMS} algebra
+theory.
+
+
+
+
+
+
+% Concluding, in this paper we show that using \acro{TSMS} facilitates
+% substantially time series management. The current field interest makes
+% us optimistic to expect soon an adequate management in \acro{DBMS}.
+
+
+
+\section{Acknowledgements}
+
+%\todo{incorrectes: T envia les noves}
+
+The research presented in this paper has been supported by Spanish
+research projects \textsc{TEC2012-35571} and \textsc{dpi2011-26243},
+the UE project i-Sense ({\small FP7-ICT-270428}), and Universitat
+Polit\`{e}cnica de Catalunya predoctoral grant.
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+
+%  LocalWords:  multiresolution
