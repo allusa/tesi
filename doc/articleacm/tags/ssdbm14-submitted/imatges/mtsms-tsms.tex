@@ -1,0 +1,31 @@
+%\usetikzlibrary{shapes,arrows,positioning}
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+
+ \node (m) {measure};
+
+ \node[rectangle,draw,above right=1cm of m] (tsms) {TSMS};
+ \node[rectangle,draw,below right=1cm of m] (mtsms) {MTSMS};
+
+ \node[right=4.3cm of m] (ts) {
+   \begin{tabular}[h]{|c|c|}
+    \multicolumn{2}{c}{$S'$} \\ \hline
+     t & v \\ \hline
+       &   \\
+       &   \\ \hline
+   \end{tabular}
+ };
+
+ \draw[->] (m.east) -- (tsms.west);
+ \draw[->] (m.east) -- (mtsms.west);
+
+ \draw[->] (tsms.east) -- (ts) node[above,midway,sloped] {multiresolution(S)};
+ \draw[->] (mtsms.east) -- (ts) node[above,midway,sloped] {TotalSeries(M)};
+
+\end{tikzpicture}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% ispell-local-dictionary: "british"
+%%% End:
