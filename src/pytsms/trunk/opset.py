@@ -47,7 +47,7 @@ class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
         False
         """
         for ms in self:
-            if m.eqnt(ms):
+            if m.eqp(ms):
                 return True
         return False
 

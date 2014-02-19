@@ -486,20 +486,13 @@ class PgfPlot(object):
         #obertura
         s = """\\begin{tikzpicture}
         \\begin{axis}[
-            width = \\textwidth,
-            height = 3.5cm,
-            date coordinates in=x,
+            rrbrs,
     """
 
         zero = datetime.datetime.utcfromtimestamp(rd.B.delta)
         s += '        date ZERO={0},\n'.format(zero)
-
-        s += """        xticklabel style= {rotate=15,anchor=east},
-            xlabel=temps (UTC),
-            x label style={anchor=north west},
-            ylabel=quantitat (bytes),
-            ]
-    """    
+        s += '            title={0},\n'.format(self._compute_title(rd))
+        s += "]"    
 
 
         s += '     \\addplot[blue] coordinates{\n'
@@ -518,6 +511,79 @@ class PgfPlot(object):
 
         return s
 
+
+    def _compute_title(self,rd):
+        """
+        Compute a title for a resolution subseries
+
+        :param rd: A resolution subseries
+        :rtype: string
+
+        """
+        title='{0}/{1}\\textbar {2}\\textbar'.format(rd.B.tau,rd.B.f.__name__,rd.D.k)
+        title = title.replace('_','\_')
+        
+        return title
+
+    def plot_latex_pgfstyles(self):
+        """
+        LaTeX pgfplot piece code for PGF styles.
+
+        :rtype: string
+
+        """
+
+        estilst= """
+   rrbtimeseries/.style={
+        date coordinates in=x,
+        ylabel=Temperature (K),
+        legend style={font=\footnotesize},
+        tick label style={font=\footnotesize},
+        every axis x label/.style={
+          at={(1.3,0)},
+          anchor=north,
+          },
+        label style={font=\footnotesize},
+        xticklabel style= {rotate=17,anchor=north east},
+%        every axis title shift=0pt,
+%        max space between ticks=15,
+        every mark/.append style={mark size=6},
+        major tick length=0.1cm,
+        minor tick length=0.066cm,
+        very thin,
+        every axis legend/.append style={
+          at={(1.2,0)},
+          anchor=south east,
+          draw = none},
+       legend columns = 4,
+       unbounded coords=jump, %v>1.4
+    },
+"""
+
+        estilrs = """
+    rrbrs/.style={
+        rrbtimeseries,
+        width = \textwidth,
+        height = 0.25\textwidth,
+        every axis x label/.style={
+          at={(1.3,-1)},
+          anchor=north,
+          },
+        ylabel = {},  
+        max space between ticks=50,
+        every axis legend/.append style={
+          at={(1,-1.1)},
+          anchor=north east,
+          draw = none},
+        title style={font=\small,below,anchor=north,fill=white},
+    },
+   """
+
+        estils = "\pgfplotsset{" + estilst + estilrs +"}\n"
+
+        return estils
+
+
     def plot(self):
         """
         LaTeX pgfplotv1.6 code for a mrd.
@@ -533,5 +599,8 @@ class PgfPlot(object):
         for rd in sorted(self._mrd):
             s += self.plot_latex_rd(rd)
             s += '\n'
-        return s
+
+        estils = self.plot_latex_pgfstyles()
+        
+        return estils +"\n" + s
 
