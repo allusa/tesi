@@ -19,23 +19,27 @@ import sys
 
 def compta_linia(l):
     """
-    >>> compta_linia("hola que tal, hola que feu?")
-    hola 1
-    que 1
-    tal, 1
-    hola 1
-    que 1
-    feu? 1
+
+    >>> compta_linia("hola")  # doctest: +NORMALIZE_WHITESPACE
+    hola\t1
+    >>> compta_linia("hola que tal, hola que feu?")  # doctest: +NORMALIZE_WHITESPACE
+    hola\t1
+    que\t1
+    tal,\t1
+    hola\t1
+    que\t1
+    feu?\t1
     """
     l = l.rstrip()
     for w in l.split():
-        print "{0} 1".format(w)
+        print "{0}\t1".format(w)
 
 
 def compta_file(f):
     """
+
     >>> s="hola que tal,\\nhola que feu?"
-    >>> compta_file(s.split("\\n"))
+    >>> compta_file(s.split("\\n")) # doctest: +NORMALIZE_WHITESPACE
     hola 1
     que 1
     tal, 1
