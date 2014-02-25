@@ -25,8 +25,8 @@ import sys
 
 def agrupa_llista(f):
     """
-    >>> s = "feu 1\\nhola 1\\nhola 1\\nque 1\\nque 1\\ntal 1"
-    >>> agrupa_llista(s.split('\\n'))
+    >>> s = "feu\\t1\\nhola\\t1\\nhola\\t1\\nque\\t1\\nque\\t1\\ntal\\t1"
+    >>> agrupa_llista(s.split('\\n'))  # doctest: +NORMALIZE_WHITESPACE
     feu 1
     hola 2
     que 2
@@ -42,19 +42,19 @@ def agrupa_llista(f):
             w = None
             c = 0
         else:
-            w,c = line.split()
+            w,c = wc
             c = int(c)
 
         if word == w:
             count += int(c)
         else:
             if word is not None:
-                print '{0} {1}'.format(word,count)
+                print '{0}\t{1}'.format(word,count)
             word = w
             count = c
         
     if word is not None:
-        print '{0} {1}'.format(word,count)      
+        print '{0}\t{1}'.format(word,count)      
 
 
 
