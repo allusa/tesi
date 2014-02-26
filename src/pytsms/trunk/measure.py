@@ -273,6 +273,22 @@ class Measure(object):
 
 
 
+class MeasureInf(Measure):
+    """
+    Mesura on el temps i valor són float amb límit infinit
+
+    >>> MeasureFloat(un='p')
+    m(inf,inf)
+    >>> MeasureFloat(un='n')
+    m(-inf,inf)
+    >>> MeasureFloat(1)
+    m(1,inf)
+    """
+    unp=float("inf")
+    unn=-float("inf")
+    unv=float("inf")
+
+
 
 class MeasureFloat(Measure):
     """

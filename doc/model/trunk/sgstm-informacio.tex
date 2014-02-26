@@ -64,3 +64,30 @@ anomalous events or to transient networking issues.
 \section{Rate–distortion theory}
 
 http://en.wikipedia.org/wiki/Rate-distortion_theory
+
+
+
+
+
+\section{Multiresolució sense pèrdua}
+
+
+Per exemple calcular la mitjana d'una sèrie temporal i calcular la mitjana d'una sèrie temporal multireoslució que tingui un esquema amb agregadors de mitjana de funció, és el mateix? Si hi han dades conegudes per a tot l'interval.
+
+agregador $fmean = \frac{1}{t_f-t_0}\int s(t)$
+
+Per tant $fmean(s)$ hauria de ser igual a $fmean(multiresolution(s))$ perquè $multiresolution(s)= \frac{1}{\delta}\int s[\tau,\tau+\delta]+\frac{1}{\delta}\int s[\tau+\delta,\tau+2\delta]+\dots$ i per tant 
+
+\[
+fmean(multiresolution(s)) =  \frac{1}{t_f-t_0}\int\right[\frac{1}{\delta}\int s[\tau,\tau+\delta]+\frac{1}{\delta}\int s[\tau+\delta,\tau+2\delta]+\dots \left]
+\]
+\[
+ =  \frac{1}{t_f-t_0}\frac{\delta}{\delta}\right[\int s[\tau,\tau+\delta]+\int s[\tau+\delta,\tau+2\delta]+\dots \left] =  \frac{1}{t_f-t_0} \int s[t_0,t_f]
+\]
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+

@@ -152,7 +152,7 @@ class Zohe(Representation):
         s = self.get_ts()
         r = s.interval_open_left(l,g)
         v = s[g::'c'].inf().v
-        m = Measure(g,v)
+        m = s.mtype()(g,v)
         r.add(m)
         return r
 

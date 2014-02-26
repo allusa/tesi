@@ -28,12 +28,13 @@ def mean(s,i):
     >>> mean(s,(0,6)) == Measure(6,20)
     True
     """
+    mtype = s.mtype()
     t0,tf = i
     sp = s.interval_open_left(t0,tf)
     v = sp.aggregate(lambda mi,m: Measure(mi.t+1, mi.v+m.v), Measure(0,0))
     if v.t == 0:
-        return Measure(tf,float("inf"))
-    return Measure(tf, v.v / float(v.t) )
+        return mtype(tf,float("inf"))
+    return mtype(tf, v.v / float(v.t) )
 
 
 def maximum(s,i):
@@ -47,10 +48,11 @@ def maximum(s,i):
     >>> maximum(s,(0,6)) == Measure(6,40)
     True
     """
+    mtype = s.mtype()
     t0,tf = i
     sp = s.interval_open_left(t0,tf)
     v = max(sp.projection(['v']))
-    return Measure(tf,v)
+    return mtype(tf,v)
 
 def last(s,i):
     """
@@ -63,10 +65,11 @@ def last(s,i):
     >>> last(s,(0,6)) == Measure(6,20)
     True
     """
+    mtype = s.mtype()
     t0,tf = i
     sp = s.interval_open_left(t0,tf)
     v = max(sp).v
-    return Measure(tf,v)
+    return mtype(tf,v)
 
 
     
@@ -86,11 +89,14 @@ def area_zohe(s,i):
     True
     >>> area_zohe(s,(0.5,3.5)) == Measure(3.5,75)
     True
-    >>> area_zohe(s,(0,6)) == Measure(6,float("inf"))
-    True
     >>> area_zohe(s,(0,1)) == Measure(1,10)
     True
     >>> area_zohe(s,(-1,0)) == Measure(0,10)
+    True
+    >>> from pytsms.measure import MeasureInf
+    >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,10); m3 = MeasureInf(5,40)
+    >>> s2 = TimeSeries([m1,m2,m3])
+    >>> area_zohe(s2,(0,6)) == MeasureInf(6)
     True
     """
     t0,tf = i
@@ -102,7 +108,7 @@ def area_zohe(s,i):
     vp = (o.t - t0)*o.v
     vp += reduce(lambda mi,m: mi+(m.t-s.prev(m).t)*m.v,spp,0)
 
-    return Measure(tf,vp)  
+    return s.mtype()(tf,vp)  
 
 
 def mean_zohe(s,i):
@@ -119,15 +125,18 @@ def mean_zohe(s,i):
     True
     >>> mean_zohe(s,(0.5,3.5)) == Measure(3.5,25)
     True
-    >>> mean_zohe(s,(0,6)) == Measure(6,float("inf"))
-    True
     >>> mean_zohe(s,(0,1)) == Measure(1,10)
+    True
+    >>> from pytsms.measure import MeasureInf
+    >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,10); m3 = MeasureInf(5,40)
+    >>> s2 = TimeSeries([m1,m2,m3])
+    >>> mean_zohe(s2,(0,6)) == MeasureInf(6)
     True
     """
     t0,tf = i
     area = area_zohe(s,i).v
     v = area/(tf-t0)
-    return Measure(tf,v)
+    return  s.mtype()(tf,v)
 
 
 def maximum_zohe(s,i):
@@ -142,7 +151,12 @@ def maximum_zohe(s,i):
     True
     >>> maximum_zohe(s,(-1,1)) == Measure(1,10)
     True
-    >>> maximum_zohe(s,(1,6)) == Measure(6,float("inf"))
+    >>> maximum_zohe(s,(1,6)) == Measure(6,40)
+    True
+    >>> from pytsms.measure import MeasureInf
+    >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,40); m3 = MeasureInf(5,20)
+    >>> s2 = TimeSeries([m1,m2,m3])
+    >>> maximum_zohe(s2,(1,6)) == MeasureInf(6)
     True
     """
     t0,tf = i
@@ -163,7 +177,7 @@ def last_zohe(s,i):
     True
     >>> last_zohe(s,(-1,1.5)) == Measure(1.5,40)
     True
-    >>> last_zohe(s,(1,6)) == Measure(6,float("inf"))
+    >>> last_zohe(s,(1,6)) == Measure(6,None)
     True
     """
     t0,tf = i
@@ -181,7 +195,7 @@ def zohe_u(fzohe,s,i):
     Agregador que tracta dades desconegudes com a zero i després
     aplica l'agregador `fzohe`.
 
-    >>> m1 = Measure(1,10); m2 = Measure(2,float("inf")); m3 = Measure(5,40)
+    >>> m1 = Measure(1,10); m2 = Measure(2); m3 = Measure(5,40)
     >>> s = TimeSeries([m1,m2,m3])
     >>> zohe_u(area_zohe, s,(1,5)) == Measure(5,120)
     True
@@ -201,7 +215,7 @@ def zohe_u(fzohe,s,i):
     t0,tf = i
 
     sp = s.interval_temporal(t0,tf,Zohe)
-    sp = sp.map(lambda m: Measure(m.t, 0 if math.isinf(m.v) else m.v))
+    sp = sp.map(lambda m: Measure(m.t, 0 if m.isvalueundefined() else m.v))
 
     return fzohe(sp,i)
 

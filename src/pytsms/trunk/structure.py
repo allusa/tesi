@@ -143,6 +143,16 @@ class TimeSeriesStructure(set):
         s.set_rpr(self.get_rpr())
         return s
 
+
+    def mtype(self):
+        """
+        Retorna el tipus de les mesures de la sèrie temporal. Cal pensar que una sèrie temporal és homogènia. QUÈ PASSA QUAN  LA SÈRIE TEMPORAL ÉS BUIDA?
+        """
+        if len(self) == 0:
+            return Measure
+        return type(next(iter(self)))
+
+
     def copy(self):
         """
         Sobrecàrrega del mètode copy
