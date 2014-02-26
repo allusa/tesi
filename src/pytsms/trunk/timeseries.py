@@ -30,6 +30,7 @@ from opset import TimeSeriesSetOp
 from opseq import TimeSeriesSeqOp
 from opfunc import TimeSeriesFuncOp
 
+from storage import TimeSeriesStorage
 
 
 
@@ -47,5 +48,8 @@ class TimeSeries(TimeSeriesSetOp,TimeSeriesSeqOp,TimeSeriesFuncOp,TimeSeriesStru
         return 'TimeSeries({0})'.format( repr(sorted(self)) ) 
 
 
-
-
+    def storage(self):
+        """
+        Retorna un objecte amb totes les operacions d'emmagatzematge al disc
+        """
+        return TimeSeriesStorage(self)

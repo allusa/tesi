@@ -77,7 +77,7 @@ class TimeSeriesStructure(set):
         True
         """
         if len(self) == 0:
-            return Measure(-float("inf"),float("inf")) #S'hauria de fer independent del tipus de valor
+            return Measure(un='-')
         else:
             return max(self)
 
@@ -97,7 +97,7 @@ class TimeSeriesStructure(set):
         True
         """
         if len(self) == 0:
-            return Measure(+float("inf"),float("inf"))
+            return Measure(un='+')
         else:
             return min(self)
 
@@ -178,3 +178,5 @@ class TimeSeriesStructure(set):
             return self._rpr
         except AttributeError:
             return None
+
+

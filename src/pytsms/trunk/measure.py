@@ -18,11 +18,18 @@ class Measure(object):
     """
     Mesura m = (t,v) on v és el valor en el temps t. El temps implementat com a instant de temps. 
 
+    :param t: Time
+    :type t: Any | None
+    :param v: Value
+    :type v: Any | None
+    :param un: Same as :meth:`set_undefined`
+    :type un: str | None
+
     :ivar t: m.t correspon a T(m)
     :ivar v: m.v correspon a V(m) 
     :ivar unp: Límit màxim del temps, mesures indefinides positives
-    :ivar unn:
-    :ivar unv:
+    :ivar unn: Límit mínim del temps, mesures indefinides negatives
+    :ivar unv: Límit afí del valor, mesures de valor indefinit
 
     >>> m1 = Measure(1,10)
     >>> m2 = Measure(2,10)
@@ -52,12 +59,14 @@ class Measure(object):
     >>> m1 ==  Measure(1,10)
     True
     >>>
-    >>> Measure(un='p')
+    >>> Measure(un='+')
     m(inf,None)
-    >>> Measure(un='n')
+    >>> Measure(un='-')
     m(-inf,None)
     >>> Measure(1)
     m(1,None)
+    >>> Measure() == Measure(un='+')
+    True
     """
 
     unp=float("inf")
@@ -74,6 +83,9 @@ class Measure(object):
 
         if v is None:
             self.set_undefined('v')
+
+        if t is None:
+            self.set_undefined('p')
 
         if un is not None:
             self.set_undefined(un)
@@ -245,12 +257,12 @@ class Measure(object):
         * 'n' mesura indefinida negativa
         * 'v' mesura de valor indefinit
         
-        :param un: p|n|v
+        :param un: p|+|n|-|v
         :type un: str
         """
-        if un=='p':
+        if un in ['p','+']:
             self.t = self.unp
-        elif un=='n':
+        elif un in ['n','-']:
             self.t = self.unn
         elif un=='v':
             self.v = self.unv
@@ -258,23 +270,6 @@ class Measure(object):
             raise ValueError('Incorrect value for parameter un={0}'.format(un))
 
 
-class MeasureUndefinedP(Measure):
-    """
-    Mesura indefinida positiva
-    """
-    def __init__(self):      
-        raise DeprecationWarning("Canviat, useu Measure(un='p')")
-        self.v = float("inf")
-        self.t = float("inf")
-    
-class MeasureUndefinedN(Measure):
-    """
-    Mesura indefinida negativa
-    """
-    def __init__(self):   
-        raise DeprecationWarning("Canviat, useu Measure(un='n')")
-        self.v = float("inf")
-        self.t = float("-inf")
 
 
 
@@ -283,11 +278,12 @@ class MeasureFloat(Measure):
     """
     Mesura on el temps i valor són float
 
-    >>> Measure(un='p')
-    m(inf,None)
-    >>> Measure(un='n')
-    m(-inf,None)
-    >>> #Measure(1)
+    >>> MeasureFloat(un='p')
+    m(inf,nan)
+    >>> MeasureFloat(un='n')
+    m(-inf,nan)
+    >>> MeasureFloat(1)
+    m(1,nan)
     """
     unp=float("inf")
     unn=-float("inf")
@@ -297,6 +293,13 @@ class MeasureFloat(Measure):
 class MeasureChar(Measure):
     """
     Mesura on el temps i valor són char
+
+    >>> MeasureChar(un='p')
+    m(z,)
+    >>> MeasureChar(un='n')
+    m(a,)
+    >>> MeasureChar('t')
+    m(t,)
     """
     unp='z'
     unn='a'
