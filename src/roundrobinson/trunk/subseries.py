@@ -58,6 +58,12 @@ class Buffer(object):
         self.f = f
         self.tau = tau
 
+    def __eq__(self,other):
+        """
+        Relació d'igualtat
+        """
+        return self.s == other.s and self.delta == other.delta and self.f == other.f and self.tau == other.tau
+
 
     def add(self,m):
         """
@@ -141,6 +147,12 @@ class Disc(object):
         self.s = TimeSeries()
         self.k = k
 
+    def __eq__(self,other):
+        """
+        Relació d'igualtat
+        """
+        return self.s == other.s and self.k == other.k
+
     def add(self,m):
         """
         Definició de l'operació `afegeix`
@@ -198,6 +210,26 @@ class ResolutionSubseries(object):
         self.B = Buffer(delta,f,tau)
         self.D = Disc(k)
 
+    def __gt__(self,other):
+        """
+        Relació d'ordre induïda pel temps de consolidació del Buffer
+        Definint l'ordre, després es pot ordenar un conjunt de discs
+        resolució mitjançant la funció sorted(mrd)
+        """
+        return self.B.delta > other.B.delta
+
+    def __eq__(self,other):
+        """
+        Relació d'igualtat
+        """
+        return self.B == other.B and self.D == other.D
+
+    def __repr__(self):
+        return 'RD:{0},{1}'.format(self.B,self.D)
+
+
+
+
     def add(self,m):
         """
         Definició de l'operació `afegeix`
@@ -217,15 +249,3 @@ class ResolutionSubseries(object):
         m = self.B.consolidate()
         self.D.add(m)
 
-    def __repr__(self):
-        return 'RD:{0},{1}'.format(self.B,self.D)
-
-
-
-    def __gt__(self,other):
-        """
-        Relació d'ordre induïda pel temps de consolidació del Buffer
-        Definint l'ordre, després es pot ordenar un conjunt de discs
-        resolució mitjançant la funció sorted(mrd)
-        """
-        return self.B.delta > other.B.delta
