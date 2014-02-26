@@ -146,7 +146,7 @@ class Zohe(Representation):
         True
         >>> s.interval_temporal(-5,0) == TimeSeries([Measure(0,1)])
         True
-        >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,float("inf"))])
+        >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,None)])
         True
         """       
         s = self.get_ts()

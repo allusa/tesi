@@ -12,7 +12,7 @@ Implementació dels operadors de seqüència de Sèrie Temporal.
 """
 
 
-from measure import Measure, MeasureUndefinedP, MeasureUndefinedN
+from measure import Measure
 from structure import TimeSeriesStructure
 
 
@@ -255,7 +255,7 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         True
         >>> s.next(max(s)).isundefinedp()
         True
-        >>> mi = MeasureUndefinedN()
+        >>> mi = Measure(un='-')
         >>> s.next(mi) == m1
         True
         >>> s2 = TimeSeriesSeqOp([])
@@ -284,7 +284,7 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         True
         >>> s.prev(min(s)).isundefinedn()
         True
-        >>> mi = MeasureUndefinedP()
+        >>> mi = Measure(un='+')
         >>> s.prev(mi) == m3
         True
         >>> s2 = TimeSeriesSeqOp([])

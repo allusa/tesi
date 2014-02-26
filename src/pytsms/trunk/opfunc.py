@@ -101,7 +101,7 @@ class TimeSeriesFuncOp(object):
         True
         >>> s.interval_temporal(-5,0) == TimeSeries([Measure(0,1)])
         True
-        >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,float("inf"))])
+        >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,None)])
         True
         """
         return self.rpr(rpr).interval_temporal(l,g)
@@ -189,7 +189,7 @@ class TimeSeriesFuncOp(object):
         >>> s1.set_rpr(Zohe)
         >>> s2 = TimeSeries([Measure(4,2),Measure(0,2),Measure(1,2),Measure(6,2)])
         >>> s2.set_rpr(Zohe)
-        >>> s1.join_temporal(s2) == TimeSeries([Measure(0,(1,2)),Measure(1,(1,2)),Measure(2,(1,2)),Measure(4,(1,2)),Measure(5,(1,2)),Measure(6,(float("inf"),2))])
+        >>> s1.join_temporal(s2) == TimeSeries([Measure(0,(1,2)),Measure(1,(1,2)),Measure(2,(1,2)),Measure(4,(1,2)),Measure(5,(1,2)),Measure(6,(None,2))])
         True
         >>> ##s2.join_temporal(s1) == swapv1v2(s1.join_temporal(s2))
         """
@@ -221,7 +221,7 @@ class TimeSeriesFuncOp(object):
         >>> s2.set_rpr(Zohe)
         >>> s1.semijoin_temporal(s2) == TimeSeries([Measure(1,(1,2)),Measure(2,(1,2)),Measure(5,(1,2))])
         True
-        >>> s2.semijoin_temporal(s1) == TimeSeries([Measure(0,(2,1)),Measure(1,(2,1)),Measure(4,(2,1)),Measure(6,(2,float("inf")))])
+        >>> s2.semijoin_temporal(s1) == TimeSeries([Measure(0,(2,1)),Measure(1,(2,1)),Measure(4,(2,1)),Measure(6,(2,None))])
         True
         """
         tp = self.t()

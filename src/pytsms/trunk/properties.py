@@ -93,7 +93,7 @@ class RegularProperties(object):
         >>> r = RegularProperties(s)
         >>> r.regularise(1,rpr=Zohe) == TimeSeries([Measure(1,1),Measure(2,1),Measure(3,1),Measure(4,1),Measure(5,1)])
         True
-        >>> r.regularise(2,0,8,Zohe) == TimeSeries([Measure(0,1),Measure(2,1),Measure(4,1),Measure(6,float("inf"))])
+        >>> r.regularise(2,0,8,Zohe) == TimeSeries([Measure(0,1),Measure(2,1),Measure(4,1),Measure(6,None)])
         True
         >>> s.set_rpr(Zohe)
         >>> r.regularise(1) == r.regularise(1,rpr=Zohe)

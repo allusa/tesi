@@ -19,4 +19,5 @@ descrit a http://escriny.epsem.upc.edu/projects/rrb/
 Amb el suport de la Universitat Politècnica de Catalunya (UPC).
 """
 
-
+from timeseries import TimeSeries
+from measure import Measure
