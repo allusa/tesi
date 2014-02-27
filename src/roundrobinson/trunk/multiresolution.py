@@ -113,6 +113,28 @@ class MultiresolutionSeries(set):
         for R in self:
             R.add(m)
 
+    def update(self,s):
+        """
+        Operació d'afegir les mesures d'una sèrie temporal, en general d'un iterable, a la base de dades
+
+        :param s: A Time series or an iterable (list, set, etc.)
+        :type s: Iterable
+
+        >>> from pytsms import Measure,TimeSeries
+        >>> s = TimeSeries([Measure(1,2),Measure(2,3)])
+        >>> l = [Measure(3,2),Measure(4,3)]
+        >>> m = MultiresolutionSeries()
+        >>> m.addResolution(5,2,'mean')
+        >>> m.update(s)
+        >>> m.update(l)
+        >>> r0 = sorted(m)[0]
+        >>> r0.B.s ==  TimeSeries([Measure(1,2),Measure(2,3),Measure(3,2),Measure(4,3)])
+        True
+        """
+        for m in s:
+            self.add(m)
+
+
     def consolidable(self):
         """
         Predicat que indica si hi ha alguna Subsèrie resolució consolidable
