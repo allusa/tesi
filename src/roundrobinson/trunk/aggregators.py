@@ -27,6 +27,9 @@ def mean(s,i):
     True
     >>> mean(s,(0,6)) == Measure(6,20)
     True
+    >>> s0 = TimeSeries([])
+    >>> mean(s0,(0,5)) == Measure(5,float("inf"))
+    True
     """
     mtype = s.mtype()
     t0,tf = i
@@ -47,10 +50,17 @@ def maximum(s,i):
     True
     >>> maximum(s,(0,6)) == Measure(6,40)
     True
+    >>> s0 = TimeSeries([])
+    >>> maximum(s0,(0,5)) == Measure(5,float("inf"))
+    True
     """
     mtype = s.mtype()
     t0,tf = i
     sp = s.interval_open_left(t0,tf)
+
+    if len(sp) == 0:
+        return mtype(tf,float("inf"))
+
     v = max(sp.projection(['v']))
     return mtype(tf,v)
 

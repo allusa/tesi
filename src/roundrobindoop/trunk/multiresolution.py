@@ -5,15 +5,17 @@
 Sèrie temporal multiresolució
 =============================
 
-:Abstract: Vegeu document principal `roundrobinson.py`
+:Abstract: Vegeu document principal `roundrobindoop.py`
 :Copyright: GPLv3
 
 Implementació de les sèries temporals multiresolució.
 """
 
 from pytsms import TimeSeries
-from subseries import ResolutionSubseries
-from storage import MultiresolutionStorage
+
+
+
+
             
 class MultiresolutionSeries(set):
     """
@@ -22,6 +24,8 @@ class MultiresolutionSeries(set):
 
     És una subclasse de set.
 
+    """
+    """
     >>> from pytsms import Measure, TimeSeries
     >>>
     >>> def mitjana(s,i):
@@ -99,27 +103,32 @@ class MultiresolutionSeries(set):
     True
     """
 
+
+
     def addResolution(self,delta,k,f,tau=0):
         """
         Add resolution by delta, k, f and tau
         """
         set.add(self, ResolutionSubseries(delta,k,f,tau) )
 
+    def getResolutionByName(self,delta,fname):
+        """
+        Get resolution subseries by delta and f name
+        """
+        for r in self:
+            if r.delta == delta and f.__name__ == fname:
+                return r
 
-    def add(self,m):
-        """
-        Operació d'afegir una nova mesura a la base de dades
-        """
-        for R in self:
-            R.add(m)
 
     def update(self,s):
         """
-        Operació d'afegir les mesures d'una sèrie temporal, en general d'un iterable, a la base de dades
+        Operació d'afegir una sèrie temporal a la base de dades
 
-        :param s: A Time series or an iterable (list, set, etc.)
+        :param s: A Time series
         :type s: Iterable
 
+        """
+        """
         >>> from pytsms import Measure,TimeSeries
         >>> s = TimeSeries([Measure(1,2),Measure(2,3)])
         >>> l = [Measure(3,2),Measure(4,3)]
@@ -131,32 +140,15 @@ class MultiresolutionSeries(set):
         >>> r0.B.s ==  TimeSeries([Measure(1,2),Measure(2,3),Measure(3,2),Measure(4,3)])
         True
         """
-        for m in s:
-            self.add(m)
-
-
-    def consolidable(self):
-        """
-        Predicat que indica si hi ha alguna Subsèrie resolució consolidable
-        """
-        for R in self:
-            if R.consolidable():
-                return True
-        return False
-
-    def consolidate(self):
-        """
-        Fa una consolidació a totes les subsèries resolució consolidables
-        """
-        for R in self:
-            if R.consolidable():
-                R.consolidate()
+        self._s = s
 
 
     def consolidateTotal(self, debug=False):
         """
         Consolida iterativament les subsèries mentre la sèrie multiresolució sigui consolidable. Amb debug permet mostrar l'evolució dels instants de consolidació de cada subsèrie
 
+        """
+        """
         >>> from pytsms import Measure, TimeSeries
         >>> m1 = Measure(1,10); m2 = Measure(5,10); m3 = Measure(10,40)
         >>> M = MultiresolutionSeries()
@@ -168,10 +160,10 @@ class MultiresolutionSeries(set):
         5/zero:5 | 10/zero:10
         5/zero:10 | 10/zero:10
         """
-        while self.consolidable():
-            self.consolidate()
-            if debug:
-                print self.str_taus()
+        pass
+        #CRIDA a rrdoop
+
+
 
 
 
@@ -180,6 +172,8 @@ class MultiresolutionSeries(set):
         """
         Retorna un string amb el tau de cada subsèrie resolució
 
+        """
+        """
         >>> M = MultiresolutionSeries()
         >>> def maxim(s,i): return None
         >>> M.addResolution(5,2,maxim)
@@ -196,6 +190,8 @@ class MultiresolutionSeries(set):
         """
         Retorna la sèrie temporal emmagatzemada de la resolució delta,f
 
+        """
+        """
         >>> from pytsms import Measure, TimeSeries
         >>> m1 = Measure(1,10); m2 = Measure(5,10); m3 = Measure(10,40)
         >>> M = MultiresolutionSeries()
@@ -220,6 +216,8 @@ class MultiresolutionSeries(set):
 
         En el cas que hi hagi passos der consolidació repetits, l'ordre és parcial i per tant el resultat és aleatori. Amb `f` es pot seleccionar uns agregadors d'atributs concrets.
 
+        """
+        """
         >>> from pytsms import Measure, TimeSeries
         >>> m1 = Measure(1,10); m2 = Measure(5,10); m3 = Measure(10,40)
         >>> m4 = Measure(15,50); m5 = Measure(20,10)
@@ -269,8 +267,18 @@ class MultiresolutionSeries(set):
             return reduce(lambda si,rb: si.concatenate_temporal(rb.D.s,rpr),sorted(M),TimeSeries())
 
 
-    def storage(self):
-        """
-        Retorna un objecte amb totes les operacions d'emmagatzematge al disc
-        """
-        return MultiresolutionStorage(self)
+
+
+
+
+
+class ResolutionSubseries(object):
+    """
+    The parameters of a Resolution Subseries
+    """
+    def __init__(self,delta,k,f,tau):
+        self.delta = delta
+        self.k = k
+        self.f = f
+        self.tau = tau
+        self.s = TimeSeries() #Sèrie del disc

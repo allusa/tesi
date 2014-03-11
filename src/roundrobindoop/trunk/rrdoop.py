@@ -8,7 +8,7 @@ Hadoop map-reduce functions for MTSMS
 import sys
 import datetime
 import time
-
+import pickle
 
 
 
@@ -21,8 +21,13 @@ def default_parser(l):
 
     >>> default_parser("2 10.0")
     (2, 10.0)
+    >>> default_parser("2,10.0")
+    (2, 10.0)
     """
-    t,v = l.split()
+    if ',' in l:
+        t,v = l.split(',')
+    else:
+        t,v = l.split()
 
     return (int(t),float(v))
 
@@ -186,8 +191,9 @@ def reduce(f):
                 previous = (delta,f,n)
 
     #last
-    agg = aggregate(ts,f)
-    print '{delta}/{f}\t{t} {v}'.format(delta=delta,f=f,t=n,v=agg)
+    if ts:
+        agg = aggregate(ts,f)
+        print '{delta}/{f}\t{t} {v}'.format(delta=delta,f=f,t=n,v=agg)
 
 
 
@@ -246,6 +252,12 @@ def mrd_schema_at_time_point(t):
 
 
 
+def schema_load_pickle(fname):
+        with open(fname,'r') as f:
+            mts = pickle.load(f)
+            f.close()
+
+        return mts
 
 
 
@@ -256,6 +268,7 @@ if __name__ == '__main__':
     #sch = mrd_schema() #no te en compte k dels discs
     sch = mrd_schema_at_time_point(tnow) #te en compte k dels discs
 
+
     def pl(l):
         t,v = l.split(',')
 
@@ -263,11 +276,21 @@ if __name__ == '__main__':
         return (int(t.strftime('%s')),float(v))
 
 
-    if len(sys.argv) == 2:
+
+    if len(sys.argv) > 1:
+
+        if len(sys.argv) == 4:
+            if sys.argv[2] == '-schema':
+                sch = schema_load_pickle(sys.argv[3])
+
         if sys.argv[1] == '-map':
-            buffer_ts(sys.stdin,sch,pl)
+            buffer_ts(sys.stdin,sch)
         elif sys.argv[1] == '-reduce':
             reduce(sys.stdin)
+        elif sys.argv[1] == '-mapdatetime':
+            buffer_ts(sys.stdin,sch,pl)
+
+
 
 
 
@@ -275,3 +298,5 @@ if __name__ == '__main__':
 
 
 #test: cat p.csv | ./rrdoop.py -map | sort -k1,1 | ./rrdoop.py -reduce
+
+#cat roundrobindoop-ts-1393851630.csv | ./rrdoop.py -mapdefault -schema roundrobindoop-ts-1393851630.pickle | sort -k1,1 | ./rrdoop.py -reduce -schema roundrobindoop-ts-1393851630.pickle
