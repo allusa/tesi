@@ -6,12 +6,10 @@ import os.path
 import csv
 import time, datetime
 
-from roundrobinson.roundrobinson import MRD
-from roundrobinson.serietemporal import Mesura
-from roundrobinson.interpoladors import zohed_maximum, zohed_arithmetic_mean
-from roundrobinson.consultes import consulta
-from roundrobinson.operadors import consolidatot, tauactual
-from roundrobinson.plot import plot_screen, plot_screen_consult, plot_dir, plot_dir_consult
+from roundrobinson import Measure, TimeSeries, MultiresolutionSeries
+from roundrobinson.aggregators import mean, maximum
+from roundrobinson.plot import ScreenPlot
+
 
 
 
@@ -49,24 +47,25 @@ def crea_mrd(temps,valors,tzero=0,debug=False):
     d50 = 50 * d1
 
     #configuració base de dades multiresolució
-    mrd = MRD()
-    mrd.afegeix_disc(h5,24,zohed_arithmetic_mean,zero)
-    mrd.afegeix_disc(d2,20,zohed_arithmetic_mean,zero)
-    mrd.afegeix_disc(d15,12,zohed_arithmetic_mean,zero)
-    mrd.afegeix_disc(d50,12,zohed_arithmetic_mean,zero)
+    mrd = MultiresolutionSeries()
+    mrd.addResolution(h5,24,mean,zero)
+    mrd.addResolution(d2,20,mean,zero)
+    mrd.addResolution(d15,12,mean,zero)
+    mrd.addResolution(d50,12,mean,zero)
 
-    mrd.afegeix_disc(d50,12,zohed_maximum,zero)
+    mrd.addResolution(d50,12,maximum,zero)
+
 
 
     if debug:
-        print tauactual(mrd)
+        print mrd.str_taus()
 
     #farciment de mesures amb consolidació
     for t,v in zip(temps,valors):
-        m = Mesura(v,t)
-        mrd.update(m)
+        m = Measure(t,v)
+        mrd.add(m)
 
-        consolidatot(mrd,debug)
+    mrd.consolidateTotal(debug)
 
     return mrd
 
@@ -112,6 +111,7 @@ def crea_mrd2(temps,valors,tzero=0,debug=False):
 if __name__ == '__main__':
 
     directori = 'matriu0'
+    totalmean = os.path.join(directori,'totalmean.csv')
     print "S'emmagatzemaran dades a {0}/".format(directori)
     if os.path.exists(directori):
         raise Exception("El directori no ha d'existir")
@@ -125,14 +125,16 @@ if __name__ == '__main__':
     print "S'ha farcit i consolidat la base de dades"
 
     print 'Emmagatzemant dades a {0}/'.format(directori)
-    plot_dir(mrd,directori)
-    print 'Emmagatzemant unió total a {0}/'.format(directori)
-    plot_dir_consult(mrd,directori)
+    mrd.storage().save_csv(directori)
+    print 'Emmagatzemant unió total a {0}/'.format(totalmean)
+    mrd.total(ff=[mean]).storage().save_csv(totalmean)
 
     print 'Creant gràfic'
-    plot_screen(mrd)
-    plot_screen_consult(mrd)
+    sp = ScreenPlot(mrd)
+    sp.plot()
+    sp.plot_total()
     print 'Gràfic tancat'
+
 
 
 
