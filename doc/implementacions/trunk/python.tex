@@ -1,0 +1,142 @@
+
+
+\chapter{Python}
+
+
+La implementació de referència dels models de SGST i SGSTM s'ha
+realitzat amb Python. L'objectiu d'aquesta implementació de referència és mantenir la fidelitat al model per tal de poder experimentar amb el model amb tota la seva potència matemàtica. 
+
+En la implementació cal afegir alguns operadors que en el model no
+feien falta com perquè ja són propis de l'àlgebra de conjunts. Els
+operadors principals que s'han d'afegir són els relacionats amb la
+creació de conjunts, els quals en els SGBD es coneixen com a
+\emph{llenguatge de definició de dades} (DDL, de l'anglès \emph{data
+  definition language}).
+
+
+Implementem els dos models de SGST i SGSTM com a dues biblioteques
+diferents: \emph{Pytsms} i \emph{RoundRobinson} respectivament. La
+\emph{RoundRobinson}, però, té una forta dependència en la
+\emph{Pytsms} de la mateixa manera que hem definit els SGSTM en base
+als SGST.
+
+
+Utilitzem orientació a objectes. Ens permet fer explicita la relació entre la implementació i el model.
+
+
+
+Implementem la part essencial, és a dir l'àlgebra definida en els
+models lògics. No implementem els complements habituals dels SGBD, els
+quals són necessaris en entorns d'explotació, com per exemple gestió
+d'usuaris i permisos, còpies de seguretat, llenguatges estàndards de
+consulta, etc.
+
+
+
+
+\section{Pytsms}
+
+La biblioteca \emph{Pytsms} implementa un SGST de referència. Per tant
+els objectes principals són les mesures, les sèries temporals i les
+representacions de les sèries temporals. 
+
+
+
+
+\begin{tikzpicture}
+
+  %Timeseries
+  \umlclass[x=0,y=0] {TimeSeries}{}{}  
+  %Realisations 
+  \umlclass[x=-3.5,y=-3] {Structure}{}{}
+  \umlclass[x=-1.2,y=-3] {OpSet}{}{}
+  \umlclass[x=1.2,y=-3] {OpSeq}{}{}
+  \umlclass[x=3.5,y=-3] {OpFunc}{}{}
+  \umlreal[geometry=|-|]{Structure}{TimeSeries}
+  \umlreal[geometry=|-|]{OpSet}{TimeSeries}
+  \umlreal[geometry=|-|]{OpSeq}{TimeSeries}
+  \umlreal[geometry=|-|]{OpFunc}{TimeSeries}
+  %Subrealisations
+  \umlclass[x=-3,y=-6] {SetNoTemporal}{}{}
+  \umlclass[x=0.7,y=-6] {SetTemporal}{}{}
+  \umlclass[x=4,y=-6] {SetRelacional}{}{}
+  \umlreal[geometry=|-|]{SetNoTemporal}{OpSet}
+  \umlreal[geometry=|-|]{SetTemporal}{OpSet}
+  \umlreal[geometry=|-|]{SetRelacional}{OpSet}
+
+  % Measure
+  \umlclass[x=-4] {Measure}{}{}
+  \umluniaggreg  {TimeSeries}{Measure}
+
+  %Repr
+  \umlclass[x=8,type=abstract] {Representation}{}{}
+  \umlassoc  {TimeSeries}{Representation}
+  \umlclass[x=7,y=-4] {Zohe}{}{}
+  \umlclass[x=9,y=-4] {Discret}{}{}
+  \umlinherit {Zohe}{Representation}
+  \umlinherit {Discret}{Representation}
+
+
+  %Associacions
+  \umlclass[x=2,y=2] {RegularProp}{}{}
+  \umluniassoc  {RegularProp}{TimeSeries}
+  \umlclass[x=5,y=2] {Storage}{}{}
+  \umluniassoc {Storage}{TimeSeries}
+
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+
+
+Les sèries temporals i les representacions són ortogonals i això
+s'implementa mitjançant una associació entre ambdós. Cada usuari ha de
+definir la representació que vol associar, com a exemple se
+n'implementen algunes. 
+
+
+
+
+El concepte de sèrie temporal s'ha implementat com un objecte
+\emph{TimeSeries}.  Una sèrie temporal és un objecte amb una gran
+quantitat de mètodes. Com a conseqüència s'ha dividit la seva
+implementació en diversos mòduls. Els mètodes que implementen el model
+estructural i el model d'operacions bàsiques s'han agrupat en objectes
+segons la seva funcionalitat. Així hi ha l'objecte \emph{Structure}
+que implementa el model estructural de les sèries temporals,
+l'\emph{OpSet} pel model d'operacions de conjunts, l'\emph{OpSeq} pel
+model d'operacions de seqüències i l'\emph{OpFunc} pel model
+d'operacions de funció temporal.  Aleshores el \emph{TimeSeries}
+hereta les funcionalitats d'aquests quatre objectes.  L'objecte
+\emph{OpSet} també té una gran quantitat de mètodes i, de la mateixa
+manera, hereta la funcionalitat de tres objectes: el
+\emph{SetNoTemporal} per les operacions basades en l'orde parcial de
+les sèries temporals, el \emph{SetTemporal} basat en l'ordre temporal
+i el \emph{SetRelacional} per les operacions específiques de l'àlgebra
+relacional.
+
+
+
+
+
+La representació és abstracta, sempre ha de ser una de concreta? I la discreta pura?
+
+
+
+
+
+
+\section{RoundRobinson}
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
