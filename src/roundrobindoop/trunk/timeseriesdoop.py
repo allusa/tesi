@@ -17,9 +17,129 @@ import glob
 import subprocess
 import datetime
 import pickle
+import marshal
 
-from multiresolution import MultiresolutionSeries
+from roundrobinson import MultiresolutionSeries, TimeSeries, Measure
 from roundrobinson.storage import MultiresolutionStorage
+
+
+
+
+
+class TsDoop(object):
+    """
+    >>> s = TimeSeries([Measure(1,2),Measure(2,1),Measure(6,3)])
+    >>> m = MultiresolutionSeries()
+    >>> def mean(s): pass
+    >>> m.addResolution(5,2,mean) 
+    >>> m.addResolution(10,4,mean)
+    >>>
+    >>> sdoop = TsDoop(s,m)
+    """
+
+    rrdoop = 'rrdoop.py'
+
+    def __init__(self,s,schema,debug=False):
+
+        self._debug = debug
+
+        self._s = s
+        self._mts = schema
+
+        self._name = 'roundrobindoop-ts-{0}'.format(datetime.datetime.now().strftime('%s'))
+ 
+
+    def name_original(self):
+        return '{0}.csv'.format(self._name)
+    def name_schema(self):
+        return '{0}.pickle'.format(self._name)
+    def name_output(self):
+        return '{0}-output.csv'.format(self._name)
+
+    def path_rrdoop(self):
+        path = os.path.abspath(__file__)
+        dir_path = os.path.dirname(path)
+        return os.path.join(dir_path,self.rrdoop)
+
+    def save_schema_pickle(self):
+        schema = self.name_schema()
+        if os.path.exists(schema):
+            raise Exception('File {0} already exists'.format(schema))
+        self._mts.storage().save_plain_pickle(schema)
+
+    def save_ts(self):
+        original = self.name_original()     
+        if os.path.exists(original):
+            raise Exception('File {0} already exists'.format(original))
+        self._s.storage().save_csv(original)
+
+    def load_output(self):
+        output = self.name_output()     
+        if os.path.exists(output):
+            raise Exception('File {0} already exists'.format(output))
+
+        """
+            10/mean	10 2.0
+            5/mean	10 3.0
+            5/mean	5 1.5
+            """
+
+
+
+
+    def rm_temporals(self):
+        original = self.name_original()
+        schema = self.name_schema()
+        output = self.name_output() 
+        
+        if os.path.exists(original):
+            os.remove(original)
+        if os.path.exists(schema):
+            os.remove(schema)
+        if os.path.exists(output):
+            os.remove(output)
+
+
+
+class TsDoopPipe(TsDoop):
+    """
+    rrdoop que s'executa amb pipes
+
+    >>> s = TimeSeries([Measure(1,2),Measure(2,1),Measure(6,3)])
+    >>> m = MultiresolutionSeries()
+    >>> def mean(s): pass
+    >>> m.addResolution(5,2,mean) 
+    >>> m.addResolution(10,4,mean)
+    >>>
+    >>> sdoop = TsDoopPipe(s,m)
+    >>> sdoop.execute()
+    """
+
+    pipeorder = "cat {original} | {rrdoop} -map -schema {schema} | sort -k1,1 | {rrdoop} -reduce -schema {schema} >> {output}"
+
+
+    def pipe_order(self):
+        order = self.pipeorder.format(
+            original=self.name_original(),
+            schema = self.name_schema(),
+            output = self.name_output(),
+            rrdoop = self.path_rrdoop())
+
+        return order
+
+
+    def execute(self):
+
+        self.save_schema_pickle()
+        self.save_ts()
+        
+        order = self.pipe_order()
+
+        r = subprocess.check_output(order,shell=True)
+        if self._debug:
+            print r
+
+        self.rm_temporals()
 
 
 
@@ -37,12 +157,12 @@ class TimeSeriesDoop(object):
     >>> m.addResolution(10,4,mean)
     >>>
     >>> sdoop = TimeSeriesDoop(s,m,'/user/aleix/')
-    >>> sdoop.save_schema_pickle('prova')
-    >>> sdoop.copytodfs()
-    >>> sdoop.execute_hadoop()
-    >>> sdoop.copydfsoutput()
+    >>> #sdoop.save_schema_pickle('prova')
+    >>> #sdoop.copytodfs()
+    >>> #sdoop.execute_hadoop()
+    >>> #sdoop.copydfsoutput()
     >>> #sdoop.load_mts_hadooped()
-    >>> sdoop.rm_temporals()
+    >>> #sdoop.rm_temporals()
     """
 
     rrdoop = 'rrdoop.py'
