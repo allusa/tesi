@@ -8,7 +8,7 @@ Hadoop map-reduce functions for MTSMS
 import sys
 import datetime
 import time
-import pickle
+import pickle, marshal, types
 
 
 
@@ -94,7 +94,7 @@ def buffer_measure(m,sch,parser_line=None):
             #descartem t < tau
             continue
 
-        s = "{0}/{1}-{2}\t{3} {4}".format(delta,f,bclass,t,v)
+        s = "{0}/{1}-{2}\t{3} {4}".format(delta,f.__name__,bclass,t,v)
         print s
 
 
@@ -150,8 +150,8 @@ def reduce_line(l):
 
 
 
-def aggregate(s,f):
-    # f=mean
+
+def _mean(s):
     if len(s) == 0:
         return 0
 
@@ -159,7 +159,13 @@ def aggregate(s,f):
     for t,v in s:
         sumv += v
         
-    return sumv / float(len(s))
+    return sumv / float(len(s))    
+
+
+
+def aggregate(s,f):
+    # f=mean
+    return _mean(s)
 
 
 
@@ -252,10 +258,22 @@ def mrd_schema_at_time_point(t):
 
 
 
+
+def despickle_f(f):
+    name,content = f
+    code = marshal.loads(content)
+    func = types.FunctionType(code, globals(), name)
+    return func
+
 def schema_load_pickle(fname):
         with open(fname,'r') as f:
             mts = pickle.load(f)
             f.close()
+
+        for i,r in enumerate(mts):
+            delta,tau,f,k = r
+            f = despickle_f(f)
+            mts[i] = (delta,tau,f,k)
 
         return mts
 

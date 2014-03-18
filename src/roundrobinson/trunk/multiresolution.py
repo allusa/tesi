@@ -176,6 +176,32 @@ class MultiresolutionSeries(set):
 
 
     #Esquema
+
+    def schema_eq(self,other):
+        """
+        Relació d'igualtat d'esquema multiresolució
+
+        >>> M = MultiresolutionSeries()
+        >>> def maxim(s,i): return None
+        >>> M.addResolution(5,2,maxim)
+        >>> M.addResolution(10,4,maxim)
+        >>> M2 = MultiresolutionSeries()
+        >>> def maxim(s,i): return None
+        >>> M2.addResolution(5,2,maxim)
+        >>> M2.addResolution(10,4,maxim)
+        >>> M.schema_eq(M2)
+        True
+        """
+        for r1 in self:
+            eq = False
+            for r2 in other: 
+                if r1.schema_eq(r2):
+                    eq = True
+                    break
+            if eq == False:
+                return False
+        return True
+
     def str_taus(self):
         """
         Retorna un string amb el tau de cada subsèrie resolució
@@ -272,5 +298,9 @@ class MultiresolutionSeries(set):
     def storage(self):
         """
         Retorna un objecte amb totes les operacions d'emmagatzematge al disc
+
+        >>> M = MultiresolutionSeries()
+        >>> isinstance(M.storage(), MultiresolutionStorage)
+        True
         """
         return MultiresolutionStorage(self)

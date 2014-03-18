@@ -123,7 +123,6 @@ def crea_mrd2(temps,valors,tzero=0,debug=False):
 if __name__ == '__main__':
 
     directori = 'matriu0'
-    roriginal = os.path.join(directori,'original.csv')
     totalmean = os.path.join(directori,'totalmean.csv')
     mrdpickle  = os.path.join(directori,'mrd.pickle')
 
@@ -135,10 +134,7 @@ if __name__ == '__main__':
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
     temps,valors = llegeix_dades('isense/matriu0.csv')
-    s = llegeix_serietemporal('isense/matriu0.csv')
-    s.storage().save_csv(roriginal)
-    import sys
-    sys.exit()
+
     print "S'ha llegit el fitxer de dades"
     mrd = crea_mrd(temps,valors,tzero,debug=True)
     print "S'ha farcit i consolidat la base de dades"

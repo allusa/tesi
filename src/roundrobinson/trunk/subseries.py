@@ -62,7 +62,24 @@ class Buffer(object):
         """
         Relació d'igualtat
         """
-        return self.s == other.s and self.delta == other.delta and self.f == other.f and self.tau == other.tau
+        return self.s == other.s and self.schema_eq(other)
+
+
+    def _f_eq(self,other):
+        """
+        Igualtat entre agregadors
+        """
+        if self.f == other.f:
+            return True
+        return self.f.__code__ == other.f.__code__
+        
+        
+    def schema_eq(self,other):
+        """
+        Relació d'igualtat d'esquema multiresolució
+        """
+        return self.delta == other.delta and self._f_eq(other) and self.tau == other.tau
+
 
 
     def add(self,m):
@@ -96,6 +113,15 @@ class Buffer(object):
         return m.t >= (self.tau + self.delta)
 
 
+
+    def _rm_olds(self,t0,tf):
+        """
+        Elimina les mesures velles del buffer que ja no són
+        necessàries sabent que s'ha consolidat l'interval [t0,tf]
+        """
+        self.s = self.s[tf::'l']
+
+
     def consolidate(self):
         """
         Definició de l'operació consolida
@@ -105,7 +131,8 @@ class Buffer(object):
         interval = (self.tau,noutau)
         interpola = self.f(self.s, interval)
 
-        self.s = self.s[noutau::'l']
+        self._rm_olds(self.tau,noutau)
+
         self.tau = noutau
  
         return interpola
@@ -151,7 +178,14 @@ class Disc(object):
         """
         Relació d'igualtat
         """
-        return self.s == other.s and self.k == other.k
+        return self.s == other.s and self.schema_eq(other)
+
+    def schema_eq(self,other):
+        """
+        Relació d'igualtat d'esquema multiresolució
+        """
+        return self.k == other.k
+
 
     def add(self,m):
         """
@@ -160,10 +194,11 @@ class Disc(object):
         if len(self.s) < self.k:
             self.s.add(m)
         else:
-            smin = self.s.empty()
-            smin.add( min(self.s) )
-            
-            self.s = self.s - smin
+            #smin = self.s.empty()
+            #smin.add( min(self.s) )            
+            #self.s = self.s - smin
+            self.s.discard(min(self.s))
+
             self.s.add(m)
 
     def __repr__(self):
@@ -224,6 +259,14 @@ class ResolutionSubseries(object):
         """
         return self.B == other.B and self.D == other.D
 
+    def schema_eq(self,other):
+        """
+        Relació d'igualtat d'esquema multiresolució
+        """
+        return self.B.schema_eq(other.B) and self.D.schema_eq(other.D)
+
+
+
     def __repr__(self):
         return 'RD:{0},{1}'.format(self.B,self.D)
 
@@ -248,4 +291,23 @@ class ResolutionSubseries(object):
         """
         m = self.B.consolidate()
         self.D.add(m)
+
+
+    def delta(self):
+        return self.B.delta
+
+    def tau(self):
+        return self.B.tau
+
+    def f(self):
+        return self.B.f
+
+    def k(self):
+        return self.D.k
+
+    def sb(self):
+        return self.B.s
+
+    def sd(self):
+        return self.D.s
 

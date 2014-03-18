@@ -12,10 +12,10 @@ Storage
 Implementació d'operacions d'emmagatzematge al disc per a les sèries temporals multiresolució
 """
 
-
-import pickle
-import csv
 import os
+import pickle, marshal, types
+import csv
+
 
 
 class MultiresolutionStorage(object):
@@ -23,6 +23,7 @@ class MultiresolutionStorage(object):
     Objecte que agrupa les operacions d'emmagatzematge al disc en diferents formats:
 
     * pickle
+    * plain.pickle
     * csv
 
 
@@ -54,6 +55,50 @@ class MultiresolutionStorage(object):
             f.close()
 
         return mts
+
+
+    def save_plain_pickle(self,fname):
+        """
+        Pickle on només hi ha llistes, tuples i strings i per tant no depèn dels objectes
+        """
+        schema = [(r.delta(),r.tau(),(r.f().__name__,marshal.dumps(r.f().func_code)),r.k()) for r in self._mts ]
+
+        with open(fname,'w') as f:
+            pickle.dump(schema,f)
+            f.close()
+
+
+    def _despickle_f(self,f):
+        name,content = f
+        code = marshal.loads(content)
+        func = types.FunctionType(code, globals(), name)
+        return func
+
+
+    def load_plain_pickle(self,fname):
+        """
+        Pickle on només hi ha llistes, tuples i strings i per tant no depèn dels objectes
+
+        >>> m = _doctest_mrd()
+        >>> ms = MultiresolutionStorage(m)
+        >>> f = _doctest_file()
+        >>> ms.save_plain_pickle(f)
+        >>> nm = ms.load_plain_pickle(f)
+        >>> nm.schema_eq(m)
+        True
+        >>> _doctest_file_rm(f)
+        True
+        """
+        from multiresolution import MultiresolutionSeries
+        mts = MultiresolutionSeries()
+        schema = self.load_pickle(fname)
+        for r in schema:
+            delta,tau,f,k = r
+            f = self._despickle_f(f)
+            mts.addResolution(delta,k,f,tau)
+        return mts
+
+
 
     
     def save_csv(self,dname):
