@@ -1,0 +1,2800 @@
+%!PS-Adobe-3.0
+%%Title: disc_atribut2.v
+%%DocumentNeededResources: font Courier Helvetica Helvetica-Bold Helvetica-Oblique Helvetica-BoldOblique Symbol
+%%Creator: Aleix,,, and TKGate 1.8.7
+%%CreationDate: 17 December 2013
+%%DocumentPaperSizes: A4
+%%Pages: 4
+%%Orientation: Landscape
+%%EndComments
+%
+% Copyright (C) 1987-2007 by Jeffery P. Hansen
+%    This program (the Postscript Prolog) is free software; you can redistribute
+%    it and/or modify it under the terms of the GNU General Public License
+%    as published by the Free Software Foundation; either version 2 of the
+%    License, or (at your option) any later version.
+%
+%    This program is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with this program; if not, write to the Free Software
+%    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+%
+
+/isTrace false def
+/LogoWidth 60 def
+/PBsize 60 def
+
+%
+% /key font defLatin1
+%
+% Define key as a latin-1 version of font 
+%
+/defLatin1 {
+  dup length dict begin
+    {1 index /FID ne {def} {pop pop} ifelse} forall
+    /Encoding ISOLatin1Encoding def
+    currentdict
+  end
+  definefont pop
+} def
+
+% Calculate the height of an equalateral triangle with the given sides.
+/theight {
+	2 div
+	3 sqrt
+	mul
+} bind def
+%
+% Genaral parameters to start a gate.
+%
+% x y r startgate
+%
+/startgate {
+	gsave
+	1 setlinewidth
+	3 1 roll
+	translate
+	rotate
+	1 -1 scale
+	newpath
+} bind def
+%
+% x y r startnorotgate
+%
+/startnorotgate {
+  pop 0 startgate
+} def
+%
+% Genaral parameters to start a gate (with position adjustment)
+%
+% x y r [[][][][]] startgate
+%
+/adjstartgate {
+  gsave
+  1 setlinewidth
+  1 index 90 div neg cvi get {} forall	% x y r dx dy
+  exch 5 -1 roll add exch 4 -1 roll add
+  translate
+  rotate
+  1 -1 scale
+  newpath
+} bind def
+%
+% x y r adjstartnorotgate
+%
+/adjstartnorotgate {
+  exch pop 0 exch adjstartgate
+} def
+%
+% Wire
+/wire {
+	gsave
+	10 div
+	setlinewidth
+	newpath
+	moveto lineto
+	stroke
+	grestore
+} bind def
+%
+% (l) j x y wirelabel
+%
+% j=0, j=1	left justified
+% j=2, j=3	centered
+%
+/wirelabel {
+  gsave
+  translate
+  8 rfont
+
+  2 lt {
+    0 -4 LJ
+  } {
+    0 -4 CT
+  } ifelse
+  grestore
+} def
+%
+% x y sizesymbol
+%
+/sizesymbol {
+  gsave
+  translate
+  1 setlinewidth
+  -5 5 5 -5 line
+  grestore
+} def
+%
+% x1 y1 x2 y2 s wiresizenote
+%
+/wiresizenote {
+    gsave
+    8 rfont
+    5 1 roll              % s x1 y1 x2 y2
+    dup                   % s x1 y1 x2 y2 y2
+    3 index               % s x1 y1 x2 y2 y2 y1
+    eq 5 1 roll           % s t x1 y1 x2 y2
+    3 -1 roll add 2 div   % s t x1 x2 y'
+    3 1 roll add 2 div    % s t y' x'
+    exch translate        % s t
+    newpath -4 -4 moveto
+    4 4 lineto stroke
+    { 0 -7 CT } { 7 3 LJ } ifelse
+    grestore
+} bind def
+%
+% An inverter bubble
+/inverter {
+   0 startgate
+   1 setgray
+   0 0 2 0 360 arc fill
+   0 setgray
+   0 0 2 0 360 arc stroke
+   grestore
+} bind def
+%
+% x y r arrow
+%
+/arrow {
+    gsave
+    3 1 roll
+    translate
+    1 -1 scale
+    90 mul rotate
+    newpath
+    -2 -.5 moveto 1 -.5 lineto 1 -2.5 lineto
+    4 0 lineto 1 2.5 lineto 1 .5 lineto -2 .5 lineto closepath
+    fill
+    grestore
+} def
+%
+% x y r tri
+%
+/tri {
+    gsave
+    3 1 roll
+    translate
+    90 mul rotate
+    newpath
+    -5 0 moveto -1 -2.5 lineto -1 -.5 lineto 1 -.5 lineto
+    1 -2.5 lineto 5 0 lineto 1 2.5 lineto 1 .5 lineto
+    -1 .5 lineto -1 2.5 lineto closepath
+    fill
+    grestore
+} def
+%
+% Arrow head for ends of wires
+/arrowhead {
+	startgate
+	0.5 setlinewidth
+	newpath
+	-2 -1.5 moveto
+	0 0 lineto
+	-2 1.5 lineto
+	stroke
+	grestore
+} bind def
+%
+% w h pbox
+%
+/pbox {
+  newpath
+  2 copy 2 copy
+  0 0 moveto
+  exch pop 0 exch lineto
+  lineto
+  pop 0 lineto
+  closepath
+} bind def
+%
+% x y w h box
+%
+/box {
+  gsave
+  1 add exch 1 add exch
+  4 2 roll
+  translate
+  -.5 -.5 translate
+  pbox stroke
+  grestore
+} bind def
+
+%
+% x y w h bold_box
+%
+/bold_box {
+  gsave
+  2 setlinewidth
+  4 2 roll
+  translate
+  pbox stroke
+  grestore
+} def
+
+%
+% x1 y2 x2 y2 line
+%
+/line {
+  moveto lineto stroke
+} def
+
+%
+% x1 y2 x2 y2 gline
+%
+/gline {
+  gsave
+  0.5 setgray
+  moveto lineto stroke
+  grestore
+} def
+
+%
+%
+/ds {
+	gsave
+	translate
+	newpath
+	0 0 moveto
+	3 0 lineto
+	3 11 lineto
+	0 11 lineto
+	closepath stroke
+	0 2 moveto 3 2 lineto stroke
+	0 9 moveto 3 9 lineto stroke
+	0 5 moveto
+	3 5 lineto
+	3 6 lineto
+	0 6 lineto
+	closepath fill
+	grestore
+} def
+%
+% x y () hsize
+%
+/hsize {
+	gsave
+	3 1 roll
+	translate
+	6 rfont
+	0 -5 CT
+	newpath
+	0.5 setlinewidth
+	3 -3 moveto -3 3 lineto stroke
+	grestore
+} def
+%
+% x y () hsize
+%
+/vsize {
+	gsave
+	3 1 roll
+	translate
+	6 rfont 
+	5 2 LJ
+	newpath
+	0.5 setlinewidth
+	3 -3 moveto -3 3 lineto stroke
+	grestore
+} def
+%
+% a b max
+%
+/max {
+	2 copy
+	le {exch pop} {pop} ifelse
+} def
+%
+%
+/longestwidth {
+	exch stringwidth pop exch
+	1 sub
+	{exch stringwidth pop max} repeat
+} def
+%
+%
+% Gate Logo (by Miles Bader)
+%
+/size 10 def
+
+/2dup {
+	1 index 1 index
+} def
+
+/gatelogo {
+  gsave
+  translate
+  0 12 translate		% Make space for label
+
+  .45 .45 scale
+  5 size mul neg 0 translate
+
+  0 0 post
+  8 size mul 0 post
+
+  1 setlinewidth
+  0 setgray
+
+  size 2 mul			% 2s
+  dup 4 mul			% 2s 8s
+  2dup				% 2s 8s 2s 8s  
+  size				% 2s 8s 2s 8s s
+  3 1 roll			% 2s 8s s 2s 8s
+  {
+    newpath
+    dup 2 index exch moveto
+    2 index exch lineto
+    stroke
+  } for
+
+  pop pop
+
+  size dup 2.5 mul exch 8.5 mul spikedraw
+  size dup 3.5 mul exch 9.25 mul spikedraw
+  size dup 4.5 mul exch 9.5 mul spikedraw
+
+  newpath
+  size dup 5 mul exch 9 mul 1 index exch moveto
+  0 lineto
+  1 setlinewidth
+  1 setgray
+  stroke
+
+  size dup 5.5 mul exch 9.5 mul spikedraw
+  size dup 6.5 mul exch 9.25 mul spikedraw
+  size dup 7.5 mul exch 8.5 mul spikedraw
+
+  1.5 size mul ifont
+  GateVersion 5 size mul -18 showCentered
+
+  grestore
+} def
+
+/spikedraw {
+	0 setgray
+
+	newpath				% x y
+	2dup moveto			% x y
+	2dup size 2 div 250 290 arc	% x y
+	closepath
+	fill
+
+	newpath
+	2dup size 2 div sub moveto	% x y
+	pop size 2 div lineto		% x y
+	1 setlinewidth
+	stroke
+} def
+
+%
+% Centered show text.
+% (TEXT) x y showCentered
+/showCentered {
+	gsave
+	3 -1 roll
+	dup
+	stringwidth
+	pop 2 div neg 0 translate
+	3 1 roll
+	moveto
+	show
+	grestore
+} def
+
+/post {
+  gsave
+  translate
+
+  newpath
+  0 0 moveto
+  size 2 mul 0 lineto
+  size dup 3.5 mul 4.12 size mul 75.96 104.04 arc
+  closepath
+  gsave 0 setgray 2 setlinewidth stroke grestore
+%	1 setgray fill
+
+  size .66 mul size moveto
+  0 6 size mul rlineto
+  size 1.33 mul size moveto
+  0 6 size mul rlineto
+  0 setgray 0.5 setlinewidth stroke
+
+  newpath
+  size .8	mul					% .8s
+  4.12 3.5 add					% .8s 7.72
+  size mul 1 index add				% .8s 8.52s
+  size exch					% .8s s 8.52s
+  3 -1 roll 0 360 arc
+  gsave 0 setgray 2 setlinewidth stroke grestore
+  .95 setgray fill
+
+  grestore
+} def
+
+
+%
+%  Draw the page box
+%
+% t/f pagebox
+%
+/pagebox {
+  gsave
+
+  %
+  % Draw main frame
+  %
+  1 setlinewidth
+  {
+    newpath
+    LMargin BMargin moveto
+    PageWidth RMargin sub	BMargin	lineto
+    PageWidth RMargin sub PageHeight TMargin sub lineto
+    LMargin PageHeight TMargin sub lineto
+    closepath
+    stroke
+  } {
+    newpath
+    LMargin BMargin moveto
+    PageWidth RMargin sub BMargin lineto
+    PageWidth RMargin sub BMargin LBlock add lineto
+    LMargin BMargin LBlock add lineto
+    closepath
+    stroke
+  } ifelse
+
+  10 dict begin
+    /X1 LMargin def
+    /X2 PageWidth RMargin sub def
+    /X3 PageWidth RMargin sub LogoWidth sub def
+    /XM X1 X3 add 2 div def
+    /Y0 BMargin LBlock add def
+    /Y1 BMargin LBlock 2 mul 3 div add def
+    /Y2 BMargin LBlock 3 div add def
+    /Y3 BMargin def
+
+
+    X1 Y0 moveto  X2 Y0 lineto stroke
+    X1 Y1 moveto  X3 Y1 lineto stroke
+    X1 Y2 moveto  X3 Y2 lineto stroke
+
+    /x1delta 10 def
+    /x2delta 0 def
+    /ydelta 5 def
+
+    12 bfont 
+    X1 x1delta add Y1 ydelta add moveto (Designer:) show
+    X1 x1delta add Y2 ydelta add moveto (Site:) show
+    X1 x1delta add Y3 ydelta add moveto (Date:) show
+
+    XM x2delta add Y1 ydelta add moveto (Document:) show
+    XM x2delta add Y2 ydelta add moveto (Page:) show
+    isTrace {
+      XM x2delta add Y3 ydelta add moveto (Interval:) show
+    } {
+      XM x2delta add Y3 ydelta add moveto (Module:) show
+    } ifelse
+
+    /x1delta 15 (Designer:) stringwidth pop add def
+    /x2delta 5 (Document:) stringwidth pop add def
+
+    12 rfont
+    X1 x1delta add Y1 ydelta add moveto Author show
+    X1 x1delta add Y2 ydelta add moveto Site show
+    X1 x1delta add Y3 ydelta add moveto Date show
+
+    XM x2delta add Y1 ydelta add moveto CircuitName show
+    XM x2delta add Y2 ydelta add moveto PageNumber show
+    XM x2delta add Y3 ydelta add moveto ModuleNames show
+  end
+
+  %
+  % Draw logo
+  %
+  PageWidth RMargin sub LogoWidth sub BMargin moveto
+  0 LBlock rlineto stroke
+  PageWidth RMargin sub LogoWidth 2 div sub BMargin gatelogo
+
+  grestore
+} bind def
+
+%
+% () x y pshow
+%
+/pshow {
+	gsave
+	translate
+	1 -1 scale
+	(_) anchorsearch {
+	    newpath 0 0 moveto
+	    pop dup true charpath pathbbox
+	    0.5 setlinewidth
+	    newpath dup 3 1 roll 2 add moveto exch pop 2 add lineto stroke
+	} if
+	0 0 moveto show
+	grestore
+} def
+%
+% () hj vj x y pjshow 
+%
+/pjshow {
+  gsave
+  translate
+  3 dict begin
+    2 index stringwidth pop /W exch def
+    /S currentfont /ScaleMatrix get 0 get def
+    currentfont /FontBBox get cvx exec
+    /A exch S mul 1000 div def pop /D exch S mul 1000 div def pop
+
+    dup /C eq {
+      0 A D add 2 div translate
+    } if
+    dup /T eq {
+      0 A translate
+    } if
+    dup /B eq {
+      0 D translate
+    } if
+    pop
+
+    dup /C eq {
+      W 2 div neg 0 translate
+    } if
+    dup /R eq {
+      W neg 0 translate
+    } if
+    pop
+  end
+  0 0 pshow
+  grestore
+} def
+
+%
+% () x y pshow
+%
+/prshow {
+	gsave
+	translate
+	(_) anchorsearch {
+	    newpath 0 0 moveto
+	    pop dup true charpath pathbbox
+	    0.5 setlinewidth
+	    newpath dup 3 1 roll 2 add moveto exch pop 2 add lineto stroke
+	} if
+	0 0 moveto show
+	grestore
+} def
+
+%
+% Show a value in a trace.  Do not display if width is greater than wmax
+%
+% () x y wmax trshow
+%
+/trshow {
+  gsave
+  3 1 roll translate
+  1 index stringwidth pop lt {
+    pop
+  } {
+    0 0 prshow
+  } ifelse
+  grestore
+} def
+
+
+%
+% Centered show text.
+% (TEXT) x y CT
+/CT {
+	gsave
+	3 -1 roll
+	dup
+	stringwidth
+	pop 2 div neg 0 translate
+	3 1 roll
+	pshow
+	grestore
+} bind def
+%
+% Centered show text (reversed).
+% (TEXT) x y rCT
+/rCT {
+  gsave
+  translate      
+  1 -1 scale
+  dup
+  stringwidth
+  pop 2 div neg 0 translate
+  0 0 pshow
+  grestore
+} bind def
+%
+% Left Justified show text
+% (TEXT) x y LJ
+/LJ {
+	pshow
+} bind def
+%
+% Right Justified show text.
+% (TEXT) x y RJ
+/RJ {
+	gsave
+	3 -1 roll
+	dup
+	stringwidth
+	pop neg 0 translate
+	3 1 roll
+	pshow
+	grestore
+} bind def
+
+%
+% begin a trace
+%
+% x y w h BT
+%
+/BT {
+  gsave
+  newpath
+  4 2 roll moveto
+  dup 0 exch rlineto
+  exch 0 rlineto
+  neg 0 exch rlineto
+  closepath
+  clip
+  newpath
+} def
+
+%
+% end a trace
+%
+/ET {
+  grestore
+} def
+
+%
+% Begin page
+%
+% (n of n) (mod) BP
+%
+/BP {
+  /ModuleNames exch def
+  gsave
+  IsLandscape { makeLandscape } if
+
+  isepsf {
+    pop
+  } {
+    /PageNumber exch def
+    isTrace not pagebox
+    LMargin BMargin LBlock add translate
+  } ifelse
+} def
+%
+
+% Begin a quandrent page
+%
+% r c nr nc (n of n) (mod) BP_P
+%
+/BP_P {
+  BP
+  PageWidth LMargin sub RMargin sub LogoWidth sub PBsize sub LBlock neg PartBox
+} def
+
+% Begin a scope trace page
+%
+% (n of n) (n-m) BP_T
+/BP_T {
+  /isTrace true def
+  BP
+} def
+
+%
+% End page
+%
+% EP
+%
+/EP { grestore showpage } def
+%
+% Begin module
+%
+% () x y w h BM
+%
+/BM {
+  gsave
+  4 2 roll translate
+
+  newpath
+  0 0 moveto
+  exch dup 0 lineto
+  exch 2 copy lineto
+  exch pop 0 exch lineto
+  closepath
+  clip
+  newpath
+
+  10 rfont
+  5 5 moveto show
+
+} def
+
+%
+% x y w h
+%
+/corners {
+  gsave
+  4 2 roll	% w h x y
+
+  newpath
+  2 copy 5 add moveto 0 -5 rlineto 5 0 rlineto stroke
+  2 copy 4 index add 5 sub moveto 0 5 rlineto 5 0 rlineto stroke
+  2 copy 4 index add exch 5 index add exch 5 sub moveto 0 5 rlineto -5 0 rlineto stroke
+  exch 3 index add 5 sub exch moveto 5 0 rlineto 0 5 rlineto stroke  
+  pop pop
+
+  grestore
+} def
+
+%
+% Begin module with corners
+%
+% () x y w h BM
+%
+/BM_C {
+  4 copy corners
+  BM
+} def
+
+%
+% x y w h
+%
+/PBox {
+  newpath
+  4 2 roll moveto
+  1 index 0 rlineto
+  neg 0 exch rlineto
+  neg 0 rlineto
+  closepath
+} def
+
+%
+% r c nr nc x y
+%
+/PartBox {
+  gsave
+  translate
+  6 dict begin
+    /nc exch def
+    /nr exch def
+    /c exch def
+    /r exch def
+    /boxW PBsize nc div def 
+    /boxH PBsize nr div def 
+
+    0 1 nc 1 sub {
+      0 1 nr 1 sub {
+        2 copy r eq exch c eq and {
+	   2 copy
+	   boxH mul PBsize exch sub exch boxW mul exch  
+           boxW boxH PBox gsave fill grestore stroke
+	} {
+           2 copy
+	   boxH mul PBsize exch sub exch boxW mul exch  
+           boxW boxH PBox gsave 1 setgray fill grestore stroke
+	} ifelse
+        pop
+      } for
+      pop
+    } for
+  end
+  grestore
+} def
+
+%
+% End module
+%
+% EM
+/EM { grestore } def
+
+%
+% makeLandscape
+%
+/makeLandscape {
+   90 rotate
+   0 PageHeight neg translate
+} def
+%
+% x y joint_gray
+%
+/joint_gray {
+   gsave
+   translate
+   0.5 setgray
+   -4 -4 moveto -4 4 lineto 4 4 lineto 4 -4 lineto closepath fill
+   grestore
+} def
+%
+% () t/f x y hgnode
+%
+/hgnode {
+  gsave
+  translate
+  {[3 3] 0 setdash} if
+  dup 5 -5 moveto show newpath
+  0 -10 moveto stringwidth pop 10 add 0 rlineto 0 20 rlineto 0 10 lineto closepath stroke
+  grestore
+} def
+%
+% An COMMENT gate
+%
+/pscomment {
+  0 startgate
+  12 cfont
+  newpath 0 0 moveto
+  { {} forall exch neg 0 exch rmoveto gsave show grestore } forall
+  grestore
+} bind def
+%
+% A Lshift
+/pslshift {
+  [[0 .5][-.5 .5][2 0.5][0 -.5]] adjstartgate
+  -31 -10.5 moveto
+  -37.5 -5 lineto
+  -37.5 4 lineto
+  -31 10.5 lineto
+  31 10.5 lineto
+  37.5 4 lineto
+  37.5 -5 lineto
+  31 -10.5 lineto
+  closepath stroke
+  7 2 moveto
+  -3 2 lineto
+  -3 5 lineto
+  -9 0 lineto
+  -3 -5 lineto
+  -3 -2 lineto
+  7 -2 lineto
+  closepath fill
+  grestore
+} def
+%
+% An OR gate
+%
+/psor {
+  startgate
+  -10 -7 moveto
+  -2 7 14 -90 -30 arc
+  -2 -7 14 30 90 arc
+  14 theight neg 11 sub 0 14 30 -30 arcn
+  closepath
+  stroke
+  grestore
+} bind def
+%
+% A flip-flop
+/psflipflop {
+  [[0 0][0 0][0 0][0 0]] adjstartgate
+  -15.5 -15.5 moveto
+  -15.5 15.5 lineto
+  15.5 15.5 lineto
+  15.5 -15.5 lineto
+  closepath stroke
+  -5 -15.5 moveto
+  0 -10.5 lineto
+  5 -15.5 lineto
+  stroke
+  7 rfont
+  (_C) -8 6 prshow
+  (_E) 2 6 prshow
+  (Q) 8 2 prshow
+  (_Q) 8 -8 prshow
+  (D) -14 -3 prshow
+  grestore
+} def
+%
+% A Rshifter
+/psrshift {
+  180 sub neg 360 mod neg
+  pslshift
+} def
+%
+% [() ...] l x y o concat
+%
+/psconcat {
+  dup 5 1 roll
+  startgate
+  dup 2 div -5 exch moveto
+  5 0 rlineto
+  dup neg 0 exch rlineto
+  -5 0 rlineto
+  stroke
+  8 rfont
+  exch -180 eq {
+    180 rotate
+    2 div neg 6 exch 12 add moveto
+    {
+      gsave show grestore
+      0 10 rmoveto
+    } forall
+  } {
+    2 div -6 exch 8 sub moveto
+    {
+      gsave dup stringwidth pop neg 0 rmoveto show grestore
+      0 -10 rmoveto
+    } forall
+  } ifelse
+  grestore
+} def
+%
+% An LED (bit)
+%
+/psled_bit {
+  startgate
+  -5 -7 moveto
+  5 -7 lineto
+  5 0 lineto
+  0 0 5 0 180 arc
+  closepath
+  gsave .8 setgray fill grestore
+  stroke
+  grestore
+} bind def
+%
+% Single bar graph segment
+%
+/psled_barseg {
+  gsave
+  3 -13 translate
+  3 10 pbox 
+  gsave .8 setgray fill grestore
+  stroke
+  grestore
+} def
+%
+% An LED (bar graph)
+%
+/psled_bar {
+  startgate
+  neg 0 0 4 2 roll box
+  1 1 3 -1 roll { psled_barseg 5 0 translate } for
+  grestore
+} bind def
+%
+% Single 7-segment digit
+%
+/psled_7segdig {
+  gsave
+  2 setlinewidth
+  0 -27 translate
+  5 0 17 0 line
+  5 11 17 11 line
+  5 22 17 22 line
+
+  4 1 4 10 line
+  18 1 18 10 line
+  4 12 4 21 line
+  18 12 18 21 line
+  grestore
+} def
+%
+% An LED (7 segment)
+%
+/psled_7seg {
+  startgate
+  neg 0 0 4 2 roll box
+  1 1 3 -1 roll { psled_7segdig 20 0 translate } for
+  grestore
+} bind def
+% ...and now for something completely different...
+%
+%	Pancakes - one serving
+%
+%  1 cup     Flour
+%  1 cup     Milk
+%  2         Eggs
+%  1   tbs   Melted Butter
+%  2   tsp   Sugar
+%  1/2 tsp   Salt
+%  1/2 tsp   Baking Soda
+%
+% Separate eggs placing whites aside in a clean bowl.  Combine flour and
+% milk in a separate bowl and mix until smooth.   Stir in melted butter,
+% sugar, salt and one of the egg yolks.  Now, using a clean mixer, whip
+% the egg whites until stiff.  Gently stir the egg whites into the batter.
+% This must be done by hand, or the pancakes will become flat.  Finally,
+% stir in the baking soda.
+%
+% x y r ram
+%
+/psram {
+  startgate
+  -17.5 23.5 moveto
+  16.5 23.5 lineto
+  16.5 -25.5 lineto
+  -17.5 -25.5 lineto
+  closepath stroke
+  8 rfont
+  -15 -2 moveto (A) show
+  5 -2 moveto (D) show
+  6 rfont
+  (_cs) -11 -23 prshow
+  (_oe) 4 -23 prshow
+  (_we) -4 16 prshow
+  grestore
+} def
+%
+% x y r psmult
+%
+/psmult {
+  startgate
+  -30 15.5 moveto
+  -5 15.5 lineto
+  0 10 lineto
+  5 15.5 lineto
+  30 15.5 lineto
+  16 -12.5 lineto
+  -16 -12.5 lineto
+  closepath stroke
+  -3 -3 moveto 3 3 lineto stroke
+  -3 3 moveto 3 -3 lineto stroke
+  grestore
+} def
+%
+% x y r vdd
+%
+/psvdd {
+  startgate
+  -19 0 moveto -3 0 lineto stroke
+  10 rfont
+  -1 -4 moveto (V) show
+  8 rfont
+  0 -3 rmoveto (dd) show
+  grestore
+} def
+%
+% x y r ground
+%
+/psground {
+  startgate
+  -4 6 moveto 4 6 lineto stroke
+  -3 4 moveto 3 4 lineto stroke
+  -2 2 moveto 2 2 lineto stroke
+  -1 0 moveto 1 0 lineto stroke
+  grestore
+} def
+%
+% A Roller
+/psroll {
+  [[0 .5][-.5 .5][2 0.5][0 -.5]] adjstartgate
+  -31 -10.5 moveto
+  -37.5 -5 lineto
+  -37.5 4 lineto
+  -31 10.5 lineto
+  31 10.5 lineto
+  37.5 4 lineto
+  37.5 -5 lineto
+  31 -10.5 lineto
+  closepath stroke
+  2 setlinewidth
+  newpath
+  0 0 6 20 340 arc stroke
+  30 rotate
+  4 0 translate
+  -70 rotate
+  -1.5 0 moveto 1.5 0 lineto
+  0 3 lineto closepath stroke
+  grestore
+} def
+%
+% A Register
+/register {
+  [[0 0][-1 1][2 1][0 -1]] adjstartgate
+  -36.5 -10.5 moveto
+  -36.5 9.5 lineto
+  38.5 9.5 lineto
+  38.5 -10.5 lineto
+  closepath stroke
+  -36.5 -7 moveto
+  -30 0 lineto
+  -36.5 7 lineto stroke
+  7 rfont
+  (_CLR) dup stringwidth pop neg 36 add 0 prshow
+  (_EN) dup stringwidth pop neg 36 add -9 prshow
+  grestore
+} def
+%
+% x y r adder
+%
+/psadder {
+  startgate
+  -30 15.5 moveto
+  -5 15.5 lineto
+  0 10 lineto
+  5 15.5 lineto
+  30 15.5 lineto
+  16 -12.5 lineto
+  -16 -12.5 lineto
+  closepath stroke
+  -3 0 moveto 3 0 lineto stroke
+  0 3 moveto 0 -3 lineto stroke
+  19 2 2 0 360 arc closepath fill
+  grestore
+} def
+%
+% A Arshifter
+%
+/psarshift {
+  [[0 .5][-.5 .5][2 0.5][0 -.5]] adjstartgate
+  -31 -10.5 moveto
+  -37.5 -5 lineto
+  -37.5 4 lineto
+  -31 10.5 lineto
+  31 10.5 lineto
+  37.5 4 lineto
+  37.5 -5 lineto
+  31 -10.5 lineto
+  closepath stroke
+  -7 2 moveto
+  3 2 lineto
+  3 5 lineto
+  9 0 lineto
+  3 -5 lineto
+  3 -2 lineto
+  -7 -2 lineto
+  closepath fill
+  -9 2 moveto -11 2 lineto
+  -11 -2 lineto -9 -2 lineto
+  closepath fill
+  -9 3 moveto
+  -9 6 lineto
+  -7 6 lineto
+
+  -7 4 lineto
+  -8 4 lineto
+  -6 3 lineto
+  -4 4 lineto
+  -5 4 lineto
+
+  -5 8 lineto
+  -11 8 lineto
+  -11 3 lineto
+  closepath fill
+  grestore
+} def
+%
+% A Buffer
+/psbuf {
+  startgate
+  -5.5 -7.5 moveto
+  9.5 0 lineto
+  -5.5 7.5 lineto
+  closepath
+  stroke
+  grestore
+} bind def
+/triiogate {
+  startgate
+  0 -3 moveto
+  6 0 lineto
+  0 3 lineto
+  -6 0 lineto
+  closepath
+  stroke
+  grestore
+} bind def
+%
+% A Switch
+/switchgate {
+  startnorotgate
+  % Outer Box
+  4 setlinewidth
+  -18 -12 moveto
+  15 -12 lineto
+  15 12 lineto
+  1 setlinewidth
+  -18 12 lineto
+  closepath
+  stroke
+  gsave      % Inner Box
+  -5 -9 moveto
+  -5 10 lineto
+  -16 10 lineto
+  -16 -9 lineto
+  closepath
+  stroke
+  0.8 setgray
+  -5 -9 moveto
+  -5 10 lineto
+  -16 10 lineto
+  -16 -9 lineto
+  closepath
+  fill
+  grestore
+  -8 0 moveto    % Knives
+  -8 7 lineto
+  -13 7 lineto
+  -13 0 lineto
+  stroke
+  -10.5 7  moveto    % Handle
+  -10.5 7.5 lineto
+  stroke
+  -10.5 8 1 0 360 arc
+  closepath
+  fill
+  -7 -1 moveto    % Hinges
+  -7 1 lineto
+  -9 -1 moveto
+  -9 1 lineto
+  -12 -1 moveto
+  -12 1 lineto
+  -14 -1 moveto
+  -14 1 lineto
+  stroke
+  -7 5 1 0 360 arc  % Clips
+  closepath fill
+  newpath
+  -9 5 1 0 360 arc
+  closepath fill
+  newpath
+  -12 5 1 0 360 arc
+  closepath fill
+  newpath
+  -14 5 1 0 360 arc
+  closepath fill
+  newpath
+  -7 -5 1 0 360 arc
+  closepath fill
+  newpath
+  -9 -5 1 0 360 arc
+  closepath fill
+  newpath
+  -12 -5 1 0 360 arc
+  closepath fill
+  newpath
+  -14 -5 1 0 360 arc
+  closepath fill
+  8 rfont
+  -3 4 moveto
+  (on) show
+  -3 -7 moveto
+  (off) show
+  grestore
+} bind def
+%
+% x y r psrom
+%
+/psrom {
+  startgate
+  -17.5 23.5 moveto
+  16.5 23.5 lineto
+  16.5 -25.5 lineto
+  -17.5 -25.5 lineto
+  closepath stroke
+  8 rfont
+  -15 -2 moveto (A) show
+  5 -2 moveto (D) show
+  6 rfont
+  (_oe) -4 -23 prshow
+  grestore
+} def
+%
+% A Solder Joint
+%
+/joint {
+  startgate
+  0 0 2 0 360 arc
+  closepath
+  fill
+  grestore
+} bind def
+%
+% x y r mux
+%
+/mux {
+    dup /mrot exch def
+    startgate
+    8 rfont
+    -29.5 15.5 moveto
+    29.5 15.5 lineto
+    16.5 -12.5 lineto
+    -16.5 -12.5 lineto
+    closepath stroke
+    dup					% n n
+    1 add 58 exch div			% n d1
+    2 copy mul				% n d1 dn
+    mrot -90 eq mrot -180 eq or {
+      3 -1 roll 1 sub 50 string cvs exch (0) exch	% d1 (n) (0) dn
+      -29 add 7 rCT				% d1
+      exch -29 add 7 rCT
+    } {
+      3 -1 roll 1 sub 50 string cvs exch	% d1 (n) dn
+      -29 add 7 rCT				% d1
+      (0) exch -29 add 7 rCT
+    } ifelse
+    grestore
+} def
+%
+% (v) x y r dip
+%
+/psdip {
+  dup 4 1 roll
+  startnorotgate
+  3.5 0.5 translate
+  -42 -10 moveto
+  34 -10 lineto
+  34 10 lineto
+  -42 10 lineto
+  closepath stroke
+  8 rfont
+  1 -1 scale
+  -180 eq { 38 5 LJ } { -4 -12 CT } ifelse
+  1 -1 scale
+  5 rfont
+  -38 3 moveto (ON) show
+  -38 -6 moveto (OFF) show
+  -24 7 25 {-5 ds} for
+  grestore
+} def
+%
+% An input pin
+%
+/psin {
+  startgate
+  -6 -3 moveto
+  0 0 lineto
+  -6 3 lineto
+  stroke
+  grestore
+} bind def
+%
+% 'OR' part of XOR gate
+%
+/base_xor {
+  startgate
+  -10 -7 moveto
+  -5 7 14 -90 -30 arc
+  -5 -7 14 30 90 arc
+  14 theight neg 11 sub 0 14 30 -30 arcn
+  closepath
+  stroke
+  grestore
+} bind def
+%
+% An XOR Gate
+%
+/psxor {
+  startgate
+  3 0 0 base_xor
+  14 theight neg 11 sub 0 14 30 -30 arcn
+  stroke
+  grestore
+} bind def
+%
+% A Splice
+/pstap {
+  [[-2 0][0 -1][-1 0][0 -2]] adjstartgate
+  -4 -3 moveto
+  -2 -3 lineto
+  2 0 lineto
+  -2 3 lineto
+  -4 3 lineto
+  8 rfont
+  4 4 moveto show
+  closepath fill
+  grestore
+} def
+%
+% An output pin
+%
+/psout {
+  startgate
+  -6 -3 moveto
+  3 0 lineto
+  -6 3 lineto
+  stroke
+  grestore
+} bind def
+%
+% Image for terminal
+%
+/tty_image <ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffff000000000000000000000000000000000000000000
+00
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffff00ff0000000000ff000000ffffffffffffffffff00
+ff
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffff00ffffff00ffffff00ffff00ffffffffffffffff00
+00
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffff00ffffff00ffffff00ffff00ffffffffffffffff00
+00
+ffffffffffffffffffffffffff0000000000000000000000000000000000000000000000
+00000000000000000000ffffffffff00ffffff00ffffff00ffff00ffffffffffffffff00
+00
+ffffffffffffffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffffff00ff00ffffffff00ffffff00ffffff00ffff00ffffffffffffffff00
+00
+ffffffffffffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffffff00ffffff00ffffff00ffffff00ffffff000000ffffffffffffffffff00
+ff
+ffffffffffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffffff00ffffff0000ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffffff00ffffff00ff00ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffffff00ffffff00ffff00ffffff00ff000000ffffff000000ffffffffffffffffff00
+ff
+ffffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffffff00ffffff00ffffff00ffffff00ff00ffff00ffff00ffff00ffffffffffffffff00
+00
+ffffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffff00ffffff00ffffffff00ffffff00ff00ffff00ffff00ffff00ffffffffffffffff00
+00
+ffffffffff00ff0000000000000000000000000000000000000000000000000000000000
+0000ffffff00ffffffffff00ffffff00ff000000ffffff00ffff00ffffffffffffffff00
+00
+ffffffffff0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffff00ff00ffffffffffff00ffffff00ff00ffff00ffff00ffff00ffffffffffffffff00
+00
+ffffffffff00ffff00000000000000000000000000000000000000000000000000000000
+ffffff00ffffffffffffff00ffffff00ff00ffff00ffff000000ffffffffffffffffff00
+ff
+ffffffffff00ffff00ffffffffffffffffffffffffffffffffffffffffffffffffffffff
+00ffff00ffffffffffffff00ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffff00ff00ffff0000000000ff00000000ff0000000000ffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ff000000ffff0000000000ffff0000ffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff0000000000ff00ffff00ffffff00ffffff00ffffffffffff00
+ff
+ffffffffff00ff00ffff000000ff000000000000ffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ff00ffff00ffffff00ffffff000000ffffffff00
+00
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff0000000000ff000000ffffffff00ffffffffffff00ffffff00
+00
+ffffffffff00ff00ffff0000000000ff000000000000ff0000ffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ff00ffff00ffffff00ffffff00ffff00ffffff00
+00
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff0000000000ff00ffff00ffffff00ffffffff0000ffffffff00
+ff
+ffffffffff00ff00ffff00ffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff0000000000ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ffff0000ffff0000000000ffff0000ffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff0000000000ff00ffff00ffffff00ffffff00ffffffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ff00ffffffffffff00ffffff00000000ffffff00
+00
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff0000000000ff00ffffffffffff00ffffffffffff00ffffff00
+00
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ff00ffff00ffffff00ffffff00ffff00ffffff00
+00
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ffff0000ffffffff00ffffffff0000ffffffff00
+ff
+ffffffffff00ff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff00ff00ffffffffffffff00ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffff00ffff00ffffffffffffffffffffffffffffffffffffffffffffffffffffff
+00ffff00ffffffffffffff00ffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffffffffff00ffffff000000000000000000000000000000000000000000000000000000
+ffffff00ffffffffffffff00ffffff00ff000000ffffffff0000ffff000000ffffffff00
+ff
+ffffffffff0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffff0000ffffffffffffff00ffffff00ff00ffff00ffff00ffffffff00ffff00ffffff00
+ff
+ffffffffff00ff0000000000000000000000000000000000000000000000000000000000
+0000ff00ffffffffffffff00ffffff00ff00ffff00ffff00000000ff00ffff00ffffff00
+00
+ffffffff00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ffff00ffffffffffffffff00ffffff00ff00ffff00ffffffffff00ff000000ffffffff00
+00
+ffffffff00ff000000000000000000000000000000000000000000000000000000000000
+ffff00ffffffffffffffff00ffffff00ff00ffff00ffff00ffff00ff00ffff00ffffff00
+00
+ffffff00ffff0000ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00
+ff00ffffffffffffffff00ffffffff00ff000000ffffffff0000ffff00ffff00ffffff00
+ff
+ffffff00ff00ff00000000000000000000000000000000000000000000000000000000ff
+ff00ffffffffffffff00ffffffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffff00ffff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff0000ff
+00ffffffffffffff00ffffffffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+ffff00ff000000000000000000000000000000000000000000000000000000000000ffff
+00ffffffffffff00ffffffffffffff00ff000000ffff0000000000ff000000ffffffff00
+ff
+ff00ffff00ffff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff00
+ffffffffffff00ffffffffffffffff00ff00ffff00ffffff00ffffff00ffff00ffffff00
+ff
+ff00ff00000000000000000000000000000000000000000000000000000000000000ff00
+ffffffffff00ffffffffffffffffff00ff00ffff00ffffff00ffffff00ffff00ffffff00
+00
+00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00ff
+ffffffff00ffffffffffffffffffff00ff00ffff00ffffff00ffffff000000ffffffff00
+00
+0000000000000000000000000000000000000000000000000000000000000000000000ff
+ffffff00ffffffffffffffffffffff00ff00ffff00ffffff00ffffff00ffff00ffffff00
+00
+00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00ff
+ffff00ffffffffffffffffffffffff00ff000000ffffffff00ffffff00ffff00ffffff00
+ff
+00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00ff
+ff00ffffffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00ff
+00ffffffffffffffffffffffffffff00ffffffffffffffffffffffffffffffffffffff00
+ff
+00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000
+ffffffffffffffffffffffffffffff000000000000000000000000000000000000000000
+00
+000000000000000000000000000000000000000000000000000000000000000000000000
+ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ff> def
+%
+% An tty gate
+%
+/pstty {
+  startgate
+  -36 28 translate
+  1 -1 scale
+  73 53 8 matrix { tty_image } image
+  grestore
+} bind def
+%
+% x y r demux
+%
+/demux {
+    180 sub neg 360 mod neg
+    startgate
+    8 rfont
+    -29.5 15.5 moveto
+    29.5 15.5 lineto
+    16.5 -12.5 lineto
+    -16.5 -12.5 lineto
+    closepath stroke
+    dup					% n n
+    1 add 58 exch div			% n d1
+    2 copy mul				% n d1 dn
+    3 -1 roll 1 sub 50 string cvs exch	% d1 (n) dn
+    -29 add 7 rCT				% d1
+    (0) exch -29 add 7 rCT
+    grestore
+} def
+%
+% An frame gate
+%
+/psframe {
+  gsave
+  12 cfont
+  translate
+  pbox
+  [3 3] 0 setdash
+  stroke
+  [] 0 setdash
+  1 setgray
+  10 0 moveto dup stringwidth pop 10 add 0 rlineto stroke
+  0 setgray
+  15 4 pshow
+  grestore
+} bind def
+%
+% dw phi pw x y r clockgate
+%
+/psclock_base {
+  [[-1 0][0 0][1 -1][-3 -2]] adjstartgate
+  -8 -12 moveto
+  16 0 lineto
+  -8 12 lineto
+  closepath
+  stroke
+  -6 -4 moveto
+  -4 -4 lineto
+  -4 4 lineto
+  0 4 lineto
+  0 -4 lineto
+  2 -4 lineto
+  stroke
+  grestore
+} def
+/psclock {
+  3 copy psclock_base
+  startnorotgate
+  0 -20 translate
+  0 0 moveto
+  8 rfont
+  (P = ) show
+  20 string cvs show
+  ( ) show
+  8 syfont
+  (f) show 
+  8 rfont
+  ( = ) show
+  20 string cvs show
+  ( D = ) show
+  20 string cvs show
+  grestore
+} bind def
+%
+% An PMOS gate
+%
+/pspmos {
+  [[0 1][1 -1][-1 0][1 1]] adjstartgate
+  -8 9 moveto
+  -8 -8 lineto stroke
+  6.5 8.5 moveto
+  -4 8.5  lineto
+  -4 -7.5 lineto
+  6.5 -7.5 lineto stroke
+  closepath fill
+  -3.5 8.5 moveto
+  -0.5 11 lineto
+  -0.5 6 lineto
+  closepath fill
+  grestore
+} bind def
+%
+% An NMOS gate
+%
+/psnmos {
+  [[0 0][0 -1][-1 1][0 -1]] adjstartgate
+  -8 8 moveto
+  -8 -9 lineto stroke
+  6.5 7.5 moveto
+  -4 7.5  lineto
+  -4 -8.5 lineto
+  6.5 -8.5 lineto stroke
+  6 -8.5 moveto
+  2 -11 lineto
+  2 -6 lineto
+  closepath fill
+  grestore
+} bind def
+%
+% x y r psdiv
+%
+/psdiv {
+  startgate
+  -30 15.5 moveto
+  -5 15.5 lineto
+  0 10 lineto
+  5 15.5 lineto
+  30 15.5 lineto
+  16 -12.5 lineto
+  -16 -12.5 lineto
+  closepath stroke
+  -3 0 moveto 3 0 lineto stroke
+  0 3 1 0 360 arc closepath fill
+  0 -3 1 0 360 arc closepath fill
+  grestore
+} def
+%
+% An AND gate
+%
+/psand {
+  startgate
+  2.5 7 moveto
+  -10.5 7 lineto
+  -10.5 -7 lineto
+  2.5 -7 lineto
+  2.5 0 7 -90 90 arc
+  closepath
+  stroke
+  grestore
+} bind def
+
+/Author (Aleix,,,) def
+/Site (Earth) def
+/Date (December 17, 2013) def
+/CircuitName (disc_atribut2.v) def
+/isepsf false def
+/NumPages ( of 4) def
+/GateVersion (TKGate 1.8.7) def
+/IsLandscape true def
+/PageWidth 841.88 def
+/PageHeight 595.27 def
+/LMargin 25 def
+/RMargin 25 def
+/TMargin 25 def
+/BMargin 25 def
+/LBlock 60 def
+/Courier-Latin1 /Courier findfont defLatin1
+/Helvetica-Latin1 /Helvetica findfont defLatin1
+/Helvetica-Bold-Latin1 /Helvetica-Bold findfont defLatin1
+/Helvetica-Oblique-Latin1 /Helvetica-Oblique findfont defLatin1
+/Helvetica-BoldOblique-Latin1 /Helvetica-BoldOblique findfont defLatin1
+/cfont { /Courier-Latin1 findfont exch scalefont setfont } bind def
+/rfont { /Helvetica-Latin1 findfont exch scalefont setfont } bind def
+/bfont { /Helvetica-Bold-Latin1 findfont exch scalefont setfont } bind def
+/ifont { /Helvetica-Oblique-Latin1 findfont exch scalefont setfont } bind def
+/bifont { /Helvetica-BoldOblique-Latin1 findfont exch scalefont setfont } bind def
+/syfont { /Symbol findfont exch scalefont setfont } bind def
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Hevetica
+%%IncludeResource: font Hevetica-Oblique
+%%IncludeResource: font Hevetica-Bold
+%%IncludeResource: font Hevetica-BoldOblique
+%%IncludeResource: font Symbol
+%%BeginFeature: *DuplexMode false
+statusdict /setduplexmode known {
+  statusdict begin
+    false setduplexmode
+  end
+} if
+%%EndFeature
+%%EndSetup
+
+
+%%Page: 1 1
+(1 of 4) (main) BP
+() 10 10 771 465 BM
+gsave
+0 465 translate
+0.898990 0.898990 scale
+1 -1 scale
+243.314607 66.123596 translate
+2 setlinewidth
+newpath
+348 166 moveto
+348 247 lineto
+92 247 lineto
+92 301 lineto
+131 301 lineto
+stroke
+newpath
+346 164 moveto
+295 164 lineto
+stroke
+(8) 65 424 161 wirelabel
+424 164 sizesymbol
+newpath
+492 216 moveto
+492 228 lineto
+461 228 lineto
+461 164 lineto
+350 164 lineto
+stroke
+1 setlinewidth
+newpath
+-120 -29 moveto
+-44 -29 lineto
+-44 -41 lineto
+stroke
+2 setlinewidth
+newpath
+20 74 moveto
+20 84 lineto
+134 84 lineto
+stroke
+1 setlinewidth
+newpath
+62 200 moveto
+62 337 lineto
+131 337 lineto
+stroke
+newpath
+64 198 moveto
+134 198 lineto
+stroke
+newpath
+39 198 moveto
+60 198 lineto
+stroke
+2 setlinewidth
+newpath
+491 378 moveto
+491 388 lineto
+466 388 lineto
+466 353 lineto
+292 353 lineto
+stroke
+newpath
+491 288 moveto
+491 297 lineto
+292 297 lineto
+stroke
+1 setlinewidth
+newpath
+42 120 moveto
+134 120 lineto
+stroke
+2 setlinewidth
+newpath
+494 115 moveto
+494 129 lineto
+468 129 lineto
+468 108 lineto
+295 108 lineto
+stroke
+newpath
+495 75 moveto
+495 80 lineto
+295 80 lineto
+stroke
+newpath
+492 333 moveto
+492 343 lineto
+466 343 lineto
+466 325 lineto
+292 325 lineto
+stroke
+newpath
+489 426 moveto
+489 435 lineto
+458 435 lineto
+458 382 lineto
+292 382 lineto
+stroke
+1 setlinewidth
+newpath
+131 415 moveto
+21 415 lineto
+stroke
+2 setlinewidth
+newpath
+492 166 moveto
+492 178 lineto
+467 178 lineto
+467 136 lineto
+295 136 lineto
+stroke
+62 198 0 joint
+2 43 31 471 301 0 psled_7seg
+8 rfont
+(16) /L /T 495 331 pjshow
+2 43 31 474 43 0 psled_7seg
+(16) /L /T 498 73 pjshow
+348 164 0 joint
+132 271 159 169 box
+(valor) /L /C 135 304 pjshow
+126 305 0 arrow
+(nouv) /L /C 135 340 pjshow
+126 341 0 arrow
+(consolida) /L /C 135 418 pjshow
+126 419 0 arrow
+(D0) /R /C 288 300 pjshow
+297 301 0 arrow
+(D1) /R /C 288 328 pjshow
+297 329 0 arrow
+(D2) /R /C 288 356 pjshow
+297 357 0 arrow
+(D3) /R /C 288 385 pjshow
+297 386 0 arrow
+10 rfont
+(disc4max) /C /C 211 355 pjshow
+2 43 31 471 134 0 psled_7seg
+8 rfont
+(16) /L /T 495 164 pjshow
+2 43 31 473 83 0 psled_7seg
+(16) /L /T 497 113 pjshow
+(2) 20 64 0 psdip
+2 43 31 470 256 0 psled_7seg
+(16) /L /T 494 286 pjshow
+2 43 31 470 346 0 psled_7seg
+(16) /L /T 494 376 pjshow
+2 43 31 468 394 0 psled_7seg
+(16) /L /T 492 424 pjshow
+25 120 0 switchgate
+135 54 159 169 box
+(valor) /L /C 138 87 pjshow
+129 88 0 arrow
+(nouv) /L /C 138 123 pjshow
+129 124 0 arrow
+(consolida) /L /C 138 201 pjshow
+129 202 0 arrow
+(D0) /R /C 291 83 pjshow
+300 84 0 arrow
+(D1) /R /C 291 111 pjshow
+300 112 0 arrow
+(D2) /R /C 291 139 pjshow
+300 140 0 arrow
+(D3) /R /C 291 167 pjshow
+300 168 0 arrow
+10 rfont
+(disc4max) /C /C 214 138 pjshow
+-44 -48 0 psled_bit
+4 415 0 switchgate
+50 0 1000 -133 -29 0 psclock
+22 198 0 switchgate
+2 43 31 471 184 0 psled_7seg
+8 rfont
+(16) /L /T 495 214 pjshow
+grestore
+EM
+EP
+
+%%Page: 2 2
+(2 of 4) (disc4max) BP
+() 10 10 771 465 BM
+gsave
+0 465 translate
+0.980176 0.980176 scale
+1 -1 scale
+176.796629 77.202247 translate
+newpath
+207 99 inverter
+205 99 moveto
+194 99 lineto
+stroke
+newpath
+96 77 moveto
+86 77 lineto
+stroke
+(8) 12 163 83 wirelabel
+155 83 sizesymbol
+2 setlinewidth
+newpath
+155 61 moveto
+155 94 lineto
+stroke
+1 setlinewidth
+newpath
+132 48 moveto
+86 48 lineto
+stroke
+2 setlinewidth
+newpath
+155 143 moveto
+155 115 lineto
+stroke
+newpath
+157 145 moveto
+385 145 lineto
+385 152 lineto
+stroke
+newpath
+12 48 moveto
+12 145 lineto
+153 145 lineto
+stroke
+newpath
+12 44 moveto
+12 5 lineto
+165 5 lineto
+165 32 lineto
+stroke
+(8) 65 20 43 wirelabel
+20 46 sizesymbol
+newpath
+30 46 moveto
+14 46 lineto
+stroke
+1 setlinewidth
+newpath
+452 243 moveto
+452 280 lineto
+424 280 lineto
+stroke
+newpath
+450 241 moveto
+424 241 lineto
+stroke
+newpath
+452 201 moveto
+452 239 lineto
+stroke
+newpath
+450 157 moveto
+424 157 lineto
+stroke
+newpath
+452 155 moveto
+452 137 lineto
+stroke
+newpath
+452 197 moveto
+452 159 lineto
+stroke
+newpath
+424 199 moveto
+450 199 lineto
+stroke
+(8) 12 393 308 wirelabel
+385 308 sizesymbol
+2 setlinewidth
+newpath
+548 315 moveto
+385 315 lineto
+385 296 lineto
+stroke
+1 setlinewidth
+newpath
+281 160 moveto
+281 99 lineto
+225 99 lineto
+stroke
+newpath
+342 248 moveto
+342 285 lineto
+348 285 lineto
+stroke
+newpath
+344 246 moveto
+348 246 lineto
+stroke
+newpath
+342 206 moveto
+342 244 lineto
+stroke
+newpath
+344 204 moveto
+348 204 lineto
+stroke
+newpath
+342 164 moveto
+342 202 lineto
+stroke
+newpath
+344 162 moveto
+348 162 lineto
+stroke
+newpath
+283 162 moveto
+314 162 lineto
+314 162 lineto
+340 162 lineto
+stroke
+newpath
+-101 326 moveto
+281 326 lineto
+281 164 lineto
+stroke
+2 setlinewidth
+newpath
+385 180 moveto
+385 173 lineto
+stroke
+newpath
+387 182 moveto
+505 182 lineto
+505 181 lineto
+544 181 lineto
+stroke
+newpath
+385 194 moveto
+385 184 lineto
+stroke
+1 setlinewidth
+newpath
+-111 104 moveto
+118 104 lineto
+stroke
+newpath
+438 290 moveto
+424 290 lineto
+stroke
+newpath
+438 251 moveto
+424 251 lineto
+stroke
+newpath
+438 209 moveto
+424 209 lineto
+stroke
+newpath
+440 207 moveto
+440 167 lineto
+424 167 lineto
+stroke
+newpath
+440 249 moveto
+440 211 lineto
+stroke
+newpath
+440 288 moveto
+440 253 lineto
+stroke
+newpath
+440 314 moveto
+440 292 lineto
+stroke
+2 setlinewidth
+newpath
+385 222 moveto
+385 215 lineto
+stroke
+newpath
+387 224 moveto
+465 224 lineto
+465 222 lineto
+546 222 lineto
+stroke
+newpath
+385 236 moveto
+385 226 lineto
+stroke
+newpath
+385 263 moveto
+385 257 lineto
+stroke
+newpath
+387 265 moveto
+536 265 lineto
+536 266 lineto
+548 266 lineto
+stroke
+newpath
+385 275 moveto
+385 267 lineto
+stroke
+1 setlinewidth
+newpath
+194 109 moveto
+209 109 lineto
+209 129 lineto
+stroke
+2 setlinewidth
+newpath
+-23 76 moveto
+-23 26 lineto
+145 26 lineto
+145 32 lineto
+stroke
+newpath
+-21 78 moveto
+30 78 lineto
+stroke
+(8) 65 -54 75 wirelabel
+-54 78 sizesymbol
+newpath
+-110 78 moveto
+-25 78 lineto
+stroke
+385 285 0 register
+463 137 0 psvdd
+281 162 0 joint
+12 46 0 joint
+385 224 0 joint
+() 279 227 -40 -32 psframe
+385 162 0 register
+452 241 0 joint
+219 99 -180 psbuf
+440 251 0 joint
+[
+   [12 (Disc)]
+] 387 106 pscomment
+155 104 0 register
+385 204 0 register
+(D1) /L /L 551 226 pjshow
+543 222 0 psout
+385 246 0 register
+385 182 0 joint
+452 199 0 joint
+440 209 0 joint
+(consolida) /R /L -111 330 pjshow
+-103 326 0 psin
+[
+   [12 (Disc atribut)]
+] 194 -60 pscomment
+(D2) /L /L 553 270 pjshow
+545 266 0 psout
+[
+   [12 (Buffer)]
+] 78 -27 pscomment
+440 320 0 psground
+(nouv) /R /L -121 108 pjshow
+-113 104 0 psin
+-23 78 0 joint
+385 265 0 joint
+452 157 0 joint
+(D3) /L /L 553 319 pjshow
+545 315 0 psout
+342 204 0 joint
+() 574 450 -73 -65 psframe
+(valor) /R /L -120 82 pjshow
+-112 78 0 psin
+155 145 0 joint
+209 135 0 psground
+[
+   [15 (M\303\240xim)]
+] 78 -14 pscomment
+2 155 48 0 mux
+342 246 0 joint
+() 158 235 328 104 psframe
+(D0) /L /L 549 185 pjshow
+541 181 0 psout
+440 290 0 joint
+31 34 54 60 box
+(A) /L /C 34 49 pjshow
+25 50 0 arrow
+(B) /L /C 34 81 pjshow
+25 82 0 arrow
+(AgB) /R /C 82 51 pjshow
+91 52 0 arrow
+(AeqB) /R /C 82 80 pjshow
+91 81 0 arrow
+10 rfont
+(CMP8) /C /C 58 64 pjshow
+342 162 0 joint
+grestore
+EM
+EP
+
+%%Page: 3 3
+(3 of 4) (CMP8) BP
+() 10 10 771 465 BM
+gsave
+0 465 translate
+1 -1 scale
+73.000000 -31.000000 translate
+2 setlinewidth
+newpath
+150 334 moveto
+158 334 lineto
+158 333 lineto
+220 333 lineto
+stroke
+1 setlinewidth
+newpath
+340 352 moveto
+340 404 lineto
+411 404 lineto
+stroke
+newpath
+340 348 moveto
+340 205 lineto
+293 205 lineto
+stroke
+newpath
+395 350 moveto
+342 350 lineto
+stroke
+newpath
+428 334 moveto
+428 295 lineto
+292 295 lineto
+stroke
+newpath
+293 174 moveto
+408 174 lineto
+408 334 lineto
+stroke
+(4) 65 197 209 wirelabel
+197 212 sizesymbol
+2 setlinewidth
+newpath
+150 212 moveto
+221 212 lineto
+stroke
+(4) 65 188 173 wirelabel
+188 176 sizesymbol
+newpath
+123 176 moveto
+221 176 lineto
+stroke
+newpath
+122 301 moveto
+130 301 lineto
+130 297 lineto
+220 297 lineto
+stroke
+1 setlinewidth
+newpath
+411 409 moveto
+302 409 lineto
+302 326 lineto
+292 326 lineto
+stroke
+newpath
+530 370 moveto
+418 370 lineto
+418 363 lineto
+stroke
+newpath
+527 407 moveto
+432 407 lineto
+stroke
+2 setlinewidth
+newpath
+118 301 moveto
+118 378 lineto
+stroke
+(8) 12 127 218 wirelabel
+119 218 sizesymbol
+newpath
+119 176 moveto
+119 239 lineto
+118 239 lineto
+118 300 lineto
+stroke
+newpath
+99 115 moveto
+119 115 lineto
+119 175 lineto
+stroke
+newpath
+146 334 moveto
+146 387 lineto
+stroke
+newpath
+146 212 moveto
+146 333 lineto
+stroke
+(8) 65 130 139 wirelabel
+130 142 sizesymbol
+newpath
+100 142 moveto
+146 142 lineto
+146 211 lineto
+stroke
+(3:0) 123 301 0 pstap
+222 162 70 65 box
+8 rfont
+(B) /L /C 225 215 pjshow
+216 216 0 arrow
+(A) /L /C 225 179 pjshow
+216 180 0 arrow
+(AeqB) /R /C 289 208 pjshow
+298 209 0 arrow
+(AgB) /R /C 289 177 pjshow
+298 178 0 arrow
+10 rfont
+(A4CMPB4) /C /C 257 194 pjshow
+2 418 350 0 mux
+8 rfont
+(AeqB) /L /L 532 411 pjshow
+524 407 0 psout
+(AgB) /L /L 535 374 pjshow
+527 370 0 psout
+(B) /R /L 90 146 pjshow
+98 142 0 psin
+340 350 0 joint
+422 407 0 psand
+(7:4) 151 212 0 pstap
+(3:0) 151 334 0 pstap
+221 283 70 65 box
+(B) /L /C 224 336 pjshow
+215 337 0 arrow
+(A) /L /C 224 300 pjshow
+215 301 0 arrow
+(AeqB) /R /C 288 329 pjshow
+297 330 0 arrow
+(AgB) /R /C 288 298 pjshow
+297 299 0 arrow
+10 rfont
+(A4CMPB4) /C /C 256 315 pjshow
+(7:4) 124 176 0 pstap
+8 rfont
+(A) /R /L 89 119 pjshow
+97 115 0 psin
+grestore
+EM
+EP
+
+%%Page: 4 4
+(4 of 4) (A4CMPB4) BP
+() 10 10 771 465 BM
+gsave
+0 465 translate
+1 -1 scale
+36.500000 52.000000 translate
+newpath
+161 179 moveto
+191 179 lineto
+stroke
+newpath
+417 186 moveto
+450 186 lineto
+450 109 lineto
+460 109 lineto
+stroke
+newpath
+161 230 moveto
+169 230 lineto
+169 227 lineto
+226 227 lineto
+stroke
+newpath
+295 177 moveto
+246 177 lineto
+stroke
+newpath
+127 121 moveto
+225 121 lineto
+stroke
+newpath
+362 103 moveto
+345 103 lineto
+345 127 lineto
+316 127 lineto
+stroke
+newpath
+331 183 moveto
+331 158 lineto
+346 158 lineto
+stroke
+newpath
+333 185 moveto
+347 185 lineto
+stroke
+newpath
+331 249 moveto
+331 187 lineto
+stroke
+newpath
+333 251 moveto
+443 251 lineto
+443 274 lineto
+468 274 lineto
+stroke
+newpath
+249 251 inverter
+251 251 moveto
+329 251 lineto
+stroke
+newpath
+347 180 moveto
+316 180 lineto
+stroke
+newpath
+161 152 moveto
+188 152 lineto
+stroke
+newpath
+127 96 moveto
+225 96 lineto
+stroke
+newpath
+127 246 moveto
+135 246 lineto
+135 248 lineto
+226 248 lineto
+stroke
+newpath
+161 254 moveto
+169 254 lineto
+169 253 lineto
+226 253 lineto
+stroke
+newpath
+127 296 moveto
+224 296 lineto
+stroke
+newpath
+411 101 moveto
+383 101 lineto
+stroke
+newpath
+205 101 inverter
+207 101 moveto
+225 101 lineto
+stroke
+newpath
+161 300 moveto
+204 300 lineto
+204 301 lineto
+224 301 lineto
+stroke
+newpath
+127 224 moveto
+166 224 lineto
+166 222 lineto
+226 222 lineto
+stroke
+newpath
+468 279 moveto
+435 279 lineto
+stroke
+newpath
+516 277 moveto
+489 277 lineto
+stroke
+newpath
+295 150 moveto
+246 150 lineto
+stroke
+newpath
+246 99 moveto
+305 99 lineto
+305 98 lineto
+362 98 lineto
+stroke
+newpath
+127 174 moveto
+225 174 lineto
+stroke
+newpath
+209 179 inverter
+211 179 moveto
+225 179 lineto
+stroke
+newpath
+460 104 moveto
+432 104 lineto
+stroke
+newpath
+271 225 moveto
+249 225 inverter
+251 225 lineto
+stroke
+newpath
+275 225 moveto
+506 225 lineto
+506 272 lineto
+516 272 lineto
+stroke
+newpath
+273 184 moveto
+273 223 lineto
+stroke
+newpath
+273 153 moveto
+273 129 lineto
+295 129 lineto
+stroke
+newpath
+275 155 moveto
+295 155 lineto
+stroke
+newpath
+273 180 moveto
+273 157 lineto
+stroke
+newpath
+295 182 moveto
+275 182 lineto
+stroke
+newpath
+396 183 moveto
+368 183 lineto
+stroke
+newpath
+346 153 moveto
+316 153 lineto
+stroke
+newpath
+206 152 inverter
+208 152 moveto
+225 152 lineto
+stroke
+newpath
+414 281 moveto
+311 281 lineto
+311 299 lineto
+247 299 inverter
+249 299 lineto
+stroke
+newpath
+161 101 moveto
+187 101 lineto
+stroke
+newpath
+225 126 moveto
+204 126 inverter
+206 126 lineto
+stroke
+newpath
+161 278 moveto
+225 278 lineto
+stroke
+newpath
+295 124 moveto
+246 124 lineto
+stroke
+newpath
+127 272 moveto
+171 272 lineto
+171 273 lineto
+225 273 lineto
+stroke
+newpath
+384 274 moveto
+384 188 lineto
+396 188 lineto
+stroke
+newpath
+386 276 moveto
+414 276 lineto
+stroke
+newpath
+248 276 inverter
+250 276 moveto
+382 276 lineto
+stroke
+newpath
+127 147 moveto
+225 147 lineto
+stroke
+newpath
+161 126 moveto
+186 126 lineto
+stroke
+newpath
+367 156 moveto
+391 156 lineto
+391 106 lineto
+411 106 lineto
+stroke
+newpath
+481 107 moveto
+607 107 lineto
+stroke
+newpath
+614 275 moveto
+537 275 lineto
+stroke
+2 setlinewidth
+newpath
+123 296 moveto
+123 313 lineto
+stroke
+newpath
+123 272 moveto
+123 295 lineto
+stroke
+newpath
+123 246 moveto
+123 271 lineto
+stroke
+newpath
+123 224 moveto
+123 245 lineto
+stroke
+newpath
+123 174 moveto
+123 223 lineto
+stroke
+newpath
+123 147 moveto
+123 173 lineto
+stroke
+newpath
+123 121 moveto
+123 146 lineto
+stroke
+newpath
+123 96 moveto
+123 120 lineto
+stroke
+(4) 65 111 43 wirelabel
+111 46 sizesymbol
+newpath
+88 46 moveto
+123 46 lineto
+123 95 lineto
+stroke
+newpath
+157 300 moveto
+157 318 lineto
+stroke
+newpath
+157 278 moveto
+157 299 lineto
+stroke
+newpath
+157 254 moveto
+157 277 lineto
+stroke
+newpath
+157 230 moveto
+157 253 lineto
+stroke
+newpath
+157 179 moveto
+157 229 lineto
+stroke
+newpath
+157 152 moveto
+157 178 lineto
+stroke
+newpath
+157 126 moveto
+157 151 lineto
+stroke
+newpath
+157 101 moveto
+157 125 lineto
+stroke
+(4) 65 134 73 wirelabel
+134 76 sizesymbol
+newpath
+88 76 moveto
+157 76 lineto
+157 100 lineto
+stroke
+(3) 128 96 0 pstap
+(2) 162 126 0 pstap
+236 99 0 psand
+236 276 0 psxor
+193 101 0 psbuf
+197 179 0 psbuf
+(AgB) /L /L 612 111 pjshow
+604 107 0 psout
+(B) /R /L 78 80 pjshow
+86 76 0 psin
+(3) 162 230 0 pstap
+(2) 162 254 0 pstap
+(3) 128 224 0 pstap
+306 180 0 psand
+(0) 128 296 0 pstap
+236 177 0 psand
+(0) 128 174 0 pstap
+236 124 0 psand
+407 186 0 psand
+(2) 128 121 0 pstap
+237 225 0 psxor
+(2) 128 246 0 pstap
+(0) 162 300 0 pstap
+(1) 162 152 0 pstap
+331 185 0 joint
+(AeqB) /L /L 619 279 pjshow
+611 275 0 psout
+527 275 0 psand
+(1) 128 272 0 pstap
+306 153 0 psand
+273 182 0 joint
+471 107 0 psor
+(3) 162 101 0 pstap
+235 299 0 psxor
+425 279 0 psand
+331 251 0 joint
+236 150 0 psand
+194 152 0 psbuf
+273 155 0 joint
+357 156 0 psand
+422 104 0 psor
+373 101 0 psor
+(A) /R /L 78 50 pjshow
+86 46 0 psin
+306 127 0 psand
+192 126 0 psbuf
+358 183 0 psand
+384 276 0 joint
+479 277 0 psand
+237 251 0 psxor
+(1) 162 278 0 pstap
+(1) 128 147 0 pstap
+(0) 162 179 0 pstap
+273 225 0 joint
+grestore
+EM
+EP
+%%Tailer

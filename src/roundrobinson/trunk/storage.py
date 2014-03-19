@@ -101,11 +101,11 @@ class MultiresolutionStorage(object):
 
 
     
-    def save_csv(self,dname):
+    def save_dir_csv(self,dname):
         """
         Write a mrd values into a filesystem. Directory `dname` must be created.
 
-        Sobre un load_csv: NO ES POSSIBLE RECUPERAR SI NO TENIM ELS AGREGADORS, guardem els buffers, k, etc.
+        Sobre un load_dir_csv: NO ES POSSIBLE RECUPERAR SI NO TENIM ELS AGREGADORS, guardem els buffers, k, etc.
 
         :param dname: Directory name
         :type dname: string
@@ -113,7 +113,7 @@ class MultiresolutionStorage(object):
         >>> m = _doctest_mrd()
         >>> ms = MultiresolutionStorage(m)
         >>> d = _doctest_dir()
-        >>> ms.save_csv(d)
+        >>> ms.save_dir_csv(d)
         >>> from pytsms import TimeSeries
         >>> s =  TimeSeries()
         >>> f1 = os.path.join(d,'R5mean.csv')
@@ -134,13 +134,25 @@ class MultiresolutionStorage(object):
         
         
         for r in self._mts:
-            fname='R{delta}{f}.csv'.format(delta=r.B.delta,f=r.B.f.__name__)
+            fname='R{delta}{f}.csv'.format(delta=r.B.delta,f=r.fname())
             fpath = os.path.join(dname,fname)
             tss = r.D.s.storage().save_csv(fpath)
 
 
 
-            
+    def save_csv(self,fname):      
+        """
+        Emmagatzema tot en un fitxer amb el format::
+
+         10/mean 10 2.0
+         5/mean 10 3.0
+         5/mean 5 1.5
+        """
+        pass
+
+        
+
+
 
 
 
