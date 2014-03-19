@@ -304,3 +304,14 @@ class MultiresolutionSeries(set):
         True
         """
         return MultiresolutionStorage(self)
+
+
+    def empty(self):
+        """
+        Retorna un nou esquema multiresolució amb els buffers i els discs buits
+        """
+        mts = type(self)()
+        for r in self:
+            mts.addResolution(r.delta(),r.k(),r.f(),r.tau())
+        return mts
+

@@ -311,3 +311,12 @@ class ResolutionSubseries(object):
     def sd(self):
         return self.D.s
 
+    def fname(self):
+        f = self.f()
+
+        try:
+            name = f.__name__
+        except AttributeError:
+            name = f
+
+        return name

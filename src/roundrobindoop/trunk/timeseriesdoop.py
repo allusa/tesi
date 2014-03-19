@@ -73,17 +73,35 @@ class TsDoop(object):
             raise Exception('File {0} already exists'.format(original))
         self._s.storage().save_csv(original)
 
-    def load_output(self):
-        output = self.name_output()     
-        if os.path.exists(output):
-            raise Exception('File {0} already exists'.format(output))
 
+    def _parse_output_line(self,l):
+        disc,ts = l.split('\t')
+        delta,f = disc.split('/')
+        t,v = ts.split()
+        return (int(delta),f,int(t),float(v))
+
+
+    def load_output(self):
         """
+        Output té el format::
+
             10/mean	10 2.0
             5/mean	10 3.0
             5/mean	5 1.5
-            """
+        """
+        output = self.name_output()     
+        mts = self._mts.empty()
 
+        with open(output,'r') as o:
+            for l in o:
+                delta,f,t,v = self._parse_output_line(l)
+
+                for r in mts:
+                    if r.delta() == delta and r.fname() == f:
+                        r.sd().add(Measure(t,v))
+
+            o.close()     
+        return mts
 
 
 
@@ -112,7 +130,12 @@ class TsDoopPipe(TsDoop):
     >>> m.addResolution(10,4,mean)
     >>>
     >>> sdoop = TsDoopPipe(s,m)
-    >>> sdoop.execute()
+    >>> nm = sdoop.execute()
+    >>> r1,r2 = sorted(nm)
+    >>> len(r1.sd())
+    2
+    >>> len(r2.sd())
+    1
     """
 
     pipeorder = "cat {original} | {rrdoop} -map -schema {schema} | sort -k1,1 | {rrdoop} -reduce -schema {schema} >> {output}"
@@ -139,8 +162,12 @@ class TsDoopPipe(TsDoop):
         if self._debug:
             print r
 
+        mts = self.load_output()
+
         self.rm_temporals()
 
+        return mts
+        
 
 
 class TimeSeriesDoop(object):
@@ -148,8 +175,6 @@ class TimeSeriesDoop(object):
 
     :param ddoop: Directory in dfs where time series will be stored 
 
-    >>> from pytsms import TimeSeries, Measure
-    >>> from multiresolution import MultiresolutionSeries
     >>> s = TimeSeries([Measure(1,2),Measure(2,1),Measure(6,3)])
     >>> m = MultiresolutionSeries()
     >>> def mean(s): pass
