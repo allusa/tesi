@@ -32,13 +32,20 @@ class MultiDoop(MultiresolutionSeries):
 
     >>>
     >>> def mitjana(s,i):
-    ...     sp = s.interval_open_left(i[0],i[1])
-    ...     v = sp.aggregate(lambda mi,m: Measure(mi.t+1, mi.v+m.v), Measure(0,0))
-    ...     return Measure(i[1], v.v / float(v.t) )
+    ...     v = 0
+    ...     for m in s:
+    ...         v += m[1]         
+    ...     return v / float(len(s))
+    >>> 
+    >>> def maxim(s,i):
+    ...     v = float("-inf")
+    ...     for m in s:
+    ...         v = max(v,m[1])         
+    ...     return v
     >>> 
     >>> M = MultiDoop()
     >>> M.addResolution(5,2,mitjana)
-    >>> M.addResolution(10,4,mitjana)
+    >>> M.addResolution(10,4,maxim)
     >>>
     >>> m1 = Measure(1,10)
     >>> m2 = Measure(2,10)
@@ -55,29 +62,34 @@ class MultiDoop(MultiresolutionSeries):
     >>> M.consolidate_pipe()
     >>> R0,R1 = sorted(M)
     >>> len(R0.D.s)
-    2
+    1
     >>> len(R1.D.s)
     1
     >>> M.add(m4)
     >>> M.consolidate_pipe()
     >>> R0,R1 = sorted(M)
     >>> len(R0.D.s)
-    3
-    >>> len(R1.D.s)
     2
+    >>> len(R1.D.s)
+    1
     >>> M.add(m5)
     >>> M.consolidate_pipe()
     >>> R0,R1 = sorted(M)
     >>> len(R0.D.s)
-    4
+    3
     >>> len(R1.D.s)
     2
+    >>>
+    >>> R0.D.s == TimeSeries([Measure(5,20),Measure(10,50),Measure(15,10)])
+    True
+    >>> R1.D.s == TimeSeries([Measure(10,50),Measure(20,10)])
+    True
     """
 
     def __init__(self):
         super(MultiDoop,self).__init__
         self._s = TimeSeries()
-        
+   
 
     def add(self,m):
         """
@@ -107,3 +119,36 @@ class MultiDoop(MultiresolutionSeries):
 
     def consolidate(self):
         pass
+
+
+
+    def empty(self):
+        """
+        Retorna un nou esquema multiresolució amb els buffers i els discs buits
+        """
+        mts = type(self)()
+        for r in self:
+            mts.addResolution(r.delta(),r.k(),r.f(),r.tau())
+        
+        mts._s = self._s
+
+        return mts
+
+
+
+class MultiDoopFile(MultiDoop):
+    """
+    Especialitació del MultiDoop on es llegeix directament d'un fitxer
+    """
+
+    def __init__(self,inputfile=None):
+        super(MultiDoop,self).__init__()
+        self._s = inputfile
+
+
+    def add(self,m):
+        """
+        Operació d'afegir una nova mesura a la base de dades
+        """
+        pass
+

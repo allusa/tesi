@@ -30,9 +30,8 @@ class TsDoop(object):
     """
     >>> s = TimeSeries([Measure(1,2),Measure(2,1),Measure(6,3)])
     >>> m = MultiresolutionSeries()
-    >>> def mean(s): pass
-    >>> m.addResolution(5,2,mean) 
-    >>> m.addResolution(10,4,mean)
+    >>> m.addResolution(5,2,'mean') 
+    >>> m.addResolution(10,4,'mean')
     >>>
     >>> sdoop = TsDoop(s,m)
     """
@@ -71,14 +70,33 @@ class TsDoop(object):
         original = self.name_original()     
         if os.path.exists(original):
             raise Exception('File {0} already exists'.format(original))
-        self._s.storage().save_csv(original)
+
+        if isinstance(self._s,str):
+            #is directly a file
+            if not os.path.exists(self._s):
+                raise Exception('File {0} directly declared but do not exists'.format(self._s))     
+            os.symlink(self._s,original)
+        else:
+            self._s.storage().save_csv(original)
 
 
     def _parse_output_line(self,l):
+        """
+        >>> t = TsDoop(None,None)
+        >>> t._parse_output_line("10/mean\\t10 2.0")
+        (10, 'mean', 10, 2.0)
+        >>> t._parse_output_line("10/mean\\t10 2.0 3.0 4.0")  
+        (10, 'mean', 10, [2.0, 3.0, 4.0])
+        """
         disc,ts = l.split('\t')
         delta,f = disc.split('/')
-        t,v = ts.split()
-        return (int(delta),f,int(t),float(v))
+        tsplit = ts.split()
+        t = int(tsplit[0])
+        v = [ float(e) for e in tsplit[1:] ]
+        if len(v) == 1:
+            v = v[0]
+
+        return (int(delta),f,t,v)
 
 
     def load_output(self):
@@ -88,6 +106,11 @@ class TsDoop(object):
             10/mean	10 2.0
             5/mean	10 3.0
             5/mean	5 1.5
+
+         o el multivaluat::
+
+            300/mitjana     1409120400 2.08 0.0 9.83 0.0 0.76 0.9 8.19 2.16 15.52 nan nan nan nan nan nan nan nan nan
+300/mitjana     1409120700 2.08 nan 9.83 nan 0.76 nan 8.28 2.52 15.7 nan nan nan nan nan nan nan nan nan
         """
         output = self.name_output()     
         mts = self._mts.empty()
@@ -125,9 +148,8 @@ class TsDoopPipe(TsDoop):
 
     >>> s = TimeSeries([Measure(1,2),Measure(2,1),Measure(6,3)])
     >>> m = MultiresolutionSeries()
-    >>> def mean(s): pass
-    >>> m.addResolution(5,2,mean) 
-    >>> m.addResolution(10,4,mean)
+    >>> m.addResolution(5,2,'mean') 
+    >>> m.addResolution(10,4,'mean')
     >>>
     >>> sdoop = TsDoopPipe(s,m)
     >>> nm = sdoop.execute()
@@ -177,9 +199,8 @@ class TimeSeriesDoop(object):
 
     >>> s = TimeSeries([Measure(1,2),Measure(2,1),Measure(6,3)])
     >>> m = MultiresolutionSeries()
-    >>> def mean(s): pass
-    >>> m.addResolution(5,2,mean) #CAL canviar a rrdoop per funcions reals
-    >>> m.addResolution(10,4,mean)
+    >>> m.addResolution(5,2,'mean')
+    >>> m.addResolution(10,4,'mean')
     >>>
     >>> sdoop = TimeSeriesDoop(s,m,'/user/aleix/')
     >>> #sdoop.save_schema_pickle('prova')

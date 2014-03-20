@@ -24,7 +24,8 @@
 \usepackage[
 style=numeric-comp,%style=authoryear
 sortcites=true,
-%backref=true,
+backref=true,
+backend=biber,
  ]{biblatex}
 
 %\ExecuteBibliographyOptions{annotation=true,backref=true,}
@@ -59,55 +60,7 @@ sortcites=true,
 {}}%
 }
 
-%cites bibliogràfiques: números de citacions entre comes
-%cal escapar els accents: \parencite{tal} {é}s
-%http://tex.stackexchange.com/questions/28461/biblatex-tighter-integration-of-textcite-in-the-flow-of-text
-%http://tex.stackexchange.com/questions/19627/biblatex-idiom-for-testing-contents-of-list-field
-%http://tex.stackexchange.com/questions/26401/help-to-develop-a-textcite-command-to-be-used-with-verbose-citation-styles-in-b
-%http://tex.stackexchange.com/questions/28461/biblatex-tighter-integration-of-textcite-in-the-flow-of-text
-%
-% \makeatletter
-% %\DeclareAutoPunctuation{.,;:!?}
-% %per defecte \DeclareRangeChars{~,;-+/}
-% \DeclareRangeChars*{:}
-% %
-% \newcommand{\citacomes}[4]{
-% \blx@addpunct{comma}\space\cite[#1][#2]{#3}%
-% %\blx@imc@ifpunctmark{#4}{\blx@addpunct{comma}\space#4}{#4}%
-% \blx@imc@ifnumerals{#4}{%per separar accents
-% \blx@imc@ifpunctmark{#4}{\blx@addpunct{comma}\space#4}{#4}}%
-% {\blx@addpunct{comma}\space#4}%
-% }
-% %
-% \renewrobustcmd*{\textcite}{\blx@citeargs\cbx@textcite}
-% \newcommand{\cbx@textcite}[4]{%
-% \citeauthor{#3}%
-% \citacomes{#1}{#2}{#3}{#4}%
-% }
 
-% \renewrobustcmd*{\parencite}{\blx@citeargs\cbx@parencite}
-% \newcommand{\cbx@parencite}[4]{%
-% \citacomes{#1}{#2}{#3}{#4}%
-% }
-% %
-% \DeclareCiteCommand{\citeauthor}
-%   {\usebibmacro{cite:init}%
-%     \boolfalse{citetracker}%
-%     \boolfalse{pagetracker}%
-%     \usebibmacro{prenote}}%pre
-%   {\ifciteindex
-%      {\indexnames{labelname}}
-%      {}%
-%      \iffieldequals{namehash}{\cbx@lasthash}%
-%      {}%repetit 
-%      {\ifnumequal{\value{citecount}}{1}{}{\multicitedelim}%
-%        \printnames{labelname}}%
-%      \savefield{namehash}{\cbx@lasthash}%
-% }%post
-%   {}%\multicitedelim}%sep
-%   {\usebibmacro{postnote}}
-% %
-% \makeatother
 %---------- Codi ---------------------------
 %% ús del lstlisting
 %%\begin{lstlisting}[language=C,caption=Plantilla de NagiosGrapher pels missatges,label=NGmis,numbers=left]

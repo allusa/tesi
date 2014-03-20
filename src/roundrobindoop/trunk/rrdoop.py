@@ -17,27 +17,38 @@ import pickle, marshal, types
 
 def default_parser(l):
     """
-    Parses a line of the file in the table format t v and returns a tuple(t,v) where `t` and `v` are int.
+    Parses a line of the file in the table format t v and returns a tuple(t,v) where `t` are int and `v` are float or list of floats.
 
     >>> default_parser("2 10.0")
     (2, 10.0)
     >>> default_parser("2,10.0")
     (2, 10.0)
+    >>> default_parser("2 10.0 15.0 20.0")
+    (2, [10.0, 15.0, 20.0])
+    >>> default_parser("2,10.0,15.0,20.0")
+    (2, [10.0, 15.0, 20.0])
     """
     if ',' in l:
-        t,v = l.split(',')
+        l = l.split(',')
     else:
-        t,v = l.split()
+        l = l.split()
 
-    return (int(t),float(v))
+
+    t = int(l[0])
+    if len(l) == 2:
+        v = float(l[1])
+    else:
+        v = [float(e) for e in l[1:] ]
+
+    return (t,v)
 
 
 
 
 def buff_class(t,delta,tau):
     """
-    Resolves Natural `n` in the equation tau+n*delta <= t and returns
-    tau+(n+1)*delta
+    Resolves Natural `n` in the equation tau+n*delta >= t and returns
+    tau+(n)*delta
 
     :type t: int
     :type tau: int
@@ -46,18 +57,33 @@ def buff_class(t,delta,tau):
     
     >>> buff_class(2,5,0)
     5
+    >>> buff_class(5,5,0)
+    5
     >>> buff_class(6,5,0)
     10
+    >>> buff_class(10,5,0)
+    10
+    >>> buff_class(0,5,0)
+    0
     >>> buff_class(-3,5,0)
     0
+    >>> buff_class(-5,5,0)
+    -5
     >>> buff_class(-6,5,0)
     -5
     """
-    natn = (t - tau) / delta
-    return tau + (natn+1) * delta
+    #natn = math.ceil((t - tau) / float(delta))
+    natn = (tau - t) / delta
+    natn = -natn
+    return tau + natn * delta
 
 
-
+def fname(f):
+    try:
+        name = f.__name__
+    except AttributeError:
+        name = f
+    return name
 
 
 def buffer_measure(m,sch,parser_line=None):
@@ -79,6 +105,9 @@ def buffer_measure(m,sch,parser_line=None):
     >>> buffer_measure("6 10.0",sch) # doctest: +NORMALIZE_WHITESPACE
     5/mean-10\t6 10.0
     10/mean-10\t6 10.0
+    >>> buffer_measure("6 10.0 15.0 20.0",sch) # doctest: +NORMALIZE_WHITESPACE
+    5/mean-10\t6 10.0 15.0 20.0
+    10/mean-10\t6 10.0 15.0 20.0
     """
 
     if parser_line is None:
@@ -88,13 +117,15 @@ def buffer_measure(m,sch,parser_line=None):
     for schema in sch:
         delta,tau,f,k = schema
         t,v = parser_line(m)
+        if isinstance(v,list):
+            v = ' '.join(str(e) for e in v)
     
         bclass = buff_class(t,delta,tau)
         if bclass < tau:
             #descartem t < tau
             continue
 
-        s = "{0}/{1}-{2}\t{3} {4}".format(delta,f.__name__,bclass,t,v)
+        s = "{0}/{1}-{2}\t{3} {4}".format(delta,fname(f),bclass,t,v)
         print s
 
 
@@ -139,13 +170,17 @@ def reduce_line(l):
 
     >>> reduce_line("10/mean-0\\t6 10.0")
     ('10', 'mean', 0, 6, 10.0)
+    >>> reduce_line("10/mean-0\\t6 10.0 15.0 20.0")
+    ('10', 'mean', 0, 6, [10.0, 15.0, 20.0])
     """
     disc,m = l.split('\t')
-    t,v = m.split()
     delta,fn = disc.split('/')
     f,n = fn.split('-')
 
-    return (delta,f,int(n),int(t),float(v))
+    t,v = default_parser(m)
+
+
+    return (delta,f,int(n),t,v)
 
 
 
@@ -155,21 +190,49 @@ def _mean(s):
     if len(s) == 0:
         return 0
 
-    sumv = 0
+    if isinstance(s[0][1],list):
+        grau = len(s[0][1]) 
+    else:
+        grau = 1
+
+    sumv = [0] * grau
+
     for t,v in s:
-        sumv += v
+        if grau == 1:
+            sumv[0] += v
+        else:
+            for i in range(grau):
+                sumv[i] += v[i]
         
-    return sumv / float(len(s))    
+        
+    return ' '.join( str(v/float(len(s))) for v in sumv )
 
 
 
-def aggregate(s,f):
-    # f=mean
-    return _mean(s)
+
+def aggregate(s,f=None):
+    if f is None or isinstance(f,str):
+        return _mean(s)
+    return f(s,None)
 
 
+def extract_aggregators(schema):
+    aggs = []
+    if schema is None:
+        return aggs
+    for r in schema:
+        aggs.append(r[2])
 
-def reduce(f):
+    return aggs
+
+def select_agregator(name,aggs):
+    for f in aggs:
+        if name == fname(f):
+            return f
+    
+
+
+def reduce(f,sch=None):
     """
     >>> f = "10/mean-10\\t2 10.0\\n10/mean-10\\t6 20.0\\n5/mean-5\\t2 10.0\\n5/mean-10\\t6 20.0\\n"
     >>> fsimu = f.split('\\n')
@@ -177,9 +240,20 @@ def reduce(f):
     10/mean\t10 15.0
     5/mean\t5 10.0
     5/mean\t10 20.0
+    >>>
+    >>> f = "10/mean-10\\t2 10.0 15.0 20.0\\n10/mean-10\\t6 20.0 25.0 30.0\\n5/mean-5\\t2 10.0 15.0 20.0\\n5/mean-10\\t6 20.0 25.0 30.0\\n"
+    >>> fsimu = f.split('\\n')
+    >>> reduce(fsimu) # doctest: +NORMALIZE_WHITESPACE
+    10/mean\t10 15.0 20.0 25.0
+    5/mean\t5 10.0 15.0 20.0
+    5/mean\t10 20.0 25.0 30.0
     """
     previous = None
     ts = []
+
+
+    aggs = extract_aggregators(sch)
+
 
     for line in f:
         line = line.rstrip()
@@ -190,7 +264,7 @@ def reduce(f):
                 ts.append((t,v))
             else:
                 if previous is not None:
-                    agg = aggregate(ts,f)
+                    agg = aggregate(ts,select_agregator(f,aggs))
                     pd,pf,pn = previous 
                     print '{delta}/{f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
                 ts = [(t,v)]
@@ -260,6 +334,9 @@ def mrd_schema_at_time_point(t):
 
 
 def despickle_f(f):
+    if isinstance(f,str):
+        return f
+
     name,content = f
     code = marshal.loads(content)
     func = types.FunctionType(code, globals(), name)
@@ -304,7 +381,7 @@ if __name__ == '__main__':
         if sys.argv[1] == '-map':
             buffer_ts(sys.stdin,sch)
         elif sys.argv[1] == '-reduce':
-            reduce(sys.stdin)
+            reduce(sys.stdin,sch)
         elif sys.argv[1] == '-mapdatetime':
             buffer_ts(sys.stdin,sch,pl)
 
