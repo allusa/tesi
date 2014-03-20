@@ -2,77 +2,36 @@
 % document principal
 %--------------------
 % cal compilar amb `pdflatex -shell-escape main.tex`
-% makeglossaries main
 %--------------------
-\documentclass[paper=a4,parskip=half,
-twoside,fontsize=11pt,BCOR12mm,
-%oneside,fontsize=11pt, %%format web
-% twoside,openany,fontsize=10pt,DIV = 10,BCOR12mm, %%format en paper
+\documentclass[paper=a4,fontsize=11pt,parskip=half,
+twoside, BCOR12mm,
+%oneside, %%format web
+% twoside,openany,DIV = 10,BCOR12mm, %%format en paper
 ]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
 %%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
-%\usepackage[T1]{fontenc}
 %------------- capçalera ----------------------
 \input{capçalera.default}
 \bibliography{bibliografia}
-\ExecuteBibliographyOptions{annotation=true,backref=true}
+\ExecuteBibliographyOptions{
+annotation=true,backref=true
 %backref=true, urldate=long, abbreviate=false,%%format web 
+}
 %---------- Mode esborrany --------------------
-%\includeonly{}
-\usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
-\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\color{gray}{esborrany}}}
+%\includeonly{resum}
+%\usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
+%\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\color{gray}{esborrany}}}
 %%\renewcommand{\headrulewidth}{0pt}
 %----------------------------------------------
-%\usetikzlibrary{shapes,arrows,positioning}
-%\usetikzlibrary{calc}
+
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
 \newtheorem{definition}{Definició}
 \def\figureautorefname{figura} %ús: \autoref{}
-\def\tableautorefname{taula} %ús: \autoref{}
-\def\definitionautorefname{definició} %ús: \autoref{}
 \numberwithin{equation}{chapter}
-%SGST-set
-\DeclareMathOperator*{\inst}{\in^t}
-\DeclareMathOperator*{\notinst}{\notin^t}
-\DeclareMathOperator*{\cupt}{\cup^t}
-\DeclareMathOperator*{\dift}{-^t}
-\DeclareMathOperator*{\capt}{\cap^t}
-\DeclareMathOperator*{\where}{where}
-\DeclareMathOperator*{\rename}{rename}
-\DeclareMathOperator*{\as}{as}
-\DeclareMathOperator*{\join}{join}
-\DeclareMathOperator*{\semijoin}{semijoin}
-\DeclareMathOperator*{\map}{mapa}%mapa (map), aplica 
-\DeclareMathOperator*{\agg}{agregat}%agregat (aggregate)
-\DeclareMathOperator*{\fold}{plec}%plec (fold)
-%SGST-seq
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
-
-
-
-\newcommand{\R}{\mathbb{R}} % the set of real numbers
-\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
-
-\usepackage{longtable}
-\usepackage{multirow}
-\usepackage{pgfplots}
-\usetikzlibrary{arrows}
-
-\usepackage{tikz-timing}[2009/05/15]
-\usepackage{imatges/tikz-uml}
-
-
-
-\usetikzlibrary{circuits.logic}
-\usetikzlibrary{circuits.logic.IEC}
-
-
-
-
-
-
+%% The \operatorname and \operatorname* commands[1] display a custom operators, the * version sets the underscored option underneath like the \lim operator
 %-------------- dades --------------------------
 \hypersetup{
     pdftitle={Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals},
@@ -82,7 +41,6 @@ twoside,fontsize=11pt,BCOR12mm,
     pdfkeywords={sèries temporals; model de dades; sistemes de bases de dades; sistemes de monitoratge},
     pdflang={ca},
 }
-
 \title{Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals}
 \author{Aleix Llusà Serra}
 %----------------------------------------------
@@ -104,7 +62,7 @@ twoside,fontsize=11pt,BCOR12mm,
 
 %------------- Índexs ------------
 %\listoftodos
-\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents{}
+\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents
 %\addtocontents{toc}{\protect\enlargethispage{1cm}}
 %\listoffigures
 %\listoftables
@@ -117,13 +75,14 @@ twoside,fontsize=11pt,BCOR12mm,
 %\frontmatter
 %\mainmatter
 
-\include{implementacio}
-
-\include{python}
-
-\include{vhdl}
+\include{mostra}
 
 
+
+%------- Annexos ------
+%\appendix
+
+%\include{}
 
 
 %------- Bibliografia ------
@@ -138,11 +97,10 @@ twoside,fontsize=11pt,BCOR12mm,
 \end{document}
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
 % Memòria Tesi Doctoral. Model d'un sistema de gestió multiresolució per a sèries temporals.
 %
-% Copyright (C) 2011-2013 Aleix Llusà Serra.
+% Copyright (C) 2011-2014 Aleix Llusà Serra.
 % 
 % This LaTeX document is free software: you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
@@ -169,4 +127,5 @@ twoside,fontsize=11pt,BCOR12mm,
 % 
 % El codi font LaTeX del document es troba a 
 % <http://escriny.epsem.upc.edu/projects/rrb/>
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+

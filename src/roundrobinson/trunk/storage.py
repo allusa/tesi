@@ -61,7 +61,14 @@ class MultiresolutionStorage(object):
         """
         Pickle on només hi ha llistes, tuples i strings i per tant no depèn dels objectes
         """
-        schema = [(r.delta(),r.tau(),(r.f().__name__,marshal.dumps(r.f().func_code)),r.k()) for r in self._mts ]
+        
+        def _agg(r):
+            if isinstance(r.f(),str):
+                return r.fname()
+            else:
+                return (r.fname(),marshal.dumps(r.f().func_code))
+
+        schema = [(r.delta(),r.tau(),_agg(r),r.k()) for r in self._mts ]
 
         with open(fname,'w') as f:
             pickle.dump(schema,f)

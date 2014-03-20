@@ -96,11 +96,16 @@ class TimeSeriesStorage(object):
             for row in csvreader:
                 if len(row) == 2:
                     t,v = row
-                    if ttype is not None:
-                        t = ttype(t)
-                    if vtype is not None:
-                        v = vtype(v)
-                    ts.add(mtype(t,v))
+                else:
+                    t = row[0]
+                    v = row[1:]
+                    
+                if ttype is not None:
+                    t = ttype(t)
+                if vtype is not None:
+                    v = vtype(v)
+                ts.add(mtype(t,v))     
+               
 
             f.close()
 
