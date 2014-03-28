@@ -37,6 +37,12 @@ de manera que la feina de treure les subsèries la fa el mapa sobre $S_i$ mentre
 \subsection{Discos enllaçats}
 
 
+Aquesta pot ser útil per al filó distribuït. 
+
+* Si quan s'entra una mesura aquesta ha d'anar a totes les subsèries resolució, aleshores el filó distribuït no té sentit perquè igualment han d'arribar les mesures noves al node central.
+
+* Però si hi ha discos enllaçats aleshores només cal anar transferint la subsèrie consolidada cap amunt i llavors un cop es llança una consulta aquesta decideix si té prou resolució al node on és o ha d'anar a buscar-ne d'un altre. Aquesta decissió de la consulta pot fer-se a mà, consultes amb SerieDisc()  indiquen quin disc s'ha d'anar a buscar, per tant l'usuari tria quin vol i sap si s'haurà d'anar a buscar a fora. 
+
 
 \paragraph{Exemple 2}
 
