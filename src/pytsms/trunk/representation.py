@@ -90,6 +90,10 @@ class Representation(object):
         pyplot.plot(x,y,'o-')
         pyplot.show()
 
+    def _default_plot_format(self):
+        
+        pyplot.xticks(rotation=15)
+        pyplot.grid(True)
 
 
 
@@ -189,7 +193,7 @@ class Zohe(Representation):
         return s[t::'c'].inf().v
 
 
-    def plot(self,l=None,g=None,step=None):
+    def plot(self,l=None,g=None,step=None,formatx=None,legend=None):
         """
         Operador de gràfic ZOHE. Grafica el graf ZOHE de la sèrie temporal.
 
@@ -198,24 +202,45 @@ class Zohe(Representation):
         :param g: Instant de temps major
         :type g: :data:`timeseries.Time`
         :param step: Duració de temps no té sentit en aquest cas
+        :param formatx: Format de l'eix x
+        :type formatx: function
         :type step: :data:`timeseries.Time`
         :returns: pyplot
 
         >>> from timeseries import TimeSeries
+        >>> import datetime
         >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
         >>> s.set_rpr(Zohe)
         >>> #s.rpr().plot()
+        >>>
+        >>> s = TimeSeries([Measure(5,[3,4]),Measure(1,[1,2]),Measure(2,[2,3])])
+        >>> s.set_rpr(Zohe)
+        >>> def timestamp(t): return datetime.datetime.fromtimestamp(t)
+        >>> #s.rpr().plot(formatx=timestamp,legend=['primer','segon'])
         """
         s = self.get_ts()
-        x = [] #x = [float("-inf")]
+        x = [] #x = [float("-inf")] #punt teoric
         y = [] #y = [s.inf().v]
         for m in sorted(s):
-            x.append(m.t)
+            if formatx is not None:
+                t = formatx(m.t)
+            else:
+                t = m.t
+            x.append(t)
             y.append(m.v)
 
+        #darrer punt teoric a (infinit,0)
         #x.append(float("inf"))
         #y.append(0)
 
+
         
+        self._default_plot_format()
+
         pyplot.plot(x,y,'o-',drawstyle='steps-pre')
+
+        if legend is not None:
+            pyplot.legend(legend)
+
         pyplot.show()
+

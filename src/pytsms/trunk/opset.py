@@ -343,13 +343,13 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
 
     def projection(self,A):
         """
-        Operador de projecció. Conjunt resultant de seleccionar
-        els atributs (columnes) `A` de la sèrie temporal.
+        Operador de projecció. Conjunt resultant de seleccionar els
+        atributs (columnes) `A` de la sèrie temporal.  
 
         :param A: exemple ['t','v']
         :type A: Iterable of attribute names
         :returns: `s{A}`, projecció de s en A
-        :rtype: set
+        :rtype: set 
 
         >>> s1 = TimeSeriesSetOp([Measure(1,1),Measure(2,1)])
         >>> TimeSeriesSetOp([]).projection([]) == set()
@@ -362,6 +362,13 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
         True
         >>> s1.projection(['t','v']) == set([(1,1),(2,1)])
         True
+        >>> s2 = TimeSeriesSetOp([Measure(1,[1,2]),Measure(2,[1,2])])
+        >>> s2.projection(['t','v0'])  == set([(1,1),(2,1)])
+        True
+        >>> s2.projection(['t','v1'])  == set([(1,2),(2,2)])
+        True
+        >>> s2.projection(['t','v0','v1']) == set([(1,1,2),(2,1,2)])
+        True
         """
         s = set()       
         for m in self:
@@ -371,6 +378,9 @@ class TimeSeriesSetOpRelacional(TimeSeriesStructure):
                     row.append(m.t)
                 if a == 'v':
                     row.append(m.v)
+                elif a.startswith('v'):
+                    i = int(a[1:])
+                    row.append(m.v[i])
 
             if len(row) > 1:
                 s.add(tuple(row))

@@ -105,6 +105,13 @@ class MultiresolutionSeries(set):
         """
         set.add(self, ResolutionSubseries(delta,k,f,tau) )
 
+    def getResolution(self,delta,f):
+        """
+        Get resolution by delta, f
+        """
+        for r in self:
+            if r.delta() == delta and r.f() == f:
+                return r
 
     def add(self,m):
         """
