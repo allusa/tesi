@@ -2,6 +2,9 @@
 VAR timeseries BASE RELATION
     { t RATIONAL, v RATIONAL }  KEY { t } ;
 
+VAR timeseriesdouble BASE RELATION
+    { t1 RATIONAL, v1 RATIONAL, t2 RATIONAL, v2 RATIONAL }  KEY { t1, t2 } ;
+
 
 
 OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
@@ -12,6 +15,17 @@ OPERATOR ts.v(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
 return v FROM TUPLE FROM m;
 END OPERATOR;
 
+
+//MULTIVALUED to CANONICAL
+//OPERATOR ts.canonical(s1 RELATION {}) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+//return extend s1 add ( WITH t as t1: (s1 where t=t1) {ALL BUT t} as v) {t,v};
+//END OPERATOR;
+
+//WITH RELATION {
+//TUPLE { t 1.0, v1 4.0, v2 5.0 },
+//TUPLE { t 2.0, v1 5.0, v2 5.0 }
+// } AS s1:
+// extend s1 add ( WITH t as t1: (s1 where t=t1) {ALL BUT t} as v) {t,v}
 
 
 
@@ -47,12 +61,16 @@ END OPERATOR;
 
 //Perinença i inclusió
 
-//per fer
-//OPERATOR ts.in( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
-//return ts.inf(ts.interval(s1,ts.t(m),1.0/0.0));
-//END OPERATOR;
+OPERATOR ts.in( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+return (TUPLE from m) IN s1;
+END OPERATOR;
 
-//OPERATOR ts.in.t( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+
+OPERATOR ts.in.t( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
+return (TUPLE from m {t}) IN s1 {t};
+END OPERATOR;
+ 
+
 
 //inclusio
 //inclusio temporal
@@ -99,84 +117,51 @@ END OPERATOR;
 
 //Intersecció
 OPERATOR ts.intersection(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 MINUS (s1 MINUS s2);
+return ts.minus(s1, ts.minus(s1,s2));
 END OPERATOR;
 
 OPERATOR ts.intersection.t(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 MINUS ts.minus.t(s1,s2);
+return ts.minus.t(s1, ts.minus.t(s1,s2));
 END OPERATOR;
 
 //Diferència simètrica
+OPERATOR ts.xor(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union(ts.minus(s1, s2), ts.minus(s1, s2));
+END OPERATOR;
 
-
-
-
-
-
-
-
-OPERATOR ts.intersect(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 JOIN (s1 {t} INTERSECT s2 {t});
+OPERATOR ts.xor.t(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.union.t(ts.minus.t(s1, s2), ts.minus.t(s1, s2));
 END OPERATOR;
 
 
-OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+//projecció
+// s {t}
+// s {t,v}
+
+//selecció
+// s where t=2.0
+// s where v>4.0
+
+//reanomena
+// s rename (t as t1, v as v1)
+
+
+//Producte i junció
+OPERATOR ts.product(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseriesdouble);
+return (s1 RENAME (t AS t1, v AS v1)) JOIN (s2 RENAME (t AS t2, v AS v2));
 END OPERATOR;
 
- 
 
-
-
-
-OPERATOR ts.interval(s1 SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 WHERE t>l AND t<=h;
-END OPERATOR;
-
-OPERATOR ts.interval.ni(s1 SAME_TYPE_AS  (timeseries), h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 WHERE t<h;
-END OPERATOR;
-
-
-
-OPERATOR ts.next( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.inf(ts.interval(s1,ts.t(m),1.0/0.0));
-END OPERATOR;
-
-OPERATOR ts.prev( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.sup(ts.interval.ni(s1,ts.t(m)));
+OPERATOR ts.join(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return (s1 RENAME (v AS v1) s2) JOIN (s2 RENAME (v AS v2)) ;
 END OPERATOR;
 
 
 
 
+//Computacionals
 
-
-
-
-//Temporals
-
-OPERATOR ts.temporal.in(m SAME_TYPE_AS  (timeseries), s SAME_TYPE_AS  (timeseries)) RETURNS BOOLEAN;
-return (TUPLE FROM m {t}) IN (s {t});
-END OPERATOR;
-
-
-
-OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-BEGIN;
-VAR x RATIONAL init(0.0);
-VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
-x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
-sp := RELATION {
-TUPLE {t h, v x}
-};
-return ts.union(ts.interval(s,l,h),sp);
-END;
-END OPERATOR;
-
-
-
-
+//map equivalent a: EXTEND s ADD ( <texpr> AS tp, <vexpr> as vp ) {tp,vp} RENAME (tp AS t, vp AS v)
 
 //Per a fer l'execute es necessiten variables globals
 VAR ts.map.sp BASE SAME_TYPE_AS ( timeseries) KEY { t };
@@ -194,7 +179,7 @@ END OPERATOR;
 
 
 
-//especials per a fer fold
+//especials per a fer fold 
 //com es deu declararar una relacio de tipus RELATION {} i que quadri amb totes?
 
 VAR ts.map.smi BASE RELATION { t RATIONAL, v RATIONAL , ti RATIONAL, vi RATIONAL}  KEY { t } ;
@@ -234,6 +219,77 @@ END OPERATOR;
 OPERATOR ts.mapfold(s SAME_TYPE_AS  (timeseries), si SAME_TYPE_AS  (timeseries), texpr CHARACTER, vexpr CHARACTER ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 return ts.fold(s,si,texpr,vexpr)
 END OPERATOR;
+
+
+
+
+
+//------Seqüències--------
+
+
+OPERATOR ts.interval(s1 SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 WHERE t>l AND t<=h;
+END OPERATOR;
+
+OPERATOR ts.interval.closed(s1 SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 WHERE t>=l AND t<=h;
+END OPERATOR;
+
+OPERATOR ts.interval.left(s1 SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 WHERE t>l AND t<=h;
+END OPERATOR;
+
+
+OPERATOR ts.interval.ni(s1 SAME_TYPE_AS  (timeseries), h RATIONAL) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return s1 WHERE t<h;
+END OPERATOR;
+
+
+
+OPERATOR ts.next( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.inf(ts.interval(s1,ts.t(m),1.0/0.0));
+END OPERATOR;
+
+OPERATOR ts.prev( m SAME_TYPE_AS  (timeseries), s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+return ts.sup(ts.interval.ni(s1,ts.t(m)));
+END OPERATOR;
+
+
+
+
+
+
+
+
+//Temporals
+
+
+OPERATOR ts.interval.t.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+BEGIN;
+VAR x RATIONAL init(0.0);
+VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+x := ts.v(ts.inf(ts.interval.closed(s,h,1.0/0.0)));
+sp := RELATION {
+TUPLE {t h, v x}
+};
+return ts.union(ts.interval.left(s,l,h),sp);
+END;
+END OPERATOR;
+
+
+//OPERATOR ts.select.t(s SAME_TYPE_AS  (timeseries), tt RELATION {t RATIONAL}, r OPERATOR ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+//BEGIN:
+//VAR si PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+//sp := RELATION {
+//};
+//return ts.fold(s, si, texpr CHARACTER, vexpr CHARACTER );
+//END;
+//END OPERATOR;
+
+
+
+
+
 
 
 

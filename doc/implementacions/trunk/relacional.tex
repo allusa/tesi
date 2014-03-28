@@ -23,6 +23,34 @@ END OPERATOR;
 
 
 
+
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 }
+ } AS ts1: 
+ts.t(ts1)
+
+
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 }
+ } AS ts1: 
+ts.v(ts1)
+
+
+\subsection{Pertinença i inclusió}
+
+
+WITH RELATION {
+TUPLE { t 2.0, v 3.0 }
+ } AS m,
+RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS ts: 
+ts.in(m,ts)
+
+
 \subsection{Màxim i suprem}
 
 Tutorial D:
@@ -101,6 +129,20 @@ TUPLE { t 10.0, v 1.0 }
 ts.union(ts1,ts2)
 \end{verbatim}
 
+
+
+\subsection{Producte}
+
+WITH RELATION {
+TUPLE { t 1.0, v 4.0 }
+ } AS s1,
+RELATION {
+TUPLE { t 2.0, v 3.0 },
+TUPLE { t 5.0, v 3.0 },
+TUPLE { t 6.0, v 5.0 },
+TUPLE { t 10.0, v 1.0 }
+ } AS s2: 
+ts.product(s1,s2)
 
 
 \subsection{Unió exclusiva}
