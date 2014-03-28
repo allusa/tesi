@@ -63,7 +63,11 @@ class TimeSeriesStorage(object):
         with open(fname,'w') as f:
             csvwriter = csv.writer(f)
             for m in self._ts:
-                csvwriter.writerow([m.t,m.v])
+                if isinstance(m.v, list):
+                    cv = [m.t] + m.v
+                else:
+                    cv = [m.t,m.v]
+                csvwriter.writerow(cv)
             f.close()
 
     def load_csv(self,fname,ttype=None,vtype=None,mtype=Measure):
@@ -84,6 +88,17 @@ class TimeSeriesStorage(object):
         >>> f = _doctest_file()
         >>> ts.save_csv(f)
         >>> ns = ts.load_csv(f,int,int)
+        >>> s == ns
+        True
+        >>> _doctest_file_rm(f)
+        True
+        >>> 
+        >>> s = TimeSeries([Measure(1,[2,3]), Measure(3,[4,5])])
+        >>> ts = TimeSeriesStorage(s)
+        >>> f = _doctest_file()
+        >>> ts.save_csv(f)
+        >>> def strlist2int(l): return [int(e) for e in l]
+        >>> ns = ts.load_csv(f,int,strlist2int)
         >>> s == ns
         True
         >>> _doctest_file_rm(f)

@@ -36,9 +36,9 @@ consulta, etc.
 
 \section{Pytsms}
 
-La biblioteca \emph{Pytsms} implementa un SGST de referència. Per tant
-els objectes principals són les mesures, les sèries temporals i les
-representacions de les sèries temporals. 
+La biblioteca \emph{Pytsms} implementa un SGST de referència. Així
+doncs, seguint el model, els objectes principals són les mesures, les
+sèries temporals i les representacions de les sèries temporals.
 
 
 
@@ -63,6 +63,9 @@ representacions de les sèries temporals.
   \umlreal[geometry=|-|]{SetNoTemporal}{OpSet}
   \umlreal[geometry=|-|]{SetTemporal}{OpSet}
   \umlreal[geometry=|-|]{SetRelacional}{OpSet}
+  \umlclass[x=-6,y=-6] {Set}{}{}
+  \umlinherit{Structure}{Set}
+
 
   % Measure
   \umlclass[x=-4] {Measure}{}{}
@@ -133,6 +136,37 @@ La representació és abstracta, sempre ha de ser una de concreta? I la discreta
 
 \section{RoundRobinson}
 
+\begin{tikzpicture}
+
+  %MultiTimeseries
+  \umlclass[x=0,y=0] {MultiresolutionSeries}{}{}  
+  \umlclass[x=4,y=0] {Set}{}{}
+  \umlinherit{MultiresolutionSeries}{Set}
+  %Components 
+  \umlclass[x=0,y=-3] {Resolution}{}{}
+  \umluniaggreg  {MultiresolutionSeries}{Resolution}
+  %SubComponents 
+  \umlclass[x=-1.2,y=-6] {Buffer}{}{}
+  \umlclass[x=1.2,y=-6] {Disc}{}{}
+  \umlclass[x=-3,y=-9] {Aggregators}{}{}
+  \umlunicompo[mult=1]  {Resolution}{Buffer}
+  \umlunicompo[mult=1]  {Resolution}{Disc}
+  \umluniassoc[mult=1]  {Buffer}{Aggregators}
+
+  %TimeSeries
+  \begin{umlpackage}[x=0,y=-9]{pyTsms}
+    \umlclass{TimeSeries}{}{}  
+  \end{umlpackage}
+  \umluniassoc[mult=1]  {Buffer}{TimeSeries}
+  \umluniassoc[mult=1]  {Disc}{TimeSeries}
+
+  %Associacions
+  \umlclass[x=5,y=2] {Storage}{}{}
+  \umluniassoc {Storage}{MultiresolutionSeries}
+  \umlclass[x=2,y=2] {Plot}{}{}
+  \umluniassoc {Plot}{MultiresolutionSeries}
+
+\end{tikzpicture}
 
 
 

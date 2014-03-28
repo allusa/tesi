@@ -111,6 +111,46 @@ class Measure(object):
         """
         return not self == other
 
+
+    def __len__(self):
+        """
+        >>> len(Measure(1,2))
+        2
+        """
+        return 2
+
+    def __getitem__(self,key):
+        """
+        >>> m = Measure(1,2)
+        >>> m[0]
+        1
+        >>> m[1]
+        2
+        """
+        if key == 0:
+            return self.t
+        if key == 1:
+            return self.v
+        raise KeyError()
+
+
+    def __iter__(self):
+        """
+        >>> m = Measure(1,2)
+        >>> for v in m: 
+        ...     print v
+        1
+        2
+        >>> t,v = m
+        >>> t
+        1
+        >>> v
+        2
+        """
+        return MeasureIterable(self)
+   
+
+
     def __hash__(self):
         """
         Retorna el hash d'una mesura, necessari per poder pertànyer a objectes colleccions com per exemple els sets
@@ -270,6 +310,20 @@ class Measure(object):
             raise ValueError('Incorrect value for parameter un={0}'.format(un))
 
 
+
+class MeasureIterable(object):
+    def __init__(self,m):
+        self.i = -1
+        self._m = m
+
+    def next(self):
+        """
+        Iterable
+        """
+        self.i += 1
+        if self.i >= len(self._m):
+            raise StopIteration
+        return self._m[self.i]
 
 
 
