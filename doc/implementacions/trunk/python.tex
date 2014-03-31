@@ -4,14 +4,16 @@
 
 
 La implementació de referència dels models de SGST i SGSTM s'ha
-realitzat amb Python. L'objectiu d'aquesta implementació de referència és mantenir la fidelitat al model per tal de poder experimentar amb el model amb tota la seva potència matemàtica. 
+realitzat amb Python \todo{referència}. L'objectiu d'aquesta
+implementació de referència és mantenir la fidelitat al model per tal
+de poder experimentar-hi amb tota la potència matemàtica .
 
-En la implementació cal afegir alguns operadors que en el model no
-feien falta com perquè ja són propis de l'àlgebra de conjunts. Els
-operadors principals que s'han d'afegir són els relacionats amb la
-creació de conjunts, els quals en els SGBD es coneixen com a
-\emph{llenguatge de definició de dades} (DDL, de l'anglès \emph{data
-  definition language}).
+En la implementació s'han afegit alguns operadors que en el model ja
+estaven definits perquè són propis de l'àlgebra de conjunts. Alguns
+dels operadors principals que s'han d'afegir són els relacionats amb
+la notació de creació de conjunts, els quals en els SGBD es coneixen
+com a \emph{llenguatge de definició de dades} (DDL, de l'anglès
+\emph{data definition language}). 
 
 
 Implementem els dos models de SGST i SGSTM com a dues biblioteques
@@ -21,8 +23,10 @@ diferents: \emph{Pytsms} i \emph{RoundRobinson} respectivament. La
 als SGST.
 
 
-Utilitzem orientació a objectes. Ens permet fer explicita la relació entre la implementació i el model.
+Utilitzem orientació a objectes. Ens permet fer explicita la relació
+entre la implementació i el model. \todo{més explicat}
 
+Utilitzem diagrames UML per a definir l'estructura de classes. \todo{més explicat}
 
 
 Implementem la part essencial, és a dir l'àlgebra definida en els
@@ -38,10 +42,49 @@ consulta, etc.
 
 La biblioteca \emph{Pytsms} implementa un SGST de referència. Així
 doncs, seguint el model, els objectes principals són les mesures, les
-sèries temporals i les representacions de les sèries temporals.
+sèries temporals i les representacions de les sèries temporals. Tots
+tres s'implementen respectivament com a classes \emph{Measure},
+\emph{TimeSeries} i \emph{Representation}.
 
 
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
 
+  %Timeseries
+  \umlclass[x=0,y=0] {TimeSeries}{}{}  
+
+  % Measure
+  \umlclass[x=-4] {Measure}{}{}
+  \umluniaggreg[mult=0..*]  {TimeSeries}{Measure}
+  \umlclass[x=-5.2,y=-2] {MFloat}{}{}
+  \umlclass[x=-2.8,y=-2] {MString}{}{}
+  \umlinherit {MFloat}{Measure}
+  \umlinherit {MString}{Measure}
+
+  %Repr
+  \umlclass[x=4,type=abstract] {Representation}{}{}
+  \umlassoc[mult1=1,mult2=1]  {TimeSeries}{Representation}
+  \umlclass[x=3,y=-2] {Zohe}{}{}
+  \umlclass[x=5,y=-2] {Discret}{}{}
+  \umlinherit {Zohe}{Representation}
+  \umlinherit {Discret}{Representation}
+
+  %Associacions
+  \umlclass[x=-1.5,y=-4] {RegularProp}{}{}
+  \umluniassoc  {RegularProp}{TimeSeries}
+  \umlclass[x=1.5,y=-4] {Storage}{}{}
+  \umluniassoc {Storage}{TimeSeries}
+  \end{tikzpicture}
+
+
+  \caption{Diagrama UML de pyTsms}
+  \label{fig:implementacio:pytsms-uml}
+\end{figure}
+
+
+\begin{figure}
+  \centering
 
 \begin{tikzpicture}
 
@@ -66,58 +109,43 @@ sèries temporals i les representacions de les sèries temporals.
   \umlclass[x=-6,y=-6] {Set}{}{}
   \umlinherit{Structure}{Set}
 
-
-  % Measure
-  \umlclass[x=-4] {Measure}{}{}
-  \umluniaggreg  {TimeSeries}{Measure}
-
-  %Repr
-  \umlclass[x=8,type=abstract] {Representation}{}{}
-  \umlassoc  {TimeSeries}{Representation}
-  \umlclass[x=7,y=-4] {Zohe}{}{}
-  \umlclass[x=9,y=-4] {Discret}{}{}
-  \umlinherit {Zohe}{Representation}
-  \umlinherit {Discret}{Representation}
-
-
-  %Associacions
-  \umlclass[x=2,y=2] {RegularProp}{}{}
-  \umluniassoc  {RegularProp}{TimeSeries}
-  \umlclass[x=5,y=2] {Storage}{}{}
-  \umluniassoc {Storage}{TimeSeries}
-
 \end{tikzpicture}
 
+  \caption{Diagrama UML de la realització de sèries temporals a pyTsms}
+  \label{fig:implementacio:pytsms-uml-ts}
+\end{figure}
 
 
 
 
 
+La \autoref{fig:implementacio:pytsms-uml} mostra amb un diagrama
+UML la relació entre aquests tres objectes principals. Així, per una
+banda, una \emph{TimeSeries} té una relació d'agregació amb les
+\emph{Measure}, és a dir que una sèrie temporal conté cap, una o més
+d'una mesura.  Per altra banda, les sèries temporals i les
+representacions són ortogonals i això s'implementa mitjançant una
+relació d'associació bidireccional entre una \emph{TimeSeries} i una
+\emph{Representation}, és a dir que una instància de sèrie temporal té
+associada una representació i una instància de representació coneix la
+sèrie temporal que representa.
 
 
 
 
-Les sèries temporals i les representacions són ortogonals i això
-s'implementa mitjançant una associació entre ambdós. Cada usuari ha de
-definir la representació que vol associar, com a exemple se
-n'implementen algunes. 
-
-
-
-
-El concepte de sèrie temporal s'ha implementat com un objecte
-\emph{TimeSeries}.  Una sèrie temporal és un objecte amb una gran
-quantitat de mètodes. Com a conseqüència s'ha dividit la seva
-implementació en diversos mòduls. Els mètodes que implementen el model
-estructural i el model d'operacions bàsiques s'han agrupat en objectes
-segons la seva funcionalitat. Així hi ha l'objecte \emph{Structure}
-que implementa el model estructural de les sèries temporals,
-l'\emph{OpSet} pel model d'operacions de conjunts, l'\emph{OpSeq} pel
-model d'operacions de seqüències i l'\emph{OpFunc} pel model
-d'operacions de funció temporal.  Aleshores el \emph{TimeSeries}
-hereta les funcionalitats d'aquests quatre objectes.  L'objecte
-\emph{OpSet} també té una gran quantitat de mètodes i, de la mateixa
-manera, hereta la funcionalitat de tres objectes: el
+Una \emph{TimeSeries} és un objecte amb una gran quantitat de
+mètodes. Com a conseqüència, la implementació de funcionalitats
+essencials s'ha dividit en diversos mòduls, el qual es mostra a la
+\autoref{fig:implementacio:pytsms-uml-ts}. Els mètodes que implementen
+el model estructural i el model d'operacions bàsiques s'han agrupat en
+objectes segons la seva funcionalitat. Així hi ha l'objecte
+\emph{Structure} que implementa el model estructural de les sèries
+temporals, l'\emph{OpSet} pel model d'operacions de conjunts,
+l'\emph{OpSeq} pel model d'operacions de seqüències i l'\emph{OpFunc}
+pel model d'operacions de funció temporal.  Aleshores el
+\emph{TimeSeries} hereta les funcionalitats d'aquests quatre objectes.
+L'objecte \emph{OpSet} també té una gran quantitat de mètodes i, de la
+mateixa manera, hereta la funcionalitat de tres objectes: el
 \emph{SetNoTemporal} per les operacions basades en l'orde parcial de
 les sèries temporals, el \emph{SetTemporal} basat en l'ordre temporal
 i el \emph{SetRelacional} per les operacions específiques de l'àlgebra
@@ -125,9 +153,33 @@ relacional.
 
 
 
+La implementació de funcionalitats complementàries s'ha implementat
+amb relacions d'associació unidireccionals, el qual es mostra a la
+\autoref{fig:implementacio:pytsms-uml}.
 
+
+
+La \autoref{fig:implementacio:pytsms-uml} també mostra
+especialitzacions de les mesures i de les representacions.
+
+
+
+
+En el cas de les representacions, una \emph{Representation} és una
+classe abstracta, és a dir
 
 La representació és abstracta, sempre ha de ser una de concreta? I la discreta pura?
+ Cada usuari ha de definir la representació
+que vol associar, com a exemple se n'implementen algunes.
+
+
+
+\subsubsection{Encaix a Python}
+
+Heretem de sets, implementem els mètodes especials de sets
+
+implementem els mètodes especials de seqüències
+
 
 
 
