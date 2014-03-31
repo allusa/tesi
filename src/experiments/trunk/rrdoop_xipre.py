@@ -450,16 +450,19 @@ def check5(ts):
         mant = ts1.prev(m)
         if mant.v is None:
             vant = 0
+            tant = mant.t
         else:
             vant = mant.v[0]
+            tant = mant.t
             
-        der = m.v[0] - vant
-        v =  ( m.v[0]-2.09, m.v[1]*1000, der+0.0006 )
-        return Measure(m.t,v)
+        der = (m.v[0] - vant) / float(m.t - tant)
+
+        v =  ( m.v[0], m.v[1], der)
+        return Measure(m.t,v[1:3])
         
 
     ts1 = ts1.map(der)
-    ts1headers = ['LM-2.1','LMder*100','LM1der2+0.0006' ]
+    ts1headers = ['LM-2.1','LMder*100','LM1der2' ]
 
     ts1.set_rpr(Zohe)
     ts1.rpr().plot(formatx=_timestamp,legend=ts1headers)
