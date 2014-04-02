@@ -1063,10 +1063,10 @@ where
 \dmap(S_B,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
 \]
 \[
- m' = (T(m_i), f(S_B, i)),\;  i = [T(\prev_{S_I}(m_i)),T(m_i)],
+ m' = f(S_B, i),\;  i = [T(\prev_{S_I}(m_i)),T(m_i)],
 \]
 \[
- S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
+ S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S_B)),
 \]
 \[
 T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
@@ -1083,13 +1083,13 @@ multivalued time series
 \totalseries(M) \equiv \multiresolution(S)
 \]
 \[
-\multiresolution(S) = \orderfold(S_\delta,\{\},f_c,\min) \text{ where }
+\multiresolution(S) = \orderfold(S_\delta,\{\},f_r,\min) \text{ where }
 \]
 \[
-f_c: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
+f_r: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
 \dmap(S,\delta_c,\tau_c,f_c,k_c)
 \]
-
+% potser millor \multiresolution(S,schema) on schema es Sd
 
 
 Summarising, a MTSMS and the multiresolution query are equivalent on
