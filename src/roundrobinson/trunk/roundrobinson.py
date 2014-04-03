@@ -27,3 +27,31 @@ class MRD(MultiresolutionSeries):
     Base de dades multiresolució com una  única sèrie temporal multiresolució
     """
     pass
+
+
+
+
+
+
+def MTSMSequivalenceTSMS():
+    """
+    >>> from pytsms import Measure,TimeSeries
+    >>> from pytsms.consult import multiresolution
+    >>> s = TimeSeries([Measure(5,5),Measure(11,1),Measure(12,2),Measure(16,1),Measure(21,1),Measure(26,1)])
+    >>> def _max(s,i): sp=s[i[0]:i[1]]; return Measure(i[1], None if len(sp)==0 else max(sp.projection('v')))
+    >>>
+    >>> m = MultiresolutionSeries()
+    >>> m.addResolution(5,4,_max,10)
+    >>> m.addResolution(10,3,_max,0)
+    >>> m.update(s)
+    >>> m.consolidateTotal()
+    >>>
+    >>> schema = TimeSeries([Measure(5,(10,_max,4)),Measure(10,(0,_max,3))])
+    >>>
+    >>> multiresolution(s,schema) == m.total()
+    True
+    """
+    pass
+
+
+

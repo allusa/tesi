@@ -75,12 +75,23 @@ tres s'implementen respectivament com a classes \emph{Measure},
   \umluniassoc  {RegularProp}{TimeSeries}
   \umlclass[x=1.5,y=-4] {Storage}{}{}
   \umluniassoc {Storage}{TimeSeries}
+
+  %Dependencies
+  \umlemptypackage[x=5,y=-5]{Matplotlib}
+  \umldep{Zohe}{Matplotlib}
+  \umldep{Partial}{Matplotlib}
+
+
   \end{tikzpicture}
+
 
 
   \caption{Diagrama UML de Pytsms}
   \label{fig:implementacio:pytsms-uml}
 \end{figure}
+
+
+
 
 
 \begin{figure}
@@ -223,22 +234,21 @@ implementem els mètodes especials de seqüències
 La biblioteca RoundRobinson implementa un SGSTM de referència. Així
 doncs, seguint el model, els objectes principals són les sèries
 temporals multiresolució, les subsèries resolució, els buffers, els
-discs i les funcions d'agregació d'atributs.
+discs i les funcions d'agregació d'atributs. Respectivament
+s'implementen com a classes \emph{MultiresolutionSeries},
+\emph{Resolution}, \emph{Buffer}, \emph{Disc} i \emph{Function}.
+Així, les funcions d'agregació d'atributs són realitzades per
+\emph{Function} de Python.
 
 
-les mesures, les
-sèries temporals i les representacions de les sèries temporals. Tots
-tres s'implementen respectivament com a classes \emph{Measure},
-\emph{TimeSeries} i \emph{Representation}.
-
-
-
+\begin{figure}[tp]
+  \centering
 
 \begin{tikzpicture}
 
   %MultiTimeseries
   \umlclass[x=0,y=0] {MultiresolutionSeries}{}{}  
-  \umlclass[x=4,y=0] {Set}{}{}
+  \umlclass[x=-4,y=0] {Set}{}{}
   \umlinherit{MultiresolutionSeries}{Set}
   %Components 
   \umlclass[x=0,y=-3] {Resolution}{}{}
@@ -246,25 +256,55 @@ tres s'implementen respectivament com a classes \emph{Measure},
   %SubComponents 
   \umlclass[x=-1.2,y=-6] {Buffer}{}{}
   \umlclass[x=1.2,y=-6] {Disc}{}{}
-  \umlclass[x=-3,y=-9] {Aggregators}{}{}
+  \umlclass[x=-3,y=-9,template={s,i},type=interface] {Function}{}{}
   \umlunicompo[mult=1]  {Resolution}{Buffer}
   \umlunicompo[mult=1]  {Resolution}{Disc}
-  \umluniassoc[mult=1]  {Buffer}{Aggregators}
+  \umluniassoc[mult=1]  {Buffer}{Function}
 
   %TimeSeries
-  \begin{umlpackage}[x=0,y=-9]{pyTsms}
+  \begin{umlpackage}[x=1,y=-9]{Pytsms}
     \umlclass{TimeSeries}{}{}  
   \end{umlpackage}
   \umluniassoc[mult=1]  {Buffer}{TimeSeries}
   \umluniassoc[mult=1]  {Disc}{TimeSeries}
 
   %Associacions
-  \umlclass[x=5,y=2] {Storage}{}{}
+  \umlclass[x=4,y=-3] {Storage}{}{}
   \umluniassoc {Storage}{MultiresolutionSeries}
-  \umlclass[x=2,y=2] {Plot}{}{}
+  \umlclass[x=4,y=-1] {Plot}{}{}
   \umluniassoc {Plot}{MultiresolutionSeries}
 
 \end{tikzpicture}
+
+  \caption{Diagrama UML de RoundRobinson}
+  \label{fig:implementacio:roundrobinson-uml}
+\end{figure}
+
+
+
+La \autoref{fig:implementacio:roundrobinson-uml} mostra amb un
+diagrama UML la relació entre aquests cinc objectes principals. Així,
+una \emph{MultiresolutionSeries} té una relació d'agregació amb les
+\emph{Resolution}, és a dir que una sèrie temporal multiresolució
+conté subsèries resolucions.  Una \emph{Resolution} té una relació de
+composició amb un \emph{Buffer} i una altra amb un \emph{Disc}, és a
+dir que cada subsèries resolució està formada exactament per un buffer
+i un disc. Cada \emph{Buffer} té una relació d'associació amb una
+\emph{TimeSeries}, és a dir amb la sèrie temporal del buffer; de
+manera similar per la sèrie temporal del disc cada \emph{Disc}
+s'associa a una \emph{TimeSeries}. A més, cada \emph{Buffer} també té
+una relació d'associació amb una \emph{Function} que ha de tenir dos
+paràmetres: la sèrie temporal (\emph{s}) i l'interval de consolidació
+(\emph{i}).
+
+
+
+\todo{funcions complementàries}
+\emph{Plot} i \emph{Storage}
+
+
+\todo{}
+MultiresolutionSeries implementades a partir de set
 
 
 
