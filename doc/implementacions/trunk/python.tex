@@ -1,19 +1,24 @@
 
 
-\chapter{Python}
+\chapter{Implementació amb Python}
 
 
-La implementació de referència dels models de SGST i SGSTM s'ha
-realitzat amb Python \todo{referència}. L'objectiu d'aquesta
-implementació de referència és mantenir la fidelitat al model per tal
-de poder experimentar-hi amb tota la potència matemàtica .
+La implementació de referència dels models de SGST i SGSTM es realitza
+amb Python\todo{referència}. L'objectiu d'aquesta implementació de
+referència és mantenir la fidelitat al model per tal de poder
+experimentar-hi amb tota la potència matemàtica .
 
-En la implementació s'han afegit alguns operadors que en el model ja
-estaven definits perquè són propis de l'àlgebra de conjunts. Alguns
-dels operadors principals que s'han d'afegir són els relacionats amb
-la notació de creació de conjunts, els quals en els SGBD es coneixen
-com a \emph{llenguatge de definició de dades} (DDL, de l'anglès
-\emph{data definition language}). 
+En la implementació s'afegeixen alguns operadors que en el model no
+estaven explícitament definits perquè són propis de l'àlgebra de
+conjunts. Alguns dels operadors principals que s'han d'afegir són els
+relacionats amb la notació de creació de conjunts, els quals en els
+SGBD s'inclouen en el que es coneix com a \emph{llenguatge de
+  definició de dades} (DDL, de l'anglès \emph{data definition
+  language}).
+% El model s'ha descrit utilitzant àlgebra de conjunts. Així moltes operacions no s'han hagut de definir perquè formen part de la notació de conjunts: definició de nous conjunts (set builder notation), operació d'assignació, manipulació de les dades amb inserció, modificació, esborrar (perquè en àlgebra de conjunts es treballa amb immutabilitat ja que a l'àlgebra crear un nou conjunt no té cap cost), etc.  A les implementacions, però, totes aquestes operacions s'han de definir en cas que es vulguin.
+
+
+
 
 
 Implementem els dos models de SGST i SGSTM com a dues biblioteques
@@ -168,11 +173,12 @@ objectes \emph{Set}, que són un tipus predefinit a Python.
 Les funcionalitats complementàries de les \emph{TimeSeries} s'han
 implementat amb relacions d'associació unidireccionals, el qual es
 mostra a la \autoref{fig:implementacio:pytsms-uml}. Així, hi ha dues
-funcionalitats complementàries: \emph{RegularProperties} per a les
-operacions relacionades amb la regularitat de les sèries temporals i
-\emph{Storage} per a operacions d'emmagatzematge i de recuperació en
-fitxers. Ens aquest cas, l'associació unidireccional indica que són
-objectes que treballen sobre una \emph{TimeSeries}.
+funcionalitats complementàries: \emph{RegularProperties} és un objecte
+que agrupa les operacions relacionades amb la regularitat de les
+sèries temporals i \emph{Storage} agrupa les operacions
+d'emmagatzematge i de recuperació en fitxers. En aquests casos,
+l'associació unidireccional indica que són objectes que treballen
+sobre una \emph{TimeSeries}.
 
 
 
@@ -299,17 +305,24 @@ paràmetres: la sèrie temporal (\emph{s}) i l'interval de consolidació
 
 
 
-\todo{funcions complementàries}
-\emph{Plot} i \emph{Storage}
+
+Les \emph{MultiresolutionSeries} tenen funcionalitats complementàries
+que s'han implementat amb relacions d'associació
+unidireccionals. Així, hi ha dues funcionalitats complementàries:
+\emph{Plot} per a les operacions relacionades amb la visualització
+gràfica i \emph{Storage} per a operacions d'emmagatzematge i de
+recuperació en fitxers.
 
 
-\todo{}
-MultiresolutionSeries implementades a partir de set
+
+Les \emph{MultiresolutionSeries} com a conjunts formats per
+\emph{Resolution} s'han implementat heretant funcionalitats dels
+\emph{Set} de Python.
 
 
 
 
-\section{Casos d'ús}
+\section{Exemples d'ús}
 
 
 \todo{}
@@ -317,8 +330,7 @@ MultiresolutionSeries implementades a partir de set
 
 Amb les biblioteques Pytsms i RoundRobinson podem treballar amb les sèries temporals i les sèries temporals multiresolució. 
 
-
-Alguns cas d'exemple és demostrar l'equivalència entre l'operació multiresolució dels SGST sobre una sèrie temporal i la sèrie temporal resultant d'una consolidació dels SGSTM. 
+Un cas d'exemple és demostrar l'equivalència entre l'operació multiresolució dels SGST sobre una sèrie temporal i la sèrie temporal resultant d'una consolidació dels SGSTM. 
 
 
 
