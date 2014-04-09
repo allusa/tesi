@@ -1,5 +1,32 @@
 \chapter{Implementació relacional}
 
+Els models SGST i SGSTM es basen fortament en l'àlgebra relacional.  
+Així doncs, es poden implementar en els SGBDR. 
+
+
+Per a mantenir la màxima fidelitat amb els models i per les
+consideracions de Date\todo{referència} sobre l'allunyament del
+llenguatge SQL respecte del model relacional, s'implementa amb
+Tutorial D\todo{referència, third manifesto?}: el llenguatge acadèmic dels SGBDR.  Com a
+intèrpret per a aquest llenguatge s'utilitza Rel\todo{referència}
+
+% Tutorial D is a specific D which is defined and used for illustration in The Third Manifesto. Implementations of D need not have the same syntax as Tutorial D. The purpose of Tutorial D is both educational and to show what a D might be like. Rel is an implementation of Tutorial D.
+
+% Rel is an open source true relational database management system that implements a significant portion of Chris Date and Hugh Darwen's Tutorial D query language.
+% Primarily intended for teaching purposes, Rel is written in the Java programming language.
+
+
+% Dee és una implementació en Python de D
+% http://www.quicksort.co.uk/ 
+%És interessant, no es basa en fer una implementació declarativa sinó en fer una implementació relacional integrada a Python
+
+
+Implementem la part essencial, és a dir l'àlgebra definida en els
+models lògics. Com que són de nivell acadèmic, ni Tutorial D ni Rel
+implementen els complements que tenen els SGBDR en entorns
+d'explotació. Com a conseqüència, només es podran utilitzar per a
+comprovar l'exactitud en l'àlgebra, però no amb comoditat per a
+treballar amb dades reals en les quals es necessita sovint operacions per canviar-ne el format, per convertir-les, etc.\todo{}
 
 
 
@@ -7,290 +34,482 @@
 \section{SGST relacional}
 
 
+Tal com s'ha definit el model estructural de SGST, en el model
+relacional les sèries temporals són relacions amb dos atributs:
+\emph{t} pel temps i \emph{v} pels valors, on l'atribut \emph{t} fa de
+clau primària en les variables relació.  Les mesures són els tuples
+d'aquestes relacions. 
 
+Principalment la implementació relacional consisteix en definir el
+tipus sèrie temporal i totes les operacions de sèries
+temporals. Aquestes definicions es basaran en Tutorial D, és a dir que
+no cal cap llenguatge no relacional extern.
+
+Tutorial D defineix estàticament els tipus a les operacions i això
+dificulta generalitzar-ho per a qualsevol tipus de temps i valor com
+s'ha fet a la implementació amb Python. Com a conseqüència, prefixarem
+els tipus dels atributs temps i dels valors a reals, \emph{Rational} a
+Tutorial D.
+
+Així doncs, el valor de sèrie temporal es defineix directament
+mitjançant una relació amb els atributs \emph{t} i \emph{v}. Per
+exemple:
+\begin{verbatim}
+RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 3.0, v 4.0 }
+ }
+\end{verbatim}
+
+
+A partir d'aquest valors relació s'hauria de definir el tipus sèrie
+temporal. No obstant això, la definició de tipus encara té un estat
+massa experimental a Tutorial D, com es detalla a
+l'apartat~\ref{sec:implementacio:tipus-relacional}. Així doncs,
+definim la variable relació \emph{timeseries} per a utilitzar-la com a
+equivalent del tipus en les definicions dels operadors:
 \begin{verbatim}
 VAR timeseries BASE RELATION
     { t RATIONAL, v RATIONAL }  KEY { t } ;
+\end{verbatim}
 
+
+En les sèries temporals com a relació, els tuples són les mesures del
+model de SGST. Hi ha alguns operadors dels SGST que tenen mesures com
+a paràmetres, però els tuples sense formar part d'una relació no són
+un tipus vàlid a Tutorial D. Així caldria definir també un valor
+relació per a les mesures. Per a simplificar, definim aquestes mesures
+com a sèries temporals d'un sol element, per exemple:
+\begin{verbatim}
+RELATION {
+   TUPLE { t 2.0, v 3.0 }
+ }
+\end{verbatim}
+
+
+A partir d'aquestes mesures com a valors relació definim els operadors
+que tenen mesures com a paràmetres. Així, els dos operadors bàsics
+dels SGST per a obtenir els atributs de temps i de valor d'una mesura
+són:
+\begin{verbatim}
 OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
-return t FROM TUPLE FROM m;
+  return t FROM TUPLE FROM m;
 END OPERATOR;
 
 OPERATOR ts.v(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
-return v FROM TUPLE FROM m;
+  return v FROM TUPLE FROM m;
 END OPERATOR;
 \end{verbatim}
 
 
-
-
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 }
- } AS ts1: 
-ts.t(ts1)
-
-
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 }
- } AS ts1: 
-ts.v(ts1)
-
-
-\subsection{Pertinença i inclusió}
-
-
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 }
- } AS m,
-RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts: 
-ts.in(m,ts)
-
-
-\subsection{Màxim i suprem}
-
-Tutorial D:
+Per exemple, per a obtenir l'atribut temps d'una mesura
 \begin{verbatim}
-OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
-END OPERATOR;
-
-OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
-END OPERATOR;
+WITH RELATION {
+   TUPLE { t 2.0, v 3.0 }
+  } AS m1: 
+ts.t(m1)
+\end{verbatim}
+i per a obtenir el valor
+\begin{verbatim}
+WITH RELATION {
+   TUPLE { t 2.0, v 3.0 }
+  } AS m1: 
+ts.v(m1)
 \end{verbatim}
 
 
 
-Exemple:
+
+\subsection{Operadors}
+
+
+Algunes operacions dels SGST es poden aplicar directament a les
+relacions \emph{timeseries} amb les operacions de Tutorial D. 
+És el cas de
+\begin{itemize}
+\item La projecció
 \begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1: 
-ts.max(ts1)
+WITH
+ RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 3.0, v 4.0 }
+ } AS ts1:
+ts1 {t}
 \end{verbatim}
+
+\item La selecció
 \begin{verbatim}
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 1.0/0.0, v 1.0 }  //1.0/0.0 infinit
- } AS ts2: 
-ts.max(ts2)
+WITH
+ RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 3.0, v 4.0 }
+ } AS ts1:
+ts1 where v>3.0
 \end{verbatim}
+
+\item El reanomena
 \begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1: 
-ts.sup(ts1)
+WITH
+ RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 3.0, v 4.0 }
+ } AS ts1:
+ts1 rename ( v as temperatura )
 \end{verbatim}
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1: 
-ts.sup(timeseries)
-\end{verbatim}
+\end{itemize}
 
 
 
-\subsection{Unió}
 
-TutorialD:
+
+Les altres operacions s'han de definir. A continuació en definim
+algunes amb Tutorial D.  Tots els operadors que definim els anomenem
+prefixats amb \emph{ts.}.
+
+
+
+L'operació d'unió és equivalent a unir la primera sèrie temporal amb
+les mesures de la segona que no tenen un atribut de temps igual que
+algun temps de la primera. Així, l'operador d'unió \emph{ts.union} és
 \begin{verbatim}
 OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+  return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
 END OPERATOR;
 \end{verbatim}
 
-
-Exemple:
+Per exemple:
 \begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2: 
+WITH 
+ RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 4.0, v 2.0 },
+   TUPLE { t 6.0, v 4.0 }
+  } AS ts1,
+ RELATION {
+   TUPLE { t 1.0, v 2.0 },
+   TUPLE { t 5.0, v 3.0 },
+   TUPLE { t 6.0, v 5.0 },
+   TUPLE { t 10.0, v 1.0 }
+  } AS ts2: 
 ts.union(ts1,ts2)
 \end{verbatim}
 
 
 
-\subsection{Producte}
-
-WITH RELATION {
-TUPLE { t 1.0, v 4.0 }
- } AS s1,
-RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS s2: 
-ts.product(s1,s2)
 
 
-\subsection{Unió exclusiva}
 
 
-TutorialD:
+
+
+
+\subsection{Quant a definir el tipus sèrie temporal}
+\label{sec:implementacio:tipus-relacional}
+
+\todo{}
+
+* Les relacions no són exactament un tipus a Tutorial D però haurien de ser-ho
+
+* S'hauria de poder heretar de les relacions
+
+
+
+
+TYPE ts POSSREP {ts relation {t rational, v rational}};
+
+però després no podríem aplicar-hi operacions relacionals com per exemple el projection perquè és projection(relation)
+
+tampoc podríem definir multivaluades en la forma canònica \verb+ts(relation {tuple {t 1.0, v relation { tuple { v1 1.0, v2 2.0}}}})+ perquè el v no és un rational
+
+
+
+
+
+
+La definició estàtica de tipus també dificulta definir tipus i operadors que admetin sèries temporals definides com a relacions on un dels atributs sigui t el temps. Hugh Darwen proposa millores a Tutorial D definit una capçalera com per exemple Relation \{ t Rational, * \} on especificaria un tipus de relació la capçalera de la qual contingui l'atribut temps.
+\todo{veure}
+Extending Tutorial D to Support User-Defined
+Generic Relation and Tuple Operators
+Hugh Darwen
+File: User-defined relational operators in TD.doc
+Printed at: 17:03 on Monday, 18 November, 2013
+\url{www.dcs.warwick.ac.uk/~hugh/CHAP05.pdf}
+\url{http://www.dcs.warwick.ac.uk/~hugh/TTM/User-defined-relational-operators-in-TD.pdf}
+
+
+Aleshores podríem definir correctament el tipus sèrie temporal, tot i així encara faria falta que fos un subtipus de relation.
+
 \begin{verbatim}
-OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
-END OPERATOR;
+type timeseries
+	POSSREP canonical {ts relation {t *, v * }}}
+	POSSREP multivalued {multivalued relation {t * ,*}} 
+	INIT  canonical (multivalued:= ts ungroup (v))
+	      multivalued (ts:= multivalued group ({all but t} as v));
+\end{verbatim}
+
+% //Ex
+% //with multivalued2(relation{ tuple{ t 1.0, v1 2.0, v2 3.0} }) as r:
+% //THE_multivalued2(r)
+
+% //with multivalued2(relation{ tuple{ t 1.0, v1 2.0, v2 3.0} }) as r:
+% //THE_ts(r)
+
+% //with ts(relation{ tuple{ t 1.0, v relation { tuple {v1 2.0, v2 3.0}} }}) as r:
+% //THE_multivalued2(r)
+
+
+
+\subsection{Sèries temporals multivaluades i dobles}
+
+
+\todo{}
+
+No funcionaran a les operacions perquè són operadors de relation {t,v} i les multivaluades són relation{t,relation{v1,v2}} -> potser es podria solucionar amb warps?
+
+
+\begin{verbatim}
+VAR timeseriesdouble BASE RELATION
+    { t1 RATIONAL, v1 RATIONAL, t2 RATIONAL, v2 RATIONAL }  KEY { t1, t2 } ;
 \end{verbatim}
 
 
-Exemple:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2: 
-ts.xunion(ts1,ts2)
-\end{verbatim}
-
-
-\subsection{Selecció temporal}
+% // multivalued2canonical -> potser es pot fer amb grup/ungroup o wrap/unwrap ?
+% //extend r add ( (r rename (t as tr) where t=tr) {ALL BUT tr} as vr ) {t,vr} rename (vr as v)
+% //multivalued2canonical
+% //r group ({all but t} as v)
+% //canonical2multivalued
+% // ungroup (v)
 
 
 
-TutorialD:
-\begin{verbatim}
-OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-BEGIN;
-VAR x RATIONAL init(0.0);
-VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
-x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
-sp := RELATION {
-TUPLE {t h, v x}
-};
-return ts.union(ts.interval(s,l,h),sp);
-END;
-END OPERATOR;
-\end{verbatim}
+% \subsection{Pertinença i inclusió}
 
-Exemple:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2:
-ts.temporal.select.zohe(ts1,1.0,5.0)
-\end{verbatim}
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 1.0, v 2.0 },
-TUPLE { t 5.0, v 3.0 },
-TUPLE { t 6.0, v 5.0 },
-TUPLE { t 10.0, v 1.0 }
- } AS ts2:
-ts.temporal.select.zohe(ts1,-1.0/0.0,-1.0/0.0)
-\end{verbatim}
+
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 }
+%  } AS m,
+% RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 5.0, v 3.0 },
+% TUPLE { t 6.0, v 5.0 },
+% TUPLE { t 10.0, v 1.0 }
+%  } AS ts: 
+% ts.in(m,ts)
+
+
+% \subsection{Màxim i suprem}
+
+% Tutorial D:
+% \begin{verbatim}
+% OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+% return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
+% END OPERATOR;
+
+% OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+% return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
+% END OPERATOR;
+% \end{verbatim}
 
 
 
-\subsection{Map i fold}
+% Exemple:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1: 
+% ts.max(ts1)
+% \end{verbatim}
+% \begin{verbatim}
+% RELATION {
+% TUPLE { t 1.0, v 2.0 },
+% TUPLE { t 5.0, v 3.0 },
+% TUPLE { t 6.0, v 5.0 },
+% TUPLE { t 1.0/0.0, v 1.0 }  //1.0/0.0 infinit
+%  } AS ts2: 
+% ts.max(ts2)
+% \end{verbatim}
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1: 
+% ts.sup(ts1)
+% \end{verbatim}
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1: 
+% ts.sup(timeseries)
+% \end{verbatim}
 
 
 
-TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
-} AS ts1: 
-ts.map(ts1,'t','t*v/2.0')
-\end{verbatim}
 
-TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 0.0, v 0.0}
-} AS mi: 
-ts.fold(ts1,mi,'t','v+vi')
-\end{verbatim}
+% \subsection{Producte}
 
-antM TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t 5.0, v 0.0}
-} AS m: 
-ts.sup(ts1 WHERE t < ts.t(m))
-\end{verbatim}
-
-sup fold TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-RELATION {
-TUPLE { t -1.0/0.0, v 1.0/0.0}
-} AS mi: 
-ts.fold(ts1,mi,'max {t,ti}','v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ti, v vi,  e False} } JOIN RELATION { TUPLE {e t > ti}})')
-\end{verbatim}
-
-predecessors mapfold TutorialD:
-\begin{verbatim}
-WITH RELATION {
-TUPLE { t 2.0, v 3.0 },
-TUPLE { t 4.0, v 2.0 },
-TUPLE { t 6.0, v 4.0 }
- } AS ts1,
-EXTEND ts1 {t} ADD ( -1.0/0.0 as v)
-AS si: 
-ts.fold(ts1,si,'t','v FROM TUPLE FROM (RELATION { TUPLE {v ti, e True}, TUPLE {v v,  e False} } JOIN RELATION { TUPLE {e v < ti and ti<t}})')
-\end{verbatim}
+% WITH RELATION {
+% TUPLE { t 1.0, v 4.0 }
+%  } AS s1,
+% RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 5.0, v 3.0 },
+% TUPLE { t 6.0, v 5.0 },
+% TUPLE { t 10.0, v 1.0 }
+%  } AS s2: 
+% ts.product(s1,s2)
 
 
-\section{SGSTM relacional}
+% \subsection{Unió exclusiva}
+
+
+% TutorialD:
+% \begin{verbatim}
+% OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+% return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
+% END OPERATOR;
+% \end{verbatim}
+
+
+% Exemple:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% RELATION {
+% TUPLE { t 1.0, v 2.0 },
+% TUPLE { t 5.0, v 3.0 },
+% TUPLE { t 6.0, v 5.0 },
+% TUPLE { t 10.0, v 1.0 }
+%  } AS ts2: 
+% ts.xunion(ts1,ts2)
+% \end{verbatim}
+
+
+% \subsection{Selecció temporal}
+
+
+
+% TutorialD:
+% \begin{verbatim}
+% OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
+% BEGIN;
+% VAR x RATIONAL init(0.0);
+% VAR sp PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+% x := ts.v(ts.inf(s MINUS ts.interval.ni(s,h)));
+% sp := RELATION {
+% TUPLE {t h, v x}
+% };
+% return ts.union(ts.interval(s,l,h),sp);
+% END;
+% END OPERATOR;
+% \end{verbatim}
+
+% Exemple:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% RELATION {
+% TUPLE { t 1.0, v 2.0 },
+% TUPLE { t 5.0, v 3.0 },
+% TUPLE { t 6.0, v 5.0 },
+% TUPLE { t 10.0, v 1.0 }
+%  } AS ts2:
+% ts.temporal.select.zohe(ts1,1.0,5.0)
+% \end{verbatim}
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% RELATION {
+% TUPLE { t 1.0, v 2.0 },
+% TUPLE { t 5.0, v 3.0 },
+% TUPLE { t 6.0, v 5.0 },
+% TUPLE { t 10.0, v 1.0 }
+%  } AS ts2:
+% ts.temporal.select.zohe(ts1,-1.0/0.0,-1.0/0.0)
+% \end{verbatim}
+
+
+
+% \subsection{Map i fold}
+
+
+
+% TutorialD:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+% } AS ts1: 
+% ts.map(ts1,'t','t*v/2.0')
+% \end{verbatim}
+
+% TutorialD:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% RELATION {
+% TUPLE { t 0.0, v 0.0}
+% } AS mi: 
+% ts.fold(ts1,mi,'t','v+vi')
+% \end{verbatim}
+
+% antM TutorialD:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% RELATION {
+% TUPLE { t 5.0, v 0.0}
+% } AS m: 
+% ts.sup(ts1 WHERE t < ts.t(m))
+% \end{verbatim}
+
+% sup fold TutorialD:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% RELATION {
+% TUPLE { t -1.0/0.0, v 1.0/0.0}
+% } AS mi: 
+% ts.fold(ts1,mi,'max {t,ti}','v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ti, v vi,  e False} } JOIN RELATION { TUPLE {e t > ti}})')
+% \end{verbatim}
+
+% predecessors mapfold TutorialD:
+% \begin{verbatim}
+% WITH RELATION {
+% TUPLE { t 2.0, v 3.0 },
+% TUPLE { t 4.0, v 2.0 },
+% TUPLE { t 6.0, v 4.0 }
+%  } AS ts1,
+% EXTEND ts1 {t} ADD ( -1.0/0.0 as v)
+% AS si: 
+% ts.fold(ts1,si,'t','v FROM TUPLE FROM (RELATION { TUPLE {v ti, e True}, TUPLE {v v,  e False} } JOIN RELATION { TUPLE {e v < ti and ti<t}})')
+% \end{verbatim}
+
+
+% \section{SGSTM relacional}
 
 
 

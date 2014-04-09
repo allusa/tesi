@@ -7,6 +7,27 @@ VAR timeseriesdouble BASE RELATION
 
 
 
+
+//type prova2 POSSREP a {qty integer} POSSREP b {qtyf rational} INIT a (qtyf:=CAST_AS_RATIONAL(qty)) b (qty:=2);
+
+//type provats POSSREP { ts same_type_as(timeseries) };
+
+//provats(relation { tuple{t 1.0, v 2.0} })
+
+//with provats(relation { tuple{t 1.0, v 2.0} }) as st:
+//THE_ts(st)
+
+//type provats2 POSSREP ts {ts relation t,v} POSSREP ts2 {ts2 relation t,v1,v2} INIT ts (ts2:=) b (qty:=2);
+
+// multivalued2canonical -> potser es pot fer amb grup/ungroup o wrap/unwrap ?
+//extend r add ( (r rename (t as tr) where t=tr) {ALL BUT tr} as vr ) {t,vr} rename (vr as v)
+//multivalued2canonical
+//r group ({all but t} as v)
+//canonical2multivalued
+// ungroup (v)
+
+
+
 OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
 return t FROM TUPLE FROM m;
 END OPERATOR;
