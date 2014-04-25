@@ -199,6 +199,28 @@ ts.union(ts1,ts2)
 
 
 
+\subsection{Sèries temporals multivaluades i dobles}
+
+
+\todo{}
+
+No funcionaran a les operacions perquè són operadors de relation {t,v} i les multivaluades són relation{t,relation{v1,v2}} -> potser es podria solucionar amb warps?
+
+
+\begin{verbatim}
+VAR timeseriesdouble BASE RELATION
+    { t1 RATIONAL, v1 RATIONAL, t2 RATIONAL, v2 RATIONAL }  KEY { t1, t2 } ;
+\end{verbatim}
+
+
+% // multivalued2canonical -> potser es pot fer amb grup/ungroup o wrap/unwrap ?
+% //extend r add ( (r rename (t as tr) where t=tr) {ALL BUT tr} as vr ) {t,vr} rename (vr as v)
+% //multivalued2canonical
+% //r group ({all but t} as v)
+% //canonical2multivalued
+% // ungroup (v)
+
+
 
 
 
@@ -257,28 +279,6 @@ type timeseries
 % //with ts(relation{ tuple{ t 1.0, v relation { tuple {v1 2.0, v2 3.0}} }}) as r:
 % //THE_multivalued2(r)
 
-
-
-\subsection{Sèries temporals multivaluades i dobles}
-
-
-\todo{}
-
-No funcionaran a les operacions perquè són operadors de relation {t,v} i les multivaluades són relation{t,relation{v1,v2}} -> potser es podria solucionar amb warps?
-
-
-\begin{verbatim}
-VAR timeseriesdouble BASE RELATION
-    { t1 RATIONAL, v1 RATIONAL, t2 RATIONAL, v2 RATIONAL }  KEY { t1, t2 } ;
-\end{verbatim}
-
-
-% // multivalued2canonical -> potser es pot fer amb grup/ungroup o wrap/unwrap ?
-% //extend r add ( (r rename (t as tr) where t=tr) {ALL BUT tr} as vr ) {t,vr} rename (vr as v)
-% //multivalued2canonical
-% //r group ({all but t} as v)
-% //canonical2multivalued
-% // ungroup (v)
 
 
 

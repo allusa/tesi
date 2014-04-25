@@ -3,112 +3,140 @@
 \label{sec:art:sgbd}
 
 
-\todo{seria interessant explicar els tres nivells d'un SGBD segons DATE: usuari, lògic, físic} 
-%el model que presentem a continuació pertany al nivell lògic
-%les implementacions són nivell físic
-%no definim nivell d'usuari, el que significaria definir un llenguatge de consultes per al SGST i al SGSTM. No el definim perquè les implementacions que fem són totalment fidedignes al nivell lògic i el nivell d'usuari que se'n deriva és igual que el nivell lògic; només li faltarien les facilitats d'un llenguatge de programació (poder fer bucles, condicionals, declarar variables, etc.) Aquestes facilitats en el nivell lògic no s'expliciten ja que es consideren inherents a les matemàtiques.
-
-
-
-Fabian Pascal \url{http://www.dbdebunk.com/2013/11/more-on-erm-still-not-data-model.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+blogspot%2FTuHQT+%28DATABASE+DEBUNKINGS%29}:
-``I never claimed that "only RM models data". In fact, the hierarchic and network data models also do, but were discarded decades ago because they were, for various reasons, inferior to the RM. Other than those two, I am unaware of any other proposed data model that is formal and complete.'' 
-``There have been attempts to structure and manipulate data based on other logics/theories e.g. graph theory or 2nd order logic, but they have proved more complex and less flexible and comprehensible than RT. In my modeling paper I provide a criterion for comparing data models on superiority, but doing it right is non-trivial and nobody has ever claimed superiority to RT on sound grounds.''
-
-
-
-
 Segons \textcite{date:introduction}, ``una base de dades és un
-contenidor informàtic per a una co\l.lecció de dades''. El sistemes
-informàtics que tracten amb bases de dades s'anomenen sistemes de
-gestió de bases de dades (SGBD, \emph{Data Base Management Systems}) i
-tenen els objectius d'emmagatzemar informació i permetre consultar i
-afegir aquesta informació per part dels usuaris.  Per complir aquests
-objectius, els SGBD ofereixen a l'usuari diferents operacions com per
-exemple crear una base de dades, afegir dades o consultar informació a
-partir de les dades emmagatzemades.
+contenidor informàtic persistent per a una co\l.lecció de dades''. El
+sistemes informàtics que tracten amb bases de dades s'anomenen
+sistemes de gestió de bases de dades (SGBD, \emph{Data Base Management
+  Systems}) i tenen els objectius d'emmagatzemar informació i permetre
+consultar i modificar aquesta informació per part dels usuaris.  Per
+complir aquests objectius, els SGBD ofereixen a l'usuari diferents
+operacions com per exemple crear una base de dades, afegir dades o
+operar amb les dades emmagatzemades. 
+
+Els àmbits d'aplicació dels SGBD són varis: operacions repetitives
+i rutinàries de producció, anomenades \emph{online transaction
+  processing}; sistemes per a prendre decisions empresarials, a
+vegades anomenats \emph{data warehouse}; processament de dades
+científiques; etc.  Alguns dels avantatges de gestionar aquestes dades
+en bases de dades són: evitar la disgregació de la informació i
+tenir-la perfectament organitzada, poder compartir la mateixa
+informació entre diverses aplicacions, garantir la consistència i la
+integritat de les dades i evitar redundàncies innecessàries, o afegir
+seguretat a la gestió de les dades.
+
 
 Els SGBD es poden descriure mitjançant teories matemàtiques que reben
-el nom de model de dades, per tant es poden veure els SGBD com una
-implementació d'un model de dades.  Segons
+el nom de \emph{model de dades}.  Segons
 \citeauthor{date:introduction}, ``un model de dades és una definició
 abstracta, auto continguda i lògica dels objectes, de les operacions i
-de la resta que conjuntament constitueixen la màquina abstracta amb la
-que els usuaris interaccionen. Els objectes permeten modelar
+de la resta que conjuntament constitueixen la màquina abstracta amb
+què els usuaris interaccionen. Els objectes permeten modelar
 l'estructura de les dades. Les operacions permeten modelar el
 comportament''. Ara bé, \citeauthor{date:introduction} avisa que el
-concepte model de dades també s'usa per a definir una estructura
-persistent de dades concreta i, per tant, cal distingir adequadament
-entre els dos conceptes.  Tal com fa Date, en aquest document parlarem
-de model de dades, o simplement de model, en el primer sentit de
-màquina abstracta.
+concepte \emph{model de dades} també s'usa per a definir una
+estructura o esquema persistent de dades concreta i, per tant, cal distingir
+adequadament entre tots dos significats.  Tal com fa Date, en aquest
+document parlarem de model de dades, o simplement de model, en el
+primer sentit de màquina abstracta. També distingeix entre els
+conceptes de \emph{dades} --allò que està emmagatzemat a la base de
+dades-- i \emph{informació} --el significat que algú dóna a aquestes
+dades.
 
 
-Un model de SGBD que ha s'ha consolidat i esdevingut un referent és el
-model relacional (\emph{relational}). L'èxit d'aquest model és degut a
-que es fonamenta en teories matemàtiques consolidades: la lògica de
-predicats i la teoria de conjunts \parencite{date:introduction}.
+Un model de SGBD que ha s'ha consolidat i ha esdevingut un referent és
+el model relacional (\emph{relational model}). L'èxit d'aquest model
+és degut principalment que es fonamenta en teories matemàtiques
+consolidades: la lògica de predicats i la teoria de
+conjunts \parencite{date:introduction}. En base al model relacional es
+va definir el llenguatge \emph{Structured Query Language} (SQL) per
+operar amb bases de dades que ha esdevingut un estàndard en molts
+SGBD.
 
 
+Els SGBD se solen dissenyar amb una arquitectura de tres nivells: el
+físic, el lògic i el d'usuari \parencite{date:introduction}. 
+\begin{itemize}
 
-\textcite{date:introduction} diferencia amb detall els conceptes de
-model i d'implementació.  El model d'un SGBD és el model matemàtic tal
-com s'ha descrit anteriorment, en canvi un SGBD és la implementació
-d'un model de dades, per exemple \emph{PostgreSQL} \parencite{postgresql}.
-%Segons l'esquema de comunicació, també es poden anomenar com a sistema servidor de bases de dades, per exemple postgresql.
-En aquest context una base de dades és una instància d'un SGBD,
-per exemple la base de dades dels estudiants.
+\item El nivell d'usuari o extern agrupa les eines que tenen
+  disponibles els usuaris per a interactuar amb la base de dades, per
+  exemple en el cas relacional SQL pertany a aquest nivell.
+
+\item El nivell lògic o conceptual és l'abstracció formal dels
+  conceptes dels SGBD. En aquest nivell hi pertanyen els models de
+  dades, per exemple el mateix model relacional en el cas relacional.
+
+\item El nivell físic o intern agrupa la programació informàtica de
+  com s'han d'emmagatzemar físicament les base dades i de com s'has
+  d'executar les operacions. Per exemple en aquest nivell apareixen
+  els registres de memòria, punters, mètodes d'accés als fitxers,
+  etc., conceptes que no tenen res de relacional.
+\end{itemize}
 
 
-Aquesta diferència entre implementació i model aporta independència de dades (\emph{data independence}) \parencite{date:dictionary}. En altres paraules, els models no han de tenir detalls d'implementació ni parlar d'objectius de rendiment. 
-\textcite{dbdebunk} detallen algunes confusions actuals sobre la independència entre el model i la implementació.
+Una bona diferenciació entre els tres nivells d'arquitectura aporta
+independència a les dades (\emph{data
+  independence}) \parencite{date:dictionary}. Date considera que és
+una de les propietats més importants que han de complir els SGBD. De
+forma resumida, la independència a les dades significa que el nivell
+lògic no ha de contenir detalls d'implementació ni parlar d'objectius
+de rendiment sinó que aquests són part del nivell físic. Així ha de
+ser possible canviar el nivell físic sense afectar el nivell lògic.
+mantenint.  Així doncs, un model de dades concret pot tenir diverses
+implementacions en el nivell físic, per exemple
+\emph{PostgreSQL} \parencite{postgresql} per al model
+relacional. \textcite{dbdebunk} detallen algunes confusions actuals
+sobre la independència entre el model i la implementació.
 
-
-
-
-
+ 
 
 
 \subsection{Sistemes relacionals}
 \label{sec:estat:sgbdr}
 
-El model relacional va ser proposat per \textcite{codd70} per a
-formalitzar els SGBD, els quals quan es basen en aquestes teories
-s'anomenen relacionals (SGBDR). A partir de llavors els SGBDR han anat
-evolucionat fins a aconseguir una gran solidesa, amb
-\textcite{date:introduction,date06,date:dictionary} com a principal
-divulgador.
+El model relacional va ser proposat per \textcite{codd70} per tal de
+formalitzar els SGBD amb teories matemàtiques consolidades.  El model
+relacional va significar un gran canvi en la recerca en SGBD ja que,
+a diferència dels models antics, possibilitava l'estudi dels problemes
+amb teories matemàtiques: la lògica i l'àlgebra de
+conjunts \parencite{atzeni13:relational_model_dead}.  A partir de
+llavors els SGBDR han evolucionat fins a aconseguir una gran solidesa,
+amb \textcite{date:introduction,date06,date:dictionary} com a
+principal divulgador.
+
+
+
+El model relacional defineix el nucli dels SGBD en tres parts:
+\begin{itemize}
+\item Les relacions com a estructura principal per a
+  representar les dades. Els tipus de dades també són necessaris per a
+  representar les dades però no es defineixen en l'estructura
+  principal sinó que són considerats ortogonals. \todo{vegeu més
+    endavant?}
+
+\item Operacions sobre les relacions, definides dualment a partir de
+  l'àlgebra de conjunts i de la lògica i anomenades àlgebra relacional
+  i càlcul lògic respectivament. Totes dues tenen una definició
+  totalment independent però s'han dissenyat a la vegada i són
+  coherents entre elles.
+
+\item Regles d'integritat o restriccions \todo{}
+
+\end{itemize}
 
 
 \todo{}
-\emph{``The introduction of the relational model in 1970
-marked a striking difference with respect to all the
-previous research on databases. The main reason
-for this lies in the strong mathematical foundations
-upon which this model is based, which provided
-the database research community with the possibil-
-ity to approach the problems that were raised dur-
-ing the years by means of logical and mathematical
-tools, and to ensure the correctness and effective-
-ness of the proposed solutions by solid mathemati-
-cal proofs.''} \textcite{atzeni13:relational_model_dead}.
 
+Quan els SGBD es basen en el model relacional s'anomenen relacionals
+(SGBDR).  Les implementacions més populars de SGBDR són les que
+ofereixen a l'usuari el llenguatge SQL per a operar amb les bases de
+dades, a continuació ens hi referim com a SGBD SQL.  Ara bé, segons
+Date els SGBD SQL es desvien considerablement del model relacional:
+permeten files duplicades, tenen ordre en les columnes, permeten
+valors nuls \parencite{date08:nulls}, etc.
 
-
-
-
-
-Les implementacions més populars de SGBDR són les que s'anomenen
-\emph{SQL} ja que tenen en comú el llenguatge \emph{Structured Query
-  Language}. Ara bé, els SGBD \emph{SQL} es desvien considerablement
-del model relacional: permeten files duplicades, tenen ordre en les
-columnes, permeten valors nuls, etc, sent aquest últim un tema
-actualment discutit \parencite{date08:nulls}.
-
-Les diferències entre els SGBD \emph{SQL} i el model relacional han
-contribuït a que hi hagi hagut una sèrie de malentesos i
-errors, alguns dels quals han estat avaluats i desmentits per
-\citeauthor{dbdebunk} en vàries
-publicacions \parencite{dbdebunk,date06}.
+Les diferències entre els SGBD SQL i el model relacional han
+contribuït que hi hagi hagut diversos malentesos i errors, alguns dels
+quals han estat avaluats i desmentits \parencite{dbdebunk,date06}.
   
 
 \textcite[cap.~2]{date06} %ch2pp21-22
@@ -189,6 +217,9 @@ d'emmagatzematge. % 'the object model' is closer to being a model of
 
 
 
+
+
+
 \subsubsection{Extensió del model}
 %Com s'ha d'estendre el model relacional?
 
@@ -236,6 +267,29 @@ tractar eficientment.
 
 
 \subsection{Altres sistemes}
+
+
+
+Fabian Pascal %\url{http://www.dbdebunk.com/2013/11/more-on-erm-still-not-data-model.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+blogspot%2FTuHQT+%28DATABASE+DEBUNKINGS%29}:
+% ``I never claimed that "only RM models data". In fact, the hierarchic and network data models also do, but were discarded decades ago because they were, for various reasons, inferior to the RM. Other than those two, I am unaware of any other proposed data model that is formal and complete.'' 
+% ``There have been attempts to structure and manipulate data based on other logics/theories e.g. graph theory or 2nd order logic, but they have proved more complex and less flexible and comprehensible than RT. In my modeling paper I provide a criterion for comparing data models on superiority, but doing it right is non-trivial and nobody has ever claimed superiority to RT on sound grounds.''
+
+
+
+\todo{Encara avui hi ha discussions en l'àmbit de SGBD}
+Es pot dir que hi ha quatre corrents d'opinió: Els SQL, els NoSQL, els NewSQL i els RelacionalsPurs (els teòrics com Date, Darwen i Pascal).
+És molt difícil valorar per què tenir un model fortament matemàtic és millor que no tenir-lo, això s'ha demostrat a través de l'experiència. Per tant algunes discussions giren al voltant d'això. Alhora també és molt difícil aconseguir una implementació totalment fidedigna al model matemàtic, a causa de la gran potència que aconsegueixen les matemàtiques amb l'abstracció, i molt menys que sigui una implementació eficient. Per tant altres discussions giren al voltant d'això. 
+
+Tenen raó quan DateDarwenPascal diuen que molts dels productes NoSQL són retornar a models pre-relacional fallits (jeràrquic o  altres) però també tenen raó els NoSQL quan diuen que fin a l'arribada dels seus productes no hi havia cap sistema informàtic capaç de resoldre eficientment determinades aplicacions. Potser s'ha de passar per uns moments de transició d'implementacions NoSQL de baix nivell (més properes al nivell físic) per a després agafar les bones idees i millorar els sistemes relacionals. De fet en certa manera ja està succeint: el corrent NoSQL ha esperonat la millora dels productes SQL (p.ex. cas de MapReduce esperona al NewSQL de Stonebraker).
+
+Per altra banda, la definició del concepte de SGBD ha hagut de canviar. Primer anava acompanyada de requisits particulars (propietats ACID, transaccions, seguretat) però ara s'ha hagut de generalitzar i centrar-se en el nucli dels SGBD: de fet és exactament el que descriu el model relacional. En canvi els requisits particulars es descriuen com a complements d'aquest nucli. (alguns fins i tot diuen que el sistema de fitxers es pot veure com un SGBD).
+
+
+\todo{}
+
+
+
+
 
 Les crítiques als SGBDR, sobretot les degudes als SGBD
 \emph{SQL}, han contribuït a voler explorar altres models de
@@ -438,4 +492,4 @@ cos a nivell acadèmic.
 %%% TeX-master: "main"
 %%% End: 
 
-% LocalWords:  monitoratge SGBD SGBDR
+% LocalWords:  monitoratge SGBD SGBDR SQL
