@@ -22,6 +22,15 @@
 
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
+%per tal que trenqui la coma en math inline mode 
+%http://tex.stackexchange.com/questions/19094/allowing-line-break-at-in-inline-math-mode-breaks-citations/
+\AtBeginDocument{%
+  \mathchardef\mathcomma\mathcode`\,
+  \mathcode`\,="8000 
+}
+{\catcode`,=\active
+  \gdef,{\mathcomma\discretionary{}{}{}}
+}
 \newtheorem{definition}{Definició}
 \def\figureautorefname{figura} %ús: \autoref{}
 \def\tableautorefname{taula} %ús: \autoref{}

@@ -93,41 +93,121 @@ sobre la independència entre el model i la implementació.
 \subsection{Sistemes relacionals}
 \label{sec:estat:sgbdr}
 
-El model relacional va ser proposat per \textcite{codd70} per tal de
-formalitzar els SGBD amb teories matemàtiques consolidades.  El model
-relacional va significar un gran canvi en la recerca en SGBD ja que,
-a diferència dels models antics, possibilitava l'estudi dels problemes
-amb teories matemàtiques: la lògica i l'àlgebra de
+El model relacional va ser proposat per \textcite{codd70} com una
+teoria abstracta de dades per tal de formalitzar els SGBD amb teories
+matemàtiques consolidades.  El model relacional va significar un gran
+canvi en la recerca en SGBD ja que, a diferència dels models antics,
+possibilitava l'estudi dels problemes amb teories matemàtiques: la
+lògica i l'àlgebra de
 conjunts \parencite{atzeni13:relational_model_dead}.  A partir de
-llavors els SGBDR han evolucionat fins a aconseguir una gran solidesa,
-amb \textcite{date:introduction,date06,date:dictionary} com a
-principal divulgador.
+llavors el model relacional ha evolucionat fins a aconseguir una gran
+solidesa, amb \textcite{date:introduction,date06,date:dictionary} com
+a principal divulgador.  Quan els SGBD es basen en el model relacional
+s'anomenen relacionals (SGBDR).
 
 
 
 El model relacional defineix el nucli dels SGBD en tres parts:
 \begin{itemize}
-\item Les relacions com a estructura principal per a
+\item Estructural: les relacions com a estructura principal per a
   representar les dades. Els tipus de dades també són necessaris per a
   representar les dades però no es defineixen en l'estructura
   principal sinó que són considerats ortogonals. \todo{vegeu més
     endavant?}
 
-\item Operacions sobre les relacions, definides dualment a partir de
-  l'àlgebra de conjunts i de la lògica i anomenades àlgebra relacional
-  i càlcul lògic respectivament. Totes dues tenen una definició
-  totalment independent però s'han dissenyat a la vegada i són
-  coherents entre elles.
+\item Manipulació: operacions sobre les relacions i que resulten en
+  noves relacions. Són definides dualment a partir de l'àlgebra de
+  conjunts i de la lògica i anomenades àlgebra relacional i càlcul
+  lògic respectivament, totes dues tenen una definició totalment
+  independent però s'han dissenyat a la vegada i són coherents entre
+  elles.
 
-\item Regles d'integritat o restriccions \todo{}
+\item Integritat: regles d'integritat o restriccions que han de
+  complir les variables relació. És una aplicació particular de les
+  operacions. Per exemple la clau primària \todo{Date no ho considera
+    del nucli}
 
 \end{itemize}
 
 
+La definició de les relacions inicialment es basava en el concepte
+matemàtic homònim en el sentit de producte cartesià de conjunts, però
+el model relacional ha anat evolucionat i ara ja no són exactament el
+mateix.  Les relacions es defineixen com una parella de capçalera i
+cos. El cos és un conjunt de tuples on cada tuple és un conjunt de
+parelles atribut i valor. Tots els tuples d'una mateixa relació tenen
+els mateixos atributs, així es distingeix entre la capçalera de la
+relació --els atributs-- i el cos de la relació --els tuples.
+
+Per exemple una relació és $r_1=(\{\text{nom},\text{edat} \}, \{
+\{(\text{nom},\text{a}),(\text{edat},32)\},
+\{(\text{nom},\text{b}),(\text{edat},23) \} \})$.  Simplificant i
+sense explicitar que els atributs no tenen ordre, la mateixa relació
+es pot expressar de forma més compacta $r_1=(
+(\text{nom},\text{edat}), \{ (\text{a},32),(\text{b},23) \})$.  
+En la definició estructural del model relacional, els valors sempre
+pertanyen a un tipus de dades i cada atribut és restringit a un únic
+tipus de dades. Així, de manera més completa hauríem d'escriure la
+capçalera de la relació $r1$ com $\{\text{nom}:
+\text{text},\, \text{edat}:\text{enter} \}$.
+
+
+
+
+Les relacions es poden representar gràficament com a taules, per
+exemple a la \autoref{fig:art:relacio:taula} es visualitza la relació
+$r_1$.  Així, els conceptes de taules s'associen als de relacions i,
+informalment, les relacions s'anomenen taules, els tuples, files o
+registres, i els atributs, columnes o camps.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$r_1$} \\ \hline
+    nom  & edat \\ \hline
+    a  & 32 \\
+    b  & 23 \\ \hline
+  \end{tabular} 
+  \caption{Visualització com a taula d'una relació}
+  \label{fig:art:relacio:taula}
+\end{figure}
+
+
+Hi ha, però, dues relacions que tenen un nom específic. Són la relació
+amb la capçalera i els tuples buits $\text{table\_dee} = (\{\},\{\})$
+i la relació amb la capçalera buida i un tuple buit $\text{table\_dum}
+= (\{\},\{\{\}\})$. Aquestes no tenen una representació clara com a
+taula.  \todo{repassar noms dee i dum}
+
+
+
 \todo{}
 
-Quan els SGBD es basen en el model relacional s'anomenen relacionals
-(SGBDR).  Les implementacions més populars de SGBDR són les que
+
+ Cal no confondre el
+concepte de taula-relació (\emph{relation}) amb el de parentiu
+(\emph{relationship}), els quals en català tots dos s'anomenen relació. 
+\todo{podríem anomenar-lo taula-relació, taula relacional, taulaR per no confondre-ho?}
+El parentiu es pot representar amb les relacions.
+
+
+Pel que fa als operadors, en el cas del model definit en l'àlgebra
+relacional estan fortament relacionats amb l'àlgebra de conjunts. Així
+hi ha els operadors habituals de conjunts, com per exemple la unió, la
+intersecció o el producte; i altres d'específics per a les relacions,
+com per exemple la projecció, la selecció, la junció o el reanomena.
+
+\todo{alguna cosa sobre les variables relació i l'assignació?}
+
+
+
+
+\subsubsection{Implementacions relacionals}
+
+
+\todo{}
+
+ Les implementacions més populars de SGBDR són les que
 ofereixen a l'usuari el llenguatge SQL per a operar amb les bases de
 dades, a continuació ens hi referim com a SGBD SQL.  Ara bé, segons
 Date els SGBD SQL es desvien considerablement del model relacional:
