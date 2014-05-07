@@ -70,6 +70,8 @@ http://www.data-compression.com/theory.shtml
 
 
 
+
+
 \section{Criteri RRDtool}
 
 RRDtool expliquen un criteri que és definir les k dels discs inferior a l'amplada en píxels de la pantalla. Aquest és un criteri basat en una consulta per a fer visualització immediatament. Llavors no té sentit tenir més nombre de dades que les que es poden visualitzar. 
@@ -91,6 +93,32 @@ fmean(multiresolution(s)) =  \frac{1}{t_f-t_0}\int\right[\frac{1}{\delta}\int s[
 \[
  =  \frac{1}{t_f-t_0}\frac{\delta}{\delta}\right[\int s[\tau,\tau+\delta]+\int s[\tau+\delta,\tau+2\delta]+\dots \left] =  \frac{1}{t_f-t_0} \int s[t_0,t_f]
 \]
+
+
+
+\section{Aplicació de la teoria de la informació als SGSTM}
+
+Habitualment en sèries temporals la mesura de qualitat dels algoritmes d'aproximació és la distància/similitud entre la sèrie temporal original i l'aproximada. Això en el cas de SGSTM no té sentit perquè segurament la sèrie temporal comprimida no serà molt similar a l'original.
+
+Això també passa en els algoritmes de compressió amb pèrdua. Els senyals comprimit poden no tenir res a veure amb els originals, però un ésser humà no es capaç de distingir entre els dos: la mesura de similitud és subjectiva. 
+
+
+En el cas dels SGSTM la mesura de qualitat hauria de ser si donada una consulta dóna  el mateix resultat en la sèrie temporal original que en la comprimida. Per exemple una consulta: hi ha un increment en les dades mesurades.
+
+
+
+
+Semblances dels SGSTM amb la compressió amb pèrdua.
+
+* En el cas de la visualització es pot entendre totalment semblant. Un algoritme de compressió amb pèrdua es pot entendre com una funció f sobre unes dades originals que retorna unes dades noves d'=f(d) i subjectivament es perceben com a semblants o fins i tot no s'hi veu diferència d~d'. Així per exemple en les imatges s'aplica compressió amb pèrdua per a obtenir altres imatges sense detalls que l'ull humà no pot percebre o bé també s'aplica per a reduir les resolucions de la imatge quan els mitjans de reproducció no són capaços de reproduir-les amb tanta qualitat.  Així en les sèries temporals podem fer una similitud si es tracta d'un problema de visualització: no cal visualitzar la sèrie temporal original si aquesta té molta resolució i no som capaços d'apreciar-la. Per exemple si capturem dades cada 5 minuts al llarg d'un any obtenim 43800 punts; si no disposem d'un monitor amb aquest nombre de píxels d'amplada no els podrem percebre.
+
+
+Diferències dels SGSTM amb la compressió amb pèrdua: 
+
+* No hi ha descompressió. Els algoritmes de compressió amb pèrdua normalment van associats amb les tècniques de compressió/descompressió; és a dir que les dades s'emmagatzemen amb estructures intermitges, que ocupen menys mida, i que cal descomprimir per recuperar-les. En els cas dels SGSTM les dades s'emmagatzemen com a subsèries temporals en els discs i per tant a l'hora de recuperar-les ja són sèries temporals, com a molt potser fa falta concatenar-les per a obtenir tota la sèrie temporal.
+
+
+
 
 
 
