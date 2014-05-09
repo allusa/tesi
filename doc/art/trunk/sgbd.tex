@@ -13,16 +13,17 @@ complir aquests objectius, els SGBD ofereixen a l'usuari diferents
 operacions com per exemple crear una base de dades, afegir dades o
 operar amb les dades emmagatzemades. 
 
-Els àmbits d'aplicació dels SGBD són varis: operacions repetitives
-i rutinàries de producció, anomenades \emph{online transaction
+Els àmbits d'aplicació dels SGBD són varis: operacions repetitives i
+rutinàries de producció, anomenades \emph{online transaction
   processing}; sistemes per a prendre decisions empresarials, a
 vegades anomenats \emph{data warehouse}; processament de dades
 científiques; etc.  Alguns dels avantatges de gestionar aquestes dades
 en bases de dades són: evitar la disgregació de la informació i
 tenir-la perfectament organitzada, poder compartir la mateixa
 informació entre diverses aplicacions, garantir la consistència i la
-integritat de les dades i evitar redundàncies innecessàries, o afegir
-seguretat a la gestió de les dades.
+integritat de les dades i evitar redundàncies innecessàries, afegir
+seguretat a la gestió de les dades o optimitzar les consultes que
+l'usuari so\l.licita.
 
 
 Els SGBD es poden descriure mitjançant teories matemàtiques que reben
@@ -132,7 +133,19 @@ El model relacional defineix el nucli dels SGBD en tres parts:
 La definició de les relacions inicialment es basava en el concepte
 matemàtic homònim en el sentit de producte cartesià de conjunts, però
 el model relacional ha anat evolucionat i ara ja no són exactament el
-mateix.  Les relacions es defineixen com una parella de capçalera
+mateix. Tampoc no s'ha de confondre el terme relació (\emph{relation})
+del model relacional amb el terme relació de parentiu
+(\emph{relationship}). El primer és el concepte basat en conjunts que
+definim a continuació mentre que el segon és el concepte de parentiu
+entre entitats: una a molts, molts a molts, etc. De fet, les
+estructures de parentiu és una de les moltes dades que poden ser
+expressades en el model relacional. Alguns autors del model relacional
+prefereixen el terme taula relacional (\emph{relational table}) en
+comptes de relació \parencite{dbdebunk}.
+
+
+
+Les relacions es defineixen com una parella de capçalera
 (\emph{heading}) i cos (\emph{body}). El cos és un conjunt de tuples
 on cada tuple és un conjunt de parelles atribut i valor. Tots els
 tuples d'una mateixa relació tenen els mateixos atributs, així es
@@ -232,17 +245,6 @@ expressions. A causa d'això les vistes també s'anomenen relvar
 virtuals mentre que les relvar que no són derivades s'anomenen relvar
 base. Les relvar s'emmagatzemen en una relació especial de les bases
 de dades: el catàleg.
-
-
-\todo{}
-
-Una darrera nota:
- Cal no confondre el
-concepte de taula-relació (\emph{relation}) amb el de parentiu
-(\emph{relationship}), els quals en català tots dos s'anomenen relació. 
-Alguns autors ho anomenen taula relacional (relational table) Pascal? \parencite{dbdebunk}
-\todo{podríem anomenar-lo taula-relació, taula relacional, taulaR per no confondre-ho?}
-El parentiu es pot representar amb les relacions.
 
 
 
