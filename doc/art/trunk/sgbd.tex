@@ -112,21 +112,20 @@ El model relacional defineix el nucli dels SGBD en tres parts:
 \item Estructural: les relacions com a estructura principal per a
   representar les dades. Els tipus de dades també són necessaris per a
   representar les dades però no es defineixen en l'estructura
-  principal sinó que són considerats ortogonals. \todo{vegeu més
-    endavant?}
+  principal sinó que són considerats ortogonals
+  (v.~\autoref{sec:art:relacional-tipus}).
 
 \item Manipulació: operacions sobre les relacions i que resulten en
   noves relacions. Són definides dualment a partir de l'àlgebra de
-  conjunts i de la lògica i anomenades àlgebra relacional i càlcul
-  lògic respectivament, totes dues tenen una definició totalment
-  independent però s'han dissenyat a la vegada i són coherents entre
-  elles.
+  conjunts i de la lògica, anomenades àlgebra relacional i càlcul
+  lògic respectivament. Totes dues tenen una definició independent
+  però són equivalents.
 
 \item Integritat: regles d'integritat o restriccions que han de
-  complir les variables relació. És una aplicació particular de les
-  operacions. Per exemple la clau primària \todo{Date no ho considera
-    del nucli}
-
+  complir les variables relació. La integritat es basa en aplicar
+  operacions que han de retornar el valor cert. La integritat s'ha de
+  complir sempre, normalment es comprova durant les assignacions.  Per
+  exemple la clau primària és una regla d'integritat.
 \end{itemize}
 
 
@@ -201,32 +200,38 @@ tenen una representació clara com a taula.
 
 
 
-
-\todo{}
-
 Pel que fa als operadors, en el cas de l'àlgebra relacional estan
 fortament relacionats amb l'àlgebra de conjunts. Així hi ha els
 operadors habituals de conjunts, com per exemple la unió, la
 diferència, la intersecció o el producte; i altres d'específics per a
 les relacions, com per exemple la projecció, la selecció, la junció o
-el reanomena \parencite[cap.~7]{date04:introduction8}.
-
-\todo{dir alguna cosa del càlcul relacional?}
-En el cas del càlcul lògic, també anomenat càlcul relacional, estan relacionats amb la lògica. \parencite[cap.~8]{date04:introduction8}. 
-
-
-
+el reanomena \parencite[cap.~7]{date04:introduction8}.  En el cas del
+càlcul lògic, també anomenat càlcul relacional, estan relacionats amb
+la lògica de predicats. Així per exemple hi ha un operador de rang per
+recórrer el conjunt de tuples, el quantificador existencial o el
+quantificador universal.\parencite[cap.~8]{date04:introduction8}.
 
 
-\todo{alguna cosa sobre les variables relació i l'assignació?}
 
- En el model relacional
-quan es parla de relacions es refereix a valors relació (relation value). Aquests valors es poden assignar a variables, l'operació d'assignació ja és de l'àlgebra. Aleshores aquestes variables es poden anomenar també variables relació (relvar). 
-Les relvar són interessants perquè en els llenguatges que manipulen les bases de dades és còmode tenir operacions sobre les relvar (delete, update, insert, etc.) que són dreceres a operacions d'assignació sobre les relacions valor. . Aquestes operacions sobre variables relació no apareixen en el nucli del model relacional ? I també hi ha les regles d'integritat sobre les relvar. 
-Unes relvar especials són les vistes. Les vistes són relvar derivades a partir d'operacions a altres relvar; és a dir són àlies d'expressions relacionals i actuen com a relvar en altres expressions. A causa d'això a vegades també s'anomenen relvar virtuals. 
-
-La igualtat algebraica (=) entre relvars i valors relació  es pot entendre inicialment però després les relvar perden el sentit de variable algebraica i l'assignació (:=) s'ha d'entendre com una altra cosa.
-Prova d'això és que les relvar pertanyen al catàleg de la base de dades.
+En el model relacional es distingeix entre les variables relació o
+relvar (\emph{relation variable}) i els valors relació (\emph{relation
+  value}). El valor relació s'anomena simplement relació, com ja hem
+definit fins ara.  Una relvar és una variable a les qual s'assigna una
+relació.  L'assignació a les relvar es defineix amb el símbol $:=$ a
+diferència de la igualtat algebraica o la definició de variables
+algebraiques de símbol $=$, com ja hem usat.  Les relvar són els
+objectes bàsics d'emmagatzematge a les bases de dades i per tant són
+els objectes bàsics als quals s'apliquen les regles
+d'integritat. També hi ha operacions que treballen sobre les relvar,
+per exemple la inserció, l'actualització o l'esborrat, que són àlies
+de combinacions de l'assignació amb altres operacions relacionals.
+Unes relvar especials són les vistes. Les vistes són relvar derivades
+a partir d'operacions a altres relvar; és a dir són àlies
+d'expressions relacionals i actuen com a relvar en altres
+expressions. A causa d'això les vistes també s'anomenen relvar
+virtuals mentre que les relvar que no són derivades s'anomenen relvar
+base. Les relvar s'emmagatzemen en una relació especial de les bases
+de dades: el catàleg.
 
 
 \todo{}
@@ -245,6 +250,7 @@ El parentiu es pot representar amb les relacions.
 
 
 \subsubsection{Extensió del model amb nous tipus}
+\label{sec:art:relacional-tipus}
 %Com s'ha d'estendre el model relacional?
 
 El model relacional ha evolucionat però no es considera que hi hagi hagut
@@ -323,18 +329,20 @@ operadors predefinits de l'àlgebra relacional.
 
 
 
-\todo{}
+Finalment, com a exemple de nous tipus de dades, cal destacar que en
+l'àmbit dels sistemes d’informació geogràfica (SIG) hi va haver un
+gran impacte quan els SGBDR es van estendre amb el tipus de dades
+espacials \parencite{nunes13:icc_geospacial}.  Inicialment els SIG
+usaven programes informàtics específics per a la gestió de les dades
+geogràfiques. Hi va haver una recerca intensa en els SGBDR per tal
+d'establir models que permetessin emmagatzemar i consultar dades
+geomètriques i les propietats espacials de la informació
+geogràfica. D'aquesta manera es van definir el que es coneix com a
+bases de dades espacials o geoespacials, les quals han permès
+desenvolupar tots els avantatges dels SGBD en els SIG. %[bollaert06:thesis]
 
-
-Finalment, cal destacar una extensió dels SGBD amb nous tipus que ha
-tingut un gran impacte en el seu àmbit: GIS
-
-
-\todo{ampliació de tipus als SGBD molt important a GIS [bollaert06:thesis]}
-
-
-Una altra extensió de tipus important és la de les dades temporals,
-les quals detallem a la \autoref{sec:art:dades_temporals}.
+Una altra extensió de tipus important en els SGBDR és la de les dades
+temporals, les quals detallem a la \autoref{sec:art:dades_temporals}.
 
 
 
