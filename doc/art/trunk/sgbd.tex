@@ -478,30 +478,135 @@ solució per a tots els problemes de bases dades, cosa que
   size does not fit all}; és a dir que en cada camp d'aplicació les
 bases de dades tenen uns requisits diferents i per tant una
 determinada implementació pot ser eficient en un camp concret però no
-en tots.  
+en tots. A més, cada camp d'aplicació pot requerir uns requisits
+diferents d'eficiència: temps d'execució ràpid, poca despesa
+d'energia, poques dades transmeses per la xarxa, etc.
+
+
+
+
+El Third Manifesto, que ja hem comentat, principalment defineix els
+requisits D per a les implementacions. Defensa que els models teòrics
+dels SGBD tenen més sentit que mai ja que permeten mantenir una
+definició comuna per a les diverses implementacions que hi pugui
+haver.  És un corrent molt crític amb els SGBD SQL i els NoSQL perquè
+s'allunyen del model relacional
+teòric \parencite{datedarwen13:notosql_notonosql}, sobretot pel que fa
+al concepte de l'\emph{Information Principle} \parencite[part
+7]{date06}. Precisament, actualment del Third Manifesto destaca la
+proposta del llenguatge Tutorial D, que no és SQL.  Tot i així,
+actualment no hi ha completada cap implementació totalment fidedigna
+al model relacional del Third Manifesto. Aquest és un model matemàtic
+de gran potència i molta abstracció i per tant és difícil obtenir-ne
+una implementació completa. A més les implementacions que s'estan
+desenvolupant són per a usos acadèmics, encara no hi ha cap intent per
+a aconseguir implementacions productives o comercials que tinguin en
+compte aspectes d'eficiència.
+
+
+% \todo{Encara avui hi ha discussions en l'àmbit de SGBD}
+% Es pot dir que hi ha quatre corrents d'opinió: Els SQL, els NoSQL, els NewSQL i els RelacionalsPurs (els teòrics com Date, Darwen i Pascal).
+% És molt difícil valorar per què tenir un model fortament matemàtic és millor que no tenir-lo, això s'ha demostrat a través de l'experiència. Per tant algunes discussions giren al voltant d'això. Alhora també és molt difícil aconseguir una implementació totalment fidedigna al model matemàtic, a causa de la gran potència que aconsegueixen les matemàtiques amb l'abstracció, i molt menys que sigui una implementació eficient. Per tant altres discussions giren al voltant d'això.
+
+
+\todo{}
+
+
+El NoSQL és un corrent modern en l'àmbit dels SGBD que té com a
+objectiu millorar les limitacions d'eficiència dels SGBD
+SQL \parencite{edlich:nosql,stonebraker10}. El terme NoSQL és un nom
+propi lexicalitzat per al lema del corrent \emph{Not Only SQL}.  Tot i
+que hi ha molta varietat en els productes NoSQL, s'ha d'entendre NoSQL
+com una crítica a les implementacions comercials actuals del model
+relacional, principalment els SGBD SQL, i no com una crítica al model
+relacional ja que els objectius parlen de millorar el rendiment dels
+SGBD, cosa que és només atribuïble al nivell físic però no al nivell
+lògic.  Alguns investigadors de SGBDR veuen compatible la coexistència
+dels SGBD SQL amb els NoSQL perquè tenen objectius molt diferents
+\parencite{atzeni13:relational_model_dead}.
+
+
+Per exemple un producte NoSQL que té molt èxit en l'àmbit open-source actualment és Hadoop \parencite{hadoop}, el qual és basa en un model de programació anomenat MapReduce. MapReduce [lemel08]
+
+
+
+
+
+
+El NewSQL és el corrent més recent i apareix com a contrapartida dels
+SGBD SQL tradicionals i el NoSQL. Si bé critiquen els SGBD SQL actuals
+per voler ser \emph{one size fits all}, proposen com el disseny de
+implementacions dels SGBD SQL que tinguin en compte els requisits d'eficiència de les aplicacions actuals.
+És un corrent crític amb alguns productes NoSQL que confonen 
+
+
+   [Stonebraker NoCOUGJournal2011] 
+
+
+Per una banda veuen amb bons ulls la recerca NoSQL en camp on els SGBD SQL 
+
+
+Per exemple, avaluen que les aportacions del model de programació
+MapReduce ja estan suportades pels SGBD para\l.lels des de fa molt
+temps \parencite{pavlo09:sigmod}.
+
+Stonebraker NoCOUGJournal2011:
+NoSQL is a collection of 50 or 75 vendors with various
+objectives. For some of them, the goal is to go fast by rejecting
+SQL and ACID. I feel these folks are misguided, since SQL is
+not the performance problem in current RDBMSs. In fact,
+there is a NewSQL movement that contains very high-perfor-
+mance ACID/SQL implementations.
+Other members of the NoSQL movement are focused on
+document management or semi-structured data—application
+areas where RDBMSs are known not to work very well. These
+folks seem to be filling a market not well served by RDBMSs.
+
+
+
+
+En conclusió, per una banda el Third Manifesto considera que molts
+dels productes NoSQL retornen a models pre-relacional fallits
+(jeràrquic o altres). Per altra banda, els NoSQL reclamen que fins a
+l'arribada dels seus productes no hi havia cap sistema de bases de
+dades capaç de resoldre eficientment determinades aplicacions. Si bé
+és cert que els productes NoSQL són implementacions amb models propers
+al nivell físic, gràcies a això tenen més facilitats per a investigar
+noves estructures eficients sense haver de tenir en compte tota la
+potència del model relacional. Per una tercera banda, el NewSQL recull
+aquestes estructures que milloren l'eficiència i intenta expressar-les
+en el model relacional; per exemple el cas de MapReduce/Hadoop vs
+Stonebraker\todo{}.  Finalment, cal destacar que, tot i aquests nous
+productes, els SGBD SQL tradicionals encara són el més usats perquè en
+moltes aplicacions segueixen sent l'opció més eficient.
+
+
+
+
+\todo{}
+
+Per altra banda, la definició del concepte de SGBD ha hagut de canviar. Primer anava acompanyada de requisits particulars (propietats ACID, transaccions, seguretat, optimització de les consultes) però ara s'ha hagut de generalitzar i centrar-se en el nucli dels SGBD: de fet és exactament el que descriu el model relacional. En canvi els requisits particulars es descriuen com a complements d'aquest nucli. (alguns fins i tot diuen que el sistema de fitxers es pot veure com un SGBD).
+
+
+
 
 
 
 \todo{}
 
 
-El Third Manifesto, que ja hem comentat, defineix els requisits D per
-a les implementacions. Defensa que els models teòrics dels SGBD tenen
-més sentit que mai ja que permeten mantenir una definició comuna per a
-les diverses implementacions que hi pugui
-haver \parencite{datedarwen13:notosql_notonosql}.  És un corrent molt
-crític amb els SGBD SQL i els NoSQL perquè s'allunyen del model
-relacional teòric.  Tot i així, actualment no hi ha completada cap
-implementació totalment fidedigna al model relacional del Third
-Manifesto. Aquest és un model matemàtic de gran potència i molta
-abstracció i és difícil obtenir-ne una implementació completa.
-
-\todo{podríem citar algunes crítiques a l'eficiència d'aquest models?}
-
-
-% \todo{Encara avui hi ha discussions en l'àmbit de SGBD}
-% Es pot dir que hi ha quatre corrents d'opinió: Els SQL, els NoSQL, els NewSQL i els RelacionalsPurs (els teòrics com Date, Darwen i Pascal).
-% És molt difícil valorar per què tenir un model fortament matemàtic és millor que no tenir-lo, això s'ha demostrat a través de l'experiència. Per tant algunes discussions giren al voltant d'això. Alhora també és molt difícil aconseguir una implementació totalment fidedigna al model matemàtic, a causa de la gran potència que aconsegueixen les matemàtiques amb l'abstracció, i molt menys que sigui una implementació eficient. Per tant altres discussions giren al voltant d'això.
+Segons es desprèn de \textcite{date06} fins a l'actualitat només hi ha
+hagut un model consolidat pels SGBD: el model relacional.  Ara, en el
+corrent NoSQL també es parla de nous models de
+SGBD \parencite{edlich:nosql,stonebraker09:scidb}.
+\citeauthor{date06} ha avaluat que alguns nous models recuperen
+intents fallits en el passat tot i que es poden representar amb el
+model relacional, per exemple els SGBD XML basats en estructures
+d'arbre \parencite[cap.~14]{date06} \parencite[cap.~27]{date04:introduction8}
+o els ODMG basats en objectes \parencite[cap.~27]{date06}. Tot i així,
+en un futur cal estar atents per si alguns d'aquests models joves de
+SGBD arriben a consolidar-se i poden esdevenir tant potents com el
+model relacional.
 
 
 
@@ -518,38 +623,9 @@ Fabian Pascal %\url{http://www.dbdebunk.com/2013/11/more-on-erm-still-not-data-m
 
 
 
-Tenen raó quan DateDarwenPascal diuen que molts dels productes NoSQL són retornar a models pre-relacional fallits (jeràrquic o  altres) però també tenen raó els NoSQL quan diuen que fin a l'arribada dels seus productes no hi havia cap sistema informàtic capaç de resoldre eficientment determinades aplicacions. Potser s'ha de passar per uns moments de transició d'implementacions NoSQL de baix nivell (més properes al nivell físic) per a després agafar les bones idees i millorar els sistemes relacionals. De fet en certa manera ja està succeint: el corrent NoSQL ha esperonat la millora dels productes SQL (p.ex. cas de MapReduce esperona al NewSQL de Stonebraker).
-
-Per altra banda, la definició del concepte de SGBD ha hagut de canviar. Primer anava acompanyada de requisits particulars (propietats ACID, transaccions, seguretat, optimització de les consultes) però ara s'ha hagut de generalitzar i centrar-se en el nucli dels SGBD: de fet és exactament el que descriu el model relacional. En canvi els requisits particulars es descriuen com a complements d'aquest nucli. (alguns fins i tot diuen que el sistema de fitxers es pot veure com un SGBD).
-
-
-Stonebraker NoCOUGJournal2011:
-NoSQL is a collection of 50 or 75 vendors with various
-objectives. For some of them, the goal is to go fast by rejecting
-SQL and ACID. I feel these folks are misguided, since SQL is
-not the performance problem in current RDBMSs. In fact,
-there is a NewSQL movement that contains very high-perfor-
-mance ACID/SQL implementations.
-Other members of the NoSQL movement are focused on
-document management or semi-structured data—application
-areas where RDBMSs are known not to work very well. These
-folks seem to be filling a market not well served by RDBMSs.
-
-You’ve been championing NewSQL as an answer to NoSQL?
-What exactly is NewSQL?
-Current RDBMSs are too slow to meet some of the de-
-manding current-day applications. This causes some users to
-look for other alternatives. NewSQL preserves SQL and ACID,
-and gets much better performance with a different architec-
-ture than that used by the traditional RDBMS vendors.
-
-\todo{ha d'aparèixer MapReduce i també ha d'aparèixer que Stonebraker està dissenyant el mateix esquema però amb SGBDR}
 
 
 \todo{}
-
-\textcite{datedarwen13:notosql_notonosql}
-
 
 
 Les crítiques als SGBDR, sobretot les degudes als SGBD
@@ -573,45 +649,9 @@ model relacional. %[date06ch25,ch21pp379-380]
 
 
 
-\todo{} La comunitat de SGBD dóna la benvinguda al NoSQL
-\cite{atzeni13:relational_model_dead}. És una bona notícia, a veure si
-a partir d'ara veiem recerca i formalització dels models dels SGBD
-NoSQL i es poden entendre i comprendre les diferències amb els SGBDR.
-
 \todo{més recentment ha aparegut el corrent NewSQL \url{http://readwrite.com/2011/04/06/the-newsql-movement}}
 \url{http://readwrite.com/2011/04/06/the-newsql-movement}
 
-
-Recentment ha aparegut un nou corrent en l'àmbit dels SGBD que
-s'anomena NoSQL (\emph{Not Only SQL}) amb l'objectiu de sobrepassar
-les limitacions dels SGBDR \parencite{edlich:nosql,stonebraker10}.  A
-l'espera que Date valori aquest corrent, cal tenir present els seus
-apunts sobre sistemes relacionals contra sistemes no
-relacionals \parencite[part 7]{date06}, sobretot pel que fa al
-concepte de l'\emph{Information Principle} i que SQL no és un bon
-referent pels SGBDR. És a dir, s'ha d'entendre NoSQL com una crítica a
-les implementacions comercials actuals del model relacional, una
-crítica que pot estar motivada per l'ús de SQL per part d'aquest
-productes.  No es pot entendre, però, el NoSQL com una crítica al
-model relacional ja que els objectius parlen de millorar el rendiment
-dels SGBD, cosa només atribuïble a les implementacions però no al
-model. Precisament, actualment del model relacional destaca la
-proposta de \citeauthor{date:tutoriald} d'un llenguatge,
-\emph{Tutorial D}, que no és SQL.
-
-
-Segons es desprèn de \textcite{date06} fins a l'actualitat només hi ha
-hagut un model consolidat pels SGBD: el model relacional.  Ara, en el
-corrent NoSQL també es parla de nous models de
-SGBD \parencite{edlich:nosql,stonebraker09:scidb}.
-\citeauthor{date06} ha avaluat que alguns nous models recuperen
-intents fallits en el passat tot i que es poden representar amb el
-model relacional, per exemple els SGBD XML basats en estructures
-d'arbre \parencite[cap.~14]{date06} \parencite[cap.~27]{date04:introduction8}
-o els ODMG basats en objectes \parencite[cap.~27]{date06}. Tot i així,
-en un futur cal estar atents per si alguns d'aquests models joves de
-SGBD arriben a consolidar-se i poden esdevenir tant potents com el
-model relacional.
 
 
 \todo{}
@@ -628,6 +668,18 @@ adequately addressed for NoSQL database systems.''}  \textcite{atzeni13:relation
 
 
 
+\todo{sobre model graf}
+\url{http://stackoverflow.com/questions/19570654/do-graph-databases-deprecate-relational-databases/19572483#19572483}
+Graph databases were deprecated by relational-ish technology some 20 to 30 years ago.
+
+The major theoretical disadvantage is that graph databases use TWO basic concepts to represent information (nodes and edges), whereas a relational database uses only one (the relation). This bleeds over into the language for data manipulation, in that a graph-based language must provide two distinct sets of operators : one for operating on nodes, and one for operating on edges. The relational model can suffice with only one.
+
+More operators means more operators to implement for the DBMS builder, more opportunity for bugs, and for the user it means more distinct language constructs to learn. For example, adding information to a database is just INSERT in relational, in graph-based it can be either STORE (nodes) or CONNECT (edges). Removing information is just DELETE (relational), as opposed to either ERASE (nodes) or DISCONNECT (edges).
+
+share|improve this answer
+answered Oct 24 '13 at 17:21
+
+Erwin Smout
 
 
 
