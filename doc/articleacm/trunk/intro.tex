@@ -48,28 +48,31 @@ size, but applied to time series.
 % In multimedia compression a dual storage can be used for a file: 
 % first it is lossless compressed to offline storage and rarely retrievals, and second it is lossy compressed to have less size and be more manageable.
 
-
+\todo{Potser dir que hi ha un SGBD que és RRDtool}
+, que és molt usat en l'àmbit de xarxa, que té una manera especial d'emmagatzemar les dades, que volem proposar un model formal per a aquest tractament per tal de generalitzar les operacions que s'hi poden fer (RRDtool és molt restringit perquè està pensat per a un camp molt específic: el de comptadors de xarxa) i poder-lo aplicar en altres camps, a part d'establir un model formal al qual s'hi puguin realitzar estudis formals de teoria de bases de dades.
 
 %TSMS
 
 This paper focuses on Data Base Management Systems \linebreak[4]
 (\acro{DBMS}) that store and treat data as time series. These are
 usually known as Time Series Data Base Management Systems
-(\acro{TSMS}), \cite{dreyer94,last01}.  We introduce a new data model named
-multiresolution \acro{TSMS} (\acro{MTSMS}). This model organises data
-in an aggregated way and it allows to store time series using
+(\acro{TSMS}), \cite{dreyer94,last01}.  We introduce a new data model
+named multiresolution \acro{TSMS} (\acro{MTSMS}). This model organises
+data in an aggregated way and it allows to store time series using
 different time resolutions. It is designed to cope well with bounded
-storage computers such as sensor systems.
-
+storage computers such as sensor systems.  We describe our model in
+two separated submodels, one a TSMS model mainly for describing time
+series and the other a MTSMS model for describing multiresolution over
+time series.\todo{}
 
 
 
 This manuscript is organised as follows.  A summary of multiresolution
-features is shown in Section~\ref{sec:features}. In
-Section~\ref{sec:model:preliminaries} nomenclature preliminaries of
-\acro{TSMS} are introduced. The \acro{MTSMS} model is presented in
-Section~\ref{sec:MTSMS} and in Section~\ref{sec:M+TSMS} the relation
-between \acro{MTSMS} and \acro{TSMS} models is highlighted.
+features is shown in Section~\ref{sec:features}.  The \acro{TSMS}
+model is presented in Section~\ref{sec:model:TSMS} and the
+\acro{MTSMS} model is presented in Section~\ref{sec:MTSMS}. In
+Section~\ref{sec:M+TSMS} the relation between \acro{MTSMS} and
+\acro{TSMS} models is highlighted.
 % Section~\ref{sec:example} is devoted to a real data multiresolution
 % database example.
 In Section~\ref{sec:related-work} some related work concerning
