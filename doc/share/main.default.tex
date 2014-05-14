@@ -3,38 +3,67 @@
 %--------------------
 % cal compilar amb `pdflatex -shell-escape main.tex`
 %--------------------
-\documentclass[paper=a4,fontsize=11pt,twoside,parskip=half,BCOR12mm]{scrbook}
+\documentclass[paper=a4,fontsize=11pt,parskip=half,
+twoside, BCOR12mm,
+%oneside, %%format web
+% twoside,openany,DIV = 10,BCOR12mm, %%format en paper
+]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
+%%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
+%\usepackage[T1]{fontenc}
 %------------- capçalera ----------------------
 \input{capçalera.default}
 \bibliography{bibliografia}
-%\ExecuteBibliographyOptions{annotation=true,backref=true,}
-\graphicspath{{imatges/}} %{{imatges/}{imatges/model/}}
+\ExecuteBibliographyOptions{
+  annotation=true,backref=true,
+%backref=true, urldate=long, abbreviate=false,%%format web 
+}
 %---------- Mode esborrany --------------------
 %\includeonly{resum}
 %\usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
-%\usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
-%%\renewcommand{\headrulewidth}{0pt}
+%\usepackage{fancyhdr}\pagestyle{fancyplain}\rhead{\fancyplain{--- esborrany \today\ ---}{\color{gray}{\today}}}\renewcommand{\headrulewidth}{0pt}
+%\usepackage[showframe]{geometry}%page margins
 %----------------------------------------------
 
 %------------- format -------------------------
 %%ús coma decimal sense espais:  2{,}5
 \newtheorem{definition}{Definició}
+%per tal que trenqui la coma en math inline mode 
+%http://tex.stackexchange.com/questions/19094/allowing-line-break-at-in-inline-math-mode-breaks-citations/
+\AtBeginDocument{%
+  \mathchardef\mathcomma\mathcode`\,
+  \mathcode`\,="8000 
+}
+{\catcode`,=\active
+  \gdef,{\mathcomma\discretionary{}{}{}}
+}
+%teoremes
+\theoremstyle{plain}
+\newtheorem{definition}{Definició}
+\theoremstyle{definition}
+\newtheorem{example}{Exemple}
 \def\figureautorefname{figura} %ús: \autoref{}
+\def\tableautorefname{taula} %ús: \autoref{}
+\def\definitionautorefname{definició} %ús: \autoref{}
+\def\exampleautorefname{exemple} %ús: \autoref{}
+\def\sectionautorefname{secció} %ús: \autoref{}
+%numeracions d'equacions, definicions, etc.
 \numberwithin{equation}{chapter}
+\numberwithin{definition}{chapter}
+\numberwithin{example}{chapter}
 \DeclareMathOperator*{\seg}{seg}
 \DeclareMathOperator*{\ant}{ant}
 %% The \operatorname and \operatorname* commands[1] display a custom operators, the * version sets the underscored option underneath like the \lim operator
 %-------------- dades --------------------------
 \hypersetup{
-    pdftitle={Model dels SGBD per sèries temporals},
+    pdftitle={Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals},
     pdfauthor={Aleix Llusà Serra},
     pdfcreator={DiPSE--UPC},
-    pdfsubject={SGST},
-    pdfkeywords={sèries temporals; adquisició de dades; SGBD per a sèries temporals; model de dades Round Robin (RRD); SGBD RRDtool},
-    pdflang=ca,
+    pdfsubject={Tesi 2011--2014},
+    pdfkeywords={sèries temporals; model de dades; sistemes de bases de dades; sistemes de monitoratge},
+    pdflang={ca},
 }
-\title{Model dels SGBD per sèries temporals}
+\title{Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals}
 \author{Aleix Llusà Serra}
 %----------------------------------------------
 
@@ -85,15 +114,16 @@
 \printbibliography
 %----------------------------------------------
 
+
 %\backmatter
 
 \end{document}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-% Model dels sistemes de gestió de bases de dades per sèries temporals.
+% Memòria Tesi Doctoral. Model dels sistemes de gestió de bases de dades per sèries temporals.
 %
-% Copyright (C) 2011-2012 Aleix Llusà Serra.
+% Copyright (C) 2011-2014 Aleix Llusà Serra.
 % 
 % This LaTeX document is free software: you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as

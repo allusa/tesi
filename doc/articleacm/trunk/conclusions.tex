@@ -3,6 +3,9 @@
 \section{Related work}
 \label{sec:related-work}
 
+
+\todo{relacionar-ho amb el nostre model}
+
 Bitemporal \acro{DBMS}, sometimes referred directly as temporal data,
 is another database field related with time. Bitemporal data target is
 to keep historical events in the database by associating time
@@ -14,20 +17,20 @@ terms \cite{jensen99:temporaldata,date02:_tempor_data_relat_model}
 marks a promising foundation. It models bitemporal data as relations
 extended with time intervals attributes and extends relational
 operations in order to deal with related time aspects.
+\todo{Some time concepts may be taken into account by TSMS, such as the discussions about time granularities }
 
-
-Therefore \acro{TSMS} are treated as a particular \acro{DBMS}
-field.  Segev and Shoshani \cite{segev87:sigmod} propose an structured
-language for querying \acro{TSMS}. Their time series structures
-include the notion of regularity and representation in time series and
-their operations are SQL-like.  Dreyer et al.\ \cite{dreyer94} propose
-the requirements of special purpose TSMS and they base the model on
-four basic structural elements: events, time series, groups, metadata
-and the time series bases. They implement a special purpose
-\acro{TSMS} called \emph{Calanda} which has calendar operations, can
-group time series and make simple queries. They exemplify it with
-financial data. In \cite{schmidt95} \emph{Calanda} is compared with
-temporal systems designed for time series.
+\acro{TSMS} are treated as a particular \acro{DBMS} field.  Segev and
+Shoshani \cite{segev87:sigmod} propose an structured language for
+querying \acro{TSMS}. Their time series structures include the notion
+of regularity and representation in time series and their operations
+are SQL-like.  Dreyer et al.\ \cite{dreyer94} propose the requirements
+of special purpose TSMS and they base the model on four basic
+structural elements: events, time series, groups, metadata and the
+time series bases. They implement a special purpose \acro{TSMS} called
+\emph{Calanda} which has calendar operations, can group time series
+and make simple queries. They exemplify it with financial data. In
+\cite{schmidt95} \emph{Calanda} is compared with temporal systems
+designed for time series.
 
 
 
@@ -58,6 +61,8 @@ subsets of data as it is usually provided.  They develop the software
 package \emph{TSDS} where time series are stored fully and then
 requested by date ranges or by applying different filters and
 operations to the time series data.
+\todo{Our model represents a generic approach to the multiresolution features, we define it very open so that any attribute aggregate function can be defined}
+
 
 
 Deri et al.\ \cite{deri12:tsdb_compressed_database} present
@@ -100,7 +105,7 @@ piecewise approximation. The time
 series representation obtained with \emph{iSAX} allows to reduce the
 stored space and to index faster and with the same quality as other
 more complex representation methods.
-
+\todo{These techniches of compression are interesting for being used as attribute aggregate functions in the MTSMS model}
 
 % A Multiresolution Symbolic Representation of
 % Time Series; Megalooikonomou, Faloutsos; 2005 proposes multiresolution by decomposing a signal in frequency subsequences and intended mainly to similarity searching. The objective is to reconstruct the original time series. 
@@ -127,6 +132,7 @@ exhibits some time series managing characteristics that include time
 series regularities, interpolation or correlation queries.  However,
 difference between tables and arrays seems too physical and leads to
 ambiguity when representing time series.
+\todo{Our TSMS model proposes time series as more firmly based on relational algebra, clarifying this ambiguity}
 
 
 
@@ -141,7 +147,7 @@ relations and sequences. \emph{Cougar} target field is sensor networks, where
 data is stored distributed. Queries are resolved combining
 sensor data in a data stream abstraction that improves processing
 performance.
-
+\todo{MTSMS model also can be thought as an stream processor, RRDtool is very stream oriented}
 
 
 
