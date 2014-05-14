@@ -331,6 +331,59 @@ operadors predefinits de l'àlgebra relacional.
 
 
 
+
+En algunes extensions, el model relacional ha incorporat conceptes
+d'altres disciplines. En destaca sobretot la incorporació de conceptes
+dels models d'orientació a objectes en el cas dels tipus de dades i de
+l'herència.  Des d'aquesta perspectiva, els SGBDR també s'anomenen
+SGBD objecte/relacionals (\emph{object/relational})
+\parencite{date02:foundation}.  Tot i així, \textcite[cap.~6]{date06}
+avisa de l'ús de la mateixa terminologia amb significat lleugerament
+diferent entre el model relacional i l'orientació a objectes, sobretot
+pel que fa als termes valor, variable i tipus. %[date06ch6pp91]
+Les diferències provenen principalment del fet que el model relacional
+és un model de dades i el model d'orientació a objectes és un
+paradigma de programació i és més proper a un model d'emmagatzematge.
+% 'the object model' is closer to being a model of storage than it is
+% to being a model of data. [date06ch6pp92]
+
+
+
+
+
+% A la \autoref{tab:sgbd:relacional-objectes} es resumeix la possible
+% equivalència lògica dels conceptes entre el model relacional i
+% l'orientació a objectes tal com Date exposa al capítol 6, tot i que
+% cal tenir en compte que la semblança és difusa.
+
+% \begin{table}
+% \centering
+% \begin{tabular}[ht]{ll}
+%   relacional & objectes \\\hline \hline
+%   tipus & tipus, classe, interfície \\\hline
+%   representació & classe, atributs, propietats \\\hline
+%   valor relació, objecte, instància & valor, estat, objecte/instància immutable/estàtic \\\hline
+%   relvar & valor, objecte/instància mutable/dinàmic \\\hline
+%   relvar??? & variable \\\hline
+%   operador & funció, mètode \\\hline
+% \end{tabular}
+% \caption{Possible equivalència lògica de termes entre el model relacional i l'orientació a objectes \parencite[cap.~6]{date06}.}
+% \label{tab:sgbd:relacional-objectes}
+% \end{table}
+
+% Relacional: tipus | representació |  valor, objecte, instància  | variable  | referència (adreça continguda en una variable) | operadors (de lectura i de modificació)
+% Objectes: tipus, classe (tipus amb atributs i mètodes), interfície | classe, atributs,propietats  |  valor, estat, objecte/instància immutable/estàtic |  valor, objecte/instància mutable/dinàmic  | variable | funcions,mètodes (funcions dins de classes) (purs o modificadors)
+
+
+
+
+
+
+
+
+
+
+
 Finalment, com a exemple de nous tipus de dades, cal destacar que en
 l'àmbit dels sistemes d’informació geogràfica (SIG) hi va haver un
 gran impacte quan els SGBDR es van estendre amb el tipus de dades
@@ -414,48 +467,6 @@ d'aquestes implementacions són:
 % tecnològica \emph{TransRelational} \parencite{date:transrelational}.
 
 
-\todo{}
-
-El model relacional ha incorporat conceptes d'altres disciplines. En
-destaca sobretot la incorporació de conceptes dels models d'orientació
-a objectes com és el cas dels tipus de dades i de l'herència.
-Aleshores s'entén que els SGBDR també es puguin anomenar SGBD
-objecte/relacionals (\emph{object/relational})
-\parencite{date02:foundation}.  Tot i així, \textcite[cap.~6]{date06}
-manifesta i avisa de l'ús de la mateixa terminologia amb significat
-diferent entre el model relacional i l'orientació a objectes, sobretot
-pel que fa als termes valor i variable. %[date06ch6pp91]
-La seva hipòtesi per a aquestes diferències és que el model relacional
-és un model de dades i el model d'orientació a objectes és més proper
-a un model
-d'emmagatzematge. % 'the object model' is closer to being a model of
-                  % storage than it is to being a model of
-                  % data. [date06ch6pp92]
-
-% A la \autoref{tab:sgbd:relacional-objectes} es resumeix la possible
-% equivalència lògica dels conceptes entre el model relacional i
-% l'orientació a objectes tal com Date exposa al capítol 6, tot i que
-% cal tenir en compte que la semblança és difusa.
-
-% \begin{table}
-% \centering
-% \begin{tabular}[ht]{ll}
-%   relacional & objectes \\\hline \hline
-%   tipus & tipus, classe, interfície \\\hline
-%   representació & classe, atributs, propietats \\\hline
-%   valor, objecte, instància & valor, estat, objecte/instància immutable/estàtic \\\hline
-%   variable & valor, objecte/instància mutable/dinàmic \\\hline
-%   referència & variable \\\hline
-%   operador & funció, mètode \\\hline
-% \end{tabular}
-% \caption{Possible equivalència lògica de termes entre el model relacional i l'orientació a objectes \parencite[cap.~6]{date06}.}
-% \label{tab:sgbd:relacional-objectes}
-% \end{table}
-
-% Relacional: tipus | representació |  valor, objecte, instància  | variable  | referència (adreça continguda en una variable) | operadors (de lectura i de modificació)
-% Objectes: tipus, classe (tipus amb atributs i mètodes), interfície | classe, atributs,propietats  |  valor, estat, objecte/instància immutable/estàtic |  valor, objecte/instància mutable/dinàmic  | variable | funcions,mètodes (funcions dins de classes) (purs o modificadors)
-
-
 
 
 
@@ -472,16 +483,22 @@ NewSQL.
 
 Els SGBD SQL són els productes tradicionals que van implementar el
 model relacional inicial. Aquests productes estan molt consolidats i
-són els més usats. Això no obstant, ja no són considerats com l'única
-solució per a tots els problemes de bases dades, cosa que
-\textcite{stonebraker07,stonebraker09} ho sentencia amb: \emph{one
-  size does not fit all}; és a dir que en cada camp d'aplicació les
-bases de dades tenen uns requisits diferents i per tant una
-determinada implementació pot ser eficient en un camp concret però no
-en tots. A més, cada camp d'aplicació pot requerir uns requisits
-diferents d'eficiència: temps d'execució ràpid, poca despesa
-d'energia, poques dades transmeses per la xarxa, etc.
-
+són els més usats. Algunes propietats que tenen són les següents:
+garantia de propietats ACID (\emph{atomicity, consistency, isolation,
+  durability}) amb transaccions, optimització de consultes,
+emmagatzematge de grans volums de dades o gestió de seguretat i
+permisos.  Això no obstant, ja no són considerats com l'única solució
+per a tots els problemes de bases dades, cosa que se sentencia amb el
+lema \emph{one size does not fit
+  all} \parencite{stonebraker07,stonebraker09}; és a dir que en cada
+camp d'aplicació les bases de dades tenen uns requisits diferents i
+per tant una determinada implementació pot ser eficient en un camp
+concret però no en tots. A més, cada camp d'aplicació pot requerir uns
+requisits diferents d'eficiència: temps d'execució ràpid, poca despesa
+d'energia, poques dades transmeses per la xarxa, etc. Per exemple en
+els sistemes encastats potser no es pot implementar tot el model de
+dades sinó que només una
+part \parencite{saake09:_downs_data_manag_embed_system}.
 
 
 
@@ -564,6 +581,8 @@ para\l.lela.
 %http://www.theregister.co.uk/Print/2010/09/13/michael_stonebraker_interview/
 
 
+%\subsubsection{Resum}
+
 En conclusió, per una banda el Third Manifesto considera que molts
 dels productes NoSQL retornen a models pre-relacional fallits. Per
 altra banda, els NoSQL reclamen que fins a l'arribada dels seus
@@ -575,7 +594,7 @@ eficients ja que no han de tenir en compte tota la potència del model
 relacional. Per una tercera banda, el NewSQL recull aquestes
 estructures que milloren l'eficiència i intenta expressar-les en el
 model relacional; així doncs els NoSQL motiven noves millores en els
-SGBD SQL com per exemple el cas NoSQL de MapReduce esperona el NewSQL
+SGBD SQL, com per exemple el NoSQL de MapReduce ha esperonat el NewSQL
 de HStore. En els sistemes NoSQL, el model de grafs és el que parteix
 de més bona base teòrica i per tant és un candidat a formalitzar-se
 amb un nivell semblant que el model relacional, tot i així les
@@ -623,110 +642,40 @@ acadèmic com a teoria dels sistemes d'informació.
 
 
 
+% \subsection{Conclusió}
 
+% \todo{}
 
-\section{Dades temporals}
-\label{sec:art:dades_temporals}
+% Actualment l'àmbit informàtic de SGBD se centra en les
+% implementacions, com ho demostra el nou corrent NoSQL concentrat en
+% trobar models d'implementacions que tinguin bon rendiment. A tal
+% efecte la recerca es concentra en temes de garantia de propietats ACID
+% (\emph{atomicity, consistency, isolation, durability}), d'optimització
+% de consultes, d'emmagatzematge de grans volums de dades, de consultes
+% via web, de distribució de bases de dades, de reduir la despesa en
+% energia, etc. \parencite{stonebraker07,stonebraker10}, la qual cosa és
+% exce\l.lent per a disposar d'un SGBD adequat a cada aplicació.
+% \textcite{haerder05:_dbms_archit} descriu diferents models
+% d'implementació per als SGBD, ja que indica que per obtenir bon
+% rendiment la implementació d'un SGBD s'ha d'estudiar per cada
+% aplicació. És més, una implementació d'un SGBD que vulgui obtenir un
+% bon rendiment en una determinada aplicació potser no pot implementar
+% el model de dades complet sinó que només una part, com per exemple en
+% els sistemes
+% encastats \parencite{saake09:_downs_data_manag_embed_system}.
 
-\todo{Convertir en una secció les dades temporals i parlar-ne més extensament}
-parlar de docs anteriors de dades temporals
-
-Refs a estudiar:
-
-\cite{jensen99:temporaldata}
-\cite{jensen00:thesis}
-\cite{jensen98:temporal_database_glossary}
-\cite{tansel93:temporal_databases}
-
-
-Em alguns llocs les bases de dades temporals també s'anomenem multiversió (multi-version)
-
-
-%Precisament,
-Una de les extensions importants del model relacional s'ha produït amb
-l'estudi de les dades
-temporals \parencite{date02:_tempor_data_relat_model}. Amb el model de
-dades temporals basat en el model relacional s'obtenen SGBDR capaços
-d'emmagatzemar i consultar dades històriques.
-
-El model de les dades
-temporals \parencite{date02:_tempor_data_relat_model} es basa en
-relacions i intervals per representar les dades històriques. Cada
-relació s'estén amb un atribut que és un interval temporal que indica
-el rang temporal de validesa de les proposicions. A més el model també
-defineix les operacions necessàries per tractar amb les dades
-temporals. Aquestes operacions són extensions de l'àlgebra relacional.
-El principal objectiu del model de dades temporals és poder tenir
-suport per a les dades històriques en els SGBDR.
-\textcite[cap.~28]{date06} compara aquest model per dades temporals
-amb altres aproximacions que s'han fet no basades en el model
-relacional.
-
-
-
-El model de dades temporals representa les dades històriques amb el
-temps vàlid i temps de
-transacció \parencite[cap.~15]{date02:_tempor_data_relat_model}, el
-que es coneix com a dades bitemporals.  Així doncs, els SGBD per dades
-bitemporals no es consideren adequats com a SGBD per sèries temporals
-ja que els primers estan pensats per a històrics, es descriuen amb
-intervals temporals, i els segons per anàlisi d'observacions
-seqüencials, es descriuen amb instants temporals.
-\textcite{schmidt95} arriben a aquesta conclusió després de comparar
-els SGBD bitemporals amb els de sèries temporals, tot i que per a
-desenvolupaments futurs observen que hi aspectes temporals comuns
-entre els dos sistemes i es pregunten si es podran trobar sistemes que
-els englobin a tots dos o cadascun necessitarà sistemes específics.
-
-
-%a algun lloc deia Date que el seu model per dades temporals no era del tot adequat per les sèries temporals?, potser perquè els intervals no estaven pensat per a instants? date02ch16.8?
-
-
-
-
-\todo{llibre que apareixerà aviat}
-
-Time and Relational Theory, 2nd Edition
-Temporal Databases in the Relational Model and SQL
- 
-Author(s) : Date,     Lorentzos,    Darwen.    Expected Release Date: 26 Sep 2014Imprint:Morgan KaufmannPrint Book ISBN :9780128006313 Pages: 560Dimensions: 235 X 191
-\url{http://store.elsevier.com/product.jsp?isbn=9780128006313&pagename=search}
-
-
-\subsection{Conclusió}
-
-\todo{}
-
-Actualment l'àmbit informàtic de SGBD se centra en les
-implementacions, com ho demostra el nou corrent NoSQL concentrat en
-trobar models d'implementacions que tinguin bon rendiment. A tal
-efecte la recerca es concentra en temes de garantia de propietats ACID
-(\emph{atomicity, consistency, isolation, durability}), d'optimització
-de consultes, d'emmagatzematge de grans volums de dades, de consultes
-via web, de distribució de bases de dades, de reduir la despesa en
-energia, etc. \parencite{stonebraker07,stonebraker10}, la qual cosa és
-exce\l.lent per a disposar d'un SGBD adequat a cada aplicació.
-\textcite{haerder05:_dbms_archit} descriu diferents models
-d'implementació per als SGBD, ja que indica que per obtenir bon
-rendiment la implementació d'un SGBD s'ha d'estudiar per cada
-aplicació. És més, una implementació d'un SGBD que vulgui obtenir un
-bon rendiment en una determinada aplicació potser no pot implementar
-el model de dades complet sinó que només una part, com per exemple en
-els sistemes
-encastats \parencite{saake09:_downs_data_manag_embed_system}.
-
-Per altra banda, l'àmbit matemàtic de SGBD, amb el model relacional
-com a màxim exponent, se centra en els conceptes teòrics, és a dir
-respon a la pregunta de què són els SGBD. Recerca en millorar-ne la
-comprensió, en obtenir la màxima potència i facilitat de cara a la
-gestió de dades per part de l'usuari o en obtenir nous models. Tot i
-així, actualment encara no s'ha trobat cap altre model que tingui la
-mateixa potència que el relacional. Cal destacar que tot i que el
-model relacional té conceptes madurs i consolidats, i que a més han
-tingut èxit amb els SGBD SQL, s'obre una nova perspectiva amb
-l'evolució de conceptes que proposa el \emph{Third Manifesto},
-especialment amb \emph{Tutorial D} i les implementacions que comencen a prendre
-cos a nivell acadèmic.
+% Per altra banda, l'àmbit matemàtic de SGBD, amb el model relacional
+% com a màxim exponent, se centra en els conceptes teòrics, és a dir
+% respon a la pregunta de què són els SGBD. Recerca en millorar-ne la
+% comprensió, en obtenir la màxima potència i facilitat de cara a la
+% gestió de dades per part de l'usuari o en obtenir nous models. Tot i
+% així, actualment encara no s'ha trobat cap altre model que tingui la
+% mateixa potència que el relacional. Cal destacar que tot i que el
+% model relacional té conceptes madurs i consolidats, i que a més han
+% tingut èxit amb els SGBD SQL, s'obre una nova perspectiva amb
+% l'evolució de conceptes que proposa el \emph{Third Manifesto},
+% especialment amb \emph{Tutorial D} i les implementacions que comencen a prendre
+% cos a nivell acadèmic.
 
 
 
