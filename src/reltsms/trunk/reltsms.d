@@ -7,11 +7,13 @@ VAR timeseries BASE RELATION
     { t RATIONAL, v RATIONAL }  KEY { t } ;
 
 VAR timeseriesdouble BASE RELATION
-    { t1 RATIONAL, v1 RATIONAL, t2 RATIONAL, v2 RATIONAL }  KEY { t1, t2 } ;
+    { ti RATIONAL, vi RATIONAL, t RATIONAL, v RATIONAL }  KEY { ti, t } ;
 
 
 //Per a fer l'execute es necessiten variables globals
 VAR ts.globalexecute BASE SAME_TYPE_AS ( timeseries) KEY { t };
+VAR ts.globalexecute2 BASE SAME_TYPE_AS ( timeseries) KEY { t };
+VAR ts.globalexecutedouble BASE SAME_TYPE_AS ( timeseriesdouble) KEY { ti,t };
 
 
 
@@ -42,6 +44,17 @@ END OPERATOR;
 
 
 //set operators
+
+
+OPERATOR ts.isempty (
+	 s1 SAME_TYPE_AS  (timeseries))
+         RETURNS BOOLEAN;
+  BEGIN;
+    VAR s PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+    return s = s1;
+  END;
+END OPERATOR;
+
 
 OPERATOR ts.max(
 	 s1 SAME_TYPE_AS  (timeseries))
@@ -98,6 +111,92 @@ END OPERATOR;
 
 //rename
 // s rename (t as t1, v as v1)
+
+
+
+
+//set computational operators
+
+//map equivalent a: EXTEND s ADD ( <texpr> AS tp, <vexpr> as vp ) {tp,vp} RENAME (tp AS t, vp AS v)
+
+//aggregate equivalent a summarize o a ts.fold(s,mi,texpr,vexpr)
+
+
+
+
+OPERATOR ts.map.double(
+	 s RELATION SAME_HEADING_AS  (timeseriesdouble), 
+	 texpr CHARACTER, 
+	 vexpr CHARACTER) 
+	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  BEGIN;
+    VAR exp character;
+    ts.globalexecutedouble := s;
+    exp := 'ts.globalexecute := (extend ts.globalexecutedouble  ADD ( ' || texpr || ' AS tp,' || vexpr || ' AS vp) {tp,vp} RENAME (tp AS t,vp AS v) );';
+    execute exp;
+    return ts.globalexecute;
+  END;
+END OPERATOR;
+
+
+OPERATOR ts.fold(
+	 s SAME_TYPE_AS  (timeseries), 
+	 si SAME_TYPE_AS  (timeseries), 
+	 texpr CHARACTER, 
+	 vexpr CHARACTER ) 
+	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  BEGIN;
+    IF
+      ts.isempty(s)
+    THEN
+      return si;
+    ELSE 
+      BEGIN;    
+        VAR mo PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+        VAR so PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+        VAR sip PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
+
+      	mo := ts.min(s);
+      	so := s minus mo;
+
+      	//ff(sip,mo)
+      	sip := ts.map.double(
+			(si rename (t as ti, v as vi)) join mo,
+			texpr,
+			vexpr
+		       );
+
+      	return ts.fold(so,sip,texpr,vexpr);
+      END;
+    END IF;
+  END;
+END OPERATOR;
+
+
+OPERATOR ts.generator(
+	 start RATIONAL, 
+	 stop RATIONAL,         
+	 step RATIONAL) 
+	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  begin;
+    var sp private same_type_as ( timeseries) key { t };
+    sp := relation { t rational, v rational}{};
+    while start < stop;
+      begin;
+        sp := ts.union(sp, 
+	          relation { tuple{t start, v 1.0/0.0} }
+		       	  );
+        start := start + step;
+      end;
+    end while;
+
+    return sp;
+  end;
+END OPERATOR;
+
+
+
+
 
 
 
