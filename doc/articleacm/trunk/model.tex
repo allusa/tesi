@@ -344,7 +344,7 @@ that selects measures in order where $o: S_a \mapsto m_r$
 where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
 
 
-Finally, we describe how \emph{binary computational} operation can be
+Finally, we describe how \emph{binary computational} operations can be
 defined for two time series in order to operate with their value
 attributes.  First it is required to join the two time series and then
 apply computational operations. Let $S_1$ and $S_2$ be two time series
@@ -1060,22 +1060,22 @@ subseries' disc $R=(B,D)$, where $B=(S_B,\tau,\delta,f)$ and
 $D=(S_D,k)$, can be expressed with a map operation over the original
 time series $S$:
 \[
-\seriedisc(M,\delta,f) \equiv \dmap(S_B,\delta,\tau,f,k)
+\seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
 \]
 where
 \[
-\dmap(S_B,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
+\dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
 \]
 \[
- m' = f(S_B, i),\;  i = [T(\prev_{S_I}(m_i)),T(m_i)],
+ m' = f(S, i),\;  i = [T(m_i)-\delta,T(m_i)],
 \]
 \[
- S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S_B)),
+ S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
 \]
 \[
 T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
 \]
-%alerta: si hauria de contenir un temps que a dmap resultant no hi ha de ser per tal de calcular prev_{S_I}(mi) 
+
 
 The total time series $S'=\totalseries(M)$ is a concatenation of all
 $\seriedisc$ without repeated $\delta$. It can be expressed with a
