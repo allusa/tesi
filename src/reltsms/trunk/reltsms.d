@@ -49,10 +49,7 @@ END OPERATOR;
 OPERATOR ts.isempty (
 	 s1 SAME_TYPE_AS  (timeseries))
          RETURNS BOOLEAN;
-  BEGIN;
-    VAR s PRIVATE SAME_TYPE_AS ( timeseries) KEY { t };
-    return s = s1;
-  END;
+  return IS_EMPTY(s1);
 END OPERATOR;
 
 
@@ -68,19 +65,6 @@ OPERATOR ts.min(
   return s1 JOIN SUMMARIZE s1 {t} ADD (MIN (t) AS t);
 END OPERATOR;
 
-OPERATOR ts.sup(
-	 s1 SAME_TYPE_AS  (timeseries)) 
-	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
-  return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
-END OPERATOR;
-
-OPERATOR ts.inf(
-	 s1 SAME_TYPE_AS  (timeseries)) 
-	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
-  return ts.min(ts.union(s1,(RELATION { TUPLE {t 1.0/0.0, v 1.0/0.0} })));
-END OPERATOR;
-
-
 
 OPERATOR ts.union(
 	 s1 SAME_TYPE_AS  (timeseries),
@@ -95,6 +79,21 @@ OPERATOR ts.union.t(
 	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
   return (s1 JOIN (s1 {t} MINUS s2 {t})) UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
 END OPERATOR;
+
+
+OPERATOR ts.sup(
+	 s1 SAME_TYPE_AS  (timeseries)) 
+	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
+END OPERATOR;
+
+OPERATOR ts.inf(
+	 s1 SAME_TYPE_AS  (timeseries)) 
+	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  return ts.min(ts.union(s1,(RELATION { TUPLE {t 1.0/0.0, v 1.0/0.0} })));
+END OPERATOR;
+
+
 
 
 
@@ -218,6 +217,23 @@ OPERATOR ts.interval.left(
 	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
   return s1 WHERE t>l AND t<=h;
 END OPERATOR;
+
+
+OPERATOR ts.concatenation(
+	 s1 SAME_TYPE_AS  (timeseries), 
+	 s2 SAME_TYPE_AS  (timeseries))
+	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  BEGIN;
+    VAR t1 RATIONAL init(0.0);
+    VAR t2 RATIONAL init(0.0);
+
+    t1 := ts.t(ts.inf(s1));
+    t2 := ts.t(ts.sup(s1));
+    
+    return ts.union(s1,s2 minus ts.interval.closed(s2,t1,t2));
+  END;
+END OPERATOR;
+
 
 
 

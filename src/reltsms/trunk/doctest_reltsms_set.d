@@ -266,6 +266,14 @@ WITH RELATION {
   } AS r:
 reltsmsdoctest and ts.generator(2.0,7.0,2.0) = r;
 
+reltsmsdoctest := 
+WITH RELATION {
+   TUPLE { t -2.0, v 1.0/0.0 },
+   TUPLE { t -1.0, v 1.0/0.0 },
+   TUPLE { t 0.0, v 1.0/0.0 }
+  } AS r:
+reltsmsdoctest and ts.generator(-2.0,1.0,1.0) = r;
+
 
 
 output reltsmsdoctest;
