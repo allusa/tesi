@@ -43,19 +43,53 @@ END OPERATOR;
 
 
 //multiresolution
-OPERATOR mtsms.dmap(
+OPERATOR mtsms.multiresolution(
 	 s SAME_TYPE_AS  (timeseries), 	 
-	 schema SAME_TYPE_AS  (timeseries)) 
+	 schema relation {delta rational, tau rational, f char, k rational}) 
 	 RETURNS RELATION SAME_HEADING_AS  (timeseries);
   begin;
     var si private same_type_as ( timeseries) key { t };
     
-    si := relation {}; 
+    si := relation {t rational, v rational} {}; 
 
-    //de moment fold = ofold(_,min)
-    return ts.fold(schema,si,'','');
+
+    //de moment fold = ofold(_,min)return ts.fold(schema,si,'','');
+
+    IF
+      IS_EMPTY(schema)
+    THEN
+      return si;
+    ELSE 
+      BEGIN;    
+        VAR scho PRIVATE SAME_TYPE_AS (schema) KEY { delta };
+        VAR schemap PRIVATE SAME_TYPE_AS ( schema) KEY { delta };
+
+      	scho := summarize schema add (min(delta) as delta) join schema;
+      	schemap := schema minus scho;
+
+	VAR delta init(delta from tuple from scho);
+	VAR tau init(tau from tuple from scho);
+	VAR f init(f from tuple from scho);
+	VAR k init(k from tuple from scho);
+
+	si :=  mtsms.multiresolution(s,schemap);
+      	return ts.concatenation(
+	                    mtsms.dmap(s,delta,tau,f,k),
+		            si
+	        	  );
+
+
+      	return ts.concatenation(
+	                    mtsms.dmap(s,delta,tau,f,k),
+		            si
+	        	  );
+      END;
+    END IF;
+
   end;
 END OPERATOR;
+
+
 
 
 END;
