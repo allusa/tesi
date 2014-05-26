@@ -3,6 +3,8 @@
 
 \section{Introduction}
 
+
+
 Information collection processes are growing in quantity as a
 consequence of the emergence of embedded systems and sensor networks.
 Nowadays it is possible to collect large amounts of data to
@@ -29,27 +31,24 @@ are recorded at regular intervals, such as hourly or daily, or at
 irregular intervals, such as recording when a pump is open or closed.
 One problem when dealing with time series data results from the fact
 that these data are often voluminous \cite{fu11,keogh08:isax}. As a
-result, efficiently storing and accessing them can be complex. Moreover, this is
-specially critical when developing small embedded systems, whose
-resources (capacity, energy, processing and communications) suffer
-restrictions \cite{yaogehrke02}.  Another problem is that the
-procedure of processing and synthesising information becomes
-difficult if data is not equi-time spaced.
+result, efficiently storing and accessing them can be
+complex. Moreover, this is specially critical when developing small
+embedded systems, whose resources (capacity, energy, processing and
+communications) suffer restrictions \cite{yaogehrke02}.  Another
+problem is that the procedure of processing and synthesising
+information becomes difficult if data is not equi-time spaced.
 
-The propose of time series data mining is to apply time series
-analysis methods when having huge amount of data.  One approach is to
-find the optimal solution approximation versus cost to the original signal
-and then compute analysis such as similarity or pattern search
-\cite{fu11,keogh01,last01}. On another approach we propose a lossy storage
-solution that selects only the needed information. We call it
-multiresolution. The concept is similar to multimedia lossy
-compression methods, where information can be discarded in favour of
-size, but applied to time series.
-% In multimedia compression a dual storage can be used for a file: 
-% first it is lossless compressed to offline storage and rarely retrievals, and second it is lossy compressed to have less size and be more manageable.
 
-\todo{Potser dir que hi ha un SGBD que és RRDtool}
-, que és molt usat en l'àmbit de xarxa, que té una manera especial d'emmagatzemar les dades, que volem proposar un model formal per a aquest tractament per tal de generalitzar les operacions que s'hi poden fer (RRDtool és molt restringit perquè està pensat per a un camp molt específic: el de comptadors de xarxa) i poder-lo aplicar en altres camps, a part d'establir un model formal al qual s'hi puguin realitzar estudis formals de teoria de bases de dades.
+When having huge amount of data, time series data mining proposes to
+apply time series analysis methods to compute the queries. One
+approach is to find the optimal solution approximation versus cost to
+the original signal and then compute analysis such as similarity or
+pattern search \cite{fu11,keogh01,last01}.  On another approach,
+RRDtool \cite{rrdtool} is a system that stores time series aggregated
+in different resolutions in order to compact data and to do faster
+visualisations. RRDtool is much used in the network field and so it is
+specific to its applications such as network counters.
+
 
 %TSMS
 
@@ -63,7 +62,20 @@ different time resolutions. It is designed to cope well with bounded
 storage computers such as sensor systems.  We describe our model in
 two separated submodels, one a TSMS model mainly for describing time
 series and the other a MTSMS model for describing multiresolution over
-time series.\todo{}
+time series.
+
+
+Our multiresolution definition is based on concepts of RRDtool but
+aims to generic applications and has more generic operators. We
+develop a formal data model firmly rooted on relational algebra that
+describes MTSMS with information systems theory.  We propose
+multiresolution as a lossy storage solution that selects only the
+needed information. The concept is similar to multimedia lossy
+compression methods, where information can be discarded in favour of
+size, but applied to time series.
+% In multimedia compression a dual storage can be used for a file: 
+% first it is lossless compressed to offline storage and rarely retrievals, and second it is lossy compressed to have less size and be more manageable.
+
 
 
 
@@ -78,10 +90,10 @@ Section~\ref{sec:M+TSMS} the relation between \acro{MTSMS} and
 In Section~\ref{sec:related-work} some related work concerning
 \acro{TSMS} and \acro{MTSMS} are presented. Finally,
 Section~\ref{sec:concl-future-work} offers some conclusions.
+\todo{hi ha noves seccions}
 
 
-
-\section{Multiresolution features}
+\section{Multiresolution preliminaries}
 \label{sec:features}
 
 A \acro{TSMS} is a special purpose \acro{DBMS} devoted to store and
@@ -92,6 +104,10 @@ that apply to time series, with a main focus on improving
 efficiency. \acro{DBMS} theory formalises systems that store and
 operate with data, currently the relational model is the referent
 \cite{date:introduction}.
+
+
+
+
 
 In time series analysis there are some common generic operations.
 Most of these operations deal with the time given the nature of data.

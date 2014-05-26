@@ -3,6 +3,78 @@
 
 \todo{}
 
+We implement the TSMS and MTSMS models into three different approaches:
+
+\begin{itemize}
+\item Pytsms+RoundRobinson, a Python implementation. This is our referent
+  implementation, which we use for example data.
+\item Reltsms, a Tutorial D implementation. This shows a TSMS
+  implemented on a relational language.
+\item Roundrobindoop, a MapReduce implementation. This is a specific
+  implementation for offline computing multiresolution with
+  parallelism approaches.
+\end{itemize}
+
+RRDtool can also be seen as a MTSMS implementation in a specific
+field. We give more references for RRDtool in
+Section~\ref{sec:related-work}.
+
+
+
+\subsection{Python referent implementation}
+
+We implement the two models of TSMS and MTSMS respectively as two
+separated Python libraries: \emph{Pytsms} and \emph{RoundRobinson}.
+RoundRobinson has a strong dependency on Pytsms following the MTSMS
+being defined based on TSMS.  It is mainly a referent implementation
+so it has fidelity to the algebraic model defined but has not extended
+\acro{DBMS} capabilities, such would be query optimisation or
+transaction management.
+
+We design the implementation concepts with object orientation, so that
+there is a clear mapping between model and implementation
+objects. Next we use Unified Modeling Language (UML) diagrams in order
+to define the classes structure, mainly to show the relationships
+among objects.
+
+
+
+\todo{}
+
+
+Pytsms is the referent implementation for the model concepts of
+measure, time series and temporal representation function.  Figure
+\ref{fig:implementacio:pytsms-uml} shows the relationships among these
+objects in a UML diagram. A \emph{TimeSeries} object is an aggregation
+of \emph{Measure} objects. TimeSeries and \emph{Representation}
+objects are associated, that is each TimeSeries has a default
+representation and a Representation operates over a TimeSeries.
+
+\todo{figura}
+
+
+
+A TimeSeries object has a huge amount of methods, we classify them
+based on their functionality. Firstly, a TimeSeries has methods that
+manipulate its structural model, a TimeSeries is a subclass of the
+predefined Set Python type. Secondly, there are methods for the
+operational model which are classified into set, sequence and temporal
+function operators.  Set operators are composed of the partial order, the
+temporal order and the relational set operators.
+
+
+
+
+\subsection{Reltsms}
+
+\todo{}
+
+
+\subsection{Roundrobindoop}
+
+\todo{}
+
+
 
 %%% Local Variables:
 %%% TeX-master: "main"
