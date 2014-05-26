@@ -142,6 +142,7 @@ ordered in time.  Sometimes they are also called time sequences
 
 
 \begin{definition}
+  \label{def:model:timeseries}
   A \emph{time series} $S$ is a set of measures $S = \{m_0, \ldots,
   m_k\}$ without repeated time values $\forall i,j:i\neq j: T(m_i)\neq
   T(m_j)$.
@@ -180,8 +181,14 @@ representation for a continuous function. Next a brief description of
 most important ones is given.
 
 
-\todo{comentari sobre els operadors i que la semàntica l'ha de donar qui aplicqui l'operador}
-
+These time series manipulations are defined abstractly for any time
+series having the structure of Definition \ref{def:model:timeseries}.
+In the same way as the relational model for operations, definitions
+evaluate algebra and logic concepts for data but do not evaluate the
+semantics of manipulations. That is, when given a particular context
+for a time series manipulation it has to be decided whether the
+algebra is meaningful or cannot be applied, for example an addition of
+values in two different units could be semantically erroneous.
 
 
 \subsubsection{Set operations}
@@ -431,7 +438,7 @@ representation functions using two methods $r$ based on impulse and
 constant piecewise functions.
 
 
-\begin{example}
+\begin{definition}
   \emph{Delta} ($\delta$) is a method based on the Dirac delta
   function. It is an impulse train function that is zero everywhere
   except at zero.  Let $S$ be a time series we define $S(t)^\delta$ as
@@ -449,9 +456,9 @@ constant piecewise functions.
       0 & \text{otherwise}
     \end{cases}
 \]
-\end{example}
+\end{definition}
 
-\begin{example}
+\begin{definition}
   \emph{Zero-order hold everted} (\zohe{}) is a method based on the
   \emph{zero-order hold} signal reconstruction methods. It is a
   piecewise constant function that has left-continuous step functions.
@@ -465,7 +472,7 @@ constant piecewise functions.
       V(m) & \text{if } t\in \big(T(\prev_S(m)),T(m)\big]
     \end{cases}
 \]
-\end{example}  
+\end{definition}
 
 
 
@@ -566,19 +573,20 @@ say it to be regular.
 
 
 The \acro{MTSMS} are \acro{TSMS} that store time series with a lossy
-compression approach, that is some information is selected and spread in
-different time resolutions. The \acro{MTSMS} model is based on the
+compression approach, that is some information is selected and spread
+in different time resolutions. The \acro{MTSMS} model is based on the
 concepts of measures and time series as defined in
-Section~\ref{sec:model:TSMS}.
+Section~\ref{sec:model:TSMS} and we call multiresolution time series
+to each time series stored in a MTSMS.
 
 
-The architecture of MTSMS model is shown in
-Figure~\ref{fig:model:mtsdb}.  It is based on a collection of
-resolution subseries which temporarily accumulate measures in a buffer
-in order to select some information and finally store it in a
-disc. The information selection process changes the time intervals
-between measures to compact information by aggregating the time series
-attributes.
+The architecture of MTSMS model for one multiresolution time series is
+shown in Figure~\ref{fig:model:mtsdb} divided into its components.  A
+multiresolution time series is a collection of resolution subseries
+which temporarily accumulate measures in a buffer in order to select
+some information and finally store it in a disc. The information
+selection process changes the time intervals between measures to
+compact information by aggregating the time series attributes.
 
 \begin{figure}
   \centering
@@ -784,17 +792,18 @@ of both with $\totalseries(M_1) + \totalseries(M_2)$.
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-Attribute aggregate functions \todo{dir que són un cas especial dels agregadors de TSMS} summarise time series information
-when consolidating a buffer. Let $S$ be a time
-series and $t_0$ and $t_f$ two time instants, an attribute aggregate
-function $f$ calculates a measure that summarises the measures of $S$
-included in the time interval $i=[t_0,t_f]$:
+Attribute aggregate functions are a specific case of TSMS aggregate
+operation which summarise time series information when consolidating a
+buffer. Let $S$ be a time series and $t_0$ and $t_f$ two time
+instants, an attribute aggregate function $f$ calculates a measure
+that summarises the measures of $S$ included in the time interval
+$i=[t_0,t_f]$:
 \[
 f : S=\{m_0,\ldots,m_k\} \times [t_0,t_f] \mapsto m'
 \]
 where, generally, $m'$ results from two operations on the time series:
 (i) a time subseries selection $S'$ depending on the consolidating
-interval, for example $S' = S[t_0,t_f]$, and (ii) an aggregation over
+interval, for example $S' = S[t_0,t_f]$, and (ii) a TSMS aggregation over
 this time subseries such as $m' = \agg(S',m_i, f^a)$ where $f^a: m_i \times
 m_b \rightarrow m''$.  
 
@@ -1093,7 +1102,7 @@ multivalued time series
 f_r: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
 \dmap(S,\delta_c,\tau_c,f_c,k_c)
 \]
-% potser millor \multiresolution(S,schema) on schema es Sd
+
 
 
 Summarising, a MTSMS and the multiresolution query are equivalent on
@@ -1128,13 +1137,13 @@ series.
 Then generic queries can be made from \acro{TSMS} information or from
 \acro{MTSMS} selected information, as instance by TotalSeries. In
 Figure~\ref{fig:model:mtsms-tsms} the logical equivalence of applying
-$S'=\totalseries(M)$ to \acro{MTSMS} and $S'= \multiresolution(S)$ to
-\acro{TSMS} is plotted, however the implementation consideration are
-different. If we regard the resulting time series $S'$ as a view of
-database information, then the $\multiresolution$ is a view that must
-be computed fully at every new measure addition and $\totalseries$ is
-a view that can be computed incrementally at every new addition as
-explained next.
+$S'=\totalseries(M)$ to \acro{MTSMS} and $S'=
+\multiresolution(S,\text{sch})$ to \acro{TSMS} is plotted, however the
+implementation consideration are different. If we regard the resulting
+time series $S'$ as a view of database information, then the
+$\multiresolution$ is a view that must be computed fully at every new
+measure addition and $\totalseries$ is a view that can be computed
+incrementally at every new addition as explained next.
 
 
 Time series data volume uses to be very big and increases along
