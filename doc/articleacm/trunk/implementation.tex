@@ -38,9 +38,7 @@ to define the classes structure, mainly to show the relationships
 among objects.
 
 
-
-\todo{}
-
+\subsubsection{Pytsms}
 
 Pytsms is the referent implementation for the model concepts of
 measure, time series and temporal representation function.  Figure
@@ -50,7 +48,49 @@ of \emph{Measure} objects. TimeSeries and \emph{Representation}
 objects are associated, that is each TimeSeries has a default
 representation and a Representation operates over a TimeSeries.
 
-\todo{figura}
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+
+  %Timeseries
+  \umlclass[x=0,y=0] {TimeSeries}{}{}  
+
+  % Measure
+  \umlclass[x=-1.5,y=-2] {Measure}{}{}
+  \umluniaggreg[mult=0..*]  {TimeSeries}{Measure}
+  %\umlclass[x=-5.2,y=-2] {MFloat}{}{}
+  %\umlclass[x=-2.8,y=-2] {MChar}{}{}
+  %\umlinherit {MFloat}{Measure}
+  %\umlinherit {MChar}{Measure}
+
+  %Repr
+  \umlclass[x=3.5] {Representation}{}{} %,type=abstract
+  \umlassoc[mult1=1,mult2=1]  {TimeSeries}{Representation}
+  \umlclass[x=2.5,y=-2] {Zohe}{}{}
+  \umlclass[x=4.5,y=-2] {Delta}{}{}
+  \umlinherit {Zohe}{Representation}
+  \umlinherit {Delta}{Representation}
+
+  %Associacions
+  \umlclass[x=-1.25,y=-4] {RegularProp}{}{}
+  \umluniassoc  {RegularProp}{TimeSeries}
+  \umlclass[x=1.25,y=-4] {Storage}{}{}
+  \umluniassoc {Storage}{TimeSeries}
+
+  %Dependencies
+  \umlemptypackage[x=4,y=-4]{Matplotlib}
+  \umldep{Zohe}{Matplotlib}
+  \umldep{Delta}{Matplotlib}
+
+
+  \end{tikzpicture}
+
+
+
+  \caption{Pytsms UML class diagram}
+  \label{fig:implementacio:pytsms-uml}
+\end{figure}
+
 
 
 
@@ -59,15 +99,108 @@ based on their functionality. Firstly, a TimeSeries has methods that
 manipulate its structural model, a TimeSeries is a subclass of the
 predefined Set Python type. Secondly, there are methods for the
 operational model which are classified into set, sequence and temporal
-function operators.  Set operators are composed of the partial order, the
-temporal order and the relational set operators.
+function operators.  Set operators are composed of the partial order,
+the temporal order and the relational set operators.  Thirdly,
+complementary operations for TimeSeries are grouped into two objects:
+\emph{RegularProperties} groups the regularity operation definitions
+and \emph{Storage} has methods for storing and retrieving time series
+from file system.
+
+
+Figure \ref{fig:implementacio:pytsms-uml} shows two specialisations
+for Representation. We show the two exemplified representations
+\emph{Zohe} and \emph{Delta}. Basically, each particular
+Representation has the graph and the temporal interval operation
+definition. Furthermore, there is also a method for plotting
+coherently the time series to its representation; for which we use the
+Python \emph{Matplotlib} library.
 
 
 
-
-\subsection{Reltsms}
 
 \todo{}
+
+exemples d'ús
+
+
+
+\subsubsection{RoundRobinson}
+
+
+RoundRobinson is the referent implementation for the model concepts of
+multiresolution time series, resolution subseries, buffers, discs, and
+attribute aggregate functions. Figure
+\ref{fig:implementacio:roundrobinson-uml} shows the relationships
+among these objects in a UML diagram. A \emph{MultiresolutionSeries}
+object is an aggregation of \emph{Resolution} objects. A
+\emph{Resolution} is composed of one \emph{Buffer} and one
+\emph{Disc}. Each Buffer is associated to one TimeSeries, from the
+Pytsms library, and each Disc is associated to another TimeSeries,
+which respectively are $S_B$ and $S_D$ of the MTSMS
+model. Furthermore, each Buffer is associated to one attribute
+aggregate function which is realised by defining a Python
+\emph{Function} with two parameters: a TimeSeries (\emph{s}) and a
+consolidation interval (\emph{i}) as a pair of two time instants.
+
+
+
+
+\begin{figure}[tp]
+  \centering
+
+\begin{tikzpicture}
+
+  %MultiTimeseries
+  \umlclass[x=0,y=0] {MultiresolutionSeries}{}{}  
+  %\umlclass[x=-4,y=0] {Set}{}{}
+  %\umlinherit{MultiresolutionSeries}{Set}
+  %Components 
+  \umlclass[x=0,y=-2] {Resolution}{}{}
+  \umluniaggreg  {MultiresolutionSeries}{Resolution}
+  %SubComponents 
+  \umlclass[x=-1.2,y=-4] {Buffer}{}{}
+  \umlclass[x=1.2,y=-4] {Disc}{}{}
+  \umlclass[x=-3,y=-6,template={s,i}] {Function}{}{}
+  \umlunicompo[mult=1]  {Resolution}{Buffer}
+  \umlunicompo[mult=1]  {Resolution}{Disc}
+  \umluniassoc[mult=1]  {Buffer}{Function}
+
+  %TimeSeries
+  \begin{umlpackage}[x=1,y=-6]{Pytsms}
+    \umlclass{TimeSeries}{}{}  
+  \end{umlpackage}
+  \umluniassoc[mult=1]  {Buffer}{TimeSeries}
+  \umluniassoc[mult=1]  {Disc}{TimeSeries}
+
+  %Associacions
+  \umlclass[x=-3,y=-2.5] {Storage}{}{}
+  \umluniassoc {Storage}{MultiresolutionSeries}
+  \umlclass[x=-3,y=-1] {Plot}{}{}
+  \umluniassoc {Plot}{MultiresolutionSeries}
+
+\end{tikzpicture}
+
+  \caption{RoundRobinson UML class diagram}
+  \label{fig:implementacio:roundrobinson-uml}
+\end{figure}
+
+
+
+A MultiresolutionSeries is a subclass of the predefined Set Python
+type. It has complementary operations that are grouped into two
+objects: \emph{Storage} has methods for storing and retrieving
+multiresolution time series from file system and \emph{Plot} has
+methods for plotting the time subseries of the multiresolution schema.
+
+
+\todo{explicar la totaConsult i la discConsult}
+
+
+\todo{}
+
+
+Exemples d'ús
+
 
 
 \subsection{Roundrobindoop}
