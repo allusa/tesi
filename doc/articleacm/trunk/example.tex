@@ -1,17 +1,15 @@
 \section{Example}
 \label{sec:example}
 
-\todo{refer}
-
 
 Next we show a real example database for a time series data. Actual
 data comes from a temperature distributed sensor monitoring system,
 \cite{alippi10}. We focus on one sensor data.
 
-The Figure~\ref{fig:exemple:original} shows the original data for one
-year and a half. The plot interpolates linearly the measures. In this
-plot we can see that there is missing data and some outlying
-observations. There are $146\,709$ stored values.
+\emph{Data}. The Figure~\ref{fig:exemple:original} shows the original
+data for one year and a half. The plot interpolates linearly the
+measures. In this plot we can see that there is missing data and some
+outlying observations. There are $146\,709$ stored values.
 
 \begin{figure}[tp]
   \centering
@@ -21,13 +19,13 @@ observations. There are $146\,709$ stored values.
   \label{fig:exemple:original}
 \end{figure}
 
-\emph{Schema}. We design a multiresolution time series database that
-stores a time series with high resolution at recent times and with low
+\emph{Schema}. We design a \acro{MTSDB} that stores a multiresolution
+time series with high resolution at recent times and with low
 resolution at older times. The schema is illustrated in the
 Figure~\ref{fig:exemple:window}. At the top there are four discs with
 different number of measures and at the bottom there is a timeline
-showing the time series chopped along time. Going from most to least
-granularity disks are configures as follows: (i) a measure every 5 h
+showing the resolution subseries along time. Going from most to least
+granularity, disks are configured as follows: (i) a measure every 5 h
 in the fourth disc which has a capacity of 24 measures and thus it
 spans 5 days; (ii) a measure every 2 days in the third disc, with a
 capacity of 20 thus spanning 40 days; (iii) a measure every 15 days in
@@ -39,75 +37,66 @@ of 12 results in a span of 600 days.
   \centering
   \setlength{\unitlength}{1.3mm}
   \input{imatges/mtsdb-time_window.tex}
-  \caption{Schema of resolutions in a \acro{MTSDB}}
+  \caption{Schema of multiresolution}
   \label{fig:exemple:window}
 \end{figure}
 
 \emph{Attribute aggregate functions}.  In order to illustrate this
-example we consolidate all the resolution discs using the zohe
-arithmetic mean aggregate function and the highest resolution disc
-using the zohe maximum aggregate function. Next, we show the process
-in designing both aggregate functions.
+example we consolidate all the resolution subseries using the
+mean$^\zohe{}$ aggregate function and the two highest resolution
+subseries using the maximum$^\zohe{}$ aggregate function. 
 
-In accordance to the zohe Equation~\ref{eq:zohe} defined using
-left-continuous step functions, we define the zohe attribute aggregate
-function family as the one interpreting the consolidation time
-interval left-continuous $i=(T_0,T_f]$ and the one aggregating on the
-subset $S'=S(T_0,T_f] \cup \{\min(S-S(-\infty,T_f))\}$:
-\begin{itemize}
-  \renewcommand{\labelitemi}{--}
-\item maximum$^{zohe}$: $S \times i \mapsto m'$ where $V(m') =
-  \max_{\forall m \in S'}(V(m))$ and $T(m')=T_f$.
-\item arithmetic mean$^{zohe}$: $S \times i \mapsto m'$ where $V(m')
-  = \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ and
-  $T(m')=T_f$. 
-\end{itemize}
 
-%\subsection{Results}
 
-The time series after consolidating the \acro{MTSDB} are shown in the
-Figure~\ref{fig:exemple:4mrd}, where each graphic corresponds to a
-resolution disc time series. Each title shows the disc resolution and
-its cardinal, and each attribute aggregate function has different
-colour.  Each time series is plotted with zohe continuous
-representation. Time axis has \acro{UTC} units rounded to nearest time
-points and temperature axis has Kelvin units. Outlayers are marked as
-discontinuities, for instance see fourth plot's 2938 K maximum.
+\emph{Consolidation}. The time subseries after consolidating the
+\acro{MTSDB} are shown in the Figure~\ref{fig:exemple:4mrd}, where
+each graphic corresponds to a resolution disc time series. Each title
+shows the resolution subseries and its cardinal, and each attribute
+aggregate function has different colour.  Each time series is plotted
+with \zohe{} representation function. Time axis has \acro{UTC} units
+rounded to nearest time points and temperature axis has Kelvin
+units. Outlayers are marked as discontinuities, for instance see
+fourth plot's 2938 K maximum.
 
 \begin{figure}[tp]
   \centering
   \tikzset{
     every picture/.style={scale=0.7},
   }
-  \input{imatges/isense_4mrdb.tex}
-  \caption{Resolution discs' time series in a \acro{MTSDB}}
+  %\input{imatges/isense_4mrdb.tex}
+  \caption{Resolution subseries in the MTSDB}
   \label{fig:exemple:4mrd}
 \end{figure}
 
 In all the four plots, we can see that mean aggregate function has
 filled missing data and filtered outlayer observations. This is due
-to the aggregate function coming from a zohe interpretation.
+to the aggregate function coming from a \zohe{} interpretation.
 
-Data can be queried.  For example, one query would be the union of the
-four time subseries choosing the one with the highest resolution as
-shown in the Figure~\ref{fig:exemple:4mrdtot}.  Each time series is
+
+Figure~\ref{fig:exemple:4mrd} corresponds to the possible $\seriedisc$
+queries. Figure~\ref{fig:exemple:4mrdtot} shows the $\totalseries$
+queries for the mean$^{\zohe}$ aggregate function resolution and for
+the maximum$^{\zohe}$ resolution.  Each resulting time series is
 plotted interpolating linearly its measures, note that this linearly
 visualisation seems right time displaced as time series comes from a
-zohe aggregation.  Comparing this figure with the original series, see
-Figure~\ref{fig:exemple:original}, we observe that it resembles an
+\zohe{} aggregation.  Comparing this figure with the original series,
+see Figure~\ref{fig:exemple:original}, we observe that it resembles an
 incremental low-pass filter because we applied mean aggregation while
 the maximum aggregation resembles an envelope function.
 
 \begin{figure}[tp]
   \centering
   \tikzset{every picture/.style={scale=0.8}}
-  \input{imatges/isense_mrdb-all.tex}
-  \caption{All time series united from the MTSDB}
+  %\input{imatges/isense_mrdb-all.tex}
+  \caption{$\totalseries$ for the mean$^{\zohe}$ and maximum$^{\zohe}$
+    resolutions}
   \label{fig:exemple:4mrdtot}
 \end{figure}
+\todo{cal que hi hagi el total pel mean i pel max}
+
 
 Note that this \acro{MTSDB} example schema does not store the complete
-original data but an approximation to the original function which
+original data but a compression of the original function which
 contains more information for recent times.
 
 

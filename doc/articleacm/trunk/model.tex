@@ -256,7 +256,7 @@ m^2 \notinst S_1 \}$.
 \end{figure}
 
 
-\begin{example}
+\begin{example}\label{ex:model:s1s2}
   Let $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$ and $S_2=\{(2,2),\allowbreak
   (3,2),(4,0),(6,2)\}$ be two time series. The union from first and
   second results $S_1 \cup S_2 = \{(1,1),(2,2),\allowbreak
@@ -577,7 +577,8 @@ compression approach, that is some information is selected and spread
 in different time resolutions. The \acro{MTSMS} model is based on the
 concepts of measures and time series as defined in
 Section~\ref{sec:model:TSMS} and we call multiresolution time series
-to each time series stored in a MTSMS.
+to each time series stored in a multiresolution database
+(\acro{MTSDB}).
 
 
 The architecture of MTSMS model for one multiresolution time series is
@@ -951,15 +952,16 @@ the general integral definition.
 
 
 
-\begin{example} Queries over a defined multiresolution schema for an
-  example time series.  Let $S = \{ (1,6),(5,2),\allowbreak
-  (8,5),\allowbreak (10,0),\allowbreak (14,1),\allowbreak (19,6),\allowbreak
-  (22,11),\allowbreak (26,6),(29,0) \}$ be a time series and
-  $M_\emptyset=\{R_0,R_1\}$ a multiresolution time series where each
-  resolution parameters are $\tau_0=0$ , $\delta_0=5$, $f_0 =\meanz$,
-  $k_0=4$ and $\tau_1=0$, $\delta_1=10$, $f_1 =\maxz$,
-  $k_1=2$. Therefore $R_0$ will be consolidated at time instants 5,
-  10, 15, 20, 25, 30\dots and $R_1$ at 10, 20, 30\dots
+\begin{example}\label{ex:model:smultiresolution} Queries over a defined
+  multiresolution schema for an example time series.  Let $S = \{
+  (1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
+  (14,1),\allowbreak (19,6),\allowbreak (22,11),\allowbreak
+  (26,6),(29,0) \}$ be a time series and $M_\emptyset=\{R_0,R_1\}$ a
+  multiresolution time series where each resolution parameters are
+  $\tau_0=0$ , $\delta_0=5$, $f_0 =\meanz$, $k_0=4$ and $\tau_1=0$,
+  $\delta_1=10$, $f_1 =\maxz$, $k_1=2$. Therefore $R_0$ will be
+  consolidated at time instants 5, 10, 15, 20, 25, 30\dots and $R_1$
+  at 10, 20, 30\dots
 
   All measures of $S$ are added to $M_\emptyset$
   %, $\forall m\in S: M'=\addM(M_\emptyset,m)$ %NOO, ha de ser recursiu
@@ -971,7 +973,7 @@ the general integral definition.
   Then the two time subseries consolidated are obtained by querying
   $\seriedisc(M_{29},5,\meanz)=\{(10,3),(15,2),\break
   (20,7),\allowbreak (25,8)\}$ and $\seriedisc(M_{29},10,\maxz)= \{
-  \allowbreak (10,5),\allowbreak (20,11)\}$. Regarding buffers, note
+  \allowbreak (10,6),\allowbreak (20,11)\}$. Regarding buffers, note
   that $S_{B0_{29}}= \{\allowbreak (26,6),\allowbreak (29,0)\}$ and
   $S_{B1_{29}}=\{(22,11),(26,6),(29,0)\}$.
 

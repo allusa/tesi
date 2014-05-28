@@ -46,7 +46,14 @@ class Buffer(object):
     True
     >>> B.consolidate() == Measure(5,20)
     True
-    >>> B.s == TimeSeries() and B.delta == 5 and B.tau == 5
+    >>> B.delta == 5 and B.tau == 5
+    True
+    >>> len(B.s)
+    3
+    >>> B.rm_olds()
+    >>> len(B.s)
+    0
+    >>> B.s == TimeSeries()
     True
     """
     def __init__(self,delta,f,tau=0):
@@ -114,14 +121,6 @@ class Buffer(object):
 
 
 
-    def _rm_olds(self,t0,tf):
-        """
-        Elimina les mesures velles del buffer que ja no són
-        necessàries sabent que s'ha consolidat l'interval [t0,tf]
-        """
-        self.s = self.s[tf::'l']
-
-
     def consolidate(self):
         """
         Definició de l'operació consolida
@@ -131,11 +130,22 @@ class Buffer(object):
         interval = (self.tau,noutau)
         interpola = self.f(self.s, interval)
 
-        self._rm_olds(self.tau,noutau)
-
         self.tau = noutau
  
         return interpola
+
+
+    def rm_olds(self,r=0):
+        """
+        Elimina les mesures velles del buffer que ja no són
+        necessàries. Les mesures més velles són les més antigues que
+        tau-r on `r` és el retard de buffer.
+
+        :param r: retard de buffer
+        :type r: Durada de temps
+        """
+        self.s = self.s[self.tau-r::'l']
+
 
 
     def __repr__(self):
@@ -233,10 +243,13 @@ class ResolutionSubseries(object):
     >>> R.consolidable()
     True
     >>> R.consolidate()
-    >>> R.B.s == TimeSeries() and R.B.delta == 5 and R.B.tau == 5
+    >>> R.B.delta == 5 and R.B.tau == 5
     True
     >>> R.D.s == TimeSeries([Measure(5,20)]) and R.D.k == 2
     True
+    >>> R.B.rm_olds()
+    >>> len(R.B.s)
+    0
     """
     def __init__(self,delta,k,f,tau=0):
         """
