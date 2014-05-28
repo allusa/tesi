@@ -117,11 +117,44 @@ Python \emph{Matplotlib} library.
 
 
 
+\begin{example}
+  We define in Pytsms the two time series $S1$ and $S2$ from
+  Example~\ref{ex:model:s1s2} and we apply different operations:
+  union, concatenation, closed interval, \zohe{} temporal interval,
+  and the test of regular property.
+\begin{lstlisting}[style=py]
+#Importing the required objects
+>>> from pytsms import TimeSeries, Measure
+>>> from pytsms.representation import Zohe
+>>> from pytsms.properties import RegularProperties
 
-\todo{}
+#Defining the two time series
+>>> s1 = TimeSeries([Measure(1,1),Measure(3,1),Measure(4,0),Measure(5,1)])
+>>> s2 = TimeSeries([Measure(2,2),Measure(3,2),Measure(4,0),Measure(6,2)])
 
-exemples d'ús
-
+#Manipulating the two time series
+# æ$s1 \cup s2$æ
+>>> s1.union(s2)
+TimeSeries([m(1,1), m(2,2), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s1 || s2$æ
+s1.concatenate(s2) 
+TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s2[2,5]$æ
+>>> s2.interval_closed(2,5)
+TimeSeries([m(2,2), m(3,2), m(4,0)])
+# æ$s2[2,5]^\zohe$æ
+>>> s2.interval_temporal(2,5,Zohe)
+TimeSeries([m(3,2), m(4,0), m(5,2)])
+# æ$s2$æ is not regular
+>>> r2 = RegularProperties(s2)
+>>> r2.isRegular()
+False
+# æ$s1 \cup s2$æ is regular
+>>> r12 = RegularProperties(s1.union(s2))
+>>> r12.isRegular()
+True
+\end{lstlisting}
+\end{example}
 
 
 \subsubsection{RoundRobinson}
@@ -193,13 +226,53 @@ multiresolution time series from file system and \emph{Plot} has
 methods for plotting the time subseries of the multiresolution schema.
 
 
+\todo{explicar operacions}
+\todo{add, addResolution, consolidate, cosnolidable}
+
 \todo{explicar la totaConsult i la discConsult}
 
 
-\todo{}
 
+\begin{example}
+  We define in Pytsms the time series $S$ and in RoundRobinson we
+  define the multiresolution time series $M_\emptyset$ from
+  Example~\ref{ex:model:smultiresolution}, we apply consolidation and
+  we query the result.
 
-Exemples d'ús
+\begin{lstlisting}[style=py]
+#Importing the required objects
+>>> from pytsms import TimeSeries, Measure
+>>> from roundrobinson import MultiresolutionSeries
+>>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+
+#Defining the original time series
+>>> s = TimeSeries([Measure(1,6),Measure(5,2),Measure(8,5),Measure(10,0),Measure(14,1),Measure(19,6),Measure(22,11),Measure(26,6),Measure(29,0)])
+
+#Defining the multiresolution time series
+>>> M = MultiresolutionSeries()
+#Defining the multiresolution schema
+>>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
+>>> M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
+
+#Adding the measures
+>>> for m in s: M.add(m)
+#M is consolidable
+>>> M.consolidable()
+True
+#Consolidating until no more consolidable
+>>> while M.consolidable(): M.consolidate()
+
+#Query æ$\seriedisc(M,5,\text{mean}^\zohe)$æ
+>>> M.discSeries(5,mean_zohe)
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+#Query æ$\seriedisc(M,10,\text{maximum}^\zohe)$æ
+>>> M.discSeries(10,maximum_zohe)
+TimeSeries([m(10,6), m(20,11)])
+#Query æ$\totalseries(M)$æ
+>>> M.total()
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+\end{lstlisting}
+\end{example}
 
 
 

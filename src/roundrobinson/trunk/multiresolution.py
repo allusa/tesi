@@ -151,13 +151,28 @@ class MultiresolutionSeries(set):
                 return True
         return False
 
-    def consolidate(self):
+    def consolidate(self,rm=True):
         """
         Fa una consolidació a totes les subsèries resolució consolidables
+
+        :param rm: if True removes old measures in buffer
+        :type rm: bool
         """
         for R in self:
             if R.consolidable():
                 R.consolidate()
+        if rm:
+            self.rm_olds()
+
+        
+
+    def rm_olds(self):
+        """
+        Elimina les mesures velles de totes les subsèries resolució
+        """
+        for R in self:            
+            R.B.rm_olds()
+
 
 
     def consolidateTotal(self, debug=False):
@@ -177,8 +192,7 @@ class MultiresolutionSeries(set):
         """
         while self.consolidable():
             self.consolidate()
-            if debug:
-                print self.str_taus()
+
 
 
 
@@ -321,4 +335,124 @@ class MultiresolutionSeries(set):
         for r in self:
             mts.addResolution(r.delta(),r.k(),r.f(),r.tau())
         return mts
+
+
+
+
+
+
+class MultiresolutionSeriesSharedBuffer(MultiresolutionSeries):
+    """
+    Sèrie temporal multiresolució M = {R0,...,Rd} on les subsèries resolució comparteixen el buffer
+
+
+    >>> from pytsms import Measure, TimeSeries
+    >>>
+    >>> def mitjana(s,i):
+    ...     sp = s.interval_open_left(i[0],i[1])
+    ...     v = sp.aggregate(lambda mi,m: Measure(mi.t+1, mi.v+m.v), Measure(0,0))
+    ...     return Measure(i[1], v.v / float(v.t) )
+    >>> 
+    >>> M = MultiresolutionSeriesSharedBuffer()
+    >>> M.addResolution(5,2,mitjana)
+    >>> M.addResolution(10,4,mitjana)
+    >>>
+    >>> m1 = Measure(1,10)
+    >>> m2 = Measure(2,10)
+    >>> m3 = Measure(5,40) 
+    >>> m4 = Measure(10,50)
+    >>> m5 = Measure(15,10)
+    >>>
+    >>> M.add(m1)
+    >>> M.consolidable()
+    False
+    >>> M.add(m2)
+    >>> M.consolidable()
+    False
+    >>> M.add(m3)
+    >>> M.consolidable()
+    True
+    >>> M.consolidate()
+    >>> M.consolidable()
+    False
+    >>> l = sorted(M)
+    >>> R0,R1 = l
+    >>> len(R0.B.s) == len(R1.B.s) and R0.B.tau == 5
+    True
+    >>> len(R1.B.s) == 3 and R1.B.tau == 0
+    True
+    >>> len(R0.D.s)
+    1
+    >>> len(R1.D.s)
+    0
+    >>> M.add(m4)
+    >>> M.consolidable()
+    True
+    >>> M.consolidate()
+    >>> M.consolidable()
+    False
+    >>> len(R0.B.s) == len(R1.B.s)  and R0.B.tau == 10
+    True
+    >>> len(R1.B.s) == 0 and R1.B.tau == 10
+    True
+    >>> len(R0.D.s)
+    2
+    >>> len(R1.D.s)
+    1
+    >>> R0.D.s == TimeSeries([Measure(5,20.0), Measure(10,50)])
+    True
+    >>> R1.D.s == TimeSeries([Measure(10,27.5)])
+    True
+    >>> M.add(m5)
+    >>> M.consolidable()
+    True
+    >>> M.consolidate()
+    >>> M.consolidable()
+    False
+    >>> len(R0.B.s) == len(R1.B.s)  and R0.B.tau == 15
+    True
+    >>> len(R1.B.s) == 1 and R1.B.tau == 10
+    True
+    >>> len(R0.D.s)
+    2
+    >>> len(R1.D.s)
+    1
+    >>> R0.D.s == TimeSeries([Measure(15,10.0), Measure(10,50)])
+    True
+    >>> R1.D.s == TimeSeries([Measure(10,27.5)])
+    True
+    """
+    def __init__(self):
+        super(MultiresolutionSeries,self).__init__()
+        self.B = TimeSeries()
+        self.Btau = None
+
+    def addResolution(self,delta,k,f,tau=0):
+        """
+        Add resolution by delta, k, f and tau
+        """
+        r = ResolutionSubseries(delta,k,f,tau)
+        r.B.s = self.B
+        set.add(self, r)
+
+
+    def add(self,m):
+        """
+        Operació d'afegir una nova mesura a la base de dades
+        """
+        self.B.add(m)
+        
+
+    def rm_olds(self):
+        """
+        Elimina les mesures velles de totes les subsèries resolució
+        """
+        taus = [R.B.tau for R in self]
+        mtau = min(taus)
+
+        if self.Btau is None or self.Btau < mtau:
+            nous = self.B[mtau::'l']
+            self.B.clear()
+            self.B.update(nous)
+            self.Btau = mtau
 
