@@ -48,23 +48,41 @@ def llegeix_dades(fitxer):
 
 
 
+def dades2timeseries(fitxer):
+
+    s = TimeSeries()
+
+    def readtime(t):
+        return datetimetotimestamp(datetime.datetime.strptime(t,'%Y-%m-%d %H:%M:%S'))
+
+    ts = s.storage().load_csv(fitxer,ttype=readtime,vtype=float)
+
+    return ts
 
 
-def consolida_mrd(mrd,temps,valors,debug=False):
+
+
+def consolida_mrd(mrd,temps,valors,tlast,debug=False):
+
+    if tlast is not None:
+        mrd.set_tau_tnow(tlast)
+
     if debug:
         print mrd.str_taus()
+
 
     #farciment de mesures amb consolidació
     for t,v in zip(temps,valors):
         m = Measure(t,v)
         mrd.add(m)
-
-        mrd.consolidate()
         if debug:
-            print mrd.str_taus()    
+            print t
 
 
-def crea_mrd(temps,valors,tzero=0,debug=False):
+    mrd.consolidateTotal(debug)
+
+
+def crea_mrd(temps,valors,tzero=0,tlast=None,debug=False):
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -84,11 +102,11 @@ def crea_mrd(temps,valors,tzero=0,debug=False):
 
     mrd.addResolution(d50,12,maximum,zero)
 
-    consolida_mrd(mrd,temps,valors,debug)
+    consolida_mrd(mrd,temps,valors,tlast,debug)
     return mrd
 
 
-def crea_mrdzohe(temps,valors,tzero=0,debug=False):
+def crea_mrdzohe(temps,valors,tzero=0,tlast=None,debug=False):
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -109,12 +127,12 @@ def crea_mrdzohe(temps,valors,tzero=0,debug=False):
     mrd.addResolution(d15,12,maximum_zohe,zero)
     mrd.addResolution(d50,12,maximum_zohe,zero)
 
-    consolida_mrd(mrd,temps,valors,debug)
+    consolida_mrd(mrd,temps,valors,tlast,debug)
     return mrd
 
 
 
-def crea_mrdzohe2(temps,valors,tzero=0,debug=False):
+def crea_mrdzohe2(temps,valors,tzero=0,tlast=None,debug=False):
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -135,7 +153,7 @@ def crea_mrdzohe2(temps,valors,tzero=0,debug=False):
     mrd.addResolution(d15,24,maximum_zohe,zero)
     mrd.addResolution(d50,24,maximum_zohe,zero)
 
-    consolida_mrd(mrd,temps,valors,debug)
+    consolida_mrd(mrd,temps,valors,tlast,debug)
     return mrd
 
  
@@ -148,6 +166,7 @@ if __name__ == '__main__':
 
     directori = 'matriu0'
     totalmean = os.path.join(directori,'totalmean.csv')
+    tspickle  = os.path.join(directori,'tsoriginal.pickle')
     mrdpickle  = os.path.join(directori,'mrd.pickle')
     isense = 'isense/matriu0.csv'
 
@@ -158,11 +177,16 @@ if __name__ == '__main__':
     
 
 
-    temps,valors = llegeix_dades(isense)
+    #temps,valors = llegeix_dades(isense)
+    ts = dades2timeseries(isense)
     print "S'ha llegit el fitxer de dades"
+    ts.storage().save_pickle(tspickle)
+    print ts
+    exit()
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
-    mrd = crea_mrdzohe(temps,valors,tzero,debug=True)
+    tlast = datetimetotimestamp(datetime.datetime(2011,10,18))
+    mrd = crea_mrdzohe(temps,valors,tzero,tlast,debug=True)
     print "S'ha farcit i consolidat la base de dades"
 
     print 'Emmagatzemant dades a {0}/'.format(directori)

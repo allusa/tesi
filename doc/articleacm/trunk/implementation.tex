@@ -1,27 +1,31 @@
 
-\section{Implementation}
+% \section{Implementation}
 
-\todo{}
+% \todo{}
 
-We implement the TSMS and MTSMS models into three different approaches:
+% We implement the TSMS and MTSMS models into three different approaches:
 
-\begin{itemize}
-\item Pytsms+RoundRobinson, a Python implementation. This is our referent
-  implementation, which we use for example data.
-\item Reltsms, a Tutorial D implementation. This shows a TSMS
-  implemented on a relational language.
-\item Roundrobindoop, a MapReduce implementation. This is a specific
-  implementation for offline computing multiresolution with
-  parallelism approaches.
-\end{itemize}
+% \begin{itemize}
+% \item Pytsms+RoundRobinson, a Python implementation. This is our referent
+%   implementation, which we use for example data.
+% \item Reltsms, a Tutorial D implementation. This shows a TSMS
+%   implemented on a relational language.
+% \item Roundrobindoop, a MapReduce implementation. This is a specific
+%   implementation for offline computing multiresolution with
+%   parallelism approaches.
+% \end{itemize}
 
-RRDtool can also be seen as a MTSMS implementation in a specific
-field. We give more references for RRDtool in
-Section~\ref{sec:related-work}.
+% RRDtool can also be seen as a MTSMS implementation in a specific
+% field. We give more references for RRDtool in
+% Section~\ref{sec:related-work}.
 
 
 
-\subsection{Python referent implementation}
+\section{Referent implementation}
+\label{sec:implementation}
+
+We implement the TSMS and MTSMS models with Python. This is our
+referent implementation, which we use for example data.  
 
 We implement the two models of TSMS and MTSMS respectively as two
 separated Python libraries: \emph{Pytsms} and \emph{RoundRobinson}.
@@ -38,7 +42,7 @@ to define the classes structure, mainly to show the relationships
 among objects.
 
 
-\subsubsection{Pytsms}
+\subsection{Pytsms}
 
 Pytsms is the referent implementation for the model concepts of
 measure, time series and temporal representation function.  Figure
@@ -121,7 +125,7 @@ Python \emph{Matplotlib} library.
   We define in Pytsms the two time series $S1$ and $S2$ from
   Example~\ref{ex:model:s1s2} and we apply different operations:
   union, concatenation, closed interval, \zohe{} temporal interval,
-  and the test of regular property.
+  \zohe{} temporal selection, and the test of regular property.
 \begin{lstlisting}[style=py]
 #Importing the required objects
 >>> from pytsms import TimeSeries, Measure
@@ -145,19 +149,26 @@ TimeSeries([m(2,2), m(3,2), m(4,0)])
 # æ$s2[2,5]^\zohe$æ
 >>> s2.interval_temporal(2,5,Zohe)
 TimeSeries([m(3,2), m(4,0), m(5,2)])
+
+#Checking the regularity
 # æ$s2$æ is not regular
 >>> r2 = RegularProperties(s2)
 >>> r2.isRegular()
 False
-# æ$s1 \cup s2$æ is regular
->>> r12 = RegularProperties(s1.union(s2))
->>> r12.isRegular()
+# æ$s2$æ can be regularised by æ$s2[{0,2,4}]^\zohe$æ
+>>> s2.selection_temporal(range(0,6,2),Zohe)
+TimeSeries([m(0,2), m(2,2), m(4,0)])
+>>> r2b=RegularProperties(s2.selection_temporal(range(0,6,2),Zohe))
+>>> r2b.isRegular()
 True
 \end{lstlisting}
 \end{example}
 
 
-\subsubsection{RoundRobinson}
+
+
+
+\subsection{RoundRobinson}
 
 
 RoundRobinson is the referent implementation for the model concepts of
@@ -226,11 +237,30 @@ multiresolution time series from file system and \emph{Plot} has
 methods for plotting the time subseries of the multiresolution schema.
 
 
-\todo{explicar operacions}
-\todo{add, addResolution, consolidate, cosnolidable}
+A MultiresolutionSeries has a method \emph{addResolution} for defining
+the multiresolution schema structure by adding resolution
+subseries. Every new resolution is configured by four parameters:
+\emph{delta}, \emph{k}, \emph{f}, and \emph{tau} that create the
+corresponding buffer and disc.  A MultiresolutionSeries has methods
+\emph{add}, \emph{consolidate}, and \emph{consolidate} that operate on
+the corresponding methods of the contained resolution subseries.
 
-\todo{explicar la totaConsult i la discConsult}
 
+A MultiresolutionSeries can be queried by two methods:
+\emph{discSeries} and \emph{total}. \emph{discSeries} returns the
+TimeSeries for the selected disc by parameters \emph{delta} and
+\emph{f}. \emph{total} returns the TimeSeries that results from the
+concatenation of all \emph{discSeries} ordered by \emph{delta}; as
+there can not be repeated \emph{delta}, \emph{total} has a parameter
+\emph{f} for selecting only \emph{discSeries} with a determined
+attribute aggregate function.
+
+In a module \emph{aggregators} we have implemented some default
+attribute aggregate functions, although users can define more as they
+are Python Function objects with parameters s as a TimeSeries and i as
+a pair of times like [t0.tf]. For example we have defined the \zohe
+aggregate functions, which basically aggregate over the temporal
+interval \lstinline[style=py]+s.interval_temporal(t0,tf,Zohe)+.
 
 
 \begin{example}
@@ -273,12 +303,6 @@ TimeSeries([m(10,6), m(20,11)])
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 \end{lstlisting}
 \end{example}
-
-
-
-\subsection{Roundrobindoop}
-
-\todo{}
 
 
 
