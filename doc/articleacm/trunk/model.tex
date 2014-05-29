@@ -507,7 +507,22 @@ representation a particular temporal interval must be interpreted:
 
 
 From temporal interval other operators can be defined such as temporal
-selection, temporal concatenation, or temporal join.
+selection, temporal concatenation, or temporal join. As example the
+definition of temporal interval operation is given.
+
+
+The temporal selection over a time series allows to change the
+resolution in the context of a representation function.  Let $S$ be a
+time series, $i=\{t_0,t_1,\dotsc,t_n\}$ a set of time instants, and
+and $r$ a representation function. The \emph{temporal selection} noted
+as $S[i]^r$ is a time series with measures in $i$ times computed in
+coherence with the representation function $r$: $S[i]^r = S[t_0,t_0]^r
+\cup S[t_1,t_1]^r \cup \dotsb \cup S[t_n,t_n]^r$. Let $t_a$ be a time
+instant, note that temporal selection depends on the temporal interval
+operation $S[t_a,t_a]^r$, which is equivalent to the notion of
+temporal representation function over an argument as $S[t_a,t_a]^r
+\equiv \{ (t_a, S(t_a)^r) \}$.
+
 
 
 
@@ -563,6 +578,13 @@ say it to be regular.
   duration. $S$ is \emph{regular} if and only if $\forall m \in
   S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = d$.
 \end{definition}
+
+
+If a time series is not regular, it can be regularised by the temporal
+selection operation. Let $S$ be a time series, $t_I$ and $d$ the
+desired regularity parameters, and $k\in\N$ a limit for the scope of
+the range.  A regularised $S$ is obtained with $S[i]^r$ where $i =
+\{t_I+jd | d\in\N, d\leq k \}$ is a set of time instants equi-spaced.
 
 
 

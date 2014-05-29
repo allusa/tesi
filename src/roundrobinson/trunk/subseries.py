@@ -333,3 +333,16 @@ class ResolutionSubseries(object):
             name = f
 
         return name
+
+
+
+    def set_tau_tnow(self,tnow):
+        """
+        Set tau to a time where tnow - (k+1)*delta, that is a tau that ignores old measures that will not be in the resulting consolidation as the would immediately be discarded
+
+        >>> R = ResolutionSubseries(5,2,max,0)
+        >>> R.set_tau_tnow(20)
+        >>> R.tau()
+        5
+        """
+        self.B.tau = tnow - ( self.k()+1 ) * self.delta()

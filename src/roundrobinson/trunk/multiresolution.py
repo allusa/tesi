@@ -192,7 +192,8 @@ class MultiresolutionSeries(set):
         """
         while self.consolidable():
             self.consolidate()
-
+            if debug:
+                print self.str_taus()
 
 
 
@@ -338,6 +339,13 @@ class MultiresolutionSeries(set):
 
 
 
+    def set_tau_tnow(self,tnow):
+        """
+        Set tau of each resolution to a time that ignores old measures that will not be in the resulting consolidation as the would immediately be discarded
+        """
+        for R in self:
+            R.set_tau_tnow(tnow)
+
 
 
 
@@ -441,6 +449,12 @@ class MultiresolutionSeriesSharedBuffer(MultiresolutionSeries):
         Operació d'afegir una nova mesura a la base de dades
         """
         self.B.add(m)
+        
+    def update(self,s):
+        """
+        Operació d'afegir les mesures d'una sèrie temporal
+        """
+        self.B.update(s)
         
 
     def rm_olds(self):
