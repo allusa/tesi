@@ -28,44 +28,42 @@
   keepspaces=true,
 }
 
+
 \usepackage[
+          counter=section,
 %          acronym,
           %%nonumberlist,
           %%toc,
           nomain,
-          section,
-          numberedsection=autolabel,
+%          section,
+%          numberedsection=autolabel,
           sanitize=none, %pels accents en el vegeu
           ]{glossaries}
- 
+
+
+
+
 \newglossary{notation}{not}{ntn}{Notation symbols}
-% \newglossarystyle{estil-notation}{%
-%   \renewcommand{\glsgroupskip}{}% make nothing happen between groups
-%   \renewenvironment{theglossary}
-%   {\begin{longtable}{lll}
-%       % \caption{Notació dels SGSTM \label{tab:sgstm-simbols}}
-%       % \endfirsthead
-%       % \caption[]{Notació dels SGSTM (continuació)}
-%       % \endhead
-%           % \endfoot
-%           % \endlastfoot
-%     }{\end{longtable}}
-%   \renewcommand*{\glossarysubentryfield}[6]{%
-%     %\glstarget{##2}{##3}% the entry name
-%     \glstarget{##2}{\Glsentryname{##2}}% the entry name
-%     &
-%      %\space (##5)% the symbol in brackets
-%     \space ##4% the description
-%     &
-%     \space [##6]% the number list in square brackets
-%     \\
-%   }%
-%   \renewcommand*{\glossaryentryfield}[5]{%
-%     \\\pagebreak[3]%\hline
-%     \glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
-%     \hline
-%   }
-% }
+\newglossarystyle{estil-notation}{%
+  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
+  \renewenvironment{theglossary}
+  {\begin{tabular}{ll}}{\end{tabular}}
+  \renewcommand*{\glossarysubentryfield}[6]{%
+    ##3 & ##4  \\
+    %\Glsentryname{##2}
+    %\glstarget{##2}{##3}% the entry name
+%    \item \glstarget{##2}{\Glsentryname{##2}}% the entry name
+    % &
+    %  %\space (##5)% the symbol in brackets
+    % \space ##4% the description
+    % &
+    % \space [##6]% the number list in square brackets
+    % \\                                    
+  }%
+  \renewcommand*{\glossaryentryfield}[5]{%   
+    \glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
+  }
+}
 
 
 \makeglossaries
@@ -221,16 +219,10 @@ Llus\`{a} Serra, Aleix\\
 \input{conclusions}
 
 
-
+\glsaddall
 \appendix
 \section{Notation}
-\glsaddall
-\gls{not:temps}
-
-
-\printglossary[type=notation,
-%style=estil-notation
-]
+\printglossary[type=notation,style=estil-notation]
 
 
 
