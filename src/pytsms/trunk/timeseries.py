@@ -34,7 +34,7 @@ from storage import TimeSeriesStorage
 
 
 
-class TimeSeries(TimeSeriesSetOp,TimeSeriesSeqOp,TimeSeriesFuncOp,TimeSeriesStructure):
+class TimeSeries(TimeSeriesSeqOp,TimeSeriesSetOp,TimeSeriesFuncOp,TimeSeriesStructure):
     """
     L'ordre de l'herència és important, `TimeSeriesStructure` ha d'anar
     en darrer lloc per tal que les seves operacions siguin

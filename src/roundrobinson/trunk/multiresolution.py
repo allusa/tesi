@@ -187,14 +187,15 @@ class MultiresolutionSeries(set):
         >>> M.addResolution(10,4,zero)
         >>> M.add(m1); M.add(m2); M.add(m3)
         >>> M.consolidateTotal(debug=True)
-        5/zero:5 | 10/zero:10
-        5/zero:10 | 10/zero:10
+        0 5/zero:5 | 10/zero:10
+        1 5/zero:10 | 10/zero:10
         """
+        i = 0
         while self.consolidable():
             self.consolidate()
             if debug:
-                print self.str_taus()
-
+                print i, self.str_taus()
+                i += 1
 
 
     #Esquema

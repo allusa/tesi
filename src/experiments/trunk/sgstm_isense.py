@@ -67,8 +67,7 @@ def consolida_mrd(mrd,tlast):
     if tlast is not None:
         mrd.set_tau_tnow(tlast)
 
-    if debug:
-        print mrd.str_taus()
+    print mrd.str_taus()
 
     mrd.consolidateTotal(debug=True)
 
@@ -96,6 +95,7 @@ def crea_mrd(tzero=0,tlast=None):
     mrd.addResolution(d50,12,maximum,zero)
 
     return mrd
+
 
 
 def crea_mrdzohe(tzero=0,tlast=None):
@@ -147,6 +147,28 @@ def crea_mrdzohe2(tzero=0,tlast=None,):
     return mrd
 
  
+def crea_mrd_meand_maxzohe(tzero=0,tlast=None):
+
+    #temps segons Unix Time Epoch (segons)
+    zero = tzero
+    h1 = 3600
+    h5 = 5 * h1
+    d1 = 24 * h1
+    d2 = 2 * d1
+    d15 = 15 * d1
+    d50 = 50 * d1
+
+    #configuració base de dades multiresolució
+    mrd = MultiresolutionSeriesSharedBuffer()
+    mrd.addResolution(h5,24,mean,zero)
+    mrd.addResolution(d2,20,mean,zero)
+    mrd.addResolution(d15,12,mean,zero)
+    mrd.addResolution(d50,12,mean,zero)
+
+    mrd.addResolution(d15,12,maximum_zohe,zero)
+    mrd.addResolution(d50,12,maximum_zohe,zero)
+
+    return mrd
 
 
 
@@ -158,7 +180,7 @@ if __name__ == '__main__':
     totalmean = os.path.join(directori,'totalmean.csv')
     tspickle  = os.path.join(directori,'tsoriginal.pickle')
     mrdpickle  = os.path.join(directori,'mrd.pickle')
-    tsoriginal = 'isense/original-tsms.csv'
+    tsoriginal = 'isense/tsoriginal.pickle'
 
     print "S'emmagatzemaran dades a {0}/".format(directori)
     if os.path.exists(directori):
@@ -179,6 +201,7 @@ if __name__ == '__main__':
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
     tlast = datetimetotimestamp(datetime.datetime(2011,10,18))
+    #mrd = crea_mrd_meand_maxzohe(tzero,tlast)
     mrd = crea_mrdzohe(tzero,tlast)
     mrd.update(ts)
     print "S'ha farcit la base de dades"
