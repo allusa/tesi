@@ -113,10 +113,15 @@ def area_zohe(s,i):
 
     sp = s.interval_temporal(t0,tf,Zohe)
     o = min(sp)
-    spp = sp - TimeSeries([o])
-    
+    #spp = sp - TimeSeries([o])
+    spp = sp[o.t::'l']
+
     vp = (o.t - t0)*o.v
-    vp += reduce(lambda mi,m: mi+(m.t-s.prev(m).t)*m.v,spp,0)
+    #aquesta operacio es molt cara en rendiment:
+    vp += reduce(lambda mi,m: mi+(m.t-sp.prev(m).t)*m.v,spp,0)
+    #vpp = spp.aggregate(lambda mi,m: Measure(mi.t,mi.v+(m.t-sp.prev(m).t)*m.v), Measure(0,0))
+    #vp = vpp.v + vp
+
 
     return s.mtype()(tf,vp)  
 

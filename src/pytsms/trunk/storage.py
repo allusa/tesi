@@ -117,7 +117,6 @@ class TimeSeriesStorage(object):
                     
                 if ttype is not None:
                     t = ttype(t)
-                    print t #debug temporal
                 if vtype is not None:
                     v = vtype(v)
                 ts.add(mtype(t,v))     

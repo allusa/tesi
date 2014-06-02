@@ -13,11 +13,10 @@ Implementació dels operadors de seqüència de Sèrie Temporal.
 
 
 from measure import Measure
-from structure import TimeSeriesStructure
+from opset import TimeSeriesSetOp
 
 
-
-class TimeSeriesSeqOp(TimeSeriesStructure):
+class TimeSeriesSeqOp(TimeSeriesSetOp):
     """
     Operadors de seqüència de Sèrie Temporal
 
@@ -154,11 +153,8 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_open(1,1) == TimeSeriesSeqOp([])
         True
         """
-        r = self.empty()
-        for m in self:
-            if m.t > l and m.t < g:
-                r.add(m)
-        return r
+        return self.selection(lambda m: m.t> l and m.t < g)
+
 
     def interval_closed(self,l,g):
         """
@@ -179,11 +175,9 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_closed(2,2) == TimeSeriesSeqOp([Measure(2,2)])
         True
         """
-        r = self.empty()
-        for m in self:
-            if m.t >= l and m.t <= g:
-                r.add(m)
-        return r 
+        return self.selection(lambda m: m.t>= l and m.t <= g)
+
+
 
     def interval_open_left(self,l,g):
         """
@@ -206,11 +200,8 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         >>> s.interval_open_left(1,1) == TimeSeriesSeqOp([])
         True
         """
-        r = self.empty()
-        for m in self:
-            if m.t > l and m.t <= g:
-                r.add(m)
-        return r
+        return self.selection(lambda m: m.t> l and m.t <= g)
+
 
     def interval_open_right(self,l,g):
         """
@@ -232,12 +223,8 @@ class TimeSeriesSeqOp(TimeSeriesStructure):
         True
         >>> s.interval_open_right(1,1) == TimeSeriesSeqOp([])
         True
-        """
-        r = self.empty()
-        for m in self:
-            if m.t >= l and m.t < g:
-                r.add(m)
-        return r
+        """        
+        return self.selection(lambda m: m.t>= l and m.t < g)
 
 
     def next(self,m):
