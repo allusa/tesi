@@ -166,13 +166,13 @@ if __name__ == '__main__':
     os.mkdir(directori)
     
 
-    isense = 'isense/matriu0.csv'
-    #temps,valors = llegeix_dades(isense)
-    ts = dades2timeseries(isense)
-    print "S'ha llegit el fitxer de dades"
-    ts.storage().save_pickle(tspickle)
-    print ts
-    exit() 
+    # isense = 'isense/matriu0.csv'
+    # #temps,valors = llegeix_dades(isense)
+    # ts = dades2timeseries(isense)
+    # print "S'ha llegit el fitxer de dades"
+    # ts.storage().save_pickle(tspickle)
+    # print ts
+    # exit() 
     ts = TimeSeries()
     ts = ts.storage().load_pickle(tsoriginal)
 
