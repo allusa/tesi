@@ -62,7 +62,7 @@ def dades2timeseries(fitxer):
 
 
 
-def consolida_mrd(mrd,temps,valors,tlast,debug=False):
+def consolida_mrd(mrd,tlast):
 
     if tlast is not None:
         mrd.set_tau_tnow(tlast)
@@ -70,19 +70,12 @@ def consolida_mrd(mrd,temps,valors,tlast,debug=False):
     if debug:
         print mrd.str_taus()
 
-
-    #farciment de mesures amb consolidació
-    for t,v in zip(temps,valors):
-        m = Measure(t,v)
-        mrd.add(m)
-        if debug:
-            print t
+    mrd.consolidateTotal(debug=True)
 
 
-    mrd.consolidateTotal(debug)
 
 
-def crea_mrd(temps,valors,tzero=0,tlast=None,debug=False):
+def crea_mrd(tzero=0,tlast=None):
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -102,11 +95,10 @@ def crea_mrd(temps,valors,tzero=0,tlast=None,debug=False):
 
     mrd.addResolution(d50,12,maximum,zero)
 
-    consolida_mrd(mrd,temps,valors,tlast,debug)
     return mrd
 
 
-def crea_mrdzohe(temps,valors,tzero=0,tlast=None,debug=False):
+def crea_mrdzohe(tzero=0,tlast=None):
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -127,12 +119,11 @@ def crea_mrdzohe(temps,valors,tzero=0,tlast=None,debug=False):
     mrd.addResolution(d15,12,maximum_zohe,zero)
     mrd.addResolution(d50,12,maximum_zohe,zero)
 
-    consolida_mrd(mrd,temps,valors,tlast,debug)
     return mrd
 
 
 
-def crea_mrdzohe2(temps,valors,tzero=0,tlast=None,debug=False):
+def crea_mrdzohe2(tzero=0,tlast=None,):
 
     #temps segons Unix Time Epoch (segons)
     zero = tzero
@@ -153,7 +144,6 @@ def crea_mrdzohe2(temps,valors,tzero=0,tlast=None,debug=False):
     mrd.addResolution(d15,24,maximum_zohe,zero)
     mrd.addResolution(d50,24,maximum_zohe,zero)
 
-    consolida_mrd(mrd,temps,valors,tlast,debug)
     return mrd
 
  
@@ -168,7 +158,7 @@ if __name__ == '__main__':
     totalmean = os.path.join(directori,'totalmean.csv')
     tspickle  = os.path.join(directori,'tsoriginal.pickle')
     mrdpickle  = os.path.join(directori,'mrd.pickle')
-    isense = 'isense/matriu0.csv'
+    tsoriginal = 'isense/original-tsms.csv'
 
     print "S'emmagatzemaran dades a {0}/".format(directori)
     if os.path.exists(directori):
@@ -176,18 +166,24 @@ if __name__ == '__main__':
     os.mkdir(directori)
     
 
-
+    isense = 'isense/matriu0.csv'
     #temps,valors = llegeix_dades(isense)
     ts = dades2timeseries(isense)
     print "S'ha llegit el fitxer de dades"
     ts.storage().save_pickle(tspickle)
     print ts
-    exit()
+    exit() 
+    ts = TimeSeries()
+    ts = ts.storage().load_pickle(tsoriginal)
+
 
     tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
     tlast = datetimetotimestamp(datetime.datetime(2011,10,18))
-    mrd = crea_mrdzohe(temps,valors,tzero,tlast,debug=True)
-    print "S'ha farcit i consolidat la base de dades"
+    mrd = crea_mrdzohe(tzero,tlast)
+    mrd.update(ts)
+    print "S'ha farcit la base de dades"
+    consolida_mrd(mrd,tlast)
+    print "S'ha consolidat la base de dades"
 
     print 'Emmagatzemant dades a {0}/'.format(directori)
     mrd.storage().save_csv(directori)
