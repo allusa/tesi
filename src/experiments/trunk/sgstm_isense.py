@@ -3,12 +3,13 @@
 #isense
 
 import os.path
+from sys import argv
 import csv
 import time, datetime
 
-from roundrobinson import Measure, TimeSeries, MultiresolutionSeriesSharedBuffer
+from roundrobinson import Measure, TimeSeries, MultiresolutionSeries, MultiresolutionSeriesSharedBuffer
 from roundrobinson.aggregators import mean, maximum, mean_zohe, maximum_zohe
-from roundrobinson.plot import ScreenPlot
+from roundrobinson.plot import ScreenPlot, PgfPlot
 
 
 
@@ -174,27 +175,20 @@ def crea_mrd_meand_maxzohe(tzero=0,tlast=None):
 
 
 
-if __name__ == '__main__':
 
-    directori = 'matriu0'
-    totalmean = os.path.join(directori,'totalmean.csv')
-    tspickle  = os.path.join(directori,'tsoriginal.pickle')
-    mrdpickle  = os.path.join(directori,'mrd.pickle')
-    tsoriginal = 'isense/tsoriginal.pickle'
 
-    print "S'emmagatzemaran dades a {0}/".format(directori)
-    if os.path.exists(directori):
-        raise Exception("El directori no ha d'existir")
-    os.mkdir(directori)
+
+def values2timeseries():
     
+    isense = 'isense/matriu0.csv'
+    #temps,valors = llegeix_dades(isense)
+    ts = dades2timeseries(isense)
+    print "S'ha llegit el fitxer de dades"
+    ts.storage().save_pickle(tspickle)
+    print ts
 
-    # isense = 'isense/matriu0.csv'
-    # #temps,valors = llegeix_dades(isense)
-    # ts = dades2timeseries(isense)
-    # print "S'ha llegit el fitxer de dades"
-    # ts.storage().save_pickle(tspickle)
-    # print ts
-    # exit() 
+
+def consolida():
     ts = TimeSeries()
     ts = ts.storage().load_pickle(tsoriginal)
 
@@ -209,8 +203,8 @@ if __name__ == '__main__':
     print "S'ha consolidat la base de dades"
 
     print 'Emmagatzemant dades a {0}/'.format(directori)
-    mrd.storage().save_csv(directori)
-    mrd.storage().save_pickle(mrdpickle)
+    mrd.storage().save_dir_csv(directori)
+    mrd.storage().save_plain_pickle(mrdpickle)
     print 'Emmagatzemant unió total a {0}/'.format(totalmean)
     mrd.total(ff=[mean_zohe]).storage().save_csv(totalmean)
 
@@ -218,7 +212,50 @@ if __name__ == '__main__':
     sp = ScreenPlot(mrd)
     sp.plot()
     #sp.plot_total()
-    print 'Gràfic tancat'
+    print 'Gràfic tancat'  
+
+
+
+def graphics():
+    mrd = MultiresolutionSeries()
+    mrd = mrd.storage().load_plain_pickle(mrdconsolidated)
+    
+    sp = PgfPlot(mrd)
+    print sp.plot()
+    
+
+if __name__ == '__main__':
+
+    directori = 'matriu0'
+    totalmean = os.path.join(directori,'totalmean.csv')
+    tspickle  = os.path.join(directori,'tsoriginal.pickle')
+    mrdpickle  = os.path.join(directori,'mrd.pickle')
+    tsoriginal = 'isense/tsoriginal.pickle'
+    mrdconsolidated = 'isense/mrdzohe.pickle'
+
+
+
+
+    if len(argv) == 1:
+        graphics()
+        exit()
+
+    print "S'emmagatzemaran dades a {0}/".format(directori)
+    if os.path.exists(directori):
+        raise Exception("El directori no ha d'existir")
+    os.mkdir(directori)
+
+    if argv[1] == 'read':
+        values2timeseries()
+    elif argv[1] == 'multiresolution' or argv[0] == 'consolida':
+        consolida()
+    else:
+        print 'error'
+
+
+
+
+ 
 
 
 
