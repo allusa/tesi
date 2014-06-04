@@ -1,0 +1,12 @@
+Potser la gran diferència que marca el model de multiresoució respecte altres treballs és:
+
+* Si bé els streams agreguen estadístics de les dades, la multiresolució té en compte l'evolució d'aquests estadístics al llarg del temps, cosa que lliga més amb l'àmbit del monitoratge. És a dir, tenim en compte el temps, altres projectes només avaluen el moment present.
+
+* Si bé l'orientació a agregadors amb stream és molt interessant, el model es manté genèric per a poder calcular amb qualsevol funció d'agregació.
+
+* Es tenen en compte les irregularitats de mostreig de les series temporals
+
+* Es modelitza fortament el concepte de funció de representació de les sèries temporals i així es pot tenir en compte la semàntica de cada sèrie temporal, ja que en cada agregació té molta afectació, per exemple quan les dades monitorades tenen naturalesa de comptadors als quals RRDtool s'hi ha especialitzat.
+
+
+* Els altres treballs se centren en el problema de recuperar el senyal original, ho demostra el fet que avaluin el resultat amb SSE (per mínims quadrats). Nosaltres enfoquem el problema en un domini més genèric de les consultes aproximades on volem avaluar el resultat per si respon correctament a les consultes, encara que el senyal recuperat no s'assembli gens a l'original.

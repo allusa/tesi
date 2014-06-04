@@ -34,6 +34,12 @@ class MultiresolutionStorage(object):
 
 
     def save_pickle(self,fname):
+        """
+        ALERTA!! que les funcions es guarden com a objectes en memòria
+        i per tant no s'emmagatzemen i no es poden recuperar en altres
+        sessions
+        """
+
         with open(fname,'w') as f:
             pickle.dump(self._mts,f)
             f.close()
@@ -57,7 +63,7 @@ class MultiresolutionStorage(object):
         return mts
 
 
-    def save_plain_pickle(self,fname):
+    def save_schema_plain_pickle(self,fname):
         """
         Pickle on només hi ha llistes, tuples i strings i per tant no depèn dels objectes
         """
@@ -75,6 +81,14 @@ class MultiresolutionStorage(object):
             f.close()
 
 
+    def save_plain_pickle(self,fname):
+        """
+        Pickle on només hi ha llistes, tuples i strings i per tant no depèn dels objectes
+        """
+        raise NotImplemented('falta fer')
+
+
+
     def _despickle_f(self,f):
         name,content = f
         code = marshal.loads(content)
@@ -82,15 +96,15 @@ class MultiresolutionStorage(object):
         return func
 
 
-    def load_plain_pickle(self,fname):
+    def load_schema_plain_pickle(self,fname):
         """
         Pickle on només hi ha llistes, tuples i strings i per tant no depèn dels objectes
 
         >>> m = _doctest_mrd()
         >>> ms = MultiresolutionStorage(m)
         >>> f = _doctest_file()
-        >>> ms.save_plain_pickle(f)
-        >>> nm = ms.load_plain_pickle(f)
+        >>> ms.save_schema_plain_pickle(f)
+        >>> nm = ms.load_schema_plain_pickle(f)
         >>> nm.schema_eq(m)
         True
         >>> _doctest_file_rm(f)
@@ -104,6 +118,7 @@ class MultiresolutionStorage(object):
             f = self._despickle_f(f)
             mts.addResolution(delta,k,f,tau)
         return mts
+
 
 
 
