@@ -53,7 +53,7 @@ subseries using the maximum$^\zohe{}$ aggregate function.
 each graphic corresponds to a resolution disc time series. Each title
 shows the resolution subseries and its cardinal, and each attribute
 aggregate function has different colour.  Each time series is plotted
-with \zohe{} representation function. Time axis has \acro{UTC} units
+with \zohe{} representation function $S(t)^\zohe{}$. Time axis has \acro{UTC} units
 rounded to nearest time points and temperature axis has Kelvin
 units. Outlayers are marked as discontinuities, for instance see
 fourth plot's 2938 K maximum.
@@ -79,30 +79,29 @@ queries for the mean$^{\zohe}$ aggregate function resolution and for
 the maximum$^{\zohe}$ resolution.  Each resulting time series is
 plotted interpolating linearly its measures, note that this linearly
 visualisation seems right time displaced as time series comes from a
-\zohe{} aggregation.  Comparing this figure with the original series,
-see Figure~\ref{fig:exemple:original}, we observe that it resembles an
+\zohe{} aggregation.  Comparing this figure with the original series
+in Figure~\ref{fig:exemple:original}, we observe that it resembles an
 incremental low-pass filter because we applied mean aggregation while
 the maximum aggregation resembles an envelope function.
 
 \begin{figure}[tp]
   \centering
   \tikzset{every picture/.style={scale=0.8}}
-  %\input{imatges/isense_mrdb-all.tex}
+  \input{imatges/isense_mrdb-all.tex}
   \caption{$\totalseries$ for the mean$^{\zohe}$ and maximum$^{\zohe}$
     resolutions}
   \label{fig:exemple:4mrdtot}
 \end{figure}
-\todo{cal que hi hagi el total pel mean i pel max}
+%Alerta: en el punt d'unió de les conatenacions queda mal unit perquè el valor de més resolució fa un span més gros del que li toca
 
 
-Note that this \acro{MTSDB} example schema does not store the complete
-original data but a compression of the original function which
-contains more information for recent times.
+In conclusion, this \acro{MTSDB} example schema does not store the
+complete original data but a compression of the original function
+which contains more information for recent times.  Each of the
+$\seriedisc$ time series is regular with $\delta$. Although
+$\totalseries$ is not a regular time series, it has piece-wise
+regularity as a concatenation of every disc's $\delta$.
 
-
-
-\todo{seriedisc is regular}
-\todo{totalseries is not regular nut is regular a trossos}
 
 
 
