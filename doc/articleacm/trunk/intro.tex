@@ -51,7 +51,7 @@ visualisations. However, RRDtool is very specific to the computer
 network field and it has limited aggregation operations such as
 applications of network counters.  In more general compression or
 aggregation approaches, aggregates for massive data streams are
-studied \todo{see graham or deri}. However, treating time series as
+studied \cite{cormode08:pods,bonnet01}. However, treating time series as
 data streams does not consider adequately the time dimension nor
 computes the evolution of aggregated parameters along time, which is
 interesting for monitoring purposes.
@@ -285,9 +285,10 @@ data sequences from sensors. Time series have specific operations and
 can combine relations and sequences. \emph{Cougar} target field is
 sensor networks, where data is stored distributed. Queries are
 resolved combining sensor data in a data stream abstraction that
-improves processing performance.  
-Time series as data streams are also considered when aggregating statistically data in order to do fast approximate queries with compressed data. \todo{graham}
-
+improves processing performance.  Time series as data streams are also
+considered when aggregating statistically data in order to do fast
+approximate queries with compressed data, some models consider giving
+more weight to recent information \cite{cormode08:pods}.
 The MTSMS model can also be thought as an stream processor if measures
 are added in time order, there is no possibility of update operations,
 buffer time series become of unity cardinality, and aggregate

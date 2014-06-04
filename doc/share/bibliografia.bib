@@ -1445,6 +1445,51 @@ urldate = {2012-04-16},
 
 %data stream
 
+@inproceedings{cormode08:pods,
+  author = {Graham Cormode and Flip Korn and Srikanta Tirthapura},
+  title = {Time-Decaying Aggregates in Out-of-order Streams},
+  booktitle = {Proceedings of the 27th {ACM} Symposium on Principles of Database Systems},
+  series = {PODS '08},
+  location = {Vancouver, Canada},
+  pages = {89--98},
+  doi = {10.1145/1376916.1376930},
+  publisher = {ACM},
+  year = 2008,
+  url = {http://dimacs.rutgers.edu/~graham/pubs/papers/decaypods.pdf},
+  urldate = {2014-06-04},
+  abstract = {
+  Processing large data streams is now a major topic in data management.
+  The data involved can be truly massive, and the required
+  analyses complex. In a stream of sequential events such as stock
+  feeds, sensor readings, or IP traffic measurements, data tuples pertaining
+  to recent events are typically more important than older
+  ones. This can be formalized via time-decay functions, which assign
+  weights to data based on the age of data. Decay functions
+  such as sliding windows and exponential decay have been studied
+  under the assumption of well-ordered arrivals, i.e., data arrives in
+  non-decreasing order of time stamps. However, data quality issues
+  are prevalent in massive streams (due to network asynchrony and
+  delays etc.), and correct arrival order is not guaranteed.
+
+  We focus on the computation of decayed aggregates such as
+  range queries, quantiles, and heavy hitters on out-of-order streams,
+  where elements do not necessarily arrive in increasing order of
+  timestamps. Existing techniques such as Exponential Histograms
+  and Waves are unable to handle out-of-order streams. We give the
+  first deterministic algorithms for approximating these aggregates
+  under popular decay functions such as sliding window and polynomial
+  decay. We study the overhead of allowing out-of-order arrivals
+  when compared to well-ordered arrivals, both analytically and experimentally.
+  Our experiments confirm that these algorithms can be
+  applied in practice, and compare the relative performance of different
+approaches for handling out-of-order arrivals.}
+}
+
+
+
+
+
+
 
 @inproceedings{jagadish95,
  author = {Jagadish, H. V. and Mumick, Inderpal Singh and Silberschatz, Abraham},
