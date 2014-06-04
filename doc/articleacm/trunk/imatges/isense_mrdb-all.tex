@@ -9,17 +9,17 @@
         y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
         ]
 
-       \addplot[black!15] file {dades/matriu0.originalbyday.dat};
+       \addplot[black!15] file {imatges/matriu0.originalbyday.dat};
        \addlegendentry{original};
 
-       \addplot[blue] table[col sep=comma] {dades/mrdb-matriu0/union1.csv};
+       \addplot[blue] table[col sep=comma] {dades/mrdzohe-matriu0/totalmean.csv};
        \addlegendentry{mean};
 
-       \addplot[orange] table[col sep=comma] {dades/mrdb-matriu0/union0.csv};
+       \addplot[orange] table[col sep=comma] {dades/mrdzohe-matriu0/totalmax.csv};
        \addlegendentry{max};
 
 %       \node[right] at (axis cs:2011-10-12,330) {\mbox{(2938)}};
-       \node (break) at (axis cs:2011-09-25,325)[inner sep=0pt,minimum width=0.9em, minimum height=0.4ex,fill=white] {};
+       \node (break) at (axis cs:2011-10-01,325)[inner sep=0pt,minimum width=0.9em, minimum height=0.4ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
 

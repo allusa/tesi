@@ -38,21 +38,23 @@ management systems. However, using SQL systems as a time series
 backend suffers some drawbacks
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}.  In other
 fields, performance and flexibility of SQL systems is considered and
-alternative NoSQL products are being developed
-\cite{atzeni13:relational_model_dead,stonebraker10}.  When having huge
-amount of data, time series data mining proposes to apply time series
-analysis methods to compute the queries. One approach is to find the
-optimal solution approximation versus cost to the original signal and
-then compute analysis such as similarity or pattern search
-\cite{fu11,keogh01,last01}.  On another approach, RRDtool
-\cite{rrdtool} is a system that stores time series aggregated in
-different resolutions in order to compact data and to do faster
+alternative NoSQL or NewSQL products are being developed
+\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}.
+When having huge amount of data, time series data mining proposes to
+apply time series analysis methods to compute the queries. One
+approach is to find the optimal solution approximation versus cost to
+the original signal and then compute analysis such as similarity or
+pattern search \cite{fu11,keogh01,last01}.  On another approach,
+RRDtool \cite{rrdtool} is a system that stores time series aggregated
+in different resolutions in order to compact data and to do faster
 visualisations. However, RRDtool is very specific to the computer
-network field such as applications of network counters.
-
-
-\todo{}
-In more general approaches, aggregates for massive data streams are studied \todo{see graham}. However, treating time series as data streams does not consider adequately the time dimension nor computes the evolution of aggregated parameters along time, which is interesting for monitoring purposes. 
+network field and it has limited aggregation operations such as
+applications of network counters.  In more general compression or
+aggregation approaches, aggregates for massive data streams are
+studied \todo{see graham or deri}. However, treating time series as
+data streams does not consider adequately the time dimension nor
+computes the evolution of aggregated parameters along time, which is
+interesting for monitoring purposes.
 
 
 
@@ -70,16 +72,13 @@ storage computers such as sensor systems.  We describe our model in
 two separated submodels, one a \acro{TSMS} model mainly for describing time
 series and the other a \acro{MTSMS} model for describing multiresolution over
 time series.
-
-
 Our multiresolution definition is based on concepts of RRDtool but
-aims to generic applications and has more generic operators. We
-develop a formal data model firmly rooted on relational algebra that
-describes \acro{TSMS} and \acro{MTSMS} with information systems
-theory.  We propose multiresolution as a lossy storage solution that
-selects only the needed information. The concept is similar to
-multimedia lossy compression methods, where information can be
-discarded in favour of size, but applied to time series.
+aims to generic applications and has more generic operators. 
+%We develop a formal data model firmly rooted on relational algebra that describes \acro{TSMS} and \acro{MTSMS} with information systems theory.  
+We propose multiresolution as a lossy storage solution that selects
+only the needed information. The concept is similar to multimedia
+lossy compression methods, where information can be discarded in
+favour of size, but applied to time series.
 % In multimedia compression a dual storage can be used for a file: 
 % first it is lossless compressed to offline storage and rarely retrievals, and second it is lossy compressed to have less size and be more manageable.
 
@@ -102,48 +101,40 @@ devoted to a real data multiresolution database example.
 Section~\ref{sec:concl-future-work} offers some conclusions.
 
 
+The main contributions of this paper are:
 
+\begin{itemize}
+
+\item The multiresolution is an aggregation of data that stores the
+  evolution of the parameters along time, which is more related to the
+  needs of monitoring. However, as a lossy storage solution, the
+  multiresolution schema has to be decided for each application
+  planning what approximate queries will be needed to resolve.
+
+\item We formalise aggregation functions as an independent object of
+  the main model. Therefore, users can define new operations and other
+  aggregation methods researched in other fields such as data streaming or time
+  series data mining can be used.
+
+\item We formalise the representation function concept of time series
+  in order the user can define different operators considering the
+  semantics of time series in different contexts; especially they
+  behave differently in aggregation operations, i.e. RRDtool specific counter
+  time series aggregations. Furthermore, we formalise representation
+  as an independent object of the main model.
+
+\item Our model considers the time irregularities sampling of time
+  series. Moreover, it operates coherently with the time dimension of
+  time series.
+
+\item We describe the model firmly rooted on set and relational
+  algebra as a formal theory for information systems.
+\end{itemize}
 
 
 
 \section{Related work}
 \label{sec:related-work}
-
-
-\todo{treball del Graham Cormode}
-Parla de sketch, que són algoritmes per calcular mitjançan orientació a flux (stream). Això es pot aplicar al model de MTSMS: les mesures s'insereixen en ordre de temps, la $S_B$ esdevé de cardinal 1 i les $f$ queden restringides a aquelles que es poden calcular en flux. De fet, és el patró que segueix RRDtool.
-
-Paraula Clau que apareix: Aproximate Query Processing (AQP)
-One possible avenue of
-attack is via approximate query processing techniques over
-probabilistic data. As in conventional database systems, such
-techniques need to rely on effective data reduction methods
-that can effectively compress large amounts of data down
-to concise data synopses while retaining the key statistical
-traits of the original data collection [6]. It is then feasible to
-run more expensive algorithms over the much compressed
-representation, and obtain a fast and accurate answer. In
-addition to enabling fast approximate query answers, such
-compact synopses can also provide the foundation for
-human understanding and interactive data exploration, and
-probabilistic query planning and optimization.
-
-
-
-\todo{}
-Potser la gran diferència que marca el model de multiresoució respecte altres treballs és:
-
-* Si bé els streams agreguen estadístics de les dades, la multiresolució té en compte l'evolució d'aquests estadístics al llarg del temps, cosa que lliga més amb l'àmbit del monitoratge. És a dir, tenim en compte el temps, altres projectes només avaluen el moment present.
-
-* Si bé l'orientació a agregadors amb stream és molt interessant, el model es manté genèric per a poder calcular amb qualsevol funció d'agregació.
-
-* Es tenen en compte les irregularitats de mostreig de les series temporals
-
-* Es modelitza fortament el concepte de funció de representació de les sèries temporals i així es pot tenir en compte la semàntica de cada sèrie temporal, ja que en cada agregació té molta afectació, per exemple quan les dades monitorades tenen naturalesa de comptadors als quals RRDtool s'hi ha especialitzat.
-
-
-* Els altres treballs se centren en el problema de recuperar el senyal original, ho demostra el fet que avaluin el resultat amb SSE (per mínims quadrats). Nosaltres enfoquem el problema en un domini més genèric de les consultes aproximades on volem avaluar el resultat per si respon correctament a les consultes, encara que el senyal recuperat no s'assembli gens a l'original.
-
 
 
 Bitemporal \acro{DBMS}, sometimes referred directly as temporal data,
@@ -180,7 +171,7 @@ designed for time series.
 
 
 As \acro{TSMS} suffer from problematic properties of time
-series, like the ones we have described in
+series, like the ones we describe in
 Section~\ref{sec:model:properties} mainly the huge data volume,
 compression techniques are used.  Next, we summarise some current work
 in \acro{TSMS} with compression.
@@ -294,14 +285,15 @@ data sequences from sensors. Time series have specific operations and
 can combine relations and sequences. \emph{Cougar} target field is
 sensor networks, where data is stored distributed. Queries are
 resolved combining sensor data in a data stream abstraction that
-improves processing performance.  The MTSMS model can also be thought
-as an stream processor if measures are added in time order and there
-is no possibility of update operations, as instance RRDtool is stream
-oriented and the consolidation process is done at the same time of
-inserting new measures.
+improves processing performance.  
+Time series as data streams are also considered when aggregating statistically data in order to do fast approximate queries with compressed data. \todo{graham}
 
-
-
+The MTSMS model can also be thought as an stream processor if measures
+are added in time order, there is no possibility of update operations,
+buffer time series become of unity cardinality, and aggregate
+functions are limited to stream capabilities ones.  As instance
+RRDtool can be considered stream oriented and the consolidation
+process is done at the same time of inserting new measures.
 
 
 

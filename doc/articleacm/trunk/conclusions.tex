@@ -23,15 +23,24 @@ function. Therefore, each multiresolution time series is configured by
 the quantity of resolution subseries and four parameters for each: the
 consolidation step, the initial consolidation time, the attribute
 aggregate function, and the capacity.  These configuration parameters
-are degrees of freedom for each application. Giving different
-values a multiresolution database is capable to keep the desired
-information from a time series.
-
+are degrees of freedom for each application. Giving different values a
+multiresolution database is capable to keep the desired information
+from a time series. %
+We have showed some aggregation functions examples with simple
+aggregation statistics, mean and maximum, and simple representation
+methods, Delta and \zohe{}. More attribute aggregation functions could
+be designed based on methods from other fields such as data streaming
+or time series data mining, especially it would be interesting aggregations with uncertain data.
 
 
 The queries over \acro{MTSMS} obtain time series from stored
 multiresolution time series. In this way \acro{TSMS} operators can be
-applied if needed.
+applied if needed. The $\seriedisc$ time series being regular
+facilitates these operations. However, the lossy storage implies that
+some operations will give approximate queries and that not every
+\acro{TSMS} operation will be semantically correct for a
+multiresolution time series. Therefor the correct planning of the
+multiresolution schema is needed.
 
 
 Compared to other \acro{TSMS} we propose a compression solution that
@@ -83,10 +92,10 @@ the implementation backend, we have shown how a generic model for
 theory. 
 
 
-\todo{Punts febles:}
-* No tenim en compte incertesa de les dades
-* No hem avaluat la teoria de la informació sobre la multiresolució
-* Hem definit pocs agregadors d'atributs: la recerca en data streams i  time series data mining és molt interssant per a trobar-hi possibles AAF.
+% \todo{Punts febles:}
+% * No tenim en compte incertesa de les dades
+% * No hem avaluat la teoria de la informació sobre la multiresolució
+% * Hem definit pocs agregadors d'atributs: la recerca en data streams i  time series data mining és molt interssant per a trobar-hi possibles AAF.
 
 
 
