@@ -53,3 +53,9 @@ class TimeSeries(TimeSeriesSeqOp,TimeSeriesSetOp,TimeSeriesFuncOp,TimeSeriesStru
         Retorna un objecte amb totes les operacions d'emmagatzematge al disc
         """
         return TimeSeriesStorage(self)
+
+
+
+
+
+

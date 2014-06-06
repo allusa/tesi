@@ -23,6 +23,205 @@ from structure import TimeSeriesStructure
 
 #'isdisjoint', 'issubset', 'issuperset', __contains__
 
+
+
+
+"""
+No Temporal
+===========
+"""
+
+def membership(s,m):
+    """
+    Operador de pertinença. Cert quan la mesura `m` pertany a la sèrie
+    temporal `s`.
+
+    :param s: 
+    :param m: 
+    :type s: :class:`TimeSeries`
+    :type m: :class:`Measure`
+    :returns: `m ∈ s`, m pertany a s
+    :rtype: bool
+
+    >>> s = TimeSeriesSetOp([Measure(1,2)])
+    >>> m1 = Measure(1,2)
+    >>> m2 = Measure(1,1)
+    >>> membership(s,m1)
+    True
+    >>> membership(s,m2)
+    False
+    """
+    for ms in s:
+        if m.eqp(ms):
+            return True
+    return False
+
+
+def union(s1, s2):
+    """
+    Operador d'unió. Sèrie temporal resultant d'unir la sèrie
+    temporal `s1` amb `s2`.
+
+    :param s1: 
+    :param s2: 
+    :type s1: :class:`TimeSeries`
+    :type s2: :class:`TimeSeries`
+    :returns: `s1 ∪ s2`, s1 unió s2
+    :rtype: :class:`TimeSeries`
+
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> union(s2,s1) == s2
+    True
+    >>> union(s1,s2) == TimeSeriesSetOp([Measure(1,2), Measure(3,2), Measure(2,1)])
+    True
+    """
+    s = s1.copy()
+    for m2 in s2:
+        if not membership_temporal(s,m2):
+            s.add(m2)
+    return s
+
+
+
+def difference(s1, s2):
+    """
+    Operador de diferència Sèrie temporal resultant de treure
+    `s2` de la sèrie temporal `s1`.
+
+    :param s1: 
+    :param s2: 
+    :type s1: :class:`TimeSeries`
+    :type s2: :class:`TimeSeries`
+    :returns: `s1 - s2`, s1 diferència s2
+    :rtype: :class:`TimeSeries`
+
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> difference(s1,s1) == TimeSeriesSetOp([])
+    True
+    >>> difference(s1,s2) == TimeSeriesSetOp([Measure(2,1)])
+    True
+    >>> difference(s2,s1) == TimeSeriesSetOp([Measure(2,2),Measure(3,2)])
+    True
+    """
+    s = s1.empty()
+    for m1 in s1:
+        if not membership(s2,m1):
+            s.add(m1)
+    return s
+
+
+def intersection(s1, s2):
+    """
+    Operador d'intersecció. Sèrie temporal resultant
+    d'interseccionar `s1` amb la sèrie temporal `s2`.
+
+    :param s1: 
+    :param s2: 
+    :type s1: :class:`TimeSeries`
+    :type s2: :class:`TimeSeries`
+    :returns: `s1 ∩ s2`, s1 intersecció s2
+    :rtype: :class:`TimeSeries`
+
+    >>> s1 = TimeSeriesSetOp([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesSetOp([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> intersection(s1,s1) == s1
+    True
+    >>> intersection(s1,s2) == TimeSeriesSetOp([Measure(1,2)])
+    True
+    >>> intersection(s2,s1) == intersection(s1,s2)
+    True
+    """
+    return difference(s1,difference(s1,s2))
+
+
+
+
+
+"""
+Temporal
+========
+"""
+
+
+
+
+def membership_temporal(s,m):
+    """
+    Operador de pertinença temporal. Cert quan la mesura `m` pertany
+    temporalment a la sèrie temporal `s`.
+
+    Cerca si m.t pertany al conjunt de temps de s (s.t())
+    Sempre es compleix que si membership(s,m)==True aleshores
+    membership_temporal(s,m)==True
+
+    :param s:
+    :param m: 
+    :type s: :class:`TimeSeries`
+    :type m: :class:`Measure`
+    :returns: `m ∈ᵗ s`, m pertany temporalment a s
+    :rtype: bool
+
+    >>> s = TimeSeriesSetOp([Measure(1,2)])
+    >>> m1 = Measure(1,2)
+    >>> m2 = Measure(1,1)
+    >>> membership_temporal(s,m1)
+    True
+    >>> membership_temporal(s,m2)
+    True
+    >>> membership_temporal(s,Measure(2,2))
+    False
+    """
+    return m.t in s.t()
+
+
+
+
+
+
+"""
+Mixins
+======
+"""
+
+
+
+class SetOpNoTemporalMixin():
+    """
+    Operadors de conjunts no temporals de Sèrie Temporal
+    """   
+    from opset import membership, union, difference
+
+
+class SetOpTemporalMixin():
+    """
+    Operadors de conjunts temporals de Sèrie Temporal
+    """   
+    from opset import membership_temporal
+
+
+
+#sobre Mixins 
+#Part1 http://www.artima.com/weblogs/viewpost.jsp?thread=246341 
+#Part2 http://www.artima.com/weblogs/viewpost.jsp?thread=246483
+
+
+#proves
+class TimeSeriesMixed(SetOpTemporalMixin,SetOpNoTemporalMixin,TimeSeriesStructure):
+    """
+    >>> s1 = TimeSeriesMixed([Measure(1,2),Measure(2,1)])
+    >>> s2 = TimeSeriesMixed([Measure(3,2),Measure(1,2),Measure(2,2)])
+    >>> s2.union(s1) == s2
+    True
+    """
+    pass
+
+
+
+
+
+
 class TimeSeriesSetOpNoTemporal(TimeSeriesStructure):
     """
     Operadors de conjunts no temporals de Sèrie Temporal
