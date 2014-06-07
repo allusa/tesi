@@ -13,10 +13,12 @@ Implementació dels operadors de seqüència de Sèrie Temporal.
 
 
 from measure import Measure
-from opset import TimeSeriesSetOp
+#from opset import TimeSeriesSetOp
+from structure import TimeSeriesStructure
+from opmixins import SetOpMixin
 
 
-class TimeSeriesSeqOp(TimeSeriesSetOp):
+class TimeSeriesSeqOp(SetOpMixin,TimeSeriesStructure):
     """
     Operadors de seqüència de Sèrie Temporal
 
