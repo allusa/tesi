@@ -26,7 +26,7 @@ Implementació de Sèrie Temporal.
 
 from measure import Measure
 from structure import TimeSeriesStructure
-from opset import TimeSeriesSetOp
+from opmixins import SetOpMixin
 from opseq import TimeSeriesSeqOp
 from opfunc import TimeSeriesFuncOp
 
@@ -34,7 +34,7 @@ from storage import TimeSeriesStorage
 
 
 
-class TimeSeries(TimeSeriesSeqOp,TimeSeriesSetOp,TimeSeriesFuncOp,TimeSeriesStructure):
+class TimeSeries(TimeSeriesSeqOp,SetOpMixin,TimeSeriesFuncOp,TimeSeriesStructure):
     """
     L'ordre de l'herència és important, `TimeSeriesStructure` ha d'anar
     en darrer lloc per tal que les seves operacions siguin

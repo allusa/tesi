@@ -22,7 +22,7 @@ class Measure(object):
     :type t: Any | None
     :param v: Value
     :type v: Any | None
-    :param un: Same as :meth:`set_undefined`
+    :param un: Same as :meth:`set_undefined` 
     :type un: str | None
 
     :ivar t: m.t correspon a T(m)
@@ -297,7 +297,7 @@ class Measure(object):
         * 'n' mesura indefinida negativa
         * 'v' mesura de valor indefinit
         
-        :param un: p|+|n|-|v
+        :param un: p,+,n,-,v
         :type un: str
         """
         if un in ['p','+']:

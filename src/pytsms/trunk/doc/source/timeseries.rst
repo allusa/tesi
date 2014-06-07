@@ -9,7 +9,7 @@
 
 
 Model d'operacions
-===================
+==================
 
 .. automodule:: opset
    :members:
@@ -23,3 +23,17 @@ Model d'operacions
 .. automodule:: opfunc
    :members:
 
+
+
+Mixins d'operacions
+===================
+
+.. automodule:: opmixins
+   :show-inheritance:
+
+
+
+.. autosummary::
+   
+   opmixins.SetOpNoTemporalMixin
+   opmixins.SetOpNoTemporalMixin.union
