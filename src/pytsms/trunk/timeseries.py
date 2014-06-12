@@ -33,11 +33,21 @@ from storage import TimeSeriesStorage
 
 
 
-class TimeSeries(FuncOpMixin,SeqOpMixin,SetOpMixin,TimeSeriesStructure):
+
+
+class VisitableMixin():
+    def accept(self, visitor):
+        return visitor(self)
+
+
+class TimeSeries(FuncOpMixin,
+                 SeqOpMixin,
+                 SetOpMixin,
+                 VisitableMixin,
+                 TimeSeriesStructure):
     """
     L'ordre de l'herència és important, `TimeSeriesStructure` ha d'anar
-    en darrer lloc per tal que les seves operacions siguin
-    redefinides.
+    en darrer lloc perquè és la classe base i les altres són els Mixins.
     """
     def __repr__(self):
         """
@@ -53,12 +63,5 @@ class TimeSeries(FuncOpMixin,SeqOpMixin,SetOpMixin,TimeSeriesStructure):
         """
         return TimeSeriesStorage(self)
 
-
-
-
-
-class TimeSeriesVisitable(TimeSeries):
-    def accept(self, visitor):
-        visitor(self)
 
 
