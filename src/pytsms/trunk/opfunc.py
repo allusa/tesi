@@ -14,7 +14,9 @@ Implementació dels operadors de funció de Sèrie Temporal.
 from measure import Measure
 
 
-class TimeSeriesFuncOp(object):
+
+
+class FuncOpMixin():
     """
     Operadors de funció de Sèrie Temporal
    

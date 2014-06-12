@@ -19,6 +19,20 @@ import csv
 from measure import Measure
 
 
+class SavePickle(object):
+    """
+    Un visitor
+    """
+    def __init__(fname):
+        self.fname = fname
+
+    def __call__(self,ob):
+        with open(self.fname,'w') as f:
+            pickle.dump(self._ts,f)
+            f.close()
+    
+
+
 class TimeSeriesStorage(object):
     """
     Objecte que agrupa les operacions d'emmagatzematge al disc en diferents formats:
