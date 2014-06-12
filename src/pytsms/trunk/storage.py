@@ -19,18 +19,48 @@ import csv
 from measure import Measure
 
 
+
+
 class SavePickle(object):
     """
     Un visitor
     """
-    def __init__(fname):
+    def __init__(self, fname):
         self.fname = fname
 
     def __call__(self,ob):
         with open(self.fname,'w') as f:
-            pickle.dump(self._ts,f)
+            pickle.dump(ob,f)
             f.close()
-    
+ 
+class LoadPickle(object):
+    """
+    Un visitor
+
+    >>> from timeseries import TimeSeries
+    >>> from measure import Measure
+    >>> s = TimeSeries([Measure(1,2), Measure(3,4)])
+    >>> f = _doctest_file()
+    >>> s.accept( SavePickle(f) )
+    >>> ns = s.accept( LoadPickle(f) )
+    >>> s == ns
+    True
+    >>> _doctest_file_rm(f)
+    True
+
+    """  
+    def __init__(self, fname):
+        self.fname = fname
+
+    def __call__(self, ob):
+        with open(self.fname, 'r') as f:
+            ts = pickle.load(f)
+            f.close()
+
+        return ts
+
+
+
 
 
 class TimeSeriesStorage(object):
