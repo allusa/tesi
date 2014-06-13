@@ -9,6 +9,12 @@ Storage
 :Copyright: GPLv3
 
 Implementació d'operacions d'emmagatzematge al disc per a les sèries temporals
+
+Diferents formats:
+
+    * pickle
+    * csv
+
 """
 
 
@@ -20,20 +26,31 @@ from measure import Measure
 
 
 
-
-class SavePickle(object):
+class Storage(object):
     """
-    Un visitor
+    Per a emmagatzemar i recuperar del disc
+
+    Les subclasses són visitors i, sigui `s=TimeSeries()` es criden com:
+
+    * s.accept( Storage() )
+    * o bé Storage()(s)
+
     """
     def __init__(self, fname):
         self.fname = fname
 
+
+
+class SavePickle(Storage):
+    """
+    Un visitor
+    """
     def __call__(self,ob):
         with open(self.fname,'w') as f:
             pickle.dump(ob,f)
             f.close()
  
-class LoadPickle(object):
+class LoadPickle(Storage):
     """
     Un visitor
 
@@ -47,17 +64,100 @@ class LoadPickle(object):
     True
     >>> _doctest_file_rm(f)
     True
-
     """  
-    def __init__(self, fname):
-        self.fname = fname
-
     def __call__(self, ob):
         with open(self.fname, 'r') as f:
             ts = pickle.load(f)
             f.close()
 
         return ts
+
+
+
+
+class SaveCsv(Storage):
+    """
+    Un visitor
+
+    S'emmagatzemen ordenades per temps
+    """
+    def __call__(self,ob):
+        with open(self.fname,'w') as f:
+            csvwriter = csv.writer(f)
+            for m in sorted(ob):
+                if isinstance(m.v, list):
+                    cv = [m.t] + m.v
+                else:
+                    cv = [m.t,m.v]
+                csvwriter.writerow(cv)
+            f.close()
+
+
+class LoadCsv(Storage):
+    """
+    Un visitor
+
+    Recuperador a partir d'un fitxer en format CSV. En el fittxer els
+    valors desats són strings, en cas que es vulgui convertir-los
+    cal indicar el tipus amb `ttype` i `vtype`.
+
+    :type fname: str
+    :type ttype: type
+    :type vtype: type
+    :type mtype: type(Measure)
+
+    >>> from timeseries import TimeSeries
+    >>> from measure import Measure
+    >>> s = TimeSeries([Measure(1,2), Measure(3,4)])
+    >>> f = _doctest_file()
+    >>> s.accept(SaveCsv(f))
+    >>> ns = s.accept(LoadCsv(f,int,int))
+    >>> s == ns
+    True
+    >>> _doctest_file_rm(f)
+    True
+    >>> 
+    >>> s = TimeSeries([Measure(1,[2,3]), Measure(3,[4,5])])
+    >>> f = _doctest_file()
+    >>> s.accept(SaveCsv(f))
+    >>> def strlist2int(l): return [int(e) for e in l]
+    >>> ns = s.accept(LoadCsv(f,int,strlist2int))
+    >>> s == ns
+    True
+    >>> _doctest_file_rm(f)
+    True
+    """
+    def __init__(self,fname,ttype=None,vtype=None,mtype=Measure):
+        super(Storage,self).__init__()
+        self.fname = fname
+        self.ttype = ttype
+        self.vtype = vtype
+        self.mtype = mtype
+
+    def __call__(self,ob):
+        ts = ob.empty()
+        with open(self.fname,'r') as f:
+            csvreader = csv.reader(f)
+
+            for row in csvreader:
+                if len(row) == 2:
+                    t,v = row
+                else:
+                    t = row[0]
+                    v = row[1:]
+                    
+                if self.ttype is not None:
+                    t = self.ttype(t)
+                if self.vtype is not None:
+                    v = self.vtype(v)
+                ts.add(self.mtype(t,v))     
+               
+
+            f.close()
+
+        return ts
+
+
 
 
 
@@ -69,6 +169,8 @@ class TimeSeriesStorage(object):
 
     * pickle
     * csv
+
+    :deprecated: Canviat a estructura Visitable/Visitor
 
 
     """

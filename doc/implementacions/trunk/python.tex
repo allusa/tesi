@@ -8,8 +8,8 @@
 
 
 La implementació de referència dels models de SGST i SGSTM es realitza
-amb Python\todo{referència}. L'objectiu d'aquesta implementació de
-referència és mantenir la fidelitat al model per tal de poder
+amb Python \parencite{python:doc2}. L'objectiu d'aquesta implementació
+de referència és mantenir la fidelitat al model per tal de poder
 experimentar-hi amb tota la potència matemàtica .
 
 En la implementació s'afegeixen alguns operadors que en el model no
@@ -76,9 +76,9 @@ tres s'implementen respectivament com a classes \emph{Measure},
   \umlclass[x=4] {Representation}{}{} %,type=abstract
   \umlassoc[mult1=1,mult2=1]  {TimeSeries}{Representation}
   \umlclass[x=3,y=-2] {Zohe}{}{}
-  \umlclass[x=5,y=-2] {Partial}{}{}
+  \umlclass[x=5,y=-2] {Delta}{}{}
   \umlinherit {Zohe}{Representation}
-  \umlinherit {Partial}{Representation}
+  \umlinherit {Delta}{Representation}
 
   %Associacions
   \umlclass[x=-1.5,y=-4] {RegularProp}{}{}
@@ -89,7 +89,7 @@ tres s'implementen respectivament com a classes \emph{Measure},
   %Dependencies
   \umlemptypackage[x=5,y=-5]{Matplotlib}
   \umldep{Zohe}{Matplotlib}
-  \umldep{Partial}{Matplotlib}
+  \umldep{Delta}{Matplotlib}
 
 
   \end{tikzpicture}
@@ -128,8 +128,8 @@ tres s'implementen respectivament com a classes \emph{Measure},
   \umlinherit[geometry=|-|]{OpSet}{SetNoTemporal}
   \umlinherit[geometry=|-|]{OpSet}{SetTemporal}
   \umlinherit[geometry=|-|]{OpSet}{SetRelacional}
-  \umlclass[x=-6,y=-6] {Set}{}{}
-  \umlinherit{Structure}{Set}
+  \umlclass[x=-6,y=-6,type=python] {set}{}{}
+  \umlinherit{Structure}{set}
 
 \end{tikzpicture}
 
@@ -157,43 +157,47 @@ sèrie temporal que representa.
 
 Una \emph{TimeSeries} és un objecte amb una gran quantitat de
 mètodes. Com a conseqüència, la implementació de funcionalitats
-essencials s'ha dividit en diversos mòduls, el qual es mostra a la
-\autoref{fig:implementacio:pytsms-uml-ts}. Els mètodes que implementen
-el model estructural i el model d'operacions bàsiques s'han agrupat en
-objectes segons la seva funcionalitat. Així hi ha l'objecte
-\emph{Structure} que implementa el model estructural de les sèries
-temporals, l'\emph{OpSet} pel model d'operacions de conjunts,
+essencials s'ha dividit en diversos objectes, els quals es mostren a
+la \autoref{fig:implementacio:pytsms-uml-ts}. Els mètodes que
+implementen el model estructural i el model d'operacions bàsiques
+s'han agrupat en objectes segons la seva funcionalitat. Així hi ha
+l'objecte \emph{Structure} que implementa el model estructural de les
+sèries temporals, l'\emph{OpSet} pel model d'operacions de conjunts,
 l'\emph{OpSeq} pel model d'operacions de seqüències i l'\emph{OpFunc}
-pel model d'operacions de funció temporal.  Aleshores el
+pel model d'operacions de funció temporal.  Aleshores l'objecte
 \emph{TimeSeries} multihereta les funcionalitats d'aquests quatre
-objectes, cosa que a Python es coneix com a implementació
-Mixin\todo{ref}.  L'objecte \emph{OpSet} també té una gran quantitat
-de mètodes i, de la mateixa manera, hereta la funcionalitat de tres
-objectes: el \emph{SetNoTemporal} per les operacions basades en l'orde
-parcial de les sèries temporals, el \emph{SetTemporal} basat en
-l'ordre temporal i el \emph{SetRelacional} per les operacions
-específiques de l'àlgebra relacional. Pel que fa a l'\emph{Structure}
-hereta funcionalitats dels objectes \emph{Set}, que són un tipus
-predefinit a Python.
+objectes, cosa que s'implementa a Python com a
+\emph{Mixin} \parencite[\S 8.3.6, \S 20.17]{python:doc2}.  L'objecte
+\emph{OpSet} també té una gran quantitat de mètodes i, de la mateixa
+manera, hereta la funcionalitat de tres objectes: el
+\emph{SetNoTemporal} per a les operacions basades en l'orde parcial de
+les sèries temporals, el \emph{SetTemporal} basat en l'ordre temporal
+i el \emph{SetRelacional} per a les operacions específiques de
+l'àlgebra relacional. Pel que fa a l'\emph{Structure} hereta
+funcionalitats dels objectes \emph{set}, que són un tipus predefinit a
+Python \parencite[\S 5.7]{python:doc2}.
 
 
 Les funcionalitats complementàries de les \emph{TimeSeries} s'han
-implementat amb relacions d'associació unidireccionals, el qual es
-mostra a la \autoref{fig:implementacio:pytsms-uml}. Així, hi ha dues
+implementat amb relacions d'associació unidireccionals, les quals es
+mostren a la \autoref{fig:implementacio:pytsms-uml}. Així, hi ha dues
 funcionalitats complementàries: \emph{RegularProperties} és un objecte
 que agrupa les operacions relacionades amb la regularitat de les
 sèries temporals i \emph{Storage} agrupa les operacions
 d'emmagatzematge i de recuperació en fitxers. En aquests casos,
 l'associació unidireccional indica que són objectes que treballen
-sobre una \emph{TimeSeries}.
+sobre una \emph{TimeSeries} i s'implementa a Python seguint el patró
+de disseny
+\emph{Visitor} \parencite[cap.~14]{ziade08:expert_python_programming}. Amb
+aquest patró les \emph{TimeSeries} esdevenen \emph{Visitable}, és a
+dir accepten objectes \emph{Visitor} que aporten funcionalitats
+extres. Així doncs, els objectes \emph{RegularProperties} i
+\emph{Storage} són \emph{Visitor}.
 
 
-
-
-
-La \autoref{fig:implementacio:pytsms-uml} mostra
-especialitzacions de les mesures i de les representacions.
-
+La \autoref{fig:implementacio:pytsms-uml} mostra exemples
+d'especialitzacions de les mesures i de les representacions.
+%
 Pel que fa a les \emph{Measure}, poden tenir especialitzacions segons
 els tipus dels atributs de temps i de valor. Amb aquesta relació
 implementem la propietat homogènia de les sèries temporals i la
@@ -212,18 +216,17 @@ indefinit o bé la \emph{MChar} que defineix mesures de tipus caràcter.
 
 
 
-
 Pel que fa a les representacions, cada representació en concret és una
 especialització de \emph{Representation}. Per exemple \emph{Zohe} i
-\emph{Partial} implementen la funció de representació ZOHE i la
-discreta pura respectivament. 
+\emph{Delta} implementen la funció de representació ZOHE i la delta
+respectivament.
 %\emph{Representation} és una classe abstracta?
 Bàsicament, cada representació particular ha de definir l'operació que
 calcula l'interval temporal i l'operació que permet trobar-ne el graf.
 També cadascuna implementa una operació que dibuixi correctament el
 gràfic de la sèrie temporal segons la representació; en les
-representacions d'exemple definides s'usa la biblioteca
-\emph{Matplotlib} \todo{referència} per a fer els gràfics.
+representacions definides s'usa la biblioteca
+\emph{Matplotlib} \parencite{python:matplotlib}  per a fer els gràfics.
 
 
 
@@ -263,8 +266,8 @@ Així, les funcions d'agregació d'atributs són realitzades per
 
   %MultiTimeseries
   \umlclass[x=0,y=0] {MultiresolutionSeries}{}{}  
-  \umlclass[x=-4,y=0] {Set}{}{}
-  \umlinherit{MultiresolutionSeries}{Set}
+  \umlclass[x=-4,y=0,type=python] {set}{}{}
+  \umlinherit{MultiresolutionSeries}{set}
   %Components 
   \umlclass[x=0,y=-3] {Resolution}{}{}
   \umluniaggreg  {MultiresolutionSeries}{Resolution}
