@@ -15,7 +15,14 @@ from pytsms import TimeSeries
 from subseries import ResolutionSubseries
 from storage import MultiresolutionStorage
             
-class MultiresolutionSeries(set):
+
+
+class VisitableMixin():
+    def accept(self, visitor):
+        return visitor(self)
+
+
+class MultiresolutionSeries(VisitableMixin,set):
     """
     Sèrie temporal multiresolució M = {R0,...,Rd} com un conjunt de
     subsèries resolució
@@ -214,6 +221,16 @@ class MultiresolutionSeries(set):
         >>> M2.addResolution(10,4,maxim)
         >>> M.schema_eq(M2)
         True
+        >>> #Igualtat total
+        >>> M == M2
+        True
+        >>> from pytsms.measure import Measure
+        >>> M.add(Measure(1,2))
+        >>> M == M2
+        False
+        >>> M2.add(Measure(1,2))
+        >>> M == M2
+        True
         """
         for r1 in self:
             eq = False
@@ -322,8 +339,11 @@ class MultiresolutionSeries(set):
         """
         Retorna un objecte amb totes les operacions d'emmagatzematge al disc
 
+        :deprecated: Use Visitable/Visitor Pattern
+
         >>> M = MultiresolutionSeries()
         >>> isinstance(M.storage(), MultiresolutionStorage)
+        DEPRECATED: Use Visitor Pattern
         True
         """
         return MultiresolutionStorage(self)

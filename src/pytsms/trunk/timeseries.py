@@ -60,6 +60,8 @@ class TimeSeries(FuncOpMixin,
     def storage(self):
         """
         Retorna un objecte amb totes les operacions d'emmagatzematge al disc
+
+        :deprecated: Use Visitor pattern
         """
         return TimeSeriesStorage(self)
 

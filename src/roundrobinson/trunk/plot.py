@@ -13,6 +13,9 @@ from matplotlib.dates import DateFormatter
 from matplotlib.ticker import MaxNLocator
 
 
+
+
+
 def _test_crea_mrd(temps,valors,tzero=0,debug=False):
 
     from multiresolution import MultiresolutionSeries as MRD
@@ -178,14 +181,146 @@ def plot_coordinates(st):
 
 
 
+class Plotter(object):
+    """
+    Dibuixa una sèrie temporal multiresolució per pantalla amb el matplotlib
+    """
+    pass
+
+
+class PlotTotal(Plotter):
+    """
+    Pinta les subsèries resolució d'una sèrie multiresolució
+
+    >>> ut = 3600
+    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    >>> #mrd.accept(PlotTotal())
+    """
+    def __call__(self,ob):
+        #figura amb tota la MRD
+        interpoladors = set()
+        for rd in ob:
+            interpoladors.add(rd.B.f)
+
+        #pintem per cada interpolador en el mateix gràfic
+        fig2 = plt.figure()
+        ax2 = fig2.add_subplot(1,1,1)
+
+        for interpolador in interpoladors:
+            sttot = ob.total(ff=[interpolador])
+            vt = []
+            vv = []
+            while len(sttot):
+                m = min(sttot)
+                sttot.discard(m)
+                temps = datetime.datetime.fromtimestamp(m.t)
+                vt.append(temps)
+                vv.append(m.v)
+
+            ax2.plot(vt,vv,label=interpolador.__name__)
+
+        ax2.legend()
+        plt.show()   
+
+
+class Plot(Plotter):
+    """
+    Pinta els discs resolució d'una base de dades multiresolució
+
+    >>> ut = 3600
+    >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
+    >>> #mrd.accept(Plot())
+    """
+    def __call__(self,ob):
+        #pinta
+        #import locale
+        #locale.setlocale(locale.LC_TIME, '') #activa els locales per defecte
+        fig = plt.figure(dpi=40)#figsize=(1,1)) #dpi=80 -> 80x80px
+
+
+        mida = len(ob)
+        index = 1
+
+
+        #plot dades originals
+        #pyplot.plot(temps,valors)
+
+        #plot dades discs
+        mrdordenat = sorted(ob)
+
+        for index,rd in enumerate(mrdordenat):
+            st = rd.D.s
+            vt = []
+            vv = []
+            antt = None
+            while len(st):
+                m = min(st)
+                st.discard(m)
+
+                #plot zohe
+                valor = m.v
+                temps = datetime.datetime.fromtimestamp(m.t)
+                if antt:
+                    vt.append(antt)
+                    vv.append(valor)
+                vt.append(temps)
+                vv.append(valor)
+
+                antt = temps
+
+
+            if len(vt) == 0:
+                #plot future delta
+                vt.append( datetime.datetime.fromtimestamp(rd.B.tau+rd.B.delta))
+                #vv.append(float("inf"))
+                vv.append(0)
+
+            if len(vt) == 1:
+                #plot point
+                vt = vt[0]
+                vv = vv[0]
+
+            #print vt,vv
+
+            ax = fig.add_subplot(mida,1,index+1)
+            ax.grid(True)
+            #ax.yaxis.set_label_text(u'Temp. (\u2103)')
+            format = DateFormatter(_formatador(rd.B.delta))
+            ax.xaxis.set_major_formatter(format)
+            locatx = MaxNLocator(8)
+            locaty = MaxNLocator(4)
+            ax.xaxis.set_major_locator(locatx)
+            ax.yaxis.set_major_locator(locaty)
+            plt.xticks(rotation=15)
+            fig.subplots_adjust(hspace=0.5)
+            etiqueta = "{0}/{2} |{1}|".format(_timestamptostring(rd.B.delta),rd.D.k,rd.B.f.__name__)
+
+            ax.plot(vt,vv,label=etiqueta)
+            ax.legend()
+
+        ax.xaxis.set_label_text('Temps')
+
+
+        #fig.autofmt_xdate()
+        plt.show()
+
+
+
+
+
+
+
 
 class ScreenPlot(object):
     """
     Dibuixa una sèrie temporal multiresolució per pantalla amb el matplotlib
+
+    :deprecated: Use Visitor Pattern
     """
 
     def __init__(self,mrd):
         self._mrd = mrd
+        print "DEPRECATED: Use Visitor Pattern"
 
     def plot_total(self):
         """
@@ -194,6 +329,7 @@ class ScreenPlot(object):
         >>> ut = 3600
         >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
         >>> sp = ScreenPlot(mrd)
+        DEPRECATED: Use Visitor Pattern
         >>> #sp.plot_total()
         """
         #figura amb tota la MRD
@@ -229,6 +365,7 @@ class ScreenPlot(object):
         >>> ut = 3600
         >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
         >>> sp = ScreenPlot(mrd)
+        DEPRECATED: Use Visitor Pattern
         >>> #sp.plot()
         """
         #pinta
@@ -310,9 +447,12 @@ class FilePlot(object):
     """
     Write a mrd into filesytem
 
+    :deprecated: Use storage.Storage
+
     >>> ut = 3600
     >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
     >>> fp = FilePlot(mrd)
+    DEPRECATED: Use storage.Storage
     >>> #os.mkdir('exemple')
     >>> #fp.plot_dir('exemple')
     >>> #fp.plot_dir_total('exemple')
@@ -320,6 +460,7 @@ class FilePlot(object):
 
     def __init__(self,mrd):
         self._mrd = mrd
+        print "DEPRECATED: Use storage.Storage"
 
     def plot_file_coordinates(self,st,f):
         """

@@ -272,6 +272,13 @@ class ResolutionSubseries(object):
         """
         return self.B == other.B and self.D == other.D
 
+    def __hash__(self):
+        """
+        Retorna el hash d'una subsèrie resolució, necessari per poder pertànyer a objectes colleccions com per exemple els sets
+        """
+        return hash((self.delta(),self.fname()))
+
+
     def schema_eq(self,other):
         """
         Relació d'igualtat d'esquema multiresolució

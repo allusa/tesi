@@ -35,8 +35,13 @@ als SGST.
 
 Utilitzem orientació a objectes. Ens permet fer explicita la relació
 entre la implementació i el model. \todo{més explicat}
-
 Utilitzem diagrames UML per a definir l'estructura de classes. Principalment volem mostrar les relacions entre les diverses classes.\todo{més explicat}
+% We design the implementation concepts with object orientation, so that
+% there is a clear mapping between model and implementation
+% objects. Next we use Unified Modeling Language (UML) diagrams in order
+% to define the classes structure, mainly to show the relationships
+% among objects.
+
 
 
 Implementem la part essencial, és a dir l'àlgebra definida en els
@@ -324,15 +329,50 @@ unidireccionals. Així, hi ha dues funcionalitats complementàries:
 \emph{Plot} per a les operacions relacionades amb la visualització
 gràfica i \emph{Storage} per a operacions d'emmagatzematge i de
 recuperació en fitxers.
+\todo{tamnbé es fa amb patró visitor?}
+%  En aquests casos,
+% l'associació unidireccional indica que són objectes que treballen
+% sobre una \emph{TimeSeries} i s'implementa a Python seguint el patró
+% de disseny
+% \emph{Visitor} \parencite[cap.~14]{ziade08:expert_python_programming}. Amb
+% aquest patró les \emph{TimeSeries} esdevenen \emph{Visitable}, és a
+% dir accepten objectes \emph{Visitor} que aporten funcionalitats
+% extres. Així doncs, els objectes \emph{RegularProperties} i
+% \emph{Storage} són \emph{Visitor}.
 
 
 
 Les \emph{MultiresolutionSeries} com a conjunts formats per
 \emph{Resolution} s'han implementat heretant funcionalitats dels
-\emph{Set} de Python.
+\emph{set} de Python.
 
 \todo{}
 explicar més detalladament les operacions de les Multiresolution: add, addResolution, consolidation, etc. i sobretot les totalConsult i les discConsult.
+
+% A MultiresolutionSeries has a method \emph{addResolution} for defining
+% the multiresolution schema structure by adding resolution
+% subseries. Every new resolution is configured by four parameters:
+% \emph{delta}, \emph{k}, \emph{f}, and \emph{tau} that create the
+% corresponding buffer and disc.  A MultiresolutionSeries has methods
+% \emph{add}, \emph{consolidate}, and \emph{consolidate} that operate on
+% the corresponding methods of the contained resolution subseries.
+
+% A MultiresolutionSeries can be queried by two methods:
+% \emph{discSeries} and \emph{total}. \emph{discSeries} returns the
+% TimeSeries for the selected disc by parameters \emph{delta} and
+% \emph{f}. \emph{total} returns the TimeSeries that results from the
+% concatenation of all \emph{discSeries} ordered by \emph{delta}; as
+% there can not be repeated \emph{delta}, \emph{total} has a parameter
+% \emph{f} for selecting only \emph{discSeries} with a determined
+% attribute aggregate function.
+
+% In a module \emph{aggregators} we have implemented some default
+% attribute aggregate functions, although users can define more as they
+% are Python Function objects with parameters s as a TimeSeries and i as
+% a pair of times like [t0.tf]. For example we have defined the \zohe
+% aggregate functions, which basically aggregate over the temporal
+% interval \lstinline[style=py]+s.interval_temporal(t0,tf,Zohe)+.
+
 
 
 
@@ -349,10 +389,93 @@ Amb les biblioteques Pytsms i RoundRobinson podem treballar amb les sèries temp
 Un cas d'exemple és demostrar l'equivalència entre l'operació multiresolució dels SGST sobre una sèrie temporal i la sèrie temporal resultant d'una consolidació dels SGSTM. 
 
 
+Exemple de Pytsms:
+
+  We define in Pytsms the two time series $S1$ and $S2$ from
+  Example~\ref{ex:model:s1s2} and we apply different operations:
+  union, concatenation, closed interval, \zohe{} temporal interval,
+  \zohe{} temporal selection, and the test of regular property.
+\begin{lstlisting}[style=py]
+#Importing the required objects
+>>> from pytsms import TimeSeries, Measure
+>>> from pytsms.representation import Zohe
+>>> from pytsms.properties import RegularProperties
+
+#Defining the two time series
+>>> s1 = TimeSeries([Measure(1,1),Measure(3,1),Measure(4,0),Measure(5,1)])
+>>> s2 = TimeSeries([Measure(2,2),Measure(3,2),Measure(4,0),Measure(6,2)])
+
+#Manipulating the two time series
+# æ$s1 \cup s2$æ
+>>> s1.union(s2)
+TimeSeries([m(1,1), m(2,2), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s1 || s2$æ
+s1.concatenate(s2) 
+TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s2[2,5]$æ
+>>> s2.interval_closed(2,5)
+TimeSeries([m(2,2), m(3,2), m(4,0)])
+# æ$s2[2,5]^\zohe$æ
+>>> s2.interval_temporal(2,5,Zohe)
+TimeSeries([m(3,2), m(4,0), m(5,2)])
+
+#Checking the regularity
+# æ$s2$æ is not regular
+>>> r2 = RegularProperties(s2)
+>>> r2.isRegular()
+False
+# æ$s2$æ can be regularised by æ$s2[{0,2,4}]^\zohe$æ
+>>> s2.selection_temporal(range(0,6,2),Zohe)
+TimeSeries([m(0,2), m(2,2), m(4,0)])
+>>> r2b=RegularProperties(s2.selection_temporal(range(0,6,2),Zohe))
+>>> r2b.isRegular()
+True
+\end{lstlisting}
 
 
 
+Roundrobinson
 
+ We define in Pytsms the time series $S$ and in RoundRobinson we
+  define the multiresolution time series $M_\emptyset$ from
+  Example~\ref{ex:model:smultiresolution}, we apply consolidation and
+  we query the result.
+
+
+\begin{lstlisting}[style=py]
+#Importing the required objects
+>>> from pytsms import TimeSeries, Measure
+>>> from roundrobinson import MultiresolutionSeries
+>>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+
+#Defining the original time series
+>>> s = TimeSeries([Measure(1,6),Measure(5,2),Measure(8,5),Measure(10,0),Measure(14,1),Measure(19,6),Measure(22,11),Measure(26,6),Measure(29,0)])
+
+#Defining the multiresolution time series
+>>> M = MultiresolutionSeries()
+#Defining the multiresolution schema
+>>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
+>>> M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
+
+#Adding the measures
+>>> for m in s: M.add(m)
+#M is consolidable
+>>> M.consolidable()
+True
+#Consolidating until no more consolidable
+
+>>> while M.consolidable(): M.consolidate()
+
+#Query æ$seriedisc(M,5,\text{mean}^\zohe)$æ
+>>> M.discSeries(5,mean_zohe)
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+#Query æ$seriedisc(M,10,\text{maximum}^\zohe)$æ
+>>> M.discSeries(10,maximum_zohe)
+TimeSeries([m(10,6), m(20,11)])
+#Query æ$totalseries(M)$æ
+>>> M.total()
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+\end{lstlisting}
 
 
 

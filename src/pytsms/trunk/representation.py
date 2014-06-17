@@ -64,12 +64,33 @@ class Representation(object):
         :type t: :data:`timeseries.Time`
         :returns: `s(t)ᵗ`
         :rtype: :data:`timeseries.Value`
-        :raises NotImplementedError: Abstract method, should be delegated
         """
-        raise NotImplementedError("Abstract object, method should be delegated")
+        return self.interval_temporal(t,t).pop().v
 
 
-    def plot(self,l,g,step):
+
+
+    def plot(self):
+        """
+        Operador de gràfic genèric. 
+
+        Es pot sobrecarregar el mètode per tal de dibuixar un gràfic
+        més d'acord amb la representació de la sèrie temporal.
+
+        :returns: pyplot
+
+        >>> from timeseries import TimeSeries
+        >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
+        >>> #s.plot()
+        
+        """
+        graf = [(m.t,m.v) for m in sorted(self.get_ts())] 
+        x,y = zip(*graf)
+
+        pyplot.plot(x,y,'o')
+        pyplot.show()
+
+    def plot_graf(self,l=None,g=None,step=None):
         """
         Operador de gràfic genèric. Grafica el graf de la sèrie temporal.
 
@@ -107,11 +128,51 @@ Some representations
 
 
 
-class DiscretePure(Representation):
+class Delta(Representation):
     """
-    Representació discreta pura per a les sèries temporals
+    Representació delta per a les sèries temporals
+
+    s(t)delta = s(t) if t in s.t() else 0
+
+    >>> from timeseries import TimeSeries
+    >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
+    >>> s.set_rpr(Delta)
+    >>> s.representation(1)
+    1
+    >>> s.representation(4)
+    0
+    >>> s.representation(6)
+    0
     """
-    pass
+    def interval_temporal(self,l,g):
+        """
+        Operador d'interval temporal ZOHE. 
+
+        :param l: Instant de temps menor
+        :type l: :data:`timeseries.Time`
+        :param g: Instant de temps major
+        :type g: :data:`timeseries.Time`
+        :returns: `s[l,g]ᵗdelta`
+        :rtype: :class:`timeseries.TimeSeries`
+
+        >>> from timeseries import TimeSeries
+        >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
+        >>> s.set_rpr(Delta)
+        >>> s.interval_temporal(1,4) == TimeSeries([Measure(4,0),Measure(2,2),Measure(1,1)])
+        True
+        >>> s.interval_temporal(-5,0) == TimeSeries([Measure(0,0),Measure(-5,0)])
+        True
+        >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,0),Measure(6,0)])
+        True
+        """  
+        s = self.get_ts()
+        r = s.interval_closed(l,g) 
+
+        ml = s.mtype()(l,0)
+        mg = s.mtype()(g,0)
+        r.add(ml)
+        r.add(mg)
+        return r   
 
 
 
@@ -211,7 +272,7 @@ class Zohe(Representation):
         >>> import datetime
         >>> s = TimeSeries([Measure(5,3),Measure(1,1),Measure(2,2)])
         >>> s.set_rpr(Zohe)
-        >>> #s.rpr().plot()
+        >>> #s.plot()
         >>>
         >>> s = TimeSeries([Measure(5,[3,4]),Measure(1,[1,2]),Measure(2,[2,3])])
         >>> s.set_rpr(Zohe)
