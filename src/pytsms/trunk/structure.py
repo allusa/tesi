@@ -134,13 +134,58 @@ class TimeSeriesStructure(set):
         set.add(self,m)
 
 
+    def copy(self):
+        """
+        Redefinició del mètode copy per tal que copiï també els atributs
+
+        >>>
+        >>> #SET predefined methods
+        >>> #COPY
+        >>> from timeseries import TimeSeries
+        >>> s1 = TimeSeries([Measure(1,2)])
+        >>> class AnyRpr(): pass
+        >>> s1.set_rpr(AnyRpr)
+        >>> s2 = s1.copy()
+        >>> s1 is s2
+        False
+        >>> s1 == s2
+        True
+        >>> s2.get_rpr() == AnyRpr
+        True
+        >>> m1 = s1.pop()
+        >>> m2 = s2.pop()
+        >>> m1 is m2
+        True
+        >>> m1 == m2
+        True
+        """
+        s = set.copy(self)
+        s.__dict__.update(self.__dict__)
+        return s
+
     def empty(self):
         """
         Retorna una sèrie temporal buida del mateix tipus i amb els
         mateixos atributs
+
+        >>> from timeseries import TimeSeries
+        >>> class AnyRpr(): pass
+        >>> s = TimeSeries([Measure(1,2)])
+        >>> s.set_rpr(AnyRpr)
+        >>> s2 = s.empty()
+        >>> s2 == TimeSeries([])
+        True
+        >>> s2.get_rpr() == AnyRpr
+        True
+        >>> #Predefined clear() is like empty but updates
+        >>> s.clear()
+        >>> s == TimeSeries([])
+        True
+        >>> s.get_rpr() == AnyRpr
+        True
         """
         s = type(self)()
-        s.set_rpr(self.get_rpr())
+        s.__dict__.update(self.__dict__)
         return s
 
 
@@ -153,40 +198,6 @@ class TimeSeriesStructure(set):
         return type(next(iter(self)))
 
 
-    def copy(self):
-        """
-        Sobrecàrrega del mètode copy
-        Retorna una còpia de la sèrie temporal amb els
-        mateixos atributs        
-        """
-        s = set.copy(self)
-        s.set_rpr(self.get_rpr())
-        return s    
 
-
-    def set_rpr(self,rpr):
-        """
-        Permet definir una representació per defecte de la sèrie
-        temporal. S'aplicarà per defecte a tots els operadors de
-        funció temporal.
-
-        :param rpr: Una representació per a la sèrie temporal
-        :type rpr: :class:`representation.Representation`
-        """        
-        self._rpr = rpr
-
-
-    def get_rpr(self):
-        """
-        Permet obtenir la representació per defecte de la sèrie
-        temporal.
-
-        :return: El tipus de representació per a la sèrie temporal
-        :rtype: :class:`representation.Representation` or None
-        """        
-        try:
-            return self._rpr
-        except AttributeError:
-            return None
 
 

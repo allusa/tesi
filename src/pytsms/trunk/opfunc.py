@@ -13,7 +13,7 @@ Implementació dels operadors de funció de Sèrie Temporal.
 
 from measure import Measure
 
-
+from representation import Representation
 
 
 class FuncOpMixin():
@@ -23,6 +23,36 @@ class FuncOpMixin():
     * s(t)
 
     """
+
+    _rpr = None
+
+
+    def set_rpr(self,rpr):
+        """
+        Permet definir una representació per defecte de la sèrie
+        temporal. S'aplicarà per defecte a tots els operadors de
+        funció temporal.
+
+        :param rpr: Una representació per a la sèrie temporal
+        :type rpr: :class:`representation.Representation`
+        """        
+        self._rpr = rpr
+
+
+    def get_rpr(self):
+        """
+        Permet obtenir la representació per defecte de la sèrie
+        temporal.
+
+        :return: El tipus de representació per a la sèrie temporal
+        :rtype: :class:`representation.Representation` or None
+        """        
+        try:
+            return self._rpr
+        except AttributeError:
+            return None
+
+
 
     def __call__(self,t):
         """
@@ -44,7 +74,7 @@ class FuncOpMixin():
         if rpr is None:
             rpr = self.get_rpr()
             if rpr is None:
-                raise AttributeError('rpr attibute has no been defined')
+                return Representation(self)
         return rpr(self)
 
 
@@ -73,10 +103,11 @@ class FuncOpMixin():
         :returns: `graf s(t)ᵗ`
         :rtype: list of tuples
         """
-        r = []
-        for t in range(l,g,step):
-            r.append((t,self.representation(t)))
-        return r
+        return [ (t,self.representation(t)) for t in range(l,g,step) ]
+
+
+    def plot(self,rpr=None):
+        self.rpr(rpr).plot()
 
 
     def interval_temporal(self,l,g,rpr=None):
@@ -129,10 +160,20 @@ class FuncOpMixin():
         >>> tt = range(1,8,2)
         >>> s.selection_temporal(tt,Zohe) == TimeSeries([Measure(5,3),Measure(1,1),Measure(3,3),Measure(7,3)])
         True
+        >>> s.set_rpr(Zohe)
+        >>> s.selection_temporal(tt) == TimeSeries([Measure(5,3),Measure(1,1),Measure(3,3),Measure(7,3)])
+        True
+        >>> s.get_rpr() == Zohe
+        True
         """
         s = self.empty()
+        
+        copiarpr = s._rpr #ERROR en el COPY
+
         for t in tt:
             s = s.union(self.interval_temporal(t,t,rpr))
+        
+        s._rpr = copiarpr #ERROR en el COPY
         return s
 
 
@@ -198,7 +239,7 @@ class FuncOpMixin():
         tp = self.t().union(other.t())
         s1tp = self.selection_temporal(tp,rpr)
         s2tp = other.selection_temporal(tp,rpr)
-        
+    
         return s1tp.join(s2tp)
 
 
@@ -229,3 +270,6 @@ class FuncOpMixin():
         tp = self.t()
         s2 = other.selection_temporal(tp,rpr)
         return self.join_temporal(s2,rpr)
+
+
+
