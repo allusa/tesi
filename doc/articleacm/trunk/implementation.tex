@@ -105,10 +105,10 @@ predefined Set Python type. Secondly, there are methods for the
 operational model which are classified into set, sequence and temporal
 function operators.  Set operators are composed of the partial order,
 the temporal order and the relational set operators.  Thirdly,
-complementary operations for TimeSeries are grouped into two objects:
-\emph{RegularProperties} groups the regularity operation definitions
-and \emph{Storage} has methods for storing and retrieving time series
-from file system.
+complementary operations for TimeSeries are grouped into two visitor
+objects: \emph{RegularProp} groups the regularity operation
+definitions and \emph{Storage} has methods for storing and retrieving
+time series from file system.
 
 
 Figure \ref{fig:implementacio:pytsms-uml} shows two specialisations
@@ -130,7 +130,7 @@ Python \emph{Matplotlib} library.
 #Importing the required objects
 >>> from pytsms import TimeSeries, Measure
 >>> from pytsms.representation import Zohe
->>> from pytsms.properties import RegularProperties
+>>> from pytsms.properties import isRegular
 
 #Defining the two time series
 >>> s1 = TimeSeries([Measure(1,1),Measure(3,1),Measure(4,0),Measure(5,1)])
@@ -152,14 +152,13 @@ TimeSeries([m(3,2), m(4,0), m(5,2)])
 
 #Checking the regularity
 # æ$s2$æ is not regular
->>> r2 = RegularProperties(s2)
->>> r2.isRegular()
+>>> s2.accept(isRegular())
 False
 # æ$s2$æ can be regularised by æ$s2[{0,2,4}]^\zohe$æ
->>> s2.selection_temporal(range(0,6,2),Zohe)
+>>> r2 = s2.selection_temporal(range(0,6,2),Zohe)
+>>> r2
 TimeSeries([m(0,2), m(2,2), m(4,0)])
->>> r2b=RegularProperties(s2.selection_temporal(range(0,6,2),Zohe))
->>> r2b.isRegular()
+>>> r2.accept(isRegular())
 True
 \end{lstlisting}
 \end{example}
@@ -242,7 +241,7 @@ the multiresolution schema structure by adding resolution
 subseries. Every new resolution is configured by four parameters:
 \emph{delta}, \emph{k}, \emph{f}, and \emph{tau} that create the
 corresponding buffer and disc.  A MultiresolutionSeries has methods
-\emph{add}, \emph{consolidate}, and \emph{consolidate} that operate on
+\emph{add}, \emph{consolidable}, and \emph{consolidate} that operate on
 the corresponding methods of the contained resolution subseries.
 
 
@@ -258,7 +257,7 @@ attribute aggregate function.
 In a module \emph{aggregators} we have implemented some default
 attribute aggregate functions, although users can define more as they
 are Python Function objects with parameters s as a TimeSeries and i as
-a pair of times like [t0.tf]. For example we have defined the \zohe
+a pair of times like [t0,tf]. For example we have defined the \zohe
 aggregate functions, which basically aggregate over the temporal
 interval \lstinline[style=py]+s.interval_temporal(t0,tf,Zohe)+.
 
