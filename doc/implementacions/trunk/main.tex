@@ -33,37 +33,27 @@ twoside,fontsize=11pt,BCOR12mm,
 \def\definitionautorefname{definició} %ús: \autoref{}
 \renewcommand{\lstlistingname}{Llistat}
 \numberwithin{equation}{chapter}
-%SGST-set
-\DeclareMathOperator*{\inst}{\in^t}
-\DeclareMathOperator*{\notinst}{\notin^t}
-\DeclareMathOperator*{\cupt}{\cup^t}
-\DeclareMathOperator*{\dift}{-^t}
-\DeclareMathOperator*{\capt}{\cap^t}
-\DeclareMathOperator*{\where}{where}
-\DeclareMathOperator*{\rename}{rename}
-\DeclareMathOperator*{\as}{as}
-\DeclareMathOperator*{\join}{join}
-\DeclareMathOperator*{\semijoin}{semijoin}
-\DeclareMathOperator*{\map}{mapa}%mapa (map), aplica 
-\DeclareMathOperator*{\agg}{agregat}%agregat (aggregate)
-\DeclareMathOperator*{\fold}{plec}%plec (fold)
-%SGST-seq
-\DeclareMathOperator*{\seg}{seg}
-\DeclareMathOperator*{\ant}{ant}
 
-%Temporal vocabulari
-\newcommand{\glssymbol}[1]{hola}
+%vocabulari
+\usepackage[
+          acronym,
+          %%nonumberlist,
+          %%toc,
+          section,
+          numberedsection=autolabel,
+          sanitize=none, %pels accents en el vegeu
+          ]{glossaries}
+\input{vocabulari/glossari.tex}
+\loadglsentries{vocabulari/abreviacions.tex}
+\loadglsentries[notation]{vocabulari/notacio.tex}
 
 
-
-\newcommand{\R}{\mathbb{R}} % the set of real numbers
-\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
-\newcommand{\zohe}{\acro{ZOHE}}
 
 \usepackage{longtable}
 \usepackage{multirow}
 \usepackage{pgfplots}
 \usetikzlibrary{arrows}
+\input{imatges/estils_pgf.tex}
 
 \usepackage{tikz-timing}[2009/05/15]
 \usepackage{imatges/tikz-uml}

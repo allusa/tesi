@@ -11,6 +11,10 @@ Representació i graf de sèries temporals
 Implementació de la representació i graf de Sèrie Temporal.
 """
 
+#Hi ha un bug al Matplotlib????
+#Per defecte fa 'TkAgg' i no funciona?
+import matplotlib
+matplotlib.use('GTKAgg')
 from matplotlib import pyplot
 
 from measure import Measure

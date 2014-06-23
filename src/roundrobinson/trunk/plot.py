@@ -8,6 +8,14 @@ import os
 from pytsms import Measure, TimeSeries
 
 import datetime
+
+
+#Hi ha un bug al Matplotlib????
+#Per defecte fa 'TkAgg' i no funciona?
+import matplotlib
+matplotlib.use('GTKAgg')
+
+
 from matplotlib import pyplot as plt
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import MaxNLocator
@@ -230,6 +238,8 @@ class Plot(Plotter):
     >>> ut = 3600
     >>> mrd = _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7])
     >>> #mrd.accept(Plot())
+    >>> mrd == _test_crea_mrd2([ut*x for x in [1,5,10,15,20,48,96]],[1,2,3,4,5,6,7]) #Checking it hs not been modified
+    True
     """
     def __call__(self,ob):
         #pinta
@@ -249,7 +259,7 @@ class Plot(Plotter):
         mrdordenat = sorted(ob)
 
         for index,rd in enumerate(mrdordenat):
-            st = rd.D.s
+            st = rd.D.s.copy()
             vt = []
             vv = []
             antt = None

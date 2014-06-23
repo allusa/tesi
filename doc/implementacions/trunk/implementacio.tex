@@ -4,14 +4,17 @@
 \chapter{Introducció a les implementacions}
 
 
-Es realitzen implementacions a alt nivell per a observar el funcionament a nivell acadèmic: Python. Implementem els models de SGST i SGSTM amb Python, aquesta és la nostra implementació de referència, la qual usem per als exemples amb dades.
+Implementem els models definits de \gls{SGST} i de \gls{SGSTM}
+
+
+Es realitzen implementacions a alt nivell per a observar el funcionament a nivell acadèmic: Python. Implementem els models de \gls{SGST} i \gls{SGSTM} amb Python, aquesta és la nostra implementació de referència, la qual usem per als exemples amb dades.
 
 Es realitzen implementacions a alt nivell per a observar l'encaix amb el model relacional: Tutorial D.
 
 Es realitzen implementacions a baix nivell d'estructures específiques: VHDL o circuit digital.
 
 
-Es realitzen implementacions específiques per a la resolució offline de la multiresolució com a consulta sobre els SGST: MapReduce
+Es realitzen implementacions específiques per a la resolució offline de la multiresolució com a consulta sobre els \gls{SGST}: MapReduce
 
 
 S'avaluen implementacions específiques com RRDtool?
@@ -44,8 +47,30 @@ S'avaluen implementacions específiques com RRDtool?
 
 
 
+\section{Particularitats de les implementacions}
 
 
+En la implementació s'afegeixen alguns operadors que en el model
+estructural no estaven explícitament definits perquè són propis de
+l'àlgebra de conjunts. Així, alguns d'aquests operadors que s'han
+d'implementar són els relacionats amb la notació de creació de
+conjunts, %set-builder notation (set comprehension)
+els quals en els \gls{SGBD} s'inclouen en el que es coneix com a
+\emph{llenguatge de definició de dades} (DDL, de l'anglès \emph{data
+  definition language}), o els relacionats amb la manipulació de les
+dades amb assignació, inserció, modificació o esborrament, els quals
+en els SGBD es coneixen com a \emph{llenguatge de manipulació de
+  dades} (DML, de l'anglès \emph{data manipulation language}) .  En el
+cas del model de \gls{SGSTM} sí que hem definit operacions de DDL i DML per
+a l'esquema multiresolució ja que aquest requereix ser manipulat
+coherentment.
+
+Pel que fa al llenguatge de consultes (\emph{query language}),
+s'implementa seguint el model d'operacions de consulta de cada cas.
+
+
+
+% El model s'ha descrit utilitzant àlgebra de conjunts. Així moltes operacions no s'han hagut de definir perquè formen part de la notació de conjunts: definició de nous conjunts (set builder notation), operació d'assignació, manipulació de les dades amb inserció, modificació, esborrar (perquè en àlgebra de conjunts es treballa amb immutabilitat ja que a l'àlgebra crear un nou conjunt no té cap cost), etc.  A les implementacions, però, totes aquestes operacions s'han de definir en cas que es vulguin.
 
 
 
