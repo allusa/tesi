@@ -5,55 +5,44 @@
 
 
 
-La implementació de referència dels models de SGST i SGSTM es realitza
-amb Python \parencite{python:doc2}. L'objectiu d'aquesta implementació
-de referència és mantenir la fidelitat al model per tal de poder
-experimentar-hi amb tota la potència matemàtica .
-
-En la implementació s'afegeixen alguns operadors que en el model no
-estaven explícitament definits perquè són propis de l'àlgebra de
-conjunts. Alguns dels operadors principals que s'han d'afegir són els
-relacionats amb la notació de creació de
-conjunts, %set-builder notation (set comprehension)
-els quals en els SGBD s'inclouen en el que es coneix com a
-\emph{llenguatge de definició de dades} (DDL, de l'anglès \emph{data
-  definition language}).
-% El model s'ha descrit utilitzant àlgebra de conjunts. Així moltes operacions no s'han hagut de definir perquè formen part de la notació de conjunts: definició de nous conjunts (set builder notation), operació d'assignació, manipulació de les dades amb inserció, modificació, esborrar (perquè en àlgebra de conjunts es treballa amb immutabilitat ja que a l'àlgebra crear un nou conjunt no té cap cost), etc.  A les implementacions, però, totes aquestes operacions s'han de definir en cas que es vulguin.
-
-
-
-
-
-Implementem els dos models de SGST i SGSTM com a dues biblioteques
+La implementació de referència dels models de \gls{SGST} i de \gls{SGSTM}
+es realitza amb Python \parencite{python:doc2}. L'objectiu d'aquesta
+implementació de referència és mantenir la fidelitat al model per tal
+de poder experimentar-hi amb tota la potència matemàtica .
+Implementem els dos models de \gls{SGST} i \gls{SGSTM} com a dues biblioteques
 diferents: \emph{Pytsms} i \emph{RoundRobinson} respectivament. La
 RoundRobinson, però, té una forta dependència en la
-Pytsms de la mateixa manera que hem definit els SGSTM en base
-als SGST.
+Pytsms de la mateixa manera que hem definit els \gls{SGSTM} en base
+als \gls{SGST}.
 
 
-Utilitzem orientació a objectes. Ens permet fer explicita la relació
-entre la implementació i el model. \todo{més explicat}
-Utilitzem diagrames UML per a definir l'estructura de classes. Principalment volem mostrar les relacions entre les diverses classes.\todo{més explicat}
-% We design the implementation concepts with object orientation, so that
-% there is a clear mapping between model and implementation
-% objects. Next we use Unified Modeling Language (UML) diagrams in order
-% to define the classes structure, mainly to show the relationships
-% among objects.
+En la implementació amb Python utilitzem el paradigma de programació
+d'orientació a objectes. Aquest paradigma permet definir objectes que
+tenen atributs per a estructurar les dades i mètodes associats per a
+manipular-les, cosa que ens permet relacionar de manera senzilla la
+implementació amb el model.  Per a mostrar les relacions entre els
+diversos objectes utilitzem diagrames de classe de \gls{UML}.
 
 
 
-Implementem la part essencial, és a dir l'àlgebra definida en els
-models lògics. No implementem els complements habituals dels SGBD, els
-quals són necessaris en entorns d'explotació, com per exemple gestió
-d'usuaris i permisos, còpies de seguretat, llenguatges estàndards de
-consulta, etc.
-Tampoc es tenen en compte paràmetres de rendiment; per exemple no es té en compte si hi ha dues subsèries resolució que tenen el mateix pas de consolidació i les funcions d'agregació d'atributs tenen la mateixa funció de representació --per exemple mitjanaZOHE i màximZOHE\todo{símbols}--,   podrien aprofitar la mateixa operació de selecció temporal d'interval \zohe{}.
+
+Implementem la part essencial dels models, és a dir l'àlgebra definida
+en els models lògics. No implementem complements habituals dels
+\gls{SGBD} que podrien ser necessaris en entorns d'explotació, com per
+exemple gestió d'usuaris i permisos, còpies de seguretat, llenguatges
+estàndards de consulta, etc.  Tampoc es tenen en compte paràmetres de
+rendiment; per exemple en el cas de dues subsèries resolució que tenen
+el mateix pas de consolidació i les funcions d'agregació d'atributs
+tenen la mateixa funció de representació --per exemple
+\glssymbol{not:sgstm:meanzohe} i \glssymbol{not:sgstm:maxzohe}--,
+aquestes podrien compartir la mateixa operació de
+selecció temporal d'interval \gls{zohe}.
 
 
 
 \section{Pytsms}
 
-La biblioteca Pytsms implementa un SGST de referència. Així
+La biblioteca Pytsms implementa un \gls{SGST} de referència. Així
 doncs, seguint el model, els objectes principals són les mesures, les
 sèries temporals i les representacions de les sèries temporals. Tots
 tres s'implementen respectivament com a classes @Measure@,
@@ -221,7 +210,7 @@ indefinit o bé la @MChar@ que defineix mesures de tipus caràcter.
 
 Pel que fa a les representacions, cada representació en concret és una
 especialització de @Representation@. Per exemple @Zohe@ i
-@Delta@ implementen la funció de representació \zohe{} i la delta
+@Delta@ implementen la funció de representació \gls{zohe} i la delta
 respectivament.
 %\emph{Representation} és una classe abstracta?
 Bàsicament, cada representació particular ha de definir l'operació que
@@ -234,15 +223,15 @@ representacions definides s'usa la biblioteca
 
 
 
-\subsubsection{Encaix a Python}
+% \subsubsection{Encaix a Python}
 
-\todo{}
+% \todo{}
 
-Explicar més detalladament quins mètodes tenen les sèries temporals: unió, selecció, etc.
+% Explicar més detalladament quins mètodes tenen les sèries temporals: unió, selecció, etc.
 
-Heretem de sets, implementem els mètodes especials de sets
+% Heretem de sets, implementem els mètodes especials de sets
 
-implementem els mètodes especials de seqüències
+% implementem els mètodes especials de seqüències
 
 
 
@@ -252,7 +241,7 @@ implementem els mètodes especials de seqüències
 
 \section{RoundRobinson}
 
-La biblioteca RoundRobinson implementa un SGSTM de referència. Així
+La biblioteca RoundRobinson implementa un \gls{SGSTM} de referència. Així
 doncs, seguint el model, els objectes principals són les sèries
 temporals multiresolució, les subsèries resolució, els buffers, els
 discs i les funcions d'agregació d'atributs. Respectivament
@@ -366,13 +355,13 @@ tenen unes determinades funcions d'agregació d'atributs.
 
 En un mòdul @aggregators@ hi ha predefinides algunes funcions
 d'agregació d'atributs com per exemple @mean@, que agrega la mitjana
-d'una sèrie temporal com a conjunt, o la @mean\_zohe@, que agrega la
-mitjana seguint la representació \zohe{}.  Això no obstant, els usuaris
+d'una sèrie temporal com a conjunt, o la @mean_zohe@, que agrega la
+mitjana seguint la representació \gls{zohe}.  Això no obstant, els usuaris
 en poden definir de pròpies ja que són @Function@ de Python amb els
 paràmetres @s@ una @TimeSeries@ i @i@ una parella d'instants de temps
 com ara @[t0,tf]@ i que retornen una @Measure@. Per exemple la funció
-@mean\_zohe@ retorna una mesura amb @tf@ com a temps i com a valor
-l'àrea mitjana a partir la selecció temporal \zohe{} de la sèrie temporal
+@mean_zohe@ retorna una mesura amb @tf@ com a temps i com a valor
+l'àrea mitjana a partir la selecció temporal \gls{zohe} de la sèrie temporal
 en l'interval de temps donat.
 
 
@@ -385,7 +374,7 @@ en l'interval de temps donat.
 
 Amb les biblioteques Pytsms i RoundRobinson podem treballar amb les
 sèries temporals i les sèries temporals multiresolució de manera molt
-semblant als models algebraics de SGST i SGSTM.
+semblant als models algebraics de \gls{SGST} i de \gls{SGSTM}.
 
 
 
@@ -393,7 +382,7 @@ semblant als models algebraics de SGST i SGSTM.
 El \autoref{lst:pytsms:ex1} és un exemple d'ús de Pytsms on
 definim dues sèries temporals $s1$ i $s2$ i hi apliquem diverses
 operacions: unió, concatenació, interval tancat, interval temporal
-\zohe{}, selecció temporal \zohe{} i comprovació de propietats de
+\gls{zohe}, selecció temporal \gls{zohe} i comprovació de propietats de
 regularitat.
 
 \begin{lstlisting}[style=py,caption=Exemple d'operacions amb Pytsms,label=lst:pytsms:ex1]
@@ -416,7 +405,7 @@ TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
 # æ$s2[2,5]$æ
 >>> s2.interval_closed(2,5)
 TimeSeries([m(2,2), m(3,2), m(4,0)])
-# æ$s2[2,5]^\zohe$æ
+# æ$s2[2,5]^{\glssymbol{not:zohe}}$æ
 >>> s2.interval_temporal(2,5,Zohe)
 TimeSeries([m(3,2), m(4,0), m(5,2)])
 
@@ -424,7 +413,7 @@ TimeSeries([m(3,2), m(4,0), m(5,2)])
 # æ$s2$æ no és regular
 >>> s2.accept(isRegular())
 False
-# regularitzem æ$s2$æ amb la selecció temporal æ$s2[{0,2,4}]^\zohe$æ
+# regularitzem æ$s2$æ amb la selecció temporal æ$s2[{0,2,4}]^{\glssymbol{not:zohe}}$æ
 >>> r2 = s2.selection_temporal(range(0,6,2),Zohe)
 >>> r2
 TimeSeries([m(0,2), m(2,2), m(4,0)])
@@ -437,13 +426,16 @@ True
 
 El \autoref{lst:roundrobinson:ex1} és un exemple d'ús de RoundRobinson
 on definim una sèrie temporal multiresolució $M$, hi afegim una sèrie
-temporal $s$, hi apliquem la consolidació i consultem el resultat.
+temporal $s$, hi apliquem la consolidació fins que no sigui
+consolidable i consultem el resultat.
 
 \begin{lstlisting}[style=py,caption=Exemple d'operacions amb RoundRobinson,label=lst:roundrobinson:ex1]
 #Importació dels objectes necessaris
 >>> from pytsms import TimeSeries, Measure
 >>> from roundrobinson import MultiresolutionSeries
 >>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+>>> from roundrobinson import Plot
+>>> from pytsms.representation import Zohe
 
 #Definició de sèries temporal d'exemple
 >>> s = TimeSeries([Measure(1,6),Measure(5,2),Measure(8,5),Measure(10,0),Measure(14,1),Measure(19,6),Measure(22,11),Measure(26,6),Measure(29,0)])
@@ -462,23 +454,108 @@ True
 #Consolidació fins que no sigui consolidable
 >>> while M.consolidable(): M.consolidate()
 
-#Consulta æ$seriedisc(M,5,\text{mean}^\zohe)$ææ\glssymbol{not:sgstm:seriedisc}æ
+#Consulta æ$\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$æ
 >>> M.discSeries(5,mean_zohe)
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
-#Query æ$seriedisc(M,10,\text{maximum}^\zohe)$æ
+#Consulta æ$\glssymbol{not:sgstm:seriedisc}(M,10,\glssymbol{not:sgstm:maxzohe})$æ
 >>> M.discSeries(10,maximum_zohe)
 TimeSeries([m(10,6), m(20,11)])
-#Query æ$totalseries(M)$æ
+#Consulta æ$\glssymbol{not:sgstm:serietotal}(M)$æ
 >>> M.total()
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+#Gràfic multiresolució
+>>> M.accept(Plot())
+[æv.~\autoref{fig:python:BDMm}æ]
+#Gràfic Pytsms de la sèrie temporal total amb representació æ\gls{zohe}æ
+>>> M.total().plot(rpr=Zohe)
+[æv.~\autoref{fig:python:BDMmtotal}æ]
 \end{lstlisting}
+%from pytsms import TimeSeries, Measure; from roundrobinson import MultiresolutionSeries; from aggregators import mean_zohe,maximum_zohe; from plot import Plot
+%s = TimeSeries([Measure(1,6),Measure(5,2),Measure(8,5),Measure(10,0),Measure(14,1),Measure(19,6),Measure(22,11),Measure(26,6),Measure(29,0)]); M = MultiresolutionSeries(); M.addResolution(delta=5,k=4,f=mean_zohe,tau=0); M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        rd,
+        title={R: 5/mean\_zohe $|4|$},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (10,3)
+         (15,2)
+         (20,7)
+         (25,8)
+       };
+    \end{axis}
+   \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+        rd,
+        title={R: 10/maximum\_zohe $|2|$},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (10,6)
+         (20,11)
+       };
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Base de dades multiresolució $M$}
+   \label{fig:python:BDMm}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseries,
+        ylabel={},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (10,3)
+         (15,2)
+         (20,7)
+         (25,8)
+       };
+    \end{axis}
+   \end{tikzpicture}
+   \caption{$\glssymbol{not:sgstm:serietotal}(M)$ amb representació \gls{zohe}}
+   \label{fig:python:BDMmtotal}
+\end{figure}
 
 
 
 
 
-\todo{}
-Un cas d'exemple és demostrar l'equivalència entre l'operació multiresolució dels SGST sobre una sèrie temporal i la sèrie temporal resultant d'una consolidació dels SGSTM. 
+
+
+% \todo{}
+% Un cas d'exemple és demostrar l'equivalència entre l'operació multiresolució dels SGST sobre una sèrie temporal i la sèrie temporal resultant d'una consolidació dels SGSTM. 
+
+
+
+% def MTSMSequivalenceTSMS(s,schema):
+%     """
+%     >>> from pytsms.consult import multiresolution
+%     >>> s = TimeSeries([Measure(5,5),Measure(11,1),Measure(12,2),Measure(16,1),Measure(21,1),Measure(26,1)])
+%     >>> def _max(s,i): sp=s[i[0]:i[1]]; return Measure(i[1], None if len(sp)==0 else max(sp.projection('v')))
+%     >>> schema = [(5,4,_max,10),(10,3,_max,0)]
+%     >>> MTSMSequivalenceTSMS(s,schema)
+%     True
+%     """
+%     from pytsms.consult import multiresolution
+    
+%     schemats = TimeSeries()
+%     m = MultiresolutionSeries()
+%     for delta,k,f,tau in schema:
+%         m.addResolution(delta,k,f,tau)
+%         schemats.add(Measure(delta,(tau,f,k)))
+    
+%     m.update(s)
+%     m.consolidateTotal()
+    
+%     return multiresolution(s,schemats) == m.total()
 
 
 
