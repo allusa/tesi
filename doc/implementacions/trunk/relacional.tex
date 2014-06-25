@@ -17,14 +17,14 @@ Tutorial~D.
 % Primarily intended for teaching purposes, Rel is written in the Java programming language.
 
 
-\todo{}
 
 Implementem la part essencial, és a dir l'àlgebra definida en els
-models lògics. Com que són de nivell acadèmic, ni Tutorial D ni Rel
-implementen els complements que tenen els SGBDR en entorns
-d'explotació. Com a conseqüència, només es podran utilitzar per a
-comprovar l'exactitud en l'àlgebra, però no amb comoditat per a
-treballar amb dades reals en les quals es necessita sovint operacions per canviar-ne el format, per convertir-les, etc.\todo{}
+models lògics. Com que són de propòsit acadèmic, ni Tutorial~D ni Rel
+implementen els complements que tenen els \gls{SGBDR} en entorns
+d'explotació. Com a conseqüència, les implementacions resultants són
+útils per a comprovar l'àlgebra relacional però no són còmodes per a
+treballar amb dades reals, les quals necessiten sovint operacions
+per canviar-ne el format, per dibuixar-les, etc.
 
 
 
@@ -32,170 +32,237 @@ treballar amb dades reals en les quals es necessita sovint operacions per canvia
 \section{SGST relacional}
 
 
-Tal com s'ha definit el model estructural de SGST, en el model
-relacional les sèries temporals són relacions amb dos atributs:
-\emph{t} pel temps i \emph{v} pels valors, on l'atribut \emph{t} fa de
-clau primària en les variables relació.  Les mesures són els tuples
-d'aquestes relacions. 
+Tal com s'ha definit el model estructural de \gls{SGST}, en el model
+relacional les sèries temporals són relacions amb dos atributs: $t$
+pel temps i $v$ pels valors, on l'atribut $t$ fa de clau primària en
+les variables relació.  Les mesures són els tuples d'aquestes
+relacions.  Per tant, la implementació relacional consisteix a definir
+un tipus sèrie temporal i totes les operacions associades. Aquestes
+definicions es basaran en Tutorial~D, és a dir que no cal cap
+llenguatge no relacional extern.
 
-Principalment la implementació relacional consisteix en definir el
-tipus sèrie temporal i totes les operacions de sèries
-temporals. Aquestes definicions es basaran en Tutorial D, és a dir que
-no cal cap llenguatge no relacional extern.
+Tutorial~D defineix estàticament els tipus dels paràmetres de les
+operacions, la qual cosa dificulta generalitzar-les per a qualsevol
+tipus de temps i valor com s'ha fet a la implementació amb Python. Com
+a conseqüència, fixarem a reals els tipus dels atributs temps i dels
+valors, \emph{Rational} a Tutorial~D.
 
-Tutorial D defineix estàticament els tipus a les operacions i això
-dificulta generalitzar-ho per a qualsevol tipus de temps i valor com
-s'ha fet a la implementació amb Python. Com a conseqüència, prefixarem
-els tipus dels atributs temps i dels valors a reals, \emph{Rational} a
-Tutorial D.
 
-Així doncs, el valor de sèrie temporal es defineix directament
-mitjançant una relació amb els atributs \emph{t} i \emph{v}. Per
-exemple:
-\begin{verbatim}
-RELATION {
-   TUPLE { t 2.0, v 3.0 },
-   TUPLE { t 3.0, v 4.0 }
+Així doncs, definim el valor de sèrie temporal mitjançant
+una relació d'atributs $t$ i $v$. Per exemple la sèrie temporal $s=\{
+(2,3), (3,4) \}$:
+\begin{lstlisting}[style=tutorialD]
+relation {
+   tuple { t 2.0, v 3.0 },
+   tuple { t 3.0, v 4.0 }
  }
-\end{verbatim}
+\end{lstlisting}
 
 
 A partir d'aquest valors relació s'hauria de definir el tipus sèrie
-temporal. No obstant això, la definició de tipus encara té un estat
-massa experimental a Tutorial D, com es detalla a
+temporal. No obstant això, la definició de tipus es troba en un estat
+massa experimental a Tutorial~D, com es detalla a
 l'apartat~\ref{sec:implementacio:tipus-relacional}. Així doncs,
-definim la variable relació \emph{timeseries} per a utilitzar-la com a
+definim una variable relació \emph{timeseries} per a utilitzar-la com a
 equivalent del tipus en les definicions dels operadors:
-\begin{verbatim}
-VAR timeseries BASE RELATION
-    { t RATIONAL, v RATIONAL }  KEY { t } ;
-\end{verbatim}
+\begin{lstlisting}[style=tutorialD]
+var timeseries base relation
+    { t rational, v rational }  key { t } ;
+\end{lstlisting}
 
 
 En les sèries temporals com a relació, els tuples són les mesures del
-model de SGST. Hi ha alguns operadors dels SGST que tenen mesures com
-a paràmetres, però els tuples sense formar part d'una relació no són
-un tipus vàlid a Tutorial D. Així caldria definir també un valor
-relació per a les mesures. Per a simplificar, definim aquestes mesures
-com a sèries temporals d'un sol element, per exemple:
-\begin{verbatim}
-RELATION {
-   TUPLE { t 2.0, v 3.0 }
+model de \gls{SGST}. Hi ha alguns operadors dels \gls{SGST} que tenen
+mesures com a paràmetres, 
+% però els tuples sense formar part d'una
+% relació no són un tipus vàlid a Tutorial D. 
+així doncs caldria definir també un tipus per a les mesures. Per a
+simplificar, definim aquestes mesures com a sèries temporals d'un sol
+element, per exemple la mesura $m=(2,3)$:
+\begin{lstlisting}[style=tutorialD]
+relation {
+   tuple { t 2.0, v 3.0 }
  }
-\end{verbatim}
+\end{lstlisting}
 
 
 A partir d'aquestes mesures com a valors relació definim els operadors
 que tenen mesures com a paràmetres. Així, els dos operadors bàsics
-dels SGST per a obtenir els atributs de temps i de valor d'una mesura
+dels \gls{SGST} per a obtenir els atributs de temps i de valor d'una mesura
 són:
-\begin{verbatim}
-OPERATOR ts.t(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
-  return t FROM TUPLE FROM m;
-END OPERATOR;
+\begin{lstlisting}[style=tutorialD]
+operator ts.t(m same_type_as (timeseries)) returns rational;
+  return t from tuple from m;
+end operator;
 
-OPERATOR ts.v(m SAME_TYPE_AS  (timeseries)) RETURNS RATIONAL;
-  return v FROM TUPLE FROM m;
-END OPERATOR;
-\end{verbatim}
+operator ts.v(m same_type_as  (timeseries)) returns rational;
+  return v from tuple from m;
+end operator;
+\end{lstlisting}
 
 
-Per exemple, per a obtenir l'atribut temps d'una mesura
-\begin{verbatim}
-WITH RELATION {
-   TUPLE { t 2.0, v 3.0 }
-  } AS m1: 
+Per exemple, per a obtenir l'atribut temps $T(m)$ de la mesura:
+\begin{lstlisting}[style=tutorialD]
+with relation {
+   tuple { t 2.0, v 3.0 }
+  } as m1: 
 ts.t(m1)
-\end{verbatim}
-i per a obtenir el valor
-\begin{verbatim}
-WITH RELATION {
-   TUPLE { t 2.0, v 3.0 }
-  } AS m1: 
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+2.0
+\end{lstlisting}
+i per a obtenir el valor $V(m)$:
+\begin{lstlisting}[style=tutorialD]
+with relation {
+   tuple { t 2.0, v 3.0 }
+  } as m1: 
 ts.v(m1)
-\end{verbatim}
-
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+3.0
+\end{lstlisting}
 
 
 
 \subsection{Operadors}
 
+Un cop implementat el model estructural és el torn d'implementar el
+model d'operacions.  Algunes operacions dels \gls{SGST} es poden
+implementar directament amb les operacions relacionals de Tutorial~D
+aplicades a les relacions \emph{timeseries}, és el cas de:
 
-Algunes operacions dels SGST es poden aplicar directament a les
-relacions \emph{timeseries} amb les operacions de Tutorial D. 
-És el cas de
 \begin{itemize}
 \item La projecció
-\begin{verbatim}
-WITH
+\begin{lstlisting}[style=tutorialD]
+with
  RELATION {
    TUPLE { t 2.0, v 3.0 },
    TUPLE { t 3.0, v 4.0 }
- } AS ts1:
-ts1 {t}
-\end{verbatim}
+ } AS s:
+s {t}
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+ t
+---
+2.0
+3.0
+\end{lstlisting}
 
 \item La selecció
-\begin{verbatim}
-WITH
+\begin{lstlisting}[style=tutorialD]
+with
  RELATION {
    TUPLE { t 2.0, v 3.0 },
    TUPLE { t 3.0, v 4.0 }
- } AS ts1:
-ts1 where v>3.0
-\end{verbatim}
+ } AS s:
+s where v>3.0
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+ t   v 
+--- ---
+3.0 4.0
+\end{lstlisting}
+
 
 \item El reanomena
-\begin{verbatim}
-WITH
+\begin{lstlisting}[style=tutorialD]
+with
  RELATION {
    TUPLE { t 2.0, v 3.0 },
    TUPLE { t 3.0, v 4.0 }
- } AS ts1:
-ts1 rename ( v as temperatura )
-\end{verbatim}
+ } AS s:
+s rename ( v as temperatura )
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+ t  temperatura 
+--- -----------
+3.0         4.0
+\end{lstlisting}
+
+\item El mapa 
+  % \glsdesc{not:sgst:map} és equivalent a un \emph{extend} més una
+  % projecció més un reanomena.
+ % EXTEND s ADD ( <texpr> AS tp, <vexpr> as vp ) {tp,vp} RENAME (tp AS t, vp AS v)
+\begin{lstlisting}[style=tutorialD]
+with
+ RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 3.0, v 4.0 }
+ } AS s:
+extend s add ( t+v as vp) 
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+ t   v  vp
+--- --- ---
+2.0 5.0 5.0
+3.0 7.0 7.0
+\end{lstlisting}
+
+\todo{}
+
+//aggregate equivalent a summarize o a ts.fold(s,mi,texpr,vexpr)
+
+
+
 \end{itemize}
 
 
 
 
 
-Les altres operacions s'han de definir. A continuació en definim
-algunes amb Tutorial D.  Tots els operadors que definim els anomenem
-prefixats amb \emph{ts.}.
+La resta d'operacions s'han de definir. A continuació en definim
+algunes d'exemple implementades a partir d'altres operadors de
+l'àlgebra relacional de Tutorial~D. Tots els operadors que definim els
+anomenem prefixats amb `ts.'.
 
 
 
 L'operació d'unió és equivalent a unir la primera sèrie temporal amb
-les mesures de la segona que no tenen un atribut de temps igual que
-algun temps de la primera. Així, l'operador d'unió \emph{ts.union} és
-\begin{verbatim}
-OPERATOR ts.union(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
-  return s1 UNION (s2 JOIN (s2 {t} MINUS s1 {t}));
+les mesures de la segona que no tenen un atribut de temps igual a
+algun temps de la primera. Així, l'operador d'unió \emph{ts.union}
+ és:
+\begin{lstlisting}[style=tutorialD]
+OPERATOR ts.union(
+      s1 SAME_TYPE_AS  (timeseries), 
+      s2 SAME_TYPE_AS  (timeseries)) 
+      RETURNS RELATION SAME_HEADING_AS  (timeseries);
+  return s1 union (s2 join (s2 {t} minus s1 {t}));
 END OPERATOR;
-\end{verbatim}
+\end{lstlisting}
 
-Per exemple:
-\begin{verbatim}
-WITH 
+Per exemple, siguin dues sèries temporals $s_1=\{(2,3),(4,2),(6,4)\}$ i $s_2=\{(1,2),(5,3),(6,5),(10,1)\}$ la unió $s_1\cup s_2$ és :
+\begin{lstlisting}[style=tutorialD]
+with 
  RELATION {
    TUPLE { t 2.0, v 3.0 },
    TUPLE { t 4.0, v 2.0 },
    TUPLE { t 6.0, v 4.0 }
-  } AS ts1,
+  } AS s1,
  RELATION {
    TUPLE { t 1.0, v 2.0 },
    TUPLE { t 5.0, v 3.0 },
    TUPLE { t 6.0, v 5.0 },
-   TUPLE { t 10.0, v 1.0 }
-  } AS ts2: 
-ts.union(ts1,ts2)
-\end{verbatim}
+   TUPLE { t 9.0, v 1.0 }
+  } AS s2: 
+ts.union(s1,s2)
+\end{lstlisting}
+\begin{lstlisting}[style=stdout]
+ t   v 
+--- ---
+1.0 2.0
+2.0 3.0
+4.0 2.0
+5.0 3.0
+6.0 4.0
+9.0 1.0
+\end{lstlisting}
 
 
 
 
-
+%
+%\todo{}
+%acabar de fer més operacions interessants, per exemple una de seqüències, una de funció temporal o un map o fold, etc.
 
 \subsection{Sèries temporals multivaluades i dobles}
 
@@ -205,10 +272,10 @@ ts.union(ts1,ts2)
 No funcionaran a les operacions perquè són operadors de relation {t,v} i les multivaluades són relation{t,relation{v1,v2}} -> potser es podria solucionar amb warps?
 
 
-\begin{verbatim}
+\begin{lstlisting}[style=tutorialD]
 VAR timeseriesdouble BASE RELATION
     { t1 RATIONAL, v1 RATIONAL, t2 RATIONAL, v2 RATIONAL }  KEY { t1, t2 } ;
-\end{verbatim}
+\end{lstlisting}
 
 
 % // multivalued2canonical -> potser es pot fer amb grup/ungroup o wrap/unwrap ?
@@ -259,13 +326,13 @@ Printed at: 17:03 on Monday, 18 November, 2013
 
 Aleshores podríem definir correctament el tipus sèrie temporal, tot i així encara faria falta que fos un subtipus de relation.
 
-\begin{verbatim}
+\begin{lstlisting}[style=tutorialD]
 type timeseries
 	POSSREP canonical {ts relation {t *, v * }}}
 	POSSREP multivalued {multivalued relation {t * ,*}} 
 	INIT  canonical (multivalued:= ts ungroup (v))
 	      multivalued (ts:= multivalued group ({all but t} as v));
-\end{verbatim}
+\end{lstlisting}
 
 % //Ex
 % //with multivalued2(relation{ tuple{ t 1.0, v1 2.0, v2 3.0} }) as r:
@@ -283,7 +350,7 @@ type timeseries
 % \subsection{Pertinença i inclusió}
 
 
-% WITH RELATION {
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 }
 %  } AS m,
 % RELATION {
@@ -298,7 +365,7 @@ type timeseries
 % \subsection{Màxim i suprem}
 
 % Tutorial D:
-% \begin{verbatim}
+% \begin{lstlisting}[style=tutorialD]
 % OPERATOR ts.max(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 % return s1 JOIN ( SUMMARIZE s1 {t} PER (s1 {}) ADD (MAX (t) AS t));
 % END OPERATOR;
@@ -306,20 +373,20 @@ type timeseries
 % OPERATOR ts.sup(s1 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 % return ts.max(ts.union(s1,(RELATION { TUPLE {t -1.0/0.0, v 1.0/0.0} })));
 % END OPERATOR;
-% \end{verbatim}
+% \end{lstlisting}
 
 
 
 % Exemple:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
 %  } AS ts1: 
 % ts.max(ts1)
-% \end{verbatim}
-% \begin{verbatim}
+% \end{lstlisting}
+% \begin{lstlisting}[style=tutorialD]
 % RELATION {
 % TUPLE { t 1.0, v 2.0 },
 % TUPLE { t 5.0, v 3.0 },
@@ -327,30 +394,30 @@ type timeseries
 % TUPLE { t 1.0/0.0, v 1.0 }  //1.0/0.0 infinit
 %  } AS ts2: 
 % ts.max(ts2)
-% \end{verbatim}
-% \begin{verbatim}
-% WITH RELATION {
+% \end{lstlisting}
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
 %  } AS ts1: 
 % ts.sup(ts1)
-% \end{verbatim}
-% \begin{verbatim}
-% WITH RELATION {
+% \end{lstlisting}
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
 %  } AS ts1: 
 % ts.sup(timeseries)
-% \end{verbatim}
+% \end{lstlisting}
 
 
 
 
 % \subsection{Producte}
 
-% WITH RELATION {
+% with RELATION {
 % TUPLE { t 1.0, v 4.0 }
 %  } AS s1,
 % RELATION {
@@ -366,16 +433,16 @@ type timeseries
 
 
 % TutorialD:
-% \begin{verbatim}
+% \begin{lstlisting}[style=tutorialD]
 % OPERATOR ts.xunion(s1 SAME_TYPE_AS  (timeseries), s2 SAME_TYPE_AS  (timeseries)) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 % return ts.union(s1,s2) MINUS ts.intersect(s1,s2) ;
 % END OPERATOR;
-% \end{verbatim}
+% \end{lstlisting}
 
 
 % Exemple:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -387,7 +454,7 @@ type timeseries
 % TUPLE { t 10.0, v 1.0 }
 %  } AS ts2: 
 % ts.xunion(ts1,ts2)
-% \end{verbatim}
+% \end{lstlisting}
 
 
 % \subsection{Selecció temporal}
@@ -395,7 +462,7 @@ type timeseries
 
 
 % TutorialD:
-% \begin{verbatim}
+% \begin{lstlisting}[style=tutorialD]
 % OPERATOR ts.temporal.select.zohe(s SAME_TYPE_AS  (timeseries), l RATIONAL, h RATIONAL ) RETURNS RELATION SAME_HEADING_AS  (timeseries);
 % BEGIN;
 % VAR x RATIONAL init(0.0);
@@ -407,11 +474,11 @@ type timeseries
 % return ts.union(ts.interval(s,l,h),sp);
 % END;
 % END OPERATOR;
-% \end{verbatim}
+% \end{lstlisting}
 
 % Exemple:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -423,9 +490,9 @@ type timeseries
 % TUPLE { t 10.0, v 1.0 }
 %  } AS ts2:
 % ts.temporal.select.zohe(ts1,1.0,5.0)
-% \end{verbatim}
-% \begin{verbatim}
-% WITH RELATION {
+% \end{lstlisting}
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -437,7 +504,7 @@ type timeseries
 % TUPLE { t 10.0, v 1.0 }
 %  } AS ts2:
 % ts.temporal.select.zohe(ts1,-1.0/0.0,-1.0/0.0)
-% \end{verbatim}
+% \end{lstlisting}
 
 
 
@@ -446,18 +513,18 @@ type timeseries
 
 
 % TutorialD:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
 % } AS ts1: 
 % ts.map(ts1,'t','t*v/2.0')
-% \end{verbatim}
+% \end{lstlisting}
 
 % TutorialD:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -466,11 +533,11 @@ type timeseries
 % TUPLE { t 0.0, v 0.0}
 % } AS mi: 
 % ts.fold(ts1,mi,'t','v+vi')
-% \end{verbatim}
+% \end{lstlisting}
 
 % antM TutorialD:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -479,11 +546,11 @@ type timeseries
 % TUPLE { t 5.0, v 0.0}
 % } AS m: 
 % ts.sup(ts1 WHERE t < ts.t(m))
-% \end{verbatim}
+% \end{lstlisting}
 
 % sup fold TutorialD:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -492,11 +559,11 @@ type timeseries
 % TUPLE { t -1.0/0.0, v 1.0/0.0}
 % } AS mi: 
 % ts.fold(ts1,mi,'max {t,ti}','v FROM TUPLE FROM (RELATION { TUPLE {t t, v v, e True}, TUPLE {t ti, v vi,  e False} } JOIN RELATION { TUPLE {e t > ti}})')
-% \end{verbatim}
+% \end{lstlisting}
 
 % predecessors mapfold TutorialD:
-% \begin{verbatim}
-% WITH RELATION {
+% \begin{lstlisting}[style=tutorialD]
+% with RELATION {
 % TUPLE { t 2.0, v 3.0 },
 % TUPLE { t 4.0, v 2.0 },
 % TUPLE { t 6.0, v 4.0 }
@@ -504,7 +571,7 @@ type timeseries
 % EXTEND ts1 {t} ADD ( -1.0/0.0 as v)
 % AS si: 
 % ts.fold(ts1,si,'t','v FROM TUPLE FROM (RELATION { TUPLE {v ti, e True}, TUPLE {v v,  e False} } JOIN RELATION { TUPLE {e v < ti and ti<t}})')
-% \end{verbatim}
+% \end{lstlisting}
 
 
 % \section{SGSTM relacional}

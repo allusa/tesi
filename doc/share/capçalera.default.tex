@@ -130,6 +130,7 @@ sortcites=true,
                  {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ï}{{\"I}}1
                  {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1
                  {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+        escapechar=æ,
         }
 
 \lstdefinestyle{py}{
@@ -141,7 +142,6 @@ sortcites=true,
   frame=none,
   inputencoding=utf8,
   backgroundcolor=\color[gray]{0.95},
-  escapechar=æ,
 }
 
 \lstdefinestyle{pycolor}{
@@ -191,6 +191,51 @@ sortcites=true,
         rulesepcolor=\color{blue},
 } 
 
+
+
+
+\lstdefinelanguage{tutorialD}{
+  morekeywords={\ , \}, \{, var, operator,with,as,end},
+  sensitive=false,
+%  morecomment=[l]{//},
+%  morecomment=[s]{/*}{*/},
+%  morestring=[b]",
+}
+
+\makeatletter
+\newcommand{\lstuppercase}{\uppercase\expandafter{\expandafter\lst@token
+                           \expandafter{\the\lst@token}}}
+\newcommand{\lstlowercase}{\lowercase\expandafter{\expandafter\lst@token
+                           \expandafter{\the\lst@token}}}
+\makeatother
+
+
+\lstdefinestyle{tutorialD}{
+        language=tutorialD,
+        frame=none,
+        inputencoding=utf8,
+        backgroundcolor=\color[gray]{0.95},
+        basicstyle=\sffamily\footnotesize,
+        stringstyle=\color{green},
+        keywordstyle={\color{blue}\lstlowercase},
+        emph={tuple,relation,base,key,same_type_as,same_heading_as,return,returns,from,%
+%          where,rename,union,join,minus,extend,add,
+        },
+        emphstyle={\color{orange}\bfseries\lstlowercase},
+        emphstyle=[2]\color{gray},
+        emph={[4]rational},
+        emphstyle=[4]\color{purple}\bfseries,
+        morecomment=[s][\color{lightgreen}]{"""}{"""},
+        commentstyle=\color{red}\slshape,
+        rulesepcolor=\color{blue},
+} 
+
+
+
+
+
+
+
 \lstdefinestyle{sh}{
   language=bash,
   frame=none,
@@ -208,6 +253,8 @@ sortcites=true,
 }
 
 \lstdefinestyle{stdout}{
+  keepspaces=true,
+  columns=fixed,
 }
 %--------------------------------------------
 
