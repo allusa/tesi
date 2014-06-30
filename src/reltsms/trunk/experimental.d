@@ -29,3 +29,15 @@ type provats2
 
 //with ts(relation{ tuple{ t 1.0, v relation { tuple {v1 2.0, v2 3.0}} }}) as r:
 //THE_multivalued2(r)
+
+
+
+
+//Operador redefinit segons el tipus timeseries
+
+OPERATOR tstype.union(
+      s1 timeseries, 
+      s2 timeseries) 
+      RETURNS timeseries;
+  return timeseries(ts.union(THE_ts(s1),THE_ts(s2)));
+END OPERATOR;

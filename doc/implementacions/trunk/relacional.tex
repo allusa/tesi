@@ -446,51 +446,102 @@ with
  ) AS s:
 THE_ts(s)
 \end{lstlisting}
+\begin{lstlisting}[style=stdout]
+ t   v 
+--- ---
+2.0 3.0
+3.0 4.0
+\end{lstlisting}
 
 
-
-Però actualment, a Tutorial~D això presenta molts inconvenients per dos
-motius:
+Però actualment, la definició de les sèries temporals com a tipus a
+Tutorial~D és incòmode principalment per dos motius:
 \begin{itemize}
-
-\item Les relacions no són un tipus del mateix ordre que els altres,
-  tenen un tractament molt diferenciat i no es poden declarar nous
-  tipus amb la mateixa funcionalitat que les relacions.
+\item Emmascara el concepte de tipus relació.
 
 \item La definició estàtica de tipus en les operacions i la rigidesa
-  en les capçaleres de les relacions. Aquest és també un inconvenient
-  que ens trobem en la definició de \emph{timeseries} com a variable.
-
+  en les capçaleres de les relacions. Aquest, de fet, és també un
+  inconvenient que ens trobem en la definició dels operadors de
+  Reltsms.
 \end{itemize}
 
 
 
-\subsubsection{El tipus relació}
-\todo{}
+\subsubsection{La sèrie temporal a partir del tipus relació}
+
+
 
 Els valors relació en l'àlgebra relacional sempre són d'un tipus i
-aquest tipus es correspon amb la seva capçalera. 
-
-* Les relacions no són exactament un tipus a Tutorial D però haurien de ser-ho
-
-* S'hauria de poder heretar de les relacions, de fet que si una possrep és una relació aleshores s'haurien de poder aplicar els operadors de relació
-
-
-TYPE ts POSSREP {ts relation {t rational, v rational}};
-
-però després no podríem aplicar-hi operacions relacionals com per exemple el projection perquè és projection(relation)
-
- tot i així encara faria falta que fos un subtipus de relation.
+aquest tipus es correspon amb la seva capçalera. Però les relacions no
+són un tipus del mateix ordre que els altres tipus, tant els
+predefinits com els d'usuari, ja que tenen un tractament molt
+diferenciat i no es poden declarar nous tipus amb la mateixa
+funcionalitat que les relacions.  Per exemple no es pot heretar del
+tipus relació i per tant no es poden definir tipus que siguin admesos
+com a arguments en els operadors predefinits de l'àlgebra relacional.
 
 
 
+A Reltsms ens ha sigut còmode definir les sèries temporals com a tipus
+relació perquè conserva molta correspondència amb el model algebraic.
+Així en els operadors hem definit els paràmetres de sèrie temporal com
+de tipus relació d'atributs $t$ i $v$ reals, és a dir en Tutorial~D %
+\lstinline[style=tutorialD]+relation {t rational, v rational}+. %
+De fet hem utilitzat la variable \emph{timeseries} per a agrupar
+aquesta capçalera i així en els operadors hem definit el tipus a
+partir de %
+\lstinline[style=tutorialD]+s SAME_TYPE_AS(timeseries)+.%
 
-tampoc podríem definir multivaluades en la forma canònica \verb+ts(relation {tuple {t 1.0, v relation { tuple { v1 1.0, v2 2.0}}}})+ perquè el v no és un rational
 
+Si haguéssim definit el tipus \emph{timeseries} aleshores hauríem
+definit els operadors de la forma següent, per exemple pel cas de la
+unió a partir de l'operador definit de \emph{ts.union}:
+\begin{lstlisting}[style=tutorialD]
+OPERATOR tstype.union(
+      s1 timeseries, 
+      s2 timeseries, 
+      RETURNS timeseries;
+  return timeseries(ts.union(THE_ts(s1),THE_ts(s2));
+END OPERATOR;
+\end{lstlisting}
 
+És a dir que \emph{s1} i \emph{s2} són de tipus \emph{timeseries} i
+per obtenir-ne la relació continguda usem l'operador \emph{THE\_ts}. El
+resultat també és de tipus \emph{timeseries}, el qual s'instancia a
+partir d'un valor relació.
+
+Aleshores, el mateix exemple que per la unió ara s'executaria amb:
+\begin{lstlisting}[style=tutorialD]
+tstype.union(timeseries(s1),timeseries(s2))
+\end{lstlisting}
+
+A més, en els usos d'operadors de l'àlgebra relacional també s'hauria
+d'executar usant l'operador \emph{THE\_ts} i tornant a instanciar com
+a sèrie temporal. Per exemple:
+\begin{lstlisting}[style=tutorialD]
+with
+timeseries(
+ RELATION {
+   TUPLE { t 2.0, v 3.0 },
+   TUPLE { t 3.0, v 4.0 }
+  }) AS s:
+timeseries(THE_ts(s) where v>3.0)
+\end{lstlisting}
+
+En conclusió, definir la sèrie temporal com a tipus \emph{timeseries}
+és més incòmode que definir-la directament com a tipus relació. Si bé
+és cert que es pot usar amb la mateixa funcionalitat, les crides als
+operadors queden emmascarades amb l'ús de l'operador d'atribut
+\emph{THE\_ts} i la instància de nou de la \emph{timeseries}.  A
+Tutorial~D faria falta poder declarar que el tipus \emph{timeseries}
+té l'atribut \emph{ts} que és de tipus relació i pot actuar com a tal
+allà on calgui.
 
 
 \subsubsection{Sèries temporals multivaluades i de qualssevol tipus}
+
+\todo{falta explicar el concepte de POSSREP}
+
 
 Els operadors de Reltsms definits treballen amb la sèrie temporal en
 forma canònica ja que així és com hem definit la variable
@@ -628,19 +679,29 @@ Aleshores podríem definir correctament el tipus sèrie temporal amb les
 dues possibles representacions de canònica i multivaluada:
 \begin{lstlisting}[style=tutorialD]
 type timeseries
-	POSSREP canonical {ts relation {t *, v * }}}
-	POSSREP multivalued {multivalued relation {t * ,*}} 
-	INIT  canonical (multivalued:= ts ungroup (v))
-	      multivalued (ts:= multivalued group ({all but t} as v));
+	POSSREP ts.canonical {ts relation {t *, v * }}}
+	POSSREP ts.multivalued {multivalued relation {t * ,*}} 
+	INIT  ts.canonical (multivalued:= ts ungroup (v))
+	      ts.multivalued (ts:= multivalued group ({all but t} as v));
 \end{lstlisting}
 
 
 
-
-
-Per exemple, la sèrie temporal multivaluada $m$ s'instanciaria amb:
+Aleshores podríem instanciar sèries temporals amb altres tipus en els
+atributs, com per exemple enters:
 \begin{lstlisting}[style=tutorialD]
-multivalued(
+ts.canonical(
+ RELATION {
+   TUPLE { t 2, v 1},
+   TUPLE { t 3, v 1}
+  }
+)
+\end{lstlisting}
+
+
+o bé instanciar sèries temporals multivaluades, per exemple:
+\begin{lstlisting}[style=tutorialD]
+ts.multivalued(
  RELATION {
    TUPLE { t 2.0, v1 1.0, v2 2.0},
    TUPLE { t 3.0, v1 1.0, v2 2.0}
@@ -648,7 +709,8 @@ multivalued(
 )
 \end{lstlisting}
 
-i se'n podria obtenir tant la possible representació en forma multivaluada 
+de les quals se'n podria obtenir tant la possible representació en
+forma multivaluada
 \begin{lstlisting}[style=tutorialD]
 THE_multivalued(m)
 \end{lstlisting}
@@ -658,29 +720,28 @@ THE_ts(m)
 \end{lstlisting}
 
 
-De la mateixa manera també es podrien instanciar sèries temporals amb altres tipus en els atributs, com per exemple enters:
-\begin{lstlisting}[style=tutorialD]
-timeseries(
- RELATION {
-   TUPLE { t 2, v 1},
-   TUPLE { t 3, v 1}
-  }
-)
-\end{lstlisting}
-
-\todo{tanmateix els problemes de tipus relació hi seguirien sent?}
 
 
-\todo{per entendre les possrep potser s'hauria d'explicar això:}
+En conclusió, definir el tipus sèrie temporal seria de molta utilitat
+si les capçaleres de les relacions poguessin ser genèriques, sobretot
+el concepte de possibles representacions és molt útil per a
+implementar la forma canònica i la multivaluada.
 
-type prova2 
-  POSSREP pa {a rational}
-  POSSREP pb {b rational}
-  INIT pa (b:=a)
-         pb (a:=b);
 
-pa(1.0)
-pb(1.0)
+
+
+
+
+% \todo{per entendre les possrep potser s'hauria d'explicar això:}
+
+% type prova2 
+%   POSSREP pa {a rational}
+%   POSSREP pb {b rational}
+%   INIT pa (b:=a)
+%          pb (a:=b);
+
+% pa(1.0)
+% pb(1.0)
 
 
 
