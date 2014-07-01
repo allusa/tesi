@@ -7,6 +7,26 @@
 Implementem els models definits de \gls{SGST} i de \gls{SGSTM}
 
 
+
+Idealment, en un \gls{SGBD} l'usuari executa una consulta i
+l'optimitzador s'encarrega d'executar les operacions físiques més
+eficients. El model relacional permet trobar expressions equivalents
+donada una determinada consulta. Això no obstant, i com s'ha detallat
+a l'estat actual dels \gls{SGBD} \todo{ref}, una implementació de
+\gls{SGBD} no pot abastar i ser eficient en tots els àmbits. Així
+doncs, no és tan senzill mantenir totalment la independència entre
+l'usuari i la implementació ja que cal que aquest decideixi un
+\gls{SGBD} adequat per a cada context i fins i tot que declari com
+resoldre algunes operacions. Sí que es pot mantenir la independència
+del nivell lògic, respecte a les implementacions; i és en aquest
+sentit que a continuació avaluem diferents implementacions per als
+models definits de \gls{SGST} i de \gls{SGSTM}, on cada implementació
+està pensada per a un context determinat.
+
+
+
+
+
 Es realitzen implementacions a alt nivell per a observar el funcionament a nivell acadèmic: Python. Implementem els models de \gls{SGST} i \gls{SGSTM} amb Python, aquesta és la nostra implementació de referència, la qual usem per als exemples amb dades.
 
 Es realitzen implementacions a alt nivell per a observar l'encaix amb el model relacional: Tutorial D.
@@ -18,6 +38,9 @@ Es realitzen implementacions específiques per a la resolució offline de la mul
 
 
 S'avaluen implementacions específiques com RRDtool?
+
+
+
 
 % We implement the TSMS and MTSMS models into three different approaches:
 
@@ -39,15 +62,26 @@ S'avaluen implementacions específiques com RRDtool?
 
 
 
-%el model que presentem a continuació pertany al nivell lògic
-%les implementacions són nivell físic
-%no definim nivell d'usuari, el que significaria definir un llenguatge de consultes per al SGST i al SGSTM. No el definim perquè les implementacions que fem són totalment fidedignes al nivell lògic i el nivell d'usuari que se'n deriva és igual que el nivell lògic; només li faltarien les facilitats d'un llenguatge de programació (poder fer bucles, condicionals, declarar variables, etc.) Aquestes facilitats en el nivell lògic no s'expliciten ja que es consideren inherents a les matemàtiques.
-
-
-
-
 
 \section{Particularitats de les implementacions}
+
+
+
+Els models d'implementacions pertanyen al nivell físic dels \gls{SGBD}
+i són una realització d'un model lògic, en el nostre cas dels models
+lògics de \gls{SGST} i de \gls{SGSTM}. Per a les implementacions se
+sol definir el nivell d'usuari, que és el llenguatge que serà visible
+per als usuaris. Les implementacions que realitzem volen ser molt
+properes al model lògic i per tant el nivell d'usuari que se'n deriva
+és molt similar. Per a ser un llenguatge d'usuari complet es
+requereixen facilitats de llenguatge de programació --bucles,
+condicionals, declarar variables, \dots--, per a la qual cosa ens
+basem en els recursos particulars de cada implementació: Python,
+Tutorial~D, etc.
+
+% Aquestes facilitats en el nivell lògic no s'expliciten ja que es
+% consideren inherents a les matemàtiques.
+
 
 
 En la implementació s'afegeixen alguns operadors que en el model
@@ -69,8 +103,6 @@ Pel que fa al llenguatge de consultes (\emph{query language}),
 s'implementa seguint el model d'operacions de consulta de cada cas.
 
 
-
-% El model s'ha descrit utilitzant àlgebra de conjunts. Així moltes operacions no s'han hagut de definir perquè formen part de la notació de conjunts: definició de nous conjunts (set builder notation), operació d'assignació, manipulació de les dades amb inserció, modificació, esborrar (perquè en àlgebra de conjunts es treballa amb immutabilitat ja que a l'àlgebra crear un nou conjunt no té cap cost), etc.  A les implementacions, però, totes aquestes operacions s'han de definir en cas que es vulguin.
 
 
 
