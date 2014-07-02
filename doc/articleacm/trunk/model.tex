@@ -339,8 +339,8 @@ defined as: $\agg(S,m_i,f^a) \equiv \fold(S,\{m_i\},f')$ where $f':
 In the previous fold the measures are computed in random order,
 however in some computational operations it is necessary to define the
 order, especially when $f^f$ is not commutative. We define a
-\emph{fold with order} as an extension of fold with a function $o$
-that selects measures in order where $o: S_a \mapsto m_r$
+\emph{fold with order}, $\orderfold$, as an extension of fold with a
+function $o$ that selects measures in order where $o: S_a \mapsto m_r$
 \[
  \orderfold(S,S_i,f^f,o) =
   \begin{cases}
@@ -356,11 +356,11 @@ defined for two time series in order to operate with their value
 attributes.  First it is required to join the two time series and then
 apply computational operations. Let $S_1$ and $S_2$ be two time series
 and \emph{op} be a binary operation on the value domain, that is for
-two values $v1$ and $v_2$ it computes a new value $\operatorname{op}:
+two values $v_1$ and $v_2$ it computes a new value $\operatorname{op}:
 v_1 + v_2 \mapsto v'$. The operator \emph{op} can be applied to both
 time series as: $\operatorname{op}: S_1 \times S_2 \mapsto S'$ where
-$S' = \map(S_1 \join S_2, (t,v^1,v^2)\mapsto(t,v^1 \operatorname{op}
-v^2))$.
+$S' = \map(S_1 \join S_2, (t,v_1,v_1)\mapsto(t,v_1 \operatorname{op}
+v_2))$.
 
 For example, we can apply real numbers binary operations such as sum,
 $S_1 + S_2$, or division, $S_1 / S_2$. It must be noted that join
@@ -439,10 +439,10 @@ constant piecewise functions.
 
 
 \begin{definition}
-  \emph{Delta} ($\delta$) is a method based on the Dirac delta
-  function. It is an impulse train function that is zero everywhere
-  except at zero.  Let $S$ be a time series we define $S(t)^\delta$ as
-  the \emph{delta representation function}
+  \emph{Delta} ($\delta$) is a method of representation based on the
+  Dirac delta function. It is an impulse train function that is zero
+  everywhere except at zero.  Let $S$ be a time series we define
+  $S(t)^\delta$ as the \emph{delta representation function}
 \[
     \forall m \in S: S(t)^\delta
 % &  \\
@@ -459,11 +459,12 @@ constant piecewise functions.
 \end{definition}
 
 \begin{definition}
-  \emph{Zero-order hold everted} (\zohe{}) is a method based on the
-  \emph{zero-order hold} signal reconstruction methods. It is a
-  piecewise constant function that has left-continuous step functions.
-  Let $S$ be a time series we define $S(t)^\zohe$ as the \emph{\zohe{}
-    representation function}, $\forall m \in S:$
+  \emph{Zero-order hold everted} (\zohe{}) is a method of
+  representation based on the \emph{zero-order hold} signal
+  reconstruction methods. It is a piecewise constant function that has
+  left-continuous step functions.  Let $S$ be a time series we define
+  $S(t)^\zohe$ as the \emph{\zohe{} representation function}, $\forall
+  m \in S:$
 \[
     S(t)^\zohe 
     % = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
@@ -495,13 +496,13 @@ $. This is a general definition difficult to implement, so for every
 representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
-\item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$, the
-  \emph{\zohe{} temporal interval} is $S[t_i,t_f]^\zohe{} = S(t_i,t_f]
-  \cup \{m\}$ where $m=(t_f,v)$ and $v= V(\inf( S[t_f,+\infty] ))$.
-
 \item Let $S(t)^\delta$ be the delta representation for $S$, the
   \emph{delta temporal interval} is $S[t_i,t_f]^\delta = S[t_i,t_f]
   \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_i,0)$ and $m_f=(t_f,0)$.
+
+\item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$, the
+  \emph{\zohe{} temporal interval} is $S[t_i,t_f]^\zohe{} = S(t_i,t_f]
+  \cup \{m\}$ where $m=(t_f,v)$ and $v= V(\inf( S[t_f,+\infty] ))$.
 \end{itemize}
 
 
@@ -604,12 +605,13 @@ to each time series stored in a multiresolution database
 
 
 The architecture of MTSMS model for one multiresolution time series is
-shown in Figure~\ref{fig:model:mtsdb} divided into its components.  A
-multiresolution time series is a collection of resolution subseries
-which temporarily accumulate measures in a buffer in order to select
-some information and finally store it in a disc. The information
-selection process changes the time intervals between measures to
-compact information by aggregating the time series attributes.
+shown in Figure~\ref{fig:model:mtsdb} depicted with its main
+components.  A multiresolution time series is a collection of
+resolution subseries which temporarily accumulate measures in a buffer
+in order to select some information and finally store it in a
+disc. The information selection process changes the time intervals
+between measures to compact information by aggregating the time series
+attributes.
 
 \begin{figure}
   \centering
@@ -826,20 +828,21 @@ f : S=\{m_0,\ldots,m_k\} \times [t_0,t_f] \mapsto m'
 \]
 where, generally, $m'$ results from two operations on the time series:
 (i) a time subseries selection $S'$ depending on the consolidating
-interval, for example $S' = S[t_0,t_f]$, and (ii) a TSMS aggregation over
-this time subseries such as $m' = \agg(S',m_i, f^a)$ where $f^a: m_i \times
-m_b \rightarrow m''$.  
+interval, for example $S' = S[t_0,t_f]$, and (ii) a TSMS aggregation
+over this time subseries such as $m' = \agg(S',m_i, f^a)$ where $f^a$
+is a function over two measures.
 
-To summarise a time series different attribute aggregate functions can
-be used.  For instance, it is possible to calculate an statistic
-indicator of the time series such as the average or a more complex
-digital signal processing operation can be applied
+
+Many different attribute aggregate functions can be used in order to
+summarise a time series, for example it is possible to calculate an
+statistic indicator of the time series such as the average or a more
+complex digital signal processing operation
 \cite{zhang11}. Furthermore, the representation for a time series and
 some of its pathologies can be considered during the aggregation
 process.
 
 
-In conclusion, as it is possible to define many attribute aggregate
+As it is possible to define many attribute aggregate
 functions no global assumptions can be made about them. Each user has
 to decide which combination of aggregation and representation fits
 better with the measured phenomena.  Therefore, \acro{MTSMS} has to be
@@ -1076,6 +1079,8 @@ the general integral definition.
 \section{Multiresolution over TSMS}
 \label{sec:M+TSMS}
 
+
+\todo{explicar mes be l'objectiu d'aquesta seccio}
 \todo{s'hauria de demostrar formalment}
 
 We have defined the MTSMS model as an structure based on time

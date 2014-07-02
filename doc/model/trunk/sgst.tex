@@ -265,8 +265,11 @@ però diferent valor, hi ha dues possibles relacions d'ordre.
     $\glssymbol{not:mesura:ordretotal}$ per a diferenciar-lo del
     parcial.
   \end{enumerate}
-
 \end{definition}
+
+Amb aquestes relacions d'ordre queden definides les operacions de
+comparació i igualtat entre mesures en les dues vessants: $m < n$ i
+$m<^t n$, $m=n$ i $m=^t n$, etc.
 
 
 
@@ -391,11 +394,29 @@ sobre els dominis ni els noms d'atributs, una sèrie temporal es pot
 escriure de manera simplificada com a $S = \{ (t_0,v_0), (t_1,v_1),
 \dotsc, (t_k,v_k) \}$, la qual es correspon amb la forma de la sèrie
 temporal expressada inicialment.
+
+
 Tal com s'utilitza en les relacions, les sèries temporals es poden
 visualitzar com a taules. La sèrie temporal $S$ i la $S_{\emptyset}$
 es visualitzen com a taula a la
 \autoref{fig:model:serietemporal:taula}.
+Per ser un conjunt de mesures, s'observa una sèrie temporal en al
+forma canònica com una relació de grau dos n la capçalera conté els
+atributs temps i valor. Ambdós atributs tenen els dominis de temps i
+valor descrits a les seccions \ref{def:model:temps} i
+\ref{sec:sgst:valor}, com per exemple el tipus de dades reals
+estesos. Les relacions de sèries temporals inclouen algunes
+particularitats:
 
+
+\begin{itemize}
+\item El predicat és similar a: «En el temps \emph{t} s'ha mesurat el
+  valor \emph{v}»
+\item Els temps no poden estar repetits: és una restricció que indica
+  que l'atribut \emph{t} és la clau primària
+\item Els valors mesurats han d'estar associats al mateix fenomen o
+  fenòmens.
+\end{itemize}
 \begin{figure}[tp]
   \centering
   \begin{tabular}[c]{|c|c|}
@@ -416,22 +437,7 @@ es visualitzen com a taula a la
 \end{figure}
 
 
-Per ser un conjunt de mesures, s'observa una sèrie temporal en al
-forma canònica com una relació de grau dos n la capçalera conté els
-atributs temps i valor. Ambdós atributs tenen els dominis de temps i
-valor descrits a les seccions \ref{def:model:temps} i
-\ref{sec:sgst:valor}, com per exemple el tipus de dades 'reals
-estesos'. Les relacions de sèries temporals inclouen algunes
-particularitats:
 
-\begin{itemize}
-\item El predicat és similar a: «En el temps \emph{t} s'ha mesurat el
-  valor \emph{v}»
-\item Els temps no poden estar repetits: és una restricció que indica
-  que l'atribut \emph{t} és la clau primària
-\item Els valors mesurats han d'estar associats al mateix fenomen o
-  fenòmens.
-\end{itemize}
 
 % Els temps no repetits indueixen un ordre temporal a les sèries
 % temporals. Tot i així, les relacions, per ser conjunts, conserven la
@@ -574,7 +580,7 @@ horitzontal i el valor a l'eix vertical.
   \caption{Taula i gràfic d'una sèrie temporal amb valors reals}
   \label{fig:model:serietemporal:real}
 \end{figure}
-
+ 
 \end{example}
 
 
