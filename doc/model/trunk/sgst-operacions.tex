@@ -1,12 +1,13 @@
 \section{Model d'operacions}
 \label{sec:model:sgst-operacions}
 
-Una sèrie temporal té un atribut de temps que ha de ser tingut en
-compte pels operadors que la manipulin.  Així, atenent a aquest
-atribut de temps, el comportament d'una sèrie temporal pot tenir
-naturaleses diferents:
+En aquesta secció definim les operacions d'un \gls{SGST} que permeten
+manipular les sèries temporals.  Una sèrie temporal té un atribut de
+temps que ha de ser tingut en compte pels operadors que la manipulin.
+Així, atenent a aquest atribut de temps, el comportament d'una sèrie
+temporal pot tenir naturaleses diferents:
 \begin{itemize}
-\item Conjunt, és a dir els operadors només atenen a la forma
+\item Conjunt, és a dir els operadors només atenent a la forma
   estructural bàsica.
 \item Seqüència, en la qual els operadors la tracten com a conjunts
   amb ordre.
@@ -16,49 +17,74 @@ naturaleses diferents:
 \end{itemize}
 
 
+
 En el disseny del model d'operacions següent es distingeix el
 comportament per als tres casos anteriors.  Es dissenyen les
 operacions bàsiques que permeten que posteriorment es combinin per
-elaborar-ne de més complexes.
+a elaborar-ne de més complexes.
+
+
+Les manipulacions de les sèries temporals es defineixen
+abstractament per a qualsevol sèrie temporal que tingui l'estructura
+de \gls{SGST}. Les definicions dels operadors avaluen els conceptes
+algebraics i lògics de les dades però no avaluen la semàntica en un
+context particular, com també ocorre per exemple en el model
+d'operacions del model relacional. És a dir, en cada context
+particular de manipulació d'una sèrie temporal s'ha de decidir si
+aquella àlgebra té significat o, al contrari, no pot ser aplicada. Per
+exemple una suma de valors de diferents unitats podria ser
+semànticament errònia.
 
 
 
 
 \subsection{Bàsiques de conjunts}
 
-En el model estructural de SGST hem definit les sèries temporals
+En el model estructural de \gls{SGST} hem definit les sèries temporals
 utilitzant conjunts. En aquest apartat definim operadors per a les
 sèries temporals recollint els operadors habituals que tenen els
 conjunts.
 
-El model relacional de SGBD defineix els seus operadors bàsics a
-partir de l'àlgebra de
+El model relacional de \gls{SGBDR} defineix els seus operadors bàsics
+a partir de l'àlgebra de
 conjunts \parencite[cap.~6]{date:introduction}. En aquest apartat
-apliquem el mateix estudi per al model de SGST. Tot i així de manera
-simplificada, a les definicions no es descriuen les sèries temporals
-com a relacions amb capçaleres sinó que se n'escriuen només els
-conjunts de valors. Seguint el model de \citeauthor{date:introduction}
-es poden estendre les definicions i introduir el model complet de
-relacions.
+apliquem el mateix estudi per al model de \gls{SGST}. Tot i així de
+manera simplificada, a les definicions no es descriuen les sèries
+temporals com a relacions amb capçaleres sinó que se n'escriuen només
+els conjunts de valors. Seguint el model relacional es poden estendre
+les definicions i introduir el model complet de relacions.
+
+
+
+En les operacions binàries de sèries temporals, entre les mesures
+d'ambdós conjunts hi ha les dues possibles relacions d'ordre de la
+\autoref{def:model:mesura-relacio-ordre}, és a dir poden tenir ordre o
+parcial. Com a conseqüència, aquests dos ordres possibles indueixen
+dues definicions per a alguns operadors de conjunts. Als operadors amb
+ordre total els anomenarem temporals i hi afegirem un superíndex $t$
+per a indicar-ho.
 
 
 Les operacions que agrupen els elements dels conjunts habitualment se
 solen representar gràficament mitjançant diagrames de Venn. A la
 \autoref{fig:model:sgst:venn} es mostren els diagrames de Venn per a
-cinc de les operacions dels SGSTM que descrivim a continuació:
+cinc de les operacions dels \gls{SGSTM} que descrivim a continuació:
 inclusió, unió, diferència, intersecció i diferència simètrica; tant
-en la seva vessant com a conjunt com en la seva vessant temporal.
-\todo{falta dir prèviament que hi ha aquestes dues vessants}
-
+en la seva vessant parcial com en la seva vessant temporal.  Per a
+dibuixar aquest diagrames de Venn, a banda del conjunt corresponent a
+cada sèrie temporal $A$ i $B$ i la seva intersecció, cal dibuixar uns
+subconjunts $t_A$ i $t_B$ que indiquen les mesures que comparteixen el
+mateix temps amb una altra mesura de l'altre conjunt però no el mateix
+valor. És a dir $t_A = \{ m_a \in A | \exists m_b \in B: m_a =^t m_b
+\}$ i $t_B = \{ m_b \in B | \exists m_a \in A: m_b =^t m_a \}$ segons
+la relació d'ordre total definida en de les mesures.
 
 
 \begin{figure}[tp]
   \centering
   \input{imatges/model/sgst-venn.tex}
-  \caption{Diagrames de Venn per a les operacions dels SGSTM. Els
-    subconjunts $t_a$ i $t_b$ indiquen les mesures que comparteixen el
-    mateix temps amb una altra mesura de l'altre conjunt però no el
-    mateix valor.}
+  \caption{Diagrames de Venn per a les operacions dels \gls{SGSTM}. Els
+    subconjunts $t_a$ i $t_b$ indiquen les mesures $m_a =^t m_b$.}
   \label{fig:model:sgst:venn}
 \end{figure}
 
@@ -66,48 +92,78 @@ en la seva vessant com a conjunt com en la seva vessant temporal.
 \subsubsection{Pertinença i inclusió}
 
 
-\todo{relacionar-ho amb l'ordre parcial i el total}
-a la \autoref{def:model:mesura-relacio-ordre} hi ha l'ordre total i el parcial
-
 La pertinença determina si un element pertany a un conjunt.  Sigui
 $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m$ una mesura, es
 defineix de la mateixa manera que en els conjunts la pertinença de la
-mesura a la sèrie temporal $m \in S$. Atenent a l'atribut de temps, es
-defineix la pertinença temporal d'una mesura a una sèrie temporal.
-\begin{definition}[Pertinença temporal]
+mesura a la sèrie temporal $m \in S$. Aquesta pertinença es defineix a
+partir de l'ordre parcial, és a dir que dues mesures són iguals quan
+ho són els seus temps i valor.
+\begin{definition}[Pertinença]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m=(t,v)$ una
-  mesura, direm que la mesura pertany temporalment a la sèrie
-  temporal $m \inst S$ si i només si $\exists m_a \in S : T(m) =
-  T(m_a)$.
+  mesura, direm que la mesura pertany a la sèrie temporal
+  $m \glssymboldef{not:sgst:in} S$ si i només si $\exists m_a \in S :
+  T(m) = T(m_a) \wedge V(m) = V(m_a)$.
 \end{definition}
 
 
+
+
+A partir de l'ordre total, és a dir que dues mesures són iguals quan
+ho són els seus temps, es defineix la pertinença temporal d'una mesura
+a una sèrie temporal.
+\begin{definition}[Pertinença temporal]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m=(t,v)$ una
+  mesura, direm que la mesura pertany temporalment a la sèrie temporal
+  $m \glssymboldef{not:sgst:int} S$ si i només si $\exists m_a \in S :
+  T(m) = T(m_a)$.
+\end{definition}
+
+
+
 La inclusió determina si tots els elements d'un conjunt pertanyen a un
-altre conjunt. Siguin $S_1=\{m_0^1,\ldots,m_k^1\}$ i
-$S_2=\{m_0^2,\ldots,m_l^2\}$ dues sèries temporals, la primera sèrie
-temporal està inclosa en la segona $S_1 \subseteq S_2$ si $\forall m
-\in S_1: m \in S_2$. Aleshores, $S_1$ és una subsèrie temporal de
-$S_2$. De la mateixa manera que en els conjunts, la definició
-d'inclusió determina un ordre parcial entre les sèries temporals.
+altre conjunt. La inclusió de conjunts en el cas de les sèries
+temporals està relacionada amb l'ordre parcial.
+\begin{definition}[Inclusió]
+  Siguin $S_1=\{m_0^1,\ldots,m_k^1\}$ i $S_2=\{m_0^2,\ldots,m_l^2\}$
+  dues sèries temporals, la primera sèrie temporal està inclosa en la
+  segona $S_1 \glssymboldef{not:sgst:sub} S_2$ si i només si $\forall
+  m \in S_1: m \in S_2$. Aleshores, $S_1$ és una subsèrie temporal de
+  $S_2$.
+\end{definition}
+
+
+
+
 
 Atenent a la pertinença temporal, es defineix la inclusió temporal
 d'una mesura a una sèrie temporal.
 \begin{definition}[Inclusió temporal]
   Siguin $S_1=\{m_0^1,\ldots,m_k^1\}$ i $S_2=\{m_0^2,\ldots,m_l^2\}$
   dues sèries temporals, la primera sèrie temporal està inclosa
-  temporalment en la segona $S_1 \subseteq^t S_2$ si $\forall m \in
-  S_1: m \in^t S_2$.
+  temporalment en la segona $S_1 \glssymboldef{not:sgst:subt} S_2$ si
+  i només si $\forall m \in S_1: m \glssymbol{not:sgst:int} S_2$.
 \end{definition}
 
 
+
+
+\begin{example}
+  Siguin les mesures $m_1=(1,1)$, $m_2=(3,1)$, $m_3=(3,2)$ i
+  $m_4=(4,0)$ i les sèries temporals $S_1=\{m_1,m_2\}$ i
+  $S_2=\{m_1,m_3,m_4\}$ aleshores les operacions següents són certes:
+  $m_2 \in S_1$, $m_2 \notin S_2$, $m_2 \glssymbol{not:sgst:int} S_1$,
+  $m_2 \glssymbol{not:sgst:int} S_2$, $S_1\not\subseteq S_2$ i
+  $S_1\glssymbol{not:sgst:subt} S_2$.
+\end{example}
+
 \subsubsection{Màxim i suprem}
 
-La relació definida a~\ref{def:model:mesura-relacio-ordre} indueix
-sobre una sèrie temporal una relació d'ordre total. Com que la sèrie
-temporal s'ha considerat finita i sense elements repetits, quan la
-sèrie temporal no és buida això comporta l'existència d'un màxim i
-d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i $\min(S)$ són
-respectivament la mesura màxima i mínima d'$S$.
+
+En una sèrie temporal les mesures tenen relació d'ordre total. Com que
+la sèrie temporal s'ha considerat finita i sense elements repetits,
+quan la sèrie temporal no és buida això comporta l'existència d'un
+màxim i d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i
+$\min(S)$ són respectivament la mesura màxima i mínima d'$S$.
 
 \begin{definition}[Màxim i mínim]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
@@ -118,12 +174,14 @@ respectivament la mesura màxima i mínima d'$S$.
 \end{definition}
 
 El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
-és buida: $S= \emptyset$. En
-canvi, el suprem i l'ínfim estan definits per qualsevol
-sèrie temporal tal com passa amb el conjunt estès de nombres reals,
-\cite{cantrell:extendedreal}.  
-
-\begin{definition}[Suprem i ínfim]\label{def:sgst:sup}\label{def:sgst:inf}
+és buida: $S= \emptyset$. En canvi si considerem el domini de temps
+com a conjunt tancat, el suprem i l'ínfim estan definits per qualsevol
+sèrie temporal, tal com passa amb el conjunt estès de nombres reals
+\cite{cantrell:extendedreal}. A continuació seguim identificant amb
+infinit ($\infty$) els valors impropis que tanquen el domini, tal com
+hem exemplificat en el model estructural.
+\begin{definition}[Suprem i
+  ínfim]\label{def:sgst:sup}\label{def:sgst:inf}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
   mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
   $n=\max(S)$ en cas que el màxim estigui definit o
@@ -138,6 +196,14 @@ i un mínim i per tant es corresponen amb el suprem i l'ínfim
 respectivament.
 
 
+\begin{example}
+  Siguin les sèries temporals $S_1=\{(1,1),m_2=(3,1)\}$ i $S_2=\{\}$
+  aleshores les operacions següents són certes:
+  $\min(S_1)=\inf(S_1)=(1,1)$ i $\sup(S_2)=(-\infty,\infty)$.
+\end{example}
+
+
+
 
 
 \subsubsection{Unió}
@@ -145,14 +211,14 @@ respectivament.
 La unió de dos conjunts és un conjunt que conté tots els elements
 d'ambdós conjunts.  Per a poder unir dos conjunts amb estructura de
 relació, $A \cup B$, cal que tots dos tinguin la mateixa estructura;
-és a dir, en termes de SGBDR cal que $A$ i $B$ tinguin la mateixa
-capçalera.
+és a dir, en termes de \gls{SGBDR} cal que $A$ i $B$ tinguin la
+mateixa capçalera.
 
 Per tal que l'operació d'unió de conjunts sigui vàlida per a les
 sèries temporals cal, a més, tenir en compte quan dues sèries
 temporals tenen mesures en el mateix instant de temps. En cas
 d'utilitzar l'operació d'unió de conjunts la sèrie temporal resultant
-no compliria amb la definició \ref{def:serie_temporal} ja que
+no compliria amb la \autoref{def:serie_temporal} ja que
 contindria mesures amb temps repetits. Com a conseqüència, es
 defineixen dues operacions d'unió per a les sèries temporals que
 resolen la restricció del temps de forma diferent.
@@ -161,11 +227,11 @@ En primer lloc, es defineix la unió de dues sèries temporals que
 escull les mesures del primer operand en cas de mesures repetides.
 \begin{definition}[unió]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues
-  sèries temporals $S_1 \cup S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
-  $S_2$ no repetides: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2
-  | m^2 \notinst S_1 \}$.
+  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
+  temporals $S_1 \glssymboldef{not:sgst:cup} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de
+  $S_1$ i les mesures de $S_2$ no repetides: $S_1 \cup S_2 = \{m^1 \in
+  S_1 \vee m^2 \in S_2 | m^2 \not\glssymbol{not:sgst:int} S_1 \}$.
 \end{definition}
 
 Propietats de la unió de sèries temporals:
@@ -183,11 +249,12 @@ instant de temps i diferent valor.
 \begin{definition}[unió temporal]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la unió temporal de les dues
-  sèries temporals $S_1 \cupt S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté les mesures de $S_1$ i de $S_2$ excloent
-  les que només comparteixen el temps: $S_1 \cupt S_2 = \{ m^1 \in S_1
-  \vee m^2 \in S_2 | m^1 \notinst S_2 \vee m^1 \in S_2, m^2 \notinst
-  S_1 \}$.
+  sèries temporals $S_1 \glssymboldef{not:sgst:cupt} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ i
+  de $S_2$ excloent les que només comparteixen el temps: $S_1
+  \glssymbol{not:sgst:cupt} S_2 = \{ m^1 \in S_1 \vee m^2 \in S_2 |
+  m^1 \not\glssymbol{not:sgst:int} S_2 \vee m^1 \in S_2, m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
 \end{definition}
 
 
@@ -200,15 +267,83 @@ Propietats de la unió temporal:
 
 
 
+\begin{example}\label{ex:model:s1s2}
+  Siguin les dues sèries temporals $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$
+  and $S_2=\{(2,2),(3,2),(4,0),(6,2)\}$.  La unió de la primera amb la
+  segona és $S_1 \cup S_2 = \{(1,1),(2,2), (3,1),
+  (4,0),(5,1),(6,2)\}$. La unió temporal de totes dues és $S_1
+  \glssymbol{not:sgst:cupt} S_2 = S_2 \glssymbol{not:sgst:cupt} S_1 =
+  \{(1,1),(2,2),(4,0),(5,1),(6,2)\}$. %
+
+  A la \autoref{fig:model:venn-unio} es mostren els diagrames Venn per
+  a les dues operacions, on l'àrea pintada és la sèrie temporal
+  resultant. L'àrea central d'intersecció dels dos conjunts són les
+  mesures que comparteixen temps i valor, en aquest cas la mesura
+  $(2,0)$. L'àrea central esquerra són les mesures de $S_1$ que només
+  comparteixen temps amb una mesura de $S_2$, és a dir la $(3,1)$, i
+  dualment a l'àrea central dreta hi ha la $(3,2)$. Les àrees més
+  externes es corresponen amb la resta de mesures.  A la
+  \autoref{fig:model:venn-unio} també es mostren les mateixes
+  operacions amb la visualització en taula de les sèries temporals.
+
+  \begin{figure}
+    \centering 
+    \input{imatges/model/sgst-unio-venn.tex}
+
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_1$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 1 \\
+    3  & 1 \\
+    4  & 0 \\
+    5  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    2  & 2 \\
+    3  & 2 \\
+    4  & 0 \\
+    6  & 2 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_1 \cup S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 1 \\
+    2  & 2 \\
+    3  & 1 \\
+    4  & 0 \\
+    5  & 1 \\
+    6  & 2 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_1 \glssymbol{not:sgst:cupt} S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 1 \\
+    2  & 2 \\
+    4  & 0 \\
+    5  & 1 \\
+    6  & 2 \\ \hline
+  \end{tabular} 
+
+    \caption{Diagrames Venn i taules per als exemples d'unió i
+      d'unió temporal}
+    \label{fig:model:venn-unio}
+  \end{figure}
+
+ \end{example}
+
+
+
+
 
 \subsubsection{Diferència}
 
 La diferència de dos conjunts és un conjunt que conté tots els
 elements del primer conjunt que no pertanyen al segon.  Per a poder
-restar dos conjunts amb estructura de relació, $A - B$, cal que
-tots dos tinguin la mateixa estructura; és a dir, en termes de SGBDR
+restar dos conjunts amb estructura de relació, $A - B$, cal que tots
+dos tinguin la mateixa estructura; és a dir, en termes de \gls{SGBDR}
 cal que $A$ i $B$ tinguin la mateixa capçalera.
-
 En la definició de l'operació de diferència cal tenir en compte les
 dues pertinences possibles.
 
@@ -231,7 +366,7 @@ temporal.
   dues sèries temporals $S_1 -^t S_2$ és una sèrie temporal
   $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de $S_1$ que no
   pertanyen temporalment a $S_2$: $S_1 -^t S_2 = \{ m \in S_1 | m
-  \notinst S_2 \}$.
+  \not\glssymbol{not:sgst:int} S_2 \}$.
 \end{definition}
 
 
