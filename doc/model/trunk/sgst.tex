@@ -273,6 +273,15 @@ $m<^t n$, $m=n$ i $m=^t n$, etc.
 
 
 
+\subsubsection{Mesures multivaluades}
+
+Les mesures poden contenir alhora més d'un fenomen mesurat quan
+aquests comparteixen els instants de temps de mesura; és a dir que hi
+ha una co\l.lecció de valors mesurats en el mateix instant de temps.
+Aleshores les mesures poden esdevenir tuples n-dimensionals
+$(t,v_1,\dotsc,v_n)$, de manera semblant a com ho defineix
+\textcite{assfalg08:thesis}.  Anomenem aquestes mesures com a mesures
+multivaluades.
 
 
 
@@ -364,11 +373,11 @@ $|S_\emptyset|=0$.
 
 Una sèrie temporal s'expressa com un conjunt i com a tal és
 susceptible d'aplicar-hi els conceptes del model relacional dels
-\gls{SGBDR}\todo{ref al capítol d'art de sgbd}, a continuació expressem la forma de sèrie temporal  seguint també
-el concepte de relació. Diferenciem entre tres formes possibles d'una
-sèrie temporal: canònica, multivaluada i doble.  Per simplicitat de
-les definicions, seguim amb els reals com a exemples per als tipus de
-dades.
+\gls{SGBDR}\todo{ref al capítol d'art de sgbd}, a continuació
+expressem la forma de sèrie temporal seguint també el concepte de
+relació. Diferenciem entre tres formes possibles d'una sèrie temporal:
+canònica, multivaluada i doble.  Per simplicitat de les definicions,
+seguim amb els reals com a exemples per als tipus de dades.
 
 
 La forma bàsica d'una sèrie temporal és la de parelles de temps i
@@ -455,11 +464,9 @@ particularitats:
 
 
 Les sèries temporals poden mesurar alhora més d'un fenomen quan
-aquests comparteixen els instants de temps de mesura; és a dir que hi
-ha una co\l.lecció de valors mesurats en el mateix instant de temps,
-de manera similar a com ho defineix \textcite{assfalg08:thesis}.
-Anomenem aquestes sèries temporals com a sèries temporal
-multivaluades.
+aquests comparteixen els instants de temps de mesura; és a dir
+contenir mesures multivaluades.  Anomenem aquestes sèries temporals
+com a sèries temporal multivaluades.
 \begin{definition}[Sèrie temporal multivaluada]
   Anomenem sèrie temporal multivaluada a una sèrie temporal que té més
   d'un atribut de valors. Així una sèrie temporal multivaluada té la
@@ -481,7 +488,7 @@ multivaluada amb tres atributs anomenats és $S^2_{\emptyset} = ( \{t:
 
 
 Una sèrie temporal multivaluada es pot escriure en forma canònica de
-mesures multivaluades $(t,v)$. D'aquesta manera, les mesures $m_i$
+mesures $(t,v)$. D'aquesta manera, les mesures $m_i$
 d'una sèrie temporal multivaluada en forma canònica són tuples
 $m_i=(t,(v_1,v_2,\dotsc,v_n))$.  Així, per al cas de la sèrie temporal
 multivaluada buida $S^m_{\emptyset}$, en forma multivaluada canònica és
@@ -823,7 +830,7 @@ taula a la \autoref{fig:model:serietemporal:serietemporal}.
 S'observa que la capçalera de $S_5$ és $\{t:\bar{\R{}},v:
 \{t:\bar{\R{}},v:\bar{\R{}}\}\}$. És a dir, el valor és
 una altra relació, com es descriu per \textcite[sec.\
-5.3]{date:introduction}, a on el temps i el valor pertanyen a
+6.4]{date04:introduction8}, a on el temps i el valor pertanyen a
 $\bar{\R{}}$. Per tant, el valor de $S_5$ és de tipus sèrie
 temporal amb valors reals. Tot i així, aquest és un valor especial i
 si es desplega la relació s'obté una sèrie temporal doble amb
