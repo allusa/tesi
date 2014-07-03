@@ -4,54 +4,20 @@
 \newglossarystyle{estil-notation}{%
   \renewcommand{\glsgroupskip}{}% make nothing happen between groups
   \renewenvironment{theglossary}
-  {\begin{supertabular}{ll}}{\end{supertabular}}
+  {\begin{supertabular}{lll}}{\end{supertabular}}
   \renewcommand*{\glossarysubentryfield}[6]{%
-    \Glsentryname{##2} & ##4 \\
-    %\Glsentryname{##2}
-    %\glstarget{##2}{##3}% the entry name
-%    \item \glstarget{##2}{\Glsentryname{##2}}% the entry name
-    % &
-    %  %\space (##5)% the symbol in brackets
-    % \space ##4% the description
-    % &
-    % \space [##6]% the number list in square brackets
-    % \\                                    
+    \space \glstarget{##2}{\Glsentryname{##2}} % the entry name
+    %& (##5) % the symbol in brackets
+    & ##4 % the description
+    & [##6] % the number list in square brackets
+    \\                            
   }%
   \renewcommand*{\glossaryentryfield}[5]{%   
     %\glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
-    \bf{\Gls{##1}}  & ##3 \\
+    \bf{\Gls{##1}}  & ##3 & [##5]\\
   }
 }
 
-
-
-% \newglossarystyle{estil-notation}{%
-%   \renewcommand{\glsgroupskip}{}% make nothing happen between groups
-%   \renewenvironment{theglossary}
-%   {\begin{longtable}{lll}
-%       % \caption{Notació dels SGSTM \label{tab:sgstm-simbols}}
-%       % \endfirsthead
-%       % \caption[]{Notació dels SGSTM (continuació)}
-%       % \endhead
-%           % \endfoot
-%           % \endlastfoot
-%     }{\end{longtable}}
-%   \renewcommand*{\glossarysubentryfield}[6]{%
-%     %\glstarget{##2}{##3}% the entry name
-%     \glstarget{##2}{\Glsentryname{##2}}% the entry name
-%     &
-%      %\space (##5)% the symbol in brackets
-%     \space ##4% the description
-%     &
-%     \space [##6]% the number list in square brackets
-%     \\
-%   }%
-%   \renewcommand*{\glossaryentryfield}[5]{%
-%     \\\pagebreak[3]%\hline
-%     \glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
-%     \hline
-%   }
-% }
 
 
 \renewcommand{\seename}{vegeu}

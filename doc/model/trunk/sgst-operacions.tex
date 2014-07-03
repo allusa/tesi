@@ -24,17 +24,20 @@ operacions bàsiques que permeten que posteriorment es combinin per
 a elaborar-ne de més complexes.
 
 
-Les manipulacions de les sèries temporals es defineixen
-abstractament per a qualsevol sèrie temporal que tingui l'estructura
-de \gls{SGST}. Les definicions dels operadors avaluen els conceptes
-algebraics i lògics de les dades però no avaluen la semàntica en un
-context particular, com també ocorre per exemple en el model
-d'operacions del model relacional. És a dir, en cada context
+Les manipulacions de les sèries temporals es defineixen abstractament
+per a qualsevol sèrie temporal que tingui l'estructura de \gls{SGST}.
+Les definicions dels operadors avaluen els
+conceptes algebraics i lògics de les dades però no avaluen la
+semàntica en un context particular, com també ocorre per exemple en el
+model d'operacions del model relacional. És a dir, en cada context
 particular de manipulació d'una sèrie temporal s'ha de decidir si
 aquella àlgebra té significat o, al contrari, no pot ser aplicada. Per
 exemple una suma de valors de diferents unitats podria ser
 semànticament errònia.
 
+
+% es treballa amb la forma canònica de les sèries temporals llevat que
+% s'indiqui el contrari. 
 
 
 
@@ -47,7 +50,7 @@ conjunts.
 
 El model relacional de \gls{SGBDR} defineix els seus operadors bàsics
 a partir de l'àlgebra de
-conjunts \parencite[cap.~6]{date:introduction}. En aquest apartat
+conjunts \parencite[cap.~7]{date04:introduction8}. En aquest apartat
 apliquem el mateix estudi per al model de \gls{SGST}. Tot i així de
 manera simplificada, a les definicions no es descriuen les sèries
 temporals com a relacions amb capçaleres sinó que se n'escriuen només
@@ -352,10 +355,11 @@ estricta de conjunts. És a dir s'aplica la diferència de
 conjunts a les sèries temporals.
 \begin{definition}[diferència]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals, la diferència de les dues
-  sèries temporals $S_1 - S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ que no pertanyen a
-  $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin S_2  \}$.
+  m_{k_2}^2\}$ dues sèries temporals, la diferència de les dues sèries
+  temporals $S_1 \glssymboldef{not:sgst:minus} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de
+  $S_1$ que no pertanyen a $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin
+  S_2 \}$.
 \end{definition}
 
 En segon lloc, es defineix la diferència atenent a la pertinença
@@ -363,9 +367,10 @@ temporal.
 \begin{definition}[diferència temporal]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la diferència temporal de les
-  dues sèries temporals $S_1 -^t S_2$ és una sèrie temporal
-  $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de $S_1$ que no
-  pertanyen temporalment a $S_2$: $S_1 -^t S_2 = \{ m \in S_1 | m
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:minust} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les
+  mesures de $S_1$ que no pertanyen temporalment a $S_2$: $S_1
+  \glssymbol{not:sgst:minust} S_2 = \{ m \in S_1 | m
   \not\glssymbol{not:sgst:int} S_2 \}$.
 \end{definition}
 
@@ -377,7 +382,7 @@ temporal.
 La intersecció de dos conjunts és un conjunt que conté els elements
 comuns als dos conjunts.  Per a poder intersecar dos conjunts amb estructura
 de relació, $A \cap B$, cal que tots dos tinguin la mateixa
-estructura; és a dir, en termes de SGBDR cal que $A$ i $B$ tinguin la
+estructura; és a dir, en termes de \gls{SGBDR} cal que $A$ i $B$ tinguin la
 mateixa capçalera.
 
 En la definició de l'operació d'intersecció cal tenir en compte les
@@ -389,9 +394,9 @@ conjunts.
 \begin{definition}[intersecció]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la intersecció de les dues
-  sèries temporals $S_1 \cap S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté les mesures de $S_1$ repetides a $S_2$:
-  $S_1 \cap S_2 = \{ m \in S_1 | m \in S_2 \}$.
+  sèries temporals $S_1 \glssymboldef{not:sgst:cap} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$
+  repetides a $S_2$: $S_1 \cap S_2 = \{ m \in S_1 | m \in S_2 \}$.
 \end{definition}
 
 En segon lloc, es defineix la intersecció atenent a la pertinença
@@ -400,10 +405,10 @@ el mateix instant de temps però de valor diferent.
 \begin{definition}[intersecció temporal]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la intersecció temporal de les
-  dues sèries temporals $S_1 \capt S_2$ és una sèrie temporal
-  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ repetides
-  temporalment a $S_2$: $S_1 \capt S_2 = \{ m \in S_1 | m \inst S_2
-  \}$.
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:capt} S_2$ és una
+  sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
+  $S_1$ repetides temporalment a $S_2$: $S_1 \glssymbol{not:sgst:capt}
+  S_2 = \{ m \in S_1 | m \glssymbol{not:sgst:int} S_2 \}$.
 \end{definition}
 
 Propietats de la intersecció:
@@ -439,10 +444,11 @@ mesures amb el mateix temps però de valor diferent.
 \begin{definition}[diferència simètrica]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la diferència simètrica de les
-  dues sèries temporals $S_1 \ominus S_2$ és una sèrie temporal
-  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ o
-  exclusivament les de $S_2$: $S_1 \ominus S_2 = \{ m^1 \in S_1 \vee
-  m^2 \in S_2 | m^1 \notinst S_2, m^2 \notin S_1 \}$.
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:ominus} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
+  $S_1$ o exclusivament les de $S_2$: $S_1 \ominus S_2 = \{ m^1 \in
+  S_1 \vee m^2 \in S_2 | m^1 \notin S_2, m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
 \end{definition}
 
 En segon lloc, es defineix la diferència simètrica temporal excloent les
@@ -450,52 +456,118 @@ mesures amb el mateix temps.
 \begin{definition}[diferència simètrica temporal]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la diferència simètrica de les
-  dues sèries temporals $S_1 \ominus S_2$ és una sèrie temporal
-  $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ o
-  exclusivament les de $S_2$: $S_1 \ominus S_2 = \{ m^1 \in S_1 \vee
-  m^2 \in S_2 | m^1 \notinst S_2, m^2 \notinst S_1 \}$.
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:ominust} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
+  $S_1$ o exclusivament les de $S_2$: $S_1
+  \glssymbol{not:sgst:ominust} S_2 = \{ m^1 \in S_1 \vee m^2 \in S_2 |
+  m^1 \not\glssymbol{not:sgst:int} S_2, m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
 \end{definition}
 
 
 
 \subsubsection{Projecció}
 
-La projecció és una operació dels SGBDR que selecciona uns atributs
-determinats d'un conjunt. Es pot aplicar la projecció a les sèries
-temporals de la mateixa manera que als
-SGBDR \parencite{date:introduction}. 
+La projecció és una operació dels \gls{SGBDR} que selecciona uns
+atributs determinats d'un conjunt. 
 
-Sigui $S =\{m_0, \dotsc, m_k\}$ una sèrie temporal i $A=\{a_0, \dotsc,
-a_n\}$ un conjunt de noms d'atributs, la projecció de $S$ en $A$
-s'escriu com $S\{a_0, \dotsc, a_n\}$.
+\begin{definition}[projecció]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$ i sigui $A=\{a_0,
+  \dotsc, a_n\}$ un conjunt de noms d'atributs, la projecció de la
+  sèrie temporal en els atributs s'escriu com
+  $\glssymboldef{not:sgst:project}_A(S)$ i es defineix de la mateixa
+  manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+\end{definition}
+
+En l'operació de projecció, si els
+atributs seleccionats no inclouen l'atribut temps o només n'inclouen
+un el resultat no és una sèrie temporal sinó que és un conjunt
+relacional. 
+
+
+% \todo{definir? la definició embolica}
+% \begin{definition}[projecció]
+%   Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, on les mesures
+%   poden ser multiavaluades $m_i=(t_i,v^1_i,\dotsc,v^n_i)$, expressada
+%   en la forma completa amb capçalera $S = ( \{t, n_1,\dotsc,n_n \}, \{
+%   \{ (t,t_0),(n_1,v^1_0),\dotsc,(n_n,v^n_0)\}, \dotsc, \{
+%   (t,t_0),(n_1,v^1_1),\dotsc,(n_n,v^n_n)\} \} )$ on $t, n_1, \dotsc,
+%   n_n$ són els noms dels atributs; i sigui $A=\{a_0, \dotsc, a_n\}$ un
+%   conjunt de noms d'atributs. La projecció de la sèrie temporal en els
+%   atributs és $\glssymboldef{not:sgst:project}_A(S) = \{ ()  \}$
+% \end{definition}
+
+
+
+
+\begin{example}
+  Sigui la sèrie temporal $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$, la
+  projecció en l'atribut de temps és el conjunt
+  $\glssymbol{not:sgst:project}_{\{t\}}(S_1) = \{ 1,3,4,5 \}$.  Sigui
+  la sèrie temporal multivaluada $S_2 = ( (t,\text{ temp},\text{
+    cons},\text{ vol}),\{ (2,1,2,3), (3,2,1,0), (6,1,2,3) \})$, la
+  projecció en els atributs $t$ i \emph{temp} és la sèrie temporal
+  $\glssymbol{not:sgst:project}_{ \{t,\text{temp}\}}(S_1) = (
+  (t,\text{ temp}),\{ (2,1), (3,2), (6,1) \})$
+\end{example}
 
 
 
 
 \subsubsection{Selecció}
 
-La selecció és una operació dels SGBDR que selecciona uns tuples
-determinats d'un conjunt. Es pot aplicar la selecció a les sèries
-temporals de la mateixa manera que als
-SGBDR \parencite{date:introduction}. 
+La selecció és una operació dels \gls{SGBDR} que selecciona uns tuples
+determinats d'un conjunt, a vegades també s'anomena restricció.
 
-Sigui $S =\{m_0, \dotsc, m_k\}$ una sèrie temporal, $a_1$ i $a_2$ dos
-noms d'atributs que pertanyen a $S$, i $a_1 \Theta a_2$ una expressió
-booleana sobre $a_1$ i $a_2$, la selecció de $S$ per l'expressió
-booleana s'escriu com $S \where a_1 \Theta a_2$.
+
+\begin{definition}[selecció]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, $a_1$ i $a_2$ dos
+  noms d'atributs que pertanyen a $S$, i $a_1 \Theta a_2$ una
+  expressió booleana sobre $a_1$ i $a_2$, la selecció de $S$ per
+  l'expressió booleana s'escriu com
+  $\glssymboldef{not:sgst:select}_{a_1 \Theta a_2}(S)$  i es defineix
+  de la mateixa manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+\end{definition}
+
+En una forma més genèrica, l'expressió booleana pot incloure un o més
+atributs i està formada per més d'una expressió lògica.
+
+
+\begin{example}
+  Sigui la sèrie temporal $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$, la
+  selecció dels temps més grans que $3$ és
+  $\glssymbol{not:sgst:select}_{t>3}(S_1) = \{(4,0),(5,1)\}$.
+\end{example}
+
+
 
 
 \subsubsection{Reanomena}
 
-El reanomena és una operació dels SGBDR que canvia el nom dels
-atributs. Es pot aplicar el reanomena les sèries temporals de la
-mateixa manera que als SGBDR \parencite{date:introduction}.
-
-Sigui $S =\{m_0, \dotsc, m_k\}$ una sèrie temporal, $a$ un nom
-d'atribut que pertany a $S$ i $b$ un que no hi pertany, el reanomenat
-de $a$ per $b$ s'escriu com $S \rename a \as b$.
+El reanomena és una operació dels \gls{SGBDR} que canvia el nom dels
+atributs. 
 
 
+\begin{definition}[reanomena]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, $a$ un nom
+  d'atribut que pertany a $S$ i $b$ un que no hi pertany, reanomenar
+  $a$ per $b$ s'escriu com $\glssymboldef{not:sgst:rename}_{a/b} (S)$
+  i es defineix de la mateixa manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+\end{definition}
+
+En una forma més genèrica, es poden reanomenar més d'un atribut
+alhora.
+
+\begin{example}
+  Sigui la sèrie temporal multivaluada $S_2 = ( (t,\text{ temp},\text{
+    cons},\text{ vol}),\{ (2,1,2,3), (3,2,1,0), (6,1,2,3) \})$, reanomenar 
+  l'atribut \emph{temp} per \emph{v1} és la sèrie temporal
+  $\glssymbol{not:sgst:rename}_{\text{temp}/\text{v1}}(S_1) = ( (t,\text{ v1},\text{
+    cons},\text{ vol}),\{ (2,1,2,3), (3,2,1,0), (6,1,2,3) \})$.
+\end{example}
 
 
 
@@ -504,24 +576,25 @@ de $a$ per $b$ s'escriu com $S \rename a \as b$.
 El producte cartesià de dos conjunts és un conjunt que conté totes les
 parelles possibles d'elements d'ambdós conjunts.  Per a poder
 multiplicar dos conjunts amb estructura de relació, $A \times B$, en
-termes de SGBDR cal que $A$ i $B$ no tinguin en comú noms d'atributs.
-En els SGBDR, a diferència del producte de conjunts, el conjunt
-resultant no és un conjunt de parells de tuples sinó un conjunt de
-tuples.
+termes de \gls{SGBDR} cal que $A$ i $B$ no tinguin en comú noms
+d'atributs.  En els \gls{SGBDR}, a diferència del producte de conjunts, el
+conjunt resultant no és un conjunt de parells de tuples sinó un
+conjunt de tuples.
 
-\todo{} Definim el producte de dues sèries temporals, les qual en
+Definim el producte de dues sèries temporals, les qual en
 forma canònica tinguin els atributs $t$ i $v$, com una sèrie temporal
 amb atributs $t_1$, $v_1$, $t_2$ i $v_2$. Així doncs, per a sèries
-temporals el producte resulta en una sèrie temporals amb dos atributs
-de temps. Per aquest fet l'anomenem sèrie temporal doble
-(v.\ \autoref{def:sgst:st-doble}).
+temporals el producte resulta en una sèrie temporal amb dos atributs
+de temps, a la qual anomenem sèrie temporal doble (v.\
+\autoref{def:sgst:st-doble}).
 \begin{definition}[producte]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals en forma canònica, el producte de
-  les dues sèries temporals $S_1 \times S_2$ és una sèrie temporal
-  doble $S=\{m_0, \dotsc, m_k\}$ que conté la unió de totes les
-  parelles de mesures de $S_1$ i $S_2$: $S_1 \times S_2 = \{
-  (t_1,v_1,t_2,v_2) | (t_1,v_1) \in S_1 \wedge (t_2,v_2) \in S_2 \}$
+  les dues sèries temporals $S_1 \glssymboldef{not:sgst:times}
+  S_2$ és una sèrie temporal doble $S=\{m_0, \dotsc, m_k\}$ que conté
+  la unió de totes les parelles de mesures de $S_1$ i $S_2$: $S_1
+  \times S_2 = \{ (t_1,v_1,t_2,v_2) | (t_1,v_1) \in S_1 \wedge
+  (t_2,v_2) \in S_2 \}$
 \end{definition}
 
 Propietats del producte:
@@ -536,7 +609,7 @@ La junció (\emph{join}) de dos conjunts és un conjunt que conté les
 parelles d'elements d'ambdós conjunts que tenen el mateix valor per
 als atributs comuns.  La junció de dos conjunts amb estructura de
 relació, $A \join B$, es defineix com una selecció sobre el
-producte \parencite{date:introduction}.
+producte \parencite[cap.~7]{date04:introduction8}.
 
 
 Per a les sèries temporals, definim la junció com l'ajuntament de les
@@ -546,11 +619,11 @@ multivaluada.
 \begin{definition}[junció]\label{def:sgst:join}
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals en forma canònica, la junció de
-  les dues sèries temporals $S_1 \join S_2$ és una sèrie temporal
-  multivaluada $S=\{m_0, \dotsc, m_k\}$ que selecciona del producte de
-  $S_1$ amb $S_2$ les mesures dobles amb temps iguals: $S_1 \join S_2
-  = \{ (t,v_1,v_2) | (t_1,v_1,t_2,v_2) \in S_1\times S_2 \wedge
-  t=t_1=t_2 \}$.
+  les dues sèries temporals $S_1 \glssymboldef{not:sgst:join} S_2$ és
+  una sèrie temporal multivaluada $S=\{m_0, \dotsc, m_k\}$ que
+  selecciona del producte de $S_1$ amb $S_2$ les mesures dobles amb
+  temps iguals: $S_1 \glssymbol{not:sgst:join} S_2 = \{ (t,v_1,v_2) |
+  (t_1,v_1,t_2,v_2) \in S_1\times S_2 \wedge t=t_1=t_2 \}$.
 \end{definition}
 
 
@@ -564,24 +637,35 @@ Propietats de la junció:
 
 
 
+\begin{example}\label{ex:model:s1s2}
+  Siguin les dues sèries temporals $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$
+  and $S_2=\{(2,2),(3,2),(4,0),(6,2)\}$.  La junció de totes dues és
+  $S_1 \glssymbol{not:sgst:join} S_2 = \{(3,1,2),(4,0,0)\}$.
+\end{example}
 
 
 
 \subsubsection{Computacionals: mapa, agregat i plec}
 
+
+\todo{revisar}
+
 Per a poder operar amb els conjunts, a més de l'àlgebra definida fins
 ara, es necessiten operadors amb funcionalitats computacionals; és a
 dir, operadors que calculin amb els valors continguts en els conjunts. 
 
-En els SGBDR els operadors computacionals bàsics són \emph{extend},
-\emph{aggregate} i \emph{summarize} \parencite{date:introduction}.
-Per a les sèries temporals definim operacions equivalents a les dues
-primeres de la manera amb que habitualment s'utilitzen per als
-conjunts. La tercera, el \emph{summarize}, és una operació creada a
-partir de les altres dues que s'utilitza per a sintetitzar per grups i
-per tant en les sèries temporals no té sentit perquè l'atribut temps
-d'una sèrie temporal no pot tenir instants repetits i per tant no se'n
-poden fer grups d'instants compartits. \todo{Alerta! sí que es fan operacions d'agregació per intervals de temps, p.ex. $\{(gen,25),(feb,4),(mar,10)\}$, com es faria això?}
+En els \gls{SGBDR} els operadors computacionals bàsics són
+\emph{extend}, \emph{aggregate} i
+\emph{summarize} \parencite[cap.~7]{date04:introduction8}.  Per a les
+sèries temporals definim operacions equivalents a les dues primeres de
+la manera amb què habitualment s'utilitzen per als conjunts. La
+tercera, el \emph{summarize}, és una operació creada a partir de les
+altres dues que s'utilitza per a sintetitzar per grups i per tant en
+les sèries temporals no té sentit perquè l'atribut temps d'una sèrie
+temporal no pot tenir instants repetits i per tant no se'n poden fer
+grups d'instants compartits. \todo{Alerta! sí que es fan operacions
+  d'agregació per intervals de temps,
+  p.ex. $\{(gen,25),(feb,4),(mar,10)\}$, com es faria això?}
 % No obstant, es pot aplicar el \emph{summarize} per a l'atribut de
 % valors: summarize S per S {v} add ...  però això ja no mapa a una
 % sèrie temporal.
