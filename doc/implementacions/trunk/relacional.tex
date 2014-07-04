@@ -481,7 +481,6 @@ tipus relació i per tant no es poden definir tipus que siguin admesos
 com a arguments en els operadors predefinits de l'àlgebra relacional.
 
 
-
 A Reltsms ens ha sigut còmode definir les sèries temporals com a tipus
 relació perquè conserva molta correspondència amb el model algebraic.
 Així en els operadors hem definit els paràmetres de sèrie temporal com
@@ -529,13 +528,17 @@ timeseries(THE_ts(s) where v>3.0)
 \end{lstlisting}
 
 En conclusió, definir la sèrie temporal com a tipus \emph{timeseries}
-és més incòmode que definir-la directament com a tipus relació. Si bé
-és cert que es pot usar amb la mateixa funcionalitat, les crides als
+en comptes de directament com a tipus relació dificulta poder observar
+la relació directa entre l'àlgebra relacional del model i la
+implementació en un \gls{SGBDR}. Si bé és cert que ambdues es poden
+usar amb la mateixa funcionalitat, en el cas dels tipus les crides als
 operadors queden emmascarades amb l'ús de l'operador d'atribut
 \emph{THE\_ts} i la instància de nou de la \emph{timeseries}.  A
-Tutorial~D faria falta poder declarar que el tipus \emph{timeseries}
-té l'atribut \emph{ts} que és de tipus relació i pot actuar com a tal
-allà on calgui.
+Tutorial~D faria falta un sistema d'herència més clar que pogués
+declarar que el tipus \emph{timeseries} té l'atribut \emph{ts} que és
+de tipus relació i pot actuar com a tal allà on calgui. Així, per bé
+que l'emmascarament del tipus podria ser útil en un sistema productiu,
+dificulta el propòsit acadèmic d'aquesta implementació.
 
 
 \subsubsection{Sèries temporals multivaluades i de qualssevol tipus}

@@ -73,22 +73,39 @@ solen representar gràficament mitjançant diagrames de Venn. A la
 \autoref{fig:model:sgst:venn} es mostren els diagrames de Venn per a
 cinc de les operacions dels \gls{SGSTM} que descrivim a continuació:
 inclusió, unió, diferència, intersecció i diferència simètrica; tant
-en la seva vessant parcial com en la seva vessant temporal.  Per a
-dibuixar aquest diagrames de Venn, a banda del conjunt corresponent a
-cada sèrie temporal $A$ i $B$ i la seva intersecció, cal dibuixar uns
-subconjunts $t_A$ i $t_B$ que indiquen les mesures que comparteixen el
-mateix temps amb una altra mesura de l'altre conjunt però no el mateix
-valor. És a dir $t_A = \{ m_a \in A | \exists m_b \in B: m_a =^t m_b
-\}$ i $t_B = \{ m_b \in B | \exists m_a \in A: m_b =^t m_a \}$ segons
-la relació d'ordre total definida en de les mesures.
+en la seva vessant parcial com en la seva vessant temporal.  
+
+Per a dibuixar aquest diagrames de Venn, a banda del conjunt
+corresponent a cada sèrie temporal $A$ i $B$ i la seva intersecció,
+cal dibuixar uns subconjunts $t_A$ i $t_B$ que indiquen les mesures
+que comparteixen el mateix temps amb una altra mesura de l'altre
+conjunt però no el mateix valor. És a dir $t_A = \{ m_A \in A |
+\exists m_B \in B: m_A =^t m_B \}$ i $t_B = \{ m_B \in B | \exists m_A
+\in A: m_B =^t m_A \}$ segons la relació d'ordre total definida en de
+les mesures.  Aquests dos subconjunts $t_A$ i $t_B$ són importants per
+a les operacions dels \gls{SGST} perquè no hi pot haver cap sèrie
+temporal resultant que els inclogui a tots dos, ja que significaria
+que conté temps repetits. Per exemple, una operació que tingui la
+sèrie resultant $t_A \cup t_B$, com es mostra a la
+\autoref{fig:model:sgst:venn-impossible}, és impossible
 
 
 \begin{figure}[tp]
   \centering
   \input{imatges/model/sgst-venn.tex}
   \caption{Diagrames de Venn per a les operacions dels \gls{SGSTM}. Els
-    subconjunts $t_a$ i $t_b$ indiquen les mesures $m_a =^t m_b$.}
+    subconjunts $t_A$ i $t_B$ indiquen les mesures $m_A =^t m_B$.}
   \label{fig:model:sgst:venn}
+\end{figure}
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgst-venn-impossible.tex}
+  \caption{Diagrama de Venn impossible per a les operacions dels
+    \gls{SGSTM}. Els subconjunts $t_A$ i $t_B$ indiquen les mesures
+    $m_A =^t m_B$.}
+  \label{fig:model:sgst:venn-impossible}
 \end{figure}
 
 
@@ -122,6 +139,10 @@ a una sèrie temporal.
 \end{definition}
 
 
+Si una mesura pertany a una sèrie temporal, $m\in S$, aleshores també
+hi pertany temporalment, $m \glssymbol{not:sgst:int} S$.
+
+
 
 La inclusió determina si tots els elements d'un conjunt pertanyen a un
 altre conjunt. La inclusió de conjunts en el cas de les sèries
@@ -133,8 +154,6 @@ temporals està relacionada amb l'ordre parcial.
   m \in S_1: m \in S_2$. Aleshores, $S_1$ és una subsèrie temporal de
   $S_2$.
 \end{definition}
-
-
 
 
 
@@ -211,6 +230,7 @@ respectivament.
 
 \subsubsection{Unió}
 
+
 La unió de dos conjunts és un conjunt que conté tots els elements
 d'ambdós conjunts.  Per a poder unir dos conjunts amb estructura de
 relació, $A \cup B$, cal que tots dos tinguin la mateixa estructura;
@@ -221,20 +241,28 @@ Per tal que l'operació d'unió de conjunts sigui vàlida per a les
 sèries temporals cal, a més, tenir en compte quan dues sèries
 temporals tenen mesures en el mateix instant de temps. En cas
 d'utilitzar l'operació d'unió de conjunts la sèrie temporal resultant
-no compliria amb la \autoref{def:serie_temporal} ja que
-contindria mesures amb temps repetits. Com a conseqüència, es
-defineixen dues operacions d'unió per a les sèries temporals que
-resolen la restricció del temps de forma diferent.
+no compliria amb la \autoref{def:serie_temporal} ja que contindria
+mesures amb temps repetits. Com a conseqüència, es defineixen dues
+operacions d'unió per a les sèries temporals que resolen la restricció
+del temps de forma diferent.  Per a definir ambdues unions cal usar la
+pertinença temporal ja que cal treballar amb els conjunts $t_A$ i
+$t_B$, per tant és difícil establir la referència de pertinença per a
+cada una.  Definim la primera unió com la més propera possible a la
+unió de conjunts.
+
+
 
 En primer lloc, es defineix la unió de dues sèries temporals que
-escull les mesures del primer operand en cas de mesures repetides.
+escull les mesures del primer operand en cas de mesures amb el mateix
+temps però diferent valor.
 \begin{definition}[unió]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
   temporals $S_1 \glssymboldef{not:sgst:cup} S_2$ és una sèrie
   temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de
-  $S_1$ i les mesures de $S_2$ no repetides: $S_1 \cup S_2 = \{m^1 \in
-  S_1 \vee m^2 \in S_2 | m^2 \not\glssymbol{not:sgst:int} S_1 \}$.
+  $S_1$ i les mesures de $S_2$ que no tenen temps repetits: $S_1 \cup
+  S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 | m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
 \end{definition}
 
 Propietats de la unió de sèries temporals:
@@ -370,7 +398,7 @@ temporal.
   dues sèries temporals $S_1 \glssymboldef{not:sgst:minust} S_2$ és
   una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les
   mesures de $S_1$ que no pertanyen temporalment a $S_2$: $S_1
-  \glssymbol{not:sgst:minust} S_2 = \{ m \in S_1 | m
+  \glssymbol{not:sgst:minust} S_2 = \{ m \glssymbol{not:sgst:int} S_1 | m
   \not\glssymbol{not:sgst:int} S_2 \}$.
 \end{definition}
 
@@ -408,7 +436,7 @@ el mateix instant de temps però de valor diferent.
   dues sèries temporals $S_1 \glssymboldef{not:sgst:capt} S_2$ és una
   sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
   $S_1$ repetides temporalment a $S_2$: $S_1 \glssymbol{not:sgst:capt}
-  S_2 = \{ m \in S_1 | m \glssymbol{not:sgst:int} S_2 \}$.
+  S_2 = \{ m \glssymbol{not:sgst:int} S_1 | m \glssymbol{not:sgst:int} S_2 \}$.
 \end{definition}
 
 Propietats de la intersecció:
@@ -459,17 +487,50 @@ mesures amb el mateix temps.
   dues sèries temporals $S_1 \glssymboldef{not:sgst:ominust} S_2$ és
   una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
   $S_1$ o exclusivament les de $S_2$: $S_1
-  \glssymbol{not:sgst:ominust} S_2 = \{ m^1 \in S_1 \vee m^2 \in S_2 |
-  m^1 \not\glssymbol{not:sgst:int} S_2, m^2
-  \not\glssymbol{not:sgst:int} S_1 \}$.
+  \glssymbol{not:sgst:ominust} S_2 = \{ m^1 \glssymbol{not:sgst:int}
+  S_1 \vee m^2 \glssymbol{not:sgst:int} S_2 | m^1
+  \not\glssymbol{not:sgst:int} S_2, m^2 \not\glssymbol{not:sgst:int}
+  S_1 \}$.
 \end{definition}
+
+
+
+\subsubsection{Selecció}
+
+La selecció és una operació dels \gls{SGBDR} que selecciona uns tuples
+determinats d'un conjunt, a vegades també s'anomena restricció.
+
+\begin{definition}[selecció]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, $a_1$ i $a_2$ dos
+  noms d'atributs que pertanyen a $S$, i $a_1 \Theta a_2$ una
+  expressió booleana sobre $a_1$ i $a_2$, la selecció de $S$ per
+  l'expressió booleana s'escriu com
+  $\glssymboldef{not:sgst:select}_{a_1 \Theta a_2}(S)$  i es defineix
+  de la mateixa manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+\end{definition}
+
+En una forma més genèrica, l'expressió booleana pot incloure un o més
+atributs i està formada per més d'una expressió lògica.
+
+
+\begin{example}
+  Sigui la sèrie temporal $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$, la
+  selecció dels temps més grans que $3$ és
+  $\glssymbol{not:sgst:select}_{t>3}(S_1) = \{(4,0),(5,1)\}$.
+\end{example}
+
+
 
 
 
 \subsubsection{Projecció}
 
+
 La projecció és una operació dels \gls{SGBDR} que selecciona uns
-atributs determinats d'un conjunt. 
+atributs determinats d'un conjunt. Aquesta operació treballa amb la
+capçalera de la sèrie temporal, és a dir amb els atributs que
+genèricament són $t$ i $v$ però que també poden tenir altres noms.
 
 \begin{definition}[projecció]
   Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$ i sigui $A=\{a_0,
@@ -515,39 +576,14 @@ relacional.
 
 
 
-\subsubsection{Selecció}
-
-La selecció és una operació dels \gls{SGBDR} que selecciona uns tuples
-determinats d'un conjunt, a vegades també s'anomena restricció.
-
-
-\begin{definition}[selecció]
-  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, $a_1$ i $a_2$ dos
-  noms d'atributs que pertanyen a $S$, i $a_1 \Theta a_2$ una
-  expressió booleana sobre $a_1$ i $a_2$, la selecció de $S$ per
-  l'expressió booleana s'escriu com
-  $\glssymboldef{not:sgst:select}_{a_1 \Theta a_2}(S)$  i es defineix
-  de la mateixa manera que en els
-  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
-\end{definition}
-
-En una forma més genèrica, l'expressió booleana pot incloure un o més
-atributs i està formada per més d'una expressió lògica.
-
-
-\begin{example}
-  Sigui la sèrie temporal $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$, la
-  selecció dels temps més grans que $3$ és
-  $\glssymbol{not:sgst:select}_{t>3}(S_1) = \{(4,0),(5,1)\}$.
-\end{example}
-
 
 
 
 \subsubsection{Reanomena}
 
 El reanomena és una operació dels \gls{SGBDR} que canvia el nom dels
-atributs. 
+atributs.  Aquesta operació treballa amb la
+capçalera de la sèrie temporal.
 
 
 \begin{definition}[reanomena]
@@ -648,8 +684,6 @@ Propietats de la junció:
 \subsubsection{Computacionals: mapa, agregat i plec}
 
 
-\todo{revisar}
-
 Per a poder operar amb els conjunts, a més de l'àlgebra definida fins
 ara, es necessiten operadors amb funcionalitats computacionals; és a
 dir, operadors que calculin amb els valors continguts en els conjunts. 
@@ -658,14 +692,18 @@ En els \gls{SGBDR} els operadors computacionals bàsics són
 \emph{extend}, \emph{aggregate} i
 \emph{summarize} \parencite[cap.~7]{date04:introduction8}.  Per a les
 sèries temporals definim operacions equivalents a les dues primeres de
-la manera amb què habitualment s'utilitzen per als conjunts. La
-tercera, el \emph{summarize}, és una operació creada a partir de les
-altres dues que s'utilitza per a sintetitzar per grups i per tant en
-les sèries temporals no té sentit perquè l'atribut temps d'una sèrie
-temporal no pot tenir instants repetits i per tant no se'n poden fer
-grups d'instants compartits. \todo{Alerta! sí que es fan operacions
-  d'agregació per intervals de temps,
-  p.ex. $\{(gen,25),(feb,4),(mar,10)\}$, com es faria això?}
+la manera amb què habitualment s'utilitzen per als conjunts.  La
+tercera, el \emph{summarize}, és una operació que s'utilitza per a
+sintetitzar per grups, és a dir per a aplicar \emph{aggregate} a
+conjunts que prèviament s'han agrupat segons un atribut compartit.
+Per a les sèries temporals, però, necessitem una operació
+computacional més genèrica que ens permeti calcular recursivament
+sense haver de definir grups.
+
+
+ % Operacions
+ %  d'agregació per intervals de temps,
+ %  p.ex. $\{(gen,25),(feb,4),(mar,10)\}$, com es faria això?}
 % No obstant, es pot aplicar el \emph{summarize} per a l'atribut de
 % valors: summarize S per S {v} add ...  però això ja no mapa a una
 % sèrie temporal.
@@ -681,15 +719,17 @@ Així doncs, a continuació es defineix l'operador mapa (\emph{map}) com
 a equivalent a l'\emph{extend}, l'operador agregat (\emph{aggregate})
 com a equivalent a l'\emph{aggregate} i l'operador plec (\emph{fold})
 com una forma més general de calcular recursivament amb les mesures
-que l'\emph{aggregate}.
+que \emph{summarize}.
 
 
+
+\todo{revisar, símbols f diferents per a cada cas}
 
 
 L'operació de mapatge aplica una funció a cada element del conjunt.
 \begin{definition}[mapa]
-  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal i $f$ una funció
-  sobre una mesura a on $f:m\mapsto m'$, el mapa de $f$ a $S$ és una
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal i $F$ una funció
+  sobre una mesura a on $F:m\mapsto m'$, el mapa de $F$ a $S$ és una
   sèrie temporal $S'=\{m_0', \dotsc, m_k'\}$ amb la funció aplicada a
   cada mesura: $\map(S,f) = \{\forall m\in S : f(m) \}$.
 \end{definition}
@@ -752,11 +792,11 @@ mateix concepte d'ordre.
 \end{definition}
 
 El plec amb ordre és necessari quan la funció $f$ no és associativa ni
-commutativa perquè llavors l'ordre dels càlculs importa. Es pot
+commutativa perquè llavors l'ordre dels càlculs és important. Es pot
 observar que el plec sense ordre és un plec amb ordre aleatori:
 $\fold(S,S_i,f)\equiv \fold(S,S_i,f,o)$ a on $o=\text{aleatori}(S)$.
-De manera semblant $\agg(S,m_i,f)\equiv \agg(S,m_i,f,o)$ a on
-$o=\text{aleatori}(S)$.
+
+%De manera semblant $\agg(S,m_i,f)\equiv \agg(S,m_i,f,o)$ on $o=\text{aleatori}(S)$.
 
 
 
@@ -925,6 +965,9 @@ temporals aquest atribut és el temps.
 
 
 \subsubsection{Interval}
+
+\todo{dir que és una selecció?}
+
 
 L'interval sobre una seqüència és la subseqüència compresa entre dos
 elements.  Per a les sèries temporals és possible definir el concepte
