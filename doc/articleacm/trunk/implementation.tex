@@ -77,9 +77,9 @@ representation and a Representation operates over a TimeSeries.
 
   %Associacions
   \umlclass[x=-1.25,y=-4] {RegularProp}{}{}
-  \umluniassoc  {RegularProp}{TimeSeries}
+  \umluniassoc  {TimeSeries}{RegularProp}
   \umlclass[x=1.25,y=-4] {Storage}{}{}
-  \umluniassoc {Storage}{TimeSeries}
+  \umluniassoc {TimeSeries}{Storage}
 
   %Dependencies
   \umlemptypackage[x=4,y=-4]{Matplotlib}
@@ -108,7 +108,9 @@ the temporal order and the relational set operators.  Thirdly,
 complementary operations for TimeSeries are grouped into two visitor
 objects: \emph{RegularProp} groups the regularity operation
 definitions and \emph{Storage} has methods for storing and retrieving
-time series from file system.
+time series from file system. Visitor is a pattern design that allows
+new functionality to be added to objects without modifying the
+objects \cite{ziade08:expert_python_programming:visitor,martin02:visitor}.
 
 
 Figure \ref{fig:implementacio:pytsms-uml} shows two specialisations

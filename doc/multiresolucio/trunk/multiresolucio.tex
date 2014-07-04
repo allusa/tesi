@@ -1,0 +1,136 @@
+
+% \section{Multiresolution over TSMS}
+% \label{sec:M+TSMS}
+
+
+% \todo{explicar mes be l'objectiu d'aquesta seccio}
+% \todo{s'hauria de demostrar formalment}
+
+% We have defined the MTSMS model as an structure based on time
+% series. Now we express the multiresolution as a query on a time series
+% using TSMS operations. 
+
+% Given a time series $S$ and a multiresolution time series $M$, a MTSMS
+% consolidates a multiresolution schema for $S$ by applying successively
+% $\forall m \in S: M=\addM(M,m)$ and then $M=\consM(M')$ until $M$ is
+% no more consolidable. Then over this consolidated $M$ we have defined
+% two basic queries $\seriedisc(M,\delta,f)$ and $\totalseries(M)$.
+
+% The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
+% subseries' disc $R=(B,D)$, where $B=(S_B,\tau,\delta,f)$ and
+% $D=(S_D,k)$, can be expressed with a map operation over the original
+% time series $S$:
+% \[
+% \seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
+% \]
+% where
+% \[
+% \dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
+% \]
+% \[
+%  m' = f(S, i),\;  i = [T(m_i)-\delta,T(m_i)],
+% \]
+% \[
+%  S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
+% \]
+% \[
+% T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
+% \]
+
+
+% The total time series $S'=\totalseries(M)$ is a concatenation of all
+% $\seriedisc$ without repeated $\delta$. It can be expressed with a
+% fold operation over the original time series $S$. Let $\text{sch} = \{
+% (\delta_0,\tau_0,f_0,k_0), (\delta_1,\tau_1,f_1,k_1), \ldots,
+% (\delta_d,\tau_d,f_d,k_d)\}$ be the parameters of $M$ expressed as a
+% multivalued time series
+% \[
+% \totalseries(M) \equiv \multiresolution(S,\text{sch})
+% \]
+% \[
+% \multiresolution(S,\text{sch}) = \orderfold(\text{sch},\{\},f_r,\min) \text{ where }
+% \]
+% \[
+% f_r: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
+% \dmap(S,\delta_c,\tau_c,f_c,k_c)
+% \]
+
+
+
+% Summarising, a MTSMS and the multiresolution query are equivalent on
+% functionality.
+
+
+
+% \subsection{Two database structures}
+
+% \acro{MTSMS} imply a data information selection and so the information
+% not considered important is discarded.  Therefore, this systems are
+% not adequate when all the monitored data must be kept as
+% acquired. This can happen for example when it is not known a priori
+% which aggregate functions will work better with the future data
+% monitored or when detailed questions must be retrieved such as at what
+% hour exactly an event triggered. 
+
+% \begin{figure}
+%   \centering
+%   \input{imatges/mtsms-tsms.tex}
+%   \caption{Dual TSMS+MTSMS}
+%   \label{fig:model:mtsms-tsms}
+% \end{figure}
+
+% This may be overcome with dual \acro{DBMS} that share measure input,
+% as shown in Figure~\ref{fig:model:mtsms-tsms}. One is a \acro{TSMS}
+% for long-term deposit and only consulted in occasional cases, it can
+% be \acro{TSMS} with other compression techniques or large size
+% \acro{DBMS}. The other is a \acro{MTSMS} that lossy compresses time
+% series.
+
+% Then generic queries can be made from \acro{TSMS} information or from
+% \acro{MTSMS} selected information, as instance by TotalSeries. In
+% Figure~\ref{fig:model:mtsms-tsms} the logical equivalence of applying
+% $S'=\totalseries(M)$ to \acro{MTSMS} and $S'=
+% \multiresolution(S,\text{sch})$ to \acro{TSMS} is plotted, however the
+% implementation consideration are different. If we regard the resulting
+% time series $S'$ as a view of database information, then the
+% $\multiresolution$ is a view that must be computed fully at every new
+% measure addition and $\totalseries$ is a view that can be computed
+% incrementally at every new addition as explained next.
+
+
+% Time series data volume uses to be very big and increases along
+% time. However, this increase is due to a continuous acquisition of
+% data. When data comes as an ordered sequence of instances it is called
+% data stream, then specific \acro{DBMS} are designed to manage data
+% stream data \cite{stonebraker05:sigmod}.  \acro{MTSMS} can take
+% advantage of data stream orientation in order to simplify the
+% consolidation process.  Assuming a time order acquisition of time
+% series, the update of a \acro{MTSMS} only consists in the addition of
+% new measures and the incremental consolidation of subseries.  As a
+% consequence \acro{MTSMS} can be seen as a time series view
+% pre-computing system for a pair of aggregation statistics and time
+% resolution operations.  Then this pre-computation can be used for
+% another queries, limited to the aggregations previously computed, or
+% for graphical visualisations like the ones done by RRDtool
+% \cite{rrdtool}.
+
+% We then have showed a structure for manipulating in time order as then there are no updates in data and it can be managed more simpler. 
+
+%* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
+
+
+
+
+% \subsection{Stream orientation}
+
+% \todo{}
+% * Dues variacions possibles interessants pels MTSMS:
+
+ 
+%   - Buffers com a streams, sempre de mida fitada 
+%   - Discos enllaçats
+
+
+
+
+

@@ -74,9 +74,9 @@ tres s'implementen respectivament com a classes @Measure@,
 
   %Associacions visitor
   \umlclass[x=-1.5,y=-4] {RegularProp}{}{}
-  \umluniassoc  {RegularProp}{TimeSeries}
+  \umluniassoc  {TimeSeries}{RegularProp}
   \umlclass[x=1.5,y=-4] {Storage}{}{}
-  \umluniassoc {Storage}{TimeSeries}
+  \umluniassoc {TimeSeries}{Storage}
 
   %Dependencies
   \umlemptypackage[x=5,y=-5]{Matplotlib}
@@ -173,18 +173,17 @@ Python \parencite[\S 5.7]{python:doc2}.
 Les funcionalitats complementàries de les @TimeSeries@ s'han
 implementat amb relacions d'associació unidireccionals, les quals es
 mostren a la \autoref{fig:implementacio:pytsms-uml}. Així, hi ha dues
-funcionalitats complementàries: @RegularProp@ és un objecte
-que agrupa les operacions relacionades amb la regularitat de les
-sèries temporals i @Storage@ agrupa les operacions
-d'emmagatzematge i de recuperació en fitxers. En aquests casos,
-l'associació unidireccional indica que són objectes que treballen
-sobre una @TimeSeries@ i s'implementa a Python seguint el patró
-de disseny
-\emph{Visitor} \parencite[cap.~14]{ziade08:expert_python_programming}. Amb
-aquest patró les @TimeSeries@ esdevenen \emph{Visitable}, és a
-dir accepten objectes \emph{Visitor} que aporten funcionalitats
-extres. Així doncs, els objectes @RegularProperties@ i
-@Storage@ són \emph{Visitor}.
+funcionalitats complementàries: @RegularProp@ és un objecte que agrupa
+les operacions relacionades amb la regularitat de les sèries temporals
+i @Storage@ agrupa les operacions d'emmagatzematge i de recuperació en
+fitxers. En aquests casos, l'associació unidireccional indica que les
+@TimeSeries@ són objectes que admeten les operacions complementàries i
+s'implementa a Python seguint el patró de disseny
+\emph{Visitor} \parencite{ziade08:expert_python_programming:visitor,martin02:visitor}. Amb
+aquest patró les @TimeSeries@ esdevenen \emph{Visitable}, és a dir
+accepten objectes \emph{Visitor} que aporten funcionalitats
+extres. Així doncs, els objectes @RegularProperties@ i @Storage@ són
+\emph{Visitor}.
 
 
 La \autoref{fig:implementacio:pytsms-uml} mostra exemples
