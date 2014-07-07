@@ -538,7 +538,9 @@ genèricament són $t$ i $v$ però que també poden tenir altres noms.
   sèrie temporal en els atributs s'escriu com
   $\glssymboldef{not:sgst:project}_A(S)$ i es defineix de la mateixa
   manera que en els
-  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}. Aleshores
+  aquesta nova sèrie temporal $\glssymbol{not:sgst:project}_A(S)$
+  només inclou els atributs $A$ de les mesures.
 \end{definition}
 
 En l'operació de projecció, si els
@@ -694,11 +696,11 @@ En els \gls{SGBDR} els operadors computacionals bàsics són
 sèries temporals definim operacions equivalents a les dues primeres de
 la manera amb què habitualment s'utilitzen per als conjunts.  La
 tercera, el \emph{summarize}, és una operació que s'utilitza per a
-sintetitzar per grups, és a dir per a aplicar \emph{aggregate} a
-conjunts que prèviament s'han agrupat segons un atribut compartit.
-Per a les sèries temporals, però, necessitem una operació
-computacional més genèrica que ens permeti calcular recursivament
-sense haver de definir grups.
+sintetitzar informació mitjançant grups, és a dir aplica operacions
+\emph{aggregate} a conjunts que prèviament s'han agrupat segons un
+atribut compartit.  Per a les sèries temporals, però, necessitem una
+operació computacional més genèrica que ens permeti calcular
+recursivament sense haver de definir grups.
 
 
  % Operacions
@@ -723,27 +725,31 @@ que \emph{summarize}.
 
 
 
-\todo{revisar, símbols f diferents per a cada cas}
-
-
 L'operació de mapatge aplica una funció a cada element del conjunt.
 \begin{definition}[mapa]
-  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal i $F$ una funció
-  sobre una mesura a on $F:m\mapsto m'$, el mapa de $F$ a $S$ és una
-  sèrie temporal $S'=\{m_0', \dotsc, m_k'\}$ amb la funció aplicada a
-  cada mesura: $\map(S,f) = \{\forall m\in S : f(m) \}$.
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal i
+  $\glssymboldef{not:sgst:fmap}$ una funció de mapatge sobre una
+  mesura, $\glssymboldef{not:sgst:fmap}:m\mapsto m'$, el mapa de
+  $\glssymbol{not:sgst:fmap}$ a $S$ és una sèrie temporal $S'=\{m_0',
+  \dotsc, m_k'\}$ amb la funció aplicada a cada mesura:
+  $\glssymboldef{not:sgst:map}(S,\glssymbol{not:sgst:fmap}) =
+  \{\forall m\in S : \glssymbol{not:sgst:fmap}(m) \}$.
 \end{definition}
 
 
-L'operació d'agregació agrupa en una mesura els elements del conjunt
-segons un criteri, per exemple estadístics.
+L'operació d'agregació sintetitza en una mesura la informació dels
+elements del conjunt segons un criteri, per exemple estadístics.
 \begin{definition}[agregat]
   Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $m_i$ una mesura
-  i $f$ una funció de dues mesures a on $f: m_a \times m_b \mapsto
-  m_r$, l'agregat de $S$ segons $f$ amb valor inicial $m_i$ és una
-  mesura $m' = (t',v')$ amb l'agrupament de les mesures seguint el
-  criteri de la funció: $\agg(S,m_i,f) = f(\dots(
-  f(f(f(m_i,m_0),m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
+  inicial i $\glssymboldef{not:sgst:fagg}$ una funció d'agregació de
+  dues mesures, $\glssymbol{not:sgst:fagg}: m_a \times m_b \mapsto
+  m_r$, l'agregat de $S$ segons $\glssymbol{not:sgst:fagg}$ és una
+  mesura $m' = (t',v')$ que sintetitza la informació de les mesures
+  seguint el criteri de la funció a partir de la mesura inicial:
+  $\glssymboldef{not:sgst:aggregate}(S,m_i,\glssymbol{not:sgst:fagg})
+  = \glssymbol{not:sgst:fagg}(\dots(
+  \glssymbol{not:sgst:fagg}(\glssymbol{not:sgst:fagg}(\glssymbol{not:sgst:fagg}
+  (m_i, m_0), m_1), m_2 )\dots),m_k)$.
 \end{definition}
 
 % Més compactament descrit amb
@@ -760,13 +766,19 @@ segons un criteri, per exemple estadístics.
 L'operació de plegament combina recursivament els elements del conjunt
 segons un criteri.
 \begin{definition}[plec]
-  Sigui $S=\{m_0, \dotsc, m_k\}$ i $S_i=\{m_{i0}, \dotsc, m_{ik}\}$
-  dues sèries temporals i $f$ una funció d'una mesura amb una sèrie
-  temporal a on $f: S_a \times m_b \mapsto S_r$, el plec de $S$ segons
-  $f$ amb valor inicial $S_i$ és una sèrie temporal $S'= \{m_0',
-  \dotsc, m_k'\}$ amb l'agrupament de les mesures seguint el criteri
-  de la funció: $\fold(S,S_i,f) = f(\dots(
-  f(f(f(S_i,m_0),m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $S_i=\{m_{i0},
+  \dotsc, m_{ik}\}$ una sèrie temporal inicial i
+  $\glssymboldef{not:sgst:ffold}$ una funció de plegament d'una mesura
+  amb una sèrie temporal, $\glssymbol{not:sgst:ffold}: S_a \times m_b
+  \mapsto S_r$, el plec de $S$ segons $\glssymbol{not:sgst:ffold}$ és
+  una sèrie temporal $S'= \{m_0', \dotsc, m_k'\}$ amb les mesures
+  combinades seguint el criteri de la funció a partir de la sèrie
+  temporal inicial:
+  $\glssymboldef{not:sgst:fold}(S,S_i,\glssymbol{not:sgst:ffold}) =
+  \glssymbol{not:sgst:ffold}(\dots(
+  \glssymbol{not:sgst:ffold}(\glssymbol{not:sgst:ffold}(
+  \glssymbol{not:sgst:ffold}(S_i,m_0),m_1),\allowbreak m_2
+  )\dots),\allowbreak m_k)$.
 \end{definition}
 
 
@@ -774,27 +786,41 @@ Les operacions d'agregació i plegament tal com s'han definit es
 realitzen en ordre aleatori de mesures. Segons el criteri que
 s'utilitzi, l'ordre és important i per tant cal una operació que
 computi tenint-lo en compte. A tal efecte, a continuació s'amplia la
-funció de plegament. Per a la funció d'agregació es pot aplicar el
-mateix concepte d'ordre.
+definició de la funció de plegament per a tenir en compte l'ordre; per
+a la funció d'agregació es pot aplicar el mateix concepte.
 \begin{definition}[plec amb ordre]
   Sigui $S=\{m_0, \dotsc, m_k\}$ i $S_i=\{m_{i0}, \dotsc, m_{ik}\}$
-  dues sèries temporals, $f$ una funció d'una mesura amb una sèrie
-  temporal a on $f: S_a \times m_b \mapsto S_r$ i $o$ una funció que
-  treu una mesura d'una sèrie temporal a on $o: S_c \mapsto m_c$, el
-  plec de $S$ segons $f$ amb valor inicial $S_i$ i ordre $o$ és una
-  sèrie temporal $S'= \{m_0', \dotsc, m_k'\}$ amb l'agrupament de les
-  mesures seguint el criteri i l'ordre de les funcions:
-  $\fold(S,S_i,f,o) =
+  dues sèries temporals, $\glssymbol{not:sgst:ffold}$ una funció d'una
+  mesura amb una sèrie temporal i $\glssymbol{not:sgst:forder}$ una
+  funció que retorna una mesura continguda a una sèrie temporal,
+  $\glssymboldef{not:sgst:forder}: S_c \mapsto m_c$, el plec de $S$
+  segons $\glssymbol{not:sgst:ffold}$ amb valor inicial $S_i$ i ordre
+  $\glssymbol{not:sgst:forder}$ és una sèrie temporal $S'= \{m_0',
+  \dotsc, m_k'\}$ que combina les mesures seguint
+  el criteri i l'ordre de les funcions:
+  $\glssymboldef{not:sgst:ofold}(S,S_i,
+  \glssymbol{not:sgst:ffold},\glssymbol{not:sgst:forder}) =
   \begin{cases}
     S_i & \text{si } |S|=0, \\
-    \fold(S_o,f(S_i,m_o),f,o) & \text{altrament}
-  \end{cases}$ a on $m_o = o(S)$ i $S_o = S - \{m_o\}$.
+    \glssymbol{not:sgst:ofold}(S_o,\glssymbol{not:sgst:ffold}(S_i,m_o),
+    \glssymbol{not:sgst:ffold},\glssymbol{not:sgst:forder}) &
+    \text{altrament}
+  \end{cases}$ on $m_o = \glssymbol{not:sgst:forder}(S)$ i $S_o = S
+  - \{m_o\}$.
 \end{definition}
 
-El plec amb ordre és necessari quan la funció $f$ no és associativa ni
-commutativa perquè llavors l'ordre dels càlculs és important. Es pot
-observar que el plec sense ordre és un plec amb ordre aleatori:
-$\fold(S,S_i,f)\equiv \fold(S,S_i,f,o)$ a on $o=\text{aleatori}(S)$.
+El plec amb ordre és necessari quan la funció
+$\glssymbol{not:sgst:ffold}$ no és associativa ni commutativa perquè
+llavors l'ordre dels càlculs és important. Es pot observar que el plec
+sense ordre és un plec amb ordre aleatori:
+$\glssymbol{not:sgst:fold}(S,S_i,\glssymbol{not:sgst:ffold})\equiv
+\glssymbol{not:sgst:ofold}(S,S_i,\glssymbol{not:sgst:ffold},
+\glssymbol{not:sgst:forder})$ a on
+$\glssymbol{not:sgst:forder}=\text{aleatori}(S_c)$.
+
+
+\todo{la funció de plegament en els plecs sense ordre ha de ser commutativa i ¿associativa? Si no ho és, el resultat és aleatori}
+
 
 %De manera semblant $\agg(S,m_i,f)\equiv \agg(S,m_i,f,o)$ on $o=\text{aleatori}(S)$.
 
@@ -802,35 +828,47 @@ $\fold(S,S_i,f)\equiv \fold(S,S_i,f,o)$ a on $o=\text{aleatori}(S)$.
 
 Propietats d'operacions de plegament:
 \begin{itemize}
-\item El plec d'una sèrie temporal buida és la sèrie inicial; $\fold:
-  \{\} \times f \times S_i \mapsto S_i$.
+\item El plec d'una sèrie temporal buida és la sèrie inicial;
+  $\glssymbol{not:sgst:fold}: \{\} \times S_i \times
+  \glssymbol{not:sgst:ffold} \mapsto S_i$.
 
 \item El plec per una funció que sempre retorni la sèrie inicial és la
-  sèrie inicial; $\fold: S \times S_i \times f \mapsto S_i$ a on
-  $f: S_i \times m \mapsto S_i$.
+  sèrie inicial; $\glssymbol{not:sgst:fold}: S \times S_i \times \glssymbol{not:sgst:ffold} \mapsto S_i$ on
+  $\glssymbol{not:sgst:ffold}: S_i \times m \mapsto S_i$.
 
 \item El plec per una funció que només retorni la mesura original és
-  una sèrie amb una sola mesura; $\fold: S \times S_i \times f \mapsto
-  S'$ a on $f:S_i\times m \mapsto \{m\}$ i $|S'|=1$.
+  una sèrie amb una sola mesura; $\glssymbol{not:sgst:fold}: S \times
+  S_i \times \glssymbol{not:sgst:ffold} \mapsto S'$ on
+  $\glssymbol{not:sgst:ffold}:S_i\times m \mapsto \{m\}$ i $|S'|=1$.
 
 
 \item La funció d'unió en el plegament permet fer la identitat, $S
-  \equiv \fold(S,\{\},(S_i,m_i) \mapsto S_i \cup \{m_i\}$.
+  \equiv \glssymbol{not:sgst:fold}(S,\{\},\glssymbol{not:sgst:ffold})$
+  on $\glssymbol{not:sgst:ffold}: S_i \times m \mapsto S_i \cup \{m\}$.
 
 
-\item Els mapes es poden implementar com a plecs; $\map(S,f) \equiv
-  \fold(S,\{\},f')$ a on $f': S_i \times m_a \mapsto \{f(m_a)\}
-  \cup S_i$. \todo{lammel08-googles programming mapreduce també ho diu exemplificat amb el map i fold de kaskell}
+\item Els mapes es poden implementar com a plecs,
+  $\glssymbol{not:sgst:map}(S,\glssymbol{not:sgst:fmap}) \equiv
+  \glssymbol{not:sgst:fold}(S,\{\},\glssymbol{not:sgst:ffold})$ on
+  $\glssymbol{not:sgst:ffold}: S_i \times m_a \mapsto
+  \{\glssymbol{not:sgst:fmap}(m_a)\} \cup S_i$.  De manera semblant,
+  \textcite{lammel08:mapreduce} també exemplifica com els mapes es
+  poden implementar com a plecs. %pàg. 5 Asides on folding
 
-\item Els agregats es poden implementar com a plecs; $\agg(S,m_i,f)
-  \equiv \fold(S,\{m_i\},f')$ a on $f': \{m_i\} \times m \mapsto
-  \{f(m_i,m)\}$.
-
-
-\todo{la funció de plegament en els plecs sense ordre ha de ser commutativa i ¿associativa?}
+\item Els agregats es poden implementar com a plecs,
+  $\glssymbol{not:sgst:aggregate}(S,m_i,\glssymbol{not:sgst:fagg})
+  \equiv
+  \\glssymbol{not:sgst:fold}(S,\{m_i\},\glssymbol{not:sgst:ffold})$ on
+  $\glssymbol{not:sgst:ffold}: \{m_i\} \times m \mapsto
+  \{\glssymbol{not:sgst:fagg}(m_i,m)\}$.
 
 \end{itemize}
 
+
+
+
+
+\todo{revisar exemple}
 
 \paragraph{Exemples} Definicions de funcions d'exemple a partir de les
 operacions computacionals.

@@ -98,9 +98,22 @@
 \newglossaryentry{not:sgst:times}{name={producte},description={\ensuremath{S_1\times S_2}},symbol={\ensuremath{\times}},parent={not:op-conjunts}}
 \newglossaryentry{not:sgst:join}{name={junció},description={\ensuremath{S_1 \operatorname{join} S_2}},parent={not:op-conjunts},symbol={\ensuremath{\operatorname{join}}}}
 
-\newglossaryentry{not:sgst:map}{name={mapa},description={\ensuremath{\operatorname{map}(S,\glssymbol{not:F})}},parent={not:op-conjunts},symbol={\ensuremath{\operatorname{map}}}}
-\newglossaryentry{not:sgst:aggregate}{name={agregat},description={\ensuremath{\operatorname{agregat}(S,m_i,\glssymbol{not:F})}},parent={not:op-conjunts},symbol={\ensuremath{\operatorname{agregat}}}}
-\newglossaryentry{not:sgst:fold}{name={plec},description={\ensuremath{\operatorname{plec}(S,S_i,\glssymbol{not:F})}},parent={not:op-conjunts},symbol={\ensuremath{\operatorname{plec}}}}
+
+
+\newglossaryentry{not:sgst:computacional}{name={Computacionals},description={\nopostdesc},sort=65}
+
+\newglossaryentry{not:sgst:fmap}{name={Funció de mapatge},description={\ensuremath{\glssymbol{not:F}^m:m\mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^m}}}
+\newglossaryentry{not:sgst:fagg}{name={Funció d'agregació},description={\ensuremath{\glssymbol{not:F}^a:m_a\times m_b\mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^a}}}
+\newglossaryentry{not:sgst:ffold}{name={Funció de plegament},description={\ensuremath{\glssymbol{not:F}^p:S \times m \mapsto S'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^p}}}
+\newglossaryentry{not:sgst:forder}{name={Funció d'ordre},description={\ensuremath{\glssymbol{not:F}^o:S \mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^o}}}
+
+\newglossaryentry{not:sgst:map}{name={mapa},description={\ensuremath{\operatorname{mapa}(S,\glssymbol{not:sgst:fmap})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{mapa}}}}
+\newglossaryentry{not:sgst:aggregate}{name={agregat},description={\ensuremath{\operatorname{agregat}(S,m_i,\glssymbol{not:sgst:fagg})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{agregat}}}}
+\newglossaryentry{not:sgst:fold}{name={plec},description={\ensuremath{\operatorname{plec}(S,S_i,\glssymbol{not:sgst:ffold})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{plec}}}}
+\newglossaryentry{not:sgst:ofold}{name={plec amb ordre},description={\ensuremath{\operatorname{oplec}(S,S_i,\glssymbol{not:sgst:ffold},\glssymbol{not:sgst:forder})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{oplec}}}}
+
+
+
 
 
 \newglossaryentry{not:op-sequencies}{name={operacions de seqüències},description={\nopostdesc},sort=70 }
