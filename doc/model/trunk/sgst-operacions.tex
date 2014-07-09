@@ -189,10 +189,10 @@ $\min(S)$ són respectivament la mesura màxima i mínima d'$S$.
 
 \begin{definition}[Màxim i mínim]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\max(S)$ és el màxim de la sèrie temporal si i
-  només si $\forall m \in S: n \geq m $.  Direm que $n=\min(S)$ és el
-  mínim de la sèrie temporal si i només si $\forall m \in S: n \leq
-  m$.
+  mesura.  Direm que $n=\glssymboldef{not:sgst:max}(S)$ és el màxim de
+  la sèrie temporal si i només si $\forall m \in S: n \geq m $.  Direm
+  que $n=\glssymboldef{not:sgst:min}(S)$ és el mínim de la sèrie
+  temporal si i només si $\forall m \in S: n \leq m$.
 \end{definition}
 
 El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
@@ -205,11 +205,12 @@ hem exemplificat en el model estructural.
 \begin{definition}[Suprem i
   ínfim]\label{def:sgst:sup}\label{def:sgst:inf}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
-  mesura.  Direm que $n=\sup(S)$ és el suprem de la sèrie temporal si
-  $n=\max(S)$ en cas que el màxim estigui definit o
-  $n=(-\infty,\infty)$ en cas contrari.  Direm que $n=\inf(S)$ és
-  l'ínfim de la sèrie temporal si $n=\min(S)$ en cas que el mínim
-  estigui definit o $n=(+\infty,\infty)$ en cas contrari.
+  mesura.  Direm que $n=\glssymboldef{not:sgst:sup}(S)$ és el suprem
+  de la sèrie temporal si $n=\max(S)$ en cas que el màxim estigui
+  definit o $n=(-\infty,\infty)$ en cas contrari.  Direm que
+  $n=\glssymboldef{not:sgst:inf}(S)$ és l'ínfim de la sèrie temporal
+  si $n=\min(S)$ en cas que el mínim estigui definit o
+  $n=(+\infty,\infty)$ en cas contrari.
 \end{definition}
 
 Quan la sèrie temporal no és buida, per
@@ -742,8 +743,8 @@ elements del conjunt segons un criteri, per exemple estadístics.
 \begin{definition}[agregat]
   Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $m_i$ una mesura
   inicial i $\glssymboldef{not:sgst:fagg}$ una funció d'agregació de
-  dues mesures, $\glssymbol{not:sgst:fagg}: m_a \times m_b \mapsto
-  m_r$, l'agregat de $S$ segons $\glssymbol{not:sgst:fagg}$ és una
+  dues mesures, $\glssymbol{not:sgst:fagg}: m_r \times m_b \mapsto
+  m_r'$, l'agregat de $S$ segons $\glssymbol{not:sgst:fagg}$ és una
   mesura $m' = (t',v')$ que sintetitza la informació de les mesures
   seguint el criteri de la funció a partir de la mesura inicial:
   $\glssymboldef{not:sgst:aggregate}(S,m_i,\glssymbol{not:sgst:fagg})
@@ -769,8 +770,8 @@ segons un criteri.
   Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $S_i=\{m_{i0},
   \dotsc, m_{ik}\}$ una sèrie temporal inicial i
   $\glssymboldef{not:sgst:ffold}$ una funció de plegament d'una mesura
-  amb una sèrie temporal, $\glssymbol{not:sgst:ffold}: S_a \times m_b
-  \mapsto S_r$, el plec de $S$ segons $\glssymbol{not:sgst:ffold}$ és
+  amb una sèrie temporal, $\glssymbol{not:sgst:ffold}: S_r \times m
+  \mapsto S_r'$, el plec de $S$ segons $\glssymbol{not:sgst:ffold}$ és
   una sèrie temporal $S'= \{m_0', \dotsc, m_k'\}$ amb les mesures
   combinades seguint el criteri de la funció a partir de la sèrie
   temporal inicial:
@@ -793,7 +794,7 @@ a la funció d'agregació es pot aplicar el mateix concepte.
   dues sèries temporals, $\glssymbol{not:sgst:ffold}$ una funció d'una
   mesura amb una sèrie temporal i $\glssymbol{not:sgst:forder}$ una
   funció que retorna una mesura continguda a una sèrie temporal,
-  $\glssymboldef{not:sgst:forder}: S_c \mapsto m_c$, el plec de $S$
+  $\glssymboldef{not:sgst:forder}: S_c \mapsto m'$, el plec de $S$
   segons $\glssymbol{not:sgst:ffold}$ amb valor inicial $S_i$ i ordre
   $\glssymbol{not:sgst:forder}$ és una sèrie temporal $S'= \{m_0',
   \dotsc, m_k'\}$ que combina les mesures seguint
@@ -818,15 +819,12 @@ $\glssymbol{not:sgst:fold}(S,S_i,\glssymbol{not:sgst:ffold})\equiv
 \glssymbol{not:sgst:forder})$ a on
 $\glssymbol{not:sgst:forder}=\text{aleatori}(S_c)$.
 
-
-\todo{la funció de plegament en els plecs sense ordre ha de ser commutativa i ¿associativa? Si no ho és, el resultat és aleatori}
-
-
+% la funció de plegament en els plecs sense ordre ha de ser commutativa i ¿associativa? Si no ho és, el resultat és aleatori
 %De manera semblant $\agg(S,m_i,f)\equiv \agg(S,m_i,f,o)$ on $o=\text{aleatori}(S)$.
 
 
 
-Propietats d'operacions de plegament:
+Propietats de les operacions computacionals:
 \begin{itemize}
 \item El plec d'una sèrie temporal buida és la sèrie inicial;
   $\glssymbol{not:sgst:fold}: \{\} \times S_i \times
@@ -834,33 +832,33 @@ Propietats d'operacions de plegament:
 
 \item El plec per una funció que sempre retorni la sèrie inicial és la
   sèrie inicial; $\glssymbol{not:sgst:fold}: S \times S_i \times \glssymbol{not:sgst:ffold} \mapsto S_i$ on
-  $\glssymbol{not:sgst:ffold}: S_i \times m \mapsto S_i$.
+  $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto S_r$.
 
 \item El plec per una funció que només retorni la mesura original és
   una sèrie amb una sola mesura; $\glssymbol{not:sgst:fold}: S \times
   S_i \times \glssymbol{not:sgst:ffold} \mapsto S'$ on
-  $\glssymbol{not:sgst:ffold}:S_i\times m \mapsto \{m\}$ i $|S'|=1$.
+  $\glssymbol{not:sgst:ffold}:S_r\times m \mapsto \{m\}$ i $|S'|=1$.
 
 
 \item La funció d'unió en el plegament permet fer la identitat, $S
   \equiv \glssymbol{not:sgst:fold}(S,\{\},\glssymbol{not:sgst:ffold})$
-  on $\glssymbol{not:sgst:ffold}: S_i \times m \mapsto S_i \cup \{m\}$.
+  on $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto S_r \cup \{m\}$.
 
 
 \item Els mapes es poden implementar com a plecs,
   $\glssymbol{not:sgst:map}(S,\glssymbol{not:sgst:fmap}) \equiv
   \glssymbol{not:sgst:fold}(S,\{\},\glssymbol{not:sgst:ffold})$ on
-  $\glssymbol{not:sgst:ffold}: S_i \times m_a \mapsto
-  \{\glssymbol{not:sgst:fmap}(m_a)\} \cup S_i$.  De manera semblant,
+  $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto
+  \{\glssymbol{not:sgst:fmap}(m)\} \cup S_r$.  De manera semblant,
   \textcite{lammel08:mapreduce} també exemplifica com els mapes es
   poden implementar com a plecs. %pàg. 5 Asides on folding
 
 \item Els agregats es poden implementar com a plecs,
   $\glssymbol{not:sgst:aggregate}(S,m_i,\glssymbol{not:sgst:fagg})
   \equiv
-  \\glssymbol{not:sgst:fold}(S,\{m_i\},\glssymbol{not:sgst:ffold})$ on
-  $\glssymbol{not:sgst:ffold}: \{m_i\} \times m \mapsto
-  \{\glssymbol{not:sgst:fagg}(m_i,m)\}$.
+  \glssymbol{not:sgst:fold}(S,\{m_i\},\glssymbol{not:sgst:ffold})$ on
+  $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto
+  \{\glssymbol{not:sgst:fagg}(m_r,m)\}$ i $S_r =\{m_r\}$.
 
 \end{itemize}
 
@@ -868,66 +866,104 @@ Propietats d'operacions de plegament:
 
 
 
-\todo{revisar exemple}
+\begin{example}
+  Definicions de funcions d'exemple a partir de l'operació
+  computacional de mapatge:
 
-\paragraph{Exemples} Definicions de funcions d'exemple a partir de les
-operacions computacionals.
-
-Exemple d'operacions de mapatge:
 \begin{itemize}
-\item $\operatorname{identitat}: S \mapsto S'$ a on $S'=
-  \map(S,(t,v)\mapsto(t,v))$
-\item $\operatorname{intercanvi}: S \mapsto S'$ a on $S'=
-  \map(S,(t,v)\mapsto(v,t))$
-\item $\glssymbolsec{not:sgst:duplica-t}: S \mapsto S'$ a on $S'=
-  \map(S,(t,v)\mapsto(t,t))$
-\item $\operatorname{translaci\acute{o}}: S \times \delta \mapsto S'$ a on $S'=
-  \map(S,(t,v)\mapsto(t+\delta,v))$
-\item $\operatorname{t\cdot v}: S \mapsto S'$ a on $S'=
-  \map(S,(t,v)\mapsto(t,t\cdot v))$
-\item $\operatorname{tpredecessors_{v1}}: S \mapsto S'$ a on $S'= \map(S,(t,v)
-  \mapsto (t,T(\ant_S(m)))$, usant l'operació predecessor de la
-  \autoref{def:sgst:ant}
-\item $\operatorname{vpredecessors}: S \mapsto S'$ a on $S'= \map(S,(t,v)
-  \mapsto (t,V(\ant_S(m)))$, usant l'operació predecessor de la
-  \autoref{def:sgst:ant}
-\end{itemize}
+\item $\operatorname{identitat}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t,v))$
+\item $\operatorname{intercanvi}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(v,t))$
+\item $\glssymbolex{not:sgst:duplica-t}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t,t))$
+\item $\operatorname{translaci\acute{o}}: S \times d \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t+d,v))$
+\item $\operatorname{multiplica\_tv}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t,t\cdot v))$
 
-Exemple d'operacions d'agregació:
+%Encara no s'ha definit ant, per tant no es pot fer l'exemple
+% \item $\operatorname{tpredecessors_{v1}}: S \mapsto S'$ on $S'= \glssymbol{not:sgst:map}(S,(t,v)
+%   \mapsto (t,T(\ant_S(m)))$, usant l'operació predecessor de la
+%   \autoref{def:sgst:ant}
+% \item $\operatorname{vpredecessors}: S \mapsto S'$ on $S'= \glssymbol{not:sgst:map}(S,(t,v)
+%   \mapsto (t,V(\ant_S(m)))$, usant l'operació predecessor de la
+%   \autoref{def:sgst:ant}
+
+\end{itemize}
+\end{example}
+
+\begin{example}
+  Definicions de funcions d'exemple a partir de l'operació
+  computacional d'agregació. Ens els exemples següents utilitzem la
+  notació $(t^i,v^i) \times(t,v)$ per a indicar la funció
+  $\glssymbol{not:sgst:fagg}: m_r \times m_b \mapsto m'$ on $t^i
+  = T(m_r)$, $v^i=V(m_r)$, $t=T(m_b)$ i $v=V(m_b)$.
+
+
 \begin{itemize}
-\item $\operatorname{cardinal}: S \mapsto m'$ a on $m'=
-  \agg(S,(0,0),(t^i,v^i)\times(t,v)\mapsto(t^i,v^i+1)$
+\item $\operatorname{cardinal}: S \mapsto v'\in \glssymbol{not:N}$ on
+  $v'=V\big( \glssymbol{not:sgst:aggregate}
+  (S,(0,0),\glssymbol{not:sgst:fagg}) \big)$ i
+  $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times(t,v) \mapsto
+  (t^i,v^i+1) $. Aquesta funció és una implementació del cardinal de
+  la \autoref{def:sgst:cardinal} a partir de l'agregació.
 
-\item $\operatorname{sumaV}: S \mapsto m'$ a on $m'=
-  \agg(S,(0,0),(t^i,v^i)\times(t,v)\mapsto(t,v+v^i))$
+\item $\operatorname{suma\_v}: S \mapsto v'$ on $v'=V\big(
+  \glssymbol{not:sgst:aggregate} (S,(0,0),\glssymbol{not:sgst:fagg} )
+  \big)$ i $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times (t,v)
+  \mapsto(t^i,v+v^i)$
 
-\item $\glssymbolsec{not:sgst:mitjanav}: S \mapsto v'$ a on $v'=
-  V(\operatorname{sumaV}(S)) / V(\operatorname{cardinal}(S))$ \todo{alerta amb 0/0, com solucionar-ho?}
+\item $\glssymbolex{not:sgst:mitjanav}: S \mapsto v'$ on $v'=
+  \operatorname{suma\_v}(S) / \operatorname{cardinal}(S)$ 
+  % alerta amb 0/0, es deixa indefinit...
 
-\item $\operatorname{sup}: S \mapsto m'$ a on $m'=
-  \agg(S,(-\infty,\infty),(t^i,v^i)\times(t,v)\mapsto [(t^i,v^i)
-  \text{ if } t < t^i \text{ else } (t,v) ])$, implementació de
-  l'operació suprem de la \autoref{def:sgst:sup} a partir de
-  l'agregació
+\item $\operatorname{sup}: S \mapsto m'$ on $m'=
+  \glssymbol{not:sgst:aggregate}(S,(-\infty,\infty),\glssymbol{not:sgst:fagg}
+  )$ i $\glssymbol{not:sgst:fagg}: (t^i,v^i)\times(t,v) \mapsto \big(
+  (t^i,v^i) \text{ si } t < t^i, \text{ o } (t,v) \text{ en cas contrari}\big)  $. Aquesta
+  funció és una implementació de l'operació suprem de la
+  \autoref{def:sgst:sup} a partir de l'agregació.
 
-\item $\operatorname{ant}: S \times m \mapsto m'$ a on $m'=
-  \agg(S,(-\infty,\infty),(t^i,v^i)\times(t,v)\mapsto [(t,v)
-  \text{ if } t^i < t < T(m) \text{ else } (t^i,v^i) ])$,
-  implementació de l'operació predecessor de la \autoref{def:sgst:ant} a
-  partir de l'agregació 
+%Encara no s'ha definit ant, per tant no es pot fer l'exemple
+% \item $\operatorname{ant}: S \times m \mapsto m'$ on $m'=
+%   \glssymbol{not:sgst:aggregate}(S,(-\infty,\infty),(t^i,v^i)\times(t,v)\mapsto
+%   [(t,v) \text{ if } t^i < t < T(m) \text{ else } (t^i,v^i)
+%   ])$. Aquesta funció és una implementació de l'operació predecessor
+%   de la \autoref{def:sgst:ant} a partir de l'agregació.
 \end{itemize}
+\end{example}
 
+\begin{example}
+  Definicions de funcions d'exemple a partir de l'operació
+  computacional de plegament. 
 
-Exemple d'operació de plegament:
 \begin{itemize}
-\item $\operatorname{tpredecessors}_{v2}: S \mapsto S'$ a on $S'=
-  \fold(S,S^b,S_i\times (t,v) \mapsto f)$ a on $S^b =
-  \map(S,(t^b,v^b)\mapsto(t^b,-\infty))$, $f= \{(t,tp)\} \cup S_i$ i
-  $t_p=T(\sup(S^i \where t^i < t))$, sense usar l'operació predecessor
-  a diferència de l'exemple $\operatorname{tpredecessors_{v1}}$
+\item  $\operatorname{tpredecessors}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:fold}(S,S, \glssymbol{not:sgst:ffold})$ on $
+  \glssymbol{not:sgst:ffold}: S_r\times m \mapsto \{(T(m),t_p)\} \cup
+  S_r$ i $t_p=T(\sup( \glssymbol{not:sgst:select}_{t <
+    T(m)}(S_r)))$. Per a cada mesura de la sèrie temporal indica quin
+  és el temps de la mesura precedent.
+  % , sense usar l'operació predecessor  a diferència de l'exemple $\operatorname{tpredecessors_{v1}}$ 
+  %De fet aquesta operació es pot definir amb un mapa en comptes de plec i potser s'entén més? S'=mapa(S,(t',v') mapsto (t', T(sup(seleccio(S,t<t')))  ))
+
+\item $\glssymbolex{not:sgst:vpredecessors}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(\operatorname{tpredecessors}(S),
+  \glssymbol{not:sgst:fmap})$ i $\glssymbol{not:sgst:fmap}:
+  (t',v')\mapsto (t, V(\sup(\glssymbol{not:sgst:select}_{t=v'}(S))) ) $.
+  Per a cada mesura de la sèrie temporal indica quin és el valor de la
+  mesura precedent, és una definició a partir de l'operació de
+  $\operatorname{tpredecessors}$.
+
 \end{itemize}
 
+\end{example}
 
+
+
+
+\todo{fer exemples amb valors concrets}
 
 
 \subsubsection{Computacionals per a dues sèries temporals}
@@ -955,7 +991,7 @@ dues sèries temporals:
 \operatorname{op}: S_1 \times S_2 \longrightarrow S'
 \]
 \[
-\text{a on } S' = \map(\join(S_1,S_2),(t,v^1,v^2)\mapsto(t,v^1
+\text{on } S' = \map(\join(S_1,S_2),(t,v^1,v^2)\mapsto(t,v^1
 \operatorname{op} v^2))
 \]
 
@@ -970,10 +1006,10 @@ de temps, es pot aplicar la junció temporal de la
 Exemples de l'aplicació d'operacions computacionals per a dues sèries
 temporals
 \begin{itemize}
-\item $S' = S_1 + S_2$
+\item $S' = S_1 + S_2$ 
 \item $S' = S_1 / S_2$
-\item $\glssymbolsec{not:sgst:gradient}: S \mapsto S'$ a on $S'=
-  \operatorname{subtraccio}(S, \operatorname{vpredecessors}(S))$ i
+\item $\glssymbolsec{not:sgst:gradient}: S \mapsto S'$ on $S'=
+  \operatorname{subtraccio}(S, \glssymbol{not:sgst:vpredecessors}(S))$ i
   $\operatorname{subtraccio}$ és l'operació computacional de dues
   sèries temporals corresponent a l'operació aritmètica de resta,
   indicada pel nom complet per no confondre-la amb l'operació de diferència de
@@ -1016,7 +1052,7 @@ temps, semblant a com es fa a \cite{last:keogh,last:hetland}.
   \label{def:model:st-interval}
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
   $S(r,t) \subseteq S$ com la sèrie temporal $S(r,t)=\{m\in S
-  | r<T(m)<t\}$, a on $r$ i $t$ són dos instants de temps.
+  | r<T(m)<t\}$, on $r$ i $t$ són dos instants de temps.
 
   Tal com es fa en les seqüències, es defineix una notació de
   parèntesis i claudàtors per indicar si l'interval és obert, tancat o
@@ -1119,7 +1155,7 @@ l'operació d'unió.
   sèries temporals $S_1 || S_2$ és una sèrie temporal $S=\{m_0,
   \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
   $S_2$ que no intersequen en l'interval de $S_1$; $S_1 || S_2 = S_1
-  \cup ( S_2 - S_2[t_1,t_2] )$ a on $t_1=T(\inf S_1)$ i $t_2=T(\sup
+  \cup ( S_2 - S_2[t_1,t_2] )$ on $t_1=T(\inf S_1)$ i $t_2=T(\sup
   S_1)$.
 \end{definition}
 
@@ -1180,7 +1216,7 @@ def.~\ref{def:model:zohe}).
   Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
   $S^\text{ZOHE}(t)$ la representació ZOHE, es defineix la subsèrie
   $S[t_0,t_f]^{\text{ZOHE}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\text{ZOHE}} = S(t_0,t_f] \cup \{m\}$ a on $m=(t_f,v)$
+  $S[t_0,t_f]^{\text{ZOHE}} = S(t_0,t_f] \cup \{m\}$ on $m=(t_f,v)$
   i $v= V(\inf( S[t_f,+\infty] ))$.
 \end{definition}
   %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
@@ -1252,7 +1288,7 @@ primera.
   amb representació $r$, $S_1 ||^r S_2$, és una sèrie temporal $S=\{m_0,
   \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
   $S_2$ que no intersequen en l'interval temporal de $S_1$; $S_1 ||^r
-  S_2 = S_1 \cup ( S_2 -^t S_2[t_1,t_2]^r )$ a on $t_1=T(\inf S_1)$ i
+  S_2 = S_1 \cup ( S_2 -^t S_2[t_1,t_2]^r )$ on $t_1=T(\inf S_1)$ i
   $t_2=T(\sup S_1)$.
 \end{definition}
 
@@ -1315,8 +1351,6 @@ Propietats de la semijunció temporal:
 \item El cardinal resultant és $|S'| = k_1$.
 \item No és commutativa.
 \end{itemize}
-
-
 
 
 
