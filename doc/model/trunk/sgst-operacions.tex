@@ -42,11 +42,12 @@ semànticament errònia.
 
 
 \subsection{Bàsiques de conjunts}
+\glsaddsec{not:op-conjunts} %%%%secció d'operacions
 
 En el model estructural de \gls{SGST} hem definit les sèries temporals
 utilitzant conjunts. En aquest apartat definim operadors per a les
 sèries temporals recollint els operadors habituals que tenen els
-conjunts.
+conjunts.   
 
 El model relacional de \gls{SGBDR} defineix els seus operadors bàsics
 a partir de l'àlgebra de
@@ -627,7 +628,7 @@ temporals el producte resulta en una sèrie temporal amb dos atributs
 de temps, a la qual anomenem sèrie temporal doble (v.\
 \autoref{def:sgst:st-doble}).
 \begin{definition}[producte]
-  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  Siguin $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals en forma canònica, el producte de
   les dues sèries temporals $S_1 \glssymboldef{not:sgst:times}
   S_2$ és una sèrie temporal doble $S=\{m_0, \dotsc, m_k\}$ que conté
@@ -656,7 +657,7 @@ parelles que tenen el mateix atribut de temps en ambdues sèries
 temporals . El resultat de la junció és una sèrie temporal
 multivaluada.
 \begin{definition}[junció]\label{def:sgst:join}
-  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  Siguin $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals en forma canònica, la junció de
   les dues sèries temporals $S_1 \glssymboldef{not:sgst:join} S_2$ és
   una sèrie temporal multivaluada $S=\{m_0, \dotsc, m_k\}$ que
@@ -685,7 +686,7 @@ Propietats de la junció:
 
 
 \subsubsection{Computacionals: mapa, agregat i plec}
-
+\glsaddsec{not:sgst:computacional} %%%%secció d'operacions
 
 Per a poder operar amb els conjunts, a més de l'àlgebra definida fins
 ara, es necessiten operadors amb funcionalitats computacionals; és a
@@ -961,76 +962,108 @@ Propietats de les operacions computacionals:
 \end{example}
 
 
+\begin{example}
+  Sigui la sèrie temporal $S=\{(1,1),(3,1),(4,0),(5,1)\}$. %
+  La duplicació dels temps en els valors de la sèrie temporal és
+  $\glssymbol{not:sgst:duplica-t}(S)=\{(1,1),(3,3),(4,4),(5,5)\}$. %
+  La mitjana dels valors de la sèrie temporal és
+  $\glssymbol{not:sgst:mitjanav}(S) = 0,75$. %
+  Els temps predecessors de cada mesura de la sèrie temporal és
+  $\operatorname{tpredecessors}(S)=\{(1,-\infty),(3,1),(4,3),(5,4)\}$
+  i els valors predecessors
+  $\glssymbol{not:sgst:vpredecessors}(S)=\{(1,\infty),(3,1),(4,1),(5,0)\}$.
+\end{example}
 
 
-\todo{fer exemples amb valors concrets}
 
 
-\subsubsection{Computacionals per a dues sèries temporals}
+\subsubsection{Computacionals binàries amb els valors}
 
-Una operació en els conjunts és la d'aplicar un operador binari a
+Una operació en els conjunts és la que aplica un operador binari a
 totes les parelles possibles dels elements de dos conjunts. Per
-exemple la suma aplicada a dos conjunts A i B és un conjunt $A + B =
-\{ e_a+e_b : (e_a,e_b) \in A\times B \}$.
+exemple la suma, és a dir l'operador binari $+$, aplicada a dos
+conjunts $A$ i $B$ és un conjunt $A + B = \{ e_a+e_b : (e_a,e_b) \in
+A\times B \}$.
 
 Per a les sèries temporals també calen operacions computacionals amb
-els valors de dues sèries temporals. En el cas d'operar amb dues
-sèries temporals primer cal ajuntar les dues sèries temporals amb les
-que es vol operar i després aplicar les operacions computacionals a la
-sèrie temporal resultant.
+les mesures de dues sèries temporals. En el cas d'operar amb dues
+sèries temporals primer cal ajuntar les dues sèries temporals que es
+volen operar i després aplicar les operacions computacionals binàries
+a la sèrie temporal resultant.
 
 
 El producte i la junció són els operadors que permeten crear parelles
 de mesures de dues sèries temporals. Per a operar amb els valors de
 dues sèries temporals la junció és més adequada ja que permet ajuntar
-el valors que tenen temps comuns. Així doncs, per a aplicar un
-operador binari $\operatorname{op}$ que calculi amb els valors de
-dues sèries temporals:
-
-\[
-\operatorname{op}: S_1 \times S_2 \longrightarrow S'
-\]
-\[
-\text{on } S' = \map(\join(S_1,S_2),(t,v^1,v^2)\mapsto(t,v^1
-\operatorname{op} v^2))
-\]
+el valors que tenen temps comuns. Així doncs, es defineix l'aplicació
+d'un operador binari de valors a dues sèries temporals a partir de la
+junció.
+\begin{definition}[Operació computacional binària amb els valors]
+  Siguin $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals i sigui
+  $\glssymboldef{not:sgst:opbinari}$ un operador binari que computi
+  amb dos valors, $\glssymbol{not:sgst:opbinari}:v_1 \times v_2
+  \mapsto v'$, l'aplicació d'aquest operador binari a dues sèries
+  temporals és $\glssymboldef{not:sgst:computacionalbinaria}: S_1
+  \times S_2 \longrightarrow S'$ on $S' = \glssymbol{not:sgst:map}
+  (S_1 \glssymbol{not:sgst:join} S_2, (t,v_1,v_2) \mapsto (t,v_1
+  \glssymbol{not:sgst:opbinari} v_2))$. Usem la notació
+  $m=(t,v_1,v_1)$ on $m\in S_1 \glssymbol{not:sgst:join} S_2$.
+\end{definition}
 
 Cal tenir en compte que la junció de la \autoref{def:sgst:join} només
 sap operar amb dues sèries temporals que tinguin el mateix vector de
-temps; és a dir regulars entre elles (v.\
-def.~\ref{def:st:regular}). En el cas que no tinguin el mateix vector
+temps; és a dir regulars entre elles (v.\ \autoref{def:st:regular}). En el cas que no tinguin el mateix vector
 de temps, es pot aplicar la junció temporal de la
 \autoref{def:sgst:joint}.
 
 
-Exemples de l'aplicació d'operacions computacionals per a dues sèries
-temporals
-\begin{itemize}
-\item $S' = S_1 + S_2$ 
-\item $S' = S_1 / S_2$
-\item $\glssymbolsec{not:sgst:gradient}: S \mapsto S'$ on $S'=
-  \operatorname{subtraccio}(S, \glssymbol{not:sgst:vpredecessors}(S))$ i
-  $\operatorname{subtraccio}$ és l'operació computacional de dues
-  sèries temporals corresponent a l'operació aritmètica de resta,
-  indicada pel nom complet per no confondre-la amb l'operació de diferència de
-  conjunts que té el guionet per símbol (\emph{-}).
-\end{itemize}
+\begin{example}
+  Exemples de l'aplicació d'operacions computacionals binàries en què
+  s'aplica un operador binari $ \glssymbol{not:sgst:opbinari}$ als
+  valors de dues sèries temporals
+  \begin{itemize}
+  \item $S' = S_1 + S_2$ 
+  \item $S' = S_1 \operatorname{subtraccio} S_2$. Indiquem amb el
+    nom complet, $\operatorname{subtraccio}$, l'operació computacional
+    de dues sèries temporals corresponent a l'operació aritmètica de
+    resta, per no confondre-la amb l'operació de diferència de
+    conjunts que té el guionet per símbol (\emph{-}).
+  \end{itemize}
+  
+  Les operacions computacionals binàries també es poden usar per a
+  definir altres operacions, per exemple per a calcular els increments de valor
+  d'una sèrie temporal:
+  \begin{itemize}
+  \item $\glssymbolex{not:sgst:increments}: S \mapsto S'$ on $S'=
+    S \operatorname{subtraccio} \glssymbol{not:sgst:vpredecessors}(S)$.
+  \end{itemize}
+\end{example}
 
 
 
 
-
+\begin{example}
+  Siguin les dues sèries temporals $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$
+  and $S_2=\{(1,2),(3,2),(4,0),(5,2)\}$. %
+  La suma de les dues sèries temporals és
+  $S_1+S_2=\{(1,3),(3,3),(3,3),(4,0)\}$. %
+  Els increments de la primera sèrie temporal són
+  $\glssymbol{not:sgst:increments}(S_1)=\{(1,\infty),(3,0),(4,-1),(5,1)\}$.
+\end{example}
 
 
 
 
 \subsection{Bàsiques de seqüències}
+\glsaddsec{not:op-sequencies} %%%%secció d'operacions
+
 
 Atesa la relació d'ordre induïda pel temps en una sèrie temporal
 (def.\ \ref{def:model:mesura-relacio-ordre}), les sèries temporals es
 poden tractar com a seqüències.  En aquest apartat definim operadors
 per a les sèries temporals recollint els operadors habituals que tenen
-les seqüències.
+les seqüències. 
 
 Els operadors que treballen amb seqüències tenen en compte l'atribut
 que marca un ordre total en el conjunt. En el cas de les sèries
@@ -1050,19 +1083,21 @@ temps, semblant a com es fa a \cite{last:keogh,last:hetland}.
 
 \begin{definition}[Interval]
   \label{def:model:st-interval}
-  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal. Definirem el subconjunt
-  $S(r,t) \subseteq S$ com la sèrie temporal $S(r,t)=\{m\in S
-  | r<T(m)<t\}$, on $r$ i $t$ són dos instants de temps.
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i siguin $r$ i $t$
+  dos instants de temps. Definim el subconjunt
+  $S\glsdispdef{not:sgst:interval}{(r,t)} \subseteq S$ com la sèrie
+  temporal $S(r,t)=\{m\in S | r<T(m)<t\}$.
 
   Tal com es fa en les seqüències, es defineix una notació de
   parèntesis i claudàtors per indicar si l'interval és obert, tancat o
   semiobert:
 
-  $S[r,t)=\{m\in S  | r\leq T(m)< t\}$
+  $S\glsdispdef{not:sgst:intervalsemi}{[r,t)}=\{m\in S  | r\leq T(m)< t\}$
 
   $S(r,t]=\{m\in S  | r<T(m)\leq t\}$
 
-  $S[r,t]=\{m\in S  | r\leq T(m)\leq t\}$
+  $S\glsdispdef{not:sgst:intervaltancat}{[r,t]}=\{m\in S | r\leq
+  T(m)\leq t\}$
 \end{definition}
 
 
@@ -1099,35 +1134,39 @@ seqüència.
 
 \begin{definition}[Successor i
   predecessor]\label{def:sgst:seg}\label{def:sgst:ant}
-  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i $l\in S$ i $n$ dues
-  mesures. Direm que $l$ és el successor de $n$ en $S$ i ho notarem
-  com $l=\seg\limits_S(n)$ si i només si $l=\inf(S(T(n),+\infty])$.
-  Direm que $l$ és el predecessor de $n$ en $S$ i ho notarem com
-  $l=\ant\limits_S(n)$ si i només si $l=\sup(S[-\infty,T(n)))$.
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i siguin $l$ i $n$
+  dues mesures on la primera pertany a la sèrie temporal, $l\in
+  S$. Direm que $l$ és el successor de $n$ en $S$ i ho notarem com
+  $l=\glssymboldef{not:sgst:next}_S(n)$ si i només si
+  $l=\inf(S(T(n),+\infty])$.  Direm que $l$ és el predecessor de $n$
+  en $S$ i ho notarem com $l=\glssymboldef{not:sgst:prev}_S(n)$ si i
+  només si $l=\sup(S[-\infty,T(n)))$.
 
-Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
-exemple quan $n\in S$, podrem escriure $\seg(n)$ i $\ant(n)$.
+  Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
+  exemple quan $n\in S$, podrem escriure
+  $\glssymbol{not:sgst:next}(n)$ i $\glssymbol{not:sgst:prev}(n)$.
 \end{definition}
 
 S'observa que s'obtenen mesures indefinides en els casos que la
 mesura següent o anterior es calcula respectivament per la mesura
-suprema o ínfima de la sèrie temporal: $\seg\limits_S(\sup
-S)=(+\infty,\infty)$ i $\ant\limits_S(\inf S)=(-\infty,\infty)$.
+suprema o ínfima de la sèrie temporal: $\glssymbol{not:sgst:next}_S(\sup
+S)=(+\infty,\infty)$ i $\glssymbol{not:sgst:prev}_S(\inf S)=(-\infty,\infty)$.
 
 De la definició anterior es dedueix que donada una sèrie temporal $S$
 que no conté mesures indefinides i donada la mesura indefinida
 $o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
-sèrie temporal $\ant\limits_S( (+\infty,\infty) ) = \sup(S): \forall
-m\in S: T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
+sèrie temporal $\glssymbol{not:sgst:prev}_S( (+\infty,\infty) ) =
+\sup(S): \forall m\in S:
+T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
 \emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
   una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
-  $l=\ant\limits_S(o)$ que compleix
+  $l=\glssymbol{not:sgst:prev}_S(o)$ que compleix
   $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
   $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
   \mathbb{R}$, i per tant com que $S$ no té mesures indefinides es
   demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
-$\seg\limits_S( (-\infty,\infty) ) = \inf(S): \forall m\in S:
-T(m)\in\mathbb{R}$.
+$\glssymbol{not:sgst:next}_S( (-\infty,\infty) ) = \inf(S): \forall
+m\in S: T(m)\in\mathbb{R}$.
 
 
 \subsubsection{Concatenació}
@@ -1173,6 +1212,7 @@ Propietats
 
 \subsection{Funció temporal}
 \label{sec:sgst:operadors-temporals}
+\glsaddsec{not:op-funcio} %%%%secció d'operacions
 
 Atenent a que una sèrie temporal és la representació d'un funció
 contínua (v.\ cap.~\todo{Ref!Falta fer el capítol de representació})
