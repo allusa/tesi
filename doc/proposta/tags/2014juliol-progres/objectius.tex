@@ -1,0 +1,102 @@
+
+\begin{abstract}
+\todo{}
+  En aquest document es detalla el progrés en el pla de treball
+  presentat el 2012 per a assolir la recerca en el disseny d'un model
+  de sistema de gestió per a sèries temporals. En primer lloc es
+  presenta l'actualització dels objectius, en segon lloc el progrés en
+  funció de les tasques planificades realitzades i en tercer lloc la
+  modificació del pla de treball per a assolir els objectius pendents.
+\end{abstract}
+
+
+
+\section{Objectius}
+\label{sec:objectius}
+
+Aquesta recerca té per objectiu l'estudi de les necessitats
+específiques que comporta l'emmagatzematge i gestió de dades amb
+naturalesa de sèrie temporal i la proposta d'un model de SGBD que
+satisfaci aquestes necessitats. Aquest objectiu es divideix en els
+següents subobjectius més concrets:
+
+\begin{enumerate}
+
+\item Estudi de les aplicacions en que les dades són sèries temporals
+  amb la finalitat de determinar quines són les propietats i problemes
+  comuns que planteja la seva gestió i emmagatzematge.
+
+\item Estudi dels models de SGBD existents. Segons es desprèn de la
+  formalització de \textcite{date:introduction} el model principal és
+  el model relacional, el qual es fonamenta en dos conceptes:
+  relacions i tipus de dades. 
+
+\item Una àrea de treball important en els SGBD és la incorporació de
+  nous tipus de dades complexos. És important estudiar com es modifica
+  el model de dades d'un SGBD quan s'afegeix un nou tipus de dades
+  complex.  Les sèries temporals es poden d'entendre com a tipus
+  complex ja que presenten diferents propietats característiques i
+  necessiten operadors addicionals.  
+
+\item Disseny d'un model de SGBD per a les sèries temporals. D'aquesta
+  manera els SGBD podran tractar dades amb instants de temps que
+  mostrin l'evolució de variables en funció del temps. El model
+  consisteix en la definició de l'estructura de les sèries temporals i
+  les operacions bàsiques que necessiten.
+
+  L'assoliment d'aquest objectiu té tres parts:
+
+  \begin{enumerate}
+  \item Disseny d'un model per a la gestió bàsica de les sèries
+    temporals, el qual anomenem model de SGBD per a sèries temporals
+    (SGST).  L'estructura d'aquest model és similar a l'utilitzat en
+    els intervals
+    temporals \parencite{date02:_tempor_data_relat_model}.  Prenent
+    com a base el model de SGST, el qual és un model general per a les
+    sèries temporals, s'hi poden incloure altres models per a
+    propietats més específiques de les sèries temporals.
+
+  \item Disseny d'un model específic en base del model de
+    SGST. Concretament es dissenya un model pels SGST multiresolució
+    (SGSTM).  En el model de SGSTM s'hi poden incloure propietats de
+    les sèries temporals relacionades amb la resolució que s'han
+    observat en les aplicacions pràctiques de les sèries temporals:
+    regularització, canvis de resolució mitjançant agregacions,
+    reconstrucció de forats, etc.
+ 
+  \item Avaluació de diferents estructures de SGSTM. El model de SGSTM
+    s'hi poden fer modificacions o simplificacions per tal
+    d'aconseguir diferents estructures.  Per exemple bases de dades
+    multiresolució que comparteixin informació, que treballin amb flux
+    de dades (\emph{data stream}) o bé que s'especialitzin per a un
+    tipus determinat de sèries temporals.
+
+  \end{enumerate}
+
+\item Implementació de referència dels models de SGST i SGSTM. Per una
+  banda, aquesta implementació, a nivell acadèmic, ha de servir com a
+  exemple per a futurs desenvolupaments de sistemes de gestió,
+  acadèmics o productius. Per altra banda, ha de servir per a
+  exemplificar-ne els seu funcionament amb unes dades de prova.
+
+\item Implementació específica i reduïda del model per a una
+  determinada aplicació de sèries temporals. Exemplificació de com una
+  estructura de SGSTM pot ser implementada per a aconseguir una
+  aplicació molt concreta. \todo{aquí pensavem en VHDL però ara potser pensem amb MapReduce}
+
+\end{enumerate} 
+
+
+El objectius 4.c i 6. són resultat d'una nova planificació com es
+detalla més endavant a les tasques futures.
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
+% LocalWords:  SGSTM multiresolució SGST
