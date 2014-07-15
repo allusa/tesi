@@ -1,8 +1,8 @@
 
 
 \documentclass[
-  prepint,
-%  review,
+%  prepint,
+  review,
   twocolumn,
   5p,
 ]{elsarticle}
@@ -39,14 +39,14 @@
 
 
 \usepackage[
-          counter=section,
+%          counter=section,
 %          acronym,
-          %%nonumberlist,
+          nonumberlist,
           %%toc,
           nomain,
 %          section,
 %          numberedsection=autolabel,
-          sanitize=none, %pels accents en el vegeu
+%          sanitize=none, %pels accents en el vegeu
           ]{glossaries}
 
 
@@ -123,13 +123,6 @@
 
 
 \bibliographystyle{elsarticle-num}
-%\biboptions{}
-
-% \ExecuteBibliographyOptions{
-%   isbn=false,url=false,doi=true,eprint=false,alldates=terse,firstinits=true,abbreviate=true,urldate=long,
-% %maxnames=2,
-% }
-
 
 
 
@@ -149,18 +142,24 @@
 
   \author
   [dipse]
-  {Teresa Escobet Canal\fnref{order}}
+  {Teresa Escobet Canal
+%    \fnref{order}
+}
   \ead{teresa.escobet@upc.edu}
 
   \author
   [dipse]
-  {Aleix Llus\`{a} Serra\corref{mycorrespondingauthor}\fnref{order}}
+  {Aleix Llus\`{a} Serra\corref{mycorrespondingauthor}
+%    \fnref{order}
+  }
   \cortext[mycorrespondingauthor]{Corresponding author. Tel: +34 938777317}
   \ead{aleix@dipse.upc.edu}
 
   \author
   [dipse]
-  {Sebasti\`{a} Vila-Marta\fnref{order}}
+  {Sebasti\`{a} Vila-Marta
+%    \fnref{order}
+  }
   \ead{sebas@dipse.upc.edu}
 
   \address
@@ -168,7 +167,7 @@
   {Department of Electronic System Design and Programming\\ Universitat Polit\`{e}cnica de Catalunya\\ Av.~Bases de Manresa 61--73, 08242 Manresa, ES-CT}
 
  
-  \fntext[order]{The authors are listed as per alphabetical order.}
+%  \fntext[order]{The authors are listed as per alphabetical order.}
 
 
   \begin{abstract}
@@ -233,8 +232,16 @@ Polit\`{e}cnica de Catalunya predoctoral grant.
 \glsaddall
 \appendix
 \section{Notation}
-\printglossary[type=notation,style=estil-notation,title=Name and symbol]
+\label{sec:notation}
 
+
+{\small
+Name and symbol notation. Divided into
+\acro{TSMS} and \acro{MTSMS} notation and each organised into its
+components.
+\setglossarysection{paragraph}
+\printglossary[type=notation,style=estil-notation,title=]
+}
 
 
 

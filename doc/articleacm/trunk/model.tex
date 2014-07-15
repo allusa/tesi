@@ -257,13 +257,14 @@ m^2 \notinst S_1 \}$.
 
 
 \begin{example}\label{ex:model:s1s2}
-  Let $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$ and $S_2 =\allowbreak \{\allowbreak
-  (2,2),\allowbreak (3,2),(4,0),(6,2)\}$ be two time series. The union
-  from first and second results $S_1 \cup S_2 =
-  \{(1,1),(2,2),\allowbreak (3,1),\allowbreak (4,0),\allowbreak
-  (5,1),(6,2)\}$. The temporal union from both results $S_1 \cupt S_2
-  = S_2 \cupt S_1 = \{(1,1),(2,2),(4,0),(5,1),\allowbreak (6,2)\}$. %
-  \linebreak[4] Venn diagrams for both cases are shown in
+  Let $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$ and $S_2 = \allowbreak
+  \{\allowbreak (2,\allowbreak 2),\allowbreak (3,2),(4,0),(6,2)\}$ be
+  two time series. The union from first and second results $S_1 \cup
+  S_2 = \{(1,1),\allowbreak (2,2),\allowbreak (3,1),\allowbreak (4,
+  0),\allowbreak (5,1),\allowbreak (6,2)\}$. The temporal union from
+  both results $S_1 \cupt S_2 = S_2 \cupt S_1 =
+  \{(1,1),(2,2),(4,0),(5,1),\allowbreak (6,2)\}$. %
+  Venn diagrams for both cases are shown in
   Figure~\ref{fig:model:venn}, where the coloured area is the
   resulting time series. For each, the central intersecting area
   indicates measures that share time and value attributes, as instance
@@ -977,8 +978,9 @@ the general integral definition.
 
 
 
-\begin{example}\label{ex:model:smultiresolution} Queries over a defined
-  multiresolution schema for an example time series.  Let $S = \{
+\begin{example}\label{ex:model:smultiresolution} 
+  We define a multiresolution schema for a time series, we consolidate
+  the database and we query its information.  Let $S = \{
   (1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
   (14,1),\allowbreak (19,6),\allowbreak (22,11),\allowbreak
   (26,6),(29,0) \}$ be a time series and $M_\emptyset=\{R_0,R_1\}$ a
@@ -996,16 +998,16 @@ the general integral definition.
   at this state.
 
   Then the two time subseries consolidated are obtained by querying
-  $\seriedisc(M_{29},5,\meanz)=\{(10,3),(15,2),\allowbreak
-  (20,\allowbreak 7),\allowbreak (25,8)\}$ and
-  $\seriedisc(M_{29},10,\maxz)= \{ \allowbreak (10,6),\allowbreak
-  (20,11)\}$. Regarding buffers, note that $S_{B0_{29}}= \{\allowbreak
-  (26,6),\allowbreak (29,0)\allowbreak \}$ and
-  $S_{B1_{29}}=\{(22,11),(26,6),(29,0)\}$.
+  $\seriedisc(M_{29},5,\allowbreak \meanz)=\{(10,3),\allowbreak
+  (15,\allowbreak 2),\allowbreak (20,7),\allowbreak (25,8)\}$ and
+  $\seriedisc(M_{29},10,\allowbreak  \maxz) =\allowbreak \{ \allowbreak
+  (10,6),\allowbreak (20,11)\}$. Regarding buffers, note that
+  $S_{B0_{29}}= \{\allowbreak (26,6),\allowbreak (29,0)\allowbreak \}$
+  and $S_{B1_{29}}=\{\allowbreak (22,11),\allowbreak (26,6),(29,0)\}$.
 
-  In this particular example $\seriedisc(M_{29},5,\meanz)=\break
-  \totalseries(M_{29})$ as $R_0$ has double resolution than
-  $R_1$. $\square$
+  In this particular example
+  $ \totalseries(M_{29}) = \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has
+  double resolution than $R_1$. $\square$
 \end{example}
 
 
