@@ -44,35 +44,45 @@ l'actualitat.
     \ganttbar{2. Model relacional}{1}{4} \\
     \ganttbar{%3. Intervals temporals
 }{3}{3} 
-    \ganttbar{3. Naturalesa ST}{7}{7} \\
-%%NOVA    \ganttbar[bar/.style={draw,fill=white}]{4. Computació ST}{10}{11} \\
+    \ganttbar{3. Propietats ST}{7}{7} \\
 
-    \ganttgroup[progress=66]{Disseny models}{5}{8} \\
-    \ganttbar[progress=75]{4. Sèries temporals}{5}{7} \\
-    \ganttbar[progress=75]{5. Multiresolució}{6}{7} \\
-    \ganttbar[bar/.style={fill=white,draw}]{5.b Estructures}{8}{8} \\
+    \ganttgroup[progress=80]{Disseny models}{5}{8} \\
+    \ganttbar[progress=100]{4. Sèries temporals}{5}{7} \\
+    \ganttbar[progress=100,name=sgstm]{5. Multiresolució}{6}{7} \\
+    \ganttbar[progress=75]{5.b Estructures}{8}{8} 
+%NOVA    \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} 
+\\
 
-    \ganttgroup[progress=0]{Experimentació}{8}{9} \\
-    \ganttbar[progress=100]{6. Implementació}{8}{9} \\
-%NOVA    \ganttbar[progress=0]{6.b Para\l.lela}{10}{10} \\
-    \ganttbar[progress=80]{7. Dades experimentals}{9}{10} \\
+    \ganttgroup[progress=80]{Experimentació}{8}{9} \\
+    \ganttbar[progress=100,name=python]{6. Impl. referència}{8}{9} \\
+    \ganttbar[bar/.style={draw,pattern=north east lines}]{6.b Impl. para\l.lela}{10}{10} 
+%NOVA ampliar impl. paralela \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} 
+\\
+
+    \ganttbar[progress=75]{7. Dades experimentals}{9}{10} 
+%NOVA dades xipre   \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} 
+\\
+
+   \ganttlink{sgstm}{python}
 
 
+   \ganttgroup[progress=75]{Redacció}{2}{10} \\
 
+    \ganttbar[progress=80]{8. Redacció memòria}{9}{10} \\
+    \ganttlinkedmilestone[milestone/.append style={color=lightgray}]{Lectura de tesi}{10} \\
 
-   \ganttgroup[progress=20]{Redacció}{2}{10} \\
-
-    \ganttbar[progress=0]{8. Redacció memòria}{9}{10} \\
-    \ganttlinkedmilestone[milestone/.style={fill=lightgray}]{Lectura de tesi}{10} \\
-
-    \ganttbar[progress=100]{9. Redacció articles}{4}{4} 
+    \ganttbar[progress=100,name=articles1]{9. Redacció articles}{4}{4} 
     \ganttbar[progress=100]{}{9}{9} 
-    \ganttbar[bar/.style={fill=white,draw}]{}{10}{10} \\
+    \ganttbar[bar/.style={draw,pattern=north east lines},name=articles2]{}{10}{10} 
+%NOVA possible redacció si el tema d'estructures és satisfactori però dir la redacció s'allargaria més enllà de l'entrega de la tesi   \ganttbar[bar/.style={fill=white,draw}]{}{12}{12} 
+\\
 
-    \ganttmilestone{Informe de recerca}{4} \\
-%    \ganttlink{elem16}{elem18}
+    \ganttmilestone[name=rep1]{Informe de recerca}{4} \\
+    \ganttlink{articles1}{rep1}
 
-    \ganttmilestone{AIKED'13}{4.5}
+    \ganttmilestone[name=aiked13]{Revistes/congr.}{4.5}
+    \ganttmilestone[name=if14]{}{10.5}
+    \ganttlink{articles2}{if14}
   \end{ganttchart}
   }
 
@@ -83,25 +93,7 @@ l'actualitat.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\todo{}
-
-
-\begin{enumerate}
+\begin{description}
 
 % \item Estudi d'aplicacions de les sèries temporals. Per a assolir
 %   l'objectiu~1 s'ha realitzat una tasca de recerca bibliogràfica i
@@ -188,6 +180,14 @@ l'actualitat.
   regularitat del temps entre mesures, forats de temps, etc.
 
 
+\item[Tasca 5.] En el model de SGSTM s'ha refet el disseny per a
+  utilitzar les operacions definides en el model anterior de les
+  sèries temporals. A més s'ha afegit un apartat per a exemplificar
+  com es duen a terme les agregacions d'atributs per a aconseguir la
+  multiresolució.
+
+
+
 \item[Tasca 5.b] Durant l'estudi de l'estat actual de les sèries temporals
   es van observar diverses aproximacions a l'hora de fer càlculs amb
   sèries temporals i en general en els SGBD. Això ha comportat la
@@ -197,6 +197,10 @@ l'actualitat.
   així es preveu que alguns conceptes de la recerca en \emph{data
     streams} poden prendre-hi sentit.
 \todo{ això ja s'ha dit a la tasca 3?}
+\todo{potser aquí dir que s'ha dissenyat la funció de multiresolució sobre una sèrie temporal i que a partir d'aquí han sortit coses noves.}
+\todo{s'ha de dir que hem extret la funció de multiresolució}
+
+
 
 
 \item[Tasca 6.] Implementació de referència. Per a l'objectiu~5 s'ha
@@ -208,11 +212,12 @@ l'actualitat.
 
 
 \item[Tasca 7.] Experimentació amb dades. Per a complementar
-  l'objectiu~5 s'ha provat la implementació amb dades experimentals per
-  a una aplicació concreta. El suport del projecte \emph{i-Sense}
+  l'objectiu~5 s'ha provat la implementació amb dades experimentals
+  per a una aplicació concreta. El suport del projecte \emph{i-Sense}
   (FP7- ICT-270428) ha aportat dades que són sèries temporals i s'ha
-  pogut experimentar amb elles.  
-\todo{dir que han aparegut les dades de Xipre?}
+  pogut experimentar amb elles. Es disposa també d'unes dades noves
+  amb irregularitats interessants per a aplicar-hi el model de
+  multiresolució.  \todo{dir que han aparegut les dades de Xipre?}
 
 % També la participació en el
 %   projecte \emph{NAPS} (TEC2012-35571) aporta l'objectiu~6 en el qual
@@ -225,31 +230,21 @@ l'actualitat.
 
 
 
-\item[9.] Redacció d'articles i informes. Un cop s'ha completat el
+\item[Tasca 9.] Redacció d'articles i informes. Un cop s'ha completat el
   disseny del model de SGBD per a sèries temporals, s'ha escrit
   compactament en format article per a l'àmbit de les bases de dades.
   En aquest article també s'ha inclòs el disseny de la implementació
-  de referència dels model. Aquesta tasca s'ha allargat més del
-  previst sobretot a causa de l'ampliació de l'estat de l'art que s'ha
-  hagut de fer.  L'article està pendent de presentar-se com es detalla
-  a l'apartat següent.  \todo{pendent de presentar?}
+  de referència dels model.  Aquesta tasca s'ha allargat més del
+  previst: ha calgut fer una tasca intensa de recerca de revistes i
+  congressos que siguin afins a l'àmbit on treballem, cosa que també
+  ha causat una gran feina de motivació i de recerca de treballs
+  relacionats en l'actualitat de la temàtica seleccionada.  L'article
+  està pendent de presentar-se com es detalla a l'apartat següent.
+  \todo{pendent de presentar?}
 
 
+\end{description}
 
-\end{enumerate}
-
-
-
-
-TASQUES NOVES
-\todo{}
-
-\begin{enumerate}
-
-\item[Tasca 6.b] Per altra banda, s'ha implementat amb Haddoop\todo{s'ha de dir que hem extret la funció de multiresolució, això ha de ser una tasca nova que s'ha fet!}
-
-
-\end{enumerate}
 
 
 
@@ -271,11 +266,21 @@ TASQUES NOVES
 
 \section{Tasques pendents}
 
-Seguint el pla del juliol de 2012 queden tot un seguit de tasques a
-realitzar. A més, com a resultat del treball dut a terme fins ara, s'ha
-actualitzat alguns dels objectius detallats a la secció
-\ref{sec:objectius}.  A la figura \ref{fig:pla:futur} es detalla aquest
+\todo{}
+
+Seguint el pla del juliol de 2013 s'han realitzat les tasques
+previstes però han aparegut uns àmbits de la multiresolució que són
+interessants de ser explorats. S'ha començat a estudiar i a
+experimentar amb diferents estructures per a la multiresolució, a tal
+efecte s'ha actualitzat alguns dels objectius detallats a la secció
+\ref{sec:objectius}, i a causa d'això no s'ha pogut completar la
+redacció de la tesi. Així doncs, es preveu mig any més de treball en
+aquests nous temes de multiresolució per a poder completar la recerca
+de la tesi doctoral.  A la figura \ref{fig:pla:futur} es detalla aquest
 pla de treball futur.
+
+
+
 
 \begin{figure}[tp]
 \centering
@@ -283,7 +288,7 @@ pla de treball futur.
   \begin{ganttchart}[
     vgrid,
     x unit=0.8cm,
-    today=6,
+    today=10,
     today label=PRESENT,
     title label font=\small,
     title height=1,
@@ -292,7 +297,7 @@ pla de treball futur.
     %incomplete/.style={fill=lightgray},
     progress label text =,
     ]
-    {12}{12}
+    {1}{12}
     \gantttitle{2012}{4}
     \gantttitle{2013}{4}
     \gantttitle{2014}{4} \\
@@ -300,44 +305,76 @@ pla de treball futur.
 
     \ganttmilestone{Proposta de tesi}{2} \\
 
-    \ganttgroup{Estudi}{1}{4} \\
+    \ganttgroup{Estudi}{1}{7} \\
     \ganttbar[progress=100]{1. Aplicacions}{1}{2} \\
     \ganttbar{2. Model relacional}{1}{4} \\
-    \ganttbar[progress=50]{%3. Intervals temporals
-}{3}{4} 
-    \ganttbar[bar/.style={fill=white}]{3. Naturalesa ST}{7}{7} \\
+    \ganttbar{%3. Intervals temporals
+}{3}{3} 
+    \ganttbar{3. Propietats ST}{7}{7} \\
 
-    \ganttgroup[progress=66]{Disseny models}{5}{8} \\
-    \ganttbar[progress=75]{4. Sèries temporals}{5}{7} \\
-    \ganttbar[progress=75]{5. Multiresolució}{6}{7} \\
-    \ganttbar[bar/.style={fill=white}]{5.b Estructures}{8}{8} \\
+    \ganttgroup[progress=80]{Disseny models}{5}{11} \\
+    \ganttbar[progress=100]{4. Sèries temporals}{5}{7} \\
+    \ganttbar[progress=100,name=sgstm]{5. Multiresolució}{6}{7} \\
+    \ganttbar[progress=75,name=extensio]{5.b Estructures}{8}{8} 
+    \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} \\
 
-    \ganttgroup[progress=0]{Experimentació}{8}{9} \\
-    \ganttbar[progress=0]{6. Implementació}{8}{9} \\
-    \ganttlink{elem8}{elem11}
-    \ganttbar[progress=0]{7. Dades experimentals}{9}{10} \\
+    \ganttgroup[progress=80]{Experimentació}{8}{9} \\
+    \ganttbar[progress=100,name=python]{6. Impl. referència}{8}{9} \\
+    \ganttbar[progress=100,name=hadoop]{6.b Impl. para\l.lela}{10}{10} 
+    \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} \\
+
+    \ganttbar[progress=75]{7. Dades experimentals}{9}{10} 
+    \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} \\
+
+   \ganttlink{sgstm}{python}
+   \ganttlink{extensio}{hadoop}
 
 
 
+   \ganttgroup[progress=75]{Redacció}{2}{12} \\
 
-   \ganttgroup[progress=20]{Redacció}{2}{10} \\
+    \ganttbar[progress=80]{8. Redacció memòria}{9}{10} 
+    \ganttbar[bar/.style={fill=white,draw}]{}{12}{12}\\
+    \ganttlinkedmilestone[milestone/.append style={color=lightgray}]{Lectura de tesi}{12} \\
 
-    \ganttbar[progress=0]{8. Redacció memòria}{9}{10} \\
-    \ganttlinkedmilestone[milestone/.style={fill=lightgray}]{Lectura de tesi}{10} \\
+    \ganttbar[progress=100,name=articles1]{9. Redacció articles}{4}{4} 
+    \ganttbar[progress=100]{}{9}{10} 
+    \ganttbar[bar/.style={fill=white,draw}]{}{12}{12} \\
 
-    \ganttbar[progress=100]{9. Redacció articles}{4}{4} 
-    \ganttbar[bar/.style={fill=white}]{}{9}{9} \\
+    \ganttmilestone[name=rep1]{Informe de recerca}{4} \\
+    \ganttlink{articles1}{rep1}
 
-    \ganttmilestone{Informe de recerca}{4} \\
-    \ganttlink{elem16}{elem18}
-
-    \ganttmilestone{AIKED'13}{4.5}
+    \ganttmilestone[name=aiked13]{Revistes/congr.}{4.5}
+    \ganttmilestone[name=if14]{}{10.5}
+    \ganttlink{articles2}{if14}
   \end{ganttchart}
   }
 \caption{Planificació del treball pendent}
 \label{fig:pla:futur}
 \end{figure}
 
+
+
+\begin{description}
+
+
+\item[Tasca 5.b] Recerca en noves estructures per a la multiresolució.   Avaluació formal de la funció de multiresolució sobre les sèries temporals \todo{s'ha de dir que hem extret la funció de multiresolució}. Estructuració para\l.lela. Teoria de la informació aplicada a la multiresolució.\todo{}
+
+
+\item[Tasca 6.b] S'ha d'ampliar implementació para\l.lela i lligar-la amb el disseny en el mdoel.\todo{}
+
+
+\item[Tasca 7.] Experimentació amb dades. Es disposa d'unes dades
+  noves amb irregularitats interessants per a aplicar-hi el model de
+  multiresolució. Són unes dades de sensors reals en un sistema de
+  dipòsits d'aigües. Cal
+ \todo{dir que han aparegut les dades de Xipre?}
+
+
+\item[Tasca 9.] possible redacció si el tema d'estructures és satisfactori però dir la redacció s'allargaria més enllà de l'entrega de la tesi \todo{}
+
+
+\end{description}
 
 
 %%% Local Variables: 
