@@ -49,33 +49,26 @@ l'actualitat.
     \ganttgroup[progress=80]{Disseny models}{5}{8} \\
     \ganttbar[progress=100]{4. Sèries temporals}{5}{7} \\
     \ganttbar[progress=100,name=sgstm]{5. Multiresolució}{6}{7} \\
-    \ganttbar[progress=75]{5.b Estructures}{8}{8} 
-%NOVA    \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} 
-\\
+    \ganttbar[progress=100]{5.b Esquemes}{8}{8}
+    \ganttbar[bar/.style={draw,pattern=north east lines}]{}{10}{10} \\
 
     \ganttgroup[progress=80]{Experimentació}{8}{9} \\
     \ganttbar[progress=100,name=python]{6. Impl. referència}{8}{9} \\
-    \ganttbar[bar/.style={draw,pattern=north east lines}]{6.b Impl. para\l.lela}{10}{10} 
-%NOVA ampliar impl. paralela \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} 
-\\
+    \ganttbar[bar/.style={draw,pattern=north east lines}]{6.b Impl. para\l.lela}{10}{10} \\
 
-    \ganttbar[progress=75]{7. Dades experimentals}{9}{10} 
-%NOVA dades xipre   \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} 
-\\
+    \ganttbar[progress=75]{7. Dades experimentals}{9}{10} \\
 
    \ganttlink{sgstm}{python}
 
 
-   \ganttgroup[progress=75]{Redacció}{2}{10} \\
+   \ganttgroup[progress=75]{Redacció}{4}{10} \\
 
     \ganttbar[progress=80]{8. Redacció memòria}{9}{10} \\
     \ganttlinkedmilestone[milestone/.append style={color=lightgray}]{Lectura de tesi}{10} \\
 
     \ganttbar[progress=100,name=articles1]{9. Redacció articles}{4}{4} 
     \ganttbar[progress=100]{}{9}{9} 
-    \ganttbar[bar/.style={draw,pattern=north east lines},name=articles2]{}{10}{10} 
-%NOVA possible redacció si el tema d'estructures és satisfactori però dir la redacció s'allargaria més enllà de l'entrega de la tesi   \ganttbar[bar/.style={fill=white,draw}]{}{12}{12} 
-\\
+    \ganttbar[bar/.style={draw,pattern=north east lines},name=articles2]{}{10}{10} \\
 
     \ganttmilestone[name=rep1]{Informe de recerca}{4} \\
     \ganttlink{articles1}{rep1}
@@ -95,69 +88,6 @@ l'actualitat.
 
 \begin{description}
 
-% \item Estudi d'aplicacions de les sèries temporals. Per a assolir
-%   l'objectiu~1 s'ha realitzat una tasca de recerca bibliogràfica i
-%   estudi dels treballs existents en l'àmbit de la gestió i
-%   emmagatzemat de dades provinents de sèries temporals. També s'ha
-%   cercat l'existència de programari que tingui en els seus objectius
-%   el tractament de sèries temporals. El resultat d'aquesta tasca es va
-%   reflectir a la proposta de
-%   tesi \parencite{llusa12:ptd}. Anteriorment a la tesi de
-%   màster \parencite{llusa11:tfm} ja s'havia estudiat profundament
-%   \emph{RRDtool} \parencite{rrdtool}, un sistema de gestió de bases de
-%   dades (SGBD) específic per a sèries temporals.
-
-
-% \item Estudi del model relacional. Per a l'objectiu~2 s'ha estudiat en
-%   profunditat el model relacional, prenent-lo com a referent pels
-%   models de SGBD. Atesa la preeminència d'aquest model en els SGBD
-%   actuals, es va considerar imprescindible tenir-ne un bon coneixement
-%   que permetés estudiar les seves deficiències per la gestió de sèries
-%   temporals i en quina forma poden ser superades. Aquest estudi s'ha
-%   utilitzat a l'objectiu~4 i ha servit per establir el punt de partida
-%   del model de SGST i la referència de conceptes bàsics pels SGBD.
-
-
-% \item Estudi de la gestió d'intervals temporals. Per a l'objectiu~3
-%   s'ha estudiat la recerca que ha conduit a incorporar els interval
-%   temporals en els SGBD per a gestionar històrics. Ens hem basat en
-%   l'estudi que relaciona el model relacional amb els intervals
-%   temporals de \textcite{date02:_tempor_data_relat_model}.  Aquest
-%   estudi ha servit per a complementar l'estudi del model relacional,
-%   ja que es detalla com es poden modelar els intervals temporals
-%   prenent com a base els SGBD relacionals. Tot i així, en un principi
-%   presenten molta diferència amb les propietats de les sèries
-%   temporals i s'ha trobat més adequat deixar aquest estudi fins que
-%   s'hagi acabat el disseny del model de SGST per aleshores poder-los
-%   comparar entre ells quan tinguem més detall sobre la naturalesa de
-%   les sèries temporals.
-
-
-
-% \item Disseny d'un model de SGBD per sèries temporals (SGST). Per a la
-%   primera part de l'objectiu 4 s'ha dissenyat un model per als SGBD de
-%   sèries temporals formalitzat amb expressions algebraiques. Aquest
-%   model, com ja s'ha dit, està fortament basat amb els conceptes de
-%   SGBD que descriu el model relacional. A partir de l'estudi de
-%   l'estat de l'art de les sèries temporals, hem observat que els SGBD
-%   per sèries temporals precisen d'operacions de tres naturaleses
-%   diferents: com a conjunts, com a seqüències i com a funció temporal.
-%   Aquesta última ha comportat la planificació d'un estudi a part com
-%   es detalla a les tasques futures.  Així, a excepció d'aquesta tasca
-%   separada, el model de SGST s'ha descrit completament i actualment s'està
-%   revisant.
-
-
-
-% \item Disseny d'un model de SGBD multiresolució per sèries temporals
-%   (SGSTM). Per a la segona part de l'objectiu 4 s'ha dissenyat un
-%   model que preveu la multiresolució de les sèries
-%   temporals. Aquest model s'ha descrit i actualment s'està refent per
-%   a utilitzar operacions definides en el model anterior per les sèries
-%   temporals.
-
-
-
 
 
 \item[Tasca 3.] Durant el disseny del model de SGST s'ha vist que la
@@ -169,8 +99,6 @@ l'actualitat.
   patologies que pot presentar. S'han trobat esquemes interessants de
   gestió per a dades massives que es poden utilitzar per a les sèries
   temporals, per exemple computació para\l.lela o computació en flux.
-\todo{aquests esquemes els volem estudiar més profundament}
-
 
 
 \item[Tasca 4.] En el model de SGST s'ha incorporat un apartat amb
@@ -188,19 +116,18 @@ l'actualitat.
 
 
 
-\item[Tasca 5.b] Durant l'estudi de l'estat actual de les sèries temporals
-  es van observar diverses aproximacions a l'hora de fer càlculs amb
-  sèries temporals i en general en els SGBD. Això ha comportat la
-  definició d'una tercera part en l'objectiu~4 a on s'avaluaran
-  diferents estructures possibles dels SGSTM.  La multiresolució té
+\item[Tasca 5.b] Durant l'estudi de l'estat actual de les sèries
+  temporals s'han observat diverses aproximacions a l'hora de fer
+  càlculs amb sèries temporals i en general en els SGBD. Això ha
+  comportat la definició d'una tercera part en l'objectiu~4 on
+  s'avaluen els esquemes de multiresolució.  La multiresolució té
   l'objectiu d'emmagatzemar les sèries temporals de forma compacta,
-  així es preveu que alguns conceptes de la recerca en \emph{data
-    streams} poden prendre-hi sentit.
-\todo{ això ja s'ha dit a la tasca 3?}
-\todo{potser aquí dir que s'ha dissenyat la funció de multiresolució sobre una sèrie temporal i que a partir d'aquí han sortit coses noves.}
-\todo{s'ha de dir que hem extret la funció de multiresolució}
-
-
+  així els conceptes de la recerca en \emph{data streams} hi prenen
+  sentit.  Per altra banda, s'ha pogut expressar la multiresolució com
+  una funció que aplicada a una sèrie temporal retorna una nova sèrie
+  temporal resultant d'aplicar-hi l'esquema de multiresolució.
+  Aquesta funció de multiresolució obre la possibilitat de noves
+  recerques que convé explorar i es planifiquen a la secció següent.
 
 
 \item[Tasca 6.] Implementació de referència. Per a l'objectiu~5 s'ha
@@ -209,15 +136,22 @@ l'actualitat.
   correcte del model enfront a una implementació que contempli un bon
   rendiment. 
 
+\item[Tasca 6.b] Implementació para\l.lela amb Hadoop. Per a
+  l'objectiu~6 s'ha experimentat amb Hadoop i MapReduce per
+  tal d'entendre la computació para\l.lela en els SGBD. S'ha començat
+  a dissenyar una implementació del model de SGSTM a Hadoop.
+
 
 
 \item[Tasca 7.] Experimentació amb dades. Per a complementar
   l'objectiu~5 s'ha provat la implementació amb dades experimentals
   per a una aplicació concreta. El suport del projecte \emph{i-Sense}
-  (FP7- ICT-270428) ha aportat dades que són sèries temporals i s'ha
-  pogut experimentar amb elles. Es disposa també d'unes dades noves
-  amb irregularitats interessants per a aplicar-hi el model de
-  multiresolució.  \todo{dir que han aparegut les dades de Xipre?}
+  (FP7- ICT-270428) ha aportat dades que són sèries temporals i amb
+  les quals s'ha pogut experimentar.  S'ha rebut també unes dades
+  noves amb irregularitats interessants per a aplicar-hi el model de
+  multiresolució.
+
+
 
 % També la participació en el
 %   projecte \emph{NAPS} (TEC2012-35571) aporta l'objectiu~6 en el qual
@@ -230,8 +164,8 @@ l'actualitat.
 
 
 
-\item[Tasca 9.] Redacció d'articles i informes. Un cop s'ha completat el
-  disseny del model de SGBD per a sèries temporals, s'ha escrit
+\item[Tasca 9.] Redacció d'articles i informes. Un cop s'ha completat
+  el disseny del model de SGBD per a sèries temporals, s'ha escrit
   compactament en format article per a l'àmbit de les bases de dades.
   En aquest article també s'ha inclòs el disseny de la implementació
   de referència dels model.  Aquesta tasca s'ha allargat més del
@@ -239,10 +173,9 @@ l'actualitat.
   congressos que siguin afins a l'àmbit on treballem, cosa que també
   ha causat una gran feina de motivació i de recerca de treballs
   relacionats en l'actualitat de la temàtica seleccionada.  L'article
-  està pendent de presentar-se com es detalla a l'apartat següent.
-  \todo{pendent de presentar?}
-
-
+  s'ha escrit conjuntament amb la Teresa Escobet Canal i el Sebastià
+  Vila Marta i està pendent per presentar-lo a la revista
+  \emph{Information Systems}.
 \end{description}
 
 
@@ -250,28 +183,13 @@ l'actualitat.
 
 
 
-
-\subsection{Publicacions pendents de presentar}
-\todo{}
-
-\begin{itemize}
-
-\item Article a revista conjuntament amb la Teresa Escobet-Canal i el
-  Sebastià Vila-Marta. Pendent de presentar a \emph{Information Systems}.
-
-\end{itemize}
-
-
-
-
 \section{Tasques pendents}
 
-\todo{}
 
 Seguint el pla del juliol de 2013 s'han realitzat les tasques
 previstes però han aparegut uns àmbits de la multiresolució que són
 interessants de ser explorats. S'ha començat a estudiar i a
-experimentar amb diferents estructures per a la multiresolució, a tal
+experimentar amb els esquemes de la multiresolució, a tal
 efecte s'ha actualitzat alguns dels objectius detallats a la secció
 \ref{sec:objectius}, i a causa d'això no s'ha pogut completar la
 redacció de la tesi. Així doncs, es preveu mig any més de treball en
@@ -315,10 +233,11 @@ pla de treball futur.
     \ganttgroup[progress=80]{Disseny models}{5}{11} \\
     \ganttbar[progress=100]{4. Sèries temporals}{5}{7} \\
     \ganttbar[progress=100,name=sgstm]{5. Multiresolució}{6}{7} \\
-    \ganttbar[progress=75,name=extensio]{5.b Estructures}{8}{8} 
+    \ganttbar[progress=100,name=extensio]{5.b Esquemes}{8}{8} 
+    \ganttbar[progress=100]{}{10}{10} 
     \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} \\
 
-    \ganttgroup[progress=80]{Experimentació}{8}{9} \\
+    \ganttgroup[progress=70]{Experimentació}{8}{11} \\
     \ganttbar[progress=100,name=python]{6. Impl. referència}{8}{9} \\
     \ganttbar[progress=100,name=hadoop]{6.b Impl. para\l.lela}{10}{10} 
     \ganttbar[bar/.style={fill=white,draw}]{}{11}{11} \\
@@ -331,7 +250,7 @@ pla de treball futur.
 
 
 
-   \ganttgroup[progress=75]{Redacció}{2}{12} \\
+   \ganttgroup[progress=75]{Redacció}{4}{12} \\
 
     \ganttbar[progress=80]{8. Redacció memòria}{9}{10} 
     \ganttbar[bar/.style={fill=white,draw}]{}{12}{12}\\
@@ -358,21 +277,39 @@ pla de treball futur.
 \begin{description}
 
 
-\item[Tasca 5.b] Recerca en noves estructures per a la multiresolució.   Avaluació formal de la funció de multiresolució sobre les sèries temporals \todo{s'ha de dir que hem extret la funció de multiresolució}. Estructuració para\l.lela. Teoria de la informació aplicada a la multiresolució.\todo{}
+\item[Tasca 5.b] Recerca en els esquemes de multiresolució.  A partir
+  de la multiresolució expressada com una funció simplificada, que
+  calcula en temps diferit, convé explorar noves recerques. En primer
+  lloc, cal avaluar formalment aquesta funció de multiresolució
+  respecte a tot el model proposat de SGSTM. En segon lloc, en aquest
+  càlcul en temps diferit apareix la possibilitat de computar
+  para\l.lelament. En tercer lloc, a partir d'aquesta funció pot ésser
+  més senzill estudiar la selecció o pèrdua d'informació que implica
+  usar un model de multiresolució.
 
 
-\item[Tasca 6.b] S'ha d'ampliar implementació para\l.lela i lligar-la amb el disseny en el mdoel.\todo{}
+\item[Tasca 6.b] S'ha començat a dissenya una nova implementació de la
+  multiresolució en Hadoop basada en conceptes de computació
+  para\l.lela en els SGBD. Un cop ben establert el model d'aquest
+  esquema de multiresolució cal acabar d'implementar-lo i provar-lo
+  amb les mateixes dades experimentals que s'usen per a la
+  implementació de referència.
 
 
 \item[Tasca 7.] Experimentació amb dades. Es disposa d'unes dades
   noves amb irregularitats interessants per a aplicar-hi el model de
   multiresolució. Són unes dades de sensors reals en un sistema de
-  dipòsits d'aigües. Cal
- \todo{dir que han aparegut les dades de Xipre?}
+  dipòsits d'aigües. Aquestes dades pertanyen a sensors
+  interrelacionats, cosa que les fa més interessants per analitzar-hi
+  l'efecte que hi un SGSTM i com pot ajudar a emmagatzemar-les de
+  forma compacta.
 
 
-\item[Tasca 9.] possible redacció si el tema d'estructures és satisfactori però dir la redacció s'allargaria més enllà de l'entrega de la tesi \todo{}
-
+\item[Tasca 9.] La nova tasca 5.b plantejada ofereix un nou tema en
+  l'àmbit de la multiresolució que, si l'experimentació que hem
+  plantejat és satisfactòria, pot conduir a la redacció d'un nou
+  article. Aquesta redacció, però, s'allargaria més enllà de l'entrega
+  de la tesi.
 
 \end{description}
 
