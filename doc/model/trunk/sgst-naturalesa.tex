@@ -357,6 +357,7 @@ donada una sèrie temporal es poden definir funcions amb el temps com a
 variable que calculin nous valors a partir de les mesures
 emmagatzemades.
 \begin{definition}[Funció de representació]
+  \label{def:model:frepr}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix $S(t)$
   com la funció de representació de la sèrie temporal contínuament al
   llarg del temps $t$; és a dir que per cada instant de temps la
@@ -510,8 +511,8 @@ zero a tot arreu excepte en el punt zero.
 
 \begin{definition}[Funció de representació delta]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\delta(t)$ com la funció de representació
-  delta al llarg del temps, $\forall m \in S:$
+  temps, es defineix $\glsdispdef{not:sgst:deltarepr}{S^\delta(t)}$ com la
+  funció de representació delta al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\delta(t) = &  \\
     = & \sum_{t\in T} V(m) \delta(t-T(m)): \delta(t)= 
@@ -646,8 +647,9 @@ valor fins al predecessor. Una representació similar s'utilitza a
          %hold everted}
   \label{def:model:zohe}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\text{ZOHE}(t)$ com la funció de representació
-  \emph{zero-order hold} cap enrere al llarg del temps, $\forall m \in S:$
+  temps, es defineix $\glsdispdef{not:zohe}{S^\text{ZOHE}(t)}$ com la
+  funció de representació \emph{zero-order hold} cap enrere al llarg
+  del temps, $\forall m \in S:$
   \begin{align*}
     S^\text{ZOHE}(t) = &  \\
     = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
@@ -1254,6 +1256,7 @@ representació \emph{lineal} de la sèrie temporal.
 
 
 \subsubsection{Ús en els operadors de funció temporal}
+\label{sec:sgst:repr-intervaltemporal}
 
 Alguns operadors dels SGST presenten particularitats a causa del
 fenomen de representació, aleshores els anomenem operadors de funció

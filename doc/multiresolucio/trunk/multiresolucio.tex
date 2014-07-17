@@ -1,4 +1,156 @@
 
+\chapter{Esquemes de multiresolució}
+
+\todo{}
+
+
+Definim una funció de multiresolució com una consulta sobre una sèrie
+temporal que ens retorna una nova sèrie temporal resultant
+d'aplicar-li un esquema de multiresolució. 
+
+Aquesta funció de multiresolució ens permetrà:
+
+\begin{itemize}
+\item Plantejar problemes on veiem la multiresolució com una consulta sobre una sèrie temporal
+\item Oferir sistemes duals de \gls{SGSTM} i \gls{SGST} amb operacions
+  de consulta multiresolució.
+\item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme.
+\item Estudiar la teoria de la informació per a l'esquema de multiresolució
+\end{itemize}
+
+
+
+
+
+
+\section{Funció de multiresolució}
+
+En el model de \gls{SGSTM} hem definit un model de dades de \gls{SGBD}
+per a gestionar sèries temporals multiresolució. Com a \gls{SGBD},
+aquest model té una estructura i per tant emmagatzema informació d'una
+sèrie temporal en una forma determinada: la de multiresolució.  La
+definició com a \gls{SGBD} té com a objectius l'emmagatzematge
+compacte de les dades i la selecció de la informació ja preparada per
+a consultes posteriors. 
+
+Així, aquest model té capacitats de computació
+sincronitzada o en línia (\emph{online}) amb el temps i té
+característiques dels sistemes que tracten fluxos de dades (\emph{data
+  stream}); és a dir dades que s'estan adquirint contínuament i cal
+anar computant al mateix temps que es van adquirint. Això no treu,
+però, que de manera més simplificada també es pugui treballar amb un
+\gls{SGSTM} en temps diferit (\emph{offline}), és a dir que
+s'emmagatzemin les dades adquirides i en el moment que es vulgui
+aplicar-hi la consolidació.
+
+
+
+
+Això no obstant, podem simplificar el problema de càlcul de
+multiresolució en temps diferit com una consulta en un \gls{SGST} de
+transformació d'una sèrie temporal a una nova sèrie temporal.
+
+És a dir, sigui $S$ una sèrie temporal, $M$ una sèrie temporal
+multiresolució i $\text{e} = \{ (\delta_0,\tau_0,f_0,k_0), \ldots,
+(\delta_d,\tau_d,f_d,k_d)\}$ els paràmetres de l'esquema de
+multiresolució de $M$. Afegim totes les mesures de la sèrie temporal a
+la multiresolució, $\forall m \in S:
+M=\glssymbol{addM}(M,m)$\todo{matemàticament és correcte recursivitat M=f(M)?}, i la
+consolidem, $M=\glssymbol{consolidaM}(M')$ fins que $M$ no sigui
+consolidable. Consultem la sèrie temporal multiresolució amb les dues
+consultes bàsiques, les quals retornen sèries temporals,
+$S'=\glssymbol{not:sgstm:serietotal}(M')$ i $S_{\delta
+  f}'\glssymbol{not:sgstm:seriedisc}(M',\delta,f)$ on $\delta$ i $f$
+són dos paràmetres de l'esquema de multiresolució de $M$.
+
+
+
+Plantegem les funcions de transformació de la sèrie temporal original
+a les consultades. És a dir, les funcions que anomenem
+$\glssymbol{not:sgstm:dmap}$ i $\glssymbol{not:sgstm:multiresolucio}$
+i que ens permeten calcular:
+
+\[
+\glssymbol{not:sgstm:dmap}: S \times \delta \times f \longrightarrow
+S'_{\delta f}
+\]
+
+
+\[
+ \glssymbol{not:sgstm:multiresolucio}: S \times e  \longrightarrow S'
+\]
+
+
+
+Definim la consulta de selecció de disc dels \gls{SGSTM} a
+partir del mapatge dels \gls{SGST}.
+\begin{definition}[mapa de \glssymbol{not:sgstm:seriedisc}]
+  Sigui $S$ una sèrie temporal i $p=(\delta,f)$ els paràmetres de
+  multiresolució d'una subsèrie resolució.
+
+
+$\glssymboldef{not:sgstm:dmap}(\delta,f)=$
+
+\end{definition}
+
+
+Definim la consulta de sèrie temporal total dels \gls{SGSTM} a partir
+del plegament dels \gls{SGST}.
+\begin{definition}[plec de \glssymbol{not:sgstm:serietotal}]
+\glssymboldef{not:sgstm:multiresolucio}
+\end{definition}
+
+
+  %$\dmap(S,\delta,\tau,f,k)$
+
+
+
+
+% The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
+% subseries' disc $R=(B,D)$, where $B=(S_B,\tau,\delta,f)$ and
+% $D=(S_D,k)$, can be expressed with a map operation over the original
+% time series $S$:
+
+% \[
+% \seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
+% \]
+% where
+% \[
+% \dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
+% \]
+% \[
+%  m' = f(S, i),\;  i = [T(m_i)-\delta,T(m_i)],
+% \]
+% \[
+%  S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
+% \]
+% \[
+% T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
+% \]
+
+
+
+
+
+
+
+És a dir que  si, en temps diferit, hem seguit la mateixa inserció de mesures a un \gls{SGST} i un \gls{SGSTM}, 
+serà equivalent a tal tal tal en un moment concret.
+
+És a dir, que si hem inserit les mateixes mesures a un \gls{SGST} i a
+un \gls{SGSTM}, per una banda consolidem el \gls{SGSTM} i n'obtenim la
+sèrie total i per altra banda consultem la multiresolució al
+\gls{SGST}: obtenim la mateixa sèrie temporal.
+
+
+\subsection{Demostració}
+
+Cal demostrar l'equivalència formalment\todo{}
+
+
+
+
+
 % \section{Multiresolution over TSMS}
 % \label{sec:M+TSMS}
 
@@ -134,3 +286,13 @@
 
 
 
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+
+
+
+
+
+
+%  LocalWords:  multiresolució
