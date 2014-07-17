@@ -269,8 +269,8 @@ temps però diferent valor.
 
 Propietats de la unió de sèries temporals:
 \begin{itemize}
-\item La dimensió $k$ de la sèrie temporal resultant està fitada a
-  $k_1 \leq k \leq k_1 + k_2$. 
+\item El cardinal de la sèrie temporal resultant està fitat a
+  $|S_1| \leq |S| \leq |S_1| + |S_2|$. 
 \item No commutativa. En general
   $S_1\cup S_2 \neq S_2\cup S_1$ tot i que sí que es compleix
   l'equivalència respecte al cardinal $|S_1 \cup S_2| = |S_2\cup S_1|$.
@@ -639,7 +639,7 @@ de temps, a la qual anomenem sèrie temporal doble (v.\
 
 Propietats del producte:
 \begin{itemize}
-\item El cardinal resultant és $|S|=k_1k_2$
+\item El cardinal resultant és $|S|=|S_1||S_2|$
 \item El grau resultant és $4$
 \end{itemize}
 
@@ -669,7 +669,7 @@ multivaluada.
 
 Propietats de la junció:
 \begin{itemize}
-\item El cardinal resultant és $|S|\leq\min(k_1,k_2)$
+\item El cardinal resultant és $|S|\leq\min(|S_1|,|S_2|)$
 \item És commutativa; tenint en compte que els atributs tenen nom i
   per tant l'ordre no importa.
 \end{itemize}
@@ -1073,13 +1073,12 @@ temporals aquest atribut és el temps.
 
 \subsubsection{Interval}
 
-\todo{dir que és una selecció?}
-
-
 L'interval sobre una seqüència és la subseqüència compresa entre dos
 elements.  Per a les sèries temporals és possible definir el concepte
 d'interval sobre la seqüència com la subsèrie entre dos instants de
-temps, semblant a com es fa a \cite{last:keogh,last:hetland}.
+temps, semblant a com es fa a \cite{last:keogh,last:hetland}.  És una
+operació de selecció però amb la notació habitual en les seqüències.
+
 
 \begin{definition}[Interval]
   \label{def:model:st-interval}
@@ -1127,7 +1126,7 @@ Propietats:
 
 \subsubsection{Successió}
 
-També atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
+Atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
 defineix el concepte de mesura següent i mesura anterior en una
 seqüència.
 
@@ -1163,10 +1162,10 @@ T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
   $l=\glssymbol{not:sgst:prev}_S(o)$ que compleix
   $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
   $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
-  \mathbb{R}$, i per tant com que $S$ no té mesures indefinides es
+  \glssymbol{not:R}$, i per tant com que $S$ no té mesures indefinides es
   demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
 $\glssymbol{not:sgst:next}_S( (-\infty,\infty) ) = \inf(S): \forall
-m\in S: T(m)\in\mathbb{R}$.
+m\in S: T(m)\in\glssymbol{not:R}$.
 
 
 \subsubsection{Concatenació}
@@ -1191,9 +1190,10 @@ l'operació d'unió.
 \begin{definition}[concatenació]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
   m_{k_2}^2\}$ dues sèries temporals, la concatenació de les dues
-  sèries temporals $S_1 || S_2$ és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
-  $S_2$ que no intersequen en l'interval de $S_1$; $S_1 || S_2 = S_1
+  sèries temporals $S_1 \glssymboldef{not:sgst:concatenate} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les
+  mesures de $S_1$ i les mesures de $S_2$ que no intersequen en
+  l'interval de $S_1$; $S_1 \glssymbol{not:sgst:concatenate} S_2 = S_1
   \cup ( S_2 - S_2[t_1,t_2] )$ on $t_1=T(\inf S_1)$ i $t_2=T(\sup
   S_1)$.
 \end{definition}
@@ -1214,14 +1214,23 @@ Propietats
 \label{sec:sgst:operadors-temporals}
 \glsaddsec{not:op-funcio} %%%%secció d'operacions
 
-Atenent a que una sèrie temporal és la representació d'un funció
-contínua (v.\ cap.~\todo{Ref!Falta fer el capítol de representació})
-cal definir operacions per a tractar convenientment aquesta
+Atenent al fet que una sèrie temporal és la representació d'un funció
+contínua cal definir operacions per a tractar convenientment aquesta
 naturalesa.
-
 En aquest apartat definim aquestes operacions com una redefinició de
-les bàsiques anteriors per a aplicar-les tenint en compte la sèrie
-temporal com una funció contínua.
+les bàsiques anteriors, i així poder aplicar-les considerant una sèrie
+temporal com una funció contínua.  
+
+
+A l'\autoref{sec:model:repr} es detalla més el concepte de funció
+representació contínua d'una sèrie temporal i s'ofereixen exemples de
+diversos mètodes de representació. Les operacions definides a
+continuació han de ser contextualitzades per a un mètode de
+representació particular, ho indiquem a cada operació amb un
+superíndex $r$. De fet, a partir de l'operació d'interval temporal es
+poden definir els altres operadors de funció temporals; per tant cal
+oferir una definició d'interval temporal per a cada mètode de
+representació que es vulgui usar.
 
 
 
@@ -1229,35 +1238,38 @@ temporal com una funció contínua.
 
 Sigui $S$ una sèrie temporal i $[t_0,t_f]$ un interval de temps, per
 una banda s'ha definit l'interval sobre la seqüència d'una sèrie
-temporal $S(t_0,t_f)$ (def.~\ref{def:model:st-interval}) i per altra
-banda s'ha definit la representació contínua $r$ d'una sèrie temporal
-$S(t)^r$ \todo{referenciar la definició de repr}.  Per seleccionar un
-interval temporal cal tenir en compte tant l'interval sobre la
-seqüència com la representació contínua, Aquest interval temporal
-s'anota com interval temporal de $S$ en $i$ amb representació $r$ o bé
-$S[t_0,t_f]^r$.
-
-
+temporal $S(t_0,t_f)$ (v.\ \autoref{def:model:st-interval}) i per
+altra banda la sèrie temporal pot tenir un mètode de representació $r$
+que permet calcular la funció contínua de la sèrie temporal $S(t)^r$
+(v.\ \autoref{def:model:frepr}).  Per seleccionar un interval temporal
+cal tenir en compte tant l'interval sobre la seqüència com la
+representació de la sèrie temporal que pot incloure noves mesures al
+resultat.
 
 \begin{definition}[Interval temporal]
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal, $[t_0,t_f]$ un
-  interval de temps i $r$ una funció de representació, l'interval
-  temporal de $S$ en $i$ amb representació $r$, $S[t_0,t_f]^r$, és una
-  sèrie temporal $S'=\{m_0, \ldots, m_{k'}\}$ amb les mesures que són
-  dins del rang temporal $i$ segons marca la funció de representació:
-  $S[t_0,t_f]^r= \forall t \in [t_0,t_f] : S' = S(t)^r $
+  interval de temps i $r$ un mètode de representació, l'interval
+  temporal $\glsdispdef{not:sgst:intervalt}{S[t_0,t_f]^r}$ és una
+  sèrie temporal amb les mesures que són dins del rang temporal $i$
+  segons marca la funció de representació: $S[t_0,t_f]^r= \forall t
+  \in [t_0,t_f] : S' = S(t)^r$
 \end{definition}
 
-
-A continuació s'exemplifica utilitzant la representació ZOHE (v.\
-def.~\ref{def:model:zohe}).
-\begin{definition}[Interval temporal ZOHE]
+Aquesta és una definició genèrica difícil d'implementar, per tant per
+a cada mètode de representació cal interpretar una operació d'interval
+temporal.  A continuació s'exemplifica utilitzant el mètode de
+representació \gls{zohe}. Més endavant, un cop profunditzat en el
+concepte de funció de representació, es detalla la representació
+\gls{zohe} (v.\ \autoref{def:model:zohe}) i s'ofereixen més exemples
+d'intervals temporals amb altres mètodes de representació (v.\
+\autoref{sec:sgst:repr-intervaltemporal}).
+\begin{definition}[Interval temporal \gls{zohe}]
   \label{def:sgst:interval-temporal-zohe}
-  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
-  $S^\text{ZOHE}(t)$ la representació ZOHE, es defineix la subsèrie
-  $S[t_0,t_f]^{\text{ZOHE}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\text{ZOHE}} = S(t_0,t_f] \cup \{m\}$ on $m=(t_f,v)$
-  i $v= V(\inf( S[t_f,+\infty] ))$.
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i el
+  mètode representació $r=\gls{zohe}$, es defineix l'interval temporal
+  \gls{zohe} $S[t_0,t_f]^{\glssymbol{not:zohe}}$ com la sèrie temporal
+    $S[t_0,t_f]^{\glssymbol{not:zohe}} = S(t_0,t_f] \cup \{m\}$ on $m=(t_f,v)$
+    i $v= V(\inf( S[t_f,+\infty] ))$.
 \end{definition}
   %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
 
@@ -1266,9 +1278,10 @@ def.~\ref{def:model:zohe}).
 Propietats de l'interval temporal:
 
 \begin{itemize}
-\item Sigui $t_a$ un instant de temps, la selecció de
-  $S$ en $[t_a,t_a]^r$ és equivalent a la representació contínua
-  $S(t_a)^r$. \todo{equivalent no, en tot cas $S(t_a)^r \equiv V(m)|m\in S[t_a,t_a]^r$}
+\item Sigui $t_a$ un instant de temps, l'interval temporal
+  $S[t_a,t_a]^r$ és equivalent a la funció contínua de la sèrie
+  temporal avaluada en aquest punt: $S[t_a,t_a]^r\equiv \{(t_a,
+  S(t_a)^r)\}$.
 \end{itemize}
 
 
@@ -1281,21 +1294,18 @@ La selecció  temporal d'una sèrie temporal permet canviar, en el
 context d'una representació, la resolució a una de marcada per un
 conjunt d'instants de temps. 
 
-Sigui $S$ una sèrie temporal, $i= \{t_0,t_1,\dotsc,t_n\}$ un conjunt
-d'instants de temps i la representació contínua $r$ de la sèrie
-temporal $S(t)$, la selecció de resolució s'anota com selecció de $S$
-en $i$ amb representació $r$ o bé $S[i]^r$.
-
 
 \begin{definition}[Selecció temporal]
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal,
-  $i=\{t_0,t_1,\dotsc,t_n\}$ un conjunt d'instants de temps i $r$ una
-  funció de representació, la selecció temporal de $S$ en $i$ amb
-  representació $r$, $S[i]^r$, és una sèrie temporal $S'=\{m_0, \ldots, m_n\}$
-  amb les mesures amb els temps d'$i$ segons marca la funció de
+  $i=\{t_0,t_1,\dotsc,t_n\}$ un conjunt d'instants de temps i $r$ un
+  mètode de representació, la selecció temporal
+  $\glsdispdef{not:sgst:selectt}{S[i]^r}$ és una sèrie temporal que
+  conté mesures amb els temps d'$i$ segons marca el mètode de
   representació: $S[i]^r= S[t_0,t_0]^r \cup S[t_1,t_1]^r \cup \dotsb
   \cup S[t_n,t_n]^r$.
 \end{definition}
+
+
 
 Propietats de la selecció temporal:
 \begin{itemize}
@@ -1323,13 +1333,14 @@ primera.
 
 \begin{definition}[concatenació temporal]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals i $r$ una funció de
-  representació, la concatenació temporal de les dues sèries temporals
-  amb representació $r$, $S_1 ||^r S_2$, és una sèrie temporal $S=\{m_0,
-  \dotsc, m_k\}$ que conté totes les mesures de $S_1$ i les mesures de
-  $S_2$ que no intersequen en l'interval temporal de $S_1$; $S_1 ||^r
-  S_2 = S_1 \cup ( S_2 -^t S_2[t_1,t_2]^r )$ on $t_1=T(\inf S_1)$ i
-  $t_2=T(\sup S_1)$.
+  m_{k_2}^2\}$ dues sèries temporals i $r$ un mètode de representació,
+  la concatenació temporal de les dues sèries temporals $S_1
+  \glssymboldef{not:sgst:concatenatet}^r S_2$, és una sèrie temporal
+  que conté totes les mesures de $S_1$ i les mesures de $S_2$ que no
+  intersequen en l'interval temporal de $S_1$; $S_1
+  \glssymbol{not:sgst:concatenatet}^r S_2 = S_1 \cup ( S_2
+  \glssymboldef{not:sgst:minust} S_2[t_1,t_2]^r )$ on $t_1=T(\inf
+  S_1)$ i $t_2=T(\sup S_1)$.
 \end{definition}
 
 Propietats de la concatenació temporal:
@@ -1350,20 +1361,21 @@ seleccionant el mateix atribut de temps en ambdues sèries temporals.
 
 \begin{definition}[junció temporal]\label{def:sgst:joint}
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ una
-  funció de representació, la junció temporal de les dues sèries
-  temporals amb representació $r$, $S_1 \join^r S_2$, és una sèrie
-  temporal multivaluada $S=\{m_0, \dotsc, m_k\}$ que ajunta les
-  mesures seleccionant els mateixos temps a cada sèrie temporal segons
-  la funció de representació; $S_1 \join^r S_2 = \{m=(t',v_1,v_2) |
-  (t',v_1) \in S_1[t']^r \wedge (t',v_2) \in S_2[t']^r \}$ a on $t'\in
-  S_1\{t\} \cup S_2\{t\}$.
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ un mètode
+  de representació, la junció temporal de les dues sèries temporals
+  $S_1 \glssymboldef{not:sgst:joint}^r S_2$, és una sèrie temporal
+  multivaluada que ajunta les mesures seleccionant els mateixos temps
+  a cada sèrie temporal segons el mètode de representació; $S_1
+  \glssymbol{not:sgst:joint}^r S_2 = \{\forall t' \in T': (t',v_1,v_2)
+  | (t',v_1) \in S_1[t']^r \wedge (t',v_2) \in S_2[t']^r \}$ on $T' =
+  \glssymbol{not:sgst:project}_{t}(S_1) \cup
+  \glssymbol{not:sgst:project}_{t}(S_2)$.
 \end{definition}
 
 
 Propietats de la junció temporal:
 \begin{itemize}
-\item El cardinal resultant és $|S'| \leq k_1 + k_2$
+\item El cardinal resultant és $|S'| \leq |S_1| + |S_2|$
 \item És commutativa; tenint en compte que els atributs tenen nom i
   per tant l'ordre no importa.
 \end{itemize}
@@ -1371,24 +1383,24 @@ Propietats de la junció temporal:
 
 
 També es defineix l'operació de semijunció temporal que és una junció
-no commutativa a on la primera sèrie temporal marca el vector de temps
-de fusió.
+no commutativa on la primera sèrie temporal marca el vector de temps
+de junció.
 
 \begin{definition}[semijunció temporal]
   Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
-  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ una
-  funció de representació, la semijunció temporal de les dues sèries
-  temporals amb representació $r$, $S_1 \semijoin^r S_2$, és una sèrie
-  temporal multivaluada $S=\{m_0, \dotsc, m_{k_1}\}$ que ajunta les
-  mesures de la primera sèrie temporal a les mesures de la segona
-  segons la funció de representació; $S_1 \semijoin^r S_2 = S_1
-  \join^r S_2[S_1\{t\}]^r$.
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ un mètode
+  de representació, la semijunció temporal de les dues sèries
+  temporals $S_1 \glssymboldef{not:sgst:semijoint}^r S_2$, és una
+  sèrie temporal multivaluada que ajunta les mesures de la primera
+  sèrie temporal a les mesures de la segona segons el mètode de
+  representació; $S_1 \glssymboldef{not:sgst:semijoint}^r S_2 = S_1
+  \glssymboldef{not:sgst:joint}^r S_2[\glssymbol{not:sgst:project}_{t}(S_1)]^r$.
 \end{definition}
 
 
 Propietats de la semijunció temporal:
 \begin{itemize}
-\item El cardinal resultant és $|S'| = k_1$.
+\item El cardinal resultant és $|S'| = |S_1|$.
 \item No és commutativa.
 \end{itemize}
 

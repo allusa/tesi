@@ -57,16 +57,16 @@ per a poder incloure les mesures indefinides (v.\
 
 Per tal de facilitar la comprensió, en el document utilitzarem el
 conjunt de reals com a conjunt pels temps. Representarem el conjunt
-$T$ amb el conjunt estès de nombres reals $\bar{\R{}} \in
-\R{} \cup
+$T$ amb el conjunt estès de nombres reals $\glssymbol{not:Rb} \in
+\glssymbol{not:R} \cup
 \{+\infty,-\infty\}$, \parencite{wiki:extendedreal,cantrell:extendedreal},
 també anomenat recta real acabada, el qual és un conjunt tancat.
 
 El conjunt estès de nombres reals té dos punts límits corresponents al
 valor impropi infinit, aleshores en notació d'interval el conjunt $T$
-es pot escriure com $\bar{\R{}} \in [-\infty,+\infty]$. En referència
-amb el conjunt dels nombres reals $\R{}$, les relacions d'ordre i
-algunes operacions aritmètiques s'estenen al conjunt $\bar{\R{}}$,
+es pot escriure com $\glssymbol{not:Rb} \in [-\infty,+\infty]$. En referència
+amb el conjunt dels nombres reals $\glssymbol{not:R}$, les relacions d'ordre i
+algunes operacions aritmètiques s'estenen al conjunt $\glssymbol{not:Rb}$,
 \cite{cantrell:extendedreal}.  Algunes expressions esdevenen
 indefinides (p.ex.\ $0/0$) i altres depenen del context, com és el cas
 de l'expressió indeterminada $0 \times \infty$ que per exemple en la
@@ -94,21 +94,26 @@ del concepte temps \parencite{iep:time}.
   \label{def:model:temps}
   Siguin $t^i_i$ i $t^i_j$ dos instants de temps amb el mateix $t^R$
   com a marc de referència, definim la quantitat de temps o la durada
-  $t^d$ com un valor $t^d \in\bar{\R{}}$ que mesura la distància en
-  unitats de temps entre dos instants de temps $t^d = d(t^i_i,t^i_j)$
-  a on $d$ és la mètrica del conjunt $T$. En el cas que els instants
-  de temps es defineixin com a reals, $t^i_i , t^i_j \in \bar{\R{}}$,
-  aleshores $t^d = t^i_i - t^i_j$.
+  $\glsdispdef{not:durada}{t^d}$ com un valor $t^d \in\glssymbol{not:Rb}$ que
+  mesura la distància en unitats de temps entre dos instants de temps
+  $t^d = d(t^i_i,t^i_j)$ a on $d$ és la mètrica del conjunt $T$. En el
+  cas que els instants de temps es defineixin com a reals, $t^i_i ,
+  t^i_j \in \glssymbol{not:Rb}$, aleshores $t^d = t^i_i - t^i_j$.
 
-  Sigui $T$ el domini del temps, definim un instant de temps
-  \glsdispdef{not:instant}{$I$} com un element del conjunt $I \in
-  T$. Així, un instant de temps és l'etiqueta d'un punt en la línia
-  temporal. Seguint la definició de sistema de coordenades i prenent
-  els nombres reals com a domini del temps, sigui $t^{R}$ un instant
-  de temps marc de referència, aleshores els instants de temps es
-  defineixen com un valor $t^i \in\bar{\R{}}$ que indica la distància
-  de temps amb signe respecte a l'instant de temps de referència $t^i=
-  d(t^{R},I)$ a on $d$ és la mètrica del conjunt $T$.
+  Sigui $T$ el domini del temps, definim un instant de temps $I$ com
+  un element del conjunt $I \in T$. Així, un instant de temps és
+  l'etiqueta d'un punt en la línia temporal. Seguint la definició de
+  sistema de coordenades i prenent els nombres reals com a domini del
+  temps, sigui $\glsdispdef{not:temps-referencia}{t^{R}}$ un instant de temps
+  marc de referència, aleshores els instants de temps es defineixen
+  com un valor $\glsdispdef{not:instant}{t^i} \in\glssymbol{not:Rb}$
+  que indica la distància de temps amb signe respecte a l'instant de
+  temps de referència $t^i= d(t^{R},I)$ a on $d$ és la mètrica del
+  conjunt $T$.
+
+  Siguin $t^i_i$ i $t^i_j$ dos instants de temps, la parella d'ambdós
+  $\glsdispdef{not:temps-interval}{[t^i_i,t^i_j]}$ s'anomena interval de
+  temps on $t^i_i \leq t^i_j$.
 \end{definition}
 
 En resum, els instants de temps es poden veure com una seqüència de
@@ -199,11 +204,12 @@ guia per a la implementació dels calendaris en els SGST.
 El valor és la variable que indica la magnitud de la dada
 mesurada. Per tal de no restringir el model a cap àmbit de mesura,
 definim genèricament el concepte de valor. Així, el valor és qualsevol
-element que és d'un tipus de dades, també anomenat domini; és a dir,
-un objecte que pertany a un determinat conjunt de valors i que té
-associat les operacions que s'hi poden aplicar. Exemples de tipus de
-dades són els enters, els reals, les cadenes de text i les estructures
-de dades com vectors, llistes o relacions.
+element que és d'un tipus de dades, també anomenat domini i que
+simbolitzem amb $\glsdispsec{not:valor-domini}{V}$; és a dir, un valor
+és un objecte que pertany a un determinat conjunt de valors $V$ i que
+té associat les operacions que s'hi poden aplicar. Exemples de tipus
+de dades són els enters, els reals, les cadenes de text i les
+estructures de dades com vectors, llistes o relacions.
 
 
 
@@ -211,13 +217,15 @@ El valor quan forma part d'una sèrie temporal pot preveure una dada
 que defineixi el valor indefinit.  Aquest valor indefinit és un valor
 impropi, és a dir no vàlid, del conjunt de valors possibles. Així cada
 tipus de dades pot anar associat amb un valor indefinit corresponent.
-Seguint l'exemple per la variable temps amb reals, com a valor
-indefinit en aquest document usem el valor impropi infinit del conjunt
-dels reals estès projectivament $\R{}^*\in\R{} \cup
-\{\infty\}$ \parencite{cantrell:projectivelyextendedreal}.  En alguns
-sistemes, a més, es poden utilitzar diferents símbols per a distingir
-diferents casos de valors impropis, per exemple valors infinits
-($\infty$) i valors indefinits (NaN, \emph{not a number}).
+Seguint l'exemple amb reals per la variable temps, representarem el
+conjunt $V$ amb el conjunt dels reals estès projectivament
+$\glssymbol{not:R*}\in\glssymbol{not:R} \cup
+\{\infty\}$ \parencite{cantrell:projectivelyextendedreal}.  D'aquesta
+manera, com a valor indefinit en aquest document usem el valor impropi
+infinit ($\infty$).  En altres sistemes, a més, es poden utilitzar
+diferents símbols per a distingir diferents casos de valors impropis,
+per exemple valors infinits ($\infty$) i valors indefinits (NaN,
+\emph{not a number}).
 
 
 
@@ -237,14 +245,15 @@ Una mesura està formada per la parella de temps i valor.
 
 \begin{definition}[Mesura]
   \label{def:model:mesura}
-  Definim \emph{mesura} com el tuple $(t,v)$, en el que $v$ és el
-  valor de la mesura i $t$ és l'instant de temps en que s'ha pres
-  aquesta mesura.
+  Definim una \emph{mesura} $m$ com el tuple
+  $\glsdispdef{not:mesura}{m=(t,v)}$, en què $v$ és el valor de la
+  mesura i $t$ és l'instant de temps en que s'ha pres aquesta mesura.
 \end{definition}
 
 
-Donada una mesura $m=(t,v)$ escriurem $V(m)$ per referir-nos a $v$ i
-$T(m)$ per referir-nos a $t$.
+Donada una mesura $m=(t,v)$ escriurem
+$\glsdispdef{not:mesura-valor}{V(m)}$ per referir-nos a $v$ i
+$\glsdispdef{not:mesura-temps}{T(m)}$ per referir-nos a $t$.
 
 
 L'instant de temps de les mesures indueix una relació d'ordre
@@ -256,13 +265,14 @@ però diferent valor, hi ha dues possibles relacions d'ordre.
 
   \begin{enumerate}
   \item Es defineix un \emph{ordre parcial} quan les dues mesures es
-    consideren iguals al complet, $m \leq n$ si i només si $t_m < t_n$
-    o $(t_m, v_m) = (t_n, v_n)$. Aleshores dues mesures no estan
+    consideren iguals al complet, $m
+    \glssymboldef{not:mesura:ordreparcial} n$ si i només si $t_m <
+    t_n$ o $(t_m, v_m) = (t_n, v_n)$. Aleshores dues mesures no estan
     ordenades quan només $t_m = t_n$.
 
   \item Es defineix un \emph{ordre total} quan les dues mesures són
     iguals només considerant l'atribut temps,
-    $m\glssymbol{not:mesura:ordretotal} n$ si i només si $t_m\leq
+    $m\glssymboldef{not:mesura:ordretotal} n$ si i només si $t_m\leq
     t_n$. Aleshores les mesures sempre estan ordenades.  Aquest ordre
     l'indiquem específicament amb el símbol
     $\glssymbol{not:mesura:ordretotal}$ per a diferenciar-lo del
@@ -294,8 +304,8 @@ multivaluades.
 
 En les definicions de temps i valor s'han estès els conjunts amb
 valors impropis, concretament s'ha exemplificat amb el conjunt estès
- $\bar{\R{}} \in \R{} \cup \{+\infty,-\infty\}$
-pel temps i amb el $\R{}^*\in\R{} \cup\{\infty\}$ pel
+ $\glssymbol{not:Rb} \in \glssymbol{not:R} \cup \{+\infty,-\infty\}$
+pel temps i amb el $\glssymbol{not:R*}\in\glssymbol{not:R} \cup\{\infty\}$ pel
 valor. Aquesta extensió amb l'element impropi infinit ($\infty$), o
 amb el que correspongui per a cada tipus de dades, dóna com a resultat
 unes mesures impròpies que anomenarem mesura de valor indefinit i
@@ -303,15 +313,17 @@ mesura indefinida.
 
 \begin{definition}[Mesura de valor indefinit]
   \label{def:model:mesura_valor_indefinit}
-  Definim \emph{mesura de valor indefinit} com el tuple $(t,v)$ en
-  què el valor és indefinit $v=\infty$ i l'instant de temps és
-  qualsevol $t\in\bar{\R{}}$.
+  Definim \emph{mesura de valor indefinit} com el tuple
+  $\glsdispdef{not:mesura-vindefinit}{m=(t,v)}$ en què el valor és
+  indefinit $v=\infty$ i l'instant de temps és qualsevol
+  $t\in\glssymbol{not:Rb}$.
 \end{definition}
 
 \begin{definition}[Mesura indefinida]
   \label{def:model:mesura_indefinida}
-  Definim \emph{mesura indefinida} com el tuple $(t,v)$ en què el
-  valor és qualsevol $v\in\R{}^*$ i l'instant de temps és indefinit
+  Definim \emph{mesura indefinida} com el tuple
+  $\glsdispdef{not:mesura-indefinida}{m=(t,v)}$ en què el valor és
+  qualsevol $v\in\glssymbol{not:R*}$ i l'instant de temps és indefinit
   $t\in\{+\infty,-\infty\}$.
 \end{definition}
 
@@ -342,8 +354,8 @@ tipus.
 
 \begin{definition}[Sèrie temporal]
   \label{def:serie_temporal}
-  Una sèrie temporal $S$ és un conjunt de mesures
-  $S=\{m_0,\ldots,m_k\}$ en què no hi ha temps repetits
+  Una sèrie temporal $\glsdispdef{not:serietemporal}{S}$ és un conjunt
+  de mesures $S=\{m_0,\ldots,m_k\}$ en què no hi ha temps repetits
   $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$.
 \end{definition}
 
@@ -362,7 +374,7 @@ Per ser un conjunt, les sèries temporals tenen mesura de cardinalitat.
   \label{def:sgst:cardinal}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, definim el nombre
   de mesures que conté la sèrie temporal com el cardinal del conjunt
-  $|S|=k+1$. 
+  $\glsdispdef{not:sgst:cardinal}{|S|=k+1}$.
 \end{definition}
 
 Una sèrie temporal sense mesures és la sèrie temporal buida
@@ -387,16 +399,17 @@ seguim amb els reals com a exemples per als tipus de dades.
 La forma bàsica d'una sèrie temporal és la de parelles de temps i
 valor, l'anomenem forma canònica. 
 \begin{definition}[Forma canònica]
-  Sigui $S = \{ m_0, m_1 , \dotsc, m_k \}$ una sèrie temporal amb
-  domini $\bar{\R{}}$ pels temps i els valors de les mesures, la forma
-  canònica com a relació és $S = ( \{t: \bar{\R{}}, v:
-  \bar{\R{}}\}, \{ \{ (t,t_0),(v,v_0)\}, \{(t,t_1),(v,v_1)\}, \dotsc,
-  \{(t,t_k),(v,v_k)\} \} )$; és a dir és una parella de capçalera i conjunt de
-  valors certs. 
+  Sigui $\glsdispdef{not:sgst-canonica}{S = \{ m_0, m_1 , \dotsc, m_k
+    \}}$ una sèrie temporal amb domini $\glssymbol{not:Rb}$ pels temps
+  i els valors de les mesures, la forma canònica com a relació és $S =
+  ( \{t: \glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \{
+  (t,t_0),(v,v_0)\}, \{(t,t_1),(v,v_1)\}, \dotsc, \{(t,t_k),(v,v_k)\}
+  \} )$; és a dir és una parella de capçalera i conjunt de valors
+  certs.
 
   Així doncs, sigui $S_{\emptyset} = \{ \}$ una sèrie temporal buida,
   modelada com a relació s'escriu com $S_{\emptyset} = ( \{t:
-  \bar{\R{}}, v: \bar{\R{}}\}, \{ \} )$.
+  \glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \} )$.
 \end{definition}
 
 
@@ -474,20 +487,21 @@ com a sèries temporal multivaluades.
 \begin{definition}[Sèrie temporal multivaluada]
   Anomenem sèrie temporal multivaluada a una sèrie temporal que té més
   d'un atribut de valors. Així una sèrie temporal multivaluada té la
-  forma simplificada $S^m = \{ m_0, m_1 , \dotsc, m_k \}$ on cada mesura
-  $m_i$ és un tuple $m_i=(t,v_1,v_2,\dotsc,v_n)$ a on $t$ és un
-  instant de temps i $v_1$, $v_2$, \dots, $v_n$ són valors.
+  forma simplificada $\glsdispdef{not:sgst-multivaluada}{S^m = \{ m_0,
+    m_1 , \dotsc, m_k \}}$ on cada mesura $m_i$ és un tuple
+  $m_i=(t,v_1,v_2,\dotsc,v_n)$ a on $t$ és un instant de temps i
+  $v_1$, $v_2$, \dots, $v_n$ són valors.
 
   La forma completa com a relació d'una sèrie temporal multivaluada
-  buida és $S^m_{\emptyset} = ( \{t: \bar{\R{}}, v_1: \bar{\R{}}\, v_2:
-  \bar{\R{}}, \dotsc, v_n: \bar{\R{}}\}, \{ \} )$
+  buida és $S^m_{\emptyset} = ( \{t: \glssymbol{not:Rb}, v_1: \glssymbol{not:Rb}\, v_2:
+  \glssymbol{not:Rb}, \dotsc, v_n: \glssymbol{not:Rb}\}, \{ \} )$
 \end{definition}
 
 Com ocorre en les relacions, el nom dels atributs d'una sèrie temporal
 pot ser decidit per l'usuari. Per exemple, una sèrie temporal
 multivaluada amb tres atributs anomenats és $S^2_{\emptyset} = ( \{t:
-\bar{\R{}}, \text{temperatura}: \bar{\R{}}\, \text{consum}:
-\bar{\R{}}, \text{volum}: \bar{\R{}}\}, \{ \} )$.
+\glssymbol{not:Rb}, \text{temperatura}: \glssymbol{not:Rb}\, \text{consum}:
+\glssymbol{not:Rb}, \text{volum}: \glssymbol{not:Rb}\}, \{ \} )$.
 
 
 
@@ -496,9 +510,9 @@ mesures $(t,v)$. D'aquesta manera, les mesures $m_i$
 d'una sèrie temporal multivaluada en forma canònica són tuples
 $m_i=(t,(v_1,v_2,\dotsc,v_n))$.  Així, per al cas de la sèrie temporal
 multivaluada buida $S^m_{\emptyset}$, en forma multivaluada canònica és
-$S^{mc}_{\emptyset} = ( \{t: \bar{\R{}}, v: V \}, \{ \} )$ a on el
+$S^{mc}_{\emptyset} = ( \{t: \glssymbol{not:Rb}, v: V \}, \{ \} )$ a on el
 domini de l'atribut valor és de tipus relació $V = \{ v_1:
-\bar{\R{}}\, v_2: \bar{\R{}}, \dotsc, v_n \}$ amb restricció que els
+\glssymbol{not:Rb}\, v_2: \glssymbol{not:Rb}, \dotsc, v_n \}$ amb restricció que els
 valors relació que hi pertanyen només poden tenir un tuple $\forall r
 \in V: |r| = 1$.
 
@@ -522,20 +536,20 @@ tenen dos atributs de temps i que anomenem forma doble.
 \begin{definition}[Sèrie temporal doble]
   \label{def:sgst:st-doble}
   Anomenem sèrie temporal doble a una sèrie temporal que té dos
-  atributs de temps i dos atributs de valors. Sigui $S^d =\{m_0,
-  \dotsc, m_k\}$ una sèrie temporal és doble si cada mesura $m_i$ és
-  un tuple $m_i=(t_1,v_1,t_2,v_2)$ a on $t_1$ i $t_2$ són instants de
-  temps i $v_1$ i $v_2$ són valors. De la mateixa manera, a aquesta
-  mesura $m_i$ l'anomenem mesura doble.  Una sèrie temporal doble no
-  té dues parelles de temps repetides $|\{(t_1,t_2) | t_1,t_2\in S\}|
-  = |S|$.
+  atributs de temps i dos atributs de valors. Sigui
+  $\glsdispdef{not:sgst-doble}{S^d =\{m_0, \dotsc, m_k\}}$ una sèrie
+  temporal és doble si cada mesura $m_i$ és un tuple
+  $m_i=(t_1,v_1,t_2,v_2)$ a on $t_1$ i $t_2$ són instants de temps i
+  $v_1$ i $v_2$ són valors. De la mateixa manera, a aquesta mesura
+  $m_i$ l'anomenem mesura doble.  Una sèrie temporal doble no té dues
+  parelles de temps repetides $|\{(t_1,t_2) | t_1,t_2\in S\}| = |S|$.
 \end{definition}
 
 La sèrie temporal doble prové d'un producte de dues sèries
 temporals. Està pensada com a càlcul intermedi d'altres operacions com
 per exemple la junció o el mapatge. En la forma de relació una sèrie
-temporal doble buida és $S_{\emptyset} = ( \{t_1: \bar{\R{}}, v_1:
-\bar{\R{}}\, t_2: \bar{\R{}}, v_2: \bar{\R{}}\}, \{ \} )$.
+temporal doble buida és $S_{\emptyset} = ( \{t_1: \glssymbol{not:Rb}, v_1:
+\glssymbol{not:Rb}\, t_2: \glssymbol{not:Rb}, v_2: \glssymbol{not:Rb}\}, \{ \} )$.
 % La seva forma canònica es
 % correspondria de manera semblant a l'exemple de la
 % \autoref{fig:model:serietemporal:serietemporal}.
@@ -553,11 +567,11 @@ temporal doble buida és $S_{\emptyset} = ( \{t_1: \bar{\R{}}, v_1:
 
 \begin{example}[Valors reals]
   Sèrie temporal $S_1$ on el temps i els valors pertanyen a
-  $\bar{\R{}}$. Conté la mesura de valor 1 en el temps 2, la mesura de
+  $\glssymbol{not:Rb}$. Conté la mesura de valor 1 en el temps 2, la mesura de
   valor 3 en el temps 2 i la mesura de valor 1 en el temps 6.
 
 En la forma canònica completa s'escriu com $S_1 = ( \{t:
-\bar{\R{}}, v: \bar{\R{}}\}, \{ \{(t,2),(v,1)\}, \{(t,3),(v,3)\},
+\glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \{(t,2),(v,1)\}, \{(t,3),(v,3)\},
 \{(t,6),(v,1)\} \} )$. També es pot escriure de manera simplificada com a
 $S_1 = \{ (2,1), (3,3), (6,1) \}$.
 
@@ -596,7 +610,7 @@ horitzontal i el valor a l'eix vertical.
 
 
 \begin{example}[Valors caràcters]
-  Sèrie temporal $S_2$ on el temps pertany a $\bar{\R{}}$ i els valors
+  Sèrie temporal $S_2$ on el temps pertany a $\glssymbol{not:Rb}$ i els valors
   són caràcters que pertanyen a $C=\{a,b,\dotsc,z,\infty\}$. Conté el
   caràcters $a$, $c$ i $a$ mesurats respectivament en els temps $2$,
   $3$ i $6$.
@@ -638,8 +652,8 @@ horitzontal i el valor a l'eix vertical no continu.
 
 
 \begin{example}[Sèrie temporal multivaluada]
-  Sèrie temporal $S_3$ on el temps pertany a $\bar{\R{}}$ i hi ha tres
-  valors on cadascun pertany a $\bar{\R{}}$. En els temps $2$, $3$ i
+  Sèrie temporal $S_3$ on el temps pertany a $\glssymbol{not:Rb}$ i hi ha tres
+  valors on cadascun pertany a $\glssymbol{not:Rb}$. En els temps $2$, $3$ i
   $6$ s'ha mesurat: a) un atribut \emph{temp} amb valors $1$, $2$ i
   $1$; b) un atribut \emph{cons} amb valors $2$, $1$ i $2$; i c) un
   atribut \emph{vol} amb valors $3$, $0$ i $3$.
@@ -648,8 +662,8 @@ horitzontal i el valor a l'eix vertical no continu.
 
 En la forma multivaluada s'escriu com
 \begin{align*}
-  S_3  &= ( \{t: \bar{\R{}}, \text{ temp}: \bar{\R{}}, \text{
-  cons}: \bar{\R{}},\text{ vol}: \bar{\R{}} \}, \{ \\
+  S_3  &= ( \{t: \glssymbol{not:Rb}, \text{ temp}: \glssymbol{not:Rb}, \text{
+  cons}: \glssymbol{not:Rb},\text{ vol}: \glssymbol{not:Rb} \}, \{ \\
   & \{(t,2),(\text{ temp},1) ,( \text{ cons},2),(\text{ vol},3) \}, \\
   & \{(t,3),(\text{ temp},2) ,( \text{ cons},1),(\text{ vol},0) \}, \\
   & \{(t,6),(\text{ temp},1) , (\text{ cons},2),(\text{ vol},3) \} \\
@@ -661,17 +675,17 @@ També es pot escriure de manera simplificada com a $S_{3} = (
 
 La forma canònica és una sèrie temporal amb tuples $(t,v)$, és a dir
 \begin{align*}
-  S^C_{3} &= ( \{t: \bar{\R{}}, v: \{ \text{ temps}:
-  \bar{\R{}}, \text{ cons}: \bar{\R{}},\text{ vol}:
-  \bar{\R{}},\} \}, \{ \\
-  & \{(t,2), (v, ( \{ \text{ temp}: \bar{\R{}}, \text{ cons}:
-  \bar{\R{}},\text{ vol}: \bar{\R{}},\}, \{ (\text{ temp},1)
+  S^C_{3} &= ( \{t: \glssymbol{not:Rb}, v: \{ \text{ temps}:
+  \glssymbol{not:Rb}, \text{ cons}: \glssymbol{not:Rb},\text{ vol}:
+  \glssymbol{not:Rb},\} \}, \{ \\
+  & \{(t,2), (v, ( \{ \text{ temp}: \glssymbol{not:Rb}, \text{ cons}:
+  \glssymbol{not:Rb},\text{ vol}: \glssymbol{not:Rb},\}, \{ (\text{ temp},1)
   ,  (\text{ cons},2),(\text{ vol},3) \}\} )), \\
- & \{(t,3), (v, ( \{ \text{ temp}: \bar{\R{}}, \text{ cons}:
-  \bar{\R{}},\text{ vol}: \bar{\R{}},\}, \{ (\text{ temp},2)
+ & \{(t,3), (v, ( \{ \text{ temp}: \glssymbol{not:Rb}, \text{ cons}:
+  \glssymbol{not:Rb},\text{ vol}: \glssymbol{not:Rb},\}, \{ (\text{ temp},2)
   ,  (\text{ cons},1),(\text{ vol},0) \}\} )), \\
- & \{(t,6), (v, ( \{ \text{ temp}: \bar{\R{}}, \text{ cons}:
-  \bar{\R{}},\text{ vol}: \bar{\R{}},\}, \{ (\text{ temp},1)
+ & \{(t,6), (v, ( \{ \text{ temp}: \glssymbol{not:Rb}, \text{ cons}:
+  \glssymbol{not:Rb},\text{ vol}: \glssymbol{not:Rb},\}, \{ (\text{ temp},1)
   ,  (\text{ cons},2),(\text{ vol},3) \}\} )) \\
   \} )
 \end{align*}
@@ -740,8 +754,8 @@ diferent.
 
 
 \begin{example}[Valors vectors]
-  Sèrie temporal $S_4$ on el temps pertany a $\bar{\R{}}$ i el valor
-  pertany a $\bar{\R{}}^3$; és a dir és un vector representat amb un
+  Sèrie temporal $S_4$ on el temps pertany a $\glssymbol{not:Rb}$ i el valor
+  pertany a $\glssymbol{not:Rb}^3$; és a dir és un vector representat amb un
   tuple. Conté el valor $(1,2,3)$ en el temps $2$, el valor $(3,4,5)$
   en el temps $4$ i el valor $(1,2,3)$ en el temps $6$.
 
@@ -796,7 +810,7 @@ per a cada atribut.
 
 
 \begin{example}[Valors sèrie temporal]\label{par:model:exemple-relvalues}
-  Sèrie temporal $S_5$ on el temps pertany a $\bar{\R{}}$ i el valor
+  Sèrie temporal $S_5$ on el temps pertany a $\glssymbol{not:Rb}$ i el valor
   és una sèrie temporal del mateix format que en l'exemple 1. Conté
   els tuples de $S_1$ com a valors en el temps $1$ i $2$.
 
@@ -831,18 +845,18 @@ taula a la \autoref{fig:model:serietemporal:serietemporal}.
   \label{fig:model:serietemporal:serietemporal}
 \end{figure}
 
-S'observa que la capçalera de $S_5$ és $\{t:\bar{\R{}},v:
-\{t:\bar{\R{}},v:\bar{\R{}}\}\}$. És a dir, el valor és
+S'observa que la capçalera de $S_5$ és $\{t:\glssymbol{not:Rb},v:
+\{t:\glssymbol{not:Rb},v:\glssymbol{not:Rb}\}\}$. És a dir, el valor és
 una altra relació, com es descriu per \textcite[sec.\
 6.4]{date04:introduction8}, a on el temps i el valor pertanyen a
-$\bar{\R{}}$. Per tant, el valor de $S_5$ és de tipus sèrie
+$\glssymbol{not:Rb}$. Per tant, el valor de $S_5$ és de tipus sèrie
 temporal amb valors reals. Tot i així, aquest és un valor especial i
 si es desplega la relació s'obté una sèrie temporal doble amb
 capçalera $\{t^1,t^2,v\}$.
 
 % Cal insistir que \emph{tots} el valors de $S_5$ han de pertànyer al
 % mateix domini \parencite[sec.\ 5.4]{date:introduction}, el qual és
-% $\{temps:\bar{\R{}},valor:\bar{\R{}}\}$.
+% $\{temps:\glssymbol{not:Rb},valor:\glssymbol{not:Rb}\}$.
 
 
 \end{example}
