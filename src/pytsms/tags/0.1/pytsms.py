@@ -7,7 +7,7 @@ pyTSMS
 
 :Author: Aleix Llusà Serra
 :Contact: aleix (a) dipse.upc.edu
-:Version: 0.2-dev
+:Version: 0.1
 :Date: 	2014-07-15
 :Abstract: Implementació en Python d'un SGBD per sèries temporals (SGST). Python implementation for a Time Series DBMS (TSMS).
 :Copyright: GPLv3
@@ -16,13 +16,11 @@ Python implementation for a time series DBMS. It is the referent
 implementation for the data model TSMS described in
 http://escriny.epsem.upc.edu/projects/rrb/
 
-
 Implementació en Python d'un SGBD per sèries temporals
 (SGST). És la implementació de referència del model de dades SGST
 descrit a http://escriny.epsem.upc.edu/projects/rrb/
 
 Amb el suport de la Universitat Politècnica de Catalunya (UPC).
-
 
 
 Copyright (C) 2012-2014 Aleix Llusà Serra.
