@@ -7,11 +7,11 @@
 % In this section we introduce some background concepts and the
 % nomenclature which we will use later concerning TSMS. 
 
-Measures and time series are the main objects of TSMS and their main
-characteristic is that they have a time attribute that requires a
-coherent treatment. We describe the TSMS nomenclature in three parts:
- the data structure model,  time series manipulation and
-operation, and  time series specific properties.
+Measures and time series are the main objects of \acro{TSMS} and their
+main characteristic is that they have a time attribute that requires a
+coherent treatment. We describe the \acro{TSMS} nomenclature in three
+parts: the data structure model, time series manipulation and
+operation, and time series specific properties.
 
 
 
@@ -65,8 +65,7 @@ purposes.
   a coordinate system and real numbers as time domain, let $t^{R}$ be
   a \emph{reference time instant}, then we define \emph{time instants}
   as a value $t^i \in\Rb$ that measures signed time distance from the
-  \emph{reference time instant} $t^i= d(t^{R},i)$ where $d$ is the
-  metric of the set $T$. $\square$
+  \emph{reference time instant} $t^i= d(t^{R},i)$. $\square$
 \end{definition}
 
 Summarising, time instants position and order events, and between two
@@ -79,7 +78,7 @@ which has been illustrated with real numbers. There is also a calendar
 approach which define the time domain with names for the points in the
 time line and with rules for time durations. Usually the aim of
 calendars is to give a relation between time and Earth
-rotation. Sometimes calendars are seen as essential parts of TSMS
+rotation. Sometimes calendars are seen as essential parts of \acro{TSMS}
 \cite{dreyer94}, however maps can be established between a time
 coordinate system and a calendar system.
 
@@ -171,6 +170,7 @@ $m=(t,v_1,v_2,\ldots,v_n)$.
 
 
 \subsection{Operations}
+\label{sec:model:operations}
 
 Time series have a time attribute that must be manipulated
 coherently. Owing to this time attribute, the behaviour of a time
@@ -206,7 +206,7 @@ m $.  We extend the maximum definition with a supremum one as for
 extended real numbers the supremum is defined even when a set is
 empty, $\sup(\emptyset)=-\infty$ \cite{cantrell:extendedreal}. So
 applying this property we can say $n=\sup(S)$ is the \emph{supremum}
-of the time series where $n=\max(S)$ if defined and
+of the time series where $n=\max(S)$ when defined and
 $n=(-\infty,\infty)$ otherwise; note that $V(n)=\infty$ is an
 indefinite value.  Dually, we can define \emph{minimum} $\min(S)$ and
 \emph{infimum} $\inf(S)$.
@@ -235,7 +235,7 @@ sets. Plain set union operation can not be applied directly as the
 resulting time series could have repeated time values.  So we define a
 non commutative operation and a commutative temporal operation. The
 union requires both time series to have the same structure and type as
-happens with union operation in relational DBMS
+happens with union operation in relational \acro{DBMS}
 \cite{date:introduction}. %
 Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
 time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
@@ -251,7 +251,7 @@ m^2 \notinst S_1 \}$.
   \centering
   \input{imatges/sgst-union-venn.tex}
   \caption{Venn diagrams examples for set and temporal set union
-    operation of TSMS}
+    operation of \acro{TSMS}}
   \label{fig:model:venn}
 \end{figure}
 
@@ -280,7 +280,7 @@ m^2 \notinst S_1 \}$.
 The \emph{difference} of two sets is a set containing all elements
 from first not contained in second. Like union, the difference
 requires both time series to have the same structure. %
-Let $S_1$ and $S_2$ be two time series. The \emph{difference} of first
+Let $S_1$ and $S_2$ be two time series, the \emph{difference} of first
 and second is a time series $S_1 - S_2$ with all measures of $S_1$ not
 belonging to $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin S_2
 \}$. The \emph{temporal difference} of first and second is a time
@@ -415,6 +415,8 @@ time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2]
 
 
 \subsubsection{Temporal function operations}
+\label{sec:model:tfunc}
+
 A time series is a discrete representation of a continuous function,
 more precisely a temporal continuous function as time is the function
 domain. Operations that manipulate time series according to this
@@ -440,12 +442,12 @@ constant piecewise functions.
 
 
 \begin{definition}
-  \emph{Delta} ($\delta$) is a method of representation based on the
+  \emph{Dirac delta} (\dd) is a method of representation based on the
   Dirac delta function. It is an impulse train function that is zero
   everywhere except at zero.  Let $S$ be a time series we define
-  $S(t)^\delta$ as the \emph{delta representation function}
+  $S(t)^\dd$ as the \emph{\dd{} representation function}
 \[
-    \forall m \in S: S(t)^\delta
+    \forall m \in S: S(t)^\dd
 % &  \\
 %     = & \sum_{t\in T} V(m) \delta(t-T(m)): \delta(t)= 
 %       \begin{cases}
@@ -497,8 +499,8 @@ $. This is a general definition difficult to implement, so for every
 representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
-\item Let $S(t)^\delta$ be the delta representation for $S$, the
-  \emph{delta temporal interval} is $S[t_i,t_f]^\delta = S[t_i,t_f]
+\item Let $S(t)^\dd$ be the \dd{} representation for $S$, the
+  \emph{\dd{} temporal interval} is $S[t_i,t_f]^\delta = S[t_i,t_f]
   \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_i,0)$ and $m_f=(t_f,0)$.
 
 \item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$, the
@@ -516,8 +518,8 @@ definition of temporal interval operation is given.
 The temporal selection over a time series allows to change the
 resolution in the context of a representation function.  Let $S$ be a
 time series, $i=\{t_0,t_1,\dotsc,t_n\}$ a set of time instants, and
-and $r$ a representation function. The \emph{temporal selection} noted
-as $S[i]^r$ is a time series with measures in $i$ times computed in
+$r$ a representation function. The \emph{temporal selection} noted as
+$S[i]^r$ is a time series with measures in $i$ times computed in
 coherence with the representation function $r$: $S[i]^r = S[t_0,t_0]^r
 \cup S[t_1,t_1]^r \cup \dotsb \cup S[t_n,t_n]^r$. Let $t_a$ be a time
 instant, note that temporal selection depends on the temporal interval
@@ -549,22 +551,25 @@ in rejecting new values if they are not correct or in reconstructing
 this erroneous data.  Data validation process has to consider when
 values are outside the possible range domain, when there has not been
 possible to acquire a sample, when the time of acquisition between
-measures is not considered freshness, etc. MTSMS has been designed to
-cope with this data validation process.
+measures is not considered freshness, etc. \acro{MTSMS} is designed to
+cope with this data validation process with the help of time series
+representation functions such as \zohe{}.
 
 
 Third, enormous quantity of data difficults computations.  Time series
 come from data recollected at monitoring systems and so its size gets
-very big as continuously new measures are added.  MTSMS has been designed to 
-be an storage with data size reduction.
+very big as continuously new measures are added.  \acro{MTSMS} is
+designed to be an storage solution with data size reduction by using
+time series aggregate operations.
 
 
 Forth, sample period irregularities difficult later time series
 analysis. That is when data has not been acquired uniformly at time it
 is harder to apply join operations between time series and it do not
 allow to apply time series analysis algorithms defined for sequences
-approaches.  MTSMS tries to storage regular time series.  Next we
-detail the regular concept for time series.
+approaches.  \acro{MTSMS} tries to storage regular time series in the
+process of consolidation.  Next we detail the regular concept for time
+series.
 
 
 A time series is regular when its measures are equi-spaced in time,
@@ -605,7 +610,7 @@ to each time series stored in a multiresolution database
 (\acro{MTSDB}).
 
 
-The architecture of MTSMS model for one multiresolution time series is
+The architecture of \acro{MTSMS} model for one multiresolution time series is
 shown in Figure~\ref{fig:model:mtsdb} depicted with its main
 components.  A multiresolution time series is a collection of
 resolution subseries which temporarily accumulate measures in a buffer
@@ -618,7 +623,7 @@ attributes.
   \centering
   \input{imatges/mtsms-arquitectura_interna.tex}
   %\smallskip
-  \caption{Architecture of MTSMS model}
+  \caption{Architecture of \acro{MTSMS} model}
   \label{fig:model:mtsdb}
 \end{figure}
 
@@ -763,7 +768,7 @@ $\text{otherwise}$.
 The multiresolution consolidation operation should be applied
 regularly based on a consolidation clock. When the measure ordered
 addition approach is taken as explained in the buffer's consolidation,
-then there is no need for a clock in a MTSMS. The consolidation clock
+then there is no need for a clock in a \acro{MTSMS}. The consolidation clock
 is induced by the measure's addition and then it is only necessary to
 check the multiresolution consolidation operation on new
 additions. However, there could be other approaches where the
@@ -782,7 +787,7 @@ external clock.
 \subsection{Queries}
 
 
-There are two basic time series queries for a MTSMS: (i) extract a
+There are two basic time series queries for a \acro{MTSMS}: (i) extract a
 time subseries from a resolution subseries' disc or (ii) query for a
 total time series from all consolidated information.
 
@@ -804,9 +809,10 @@ as it could contain repeated $\delta_i$.
 
 
 From these two basic time series queries, more elaborated queries can
-be applied to MTSMS by using TSMS operations. For example, let $M_1$
-and $M_2$ be two multiresolution time series, we can compute the sum
-of both with $\totalseries(M_1) + \totalseries(M_2)$. 
+be applied to \acro{MTSMS} by using \acro{TSMS} operations. For
+example, let $M_1$ and $M_2$ be two multiresolution time series, we
+can compute the sum of both with $\totalseries(M_1) +
+\totalseries(M_2)$.
 % This is the general algebraic expressions that describes the model,
 % but an implementation of the model could accomplish this operation
 % in a more efficient way.
@@ -818,18 +824,18 @@ of both with $\totalseries(M_1) + \totalseries(M_2)$.
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-Attribute aggregate functions are a specific case of TSMS aggregate
+Attribute aggregate functions are a specific case of \acro{TSMS} aggregate
 operation which summarise time series information when consolidating a
 buffer. Let $S$ be a time series and $t_0$ and $t_f$ two time
 instants, an attribute aggregate function $f$ calculates a measure
 that summarises the measures of $S$ included in the time interval
 $i=[t_0,t_f]$:
 \[
-f : S=\{m_0,\ldots,m_k\} \times [t_0,t_f] \mapsto m'
+f : S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \mapsto m'
 \]
 where, generally, $m'$ results from two operations on the time series:
 (i) a time subseries selection $S'$ depending on the consolidating
-interval, for example $S' = S[t_0,t_f]$, and (ii) a TSMS aggregation
+interval, for example $S' = S[t_0,t_f]$, and (ii) a \acro{TSMS} aggregation
 over this time subseries such as $m' = \agg(S',m_i, f^a)$ where $f^a$
 is a function over two measures.
 
@@ -907,10 +913,11 @@ resulting value $V(m')$ is calculated, letting the resulting time
 instant $T(m')$ subject to interpretation.  Next there are some
 attribute patterns examples based on temporal function time series
 operators, that is the time series aggregated corresponds to a
-continuous function $S(t)^r$ where $r$ is a representation. The
-patterns of these functions leave $T(m')$ undefined as well as the
-representation $r$ of the time series. Let the time be continuous on
-all the time domain $t\in T$:
+continuous function $S(t)^r$ where $r$ is a representation as has been
+described in Section~\ref{sec:model:tfunc}. The patterns of these
+functions leave $T(m')$ undefined as well as the representation $r$ of
+the time series. Let the time be continuous on all the time domain
+$t\in T$:
 \begin{itemize}
 %\renewcommand{\labelitemi}{--}
 \item maximum$^r$: $S \times i \mapsto m'$ where $V(m') =
@@ -926,23 +933,24 @@ all the time domain $t\in T$:
 
 These aggregation function patterns can be expressed with discrete
 mathematics for each particular representation, that is based on the
-temporal interval defined in TSMS. Next we exemplify it by
-interpreting the general continuous patterns for two particular
-representations that have been defined previously: delta and \zohe{}.
+temporal interval defined in Section~\ref{sec:model:tfunc}. Next we
+exemplify it by interpreting the general continuous patterns for two
+particular representations that have been defined previously: \dd{}
+and \zohe{}.
 
 
-Delta attribute aggregation functions $f^\delta$ have a general form
-$f^\delta : S \times [t_0,t_f]\mapsto m'$ where $m'=(t',v')$, the
+Dirac delta attribute aggregation functions $f^\dd$ have a general
+form $f^\dd : S \times [t_0,t_f]\mapsto m'$ where $m'=(t',v')$, the
 resulting time is interpreted as centred on the interval
 $t'=\frac{t_f+t_0}{2}$ and the resulting value depends on the
-attribute, let $S'=S[t_0,t_f]^\delta$ be the selection of measures by
-delta temporal interval:
+attribute, let $S'=S[t_0,t_f]^\dd$ be the selection of measures by
+Dirac delta temporal interval:
 \begin{itemize}
 %\renewcommand{\labelitemi}{--}
-\item maximum$^\delta$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
-\item last$^\delta$: $v' = \max(S')$.
-\item mean$^\delta$: $v' = \frac{1}{t_f-t_0} \sum\limits_{\forall m
-    \in S'} V(m)$, as delta function has property $\int\delta(t)dt=1$.
+\item maximum$^\dd$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
+\item last$^\dd$: $v' = \max(S')$.
+\item mean$^\dd$: $v' = \frac{1}{t_f-t_0} \sum\limits_{\forall m
+    \in S'} V(m)$, as Dirac delta function has property $\int\dd(t)dt=1$.
 \end{itemize}
 
 
@@ -961,7 +969,7 @@ interval:
   m) )V(m) \big]$ where $o=\min(S')$ and $S''= S' - \{o\}$.
 \end{itemize}
 
-A similar aggregation function to mean$^\zohe{}$ is used by RRDtool
+A similar aggregation function to mean$^\zohe{}$ is used by \emph{RRDtool}
 \cite{rrdtool} in order to summarise information for velocity coun\-ter
 data by keeping the total counting information, as mean aggregation
 can be seen as one keeping the area below the original signal.
@@ -971,7 +979,7 @@ In conclusion, some patterns are very similar. As instance maximum and
 last attributes differ basically on the interval selection
 operation. However, other patterns have a more elaborated
 interpretation in a particular representation. As instance
-mean$^\zohe{}$ and mean$^\delta$ are an elaborated interpretation for
+mean$^\zohe{}$ and mean$^\dd$ are an elaborated interpretation for
 the general integral definition.
 
 
