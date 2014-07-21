@@ -12,7 +12,7 @@ Aquesta funció de multiresolució ens permetrà:
 
 \begin{itemize}
 \item Plantejar problemes on veiem la multiresolució com una consulta sobre una sèrie temporal
-\item Oferir sistemes duals de \gls{SGSTM} i \gls{SGST} amb operacions
+\item Oferir sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
   de consulta multiresolució.
 \item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme.
 \item Estudiar la teoria de la informació per a l'esquema de multiresolució
@@ -51,7 +51,7 @@ multiresolució en temps diferit com una consulta en un \gls{SGST} de
 transformació d'una sèrie temporal a una nova sèrie temporal.
 
 És a dir, sigui $S$ una sèrie temporal, $M$ una sèrie temporal
-multiresolució i $\text{e} = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
+multiresolució i $e = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
 (\delta_d,f_d,\tau_d,k_d)\}$ els paràmetres de l'esquema de
 multiresolució de $M$. Afegim totes les mesures de la sèrie temporal a
 la multiresolució, $\forall m \in S:
@@ -87,7 +87,7 @@ Definim la consulta de selecció de disc dels \gls{SGSTM} a partir del
 mapatge dels \gls{SGST} de manera que, en computació per temps
 diferit, són equivalents
 \[
-\glssymbol{not:sgstm:seriedisc}(M,\delta,f) \equiv
+\glssymbol{not:sgstm:seriedisc}(M',\delta,f) \equiv
 \glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,k)
 \]
 
@@ -97,9 +97,8 @@ diferit, són equivalents
   amb esquema $e$ i $(\delta,f,\tau,k)\in e$ els paràmetres de
   multiresolució d'una subsèrie resolució. L'expressió de
   $\glssymbol{not:sgstm:seriedisc}(M,\delta,f)$ com a mapa d'una sèrie
-  temporal és
-  $\glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,k)=\glssymbol{not:sgst:map}(S_I,\glssymbol{not:sgst:fmap})$
-  on
+  temporal és $\glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,k)=
+  \glssymbol{not:sgst:map}(S_I,\glssymbol{not:sgst:fmap})$ on
   \[
   \glssymbol{not:sgst:fmap}: m_i\mapsto f(S, [T(m_i)-\delta,T(m_i)]),
   \]
@@ -115,7 +114,8 @@ diferit, són equivalents
 
 
 \begin{example}
-  Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,1),(10,1)\}$ i els
+  \label{ex:multiresolucio:dmap}
+  Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i els
   paràmetres de multiresolució
   $((\delta,5),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,2))$.  El
   mapa de \glssymbol{not:sgstm:seriedisc} és una sèrie temporal $S'=
@@ -152,8 +152,6 @@ diferit, són equivalents
     consolidació. Així, per a cada $T(m_i)$ hi hauria la sèrie
     temporal $S[T(m_i)-\delta,T(m_i)]$, és a dir $S_B=\{
     (5,S[0,5],(10,S[5,10]) \}$.
-
-
   \end{enumerate}
 
 
@@ -167,7 +165,7 @@ diferit, són equivalents
     $t$  & $v$ \\ \hline
     1  & 0 \\
     3  & 1 \\
-    6  & 1 \\
+    6  & 0 \\
     10  & 1 \\ \hline
   \end{tabular} \qquad
   \begin{tabular}[c]{|c|c|}
@@ -180,7 +178,7 @@ diferit, són equivalents
     \multicolumn{2}{c}{$S_B$} \\ \hline
     $t$  & $v$ \\ \hline
     5  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 1&0\\ 3&0 \\\hline  \end{tabular} \\\hline
-    10  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 6&1\\ 10&1 \\\hline  \end{tabular} \\ \hline
+    10  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 6&0\\ 10&1 \\\hline  \end{tabular} \\ \hline
   \end{tabular} \qquad
  \begin{tabular}[c]{|c|c|}
     \multicolumn{2}{c}{$S'$} \\ \hline
@@ -200,51 +198,110 @@ diferit, són equivalents
 
 Definim la consulta de sèrie temporal total dels \gls{SGSTM} a partir
 del plegament dels \gls{SGST} de manera que, en computació per temps
-diferit, són equivalents\todo{}
-% \[
-% \totalseries(M) \equiv \multiresolution(S,\text{sch})
-% \]
-
+diferit, són equivalents
+\[
+\glssymbol{not:sgstm:serietotal}(M') \equiv \glssymbol{not:sgstm:multiresolucio}(S,e)
+\]
 
 \begin{definition}[plec de \glssymbol{not:sgstm:serietotal}]
-$\glssymboldef{not:sgstm:multiresolucio}$
+  Sigui $S$ una sèrie temporal i $M$ una sèrie temporal multiresolució
+  amb esquema $e = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
+  (\delta_d,f_d,\tau_d,k_d)\}$, el qual es pot observar com una sèrie
+  temporal multivaluada.  L'expressió de
+  $\glssymbol{not:sgstm:serietotal}(M)$ com a plec d'una sèrie
+  temporal és $\glssymboldef{not:sgstm:multiresolucio}(S,e)=
+  \glssymbol{not:sgst:ofold}(e,\{\},\glssymbol{not:sgst:ffold},\min)$
+  on $\glssymbol{not:sgst:ffold}: S_i \times (\delta_c,f_c,\tau_c,k_c)
+  \mapsto S_i ||
+  \glssymbol{not:sgstm:dmap}(S,\delta_c,f_c,\tau_c,k_c)$.
+
+  Així, el plec de \glssymbol{not:sgstm:serietotal} és la concatenació de
+  tots els \glssymbol{not:sgstm:dmap} possibles per l'esquema $e$
+  ordenats per $\delta$, assumint que $e$ no conté $\delta$ repetits.
 \end{definition}
 
 
-% The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
-% subseries' disc $R=(B,D)$, where $B=(S_B,\tau,\delta,f)$ and
-% $D=(S_D,k)$, can be expressed with a map operation over the original
-% time series $S$:
+
+En resum: en temps diferit, s'insereixen les mateixes mesures a un
+\gls{SGST} i a un \gls{SGSTM}. Per una banda es consolida el
+\gls{SGSTM} i s'obté la sèrie total i per altra banda es consulta la
+multiresolució en el \gls{SGST}. Aleshores s'obté la mateixa sèrie
+temporal.
 
 
-% The total time series $S'=\totalseries(M)$ is a concatenation of all
-% $\seriedisc$ without repeated $\delta$. It can be expressed with a
-% fold operation over the original time series $S$. Let $\text{sch} = \{
-% (\delta_0,\tau_0,f_0,k_0), (\delta_1,\tau_1,f_1,k_1), \ldots,
-% (\delta_d,\tau_d,f_d,k_d)\}$ be the parameters of $M$ expressed as a
-% multivalued time series
-% \[
-% \totalseries(M) \equiv \multiresolution(S,\text{sch})
-% \]
-% \[
-% \multiresolution(S,\text{sch}) = \orderfold(\text{sch},\{\},f_r,\min) \text{ where }
-% \]
-% \[
-% f_r: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
-% \dmap(S,\delta_c,\tau_c,f_c,k_c)
-% \]
+\begin{example}
+  Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i l'esquema
+  de multiresolució
+  $e=\{\{(\delta,5),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,2)\},
+  \{(\delta,2),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,3)\}\}$.
+  El plec de $\glssymbol{not:sgstm:serietotal}$ és una sèrie temporal
+  $S'= \glssymboldef{not:sgstm:multiresolucio}(S,e)$ on
+  $S'=\{(5,1),(6,0),(8,0),(10,1)\}$. Expressem el càlcul pas a pas, a la
+  \autoref{fig:multiresolucio:multiresolucio} es visualitzen en taula les sèries
+  temporals corresponents:
+
+  \begin{enumerate}
+  \item En primer lloc es calcula la sèrie temporal pels paràmetres de
+    multiresolució $\delta_1$:
+    $S_{D1}=\glssymbol{not:sgstm:dmap}(5,\glssymbol{not:sgstm:maxdd}),0,2)=\{(5,1),(10,1)\}$,
+    com ja s'ha vist a l'\autoref{ex:multiresolucio:dmap}.
+
+  \item En segon lloc, es calcula la sèrie temporal pels paràmetres de
+    multiresolució $\delta_2$:
+    $S_{D2}=\glssymbol{not:sgstm:dmap}(2,\glssymbol{not:sgstm:maxdd}),0,3)=\{(6,0),(8,0),(10,1)\}$,
+    de manera similar a $S_{D1}$.
+
+  \item En tercer lloc es concatenen les sèries temporals per ordre de
+    $\delta$: $\delta_2<\delta_1$. Així, $S'= S_{D2} || S_{D1}$.
+
+  \end{enumerate}
+  
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 0 \\
+    3  & 1 \\
+    6  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_{D1}$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_{D2}$} \\ \hline
+    $t$  & $v$ \\ \hline
+    6  & 0 \\
+    8  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S'$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    6  & 0 \\
+    8  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular}
+  \caption{Taules de les sèries temporals per l'operació de plec de  \glssymbol{not:sgstm:serietotal}}
+  \label{fig:multiresolucio:multiresolucio}
+\end{figure}
+ 
+
+
+\end{example}
 
 
 
 
-\todo{}
-És a dir que  si, en temps diferit, hem seguit la mateixa inserció de mesures a un \gls{SGST} i un \gls{SGSTM}, 
-serà equivalent a tal tal tal en un moment concret.
 
-És a dir, que si hem inserit les mateixes mesures a un \gls{SGST} i a
-un \gls{SGSTM}, per una banda consolidem el \gls{SGSTM} i n'obtenim la
-sèrie total i per altra banda consultem la multiresolució al
-\gls{SGST}: obtenim la mateixa sèrie temporal.
+
 
 
 \subsection{Demostració}
@@ -255,32 +312,18 @@ Cal demostrar l'equivalència formalment\todo{}
 
 
 
-% \section{Multiresolution over TSMS}
-% \label{sec:M+TSMS}
+\section{Sistemes duals amb SGST i SGSTM}
+\todo{}
 
 
+Oferir sistemes duals de \gls{SGSTM} i \gls{SGST} amb operacions
+  de consulta multiresolució.
 
-% The total time series $S'=\totalseries(M)$ is a concatenation of all
-% $\seriedisc$ without repeated $\delta$. It can be expressed with a
-% fold operation over the original time series $S$. Let $\text{sch} = \{
-% (\delta_0,\tau_0,f_0,k_0), (\delta_1,\tau_1,f_1,k_1), \ldots,
-% (\delta_d,\tau_d,f_d,k_d)\}$ be the parameters of $M$ expressed as a
-% multivalued time series
-% \[
-% \totalseries(M) \equiv \multiresolution(S,\text{sch})
-% \]
-% \[
-% \multiresolution(S,\text{sch}) = \orderfold(\text{sch},\{\},f_r,\min) \text{ where }
-% \]
-% \[
-% f_r: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
-% \dmap(S,\delta_c,\tau_c,f_c,k_c)
-% \]
+* Sistemes on el SGSTM funcionen com a cache per a consultes multiresolució
 
+* Sistemes on la informació en un warehouse SGST (que es consulta rarament) serveix per si es vol fer un canvi d'esquema  en un SGSTM poder recalcular les dades que hi hauria hagut en el SGSTM. Altrament el SGSTM ha de començar de nou. Pensem en un canvi d'esquema com per exemple ampliar un disc o canviar la $f$, un canvi com reduir un disc sí que es pot recalcular
 
-
-% Summarising, a MTSMS and the multiresolution query are equivalent on
-% functionality.
+* Posar símil amb la compressió multimèdia: es tenen fitxers lossless que s'emmagatzemen i es fan servir rarament, es fan circular fitxers lossy que ocupen menys i són més àgils per treballar; en el cas que calgui modificar un lossy  es regenera un de nou a partir del lossless. Sobretot es fa per evitar les pèrdues encadenades entre compressions lossy.
 
 
 
