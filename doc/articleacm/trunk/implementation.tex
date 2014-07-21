@@ -24,7 +24,7 @@ are implemented as object methods, which are not show in \acro{UML}
 diagrams for space reasons.
 
 
-% The development of this implementation is free software and it is located at our version control system
+% The development of this implementation is free software and can be found at our version control system
 % \url{http://escriny.epsem.upc.edu/svn/rrb//src/roundrobinson/tags/0.3/}.
 
 
@@ -111,11 +111,13 @@ we use the Python \emph{Matplotlib} library.
 
 
 \begin{example}
+  \label{ex:pytsms:example}
   We define in Pytsms the two time series $S1$ and $S2$ from
   Example~\ref{ex:model:s1s2} and we apply different operations:
-  union, concatenation, closed interval, \zohe{} temporal interval,
-  \zohe{} temporal selection, and the test of regular property. For
-  space reasons we abbreviate \emph{Measure} to \emph{m}.
+  union, temporal union, concatenation, closed interval, \zohe{}
+  temporal interval, \zohe{} temporal selection, and the test of
+  regular property. Note that \emph{Measure} is abbreviated to
+  \emph{m}.
 \begin{lstlisting}[style=py]
 #Importing the required objects
 >>> from pytsms import TimeSeries, Measure as m
@@ -130,8 +132,11 @@ we use the Python \emph{Matplotlib} library.
 # æ$s1 \cup s2$æ
 >>> s1.union(s2)
 TimeSeries([m(1,1), m(2,2), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s1 \cupt s2$æ
+>>> s1.union_temporal(s2)
+TimeSeries([m(1,1), m(2,2), m(4,0), m(5,1), m(6,2)])
 # æ$s1 || s2$æ
-s1.concatenate(s2) 
+>>> s1.concatenate(s2) 
 TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
 # æ$s2[2,5]$æ
 >>> s2.interval_closed(2,5)
@@ -164,16 +169,17 @@ RoundRobinson is the referent implementation for the model concepts of
 multiresolution time series, resolution subseries, buffers, discs, and
 attribute aggregate functions. Figure
 \ref{fig:implementacio:roundrobinson-uml} shows the relationships
-among these objects in a \acro{UML} diagram. A \emph{MultiresolutionSeries}
-object is an aggregation of \emph{Resolution} objects. A
-\emph{Resolution} is composed of one \emph{Buffer} and one
-\emph{Disc}. Each \emph{Buffer} is associated to one \emph{TimeSeries}, from the
-Pytsms library, and each \emph{Disc} is associated to another \emph{TimeSeries},
-which respectively are $S_B$ and $S_D$ of the \acro{MTSMS}
-model. Furthermore, each \emph{Buffer} is associated to one attribute
-aggregate function which is realised by defining a Python
-\emph{Function} with two parameters: a TimeSeries (\emph{s}) and a
-consolidation interval (\emph{i}) as a pair of two time instants.
+among these objects in a \acro{UML} diagram. A
+\emph{MultiresolutionSeries} object is an aggregation of
+\emph{Resolution} objects. A \emph{Resolution} is composed of one
+\emph{Buffer} and one \emph{Disc}. Each \emph{Buffer} is associated to
+one \emph{TimeSeries}, from the Pytsms library, and each \emph{Disc}
+is associated to another \emph{TimeSeries}, which respectively are
+$S_B$ and $S_D$ of the \acro{MTSMS} model. Furthermore, each
+\emph{Buffer} is associated to one attribute aggregate function which
+is realised by defining a Python \emph{Function} with two parameters:
+a \emph{TimeSeries} (\emph{s}) and a consolidation time interval
+(\emph{i}).
 
 
 
@@ -193,23 +199,25 @@ consolidation interval (\emph{i}) as a pair of two time instants.
   %SubComponents 
   \umlclass[x=-1.2,y=-4] {Buffer}{}{}
   \umlclass[x=1.2,y=-4] {Disc}{}{}
-  \umlclass[x=-3,y=-6,template={s,i}] {Function}{}{}
+  \begin{umlpackage}[x=-3,y=-6.6]{aggregators}
+    \umlclass[template={s,i}] {Function}{}{}
+  \end{umlpackage}
   \umlunicompo[mult=1]  {Resolution}{Buffer}
   \umlunicompo[mult=1]  {Resolution}{Disc}
   \umluniassoc[mult=1]  {Buffer}{Function}
 
   %TimeSeries
-  \begin{umlpackage}[x=1,y=-6]{Pytsms}
+  \begin{umlpackage}[x=1,y=-6.5]{Pytsms}
     \umlclass{TimeSeries}{}{}  
   \end{umlpackage}
   \umluniassoc[mult=1]  {Buffer}{TimeSeries}
   \umluniassoc[mult=1]  {Disc}{TimeSeries}
 
   %Associacions
-  \umlclass[x=-3,y=-2.5] {Storage}{}{}
-  \umluniassoc {Storage}{MultiresolutionSeries}
-  \umlclass[x=-3,y=-1] {Plot}{}{}
-  \umluniassoc {Plot}{MultiresolutionSeries}
+  \umlclass[x=-3.25,y=-2.7] {Storage}{}{}
+  \umluniassoc {MultiresolutionSeries}{Storage}
+  \umlclass[x=-3.5,y=-1] {Plot}{}{}
+  \umluniassoc {MultiresolutionSeries}{Plot}
 
 \end{tikzpicture}
 
@@ -236,20 +244,24 @@ the corresponding methods of the contained resolution subseries.
 
 
 A \emph{MultiresolutionSeries} can be queried by two methods:
-\emph{discSeries} and \emph{total}. \emph{discSeries} returns the
-\emph{TimeSeries} for the selected disc by parameters \emph{delta} and
-\emph{f}. \emph{total} returns the \emph{TimeSeries} that results from the
-concatenation of all \emph{discSeries} ordered by \emph{delta}; as
-there can not be repeated \emph{delta}, \emph{total} has a parameter
-\emph{f} for selecting only \emph{discSeries} with a determined
-attribute aggregate function.
+\emph{seriedisc} and \emph{totalseries}. The \emph{seriedisc} returns
+the \emph{TimeSeries} for the selected disc by parameters \emph{delta}
+and \emph{f}. The \emph{totalseries} returns the \emph{TimeSeries}
+that results from the concatenation of all \emph{seriedisc} ordered by
+\emph{delta}.
+% as there can not be repeated \emph{delta}, \emph{totalseries} has a
+% parameter \emph{f} for selecting only \emph{discSeries} with a
+% determined attribute aggregate function.
 
 In a module \emph{aggregators} we have implemented some default
 attribute aggregate functions, although users can define more as they
-are Python \emph{Function} objects with parameters s as a \emph{TimeSeries} and i as
-a pair of times like \emph{[t0,tf]}. For example we have defined the \zohe
-aggregate functions, which basically aggregate over the temporal
-interval \lstinline[style=py]+s.interval_temporal(t0,tf,Zohe)+.
+are Python \emph{Function} objects with parameters \emph{s} as a
+\emph{TimeSeries} and \emph{i} as a pair of times like
+\emph{[t0,tf]}. As instance we have defined the \zohe{} aggregate
+functions from Section~\ref{sec:model:interpolador}, which basically
+aggregate over the temporal interval
+\lstinline[style=py]+s.interval_temporal(t0,tf,Zohe)+ shown in
+Example~\ref{ex:pytsms:example}.
 
 
 \begin{example}
@@ -279,16 +291,17 @@ interval \lstinline[style=py]+s.interval_temporal(t0,tf,Zohe)+.
 >>> M.consolidable()
 True
 #Consolidating until no more consolidable
->>> while M.consolidable(): M.consolidate()
+>>> while M.consolidable():
+...    M.consolidate()
 
 #Query æ$\seriedisc(M,5,\text{mean}^\zohe)$æ
->>> M.discSeries(5,mean_zohe)
+>>> M.seriedisc(5,mean_zohe)
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 #Query æ$\seriedisc(M,10,\text{maximum}^\zohe)$æ
->>> M.discSeries(10,maximum_zohe)
+>>> M.seriedisc(10,maximum_zohe)
 TimeSeries([m(10,6), m(20,11)])
 #Query æ$\totalseries(M)$æ
->>> M.total()
+>>> M.totalseries()
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 \end{lstlisting}
 \end{example}

@@ -2,10 +2,11 @@
 \label{sec:example}
 
 
-Next we show a real example database for a time series data using
-Pytsms and RoundRobinson implementations. Actual data comes from a
-temperature distributed sensor monitoring system \cite{alippi10}, we
-focus on one sensor data.
+Next we show a real example database for a time series data. Actual
+data comes from a temperature distributed sensor monitoring system
+\cite{alippi10}, we focus on one sensor data. We use Pytsms and
+RoundRobinson implementations in order to create a \acro{MTSDB} and
+to query it.
 
 \emph{Data}. The Figure~\ref{fig:exemple:original} shows the original
 data for one year and a half. The plot interpolates linearly the
@@ -51,13 +52,14 @@ subseries using the maximum$^\zohe{}$ aggregate function.
 
 \emph{Consolidation}. The time subseries after consolidating the
 \acro{MTSDB} are shown in the Figure~\ref{fig:exemple:4mrd}, where
-each graphic corresponds to a resolution disc time series. Each title
+each graphic corresponds to the possible $\seriedisc$ queries, that is
+every resolution disc time series from the \acro{MTSDB}. Each title
 shows the resolution subseries and its cardinal, and each attribute
 aggregate function has different colour.  Each time series is plotted
-with \zohe{} representation function $S(t)^\zohe{}$. Time axis has \acro{UTC} units
-rounded to nearest time points and temperature axis has Kelvin
-units. Outlayers are marked as discontinuities, for instance see
-fourth plot's 2938 K maximum.
+with \zohe{} representation function $S(t)^\zohe{}$. Time axis has
+\acro{UTC} units rounded to nearest time points and temperature axis
+has Kelvin units. Outlayers are marked as discontinuities, for
+instance see fourth plot's 2938 K maximum.
 
 \begin{figure}[tp]
   \centering
@@ -73,9 +75,7 @@ In all the four plots, we can see that mean aggregate function has
 filled missing data and filtered outlayer observations. This is due
 to the aggregate function coming from a \zohe{} interpretation.
 
-
-Figure~\ref{fig:exemple:4mrd} corresponds to the possible $\seriedisc$
-queries. Figure~\ref{fig:exemple:4mrdtot} shows the $\totalseries$
+Figure~\ref{fig:exemple:4mrdtot} shows the $\totalseries$
 queries for the mean$^{\zohe}$ aggregate function resolution and for
 the maximum$^{\zohe}$ resolution.  Each resulting time series is
 plotted interpolating linearly its measures, note that this linearly
