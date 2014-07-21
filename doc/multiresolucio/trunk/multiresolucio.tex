@@ -51,17 +51,18 @@ multiresolució en temps diferit com una consulta en un \gls{SGST} de
 transformació d'una sèrie temporal a una nova sèrie temporal.
 
 És a dir, sigui $S$ una sèrie temporal, $M$ una sèrie temporal
-multiresolució i $\text{e} = \{ (\delta_0,\tau_0,f_0,k_0), \ldots,
-(\delta_d,\tau_d,f_d,k_d)\}$ els paràmetres de l'esquema de
+multiresolució i $\text{e} = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
+(\delta_d,f_d,\tau_d,k_d)\}$ els paràmetres de l'esquema de
 multiresolució de $M$. Afegim totes les mesures de la sèrie temporal a
 la multiresolució, $\forall m \in S:
-M=\glssymbol{addM}(M,m)$\todo{matemàticament és correcte recursivitat M=f(M)?}, i la
-consolidem, $M=\glssymbol{consolidaM}(M')$ fins que $M$ no sigui
-consolidable. Consultem la sèrie temporal multiresolució amb les dues
-consultes bàsiques, les quals retornen sèries temporals,
+M=\glssymbol{addM}(M,m)$\todo{matemàticament és correcte recursivitat
+  M=f(M)?}, i la consolidem, $M=\glssymbol{consolidaM}(M')$ fins que
+$M$ no sigui consolidable. Consultem la sèrie temporal multiresolució
+amb les dues consultes bàsiques, les quals retornen sèries temporals,
 $S'=\glssymbol{not:sgstm:serietotal}(M')$ i $S_{\delta
   f}'\glssymbol{not:sgstm:seriedisc}(M',\delta,f)$ on $\delta$ i $f$
-són dos paràmetres de l'esquema de multiresolució de $M$.
+són dos paràmetres de l'esquema de multiresolució de $M$ que van
+associats amb els altres dos corresponents $\tau$ i $k$.
 
 
 
@@ -71,7 +72,7 @@ $\glssymbol{not:sgstm:dmap}$ i $\glssymbol{not:sgstm:multiresolucio}$
 i que ens permeten calcular:
 
 \[
-\glssymbol{not:sgstm:dmap}: S \times \delta \times f \longrightarrow
+\glssymbol{not:sgstm:dmap}: S \times \delta \times f \times \tau \times k \longrightarrow
 S'_{\delta f}
 \]
 
@@ -82,28 +83,132 @@ S'_{\delta f}
 
 
 
-Definim la consulta de selecció de disc dels \gls{SGSTM} a
-partir del mapatge dels \gls{SGST}.
+Definim la consulta de selecció de disc dels \gls{SGSTM} a partir del
+mapatge dels \gls{SGST} de manera que, en computació per temps
+diferit, són equivalents
+\[
+\glssymbol{not:sgstm:seriedisc}(M,\delta,f) \equiv
+\glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,k)
+\]
+
+
 \begin{definition}[mapa de \glssymbol{not:sgstm:seriedisc}]
-  Sigui $S$ una sèrie temporal i $p=(\delta,f)$ els paràmetres de
-  multiresolució d'una subsèrie resolució.
-
-
-$\glssymboldef{not:sgstm:dmap}(\delta,f)=$
-
+  Sigui $S$ una sèrie temporal, $M$ una sèrie temporal multiresolució
+  amb esquema $e$ i $(\delta,f,\tau,k)\in e$ els paràmetres de
+  multiresolució d'una subsèrie resolució. L'expressió de
+  $\glssymbol{not:sgstm:seriedisc}(M,\delta,f)$ com a mapa d'una sèrie
+  temporal és
+  $\glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,k)=\glssymbol{not:sgst:map}(S_I,\glssymbol{not:sgst:fmap})$
+  on
+  \[
+  \glssymbol{not:sgst:fmap}: m_i\mapsto f(S, [T(m_i)-\delta,T(m_i)]),
+  \]
+  \[
+  S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
+  \]
+  \[
+  T_I = \{ t_I = \tau+n\delta | n\in\glssymbol{not:Z}, t_M - k\delta <
+  t_I \leq t_M \}.
+  \]
 \end{definition}
+
+
+
+\begin{example}
+  Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,1),(10,1)\}$ i els
+  paràmetres de multiresolució
+  $((\delta,5),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,2))$.  El
+  mapa de \glssymbol{not:sgstm:seriedisc} és una sèrie temporal $S'=
+  \glssymboldef{not:sgstm:dmap}(S,5,0,\glssymbol{not:sgstm:maxdd},2)$
+  on $S'=\{(5,1),(10,1)\}$. Expressem el càlcul pas a pas, a la
+  \autoref{fig:multiresolucio:dmap} es visualitzen en taula les sèries
+  temporals corresponents:
+  \begin{enumerate}
+  \item El primer pas és obtenir els instants de temps que
+    s'emmagatzemarien al disc d'una sèrie temporal
+    multiresolució. Així, els instants de consolidació possibles són
+    $T_I'=\{\tau+n\delta|n\in\glssymbol{not:Z}\}=
+    \{\ldots,-5,0,5,10,15,\ldots\}$. Però un cop consolidat el disc
+    només hi haurà els $k=2$ més recents abans de $t_M=T(\max(S))=10$,
+    és a dir $T_I=\{t_I'\in T_I'|t_M - k\delta < t_I \leq
+    t_M\}=\{5,10\}$.
+
+  \item El segon pas és obtenir a partir de $T_I$ la sèrie temporal
+    $S_I$ que es correspon amb la sèrie temporal que s'inicialitzaria
+    al disc encara amb valors desconeguts,
+    $S_I=\{(5,\infty),(10,\infty)\}$.
+
+
+
+  \item El tercer pas és calcular la funció d'agregació a $S$ per a
+    cada intervals de consolidació del disc de la forma
+    $[T(m_i)-\delta,T(m_i)]$ on $m_i\in S_i$, és a dir $f(S,[0,5])$ i
+    $f(S,[5,10])$. A tal efecte utilitzem el mapa sobre $S_I$ per a
+    calcular la sèrie temporal resultant $S'=\{ (5,f(S,[0,5])),
+    (10,f(S,[5,10])) \}$.
+
+    Podríem calcular un pas entremig que es correspon amb les sèries
+    temporals que hi hauria en el buffer abans de cada instant de
+    consolidació. Així, per a cada $T(m_i)$ hi hauria la sèrie
+    temporal $S[T(m_i)-\delta,T(m_i)]$, és a dir $S_B=\{
+    (5,S[0,5],(10,S[5,10]) \}$.
+
+
+  \end{enumerate}
+
+
+  
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 0 \\
+    3  & 1 \\
+    6  & 1 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_I$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & $\infty$ \\
+    10  & $\infty$ \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_B$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 1&0\\ 3&0 \\\hline  \end{tabular} \\\hline
+    10  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 6&1\\ 10&1 \\\hline  \end{tabular} \\ \hline
+  \end{tabular} \qquad
+ \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S'$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    10  & 1\\ \hline
+  \end{tabular}
+  \caption{Taules de les sèries temporals per l'operació de mapa de  \glssymbol{not:sgstm:seriedisc}}
+  \label{fig:multiresolucio:dmap}
+\end{figure}
+ 
+\end{example}
+
+
+
 
 
 Definim la consulta de sèrie temporal total dels \gls{SGSTM} a partir
-del plegament dels \gls{SGST}.
+del plegament dels \gls{SGST} de manera que, en computació per temps
+diferit, són equivalents\todo{}
+% \[
+% \totalseries(M) \equiv \multiresolution(S,\text{sch})
+% \]
+
+
 \begin{definition}[plec de \glssymbol{not:sgstm:serietotal}]
-\glssymboldef{not:sgstm:multiresolucio}
+$\glssymboldef{not:sgstm:multiresolucio}$
 \end{definition}
-
-
-  %$\dmap(S,\delta,\tau,f,k)$
-
-
 
 
 % The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
@@ -111,29 +216,28 @@ del plegament dels \gls{SGST}.
 % $D=(S_D,k)$, can be expressed with a map operation over the original
 % time series $S$:
 
+
+% The total time series $S'=\totalseries(M)$ is a concatenation of all
+% $\seriedisc$ without repeated $\delta$. It can be expressed with a
+% fold operation over the original time series $S$. Let $\text{sch} = \{
+% (\delta_0,\tau_0,f_0,k_0), (\delta_1,\tau_1,f_1,k_1), \ldots,
+% (\delta_d,\tau_d,f_d,k_d)\}$ be the parameters of $M$ expressed as a
+% multivalued time series
 % \[
-% \seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
-% \]
-% where
-% \[
-% \dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
-% \]
-% \[
-%  m' = f(S, i),\;  i = [T(m_i)-\delta,T(m_i)],
-% \]
-% \[
-%  S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
+% \totalseries(M) \equiv \multiresolution(S,\text{sch})
 % \]
 % \[
-% T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
+% \multiresolution(S,\text{sch}) = \orderfold(\text{sch},\{\},f_r,\min) \text{ where }
+% \]
+% \[
+% f_r: S_i \times (\delta_c,\tau_c,f_c,k_c) \mapsto S_i ||
+% \dmap(S,\delta_c,\tau_c,f_c,k_c)
 % \]
 
 
 
 
-
-
-
+\todo{}
 És a dir que  si, en temps diferit, hem seguit la mateixa inserció de mesures a un \gls{SGST} i un \gls{SGSTM}, 
 serà equivalent a tal tal tal en un moment concret.
 
@@ -154,40 +258,6 @@ Cal demostrar l'equivalència formalment\todo{}
 % \section{Multiresolution over TSMS}
 % \label{sec:M+TSMS}
 
-
-% \todo{explicar mes be l'objectiu d'aquesta seccio}
-% \todo{s'hauria de demostrar formalment}
-
-% We have defined the MTSMS model as an structure based on time
-% series. Now we express the multiresolution as a query on a time series
-% using TSMS operations. 
-
-% Given a time series $S$ and a multiresolution time series $M$, a MTSMS
-% consolidates a multiresolution schema for $S$ by applying successively
-% $\forall m \in S: M=\addM(M,m)$ and then $M=\consM(M')$ until $M$ is
-% no more consolidable. Then over this consolidated $M$ we have defined
-% two basic queries $\seriedisc(M,\delta,f)$ and $\totalseries(M)$.
-
-% The time series $S_D=\seriedisc(M,\delta,f)$ stored in a resolution
-% subseries' disc $R=(B,D)$, where $B=(S_B,\tau,\delta,f)$ and
-% $D=(S_D,k)$, can be expressed with a map operation over the original
-% time series $S$:
-% \[
-% \seriedisc(M,\delta,f) \equiv \dmap(S,\delta,\tau,f,k)
-% \]
-% where
-% \[
-% \dmap(S,\delta,\tau,f,k) = \map(S_I, m_i\mapsto m') \text{ where }
-% \]
-% \[
-%  m' = f(S, i),\;  i = [T(m_i)-\delta,T(m_i)],
-% \]
-% \[
-%  S_I = \{ (t,\infty) | t\in T_I  \},\;  t_M = T(\max(S)),
-% \]
-% \[
-% T_I = \{ t_I = \tau+n\delta | n\in\N, t_M - k\delta < t_I \leq t_M \}
-% \]
 
 
 % The total time series $S'=\totalseries(M)$ is a concatenation of all
