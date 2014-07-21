@@ -335,6 +335,21 @@ class MultiresolutionSeries(VisitableMixin,set):
             return reduce(lambda si,rb: si.concatenate_temporal(rb.D.s,rpr),sorted(M),TimeSeries())
 
 
+    def seriedisc(self,delta,f):
+        """
+        Alias for discseries
+        """
+        return self.discseries(delta,f)
+
+    def totalseries(self):
+        """
+        Alias for total
+        """
+        return self.totalseries()
+
+
+
+
     def storage(self):
         """
         Retorna un objecte amb totes les operacions d'emmagatzematge al disc
