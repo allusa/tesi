@@ -14,7 +14,7 @@ Aquesta funció de multiresolució ens permetrà:
 \item Plantejar problemes on veiem la multiresolució com una consulta sobre una sèrie temporal
 \item Oferir sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
   de consulta multiresolució.
-\item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme.
+\item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
 \item Estudiar la teoria de la informació per a l'esquema de multiresolució
 \end{itemize}
 
@@ -319,12 +319,20 @@ Cal demostrar l'equivalència formalment\todo{}
 Oferir sistemes duals de \gls{SGSTM} i \gls{SGST} amb operacions
   de consulta multiresolució.
 
-* Sistemes on el SGSTM funcionen com a cache per a consultes multiresolució
+* Sistemes on el SGSTM funcionen com a cache per a consultes multiresolució, cache de consultes que mai s'han fet però que s'ha previst que es puguin fer -> computació en flux
 
 * Sistemes on la informació en un warehouse SGST (que es consulta rarament) serveix per si es vol fer un canvi d'esquema  en un SGSTM poder recalcular les dades que hi hauria hagut en el SGSTM. Altrament el SGSTM ha de començar de nou. Pensem en un canvi d'esquema com per exemple ampliar un disc o canviar la $f$, un canvi com reduir un disc sí que es pot recalcular
 
 * Posar símil amb la compressió multimèdia: es tenen fitxers lossless que s'emmagatzemen i es fan servir rarament, es fan circular fitxers lossy que ocupen menys i són més àgils per treballar; en el cas que calgui modificar un lossy  es regenera un de nou a partir del lossless. Sobretot es fa per evitar les pèrdues encadenades entre compressions lossy.
 
+
+\todo{notar que els SGSTM es basen en els SGST}
+
+
+
+La multiresolució(S) és una operació computada en temps diferit.
+
+La SèrieTotal(S) és una operació computada en línia, és a dir seguint el flux de $S$.
 
 
 % \subsection{Two database structures}
@@ -337,12 +345,12 @@ Oferir sistemes duals de \gls{SGSTM} i \gls{SGST} amb operacions
 % monitored or when detailed questions must be retrieved such as at what
 % hour exactly an event triggered. 
 
-% \begin{figure}
-%   \centering
-%   \input{imatges/mtsms-tsms.tex}
-%   \caption{Dual TSMS+MTSMS}
-%   \label{fig:model:mtsms-tsms}
-% \end{figure}
+\begin{figure}
+  \centering
+  \input{imatges/sgst-m-dual.tex}
+  \caption{Sistema dual \gls{SGST}+\gls{SGSTM}}
+  \label{fig:multiresolucio:dual}
+\end{figure}
 
 % This may be overcome with dual \acro{DBMS} that share measure input,
 % as shown in Figure~\ref{fig:model:mtsms-tsms}. One is a \acro{TSMS}
@@ -382,6 +390,65 @@ Oferir sistemes duals de \gls{SGSTM} i \gls{SGST} amb operacions
 % We then have showed a structure for manipulating in time order as then there are no updates in data and it can be managed more simpler. 
 
 %* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
+
+
+
+\subsection{Conceptes relacionats}
+
+
+\textcite{marz13:nosql13, marz14:bigdata} generalitzen un concepte
+similar al de \gls{SGST} dual, ho emmarquen en l'àmbit dels \gls{SGBD}
+per a \emph{Big Data}.  Proposen \gls{SGBD} dissenyats amb tres
+nivells, que anomenen arquitectura \emph{Lambda}:
+\begin{itemize}
+\item Nivell \emph{batch}: Emmagatzema totes les dades originals i
+  permet realitzar qualsevol consulta sobre aquestes dades. Preveu que
+  algunes consultes operen sobre dades consultades prèviament, per
+  tant en aquest nivell es gestionen també aquestes consultes
+  precomputades, les quals a més es poden obtenir amb computació
+  para\l.lela com per exemple amb Hadoop. 
+
+\item Nivell \emph{server}: Emmagatzema les consultes precomputades i
+  n'ofereix les dades per a altres consultes. Les consultes
+  precomputades s'han de tornar a calcular periòdicament i en el
+  nivell \emph{server} sempre hi ha la versió calculada més
+  recent. Per tant, es preveu que les consultes precomputades no
+  ofereixen la informació actualitzada al moment, sinó que hi ha un
+  cert temps des que es modifiquen les dades originals fins que té
+  impacte en les consultes.
+
+\item Nivell \emph{speed}: Precomputa les mateixes consultes que el
+  nivell \emph{batch} però incrementalment, és a dir cada cop que
+  s'afegeix una dada nova les dades de la consulta s'actualitzen
+  adequadament.  Aquest nivell només s'usa per a dades recents i per
+  tant complementa el problema de les dades desactualitzades en els
+  nivells \emph{batch} i \emph{server}.
+
+
+\end{itemize}
+
+\todo{repassar que es digui això}
+All data entering the system is dispatched to both the batch layer and the speed layer for processing.
+The batch layer has two functions: (i) managing the master dataset (an immutable, append-only set of raw data), and (ii) to pre-compute the batch views.
+The serving layer indexes the batch views so that they can be queried in low-latency, ad-hoc way.
+The speed layer compensates for the high latency of updates to the serving layer and deals with recent data only.
+Any incoming query can be answered by merging results from batch views and real-time views.
+
+
+
+
+
+\todo{potser parlar de vistes catxejades?}
+Tot i així, ens agradaria comentar els conceptes de Marz amb altres conceptes de SGBD:
+
+és a dir en realitat volem treballar sobre consultes que es basen en altres consultes, és a dir aquestes darreres són el que en SGBD anomenem vistes que són àlies de consultes. Per tant definim una vista com una operació sobre les dades v:=op1(dades) i aleshores podem fer consultes sobre la vista op2(v) que ha de ser el mateix que fer op2(op1(dades)). Per tant en SGBD les vistes s'entén que el resultat es calculen per a cada consulta que les crida. Això no obstant:
+
+* el resultat de les vistes es podria catxejar per a altres consultes, però fins quan és vàlid el catxeig?
+
+  * es podria catxejar periòdicament, per tant pot ser que a vegades es computi amb dades velles. això es correspon amb les batch view que proposa marz? més o menys, ell directament afegeix computació para\l.lela en el càlcul de les view
+  * es podria catxejar i tornar-les a recalcular quan canviïn les dades. Els indexos als SGBD fan una cosa similar a això?
+  * es podria calcular per primer cop el resultat vista(op1(v)) i quan s'actualitzin les dades amb una operació com up(dades) aleshores traslladar aquesta operació a la vista up'(vista) on s'hauria de determinar la relació entre up i up'  -> això és el realtime que proposa marz? és el que proposen els de data stream?
+
 
 
 

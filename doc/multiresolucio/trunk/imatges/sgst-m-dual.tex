@@ -1,0 +1,63 @@
+%\usetikzlibrary{shapes,arrows,positioning}
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+
+
+ \node[mynode] (m) {$S$};
+
+ \node[right=1cm of m] (mdins) {};
+
+ \node[mynode, verd, above right=0.25cm and 2cm of m] (tsms) {\glstext{SGST}};
+
+ \node[mynode, verd, below right=0.25cm and 2cm of m] (mtsms) {\glstext{SGSTM}};
+
+ \node[rectangle,draw,minimum height=6cm,minimum width=6.5cm,right=0.9cm of m] (dual) {};
+
+\draw[shift=( dual.south west)]   
+  node[above right] {\glstext{SGST} dual};
+
+
+
+
+
+ \node[right=7cm of m] (tsdins) {};
+
+ \node[mynode,right=8cm of m] (ts) {$S'$};
+
+
+
+ \draw (m) -- (mdins.east);
+ \draw[myarrow] (mdins.east) -- (tsms.west);
+ \draw[myarrow] (mdins.east) -- (mtsms.west);
+
+
+ \draw (tsms.east) -- (tsdins.west) node[above,midway,sloped]
+ {$\glssymbol{not:sgstm:multiresolucio}(S)$}; 
+ 
+ \draw (mtsms.east) -- (tsdins.west) node[above,midway,sloped]
+ {$\glssymbol{not:sgstm:serietotal}(M)$};
+
+ \draw[myarrow] (tsdins.west) -- (ts);
+
+
+\end{tikzpicture}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% End:
