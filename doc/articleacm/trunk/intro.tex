@@ -309,12 +309,16 @@ data stream abstraction that improves processing performance.
 
 Time series as data streams are also considered when aggregating
 statistically data in order to do fast approximate queries with
-compressed data, Cormode et al.\ \cite{cormode08:pods} develop
+compressed data. Cormode et al.\ \cite{cormode08:pods} develop
 aggregation techniques that consider giving more weight to recent
 information.  Our \acro{MTSMS} model applies a similar approach of
 weighting more recent data but specifically to time series, with
-multiple aggregations and considering time irregularities.
-
+multiple aggregations and considering time irregularities.  Dou et
+al.\ \cite{dou14:historic_queries_flash_storage} create index
+structures as multiresolution aggregates, like average, count, or top,
+for historical data managed in flash storage; they consider a specific
+storage solution based on register with pointers similar to the
+multiresolution storage in \emph{RRDtool} \cite{lisa98:oetiker}.
 
 % Our MTSMS model can also be thought as an stream processor if measures
 % are added in time order, there is no possibility of update operations,
