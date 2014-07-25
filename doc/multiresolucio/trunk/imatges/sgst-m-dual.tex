@@ -19,13 +19,13 @@
 
  \node[mynode] (m) {$S$};
 
- \node[right=1cm of m] (mdins) {};
+ \node[right=2cm of m] (mdins) {};
 
- \node[mynode, verd, above right=0.25cm and 2cm of m] (tsms) {\glstext{SGST}};
+ \node[mynode, verd, above right=0.6cm and 1cm of mdins] (tsms) {\glstext{SGST}};
 
- \node[mynode, verd, below right=0.25cm and 2cm of m] (mtsms) {\glstext{SGSTM}};
+ \node[mynode, verd, below right=0.6cm and 1cm of mdins] (mtsms) {\glstext{SGSTM}};
 
- \node[rectangle,draw,minimum height=6cm,minimum width=6.5cm,right=0.9cm of m] (dual) {};
+ \node[rectangle,draw,minimum height=6cm,minimum width=9.5cm,right=-0.25cm of mdins] (dual) {};
 
 \draw[shift=( dual.south west)]   
   node[above right] {\glstext{SGST} dual};
@@ -34,24 +34,36 @@
 
 
 
- \node[right=7cm of m] (tsdins) {};
 
- \node[mynode,right=8cm of m] (ts) {$S'$};
-
+ \node[mynode,right=3cm of mtsms] (ts) {$S'$};
 
 
- \draw (m) -- (mdins.east);
+
+ \draw (m.east) -- (mdins.east) node[above right,at start]
+ {afegeix$(m)$};
+
  \draw[myarrow] (mdins.east) -- (tsms.west);
  \draw[myarrow] (mdins.east) -- (mtsms.west);
 
 
- \draw (tsms.east) -- (tsdins.west) node[above,midway,sloped]
+ \draw[myarrow] (tsms) -- (ts) node[above,midway,sloped]
  {$\glssymbol{not:sgstm:multiresolucio}(S)$}; 
  
- \draw (mtsms.east) -- (tsdins.west) node[above,midway,sloped]
+ \draw[myarrow] (mtsms) -- (ts) node[above,midway,sloped]
  {$\glssymbol{not:sgstm:serietotal}(M)$};
 
- \draw[myarrow] (tsdins.west) -- (ts);
+
+
+
+ \node[right=6cm of tsms] (consdins) {};
+
+ \draw (tsms) -- (consdins.center);
+ \draw (ts) -- (consdins.center);
+
+ \node[right=2.5cm of consdins] (consultes) {};
+ \draw[myarrow] (consdins.center) -- (consultes) node[above,midway,sloped]
+ {consultes};
+
 
 
 \end{tikzpicture}
