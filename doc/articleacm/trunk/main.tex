@@ -28,6 +28,11 @@
 \input{imatges/estils_pgf.tex}
 \usepackage{imatges/tikz-uml}
 
+%%%Export fig as esp
+\usepgfplotslibrary{external}
+\tikzexternalize[prefix=fig/]
+
+
 \usepackage{listings}
 \lstdefinestyle{py}{
   language=python,
@@ -39,47 +44,7 @@
 }
 
 
-\usepackage[
-%          counter=section,
-%          acronym,
-          nonumberlist,
-          %%toc,
-          nomain,
-%          section,
-%          numberedsection=autolabel,
-%          sanitize=none, %pels accents en el vegeu
-          ]{glossaries}
-
-
-
-
-\newglossary{notation}{not}{ntn}{Notation symbols}
-\newglossarystyle{estil-notation}{%
-  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
-  \renewenvironment{theglossary}
-  {\begin{supertabular}{ll}}{\end{supertabular}}
-  \renewcommand*{\glossarysubentryfield}[6]{%
-    \Glsentryname{##2} & ##4  \\
-    %\Glsentryname{##2}
-    %\glstarget{##2}{##3}% the entry name
-%    \item \glstarget{##2}{\Glsentryname{##2}}% the entry name
-    % &
-    %  %\space (##5)% the symbol in brackets
-    % \space ##4% the description
-    % &
-    % \space [##6]% the number list in square brackets
-    % \\                                    
-  }%
-  \renewcommand*{\glossaryentryfield}[5]{%   
-    %\glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
-    \bf{\Gls{##1}}  & ##3 \\
-  }
-}
-
-
-\glsdisablehyper
-\makeglossaries
-\loadglsentries[notation]{notation_table.tex}
+\usepackage{supertabular}
 
 
 
@@ -144,19 +109,22 @@
 
   \author
   [dipse]
-  {Aleix Llus\`{a} Serra\corref{mycorrespondingauthor}}
+  {Teresa Escobet Canal%\fnref{order}
+  }
+  \ead{teresa.escobet@upc.edu}
+
+  \author
+  [dipse]
+  {Aleix Llus\`{a} Serra\corref{mycorrespondingauthor}%\fnref{order}
+  }
   \cortext[mycorrespondingauthor]{Corresponding author. Tel: +34 938777317}
   \ead{aleix@dipse.upc.edu}
 
   \author
   [dipse]
-  {Sebasti\`{a} Vila-Marta}
+  {Sebasti\`{a} Vila-Marta%\fnref{order}
+  }
   \ead{sebas@dipse.upc.edu}
-
-  \author
-  [dipse]
-  {Teresa Escobet Canal}
-  \ead{teresa.escobet@upc.edu}
 
 
   \address
@@ -164,7 +132,7 @@
   {Department of Electronic System Design and Programming\\ Universitat Polit\`{e}cnica de Catalunya\\ Av.~Bases de Manresa 61--73, 08242 Manresa, ES-CT}
 
  
-
+  \fntext[order]{The authors are listed as per alphabetical order.}
 
 
   \begin{abstract}
@@ -210,8 +178,6 @@
 \input{conclusions}
 
 
-
-
 \section*{Acknowledgements}
 %\todo{incorrectes: T envia les noves}
 
@@ -226,20 +192,8 @@ Polit\`{e}cnica de Catalunya predoctoral grant.
 \bibliography{bibelsarticle}
 
 
-\glsaddall
 \appendix
-\section{Notation}
-\label{sec:notation}
-
-
-{\small
-Name and symbol notation. Divided into
-\acro{TSMS} and \acro{MTSMS} notation and each organised into its
-components.
-\setglossarysection{paragraph}
-\printglossary[type=notation,style=estil-notation,title=]
-}
-
+\input{notation}
 
 
 \end{document}
