@@ -85,10 +85,6 @@ moreover it operates coherently with the time dimension of time
 series.
 
 
-% Our multiresolution definition is
-% based on concepts of RRDtool but aims to generic applications and has
-% more generic operators.
-
 
 Multiresolution is proposed as a lossy storage solution that selects
 only the needed information. The concept is similar to multimedia
@@ -252,15 +248,6 @@ architecture of shared time arrays in \acro{MTSMS} for resolution subseries
 with same delta time in order to achieve better performance requirements
 when having much equal acquired time series.
 
-% Therefore, as it is a very different approach from RRDtool we find it difficult to compare both in these performance requirements. 
-% He only evaluates compression performance but we think that a global
-% evaluation of compression plus descompression must be done. MTSMS
-% are not aimed to be a replacement for offline long time storage
-% systems that are rarely queried and then queries can be slow but
-% have tot be exact. MTSMS are adequate to stream processing and
-% resolving queries with less data than original and so they are
-% quicker but give information previously selected.
-
 
 There are other lossy compression techniques for time series devoted
 to the optimal approximation representation, that is finding the
@@ -282,13 +269,6 @@ aggregate functions in the \acro{MTSMS} model, as instance it would be
 interesting to define aggregations in the frequency domain of time
 series.
 
-
-% A Multiresolution Symbolic Representation of
-% Time Series; Megalooikonomou, Faloutsos; 2005 proposes multiresolution by decomposing a signal in frequency subsequences and intended mainly to similarity searching. The objective is to reconstruct the original time series. 
- 
-
-
-% \paragraph{T-Time}  \textcite{assfalg08:thesis} shows a TSMS that can do similarity search, which is calculated as distances between time series. Mainly, two time series are marked as similar if they distance is less than a threshold in each interval. From this method efficient algorithms are developed and implemented in a program called T-Time, which is described in \cite{assfalg08:ttime}.
 
  
 
@@ -319,14 +299,6 @@ structures as multiresolution aggregates, like average, count, or top,
 for historical data managed in flash storage; they consider a specific
 storage solution based on register with pointers similar to the
 multiresolution storage in \emph{RRDtool} \cite{lisa98:oetiker}.
-
-% Our MTSMS model can also be thought as an stream processor if measures
-% are added in time order, there is no possibility of update operations,
-% buffer time series become of unity cardinality, and aggregate
-% functions are limited to stream capabilities ones.  
-% As instance,
-% RRDtool can be considered stream oriented and its consolidation
-% process is done at the same time of inserting new measures.
 
 
 
@@ -372,7 +344,7 @@ have been to formalise the main concepts into an abstract model and to
 include more genericity in order to describe \acro{MTSMS} as fully
 \acro{TSMS}.
 
-%Then we will be able to apply these systems to other applications.
+
 
 As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
 \begin{itemize}
@@ -388,9 +360,7 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   series allowing the user to select the best time range and time
   step that fits into the screen; there is no need to process with
   more quantity of data than the one that can be
-  shown.% In figure~\ref{fig:mtsms:sequence} there is an example of
-  % extracting two resolutions: one every three units of time and
-  % another every five.
+  shown.
 
 \item Data validation. Monitoring systems capture data but can occur
   some drawbacks that will affect later the process of time series
@@ -399,8 +369,7 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   \cite{quevedo10}.  The multiresolution attribute functions is
   designed to cope well with validating, filtering and reconstructing
   with this unknown data in order to keep a consistent
-  historic.% In figure~\ref{fig:mtsms:sequence-irregular} an
-  % example of a gap can be seen.
+  historic.
 
 \item Data time regularising. Another monitoring side effect happens
   when the sampling rate is not constant, that is when the resulting
@@ -412,9 +381,7 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   segment has a regular time resolution. This regularising approach
   could also be used when the user wants to consult another resolution
   for a time series, such as changing periodic data from a month to a
-  year step. % In
-  % figure~\ref{fig:mtsms:sequence-irregular} an example of time
-  % regularising can be seen.
+  year step.
 
 \item Information summaries. Time series analysis typically focuses on
   reconstructing the original signal. However, the user objective in a
@@ -423,9 +390,6 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   it can be regarded as to extracting the interesting information and
   then storing it. The selected information must be determined a
   priori assuming the context where the future queries will be done.
-  % In
-  % figure~\ref{fig:mtsms:sequence} there is an example of summarising by
-  % mean attribute.
 \end{itemize}
 
 
@@ -453,20 +417,12 @@ the earlier unknown time points have negative units.
 
 \begin{figure}
   \centering
-  \tikzsetnextfilename{fig_mtsms_sequence}
-  \input{imatges/mtsms_sequence.tex}
-  %\includegraphics{fig/fig_mtsms_sequence}
+  %\tikzsetnextfilename{fig_mtsms_sequence}
+  %\input{imatges/mtsms_sequence.tex}
+  \includegraphics{fig/fig_mtsms_sequence}
   \caption{Multiresolution snapshot diagram with regular sampling}
   \label{fig:mtsms:sequence}
 \end{figure}
-
-
-% \begin{figure}[tp]
-%   \centering
-%   \input{imatges/mtsms_sequence_irregular.tex}
-%   \caption{Multiresolution snapshot diagram with irregular sampling}
-%   \label{fig:mtsms:sequence-irregular}
-% \end{figure}
 
 
 
@@ -487,19 +443,6 @@ is stored and, independently, every five values another mean is
 stored. For the future values, dashed arrows show that if time
 advances one u.t.\ then value 10 is sampled and the mean for time 10
 can be computed resulting 8 but not yet the mean for time 12.
-
-% Fig.~\ref{fig:mtsms:sequence-irregular} is essentially the same but
-% showing two possible monitoring irregularities: a gap and a time
-% disruption. In other words, we want to sample the time series every 2
-% u.t.\ but first for some reason it can not be done in time 4 and
-% second the sampling clock is disrupted and samples are done in time 7
-% and 9 instead of 8. The resulting stored time schema is the same: on
-% time resolution every 3 u.t.\ and the other every 5 u.t.; that is,
-% without time disruptions. The resulting stored values are computed
-% from the known sampled values, some coincide with
-% fig.~\ref{fig:mtsms:sequence} whereas some differ specially in the
-% gap. A better function than mean would solve this, we extend this
-% further in section~\ref{sec:model:interpolador}.
 
 
 
