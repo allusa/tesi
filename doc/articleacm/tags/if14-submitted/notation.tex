@@ -1,0 +1,115 @@
+\section{Notation}
+\label{sec:notation}
+{\small
+
+Name and symbol notation. Divided into \acro{TSMS} and \acro{MTSMS}
+notation and each organised into its components.
+
+
+
+\begin{supertabular}{ll}
+
+
+\colorbox{lightgray}{\textbf{TSMS}} & \\
+
+
+\textbf{Time} & $t\in T$\\
+Duration & \ensuremath{t^d}\\
+Reference time & \ensuremath{t^R}\\
+Time domain & \ensuremath{T} (e.g.~$\bar{\mathbb{R}}$) \\
+Time instant & \ensuremath{t^i}\\
+
+\textbf{Value} & \ensuremath{v\in V}\\
+Value domain & \ensuremath{V} (e.g.~$\mathbb{R}*$) \\
+
+\textbf{Measure} & \ensuremath{m=(t,v)}\\
+Time & \ensuremath{T(m)}\\
+Value & \ensuremath{V(m)}\\
+
+
+\textbf{Time series} & \ensuremath{S=\{m_0,\dotsc,m_k\}}\\
+Multivalued & \ensuremath{m=(t, v_1,\dotsc, v_n)}\\
+Cardinality & $|S|$\\
+Regularity & $S$ is regular\\
+
+\textbf{Set operations} & \\
+Difference & \ensuremath{S_1 - S_2}\\
+Infimum & \ensuremath{\inf(S)}\\
+Intersection & \ensuremath{S_1\cap S_2}\\
+Join & \ensuremath{S_1 \operatorname{join} S_2}\\
+Maximum & \ensuremath{\max(S)}\\
+Membership & \ensuremath{m\in S}\\
+Minimum & \ensuremath{\min(S)}\\
+Supremum & \ensuremath{\sup(S)}\\
+Symmetric difference & \ensuremath{S_1\ominus S_2}\\
+Temporal membership & \ensuremath{m\in^t S}\\
+Temporal union & \ensuremath{S_1\cup^t S_2}\\
+Union & \ensuremath{S_1\cup S_2}\\
+
+\textbf{Computational operations} & \\
+Aggregate & \ensuremath{\operatorname{aggregate}(S,m_i,f^a)}\\
+Aggregate function & \ensuremath{f^a: m_a\times m_b \mapsto m_r}\\
+Fold & \ensuremath{\operatorname{fold}(S,S_i,f^f)}\\
+Fold function & \ensuremath{f^f: S_a\times m_b \mapsto S_r}\\
+Fold order function & \ensuremath{o: S_a \mapsto m_r}\\
+Fold with order & \ensuremath{\operatorname{ofold}(S,S_i,f^f,o)}\\
+Map & \ensuremath{\operatorname{map}(S,f^m)}\\
+Map function & \ensuremath{f^m:m_a\mapsto m_r}\\
+
+\textbf{Sequence operations} & \\
+Concatenation & $S_1 || S_2$ \\
+Interval & \ensuremath{S(t^i_a,t^i_b), S[t^i_a,t^i_b],\ldots }\\
+Predecessor & \ensuremath{\operatorname{prev}_S(m)}\\
+Successor & \ensuremath{\operatorname{next}_S(m)}\\
+
+\textbf{T. function operations} & \\
+Dirac delta & $r=\dd{}$\\
+Representation function & $S(t)^r$\\
+Representation method & $r$\\
+Temporal interval & \ensuremath{S[t^i_a,t^i_b]^r}\\
+Temporal selection & \ensuremath{S[\{t_0,\dotsc,t_n\}]^r}\\
+Zero-order hold everted & $r=\zohe{}$\\
+
+
+
+\colorbox{lightgray}{\textbf{MTSMS}} & \\
+
+
+
+\textbf{Buffer} & \ensuremath{B=(S_B,\tau,\delta,f)}\\
+Add measure & $\operatorname{addB}(B,m)$\\
+Attribute aggregate function & $f$\\
+Buffer time series & $S_B$\\
+Consolidable & $B$ is consolidable\\
+Consolidate  buffer & $\operatorname{consB}(B)$\\
+Consolidation duration & $\delta$\\
+Last consolidation time & $\tau$\\
+
+\textbf{Disc} & \ensuremath{D=(S_D,k)}\\
+Add measure & $\operatorname{addD}(D,m)$\\
+Disc time series & $S_D$\\
+Maximum cardinality & $k$\\
+
+\textbf{Resolution subseries} & \ensuremath{R=(B,D)}\\
+Add measure & $\operatorname{addR}(R,m)$\\
+Consolidable & $R$ is consolidable\\
+Consolidate & $\operatorname{consR}(R)$\\
+
+\textbf{Multiresolution time series} & \ensuremath{M=\{R_0,\dotsc,R_d\}}\\
+Add measure & $\operatorname{addM}(M,m)$\\
+Consolidate & $\operatorname{consM}(M)$\\
+
+\textbf{Queries} & \\
+Disc selection & $\operatorname{SerieDisc}(M,\delta,f)$\\
+Total time series & $\operatorname{TotalSeries}(M)$\\
+
+\end{supertabular}
+}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+    \begin{axis}[
+        timeseries,
+        xticklabel={\pgfcalendarmonthshortname{\month} \year},
+        xlabel={Time (UTC)},
+        ymax = 320,
+        clip=false,
+        y filter/.code = { \pgfmathparse{(#1>320)*322+(#1<320)*#1}},
+        ]
+       \addplot[blue] file {imatges/matriu0.originalbyday.dat};
+
+%      \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
+       \node (break) at (axis cs:2011-10-02,318)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
+    \draw [fill=red,color=blue] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
+
+
+
+  \end{axis}
+\end{tikzpicture}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% ispell-local-dictionary: "british"
+%%% End:

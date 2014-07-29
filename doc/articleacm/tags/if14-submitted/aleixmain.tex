@@ -1,0 +1,187 @@
+
+
+\documentclass{acm_proc_article-sp}
+
+%TOT això s'ha de treure per ordres de l'acm?
+
+\usepackage{todonotes}
+\presetkeys%
+{todonotes}
+{inline}
+{}
+
+
+
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+
+
+
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+\newcommand{\R}{\mathbb{R}} % the set of real numbers
+\newcommand{\Rb}{\bar\R} % the set of bar real numbers
+\newcommand{\N}{\mathbb{N}} % the set of natural
+\newcommand{\zohe}{\acro{zohe}}
+
+\DeclareMathOperator*{\inst}{\in^t}
+\DeclareMathOperator*{\notinst}{\notin^t}
+\DeclareMathOperator*{\subseteqt}{\subseteq^t}
+\DeclareMathOperator*{\cupt}{\cup^t}
+\DeclareMathOperator*{\dift}{-^t}
+\DeclareMathOperator*{\join}{join}
+\DeclareMathOperator*{\map}{map}
+\DeclareMathOperator*{\fold}{fold}
+\DeclareMathOperator*{\agg}{aggregate}
+\DeclareMathOperator*{\orderfold}{ofold}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+\DeclareMathOperator*{\graph}{graph}
+
+\DeclareMathOperator{\addB}{addB}
+\DeclareMathOperator{\consB}{consB}
+\DeclareMathOperator{\addD}{addD}
+\DeclareMathOperator{\addR}{addR}
+\DeclareMathOperator{\consR}{consR}
+\DeclareMathOperator{\addM}{addM}
+\DeclareMathOperator{\consM}{consM}
+\DeclareMathOperator{\seriedisc}{SerieDisc}
+\DeclareMathOperator{\totalseries}{TotalSeries}
+
+\DeclareMathOperator{\dmap}{Dmap}
+\DeclareMathOperator{\multiresolution}{multiresolution}
+
+\DeclareMathOperator{\meanz}{mean^\zohe}
+\DeclareMathOperator{\maxz}{maximum^\zohe}
+
+\usepackage[backend=biber]{biblatex}
+\bibliography{bibliografia}
+\begin{document}
+
+
+
+%%PARAMETRES
+\newdef{definition}{Definition}
+\newdef{example}{Example}
+\hyphenation{re-so-lu-tion}
+
+
+
+\title{Operating with a Multiresolution \\Time Series Database Model}
+%\subtitle{[Extended Abstract]}
+
+\numberofauthors{3} 
+\author{%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+\alignauthor
+Escobet Canal, Teresa\\
+       %\affaddr{Institute for Clarity in Documentation}\\
+       %\affaddr{1932 Wallamaloo Lane}\\
+       %\affaddr{Wallamaloo, New Zealand}\\
+       \email{teresa.escobet@upc.edu}
+% 2nd. author
+\alignauthor
+Llus\`{a} Serra, Aleix\\
+%       \affaddr{Department of Electronic System Design and Programming}\\
+%       \affaddr{Universitat Polit\`{e}cnica de Catalunya}\\
+       %\affaddr{Av.~Bases de Manresa 61--73}
+%       \affaddr{08242 Manresa, ES-CT}\\
+       \email{aleix@dipse.upc.edu}
+% 3rd. author
+\alignauthor Vila-Marta, Sebasti\`{a}\\
+       %\affaddr{The Th{\o}rv{\"a}ld Group}\\
+       %\affaddr{1 Th{\o}rv{\"a}ld Circle}\\
+       %\affaddr{Hekla, Iceland}\\
+       \email{sebas@dipse.upc.edu}
+\and
+%\alignauthor
+%Llus\`{a} Serra, Aleix\\
+       \affaddr{Department of Electronic Systems Design and Programming}\\
+       \affaddr{Universitat Polit\`{e}cnica de Catalunya}\\
+       %\affaddr{Av.~Bases de Manresa 61--73}
+       \affaddr{08242 Manresa, ES-CT}\\
+%       \email{aleix@dipse.upc.edu}
+}
+
+\maketitle
+
+
+\begin{abstract}
+%\boldmath
+  In this paper we define a model for multiresolution time series
+  database management systems. These systems store each time series
+  lossy compressed by extracting different resolutions and attribute
+  aggregations. Then time series are stored compactly, with finite
+  capacity and with its temporal attribute managed consistently.
+
+  For many applications it is of primary relevance that database
+  systems support time series.  We root our theory firmly on set and
+  relational algebra together with some time series analysis specific
+  properties that can be problematic when manipulating them.
+  Furthermore, we use the time-order acquisition characteristic of
+  time series to simplify its treatment by stream-like computations in
+  order to achieve fast pre-computed queries and visualisations.
+\end{abstract}
+
+% A category with the (minimum) three required fields
+\category{H.2}{Information Systems}{Data Management Systems}[Database design and models]
+%A category including the fourth, optional field follows...
+%\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+
+\terms{Theory}
+
+
+\keywords{Time series, database systems, multiresolution, lossy compression} % NOT required for Proceedings
+
+
+\input{intro}
+
+\input{model}
+
+\input{conclusions}
+
+
+
+
+
+% The following two commands are all you need in the
+% initial runs of your .tex file to
+% produce the bibliography for the citations in your paper.
+%\bibliographystyle{abbrv}
+%\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+%\bibliography{bibliografia}
+\printbibliography
+% You must have a proper ".bib" file
+%  and remember to run:
+% latex bibtex latex latex
+% to resolve all references
+%
+% ACM needs 'a single self-contained file'!
+%
+
+
+
+%\balancecolumns -> s'ha de posar a la darrera pàgina allà on les columnes quedin ajustades
+
+
+\end{document}
+
+
+
+%  based upon ACM SIG Proceedings document using LaTeX2e
+
+
+
+
+
+%%% Local Variables: 
+%%% ispell-local-dictionary: "british"
+%%% End: 
