@@ -23,8 +23,20 @@ foldmarks=false,
 }
 \setkomavar{fromphone}{+34 938777317}
 \setkomavar{fromemail}{aleix@dipse.upc.edu}
-\setkomavar{signature}{Aleix Llusà Serra, Sebastià Vila-Marta, and Teresa Escobet Canal}
-\renewcommand*{\raggedsignature}{\raggedright}
+% \setkomavar{signature}{Aleix Llusà Serra, Sebastià Vila-Marta, and Teresa Escobet Canal}
+% \renewcommand*{\raggedsignature}{\raggedright}
+
+\newcommand\Sigline[4][t]{%
+  \parbox[#1]{.333\linewidth}{\raggedright#2}%
+  \parbox[#1]{.333\linewidth}{\raggedright#3}%
+  \parbox[#1]{.333\linewidth}{\raggedright#4}%
+}
+\setkomavar{signature}{% 
+   \Sigline{Aleix Llusà Serra}{Sebastià Vila-Marta}{Teresa Escobet Canal} \\
+%   \Sigline{Doctoral student}{Position 2}{Position 3} \\
+}
+
+
 
  \begin{letter}{Editorial Board of Information Systems}
 
@@ -50,7 +62,7 @@ predoctoral grant and Spanish research projects.
 
 Regarding experimentation purposes, we have implemented our model with
 Python programming language and tested it successfully with real sensor
-data coming from "i-Sense", which is an UE project.
+data coming from \emph{i-Sense}, which is an UE project.
 
 
 
