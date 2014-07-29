@@ -449,12 +449,6 @@ constant piecewise functions.
   $S(t)^\dd$ as the \emph{\dd{} representation function}
 \[
     \forall m \in S: S(t)^\dd
-% &  \\
-%     = & \sum_{t\in T} V(m) \delta(t-T(m)): \delta(t)= 
-%       \begin{cases}
-%         1 & \text{si }  t=0 \\
-%         0 & \text{altrament}
-%       \end{cases} \\
     =  \begin{cases}
       V(m) & \text{if }  t=T(m) \\
       0 & \text{otherwise}
@@ -471,7 +465,6 @@ constant piecewise functions.
   m \in S:$
 \[
     S(t)^\zohe 
-    % = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
     = \begin{cases}
       0 & \text{if }  t > T(\max(S)) \\
       V(m) & \text{if } t\in \big(T(\prev_S(m)),T(m)\big]
@@ -490,8 +483,6 @@ sequence operators as temporal operators.
 
 We define a temporal interval operation to introduce this
 concept.
-%Interval is a sequence operation and now we extend it in the temporal function approach with a representation method, we call it \emph{temporal interval}. 
-%It is similar to the concept of interval but with some measures computed that are not in the input time series.
 Let $S$ be a time series, $[t_i,t_f]$ a interval of two time instants
 and $r$ a representation function. The \emph{temporal interval} noted
 as $S[t_i,t_f]^r$ is a time series with measures in the interval
@@ -779,10 +770,6 @@ events. Then the consolidable definitions would depend on this
 external clock.
 
 
-% \subsection{Data manipulation}
-
-
-% \todo{tenim espai per a les operacions d'esquema? o potser deixar-ho per una altre article}
 
 
 
@@ -859,12 +846,6 @@ designed for allowing users to define aggregate functions.
 
 
 
-% \todo{alerta!}
-% We can classify attribute aggregate functions based on a discrete or
-% continuous approach. For each approach we can define patterns that
-% explain how the resulting value $V(m')$ is calculated but not the
-% resulting time instant $T(m')$, which is subject to
-% interpretation.  
 
 
 Regarding the resulting consolidation time, normally it will be
@@ -879,36 +860,6 @@ aggregate function that returns the first measure of the interval
 $S[t_0,t_f)$, $m'=\min(S[t_0,t_f))$, then the resulting time can be
 between $t_0 \leq T(m') < t_f$.
 
-% First, discrete aggregation functions are based on set and sequence
-% time series operators. The patterns of these functions leave $T(m')$
-% undefined as well as the time subseries consolidating interval, that
-% is the resulting measure can be aggregated from a time subseries $S'$
-% with open interval $S'=S(t_0,t_f)$, closed interval $S'=S[t_0,t_f]$,
-% or other combinations like $S'=S(t_0-d,t_f-d]$ where $d$ is a time
-% duration. Next there are some attribute patterns examples, let the
-% time be continuous on all the time domain $t\in T$:
-
-
-
-% First, discrete aggregation functions are based on set and sequence
-% time series operators. The patterns of these functions leave $T(m')$
-% undefined as well as the time subseries consolidating interval, that
-% is the resulting measure can be aggregated from a time subseries $S'$
-% with open interval $S'=S(t_0,t_f)$, closed interval $S'=S[t_0,t_f]$,
-% or other combinations like $S'=S(t_0-d,t_f-d]$ where $d$ is a time
-% duration. Next there are some attribute patterns examples, let the
-% time be continuous on all the time domain $t\in T$:
-% \begin{itemize}
-% %\renewcommand{\labelitemi}{--}
-% \item maximum$^d$: $S \times i \mapsto m'$ where $V(m') =
-%   \max\limits_{\forall m \in S'}(V(m))$. It summarises $S'$ with the maximum
-%   of the measure values.
-% \item last$^d$: $S \times i \mapsto m'$ where $V(m') = \max(S')$. It
-%   summarises $S'$ with the maximum measure.
-% \item arithmetic mean$^d$: $S \times i \mapsto m'$ where $V(m') = 
-%   \frac{1}{|S'|} \allowbreak \sum\limits_{\forall m\in S'} V(m)$. It
-%   summarises $S'$ with the mean of the measure values.
-% \end{itemize}
 
 Attribute general patterns can be defined that explain how the
 resulting value $V(m')$ is calculated, letting the resulting time
@@ -921,7 +872,6 @@ functions leave $T(m')$ undefined as well as the representation $r$ of
 the time series. Let the time be continuous on all the time domain
 $t\in T$:
 \begin{itemize}
-%\renewcommand{\labelitemi}{--}
 \item maximum$^r$: $S \times i \mapsto m'$ where $V(m') =
   \max\limits_{\forall t \in i}(S(t)^r)$. It summarises $S$ with the maximum
   of the measure values in the interval $i$.
@@ -948,7 +898,6 @@ $t'=\frac{t_f+t_0}{2}$ and the resulting value depends on the
 attribute, let $S'=S[t_0,t_f]^\dd$ be the selection of measures by
 Dirac delta temporal interval:
 \begin{itemize}
-%\renewcommand{\labelitemi}{--}
 \item maximum$^\dd$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
 \item last$^\dd$: $v' = \max(S')$.
 \item mean$^\dd$: $v' = \frac{1}{t_f-t_0} \sum\limits_{\forall m
@@ -963,7 +912,6 @@ $t'=t_f$ and the resulting value depends on the attribute, let
 $S'=S[t_0,t_f]^\zohe{}$ be the selection of measures by \zohe{} temporal
 interval:
 \begin{itemize}
-%\renewcommand{\labelitemi}{--}
 \item maximum$^\zohe{}$: $v' = \max_{\forall m \in S'}(V(m))$. 
 \item last$^\zohe{}$: $v' = \max(S')$.
 \item mean$^\zohe{}$: $v' = \frac{1}{t_f-t_0} \big[ (T(o)-t_0)V(o) +
@@ -1001,7 +949,6 @@ the general integral definition.
   at 10, 20, 30\dots
 
   All measures of $S$ are added to $M_\emptyset$
-  %, $\forall m\in S: M'=\addM(M_\emptyset,m)$ %NOO, ha de ser recursiu
   and then it is consolidated until it is no more consolidable. As
   $T(\max(S))=29$, the last consolidation times are $\tau_0=25$ and
   $\tau_1=20$, so we call $M_{29}$ to this multiresolution time series
@@ -1019,76 +966,6 @@ the general integral definition.
   $ \totalseries(M_{29}) = \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has
   double resolution than $R_1$. $\square$
 \end{example}
-
-
-
-
-% \subsubsection{Data validation}
-
-% \todo{potser encara es verd aixo}
-
-% With reference to data validation, attribute aggregate functions
-% can cope with this process. When data has not been captured or has
-% been captured erroneously, it must be treated as unknown data.
-% \begin{itemize}
-% \item When data has not been captured it is unknown by nature. For
-%   example, we try to capture data from a sensor and there is no
-%   response.
-% \item When data is erroneously it must be marked as unknown. For
-%   example, we capture data from a sensor but it responses in a not
-%   reasonable time or we capture data that is clearly outside a
-%   reasonable limits.
-% \end{itemize}
-% As a consequence, attribute aggregate functions deals with these two
-% subprocesses: treating unknown data and marking data as
-% unknown. Following with real numbers example, we extend the
-% domain with a value that means 'unknown', let this unknown value be
-% represented by the improper element infinity ($\infty$).
-
-% An attribute aggregate functions treating unknown
-% data is a one that can calculate a result when there are unknown
-% values in the original time series, $f^u: S \times i \mapsto m'$ where
-% $\exists m \in S: V(m)=\infty$. Although from a strict point of view
-% operating with unknown data makes unknown result, aggregate functions
-% are free to calculate whatever is needed such as time series analysis
-% does with data reconstruction.
-
-% For example, arithmetic mean$^{d}$ aggregate function returns
-% $V(m')=\infty$ if $\exists m \in S: V(m)=\infty$.  We can define a new
-% mean function, based on the original arithmetic mean$^{d}$ aggregate,
-% that naively treats unknown values by keeping the
-% known mean; in other words, it ignores unknown values found in the time
-% interval: arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
-% \text{arithmetic mean}^{d}(S'',i)$ and $S''= \{m''\in S':V(m'')\neq
-% \infty\}$.
-% % ignore$^{u}$: $S \mapsto S'$ where $S'= \{m''\in S':V(m'')\neq
-% % \infty\}$,
-% % arithmetic mean$^{du}$: $S \times i \mapsto m'$ where $m' =
-% % \text{arithmetic mean}^{d}(\text{ignore}^u(S),i)$.
-
-% An attribute aggregate functions marking data as unknown is a one
-% that can give unknown value as the resulting measure's value, $f^{mu}:
-% S \times i \mapsto m'$ where $V(m')\in \mathbb{R}\cup\{\infty\}$.
-
-% For example, we can define a maximum aggregate, based on the
-% maximum$^d$ aggregate, that returns unknown if there is a
-% measure's value bigger than 2:  maximum$^{dmu2}$: $S \times i
-% \mapsto m'$ where $V(m') = 
-% \begin{cases}
-%   \infty &\text{if }  m''>2\\
-%   m'' & \text{else }
-% \end{cases}$ and $m''=\text{maximum}^d(S,i)$.
-
-% %Per exemple definim un termini, si les dades estan més espaiades que 2 es marca com a desconeguda
-
-
-
-
-
-
-
-
-
 
 
 

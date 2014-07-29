@@ -6,7 +6,8 @@ A new Multiresolution Time Series Database Formal Model
 :Date: 2014-07-28
 
 
-Highlights:
+Highlights
+==========
 
 * A multiresolution database stores time series compressed by
   aggregating the evolution of parameters along time. As a lossy
