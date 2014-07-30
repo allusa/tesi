@@ -11,16 +11,15 @@ d'aplicar-li un esquema de multiresolució.
 Aquesta funció de multiresolució ens permetrà:
 
 \begin{itemize}
-\item Plantejar problemes on veiem la multiresolució com una consulta sobre una sèrie temporal
+\item Plantejar problemes on veiem la multiresolució com una consulta
+  sobre una sèrie temporal; és a dir com una operació per calcular
+  parelles d'agregació d'atributs i resolucions temporals per a una
+  sèrie temporal.
 \item Oferir sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
   de consulta multiresolució.
 \item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
 \item Estudiar la teoria de la informació per a l'esquema de multiresolució
 \end{itemize}
-
-
-
-
 
 
 \section{Funció de multiresolució}
@@ -327,8 +326,8 @@ l'orientació de compressió amb pèrdua mostrada a la secció??\todo{ref
   model sgstm}. A continuació:
 \begin{itemize}
 \item Dissenyem l'estructura d'aquests sistemes duals
-\item Mostrem les aplicacions que permeten
 \item Avaluem conceptes relacionats en l'àmbit genèric dels \gls{SGBD}
+\item Mostrem les aplicacions que permeten
 \end{itemize}
 
 
@@ -336,9 +335,12 @@ l'orientació de compressió amb pèrdua mostrada a la secció??\todo{ref
 
 \subsection{Estructura}
 
-
-\todo{falta percebre que al SGST s'hi emmagatzema la sèrie temporal original}
-\todo{enfocar-ho diferent: emmagatzem la S als dos sistemes. 1. A cadascun hi podem fer les consultes pertinents  2. S'hi seguim certes restriccions obtenim el mateix resultat en el SGST que en el SGSTM}
+Un sistema dual de multiresolució està format per un \gls{SGST} i un
+\gls{SGSTM} on s'emmagatzemen les mateixes sèries temporals. A
+cadascun s'hi pot fer les consultes pertinents de cada model per a les
+sèries temporal. A més, s'obté el mateix resultat en els dos sistemes
+per a les consultes que segueixin les restriccions de la funció de
+multiresolució.
 
 
 A la \autoref{fig:multiresolucio:dual} es mostra l'estructura d'un
@@ -392,88 +394,10 @@ compte i per tant l'equivalència entre les consultes de \gls{SGST} i
 \gls{SGSTM} ja no serà certa. Així doncs, si es vol mantenir
 l'equivalència, el sistema dual dissenyat té aquestes dues
 restriccions: només permet operacions d'adició i l'ordre d'adició és
-important.  
-\todo{dir que després a les aplicacions solucionarem
-  aquestes restriccions}
+important.  Més endavant a les aplicacions descriurem l'abast
+d'aquestes restriccions.
 
 
-
-
-
-
-\subsection{Aplicacions}
-
-
-Les sèries temporals són dades que s'adquireixen contínuament i per
-tant cada cop és més gran el volum de dades que s'han d'emmagatzemar i
-tractar. Aquest gran volum de dades és un problema per a operar amb
-les sèries temporals i és un problema en els sistemes que tenen
-l'emmagatzematge limitat. En aquest sentit, originalment hem
-plantejat el model de \gls{SGSTM} per tal d'oferir una solució
-d'emmagatzematge que comprimeix la informació seleccionant-ne una
-multiresolució determinada.
-
-
-Així, un \gls{SGSTM} implica un selecció d'informació i la informació
-que no es considera importat és descartada. Aquests sistemes, per
-tant, no són adequats quan totes les dades monitorades han de ser
-emmagatzemades tal com s'adquireixen. Un cas d'aquests és quan no es
-coneixen quines funcions d'agregació són les més escaients per a les
-dades futures que s'adquiriran. Un altre cas és quan volem resoldre
-consultes detallades sobre les dades, com per exemple: a quina hora
-exacta ha ocorregut un esdeveniment.
-
-
-Els sistemes duals de multiresolució ofereixen una solució per
-emmagatzemar totes les dades però mantenint-ne una gestió de
-multiresolució.  En el sistema dual, s'ha d'entendre el \gls{SGST} com
-un emmagatzematge a llarg termini que no és consultat freqüentment;
-així pot estar implementat com a \gls{SGBD} per a dades de gran volum
-i basat en tècniques de compressió sense pèrdua, encara que tinguin
-temps grans de descompressió. El \gls{SGSTM} s'ha d'entendre com un
-emmagatzematge de compressió amb pèrdua que conté multiresolucions
-precomputades de la sèries temporal.  El temps de còmput no és tant
-crític en els \gls{SGSTM} perquè es reparteix al llarg del temps, és a
-dir tal com es van adquirint les dades.
-%  més enllà del temps de càlcul
-% de cada funció d'agregació: aquest limita quantes sèries temporals
-% multiresolució diferents i quantes resolucions de cada es poden
-% emmagatzemar un mateix aparell.
-
-
-En la compressió de dades multimèdia s'utilitza una tècnica de gestió
-similar.  Les dades s'emmagatzemen inicialment amb compressió sense
-pèrdua, a partir d'aquestes es generen dades amb compressió amb pèrdua
-que ocupen menys i són més àgils per a treballar. En el cas que calgui
-modificar les dades, es canvien les comprimides sense pèrdua i es
-regeneren de nou comprimides amb pèrdua. Amb aquesta gestió s'evita el
-problema que les compressions amb pèrdua acumulin pèrdua entre
-successives modificacions.  \todo{citació?}
-
-
-
-
-Així doncs, el sistema dual es pot utilitzar en les aplicacions següents:
-\begin{itemize}
-\item 
-
-\todo{}
-
-* Sistemes on el SGSTM funcionen com a cache per a consultes multiresolució, cache de consultes que mai s'han fet però que s'ha previst que es puguin fer -> computació en flux
-
-\item
-
-* Sistemes on la informació en un warehouse SGST (que es consulta rarament) serveix per si es vol fer un canvi d'esquema  en un SGSTM poder recalcular les dades que hi hauria hagut en el SGSTM. Altrament el SGSTM ha de començar de nou. Pensem en un canvi d'esquema com per exemple ampliar un disc o canviar la $f$, un canvi com reduir un disc sí que es pot recalcular
-O també pot servir per si no es compleix l'ordre d'arribada de les mesures: aleshores el SGST i el SGSTM no donarien la mateixa informació, per tant es pot obligar a refer la informació que hi ha desada el el SGSTM
-
-
-\item Farciment inicial del SGSTM: imaginem que tenim dades i volem passar a emmagatzemar-les en un SGSTM (això sobretot va lligat a la implementació en para\l.lel \todo{}
-
-\end{itemize}
-
-
-Com a contrapartida, però, en els sistemes duals apareix un \gls{SGST}
-amb una gran quantitat de dades.
 
 
 
@@ -569,45 +493,172 @@ maneres:
   vista precomputada. És a dir, quan es modifiquen les dades originals
   amb una operació, $\text{mod}(\text{dades})$, es trasllada aquesta
   operació a la vista, $\text{mod}'(\text{dades})$, on cal determinar
-  la relació entre $\text{mod}$ i $\text{mod}'$.  En un context on
-  només es permeten operacions d'afegir però no de modificar, és el
+  la relació entre $\text{mod}$ i $\text{mod}'$.  Aquesta translació
+  és més senzilla quan només hi ha possibilitat d'operacions d'afegir
+  noves dades però no de modificar-les: és el
   que es proposa en el nivell \emph{speed} de l'arquitectura
-  \emph{Lambda} i el que admet el model de \gls{SGSTM} que proposem.
-\end{itemize}
-
-
-
-En resum, la sèrie temporal resultant dels sistemes duals pot ser considerada 
-
-\todo{lligam de que la S' pot ser considerada una vista}
-% If we regard the resulting
-% time series $S'$ as a view of database information, then the
-% $\multiresolution$ is a view that must be computed fully at every new
-% measure addition and $\totalseries$ is a view that can be computed
-% incrementally at every new addition as explained next.
-
-
-
+  \emph{Lambda} i el que admet el model de \gls{SGSTM} que
+  proposem. \todo{s'ha d'estudiar la relació d'això amb els data stream}
 % When data comes as an ordered sequence of instances it is called
 % data stream, then specific \acro{DBMS} are designed to manage data
 % stream data \cite{stonebraker05:sigmod}.  \acro{MTSMS} can take
 % advantage of data stream orientation in order to simplify the
 % consolidation process.  Assuming a time order acquisition of time
 % series, the update of a \acro{MTSMS} only consists in the addition of
-% new measures and the incremental consolidation of subseries.  As a
-% consequence \acro{MTSMS} can be seen as a time series view
-% pre-computing system for a pair of aggregation statistics and time
-% resolution operations.  Then this pre-computation can be used for
-% another queries, limited to the aggregations previously computed, or
-% for graphical visualisations like the ones done by RRDtool
-% \cite{rrdtool}.
-
-%* Important! dir que si seguim l'addició amb ordre de les mesures, aleshores es pot fer l'stream en els MTSMS ja que no hi ha possibilitat d'operacions d'UPDATE.
+% new measures and the incremental consolidation of subseries. 
+\end{itemize}
 
 
 
+En resum, la sèrie temporal resultant dels sistemes duals pot ser
+considerada com una vista calculada sobre les sèries temporals
+originals. Aquesta vista pot ser precomputada, cosa que es pot fer de
+diverses maneres: la funció de multiresolució l'ha de computar
+totalment cada cop que s'afegeix una nova mesura i en canvi els
+\gls{SGSTM} la computen incrementalment.  Aleshores aquestes vistes es
+poden usar per a altres consultes que tinguin com a context
+l'aproximació de multiresolució realitzada, o per a visualitzacions
+gràfiques com les que ofereix RRDtool \cite{rrdtool}.
 
-% \subsection{Stream orientation}
+
+
+
+\subsection{Aplicacions}
+
+
+Les sèries temporals són dades que s'adquireixen contínuament i per
+tant cada cop és més gran el volum de dades que s'han d'emmagatzemar i
+tractar. Aquest gran volum de dades és un problema per a operar amb
+les sèries temporals i és un problema en els sistemes que tenen
+l'emmagatzematge limitat. En aquest sentit, originalment hem
+plantejat el model de \gls{SGSTM} per tal d'oferir una solució
+d'emmagatzematge que comprimeix la informació seleccionant-ne una
+multiresolució determinada.
+
+
+Així, un \gls{SGSTM} implica un selecció d'informació i la informació
+que no es considera importat és descartada. Aquests sistemes, per
+tant, no són adequats quan totes les dades monitorades han de ser
+emmagatzemades tal com s'adquireixen. Un cas d'aquests és quan no es
+coneixen quines funcions d'agregació són les més escaients per a les
+dades futures que s'adquiriran. Un altre cas és quan volem resoldre
+consultes detallades sobre les dades, com per exemple: a quina hora
+exacta ha ocorregut un esdeveniment.
+
+
+Els sistemes duals de multiresolució ofereixen una solució per
+emmagatzemar totes les dades però mantenint-ne una gestió de
+multiresolució.  En el sistema dual, s'ha d'entendre el \gls{SGST} com
+un emmagatzematge a llarg termini que no és consultat freqüentment;
+així pot estar implementat com a \gls{SGBD} per a dades de gran volum
+i basat en tècniques de compressió sense pèrdua, encara que tinguin
+temps grans de descompressió. El \gls{SGSTM} s'ha d'entendre com un
+emmagatzematge de compressió amb pèrdua que conté multiresolucions
+precomputades de la sèries temporal.  El temps de còmput no és tant
+crític en els \gls{SGSTM} perquè es reparteix al llarg del temps, és a
+dir tal com es van adquirint les dades; més enllà del temps de còmput
+de cada funció d'agregació d'atributs, el qual limita la quantitat de
+multiresolucions diferents que pot gestionar un mateix \gls{SGSTM}.
+
+
+En la compressió de dades multimèdia s'utilitza una tècnica de gestió
+similar.  Les dades s'emmagatzemen inicialment amb compressió sense
+pèrdua, a partir d'aquestes es generen dades amb compressió amb pèrdua
+que ocupen menys i són més àgils per a treballar. En el cas que calgui
+modificar les dades, es canvien les comprimides sense pèrdua i es
+regeneren de nou comprimides amb pèrdua. Amb aquesta gestió s'evita el
+problema que les compressions amb pèrdua acumulin pèrdua entre
+successives modificacions.  \todo{citació?}
+
+
+
+En resum, les aplicacions del sistema dual de multiresolució són les
+següents:
+\begin{itemize}
+\item Sistemes on els \gls{SGSTM} precomputen en flux vistes que són
+  consultes de multiresolució. És a dir, funcionen com a precomputació
+  de consultes que es preveuen que es faran; per tant al llarg del
+  temps es creen i eliminen vistes segons les necessitats que es
+  preveuen. Aleshores els \gls{SGST} funcionen com a emmagatzematge a
+  llarg termini que es consulta rarament.
+
+
+\item Les dades emmagatzemades en els \gls{SGST} s'utilitzen per al
+  farciment inicial dels \gls{SGSTM} gràcies a la funció de
+  multiresolució que permet computar les sèries temporals dels discs a
+  partir de l'operació \glssymbol{not:sgstm:dmap}. Pot tenir diversos
+  objectius:
+  \begin{itemize}
+  \item Quan es creen les vistes precomputades anteriors, inicialment
+    el \gls{SGSTM} contindrà sèries temporals amb valors desconeguts;
+    amb la funció de multiresolució es poden inicialitzar amb els
+    valors correctes.
+
+  \item Es pot usar per a canviar l'esquema de multiresolució dels
+    \gls{SGSTM}. En alguns canvis d'esquema, per exemple ampliar un
+    disc, inicialment hi ha dades desconegudes però que es poden
+    computar amb la funció de multiresolució.
+
+  \item Es pot usar per a canviar d'un emmagatzematge de sèries
+    temporals en \gls{SGST} a un emmagatzematge en \gls{SGSTM}. Cal
+    notar que és un canvi irreversible perquè l'emmagatzematge en els
+    \gls{SGSTM} és amb pèrdua.
+  \end{itemize}
+
+\item Es poden usar els \gls{SGST} per a experimentar amb diversos
+  esquemes de multiresolució per a les dades adquirides i així
+  observar-ne la idoneïtat i escollir-ne un de millor.
+
+\item En el cas que no es compleixi la restricció d'ordre d'arribada
+  de les mesures per a l'equivalència entre els \gls{SGST} i els
+  \gls{SGSTM}, es podria refer la informació emmagatzemada en els
+  \gls{SGSTM} a partir dels \gls{SGST}.
+
+\end{itemize}
+
+
+Com a contrapartida, però, en els sistemes duals apareix un \gls{SGST}
+amb una gran quantitat de dades. Per tant, cal tenir en compte que si
+la informació computada pels \gls{SGSTM} és suficient per a les
+consultes que s'han de realitzar, aleshores la informació
+emmagatzemada en els \gls{SGST} és redundant. Això no obstant, no és
+senzill identificar i predir quan la informació emmagatzemada en el
+\gls{SGSTM} serà totalment suficient.
+\todo{a la secció de la
+  teoria de la informació descriurem el problema d'identificar la
+  informació que seleccionem i la que perdem i per tant podríem predir
+  quan la tenim redundant?? }
+
+
+
+Així, encara que l'objectiu final sigui l'emmagatzematge de les sèries
+temporals comprimides amb pèrdua en un \gls{SGSTM}, és a dir el model
+proposat originalment, els sistemes duals de multiresolució es poden
+utilitzar mentre hi hagi dubtes sobre quin esquema de multiresolució
+escollir i un eliminar-los un cop es consideri que l'esquema és
+correcte. Aleshores, l'estructura de sistema dual serveix per a
+observar clarament que els \gls{SGSTM} ofereixen una sèrie temporal
+$S'$ que és una aproximació a una certa informació que hi ha en
+l'original $S$ i que, per tant, permeten resoldre consultes
+aproximades.
+
+
+
+
+
+
+\section{Teoria de la informació}
+
+\todo{}
+
+
+
+
+
+
+
+
+% \section{Stream orientation}
 
 % \todo{}
 % * Dues variacions possibles interessants pels MTSMS:
