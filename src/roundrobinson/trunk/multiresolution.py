@@ -339,7 +339,7 @@ class MultiresolutionSeries(VisitableMixin,set):
         """
         Alias for discseries
         """
-        return self.discseries(delta,f)
+        return self.discSeries(delta,f)
 
     def totalseries(self):
         """
