@@ -467,6 +467,13 @@ l'optimització global de la consulta i l'operació continguda a la
 vista.
 
 
+
+% PostgreSQL no té materialized views però aquí expliquen com definir-ne a partir de triggers. \url{http://tech.jonathangardner.net/wiki/PostgreSQL/Materialized_Views}.
+
+
+
+
+
 Les vistes precomputades tenen associada una acció per actualitzar de
 nou el seu valor, és a dir per a recalcular la consulta que contenen
 quan les dades originals han canviat. En usar vistes precomputades cal
@@ -493,15 +500,16 @@ maneres:
   vista.
 
 \item Quan es modifiquen les dades, s'aplica la mateixa operació a la
-  vista precomputada. És a dir, quan es modifiquen les dades originals
+  vista precomputada; requereix especificar la instrucció
+  d'actualització. És a dir, quan es modifiquen les dades originals
   amb una operació, $\text{mod}(\text{dades})$, es trasllada aquesta
   operació a la vista, $\text{mod}'(\text{dades})$, on cal determinar
   la relació entre $\text{mod}$ i $\text{mod}'$.  Aquesta translació
   és més senzilla quan només hi ha possibilitat d'operacions d'afegir
-  noves dades però no de modificar-les: és el
-  que es proposa en el nivell \emph{speed} de l'arquitectura
-  \emph{Lambda} i el que admet el model de \gls{SGSTM} que
-  proposem. \todo{s'ha d'estudiar la relació d'això amb els data stream}
+  noves dades però no de modificar-les: és el que es proposa en el
+  nivell \emph{speed} de l'arquitectura \emph{Lambda} i el que admet
+  el model de \gls{SGSTM} que proposem. \todo{s'ha d'estudiar la
+    relació d'això amb els data stream}
 % When data comes as an ordered sequence of instances it is called
 % data stream, then specific \acro{DBMS} are designed to manage data
 % stream data \cite{stonebraker05:sigmod}.  \acro{MTSMS} can take
@@ -650,9 +658,123 @@ aproximades.
 
 
 
+
+
+
+
+
 \section{Teoria de la informació}
 
 \todo{}
+
+
+
+
+\subsection{Avaluar la multiresolució}
+
+
+
+* Si el que es vol inicialment ja és fer el càlcul de multiresolució aleshores un SGSTM ja ho fa exactament, tal com s'ha discutit en l'equivalència de multiresolució i en el cas de SGST duals.
+
+
+* Si el que es vol és un emmagatzematge reduït aleshores cal avaluar la pèrdua d'informació.
+
+  - Comprovar que la visualització de la informació original amb les comprimides s'assembli: aquest cas tindria una valoració subjectiva de la mateixa manera que en la compressió amb pèrdua de multimèdia. Per exemple el criteri de RRDtool es basa en l'amplada de la pantalla. Això pot ser té relació amb el camp de gràfics 3D?
+
+  - Comprovar que la resposta a una consulta és la mateixa en les dades originals que en les dades en el SGSTM.
+
+  - Quines consultes no podré respondre en un SGSTM
+
+  - Consultes que es poden resoldre a la perfecció, per exemple en el cas de comptadors
+
+
+
+
+
+
+
+\subsection{Problema d'informació de la multiresolució}
+
+
+Definició del problema:
+
+Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
+resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
+temporal multiresolució puc consultar la sèrie temporal total
+$S'=\glssymbol{not:sgstm:serietotal}(M)$, o bé de forma equivalent com
+s'ha vist abans $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$
+és l'esquema de $M$.  Executo una operació de consulta $o$ sobre la
+sèrie temporal original $r_1=o(S)$ i la mateixa operació sobre la
+sèrie temporal de la multiresolució $r_2=o(S')$ . Puc avaluar l'error
+de multiresolució $d(r_1,r_2)$ on $d$ és una funció que permet avaluar
+la distància entre els dos resultats, per exemple mínims quadrats si
+els resultats són sèries temporals \todo{ref?}.
+
+
+
+
+Cal pensar amb consultes també qualitatives, 
+per exemple la consulta  podria ser o=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
+
+També hi pot haver casos on l'operació per a obtenir el mateix resultat és diferent en els dos casos; és a dir $r_1=o(S)$ però  $r_2=o'(S')$ on $o'$ és l'operació equivalent a $o$ per aplicar després de la multiresolució. Per exemple, una operació $o$ que es vulgui fer pot ser el càlcul de la multiresolució, $r_1=\glssymbol{not:sgstm:multiresolucio}(S,e)$, aleshores l'operació $o'$ equivalent és la identitat perquè el \gls{SGSTM} ja ha calculat la multiresolució,  $r_2=S'$ on $o'$ no hi és. Aquest exemple, de fet, és el cas de la funció de multiresolució que ja hem discutit abans on és equivalent l'operació de multiresolució aplicada als SGST que la sèrie temporal dels SGSTM; per tant l'error  $d(r_1,r_2)$ seria nul.
+
+
+
+
+Es pot avaluar $d(S,S')$, però aquest no és el problema que intenten resoldre els \gls{SGSTM}. Els \gls{SGSTM} resolen un problema de compressió amb pèrdua i aquest seria un problema d'aproximació al senyal original, el qual altres models poden resoldre més bé\todo{ref?}.  
+
+
+
+
+
+
+
+
+
+
+
+
+% \subsection{Exemples}
+
+
+
+
+% \subsubsection{Multiresolució sense pèrdua}
+
+
+% Per exemple calcular la mitjana d'una sèrie temporal i calcular la mitjana d'una sèrie temporal multireoslució que tingui un esquema amb agregadors de mitjana de funció, és el mateix? Si hi han dades conegudes per a tot l'interval.
+
+% agregador $fmean = \frac{1}{t_f-t_0}\int s(t)$
+
+% Per tant $fmean(s)$ hauria de ser igual a $fmean(multiresolution(s))$ perquè $multiresolution(s)= \frac{1}{\delta}\int s[\tau,\tau+\delta]+\frac{1}{\delta}\int s[\tau+\delta,\tau+2\delta]+\dots$ i per tant 
+
+% \[
+% fmean(multiresolution(s)) =  \frac{1}{t_f-t_0}\int\right[\frac{1}{\delta}\int s[\tau,\tau+\delta]+\frac{1}{\delta}\int s[\tau+\delta,\tau+2\delta]+\dots \left]
+% \]
+% \[
+%  =  \frac{1}{t_f-t_0}\frac{\delta}{\delta}\right[\int s[\tau,\tau+\delta]+\int s[\tau+\delta,\tau+2\delta]+\dots \left] =  \frac{1}{t_f-t_0} \int s[t_0,t_f]
+% \]
+
+% \subsubsection{Exemple2}
+
+
+% Quan una sèrie temporal és regular, l'interpolador mitjana i l'àrea valen el mat
+% eix en l'interval $[T_0,n\delta]$.
+
+% \[
+% mitjana(S(T_0,T_f] ) = \frac{v_0+v_1+v_2}{3}
+% \]
+
+% \[
+% area(S(T_0,T_f] ) = \frac{(t_0-T_0)v_0+(t_1-t_0)v_1+(T_f-t_1)v_2}{T_f-T_0} 
+% \]
+% per ser regular $t_0 -T_0 = t_1 -t_0 = T_f - t_1 = \delta$
+% \[
+% area(S(T_0,T_f] ) = \frac{\delta v_0 + \delta v_1 + \delta v_2}{3\delta}
+% =\frac{v_0+v_1+v_2}{3} = mitjana(S(T_0,T_f] )
+% \]
+
+
 
 
 

@@ -2,33 +2,6 @@
 
 
 
-\section{Multiresolution over TSMS}
-
-
-* MTSMS expressada com una consulta  sobre TSMS
-
-Potser expressar com dues coses: una selecció de l'interval + una agregació sobre aquesta subsèrie temporal?
-
-  \begin{align*}
-    S_D \equiv &  \operatorname{map}(S_I, m_i\mapsto m') \text{ on }  \\
-    & m' = (T(m_i), f(S, i)), i = [T(\operatorname{prev}_{S_I}(m_i)),T(m_i)] \\
-    &  S_I = \{ (t,\infty) | t\in T_I  \}, T_I = \{ t_i = \tau+n\delta | n\in\N, t_M - k\delta < t_i \leq t_M \}, t_M = T(\max(S))
-  \end{align*}
-  
-En aquest cas hem suposat que la $f$ segueix sent un agregador d'atributs $f:S\times i\rightarrow m$. Però podríem simplificar dient que és un agregador que segueix la forma ja coneguda dels TSMS $f_a \equiv agg:S\times m_i \times f \rightarrow m'$ on $f:m_i\times m\rightarrow m''$ i aleshores ho podem veure dos mapes:
-  \begin{align*}
-    S_D \equiv &  \operatorname{map}(S', m_i\mapsto m') \text{ on }  \\
-    & m' = (T(m_i), f_a(V(m_i)))
-    & S' = \operatorname{map}(S_I, m_i\mapsto m'') \\
-    & m'' = (T(m_i), S[t_a,t_b]), t_a = T(\operatorname{prev}_{S_I}(m_i)), t_b=T(m_i) \\
-    &  S_I = \{ (t,\infty) | t\in T_I  \}, T_I = \{ t_i = \tau+n\delta | n\in\N, t_M - k\delta < t_i \leq t_M \}, t_M = T(\max(S))
-  \end{align*}
-de manera que la feina de treure les subsèries la fa el mapa sobre $S_i$ mentre que abans la feia cada funció d'agregació d'atributs. Per a poder extreure aquesta part de selecció de l'interval dels $f$ cal interpretar-los, no es pot fer de manera automàtica.
-
-
-
-* Si una consulta multiresolució(S) és una combinació de map i fold es podria fer en SGBD de tipus MapReduce?
-
 
 \section{Estructures interessants}
 
@@ -192,43 +165,6 @@ El temps pot ser vist com un valor amb incertesa. Aleshores què passa amb les o
 
 
 
-\subsection{Vistes pre-calculades i vistes actualitzades en flux}
-
-Nathan Marz ``A call for sanity in NoSQL''
-
-Lambda Architecture: batch view vs. real time view
-
-Els SGBDM podrien ser utilitzats en les real time view
-
-
-
-Sembla que en el món SQL les vistes pre-calculades s'anomenen
-\emph{materialized views}. Date %\cite{date13}
- proposa que s'anomenin
-\emph{snapshots}. Es podrien definir com unes taules amb caching de les dades.
-
-PostgreSQL no té materialized views però aquí expliquen com definir-ne a partir de triggers. \url{http://tech.jonathangardner.net/wiki/PostgreSQL/Materialized_Views}.
-
-
-En els SGBDR les views funcionen com a la teoria relacional, és a dir
-com a àlies d'una consulta, i per tant cada cop que s'utilitzen es
-calculen. Això fa que siguin lentes quan hi ha moltes dades. Tot i
-així, estranyament, el caching de views no és un tema molt treballat
-en els SGBDR. Sembla que els SGBDR per millor l'eficiència haurien de
-permetre fer caching de les vistes i actualitzar-les segons diversos
-patrons:
-\begin{itemize}
-\item Periòdicament, p.ex. cada 5 minuts
-\item Esdeveniments en base a triggers de les relvars de les quals
-  depèn la vista, p.ex. s'actualitza quan es modifica la relvar
-  original
-\item En flux en base a triggers de les relvars de les quals depèn la
-  vista, p.ex. s'actualitza quan es modifica la relvar original i es
-  diu quina acció s'ha de fer per modificar la vista. Aquest cas és
-  molt més complicat que els altres dos i requereix especificar la
-  instrucció d'actualització. Un exemple seria un SGSTM com a caching
-  de consultes multriesolution(S) llançades a un SGST.
-\end{itemize}
 
 
 
@@ -430,24 +366,6 @@ Temes que després es poden aprofitar a les implementacions
 % Nota: les operacions no són equivalents, l'operació $\text{SerieTotal}(M)[i]^r$ és molt més potent que la $\text{ResolucióRegular}(M,T)$.
 
 
-
-
-\subsection{Comparació d'operacions dels SGSTM amb les dels SGST}
-
-Tinc una sèries temporal $S$ i l'emmagatzemo a una base de dades multiresolució $M$ amb atributs de mitjana. 
-
-* mitjana(S) = mitjana(serieTotal(M)) ?
-
-* Operació O, afegeix(M',O(S)) = O(serieTotal(M))?
-
-
-\begin{align*}
-s   \qquad   &  s'=ST(M(s))\\
-r=O(s) \qquad& r'=O(s') \\
-\epsilon(r,r')?
-\end{align*}
-
-on $O$ és una consulta, per exemple pot ser O=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
 
 
 
