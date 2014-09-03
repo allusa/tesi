@@ -668,9 +668,96 @@ aproximades.
 \todo{}
 
 
+La compressió de dades es formalitza en la teoria de la informació
+(\emph{information theory}). Per al cas particular de compressió amb
+pèrdua s'aplica un subconjunt de la teoria anomenat teoria de la taxa
+de bit-distorsió %optimot: rate-distortion relationship
+(\emph{rate–distortion theory}); la qual modela la percepció de la
+distorsió i valora l'estètica dels resultats.
 
 
-\subsection{Avaluar la multiresolució}
+Per a quantificar la informació d'unes dades s'utilitza l'entropia, la
+qual mesura la incertesa de predir els valors de les dades. Així, com
+més entropia més aleatòries són les dades i com menys, més
+redundants. Si l'entropia és zero aleshores les dades són totalment
+predictible; és a dir donat un valor es coneix exactament quin és el
+següent.
+
+
+
+
+La compressió redueix la mida original de les dades. En el cas de la
+compressió sense pèrdua es conserva la informació però s'augmenta
+l'entropia, és a dir que s'elimina la redundància de les dades, i en
+el cas de la compressió amb pèrdua es descarta informació que es
+considera no essencial, per exemple en una imatge detalls que l'ull
+humà no pot apreciar, tot i que també poden transformar les dades a un
+altre domini on es es percebi millor la informació, per exemple
+treballar en el domini freqüencial del so per a operacions
+d'equalització. Aquesta aplicació de la compressió amb pèrdua per tal
+de representar millor les dades també es coneix amb el nom de
+codificació perceptiva (\emph{perceptual encoding}).
+
+
+La compressió amb pèrdua és més complicada perquè requereix valorar la
+percepció humana. L'objectiu és aconseguir menys volum de dades però
+que conservin la mateixa percepció que les originals, o fins i tot amb
+una pèrdua de qualitat perceptible mentre compleixi amb els requisits de
+l'aplicació que se li vol donar.
+Els mètode de compressió amb pèrdua se solen usar per a compressió de multimèdia, per tal de valorar-ne la qualitat de percepció humana s'utilitzen testos subjectius com per exemple el test ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
+
+
+
+% El procediment
+% que se segueix és: comprimir, emmagatzemar, descomprimir i
+% visualitzar.
+
+
+
+\subsection{Informació de la multiresolució}
+
+El model dels \gls{SGSTM} es basa en una compressió
+amb pèrdua; és a dir descartar dades i emmagatzemar només aquella
+informació que es consideri necessària o suficient.
+
+
+El problema genèric de la informació en la multiresolució és el següent.
+
+Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
+resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
+temporal multiresolució es pot consultar la sèrie temporal total
+$S'=\glssymbol{not:sgstm:serietotal}(M)$, o bé de forma equivalent com
+s'ha vist abans $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$
+és l'esquema de $M$.  S'executa una operació de consulta $o$ sobre la
+sèrie temporal original $r_1=o(S)$ i la mateixa operació sobre la
+sèrie temporal de la multiresolució $r_2=o(S')$ . Es pot avaluar l'error
+de multiresolució $d(r_1,r_2)$ on $d$ és una funció que permet avaluar
+la distància entre els dos resultats, per exemple mínims quadrats si
+els resultats són sèries temporals \todo{ref?}.
+
+
+Cal aclarir que es podria avaluar $d(S,S')$, però aquest no és el
+problema que intenten resoldre els \gls{SGSTM}.  Els \gls{SGSTM}
+resolen un problema de compressió amb pèrdua (NOO perquè l'aproximació és una pèrdua)
+ i en canvi aquest seria
+un problema d'aproximació al senyal original, el qual altres models
+poden resoldre més bé\todo{ref?}.
+
+
+
+
+
+
+
+Cal pensar amb consultes també qualitatives, 
+per exemple la consulta  podria ser o=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
+
+També hi pot haver casos on l'operació per a obtenir el mateix resultat és diferent en els dos casos; és a dir $r_1=o(S)$ però  $r_2=o'(S')$ on $o'$ és l'operació equivalent a $o$ per aplicar després de la multiresolució. Per exemple, una operació $o$ que es vulgui fer pot ser el càlcul de la multiresolució, $r_1=\glssymbol{not:sgstm:multiresolucio}(S,e)$, aleshores l'operació $o'$ equivalent és la identitat perquè el \gls{SGSTM} ja ha calculat la multiresolució,  $r_2=S'$ on $o'$ no hi és. Aquest exemple, de fet, és el cas de la funció de multiresolució que ja hem discutit abans on és equivalent l'operació de multiresolució aplicada als SGST que la sèrie temporal dels SGSTM; per tant l'error  $d(r_1,r_2)$ seria nul.
+
+
+
+
+
 
 
 
@@ -689,39 +776,6 @@ aproximades.
 
 
 
-
-
-
-
-\subsection{Problema d'informació de la multiresolució}
-
-
-Definició del problema:
-
-Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
-resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
-temporal multiresolució puc consultar la sèrie temporal total
-$S'=\glssymbol{not:sgstm:serietotal}(M)$, o bé de forma equivalent com
-s'ha vist abans $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$
-és l'esquema de $M$.  Executo una operació de consulta $o$ sobre la
-sèrie temporal original $r_1=o(S)$ i la mateixa operació sobre la
-sèrie temporal de la multiresolució $r_2=o(S')$ . Puc avaluar l'error
-de multiresolució $d(r_1,r_2)$ on $d$ és una funció que permet avaluar
-la distància entre els dos resultats, per exemple mínims quadrats si
-els resultats són sèries temporals \todo{ref?}.
-
-
-
-
-Cal pensar amb consultes també qualitatives, 
-per exemple la consulta  podria ser o=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
-
-També hi pot haver casos on l'operació per a obtenir el mateix resultat és diferent en els dos casos; és a dir $r_1=o(S)$ però  $r_2=o'(S')$ on $o'$ és l'operació equivalent a $o$ per aplicar després de la multiresolució. Per exemple, una operació $o$ que es vulgui fer pot ser el càlcul de la multiresolució, $r_1=\glssymbol{not:sgstm:multiresolucio}(S,e)$, aleshores l'operació $o'$ equivalent és la identitat perquè el \gls{SGSTM} ja ha calculat la multiresolució,  $r_2=S'$ on $o'$ no hi és. Aquest exemple, de fet, és el cas de la funció de multiresolució que ja hem discutit abans on és equivalent l'operació de multiresolució aplicada als SGST que la sèrie temporal dels SGSTM; per tant l'error  $d(r_1,r_2)$ seria nul.
-
-
-
-
-Es pot avaluar $d(S,S')$, però aquest no és el problema que intenten resoldre els \gls{SGSTM}. Els \gls{SGSTM} resolen un problema de compressió amb pèrdua i aquest seria un problema d'aproximació al senyal original, el qual altres models poden resoldre més bé\todo{ref?}.  
 
 
 
