@@ -23,6 +23,7 @@ Aquesta funció de multiresolució ens permetrà:
 
 
 \section{Funció de multiresolució}
+\label{sec:multiresolucio:funcio}
 
 En el model de \gls{SGSTM} hem definit un model de dades de \gls{SGBD}
 per a gestionar sèries temporals multiresolució. Com a \gls{SGBD},
@@ -663,15 +664,34 @@ aproximades.
 
 
 
-\section{Teoria de la informació}
+\section{Informació en la multiresolució}
 
-\todo{}
+\todo{} 
+En aquesta secció descrivim el problema d'identificar la
+informació que selecciona un esquema de multiresolució i per tant
+també observar la que no queda emmagatzemada i es perd.  Així doncs,
+els \gls{SGSTM} són un sistemes que emmagatzemen les dades comprimides
+amb pèrdua d'una certa part de la informació original.
 
 
-La compressió de dades es formalitza en la teoria de la informació
-(\emph{information theory}). Per al cas particular de compressió amb
-pèrdua s'aplica un subconjunt de la teoria anomenat teoria de la taxa
-de bit-distorsió %optimot: rate-distortion relationship
+\begin{itemize}
+\item Primer, descrivim la teoria de la informació que està
+  relacionada amb la quantificació de la informació.
+\item Segon, definim el problema de calcular l'error en la multiresolució.
+\item Tercer, alguns exemples?
+\end{itemize}
+
+
+
+\subsection{Teoria de la informació}
+
+En altres àmbits, la teoria de la informació (\emph{information
+  theory}) és el referent per a formalitzar la quantificació de la
+informació. És també el cas de la compressió de dades, un àmbit proper
+als \gls{SGSTM} en aquest context d'informació.  Per al cas particular
+de compressió amb pèrdua s'aplica un subconjunt de la teoria anomenat
+teoria de la taxa de
+bit-distorsió %optimot: rate-distortion relationship
 (\emph{rate–distortion theory}); la qual modela la percepció de la
 distorsió i valora l'estètica dels resultats.
 
@@ -714,15 +734,17 @@ Els mètode de compressió amb pèrdua se solen usar per a compressió de multim
 
 
 
-\subsection{Informació de la multiresolució}
+\subsection{Error en la informació de la multiresolució}
 
-El model dels \gls{SGSTM} es basa en una compressió
-amb pèrdua; és a dir descartar dades i emmagatzemar només aquella
-informació que es consideri necessària o suficient.
+El model dels \gls{SGSTM} es basa en una compressió amb pèrdua, és a
+dir descartar dades i emmagatzemar només aquella informació que es
+consideri necessària o suficient. Així doncs, cal quantificar quin
+error hi ha entre la informació emmagatzemada i la informació que
+contenen les dades originals.
 
 
 El problema genèric de la informació en la multiresolució és el següent.
-
+\begin{definition}[Error en la informació de la multiresolució]
 Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
 resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
 temporal multiresolució es pot consultar la sèrie temporal total
@@ -731,50 +753,79 @@ s'ha vist abans $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$
 és l'esquema de $M$.  S'executa una operació de consulta $o$ sobre la
 sèrie temporal original $r_1=o(S)$ i la mateixa operació sobre la
 sèrie temporal de la multiresolució $r_2=o(S')$ . Es pot avaluar l'error
-de multiresolució $d(r_1,r_2)$ on $d$ és una funció que permet avaluar
+de multiresolució $\epsilon=d(r_1,r_2)$ on $d$ és una funció que permet avaluar
 la distància entre els dos resultats, per exemple mínims quadrats si
 els resultats són sèries temporals \todo{ref?}.
+\end{definition}
 
 
 Cal aclarir que es podria avaluar $d(S,S')$, però aquest no és el
-problema que intenten resoldre els \gls{SGSTM}.  Els \gls{SGSTM}
-resolen un problema de compressió amb pèrdua (NOO perquè l'aproximació és una pèrdua)
- i en canvi aquest seria
-un problema d'aproximació al senyal original, el qual altres models
-poden resoldre més bé\todo{ref?}.
+problema que intenten resoldre els \gls{SGSTM}. Aquest seria un
+problema d'aproximació al senyal original, el qual altres models poden
+resoldre més bé\todo{ref?}. En canvi els \gls{SGSTM} resolen un
+problema de compressió amb pèrdua per a seleccionar una determinada
+informació.
+
+
+
+
+En la informació de la multiresolució cal pensar també amb consultes
+qualitatives. Per exemple una consulta podria ser $o=$`Creix la sèrie
+temporal?' Aleshores no hi hauria error $\epsilon=d(r_1,r_2)$ quan la
+resposta fos la mateixa per als dos casos, $r_1$ i $r_2$.
+
+
+Tot i que hem proposat d'aplicar la mateixa operació $o$ a la
+sèrie temporal original $r_1=o(S)$ i a la sèrie temporal de la
+multiresolució $r_2=o(S')$, pot ser que l'operació hagi de ser
+diferent per a obtenir el mateix resultat. És a dir $r_1=o(S)$ però
+$r_2=o'(S')$ on $o'$ és l'operació equivalent a $o$ per aplicar
+després de la multiresolució.  Per exemple, una operació $o$ podria
+ser el càlcul de la multiresolució,
+$r_1=\glssymbol{not:sgstm:multiresolucio}(S,e)$, aleshores l'operació
+$o'$ equivalent és la identitat perquè el \gls{SGSTM} ja ha calculat
+la multiresolució, $r_2=S'$ on $o'$ no hi és. Aquest exemple, de fet,
+és el cas de la funció de multiresolució de la
+\autoref{sec:multiresolucio:funcio}, on és equivalent l'operació de
+multiresolució aplicada als \gls{SGST} que la sèrie temporal
+emmagatzemada en un \gls{SGSTM}; per tant l'error
+$\epsilon =d(r_1,r_2)$ seria nul.
 
 
 
 
 
+\todo{} 
 
+Així doncs, l'error en la informació de la multiresolució permet
+quantificar la pèrdua d'informació dels \gls{SGSTM}. Un cop
+quantificat l'error per a un determinat esquema de multiresolució es
+pot saber per a quines consultes serà apropiat aquell esquema i per a
+quines no. Per a quantificar aquest error es poden preveure diversos
+contextos:
+\begin{itemize}
+\item Hi ha consultes que es poden resoldre a la perfecció, és a dir
+  sense error. Per exemple és el cas descrit on l'operació que es vol
+  fer a una sèrie temporal és precisament la consulta de
+  multiresolució.
+  %altres exemples, per exemple en el cas de comptadors per a consultar totals
 
-Cal pensar amb consultes també qualitatives, 
-per exemple la consulta  podria ser o=Creix la sèrie temporal? Si la resposta és Sí en els dos casos, aleshores no hi ha error.
+\item Es pot calcular l'error mesurant la diferència entre la mateixa
+  consulta aplicada a les dades originals que a les dades
+  emmagatzemades en el \gls{SGSTM}.
 
-També hi pot haver casos on l'operació per a obtenir el mateix resultat és diferent en els dos casos; és a dir $r_1=o(S)$ però  $r_2=o'(S')$ on $o'$ és l'operació equivalent a $o$ per aplicar després de la multiresolució. Per exemple, una operació $o$ que es vulgui fer pot ser el càlcul de la multiresolució, $r_1=\glssymbol{not:sgstm:multiresolucio}(S,e)$, aleshores l'operació $o'$ equivalent és la identitat perquè el \gls{SGSTM} ja ha calculat la multiresolució,  $r_2=S'$ on $o'$ no hi és. Aquest exemple, de fet, és el cas de la funció de multiresolució que ja hem discutit abans on és equivalent l'operació de multiresolució aplicada als SGST que la sèrie temporal dels SGSTM; per tant l'error  $d(r_1,r_2)$ seria nul.
+\item Es pot mesurar l'error mitjançant la visualització de les
+  dades. És a dir, de manera semblant a la compressió amb pèrdua de
+  multimèdia, l'usuari valora subjectivament si visualitza la mateixa
+  informació en les dades originals com en les dades comprimides amb
+  multiresolució. Per exemple, un dels criteris que recomana RRDtool
+  per a establir un esquema és tenir en compte l'amplada de la
+  pantalla on es visualitzen els resultats: no cal treballar amb una
+  sèrie temporal amb molta resolució si no és possible observar-la
+  \todo{ref}.
+  %Això potser també té relació amb el camp de gràfics 3D, on la multiresolució s'aplica per a no treballar amb objectes que només seran percebuts com un píxel?
 
-
-
-
-
-
-
-
-* Si el que es vol inicialment ja és fer el càlcul de multiresolució aleshores un SGSTM ja ho fa exactament, tal com s'ha discutit en l'equivalència de multiresolució i en el cas de SGST duals.
-
-
-* Si el que es vol és un emmagatzematge reduït aleshores cal avaluar la pèrdua d'informació.
-
-  - Comprovar que la visualització de la informació original amb les comprimides s'assembli: aquest cas tindria una valoració subjectiva de la mateixa manera que en la compressió amb pèrdua de multimèdia. Per exemple el criteri de RRDtool es basa en l'amplada de la pantalla. Això pot ser té relació amb el camp de gràfics 3D?
-
-  - Comprovar que la resposta a una consulta és la mateixa en les dades originals que en les dades en el SGSTM.
-
-  - Quines consultes no podré respondre en un SGSTM
-
-  - Consultes que es poden resoldre a la perfecció, per exemple en el cas de comptadors
-
-
+\end{itemize}
 
 
 
