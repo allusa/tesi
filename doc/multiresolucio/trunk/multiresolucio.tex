@@ -793,10 +793,6 @@ $\epsilon =d(r_1,r_2)$ seria nul.
 
 
 
-
-
-\todo{} 
-
 Així doncs, l'error en la informació de la multiresolució permet
 quantificar la pèrdua d'informació dels \gls{SGSTM}. Un cop
 quantificat l'error per a un determinat esquema de multiresolució es
@@ -839,7 +835,34 @@ contextos:
 
 
 
-% \subsection{Exemples}
+\subsection{Exemples}
+
+A continuació mostrem alguns exemples per tal de quantificar la
+selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
+
+
+\begin{example}[Mateixa consulta i funció d'agregació d'atributs]
+  Sigui $S=\{m0,\dotsc,m_k\}$ una sèrie temporal i $e= \{ (\delta_0,
+  f_0, \tau_0, k_0) \}$ un esquema de multiresolució amb una sola
+  subsèrie resolució, suposem $k_0=\infty$ per tal de menysprear-ne
+  l'efecte i $\tau_0=T(min(S))$. Obtenim la sèrie temporal resultant
+  d'aplicar la funció de multiresolució
+  $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$.  Així, aquesta sèrie
+  temporal resultant contindrà mesures calculades a partir de
+  l'agregació de $S$ en els intervals definits per $\tau_0$ i
+  $\delta_0$ $S'=\{ f(S,[\tau_0,\tau_0+\delta_0],
+  f(S,[\tau_0+\delta_0)\dotsc f(S,\tau_0+2\delta_0])\dotsc \}$.
+
+  Apliquem un operador de consulta $o$ a les dues sèries temporals,
+  $r_1=o(S,[-\infty,\infty])$ i $r_2=o(S',[-\infty,\infty])$, que és
+  la mateixa funció d'agregació d'atributs de la multiresolució
+  $o=f_0$. Analitzem els efectes segons diferents funcions d'agregació
+  d'atributs: mitjana, màxim i total.
+
+
+
+
+\end{example}
 
 
 
