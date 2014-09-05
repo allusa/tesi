@@ -910,6 +910,7 @@ Propietats de les operacions computacionals:
   (t^i,v^i+1) $. Aquesta funció és una implementació del cardinal de
   la \autoref{def:sgst:cardinal} a partir de l'agregació.
 
+
 \item $\operatorname{suma\_v}: S \mapsto v'$ on $v'=V\big(
   \glssymbol{not:sgst:aggregate} (S,(0,0),\glssymbol{not:sgst:fagg} )
   \big)$ i $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times (t,v)
@@ -922,9 +923,19 @@ Propietats de les operacions computacionals:
 \item $\operatorname{sup}: S \mapsto m'$ on $m'=
   \glssymbol{not:sgst:aggregate}(S,(-\infty,\infty),\glssymbol{not:sgst:fagg}
   )$ i $\glssymbol{not:sgst:fagg}: (t^i,v^i)\times(t,v) \mapsto \big(
-  (t^i,v^i) \text{ si } t < t^i, \text{ o } (t,v) \text{ en cas contrari}\big)  $. Aquesta
-  funció és una implementació de l'operació suprem de la
-  \autoref{def:sgst:sup} a partir de l'agregació.
+  (t^i,v^i) \text{ si } t < t^i, \text{ o } (t,v) \text{ en cas
+    contrari}\big) $. Aquesta funció és una implementació de
+  l'operació suprem de la \autoref{def:sgst:sup} a partir de
+  l'agregació.
+
+\item $\glssymbolex{not:sgst:maxv}: S \mapsto v'$ on $v'= V\big(
+  \glssymbol{not:sgst:aggregate}
+  (S,(0,-\infty),\glssymbol{not:sgst:fagg} ) \big)$ i
+  $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times (t,v)
+  \mapsto(t^i,\max(v,v^i))$. A diferència del $\sup(S)$ o del
+  $\max(S)$, el $\glssymbol{not:sgst:maxv}(S)$ calcula el màxim dels
+  valors.
+
 
 %Encara no s'ha definit ant, per tant no es pot fer l'exemple
 % \item $\operatorname{ant}: S \times m \mapsto m'$ on $m'=

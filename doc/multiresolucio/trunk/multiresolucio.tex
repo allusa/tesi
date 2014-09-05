@@ -22,6 +22,9 @@ Aquesta funció de multiresolució ens permetrà:
 \end{itemize}
 
 
+
+
+
 \section{Funció de multiresolució}
 \label{sec:multiresolucio:funcio}
 
@@ -666,19 +669,20 @@ aproximades.
 
 \section{Informació en la multiresolució}
 
-\todo{} 
-En aquesta secció descrivim el problema d'identificar la
-informació que selecciona un esquema de multiresolució i per tant
-també observar la que no queda emmagatzemada i es perd.  Així doncs,
-els \gls{SGSTM} són un sistemes que emmagatzemen les dades comprimides
-amb pèrdua d'una certa part de la informació original.
+En aquesta secció descrivim el problema d'identificar la informació
+que selecciona un esquema de multiresolució i per tant també
+d'observar quina informació no queda emmagatzemada i es perd.  En
+aquest context, els \gls{SGSTM} són un sistemes que emmagatzemen les
+dades comprimides amb pèrdua d'una certa part de la informació
+original.
 
 
 \begin{itemize}
 \item Primer, descrivim la teoria de la informació que està
   relacionada amb la quantificació de la informació.
 \item Segon, definim el problema de calcular l'error en la multiresolució.
-\item Tercer, alguns exemples?
+\item Tercer, mostrem exemples d'anàlisi de la informació per alguns
+  esquemes de multiresolució.
 \end{itemize}
 
 
@@ -841,24 +845,153 @@ A continuació mostrem alguns exemples per tal de quantificar la
 selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
 
 
-\begin{example}[Mateixa consulta i funció d'agregació d'atributs]
-  Sigui $S=\{m0,\dotsc,m_k\}$ una sèrie temporal i $e= \{ (\delta_0,
-  f_0, \tau_0, k_0) \}$ un esquema de multiresolució amb una sola
-  subsèrie resolució, suposem $k_0=\infty$ per tal de menysprear-ne
-  l'efecte i $\tau_0=T(min(S))$. Obtenim la sèrie temporal resultant
-  d'aplicar la funció de multiresolució
+\begin{example}[Mateixa consulta i funció d'agregació d'atributs per a
+  tota la sèrie temporal]
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, on $m_k=(t_k,v_k)$,
+  i $e= \{ (\delta_0, f_0, \tau_0, k_0) \}$ un esquema de
+  multiresolució amb una sola subsèrie resolució, suposem $k_0=\infty$
+  per tal de menysprear-ne l'efecte i $\tau_0=T(\min(S))$. Obtenim la
+  sèrie temporal resultant d'aplicar la funció de multiresolució
   $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$.  Així, aquesta sèrie
   temporal resultant contindrà mesures calculades a partir de
   l'agregació de $S$ en els intervals definits per $\tau_0$ i
-  $\delta_0$ $S'=\{ f(S,[\tau_0,\tau_0+\delta_0],
-  f(S,[\tau_0+\delta_0)\dotsc f(S,\tau_0+2\delta_0])\dotsc \}$.
+  $\delta_0$ i tindrà la forma $S'=\{ f_0(S,[\tau_0,\tau_0+\delta_0],
+  f_0(S,[\tau_0+\delta_0,\tau_0+2\delta_0]),\dotsc,
+  f_0(S,[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0])\}$ on
+  $\tau_0+M\delta\geq T(\max(S))$ i $M\in\glssymbol{not:N}$. Si
+  escrivim de forma genèrica $v_0,\dotsc,v_{i_1}$ els valors originals
+  usats en l'agregació del primer interval
+  $f_0(S,[\tau_0,\tau_0+\delta_0]$, $v_{i_1+1},\dotsc,v_{i_2}$ els del
+  segon interval, etc. aleshores podem expressar $S'=\{
+  (\tau_0+\delta_0, f'(v_0,\dotsc,v_{i_1})), (\tau_0+2\delta_0,
+  f'(v_{i_1+1},\dotsc,v_{i_2})), \dotsc, ((\tau_0+M\delta_0 ,f'(v_{i_M},
+  \dotsc, v_k)) \}$ on $f'$ és l'aplicació corresponent de l'atribut
+  que resumeix $f_0$.
 
   Apliquem un operador de consulta $o$ a les dues sèries temporals,
-  $r_1=o(S,[-\infty,\infty])$ i $r_2=o(S',[-\infty,\infty])$, que és
-  la mateixa funció d'agregació d'atributs de la multiresolució
-  $o=f_0$. Analitzem els efectes segons diferents funcions d'agregació
-  d'atributs: mitjana, màxim i total.
+  $r_1=o(S)$ i $r_2=o(S')$, que és la mateixa funció d'agregació
+  d'atributs de l'esquema multiresolució però aplicat a tots els
+  valors de la sèrie temporal,
+  $o(S)=V(f(S,[-\infty,\infty]))$. Analitzem els efectes segons dues
+  funcions d'agregació d'atributs:
 
+  \begin{itemize}
+  \item Màxim: $f_0=\glssymbol{not:sgstm:maxdd}$, segons definit al
+    model de \gls{SGSTM}, el qual si menyspreem l'atribut de temps es
+    correspon a aplicar l'agregació $o=\glssymbol{not:sgst:maxv}$,
+    segons definit al model de \gls{SGST}, i per tant a calcular
+    l'atribut $f'=\max$ dels valors.
+
+    Si $S=\{m_0,\dotsc,m_k\}$ on $m_k=(t_k,v_k)$ aleshores
+    $r_1=o(S)=\max(v_0,\dotsc, v_k)$. En canvi $S'=\{
+    (\tau_0+\delta_0, \max(v_0,\dotsc,v_{i_1})),
+    (\tau_0+2\delta_0,\max(v_{i_1+1},\dotsc,v_{i_2})), \dotsc,
+    (\tau_0+M\delta_0,\max(v_{i_M}, \dotsc, v_k)) \}$ i aleshores
+    $r_2=o(S')= \max\big( \max(v_0,\dotsc,v_{i_1}),
+    \max(v_{i_1+1},\dotsc,v_{i_2}), \dotsc, \max(v_{i_M}, \dotsc v_k)
+    \big)$.
+
+    Podem concloure que en aquest cas $r_1=r_2$, i per tant
+    $\epsilon=d(r_1,r_2)=0$ , perquè $\max(v_0,\dotsc, v_k) =
+    \max\big( \max(v_0,\dotsc,v_{i_1}),
+    \max(v_{i_1+1},\dotsc,v_{i_2}), \dotsc, \max(v_{i_M}, \dotsc v_k)
+    \big)$ i $\max$ és una funció associativa: $\max(a,b,c,d,e) = \max(
+    \max(a,b), \max(c,d,e))$.
+
+    En aquest exemple hem menyspreat els temps resultants de
+    l'agregació. És a dir, $r_1$ és correspon amb una o més d'una
+    mesura $m_a\in S: V(m_a)=r_1$ i de la mateixa manera $m_b\in S':
+    V(m_b)=r_2$ on hem conclòs que $V(m_a)=V(m_b)$. Això no obstant,
+    en general els temps d'aquestes mesures no es correspondran,
+    $T(m_a)\neq T(m_b)$ perquè $f_0=\glssymbol{not:sgstm:maxdd}$
+    resumeix els atributs de temps segons l'interval de consolidació i
+    al marge del resum de la informació en els valors.
+
+
+
+\item   Mitjana aritmètica:
+  $f_0=\glssymbol{not:sgstm:mitjanadd}$\todo{NOOOO} la mitjanadd
+  divideix per tf-t0, cal una mitjana que divideixi pel
+  cardinal!!!!!\todo{noo: ha de ser la mitjanaParcial el que de moment
+    es diu mitjana aritmètica$^d$}, segons definit al model de
+  \gls{SGSTM}, el qual si menyspreem l'atribut de temps es correspon a
+  aplicar l'agregació $o=\glssymbol{not:sgst:mitjanav}$, segons
+  definit al model de \gls{SGST}, i per tant a calcular l'atribut
+  $f'=\operatorname{mitjana}$ (aritmètica) dels valors.
+
+    De manera similar al cas anterior, els resultats són
+    $r_1=\operatorname{mitjana}(v_0,\dotsc, v_k)$ i
+    $r_2=\operatorname{mitjana}\big(
+    \operatorname{mitjana}(v_0,\dotsc,v_{i_1}),
+    \operatorname{mitjana}(v_{i_1+1},\dotsc,v_{i_2}), \dotsc,
+    \operatorname{mitjana}(v_{i_M}, \dotsc v_k) \big)$.  Però en
+    aquest cas hem de concloure que $\epsilon=d(r_1,r_2)\geq 0$ perquè
+    la mitjana no és una funció associativa:
+    $\operatorname{mitjana}(a,b,c,d,e) \neq \operatorname{mitjana}(
+    \operatorname{mitjana}(a,b), \operatorname{mitjana}(c,d,e))$.
+ 
+
+
+ \item Total: 
+
+\todo{és més simple fer el cas amb la suma que amb la mitjana de la funció}
+
+
+  \item Mitjana de la funció:
+    $f_0=\operatorname{mitjana}^c$\todo{operador no declarat a la
+      taula}, segons definit al model de \gls{SGSTM}, el qual si
+    menyspreem l'atribut de temps es correspon a calcular la mitjana
+    de la funció de representació de la sèrie temporal $\frac{1}{b-a}
+    \int_{a}^{b} S(t)dt$ en l'interval tancat $[a,b]$.
+
+    Sigui $t_M=T(\max(S)$ i $t_m=T(\min(S))$ i $S'= \{
+    (\tau_0+\delta_0, \frac{1}{\delta_0}
+    \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt), (\tau_0+2\delta_0,
+    \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S(t) dt), \dotsc,
+    (\tau_0+M\delta_0, \frac{1}{\delta_0}
+    \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0} S(t) dt \}$, on
+    s'ha aplicat $\delta_0= (\tau_0+\delta_0)-(\tau_0)=\dotsb=
+    (\tau_0+M\delta_0)-(\tau_0+(M-1)\delta_0)$.  Els resultats que cal
+    calcular són $r_1=\frac{1}{t_M-t_m} \int_{t_m}^{t_M} S(t)dt$ i
+    $r_2 = \frac{1}{t_M-t_m} \int_{t_m}^{t_M} S'(t)$.
+
+    Si suposem $\tau_0=t_m$ i $\tau_0+M\delta_0=t_M$ aleshores
+    $\int_{t_m}^{t_M} S'(t) = \int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt + \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S'(t) dt + \dotsb + \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0}
+    S'(t) dt$.  
+    
+    Si resolem per exemple el primer interval de consolidació: $
+    \int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt = \delta_0V(m'_0) =
+    \delta_0 \frac{ \int_{\tau_0}^{\tau_0+\delta_0} S(t)
+      dt}{\delta_0}$ on $m'_0$ és la mesura corresponent a la
+    consolidació en el primer interval. Així doncs
+    $\int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt =
+    \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt$, de fet és la propietat
+    que resumeix la mitjana de la funció, i per tant podem estendre-ho
+    a $\int_{t_m}^{t_M} S'(t)= \int_{t_m}^{t_M} S(t)$. Podem
+    concloure, doncs, que $r_1=r_2$.
+
+
+
+  \end{itemize}
+
+$\square$
+\end{example}
+
+
+
+
+\begin{example}[Consultes amb subresolucions]
+\label{ex:multireoslucio:informacio-subresolucions}
+\todo{}
+
+Ara o no s'aplica a $S[-infty,infty]$ sinó a $S[t_a,t_b]$. Ens quins
+casos és cert?  De la multiresolució jo sé que és cert en els
+intervals consolidats $[i_0,i_1]$. Per tant si $t_a,t_b$ és múltiple
+dels intervals consolidats perfecte. Sinó cometo error. En el cas de
+totals el puc quantificar: per exemple si $t_a=i_0$ i $t_b < i_1$,
+aleshores l'error màxim que puc cometre és el que hi ha mesurat a
+l'interval $[i_0,i_1]$; és a dir que en els pitjors del casos tota la
+mesura hauria ocorregut després de $t_b$. En el cas del màxim, ves a saber.
 
 
 
@@ -867,21 +1000,89 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
 
 
 
-% \subsubsection{Multiresolució sense pèrdua}
+
+\begin{example}[Mitjana per a una sèrie temporal regular]
+\todo{}
+
+* la mitjana sí que és associativa en el cas que la sèrie temporal sigui regular
+ : no n'hi ha prou amb ser regular, s'ha de complir quelcom més per exemple que $\delta$ sigui múltiple del període de temps regular. En realitat volem que es compleixi $|S[\tau_0,\tau_0+\delta_0]|=|S[\tau_0+\delta_0,\tau_0+2\delta_0]|=\dotsb = |S[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0]|$
+
+\end{example}
 
 
-% Per exemple calcular la mitjana d'una sèrie temporal i calcular la mitjana d'una sèrie temporal multireoslució que tingui un esquema amb agregadors de mitjana de funció, és el mateix? Si hi han dades conegudes per a tot l'interval.
 
-% agregador $fmean = \frac{1}{t_f-t_0}\int s(t)$
 
-% Per tant $fmean(s)$ hauria de ser igual a $fmean(multiresolution(s))$ perquè $multiresolution(s)= \frac{1}{\delta}\int s[\tau,\tau+\delta]+\frac{1}{\delta}\int s[\tau+\delta,\tau+2\delta]+\dots$ i per tant 
 
-% \[
-% fmean(multiresolution(s)) =  \frac{1}{t_f-t_0}\int\right[\frac{1}{\delta}\int s[\tau,\tau+\delta]+\frac{1}{\delta}\int s[\tau+\delta,\tau+2\delta]+\dots \left]
-% \]
-% \[
-%  =  \frac{1}{t_f-t_0}\frac{\delta}{\delta}\right[\int s[\tau,\tau+\delta]+\int s[\tau+\delta,\tau+2\delta]+\dots \left] =  \frac{1}{t_f-t_0} \int s[t_0,t_f]
-% \]
+
+
+\begin{example}[Aplicació de la conservació de la mitjana de la funció
+  en comptadors]
+
+  Aquest exemple prové d'una reflexió acurada de per què RRDtool té
+  com a referent els comptadors.
+
+  Un comptador monòton creixent és un aparell que mesura l'energia en
+  un determinat interval de temps. Entre dues lectures successives del
+  comptador la mesura de l'energia és exacte, dins de la precisió del
+  comptador, a diferència d'un aparell que mesuri potència instantània
+  del qual només es pot deduir l'energia exacta si es considera que el
+  senyal es pot reconstruir: per exemple compleix Nyquist tot i que a
+  la pràctica és complicat conèixer la freqüència de les variables
+  mesurades atès que solen ser aleatòries. A la inversa, a partir de
+  la mesura de l'energia només es pot deduir la potència instantània
+  exacta si es considera que el senyal es pot reconstruir.
+
+  En resum, sigui $E(t)$ l'energia d'un senyal i $P(t)$ la potència
+  instantània del senyal, es compleix la relació $E(t)=\int P(t)
+  dt$. Sigui $[t_a,t_b]$ un interval de temps, un comptador mesura
+  exactament el valor de $\int_{t_a}^{t_b} P(t)$. En canvi, un aparell
+  de mesura de potència instantània es capaç de mesurar exactament
+  $P(t_a)$ i $P(t_b)$. Ara bé, a partir del comptador no es poden deduir
+  exactament $P(t_a)$ i $P(t_b)$ i a partir de la mesura de la
+  potència instantània no es poden deduir exactament $\int_{t_a}^{t_b}
+  P(t)$. Tampoc a partir del comptador es poden deduir exactament
+  energies que no s'han mesurat, per exemple ni
+  $\int_{(t_a+t_b)/2}^{t_b} P(t)$ ni $\int_{(t_a+t_b)/2}^{t_c} P(t)$
+  on sigui $[t_b,t_c]$ un interval de temps mesurat; ara bé sí que
+  serà exacte el càlcul $\int_{t_a}^{t_b} P(t)+\int_{t_b}^{t_c} P(t)$.
+  
+  No totes les variables físiques són susceptibles de
+  ser mesurades amb un comptador. Els comptadors es poden aplicar per
+  exemple per a mesurar energia elèctrica, persones que entren en un
+  edifici, etc. 
+  
+
+  La multiresolució és capaç de conservar aquesta exactitud del
+  comptatge total. 
+  El comptatge total es pot conservar amb una multiresolució amb
+  funcions d'agregació per atributs de suma o bé per atributs de
+  mitjana de la funció. Aquests darrers són els que permeten a més
+  expressar la sèrie temporal resultant de la multiresolució de forma
+  més coherent amb l'original (vegeu secció de naturalesa de comptadors \todo{ref}).
+
+  La multiresolució, però, no pot conservar la resolució del
+  comptatge.  Com s'ha exposat a
+  l'\autoref{ex:multireoslucio:informacio-subresolucions} de
+  subresolucions\todo{nom?}, en consultes en què el període no es
+  correspongui amb les resolucions emmagatzemades, els totals no seran
+  els correctes que s'obtindrien de calcular amb les dades originals.
+  De fet, és el mateix problema que hem exposat que a partir d'un
+  comptador no es poden deduir exactament energies que no s'han
+  mesurat.
+
+
+  \todo{falten algunes imatges d'acompanyament}
+
+\end{example}
+
+
+
+
+
+\todo{}
+* analitzar casos on és el mateix aplicar un agregador que un altre: per exemple la mitjana i l'àrea quan la sèrie temporal és regular
+
+
 
 % \subsubsection{Exemple2}
 
