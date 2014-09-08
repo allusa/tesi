@@ -11,14 +11,19 @@ d'aplicar-li un esquema de multiresolució.
 Aquesta funció de multiresolució ens permetrà:
 
 \begin{itemize}
+
 \item Plantejar problemes on veiem la multiresolució com una consulta
   sobre una sèrie temporal; és a dir com una operació per calcular
   parelles d'agregació d'atributs i resolucions temporals per a una
   sèrie temporal.
+
 \item Oferir sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
   de consulta multiresolució.
+
 \item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
+
 \item Estudiar la teoria de la informació per a l'esquema de multiresolució
+
 \end{itemize}
 
 
@@ -950,40 +955,6 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
     
 
 
-  \item Mitjana de la funció:
-    $f_0=\operatorname{mitjana}^c$\todo{operador no declarat a la
-      taula}, segons definit al model de \gls{SGSTM}, el qual si
-    menyspreem l'atribut de temps es correspon a calcular la mitjana
-    de la funció de representació de la sèrie temporal $\frac{1}{b-a}
-    \int_{a}^{b} S(t)dt$ en l'interval tancat $[a,b]$.
-
-    Sigui $t_M=T(\max(S)$ i $t_m=T(\min(S))$ i $S'= \{
-    (\tau_0+\delta_0, \frac{1}{\delta_0}
-    \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt), (\tau_0+2\delta_0,
-    \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S(t) dt), \dotsc,
-    (\tau_0+M\delta_0, \frac{1}{\delta_0}
-    \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0} S(t) dt \}$, on
-    s'ha aplicat $\delta_0= (\tau_0+\delta_0)-(\tau_0)=\dotsb=
-    (\tau_0+M\delta_0)-(\tau_0+(M-1)\delta_0)$.  Els resultats que cal
-    calcular són $r_1=\frac{1}{t_M-t_m} \int_{t_m}^{t_M} S(t)dt$ i
-    $r_2 = \frac{1}{t_M-t_m} \int_{t_m}^{t_M} S'(t)$.
-
-    Si suposem $\tau_0=t_m$ i $\tau_0+M\delta_0=t_M$ aleshores
-    $\int_{t_m}^{t_M} S'(t) = \int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt + \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S'(t) dt + \dotsb + \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0}
-    S'(t) dt$.  
-    
-    Si resolem per exemple el primer interval de consolidació: $
-    \int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt = \delta_0V(m'_0) =
-    \delta_0 \frac{ \int_{\tau_0}^{\tau_0+\delta_0} S(t)
-      dt}{\delta_0}$ on $m'_0$ és la mesura corresponent a la
-    consolidació en el primer interval. Així doncs
-    $\int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt =
-    \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt$, de fet és la propietat
-    que resumeix la mitjana de la funció, i per tant podem estendre-ho
-    a $\int_{t_m}^{t_M} S'(t)= \int_{t_m}^{t_M} S(t)$. Podem
-    concloure, doncs, que $r_1=r_2$.
-
-
 
   \end{itemize}
 
@@ -1062,7 +1033,71 @@ $n,l\in\glssymbol{not:N}$, i quan no ho és:
   \{(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ),(\tau_0+2\delta ,
   f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})), \dotsc \}$ on els
   valors s'anoten com a l'\autoref{ex:multiresolucio:f=op} i $v_b$
-  assenyala una possible mesura en l'instant $t_b$.
+  assenyala una possible mesura en l'instant $t_b$.  A la
+  \autoref{fig:multiresolucio:informacio-subresolucions} es mostra els
+  instants de temps i els valors d'aquest exemple, l'interval
+  temporal $[t_a,t_b]$ de la consulta i l'interval temporal
+  $[t_b,\tau_0+2\delta_0]$ que mostra l'error en la consulta a partir
+  de la informació emmagatzemada a la multiresolució.
+
+
+\begin{figure}[tp]
+  \centering
+     \begin{tikzpicture}
+        \begin{axis}[
+          ymin = 0,
+          yticklabels= {},
+          xticklabels={,,$\underset{t_a}{\tau_0}$,,$\tau_0+\delta$,$t_b$,$\tau_0+2\delta$},
+          ]
+          \addplot[ycomb,blue] coordinates {
+            (20,10)
+            (30,10)
+            (40,10)
+          }; 
+          
+ 
+          \addplot[
+          ybar interval, 
+          fill=green!25,
+          fill opacity=0.5,
+          draw=none,
+          ] plot coordinates
+          {(20,7)(35,7)};
+
+          \addplot[
+          ybar interval, 
+          fill=orange!75,
+          fill opacity=0.5,
+          draw=none,
+          ] plot coordinates
+          {(35,7)(40,7)};
+
+
+          \addplot[red,mark=*,only marks] coordinates {
+            (20,2)
+            (30,2)
+            (35,2)
+            (40,2)
+          }; 
+
+
+          \node[right] at (axis cs:37,5) {$\epsilon$};
+
+          \node[right] at (axis cs:20,3) {$v_{i0}$};
+          \node[right] at (axis cs:30,3) {$v_{i1}$};
+          \node[right] at (axis cs:30,4) {$v_{i1+1}$};
+          \node[right] at (axis cs:35,3) {$v_{b}$};
+          \node[left] at (axis cs:40,3) {$v_{i2}$};
+        \end{axis}
+      \end{tikzpicture}
+
+      \caption{Sèrie temporal amb la consulta desitjada (verd) i l'error de la
+        informació no coneguda (taronja)}
+  \label{fig:multiresolucio:informacio-subresolucions}
+\end{figure}
+
+
+
 
   Cal tenir en compte que $f_0(S',[t_a,t_b])$ ha de resoldre la
   selecció en l'interval: a) amb una selecció d'interval
@@ -1075,7 +1110,7 @@ $n,l\in\glssymbol{not:N}$, i quan no ho és:
   (t_b, f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})) )$.
 
 
-  Així, per a estudiar $d(r_1,r_2)$ s'ha d'analitzar
+  Així, per a estudiar $\epsilon=d(r_1,r_2)$ s'ha d'analitzar
   $r_1=f'(v_{i_0},\dotsc,v_{i_1},\dotsc, v_{i_1+1},\dotsc,v_{b})$ i,
   depenent de la selecció, a) $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}))$, b)
   $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})))$,
@@ -1088,41 +1123,48 @@ $n,l\in\glssymbol{not:N}$, i quan no ho és:
   0$ quan l'interval consultat no és múltiple de la resolució
   emmagatzemada, tret que coneguéssim exactament el comportament de la
   sèrie temporal i poguéssim determinar la funció de representació que complís 
-  $ f'(v_{i_1+1},\dotsc,v_{b}) = f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.
+  $ f'(v_{i_1+1},\dotsc,v_{b}) = f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$.
 \end{itemize}
 
 
+Així doncs, hi haurà un cert error en el cas que els intervals
+consultats no siguin múltiples de la multiresolució emmagatzemada:
+seguint l'exemple, caldria calcular $f'(v_{i_1+1},\dotsc,v_{b})$ però
+la informació que hi ha emmagatzemada per a aquest interval és
+$f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$. Estudiem dos dels
+atributs descrits a l'\autoref{ex:multiresolucio:f=op} per tal
+d'avaluar si és possible afitar-ne error en aquests casos:
+
+\begin{itemize}
+
+\item Màxim. Cal calcular $\max(v_{i_1+1},\dotsc,v_{b})$ però hi ha
+  emmagatzemat $\max(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.  Per
+  tant l'error en la consulta és $\epsilon=d(r_1,r_2)=
+  d(\max(v_{i_1+1},\dotsc,v_{b}),\max(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$. Si
+  el màxim es troba a $[t_a+\delta_0,t_b]$ l'error és nul però si hi
+  ha un màxim a $[t_b,t_a+2\delta_0]$ aleshores l'error és
+  $\epsilon=d(\max(v_{i_1+1},\dotsc,v_{b}),\max(v_{b},\dotsc,v_{i_2}))$,
+  el qual no és fitable.
+  
+\item Total: Cal calcular $\sum(v_{i_1+1},\dotsc,v_{b})$ però hi ha
+  emmagatzemat $\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$. Per tant
+  l'error en la consulta és $\epsilon=d(r_1,r_2)=d(
+  \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}),\sum(v_{i_1+1},\dotsc,v_{b}))
+  = \sum(v_{b+1},\dotsc,v_{i_2})$. Però $\sum(v_{b+1},\dotsc,v_{i_2})$
+  no és un valor emmagatzemat a la multiresolució i per tant no es pot
+  saber l'error. Això no obstant, en el cas del total té sentit
+  plantejar el cas que la variable mesurada és monòtona creixent
+  (v.~\autoref{ex:multiresolucio:comptadors}): aleshores es compleix
+  que $\sum(v_{i_1+1},\dotsc,v_{b}) \leq
+  \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$ i per tant es pot fitar
+  l'error $\epsilon=d(r_1,r_2) = \sum(v_{b+1},\dotsc,v_{i_2}) \leq  
+  \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$; és a dir com a màxim
+  es cometria un error del valor consolidat a $\tau_0+2\delta$ que
+  significaria que en els pitjors del casos tota la mesura hauria
+  ocorregut després de $t_b$.
 
 
-
-\todo{} Podem intentar afitar l'error en el cas dels intervals no
-múltiples?  En resum el problema és: caldria calcular $f'(v_{i_1+1},\dotsc,v_{b})$
-però la informació que hi ha emmagatzemada per a aquest interval és
-$f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.
-
-Cas del màxim: $\max(v_{i_1+1},\dotsc,v_{b})$ i
-$\max(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$; per tant si el màxim no
-es troba a $[t_a+\delta,t_b]$ aleshores no es pot afitar l'error
-perquè $\max(\dotsc,v_{b},\dotsc,v_{i_2})$ ves a saber.
-
-$\epsilon=d(r_1,r_2)= \max(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}) -
-\max(v_{i_1+1},\dotsc,v_{b})$ que no és fitable.
-
-
-Cas del total: $\sum(v_{i_1+1},\dotsc,v_{b})$ i
-$\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.  Aleshores
-$\epsilon=d(r_1,r_2)= \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}) -
-\sum(v_{i_1+1},\dotsc,v_{b}) = \sum(v_{b+1},\dotsc,v_{i_2}$.  En
-aquest cas tampoc és fitable. Però si la variable mesurada fos
-monòtona creixent, per exemple un comptador monòton creixent,
-aleshores $0\leq \sum(v_{i_1+1},\dotsc,v_{b}) \leq
-\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.  I per tant com a màxim
-es cometria un error de $\epsilon=d(r_1,r_2)\leq
-\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$; és a dir del valor
-consolidat a $\tau_0+2\delta$ que significaria que en els pitjors del
-casos tota la mesura hauria ocorregut després de $t_b$.
-
-
+\end{itemize}
 
 
 
@@ -1141,6 +1183,7 @@ casos tota la mesura hauria ocorregut després de $t_b$.
 
 \begin{example}[Aplicació de la conservació de la mitjana de la funció
   en comptadors]
+  \label{ex:multiresolucio:comptadors}
 
   Aquest exemple prové d'una reflexió acurada de per què RRDtool té
   com a referent els comptadors.
@@ -1148,13 +1191,14 @@ casos tota la mesura hauria ocorregut després de $t_b$.
   Un comptador monòton creixent és un aparell que mesura l'energia en
   un determinat interval de temps. Entre dues lectures successives del
   comptador la mesura de l'energia és exacte, dins de la precisió del
-  comptador, a diferència d'un aparell que mesuri potència instantània
-  del qual només es pot deduir l'energia exacta si es considera que el
-  senyal es pot reconstruir: per exemple compleix Nyquist tot i que a
-  la pràctica és complicat conèixer la freqüència de les variables
-  mesurades atès que solen ser aleatòries. A la inversa, a partir de
-  la mesura de l'energia només es pot deduir la potència instantània
-  exacta si es considera que el senyal es pot reconstruir.
+  comptador, a diferència d'un aparell que mesuri potència
+  instantània, per exemple el flux d'una variable, del qual només es
+  pot deduir l'energia exacta si es considera que el senyal es pot
+  reconstruir: per exemple compleix Nyquist tot i que a la pràctica és
+  complicat conèixer la freqüència de les variables mesurades atès que
+  solen ser aleatòries. A la inversa, a partir de la mesura de
+  l'energia només es pot deduir la potència instantània exacta si es
+  considera que el senyal es pot reconstruir.
 
   En resum, sigui $E(t)$ l'energia d'un senyal i $P(t)$ la potència
   instantània del senyal, es compleix la relació $E(t)=\int P(t)
@@ -1177,12 +1221,123 @@ casos tota la mesura hauria ocorregut després de $t_b$.
   
 
   La multiresolució és capaç de conservar aquesta exactitud del
-  comptatge total. 
-  El comptatge total es pot conservar amb una multiresolució amb
-  funcions d'agregació per atributs de suma o bé per atributs de
-  mitjana de la funció. Aquests darrers són els que permeten a més
-  expressar la sèrie temporal resultant de la multiresolució de forma
-  més coherent amb l'original (vegeu secció de naturalesa de comptadors \todo{ref}).
+  comptatge total.  El comptatge total es pot conservar amb una
+  multiresolució amb funcions d'agregació per atributs de suma de
+  totals o bé per atributs de mitjana de la funció. Aquests darrers
+  són els que permeten a més expressar la sèrie temporal resultant de
+  la multiresolució de forma més coherent amb l'original (vegeu secció
+  de naturalesa de comptadors \todo{ref}). Reprenent
+  l'\autoref{ex:multiresolucio:f=op}, avaluem els atributs de mitjana
+  de la funció:
+  
+  \begin{itemize}
+
+  \item Mitjana de la funció:
+    $f_0=\operatorname{mitjana}^c$\todo{operador no declarat a la
+      taula}, segons definit al model de \gls{SGSTM}, el qual si
+    menyspreem l'atribut de temps es correspon a calcular la mitjana
+    de la funció de representació de la sèrie temporal $\frac{1}{b-a}
+    \int_{a}^{b} S(t)dt$ en l'interval tancat $[a,b]$.
+
+    Sigui $t_M=T(\max(S)$ i $t_m=T(\min(S))$ i $S'= \{
+    (\tau_0+\delta_0, \frac{1}{\delta_0}
+    \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt), (\tau_0+2\delta_0,
+    \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S(t) dt), \dotsc,
+    (\tau_0+M\delta_0, \frac{1}{\delta_0}
+    \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0} S(t) dt \}$, on
+    s'ha aplicat $\delta_0= (\tau_0+\delta_0)-(\tau_0)=\dotsb=
+    (\tau_0+M\delta_0)-(\tau_0+(M-1)\delta_0)$.  Els resultats que cal
+    calcular són $r_1=\frac{1}{t_M-t_m} \int_{t_m}^{t_M} S(t)dt$ i
+    $r_2 = \frac{1}{t_M-t_m} \int_{t_m}^{t_M} S'(t)$.
+
+    Si suposem $\tau_0=t_m$ i $\tau_0+M\delta_0=t_M$ aleshores
+    $\int_{t_m}^{t_M} S'(t) = \int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt + \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S'(t) dt + \dotsb + \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0}
+    S'(t) dt$.  
+    
+    Si resolem per exemple el primer interval de consolidació: $
+    \int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt = \delta_0V(m'_0) =
+    \delta_0 \frac{ \int_{\tau_0}^{\tau_0+\delta_0} S(t)
+      dt}{\delta_0}$ on $m'_0$ és la mesura corresponent a la
+    consolidació en el primer interval. Així doncs
+    $\int_{\tau_0}^{\tau_0+\delta_0} S'(t) dt =
+    \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt$, de fet és la propietat
+    que resumeix la mitjana de la funció, i per tant podem estendre-ho
+    a $\int_{t_m}^{t_M} S'(t)= \int_{t_m}^{t_M} S(t)$. Podem
+    concloure, doncs, que $r_1=r_2$.
+
+
+    A la \autoref{fig:multiresolucio:comptador} es mostra un exemple
+    amb valors concrets on $S=\{ (1,4),(2,2),(3,6),(4,4)\}$, l'esquema
+    de multiresolució és
+    $e=\{\delta_0=2,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0,k_0=\infty
+    \}$,així la sèrie resultant de la consulta multiresolució
+    és $S'=\{ (2,3),(4,5)\}$, i les sèries temporals es representen amb
+    representació \gls{zohe}.
+
+
+\begin{figure}[tp]
+  \centering
+
+
+     \begin{tikzpicture}
+        \begin{axis}[
+          width=0.5*\textwidth,
+          title=$S$,
+          ymin = 0,
+          ]
+          \addplot[
+          ybar interval, 
+          ] plot coordinates
+          {(0,4)(1,2)(2,6)(3,4)(4,4)};
+
+
+    \node at (axis cs:0.5,2) {$4$};
+    \node at (axis cs:1.5,1) {$2$};
+    \node at (axis cs:2.5,3) {$6$};
+    \node at (axis cs:3.5,2) {$4$};
+
+
+     \end{axis}
+      \end{tikzpicture}\qquad
+     \begin{tikzpicture}
+        \begin{axis}[
+          width=0.5*\textwidth,
+          title=$S'$,
+          ymin = 0,
+          ymax=6,
+          ]
+
+          \addplot[
+          ybar interval, 
+          ] plot coordinates
+          {(0,3)(2,5)(4,5)};
+
+    \node at (axis cs:1,1.5) {$6$};
+    \node at (axis cs:3,2.5) {$10$};
+
+
+     \end{axis}
+      \end{tikzpicture}
+
+
+      \caption{Sèrie temporal amb àrea sota la corba i sèrie temporal
+        resultant de la multiresolució amb agregació mitjana de la
+        funció}
+  \label{fig:multiresolucio:comptador}
+\end{figure}
+
+
+
+
+
+
+  \end{itemize}
+  
+
+
+
+
+
 
   La multiresolució, però, no pot conservar la resolució del
   comptatge.  Com s'ha exposat a
@@ -1194,18 +1349,16 @@ casos tota la mesura hauria ocorregut després de $t_b$.
   exactament energies que no s'han mesurat.
 
 
-  \todo{falten algunes imatges d'acompanyament}
-
 \end{example}
 
 
-
+\begin{example}
 
 
 \todo{}
 * analitzar casos on és el mateix aplicar un agregador que un altre: per exemple la mitjana i l'àrea quan la sèrie temporal és regular
 
-
+\end{example}
 
 % \subsubsection{Exemple2}
 
