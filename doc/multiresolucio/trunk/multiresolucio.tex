@@ -847,6 +847,7 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
 
 \begin{example}[Mateixa consulta i funció d'agregació d'atributs per a
   tota la sèrie temporal]
+  \label{ex:multiresolucio:f=op}
   Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, on $m_k=(t_k,v_k)$,
   i $e= \{ (\delta_0, f_0, \tau_0, k_0) \}$ un esquema de
   multiresolució amb una sola subsèrie resolució, suposem $k_0=\infty$
@@ -861,7 +862,7 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
   $\tau_0+M\delta\geq T(\max(S))$ i $M\in\glssymbol{not:N}$. Si
   escrivim de forma genèrica $v_0,\dotsc,v_{i_1}$ els valors originals
   usats en l'agregació del primer interval
-  $f_0(S,[\tau_0,\tau_0+\delta_0]$, $v_{i_1+1},\dotsc,v_{i_2}$ els del
+  $f_0(S,[\tau_0,\tau_0+\delta_0])$, $v_{i_1+1},\dotsc,v_{i_2}$ els del
   segon interval, etc. aleshores podem expressar $S'=\{
   (\tau_0+\delta_0, f'(v_0,\dotsc,v_{i_1})), (\tau_0+2\delta_0,
   f'(v_{i_1+1},\dotsc,v_{i_2})), \dotsc, ((\tau_0+M\delta_0 ,f'(v_{i_M},
@@ -872,7 +873,7 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
   $r_1=o(S)$ i $r_2=o(S')$, que és la mateixa funció d'agregació
   d'atributs de l'esquema multiresolució però aplicat a tots els
   valors de la sèrie temporal,
-  $o(S)=V(f(S,[-\infty,\infty]))$. Analitzem els efectes segons dues
+  $o(S)=V(f_0(S,[-\infty,\infty]))$. Analitzem els efectes segons dues
   funcions d'agregació d'atributs:
 
   \begin{itemize}
@@ -932,9 +933,21 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
  
 
 
- \item Total: 
+  \item Total: definim una funció d'agregació d'atributs
+    $f_0=\operatorname{total}$ que, menyspreant l'atribut de temps,
+    resumeix la sèrie temporal amb la suma dels valors:
+    $\operatorname{total}: S \times [t_a,t_b] \mapsto m'$ i $V(m') =
+    \sum\limits_{\forall m\in S(t_a,t_b]} V(m)$. Així doncs, es
+    correspon a calcular $o=\glssymbol{not:sgst:sumav}$, segons
+    definit al model de \gls{SGST}, i per tant a calcular l'atribut
+    $f'=\sum$ dels valors.
 
-\todo{és més simple fer el cas amb la suma que amb la mitjana de la funció}
+    Aquest cas és similar al del màxim, $r_1=\sum(v_0,\dotsc, v_k)$ i
+    $r_2=\sum\big( \sum(v_0,\dotsc,v_{i_1}),
+    \sum(v_{i_1+1},\dotsc,v_{i_2}), \dotsc, \sum(v_{i_M}, \dotsc v_k)
+    \big)$, i $\epsilon=d(r_1,r_2)=0$ perquè la suma és una funció
+    associativa.
+    
 
 
   \item Mitjana de la funció:
@@ -980,34 +993,145 @@ $\square$
 
 
 
-\begin{example}[Consultes amb subresolucions]
-\label{ex:multireoslucio:informacio-subresolucions}
-\todo{}
-
-Ara o no s'aplica a $S[-infty,infty]$ sinó a $S[t_a,t_b]$. Ens quins
-casos és cert?  De la multiresolució jo sé que és cert en els
-intervals consolidats $[i_0,i_1]$. Per tant si $t_a,t_b$ és múltiple
-dels intervals consolidats perfecte. Sinó cometo error. En el cas de
-totals el puc quantificar: per exemple si $t_a=i_0$ i $t_b < i_1$,
-aleshores l'error màxim que puc cometre és el que hi ha mesurat a
-l'interval $[i_0,i_1]$; és a dir que en els pitjors del casos tota la
-mesura hauria ocorregut després de $t_b$. En el cas del màxim, ves a saber.
-
-
-
-\end{example}
-
-
-
 
 
 \begin{example}[Mitjana per a una sèrie temporal regular]
-\todo{}
+  Seguint l'\autoref{ex:multiresolucio:f=op}, podem estudiar en quins
+  casos la mitjana aritmètica no té error. Com ja s'ha dit, la mitjana
+  no és una funció associativa. Però sí que esdevé associativa quan
+  s'associen el mateix nombre d'elements:
+  $\operatorname{mitjana}(a,b,c,d,e,f) = \operatorname{mitjana}(
+  \operatorname{mitjana}(a,b), \operatorname{mitjana}(c,d),
+  \operatorname{mitjana}(e,f)) = \operatorname{mitjana}(
+  \operatorname{mitjana}(a,b,c), \operatorname{mitjana}(d,e,f))$.
 
-* la mitjana sí que és associativa en el cas que la sèrie temporal sigui regular
- : no n'hi ha prou amb ser regular, s'ha de complir quelcom més per exemple que $\delta$ sigui múltiple del període de temps regular. En realitat volem que es compleixi $|S[\tau_0,\tau_0+\delta_0]|=|S[\tau_0+\delta_0,\tau_0+2\delta_0]|=\dotsb = |S[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0]|$
+  Per tal que s'associïn el mateix nombre d'elements cal que per cada
+  interval de consolidació de la sèrie temporal hi hagi el mateix
+  nombre de mesures:
+  $|S[\tau_0,\tau_0+\delta_0]|=|S[\tau_0+\delta_0,\tau_0+2\delta_0]|=\dotsb
+  = |S[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0]|$.  Aquest cas es
+  compleix, per exemple, quan la sèrie temporal és regular amb període
+  $d$ i el pas de consolidació de l'esquema multiresolució és múltiple
+  de la regularitat de la sèrie temporal, $\delta_0 = nd$ on
+  $n\in\glssymbol{not:N}$, o bé quan la sèrie temporal és de temps
+  real amb període $d$ i iniciada a $t_I$ i la multiresolució n'és
+  múltiple: $\delta_0 = nd$ i $\tau_0 = t_I+n\delta$ (v.\ secció de
+  regularitat de la sèrie temporal\todo{ref}).
+
+  Aleshores, en aquest casos, sí que es podria concloure que
+  $\epsilon=d(r_1,r_2)=0$ per la multiresolució amb mitjana.
+\end{example}
+
+
+
+
+
+\begin{example}[Consultes per a un interval determinat]
+\label{ex:multireoslucio:informacio-subresolucions}
+
+En l'\autoref{ex:multiresolucio:f=op} l'operació de consulta $o$
+s'aplica a tota la sèrie temporal $S[-\infty,\infty]$. Ara plantegem
+d'aplicar-la a un interval concret de la sèrie temporal $S[t_a,t_b]$
+on $t_a$ i $t_b$ són dos instants de temps.  Analitzem quan l'interval
+$[t_a,t_b]$ és múltiple dels intervals de multiresolució consolidats,
+$t_a=\tau_0+n\delta_0$ i $t_b=\tau_0+(n+l)\delta_0$ on
+$n,l\in\glssymbol{not:N}$, i quan no ho és:
+
+\begin{itemize}
+\item L'interval és múltiple dels intervals de multiresolució
+  consolidats. Aleshores $r_1=V(f_0(S,[t_a,t_b]))$,
+  $r_2=f_0(S',[t_a,t_b])$ on $S'= \{ \dotsc, (t_a,
+  f'(v_{i_a},\dotsc,v_{i_a+1}) ), \dotsc, (t_b,
+  f'(v_{i_b-1},\dotsc,v_{i_b})), \dotsc \}$ i
+  $v_{i_a},\dotsc,v_{i_a+1}$ són els valors de les mesures en
+  $S[t_a,t_a+\delta_0]$ i $v_{i_b-1},\dotsc,v_{i_b}$ en
+  $S[t_b-\delta_0,t_b]$.
+
+  Per tant, per a estudiar $d(r_1,r_2)$ se segueix analitzant el
+  comportament de la funció de resum de l'atribut per als dos casos
+  $r_1=f'(v_{i_a},\dotsc,v_{i_a+1},\dotsc, v_{i_a+1},\dotsc,v_{i_b})$
+  i $r_2=f'(f'(v_{i_a},\dotsc,v_{i_a+1}),\dotsc,
+  f'(v_{i_a+1},\dotsc,v_{i_b}))$ de la mateixa manera que a 
+  l'\autoref{ex:multiresolucio:f=op}.
+
+
+\item L'interval no és múltiple dels intervals de multiresolució
+  consolidats.  Per a simplificar la notació, suposem $t_a=\tau_0$ i
+  $\tau_0+\delta < t_b \leq \tau_0+2\delta_0$.  Aleshores
+  $r_1=V(f_0(S,[t_a,t_b]))$, $r_2=f_0(S',[t_a,t_b])$ on $S'=
+  \{(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ),(\tau_0+2\delta ,
+  f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})), \dotsc \}$ on els
+  valors s'anoten com a l'\autoref{ex:multiresolucio:f=op} i $v_b$
+  assenyala una possible mesura en l'instant $t_b$.
+
+  Cal tenir en compte que $f_0(S',[t_a,t_b])$ ha de resoldre la
+  selecció en l'interval: a) amb una selecció d'interval
+  $S'[t_a,t_b]=\{ (\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ) \}$, b)
+  amb una selecció d'interval temporal $S'[t_a,t_b]^r=(\tau_0+\delta,
+  f'(v_{i_0},\dotsc,v_{i_1}), (t_b, f^r(f'(v_{i_1+1},\dotsc,v_{b}
+  ,\dotsc,v_{i_2}))) ) $ on $f^r$ és la interpolació realitzada per la
+  funció de representació $r$, c) amb altres casos, podem pensar per
+  exemple $S'[t_a,t_b]^r=(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}),
+  (t_b, f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})) )$.
+
+
+  Així, per a estudiar $d(r_1,r_2)$ s'ha d'analitzar
+  $r_1=f'(v_{i_0},\dotsc,v_{i_1},\dotsc, v_{i_1+1},\dotsc,v_{b})$ i,
+  depenent de la selecció, a) $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}))$, b)
+  $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})))$,
+  o c)
+  $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$.
+
+  És a dir, en la multiresolució consolidada no hi ha disponible la
+  informació $f'(v_{i_1+1},\dotsc,v_{b})$ que es voldria consultar.
+  Per tant hem de concloure que generalment $\epsilon=d(r_1,r_2)\geq
+  0$ quan l'interval consultat no és múltiple de la resolució
+  emmagatzemada, tret que coneguéssim exactament el comportament de la
+  sèrie temporal i poguéssim determinar la funció de representació que complís 
+  $ f'(v_{i_1+1},\dotsc,v_{b}) = f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.
+\end{itemize}
+
+
+
+
+
+\todo{} Podem intentar afitar l'error en el cas dels intervals no
+múltiples?  En resum el problema és: caldria calcular $f'(v_{i_1+1},\dotsc,v_{b})$
+però la informació que hi ha emmagatzemada per a aquest interval és
+$f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.
+
+Cas del màxim: $\max(v_{i_1+1},\dotsc,v_{b})$ i
+$\max(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$; per tant si el màxim no
+es troba a $[t_a+\delta,t_b]$ aleshores no es pot afitar l'error
+perquè $\max(\dotsc,v_{b},\dotsc,v_{i_2})$ ves a saber.
+
+$\epsilon=d(r_1,r_2)= \max(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}) -
+\max(v_{i_1+1},\dotsc,v_{b})$ que no és fitable.
+
+
+Cas del total: $\sum(v_{i_1+1},\dotsc,v_{b})$ i
+$\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.  Aleshores
+$\epsilon=d(r_1,r_2)= \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}) -
+\sum(v_{i_1+1},\dotsc,v_{b}) = \sum(v_{b+1},\dotsc,v_{i_2}$.  En
+aquest cas tampoc és fitable. Però si la variable mesurada fos
+monòtona creixent, per exemple un comptador monòton creixent,
+aleshores $0\leq \sum(v_{i_1+1},\dotsc,v_{b}) \leq
+\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$.  I per tant com a màxim
+es cometria un error de $\epsilon=d(r_1,r_2)\leq
+\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$; és a dir del valor
+consolidat a $\tau_0+2\delta$ que significaria que en els pitjors del
+casos tota la mesura hauria ocorregut després de $t_b$.
+
+
+
+
+
 
 \end{example}
+
+
+
+
 
 
 
@@ -1062,13 +1186,12 @@ mesura hauria ocorregut després de $t_b$. En el cas del màxim, ves a saber.
 
   La multiresolució, però, no pot conservar la resolució del
   comptatge.  Com s'ha exposat a
-  l'\autoref{ex:multireoslucio:informacio-subresolucions} de
-  subresolucions\todo{nom?}, en consultes en què el període no es
-  correspongui amb les resolucions emmagatzemades, els totals no seran
-  els correctes que s'obtindrien de calcular amb les dades originals.
-  De fet, és el mateix problema que hem exposat que a partir d'un
-  comptador no es poden deduir exactament energies que no s'han
-  mesurat.
+  l'\autoref{ex:multireoslucio:informacio-subresolucions}, en
+  consultes en què l'interval no es correspongui amb les resolucions
+  emmagatzemades, els totals no seran els correctes que s'obtindrien
+  de calcular amb les dades originals.  De fet, és el mateix problema
+  que hem exposat que a partir d'un comptador no es poden deduir
+  exactament energies que no s'han mesurat.
 
 
   \todo{falten algunes imatges d'acompanyament}
