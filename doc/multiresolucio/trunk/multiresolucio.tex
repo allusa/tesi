@@ -5,24 +5,28 @@
 
 
 Definim una funció de multiresolució com una consulta sobre una sèrie
-temporal que ens retorna una nova sèrie temporal resultant
-d'aplicar-li un esquema de multiresolució. 
+temporal que retorna una nova sèrie temporal. Aquesta nova sèrie
+temporal és el resultat d'aplicar un esquema de multiresolució a la
+sèrie temporal original.
 
-Aquesta funció de multiresolució ens permetrà:
+
+
+La funció de multiresolució permet:
 
 \begin{itemize}
 
-\item Plantejar problemes on veiem la multiresolució com una consulta
-  sobre una sèrie temporal; és a dir com una operació per calcular
+\item Plantejar problemes on la multiresolució sigui gestionada com una consulta
+  sobre una sèrie temporal; és a dir com una operació que calcula
   parelles d'agregació d'atributs i resolucions temporals per a una
   sèrie temporal.
 
-\item Oferir sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
+\item Dissenyar sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
   de consulta multiresolució.
 
-\item Estudiar implementacions per a la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
+\item Estudiar altres implementacions de la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
 
-\item Estudiar la teoria de la informació per a l'esquema de multiresolució
+\item Estudiar la teoria de la informació per a l'esquema de
+  multiresolució
 
 \end{itemize}
 
@@ -33,13 +37,13 @@ Aquesta funció de multiresolució ens permetrà:
 \section{Funció de multiresolució}
 \label{sec:multiresolucio:funcio}
 
-En el model de \gls{SGSTM} hem definit un model de dades de \gls{SGBD}
-per a gestionar sèries temporals multiresolució. Com a \gls{SGBD},
-aquest model té una estructura i per tant emmagatzema informació d'una
-sèrie temporal en una forma determinada: la de multiresolució.  La
-definició com a \gls{SGBD} té com a objectius l'emmagatzematge
-compacte de les dades i la selecció de la informació ja preparada per
-a consultes posteriors. 
+En el model de \gls{SGSTM} hem definit un model de dades per a
+gestionar sèries temporals multiresolució. Aquest model té una
+estructura i per tant emmagatzema informació d'una sèrie temporal en
+una forma determinada: la de multiresolució.  La definició com a
+\gls{SGSTM} té com a objectius l'emmagatzematge compacte de les dades
+i la selecció de la informació ja preparada per a consultes
+posteriors.
 
 Així, aquest model té capacitats de computació
 sincronitzada o en línia (\emph{online}) amb el temps i té
@@ -68,7 +72,7 @@ M=\glssymbol{addM}(M,m)$\todo{matemàticament és correcte recursivitat
 $M$ no sigui consolidable. Consultem la sèrie temporal multiresolució
 amb les dues consultes bàsiques, les quals retornen sèries temporals,
 $S'=\glssymbol{not:sgstm:serietotal}(M')$ i $S_{\delta
-  f}'\glssymbol{not:sgstm:seriedisc}(M',\delta,f)$ on $\delta$ i $f$
+  f}'\glssymbol{not:sgstm:seriedisc}=(M',\delta,f)$ on $\delta$ i $f$
 són dos paràmetres de l'esquema de multiresolució de $M$ que van
 associats amb els altres dos corresponents $\tau$ i $k$.
 
@@ -497,11 +501,13 @@ maneres:
   de les dades (\emph{snapshots}) sense haver de blocar la modificació
   de la base de dades \cite[\S{}10.5]{date04:introduction8}.
 
-\item Es computen associades a un temps de termini a partir del qual
-  si es tornen a utilitzar s'hauran de tornar a computar. \todo{}
-
 \item Es computen periòdicament, com també es proposa en el nivell
   \emph{batch} de l'arquitectura \emph{Lambda}.
+
+\item Quan s'utilitzen per primer cop, es computen associades a un
+  temps de termini a partir del qual si es tornen a utilitzar s'hauran
+  de tornar a computar. 
+
 
 \item Es computen cada cop que es modifiquen les dades amb les quals
   operen, és a dir quan les dades originals reben una operació
@@ -1100,22 +1106,33 @@ $n,l\in\glssymbol{not:N}$, i quan no ho és:
 
 
   Cal tenir en compte que $f_0(S',[t_a,t_b])$ ha de resoldre la
-  selecció en l'interval: a) amb una selecció d'interval
-  $S'[t_a,t_b]=\{ (\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ) \}$, b)
-  amb una selecció d'interval temporal $S'[t_a,t_b]^r=(\tau_0+\delta,
-  f'(v_{i_0},\dotsc,v_{i_1}), (t_b, f^r(f'(v_{i_1+1},\dotsc,v_{b}
-  ,\dotsc,v_{i_2}))) ) $ on $f^r$ és la interpolació realitzada per la
-  funció de representació $r$, c) amb altres casos, podem pensar per
-  exemple $S'[t_a,t_b]^r=(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}),
-  (t_b, f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})) )$.
+  selecció en l'interval: 
+  \begin{enumerate}
+  \item amb una selecció d'interval $S'[t_a,t_b]=\{ (\tau_0+\delta,
+    f'(v_{i_0},\dotsc,v_{i_1}) ) \}$,
+
+  \item amb una selecció d'interval temporal
+    $S'[t_a,t_b]^r=(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}), (t_b,
+    f^r(f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2}))) ) $ on $f^r$ és
+    la interpolació realitzada per la funció de representació $r$
+
+  \item o amb altres casos, podem pensar per exemple
+    $S'[t_a,t_b]^r=(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}), (t_b,
+    f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})) )$.
+   \end{enumerate}
+
 
 
   Així, per a estudiar $\epsilon=d(r_1,r_2)$ s'ha d'analitzar
   $r_1=f'(v_{i_0},\dotsc,v_{i_1},\dotsc, v_{i_1+1},\dotsc,v_{b})$ i,
-  depenent de la selecció, a) $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}))$, b)
-  $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})))$,
-  o c)
-  $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$.
+  depenent de la selecció,
+   \begin{enumerate}
+   \item $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}))$, 
+
+   \item
+     $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})))$
+     \item o $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$.
+\end{enumerate}
 
   És a dir, en la multiresolució consolidada no hi ha disponible la
   informació $f'(v_{i_1+1},\dotsc,v_{b})$ que es voldria consultar.
@@ -1188,37 +1205,60 @@ d'avaluar si és possible afitar-ne error en aquests casos:
   Aquest exemple prové d'una reflexió acurada de per què RRDtool té
   com a referent els comptadors.
 
+
   Un comptador monòton creixent és un aparell que mesura l'energia en
   un determinat interval de temps. Entre dues lectures successives del
-  comptador la mesura de l'energia és exacte, dins de la precisió del
-  comptador, a diferència d'un aparell que mesuri potència
-  instantània, per exemple el flux d'una variable, del qual només es
-  pot deduir l'energia exacta si es considera que el senyal es pot
-  reconstruir: per exemple compleix Nyquist tot i que a la pràctica és
+  comptador la mesura de l'energia és exacta a diferència d'un aparell
+  que mesuri potència instantània, de la qual només es pot deduir
+  l'energia exacta si es considera que el senyal es pot reconstruir:
+  per exemple compleix Nyquist\todo{ref} tot i que a la pràctica és
   complicat conèixer la freqüència de les variables mesurades atès que
-  solen ser aleatòries. A la inversa, a partir de la mesura de
-  l'energia només es pot deduir la potència instantània exacta si es
-  considera que el senyal es pot reconstruir.
+  solen ser aleatòries o canvien bruscament. A la inversa també ocorre
+  el mateix, a partir de la mesura de l'energia només es pot deduir la
+  potència instantània exacta si es considera que el senyal es pot
+  reconstruir.  Els conceptes d'energia i potència solen anar
+  associats a un determinat tipus de variables físiques contínues; en
+  altres comptadors els conceptes equivalents són el quantitat,
+  comptatge total o increments per a l'energia i el flux o la
+  velocitat per a la potència.
 
-  En resum, sigui $E(t)$ l'energia d'un senyal i $P(t)$ la potència
-  instantània del senyal, es compleix la relació $E(t)=\int P(t)
-  dt$. Sigui $[t_a,t_b]$ un interval de temps, un comptador mesura
-  exactament el valor de $\int_{t_a}^{t_b} P(t)$. En canvi, un aparell
-  de mesura de potència instantània es capaç de mesurar exactament
-  $P(t_a)$ i $P(t_b)$. Ara bé, a partir del comptador no es poden deduir
-  exactament $P(t_a)$ i $P(t_b)$ i a partir de la mesura de la
-  potència instantània no es poden deduir exactament $\int_{t_a}^{t_b}
-  P(t)$. Tampoc a partir del comptador es poden deduir exactament
-  energies que no s'han mesurat, per exemple ni
-  $\int_{(t_a+t_b)/2}^{t_b} P(t)$ ni $\int_{(t_a+t_b)/2}^{t_c} P(t)$
-  on sigui $[t_b,t_c]$ un interval de temps mesurat; ara bé sí que
-  serà exacte el càlcul $\int_{t_a}^{t_b} P(t)+\int_{t_b}^{t_c} P(t)$.
+
+% ha d'aparèixer potència mitjana (que és la línia) i energia (que és l'àrea sota la línia). els aparells tant poden mesurar en un interval energia com potència mitjana i és el mateix, si la mesura mitjana és real i no a partir de la mitjana de diverses instantànies. 
+
+  No totes les variables físiques són susceptibles de ser mesurades
+  amb un comptador. Els comptadors es poden aplicar per exemple per a
+  mesurar energia elèctrica, persones que entren en un edifici, consum
+  d'aigua, etc.
   
-  No totes les variables físiques són susceptibles de
-  ser mesurades amb un comptador. Els comptadors es poden aplicar per
-  exemple per a mesurar energia elèctrica, persones que entren en un
-  edifici, etc. 
+
+En resum, l'aparell condiciona la informació que es podrà extreure de
+la mesura; en aquest exemple ens centrem en la informació de l'energia
+i de quina manera la multiresolució és capaç de conservar exactament
+algunes propietats d'aquesta informació.  Per a aquest exemple suposem
+aparells de mesura ideals quan parlem de mesura exacta; és a dir que
+no tenim en compte l'error de precisió o d'exactitud de l'aparell.
+
+ 
+
+
+
+  Sigui $E(t)$ l'energia d'un senyal i $P(t)$ la potència instantània
+  del senyal, es compleix la relació $E(t)=\int P(t) dt$. Siguin
+  $[t_a,t_b]$ i $[t_b,t_c]$ dos intervals de temps de mesura, un
+  comptador mesura exactament el valor de $\int_{t_a}^{t_b} P(t)$ i de
+  $\int_{t_b}^{t_c} P(t)$. En canvi, un aparell de mesura de potència
+  instantània es capaç de mesurar exactament $P(t_a)$, $P(t_b)$ i
+  $P(t_c)$. Ara bé, a partir del comptador no es poden deduir
+  exactament $P(t_a)$, $P(t_b)$ ni $P(t_c)$ i a partir de la mesura de
+  la potència instantània no es poden deduir exactament
+  $\int_{t_a}^{t_b} P(t)$ ni $\int_{t_b}^{t_c} P(t)$. Tampoc a partir
+  del comptador es poden deduir exactament energies que no s'han
+  mesurat, per exemple ni $\int_{(t_a+t_b)/2}^{t_b} P(t)$ ni
+  $\int_{(t_a+t_b)/2}^{t_c} P(t)$; ara bé sí que serà exacte el càlcul
+  $\int_{t_a}^{t_b} P(t)+\int_{t_b}^{t_c} P(t)$.
   
+%plantejar-ho en discret amb sumatoris?
+
 
   La multiresolució és capaç de conservar aquesta exactitud del
   comptatge total.  El comptatge total es pot conservar amb una
@@ -1228,7 +1268,8 @@ d'avaluar si és possible afitar-ne error en aquests casos:
   la multiresolució de forma més coherent amb l'original (vegeu secció
   de naturalesa de comptadors \todo{ref}). Reprenent
   l'\autoref{ex:multiresolucio:f=op}, avaluem els atributs de mitjana
-  de la funció:
+  de la funció, els quals són semblants als atributs de total però
+  considerant la sèrie temporal en la representació contínua:
   
   \begin{itemize}
 
@@ -1269,7 +1310,7 @@ d'avaluar si és possible afitar-ne error en aquests casos:
     A la \autoref{fig:multiresolucio:comptador} es mostra un exemple
     amb valors concrets on $S=\{ (1,4),(2,2),(3,6),(4,4)\}$, l'esquema
     de multiresolució és
-    $e=\{\delta_0=2,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0,k_0=\infty
+    $e=\{\{(\delta,2),(f,\glssymbol{not:sgstm:meanzohe}),(\tau,0),(k,\infty)\}
     \}$,així la sèrie resultant de la consulta multiresolució
     és $S'=\{ (2,3),(4,5)\}$, i les sèries temporals es representen amb
     representació \gls{zohe}.
@@ -1284,9 +1325,11 @@ d'avaluar si és possible afitar-ne error en aquests casos:
           width=0.5*\textwidth,
           title=$S$,
           ymin = 0,
+          ymax=6,
           ]
           \addplot[
           ybar interval, 
+          blue,fill=blue!30!white,
           ] plot coordinates
           {(0,4)(1,2)(2,6)(3,4)(4,4)};
 
@@ -1309,6 +1352,7 @@ d'avaluar si és possible afitar-ne error en aquests casos:
 
           \addplot[
           ybar interval, 
+          blue,fill=blue!30!white,
           ] plot coordinates
           {(0,3)(2,5)(4,5)};
 
@@ -1352,32 +1396,48 @@ d'avaluar si és possible afitar-ne error en aquests casos:
 \end{example}
 
 
-\begin{example}
+
+\begin{example}[Equivalències en l'agregació d'atributs]
+
+  Hi ha casos en què és el mateix aplicar una funció d'agregació
+  d'atributs que aplicar-ne una altra. Per exemple és el cas de la
+  $\operatorname{mitjana}$\todo{falta definir a la taula} i el de la
+  $\glssymbol{not:sgstm:meanzohe}$ per a sèries temporals regulars. 
+
+  Sigui $S=\{m_0,\dotsc,m_k\}$, on $m_k=(t_k,v_k)$, una sèrie temporal
+  regular de període $d$ i sigui $[t_a,t_b]$ un interval de temps on
+  $t_a=T(\min(S))-d=t_0-d$ i $t_b=T(\max(S))=t_k$.  Demostrem que
+  $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b]) =
+  \operatorname{mitjana}(S,[t_a,t_b])$.
+
+  La mitjana aritmètica de la sèrie temporal és
+  $\operatorname{mitjana}(S,[t_a,t_b])=\frac{v_0+\dotsb+v_k}{|S|}$
+  
+  La mitjana amb representació \gls{zohe} és
+  $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])= \frac{1}{t_b-t_a} (
+  v_0(t_0-t_a)+v_1(t_1-t_0)+\dotsb+ v_k(t_k-t_{k-1}) )$.
+
+  Per ser regular, $t_1-t_0 = \dotsb = t_k-t_{k-1} = d$. A més
+  $t_a=t_0-d$ i per tant $t_0-t_a = d$. També per ser regular,
+  $t_k-t_0= t_k +(- t_{k-1} + t_{k-1}) + \dotsb + (- t_1 + t_1) - t_0
+  = (|S|-1)d$ i per tant $t_b-t_a=t_k - (t_0 - d) = (|S|-1)d +d = |S|d$.
+
+  Reescrivint, $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])=
+  \frac{1}{|S|d} ( v_0d+v_1d+\dotsb+ v_kd ) = \frac{1}{|S|} (
+  v_0+v_1+\dotsb+ v_k ) = \operatorname{mitjana}(S,[t_a,t_b])$.
 
 
-\todo{}
-* analitzar casos on és el mateix aplicar un agregador que un altre: per exemple la mitjana i l'àrea quan la sèrie temporal és regular
 
+  Així doncs, en una sèrie temporal regular es pot aplicar la
+  $\operatorname{mitjana}$ com a equivalent a la
+  $\glssymbol{not:sgstm:meanzohe}$; la
+  \autoref{fig:multiresolucio:comptador} n'és un exemple. Un àmbit
+  d'aplicació d'aquestes equivalències pot ser el de simplificar els
+  càlculs en les consultes als \gls{SGSTM}, en els discs dels quals
+  les subsèries temporals normalment s'emmagatzemen regulars.
+  
 \end{example}
 
-% \subsubsection{Exemple2}
-
-
-% Quan una sèrie temporal és regular, l'interpolador mitjana i l'àrea valen el mat
-% eix en l'interval $[T_0,n\delta]$.
-
-% \[
-% mitjana(S(T_0,T_f] ) = \frac{v_0+v_1+v_2}{3}
-% \]
-
-% \[
-% area(S(T_0,T_f] ) = \frac{(t_0-T_0)v_0+(t_1-t_0)v_1+(T_f-t_1)v_2}{T_f-T_0} 
-% \]
-% per ser regular $t_0 -T_0 = t_1 -t_0 = T_f - t_1 = \delta$
-% \[
-% area(S(T_0,T_f] ) = \frac{\delta v_0 + \delta v_1 + \delta v_2}{3\delta}
-% =\frac{v_0+v_1+v_2}{3} = mitjana(S(T_0,T_f] )
-% \]
 
 
 

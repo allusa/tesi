@@ -94,6 +94,44 @@ reduïda.
   S[\tau+\delta,+\infty]$.
 \end{definition}
 
+
+\todo{explicar dibuix}
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=4cm,
+        scale only axis, height=2.3cm,
+        ymin = 0,
+        yticklabels= {,,\tiny valors},
+        y tick label style = {rotate=90,anchor=south},
+        x tick label style = {font=\tiny},        
+        xticklabels={$\underbrace{\tau_{}}_{\tau_0}$,$\underbrace{\tau_0+\delta}_{\tau_1}$,$\underbrace{\tau_1+\delta}_{\tau_2}$,$\underbrace{\tau_2+\delta}_{\tau_3 \ldots}$},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (19,4)
+        (22,6)
+        (25,7)
+        (29,8)
+        (30,4)
+        (35,2)
+        (41,5)
+        (45,8)
+    };
+
+    \end{axis}
+  \end{tikzpicture}
+
+
+
+
+
 De manera simplificada, hem definit que cada consolidació només
 s'aplica a l'interval de consolidació actual; així la consolidació
 total del buffer és l'aplicació successiva de l'operació de
