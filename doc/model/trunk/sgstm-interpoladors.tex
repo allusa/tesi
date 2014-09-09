@@ -45,6 +45,44 @@ sèries temporals.
 
 
 
+\todo{explicar dibuix i situar al lloc correcte}
+
+    \begin{tikzpicture}
+        \begin{axis}[
+          % width=10cm,
+          scale only axis, height=3cm,
+          ymin = 0,
+          yticklabels= {},
+          xticklabels={$\ldots$,$t_{i-1}^N$,$t_i^N$},
+          ]
+          \addplot[ycomb,blue] coordinates {
+            (20,10)
+            (30,10)
+            (40,10)
+          }; 
+          
+          \addplot[only marks,mark=*,red] coordinates {
+            (19,4)
+            (32,2)
+            (35,4)
+            (38,6)
+            (45,8)
+          };
+          
+          \addplot[only marks,mark=*,green] coordinates {
+            (40,4)
+          };
+          
+          
+          \node[below] at (axis cs:32,2) {$t_{T_{f-k}}$};
+          \node[below] at (axis cs:35,4) {$\ldots$};
+          \node[above] at (axis cs:38,6) {$t_{T_{f-1}}$};
+          \node[above] at (axis cs:45,8) {$t_{T_f}$};
+          \node[right] at (axis cs:40,4) {$m'$};
+        \end{axis}
+      \end{tikzpicture}
+
+
 
 \subsection{Interpretació de l'agregació}
 
