@@ -743,6 +743,13 @@ Els mètode de compressió amb pèrdua se solen usar per a compressió de multim
 
 
 
+\todo{information algebra}
+\url{https://en.wikipedia.org/wiki/Information_algebra}
+
+algebra of information, describing basic modes of information processing. Such an algebra involves several formalisms of computer science, which seem to be different on the surface: relational databases, multiple systems of formal logic or numerical problems of linear algebra. It 
+
+
+
 % El procediment
 % que se segueix és: comprimir, emmagatzemar, descomprimir i
 % visualitzar.
@@ -1206,6 +1213,9 @@ d'avaluar si és possible afitar-ne error en aquests casos:
   com a referent els comptadors.
 
 
+
+%\todo{parlar de comptadors monòtons creixents?? o de comptadors en general}
+
   Un comptador monòton creixent és un aparell que mesura l'energia en
   un determinat interval de temps. Entre dues lectures successives del
   comptador la mesura de l'energia és exacta a diferència d'un aparell
@@ -1231,19 +1241,70 @@ d'avaluar si és possible afitar-ne error en aquests casos:
   d'aigua, etc.
   
 
-En resum, l'aparell condiciona la informació que es podrà extreure de
-la mesura; en aquest exemple ens centrem en la informació de l'energia
-i de quina manera la multiresolució és capaç de conservar exactament
-algunes propietats d'aquesta informació.  Per a aquest exemple suposem
-aparells de mesura ideals quan parlem de mesura exacta; és a dir que
-no tenim en compte l'error de precisió o d'exactitud de l'aparell.
+  En resum, l'aparell condiciona la informació que es podrà extreure
+  de la mesura; en aquest exemple ens centrem en la informació de
+  l'energia i de quina manera la multiresolució és capaç de conservar
+  exactament algunes propietats d'aquesta informació.  Per a aquest
+  exemple suposem aparells de mesura ideals quan parlem de mesura
+  exacta; és a dir que no tenim en compte l'error de precisió o
+  d'exactitud de l'aparell.
 
  
 
 
 
-  Sigui $E(t)$ l'energia d'un senyal i $P(t)$ la potència instantània
-  del senyal, es compleix la relació $E(t)=\int P(t) dt$. Siguin
+\begin{figure}[tp]
+  \centering
+
+     \begin{tikzpicture}
+        \begin{axis}[
+          title={$E(t)=\int P(t) dt$},
+          ymin=0,
+          ymax=3,
+          xmax=21,
+          domain=0:20,
+          ylabel=$P(t)$,
+          xlabel=$t$,
+          xtick=\empty,
+          ytick=\empty,
+          axis x line=left,
+          axis y line=left,
+          ]
+
+          % \addplot[const plot, blue,fill=blue,smooth,
+          % ] plot coordinates
+          % {(0,4)(1,2)(2,6)(3,4)(4,4)};
+
+
+          \addplot[pattern=crosshatch dots, pattern
+          color=blue,draw=blue, samples=500] {2+sin(deg(x))/2} \closedcycle;
+
+
+
+          \node at (axis cs:10,1) {$E(t)$};
+
+
+     \end{axis}
+      \end{tikzpicture}  
+
+      \caption{Relació entre l'energia i la potència o la quantitat
+        comptada i la velocitat}
+  \label{fig:multiresolucio:energia-potencia}
+\end{figure}
+
+
+
+
+Així doncs, la definició del problema és la següent.  Sigui $E(t)$
+l'energia d'un senyal i $P(t)$ la potència instantània del senyal, es
+compleix la relació $E(t)=\int P(t) dt$, que es mostra a la
+\autoref{fig:multiresolucio:energia-potencia}; que és la mateixa
+relació $Q(t)=\int v(t) dt$ per a un comptador on $Q$ és la quantitat
+comptada i $v$ és la velocitat instantània, o la mateixa per a un cas
+discret $\Delta Q = \bar{v} \Delta t$ on $\bar{v}$ és la velocitat
+mitjana mesurada durant $\Delta t$. %
+  %Potser el cas discret hauria de ser $\Delta Q = \sum \bar{v}_k \Delta t_k$
+  Siguin
   $[t_a,t_b]$ i $[t_b,t_c]$ dos intervals de temps de mesura, un
   comptador mesura exactament el valor de $\int_{t_a}^{t_b} P(t)$ i de
   $\int_{t_b}^{t_c} P(t)$. En canvi, un aparell de mesura de potència
@@ -1257,8 +1318,6 @@ no tenim en compte l'error de precisió o d'exactitud de l'aparell.
   $\int_{(t_a+t_b)/2}^{t_c} P(t)$; ara bé sí que serà exacte el càlcul
   $\int_{t_a}^{t_b} P(t)+\int_{t_b}^{t_c} P(t)$.
   
-%plantejar-ho en discret amb sumatoris?
-
 
   La multiresolució és capaç de conservar aquesta exactitud del
   comptatge total.  El comptatge total es pot conservar amb una
