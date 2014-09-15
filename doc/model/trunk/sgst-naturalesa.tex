@@ -1,13 +1,13 @@
 \section{Propietats de les sèries temporals}
 
 En el model de \gls{SGST} descrit anteriorment, les sèries temporals
-tenen una única estructura i uns únics operadors independentment del
-context on s'apliquin. De fet aquest és l'objectiu principal de
-definir-ne un model lògic. No obstant això, en la seva aplicació les
-sèries temporals tenen associat un context, és a dir que els valors
-prenen un determinat significat. En aquesta secció avaluem les
-propietats que poden prendre les sèries temporals quan es troben en
-context:
+tenen una única estructura i uns operadors genèrics definits per un
+model lògic independentment del context on s'apliquin. No obstant
+això, en la seva aplicació, les sèries temporals tenen associat un
+context, és a dir que els valors prenen un determinat significat. En
+aquesta secció avaluem les propietats que poden prendre les sèries
+temporals quan es troben en uns determinats contexts. En concret
+s'avaluen:
 \begin{itemize}
 \item Trets semàntics: el significat que tenen en
   el seu àmbit d'aplicació
@@ -20,53 +20,61 @@ context:
 
 
 \subsection{Trets semàntics de les sèries temporals}
+\label{sec:sgst:tretssemantics}
 
-Una sèrie temporal pot provenir de varis àmbits i per tant tenir un
-significat variat. És el que anomenem trets semàntics de les sèries
-temporals.
+Una sèrie temporal pot provenir de diferents àmbits i per tant tenir
+un significat variat. És el que anomenem trets semàntics de les sèries
+temporals. Entendre el significat que tenen les sèries temporals és
+important per a determinar quines operacions tenen sentit de ser
+aplicades i quines no a una sèrie temporal en particular. Així
+\textcite{segev87:sigmod} anomenen comportament semàntic
+(\emph{semantic behavior}) a la varietat de formes que pot prendre una
+sèrie temporal segons l'àmbit on s'apliquen.
 
 
-En el model d'operacions s'ha vist que l'atribut de temps de les
-sèries temporals indueix vàries naturaleses en el comportament dels
-operadors: com a conjunts, com a seqüències o com a funcions
-temporals. Aquesta distinció de significat és des del punt de
-vista de formalització matemàtica per l'estructura de les sèries
-temporals.
+A continuació estudiem els tres semàntics de les sèries temporals
+segons l'origen; és a dir segons com s'han adquirit amb l'aparell de
+mesura, quina continuïtat té el temps d'adquisició o de si provenen
+d'un model d'intervals de temps.
 
-A continuació distingim el significat de les sèries temporals segons
-l'origen; és a dir com s'han adquirit o de quin entorn
-provenen. Aquesta distinció és important per a determinar quines
-operacions tenen sentit de ser aplicades i quines no a una sèrie
-temporal en particular. Així \textcite{segev87:sigmod} anomenen
-comportament semàntic (\emph{semantic behavior}) a la varietat de
-formes que pot prendre una sèrie temporal segons l'àmbit on
-s'apliquen.
+
+Cal aclarir que els trets semàntics no es corresponen amb
+l'estudi de les sèries temporals com a conjunt, seqüència i funció
+temporal que hem dut a terme en el model d'operacions, cosa que es
+correspon amb la formalització matemàtica del model com a conseqüència
+de l'atribut de temps.
 
 
 \subsubsection{Aparell de mesura}
 
+
 Un primer tret semàntic de les sèries temporals és deu al mètode
-d'adquisició segons l'aparell de mesura. Així una sèrie temporal es
-pot classificar segons si s'ha adquirit mostrejant un senyal continu
-cada cert període o si prové d'una acumulació o d'un comptatge
-d'esdeveniments en un cert període de temps. Aquests són els dos
-orígens principals que poden tenir els senyals discrets segons
-\textcite[cap.~1]{proakismanolakis96}.  En aquest tret es distingeix
-segons l'adquisició en l'eix del temps, també es pot distingir segons
-si l'adquisició en l'eix de valors és contínua o discreta però això és
-un tret propi dels valors i, com a característica, pertany al domini
-dels valors. Aquest procés en l'eix de valors s'anomena quantització
-del senyal però sovint, per simplificar, no es té en
+d'adquisició segons l'aparell de mesura.  Segons
+\textcite[cap.~1]{proakismanolakis96} els senyal discrets tenen dos
+orígens principals: l'adquisició mitjançant el mostreig d'un senyal
+continu cada cert període de temps o l'adquisició que prové d'una
+acumulació o d'un comptatge d'esdeveniments en un cert període de
+temps. 
+
+
+Aquest tret semàntic descrit fa referència a l'eix del
+temps. Pel que fa a l'eix de valors es pot distingir entre una
+adquisició contínua o discreta, procés que s'anomena quantització del
+senyal, tot i que sovint per simplificar no es té en
 compte \parencite{proakismanolakis96}.%S1.4.7
+En el nostre cas, per tal de no restringir el model a cap domini de
+valors en concret (v.~\autoref{sec:sgst:valor}), no avaluem el
+significat de la quantització en les sèries temporals perquè només
+afecta a les operacions que treballen amb l'atribut de valor.
 
 
-
-Així doncs segons l'aparell de mesura, classifiquem una sèrie
-temporal amb trets de magnitud física o de comptador de magnitud
-física. Aquest tret semàntic cal tenir-lo en compte ja que quan
-s'adquireix una magnitud es veu el seu estat instantani actual, mentre
-que quan s'adquireix un comptador ofereix informació de la seva
-variació respecte a l'adquisició anterior.
+Així doncs, classifiquem els trets semàntics d'una sèrie temporal en
+magnitud física o en comptador de magnitud física segons si l'aparell
+de mesura és continu o d'acumulació. Aquest tret semàntic cal
+tenir-lo en compte ja que quan s'adquireix una magnitud es mostra el
+seu estat instantani actual, mentre que quan s'adquireix un comptador
+ofereix informació de la seva variació respecte a l'adquisició
+anterior.
 
 
 
@@ -86,27 +94,36 @@ variació respecte a l'adquisició anterior.
 
 
 
-Les magnituds ofereixen la informació d'una forma: l'estat de la
-variable. A la \autoref{fig:model:magnitud} es mostra aquesta forma
-amb una sèrie temporal d'exemple: $S_a = \{(0,0),(2,1),(3,
-1{,}5),(4,0),(5,2),(8,2)\}$. De manera general, el valor d’una
-magnitud física és defineix com el producte d’un valor numèric per una
-unitat.
+Les sèries temporals amb tret semàntic de magnitud ofereixen la
+informació en una sola forma: l'estat de la variable. A la
+\autoref{fig:model:magnitud} es mostra amb una sèrie temporal
+d'exemple: $S_m = \{(0,0),(2,1),(3, 1{,}5),(4,0),(5,2),(8,2)\}$ on els
+valors mostren l'estat de la magnitud física en els instants de temps
+mesurats. De manera general, el valor d’una magnitud física és
+defineix com el producte d’un valor numèric per una unitat.
 
 
-Els comptadors poden oferir la informació de diverses formes : en
-valor absolut, en valor relatiu i en velocitat. A la
-\autoref{fig:model:comptador-formes} es mostren aquestes formes amb
-tres sèries temporals d'exemple: $S_a =
-\{(0,0),(2,1),(4,3),(5,4),(8,10)\}$ són els valors absoluts del
-comptador, $S_\Delta = \{(0,0)\} \cup
-\glssymbol{not:sgst:increments}(S_a) =
-\{(0,0),(2,1),(4,2),(5,1),(8,6)\}$ són els valors relatius del
-comptador i $S_v = S_\Delta /
-\glssymbol{not:sgst:increments}(\glssymbol{not:sgst:duplica-t}(S_\Delta))
-= \{(0,0),(2,0{,}5),(4,1),(5,1),(8,2)\}$ són els valors de velocitat
-del comptador, les unitats dels quals són de \emph{unitat$/$unitat de
-  temps}.
+Les sèries temporals amb tret semàntic de comptador poden oferir la
+informació en diverses formes : en valor absolut, en valor relatiu i
+en velocitat. A la \autoref{fig:model:comptador-formes} es mostren
+aquestes formes amb tres sèries temporals d'exemple provinents del
+mateix comptatge:
+
+\begin{itemize}
+\item $S_a = \{(0,0),(2,1),(4,3),(5,4),(8,10)\}$ amb els valors
+  absoluts del comptador
+\item $S_\Delta = \{(0,0),(2,1),(4,2),(5,1),(8,6)\}$ amb els valors
+  relatius del comptador, on $S_\Delta = \{(0,0)\} \cup
+  \glssymbol{not:sgst:increments}(S_a)$
+\item $S_v = \{(0,0),(2,0{,}5),(4,1),(5,1),(8,2)\}$ amb els valors de
+  velocitat del comptador, on $S_v = S_\Delta /
+  \glssymbol{not:sgst:increments}(\glssymbol{not:sgst:duplica-t}(S_\Delta))$
+  i les unitats dels valors són de \emph{unitat$/$unitat de temps},.
+\end{itemize}
+
+
+
+\todo{} 
 
 
 El gràfic de valor absolut, en aquest cas es tracta d'un comptador
@@ -161,6 +178,7 @@ tant tenen un comportament semblant al de valor relatiu.
 % usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
 
 \begin{example}
+  \label{ex:sgst:comptador-electricitat}
   Un exemple de sèrie temporal amb tret de magnitud és la potència
   instantània elèctrica i un exemple de comptador és la quantitat
   d'energia elèctrica. Així doncs mesurant electricitat poden
