@@ -123,70 +123,76 @@ mateix comptatge:
 
 
 
-\todo{revisar} 
-
 A la \autoref{fig:model:comptador-formes:absolut} es mostra la sèrie
 temporal $S_a$, en aquest cas es tracta d'un comptador monòton
 creixent. S'hi mostra la interpolació lineal del valor acumulat que va
 prenent la variable mesurada.  A partir del valor absolut es calculen
 els increments del comptador $S_\Delta$, és a dir la quantitat
-relativa de comptatge per cada període. A la
+relativa de comptatge per cada període.  A la
 \autoref{fig:model:comptador-formes:increments} es mostra la sèrie
 temporal $S_\Delta$ indicant en línia discontínua la tendència dels
-increments, és a dir la interpolació lineal del comptatge absolut com
-si el comptador fos una magnitud.
-
-A la \autoref{fig:model:comptador-formes:relatiu} també es mostra
+increments, és a dir la interpolació lineal del comptatge absolut de
+manera similar a com s'ha fet per la mesura de la magnitud de la
+\autoref{fig:model:magnitud}.  A la
+\autoref{fig:model:comptador-formes:relatiu} també es mostra
 $S_\Delta$ però indicant la interpolació lineal que va prenent la
 variable mesurada relativament, és a dir amb el pas per zero com si a
-cada lectura s'inicialitza de nou el valor acumulat del comptador. A
+cada lectura s'inicialitzés de nou el valor acumulat del comptador. A
 la \autoref{fig:model:comptador-formes:velocitat} es mostra la sèrie
-temporal $S_v$ \todo{} els pendents lineals del gràfic de valor relatiu, és a
-dir la velocitat mitjana de comptatge a cada període.
+temporal $S_v$, que es correspon amb els pendents lineals del
+gràfic de valor relatiu, és a dir la velocitat mitjana de comptatge a
+cada interval de temps.
 
 El significat del gràfic de valor absolut i el d'increments es
-visualitza bé en un gràfic de barres \autoref{fig:model:comptador-formes:barres} en el que l'eix vertical mostra
-freqüència i en el que l'alçària de les barres mostra la quantitat que
+visualitza bé en el gràfic de barres de la
+\autoref{fig:model:comptador-formes:barres} en què l'eix vertical
+mostra freqüència i l'eix horitzontal mostra la quantitat que
 ha augmentat el comptador a cada interval. En canvi el gràfic de valor
-relatiu i el de velocitat es visualitzen més bé en un gràfic
-d'histograma  \autoref{fig:model:comptador-formes:histograma} en el que l'eix vertical mostra densitat de freqüència i en el
-que l'àrea de les barres equival a la quantitat comptada i l'alçària
-de cada una mostra la velocitat del comptatge.
+relatiu i el de velocitat es visualitzen més bé en el gràfic
+d'histograma de la \autoref{fig:model:comptador-formes:histograma} en
+què l'eix vertical mostra densitat de freqüència, l'eix horitzontal 
+mostra la velocitat del comptatge i l'àrea
+de les barres equival a la quantitat comptada.
+%Quan la sèrie temporal és regular, la forma del gràfic de barres i la de l'histograma és la mateixa.
+
 
 
 En conclusió, un comptador pot oferir les dades en qualsevol de les
 tres formes i a partir d'una d'aquestes es poden calcular les
 altres. També es possible d'aplicar les mateixes operacions a les
 magnituds, és a dir calcular-ne els increments o la velocitat mitjana
-de cada període, tenint en compte que aleshores es perd la referència
-absoluta llevat que es conservi a part. La diferència principal
-d'ambdós rau en el fet que l'objectiu de les magnituds és observar el
-valor instantani d'una variable i per tant se sol obtenir en aquesta
-forma mentre que l'objectiu dels comptadors és precisament el de
-mesurar els comptatges totals de les variables en els períodes
-seleccionats, i això es pot mostrar en les tres formes descrites. És a
-dir, el tret semàntic de mètode d'adquisició està lligat al tipus
-d'aparell de mesura: una magnitud ben mostrejada té informació
-suficient per a calcular-ne els comptatges mentre que un comptador
-inherentment mesura els totals però perd la noció del valor
-instantani.
+a cada cert interval de temps, tenint en compte que aleshores es perd
+la referència absoluta llevat que s'emmagatzemi a part. La diferència
+principal d'ambdós rau en el fet que l'objectiu de les magnituds és
+observar el valor instantani d'una variable, i per tant se sol obtenir
+en aquesta forma, mentre que l'objectiu dels comptadors és precisament
+el de mesurar els comptatges totals de les variables en els intervals
+de temps seleccionats, i això es pot mostrar en les tres formes
+descrites. És a dir, el trets semàntics de la sèrie temporal depenen
+de l'adquisició per part de l'aparell de mesura: una magnitud ben
+mostrejada té informació suficient per a calcular-ne els comptatges
+mentre que un comptador inherentment mesura els totals però perd la
+noció del valor instantani.
+
 
 Altrament, tot i que els comptadors solen presentar un comportament
 monòton, creixent o decreixent, també poden ser dobles i tenir
 increments tant positius com negatius. Un efecte que també cal tenir
 en compte dels comptadors, sobretot dels monòtons, és el fons
-d'escala, que quan s'assoleix es torna a comptar des de l'inici i per
-tant tenen un comportament semblant al de valor relatiu.
+d'escala, que és aquell valor que quan l'assoleixen es torna a comptar
+des de l'inici i per tant, en aquest interval de mesura, tenen un
+comportament semblant al de valor relatiu.
+
 
 % * comptadors -> conservar totals (comptador: monòton, doble, relatiu)
 % usualment són digitals en naturalesa (compten amb naturals) però també poden ser analògics (comptar amb reals, per exemple comptar el cabal d'aigua, l'energia consumida, etc.).
 
 \begin{example}
   \label{ex:sgst:comptador-electricitat}
-  Un exemple de sèrie temporal amb tret de magnitud és la potència
-  instantània elèctrica i un exemple de comptador és la quantitat
-  d'energia elèctrica. Així doncs mesurant electricitat poden
-  aparèixer sèries temporals amb els trets següents:
+  Un exemple de sèrie temporal amb tret semàntic de magnitud és la
+  potència instantània elèctrica i un exemple de comptador és la
+  quantitat d'energia elèctrica. Així doncs mesurant electricitat
+  poden aparèixer sèries temporals amb els trets semàntics següents:
 
   \begin{itemize}
   \item Magnitud: potència instantània elèctrica.  Per exemple la
@@ -212,23 +218,31 @@ tant tenen un comportament semblant al de valor relatiu.
 
 
 
-\subsubsection{Temps}
+\subsubsection{Continuïtat del temps}
+
+
+
+\todo{revisar} 
+
+
+
 
 Un segon tret semàntic de les sèries temporals també es deu al mètode
 d'adquisició però en aquest cas segons la continuïtat del temps.
 
-\textcite{furia10:modeling_time} distingeix entre temps dens
+\textcite{furia10:modeling_time} distingeixen entre temps dens
 (\emph{dense time}) i temps discret (\emph{discrete time}) segons si
 entre dos instants de temps n'hi pot haver un de tercer o si els
 instants de temps son punts aïllats. Un exemple de domini del temps
 com a conjunt dens són els reals $T\in \glssymbol{not:Rb}$ i com a
 conjunt discret són els naturals $T\in \N$.
-\textcite[cap.~3]{kopetz11:realtime} descriu conceptes similars tot i que els
-anomena \emph{dense time} i \emph{sparse time} i ho fa des del punt de
-vista d'esdeveniments de temps real. Així fa notar que els
+\textcite[cap.~3]{kopetz11:realtime} descriu conceptes similars tot i
+que els anomena \emph{dense time} i \emph{sparse time} i ho fa des del
+punt de vista d'esdeveniments de temps real. Així fa notar que els
 esdeveniments es produeixen amb \emph{sparse time} quan hi ha un
-sistema que controla el rellotge però que els esdeveniments que són
-externs a aquest control sempre es produeixen amb \emph{dense time}.
+sistema que controla el rellotge, p.ex. un processador, però que els
+esdeveniments que són externs a aquest control sempre es produeixen
+amb \emph{dense time}.
 % també parla dels processos amb representació cíclica del temps
 
 Així, segons la perspectiva de sistema de coordenades temps continu,
