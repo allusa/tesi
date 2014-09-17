@@ -222,9 +222,6 @@ comportament semblant al de valor relatiu.
 
 
 
-\todo{revisar} 
-
-
 
 
 Un segon tret semàntic de les sèries temporals també es deu al mètode
@@ -234,8 +231,8 @@ d'adquisició però en aquest cas segons la continuïtat del temps.
 (\emph{dense time}) i temps discret (\emph{discrete time}) segons si
 entre dos instants de temps n'hi pot haver un de tercer o si els
 instants de temps son punts aïllats. Un exemple de domini del temps
-com a conjunt dens són els reals $T\in \glssymbol{not:Rb}$ i com a
-conjunt discret són els naturals $T\in \N$.
+com a conjunt dens són els reals, $T\in \glssymbol{not:Rb}$, i com a
+conjunt discret són els naturals, $T\in \N$.
 \textcite[cap.~3]{kopetz11:realtime} descriu conceptes similars tot i
 que els anomena \emph{dense time} i \emph{sparse time} i ho fa des del
 punt de vista d'esdeveniments de temps real. Així fa notar que els
@@ -245,77 +242,137 @@ esdeveniments que són externs a aquest control sempre es produeixen
 amb \emph{dense time}.
 % també parla dels processos amb representació cíclica del temps
 
-Així, segons la perspectiva de sistema de coordenades temps continu,
-el temps dens infereix als instants de temps un significat de punt
-(\emph{timestamp}) mentre que el temps discret infereix un significat
-de lapse de temps (\emph{time span}).  
-Un cas particular de sèries temporals amb trets de temps
+
+
+Així, segons la perspectiva del temps com a sistema de coordenades de
+la \autoref{def:model:temps}, el temps dens infereix als instants de
+temps un significat de punt temporal (\emph{timestamp}) mentre que el
+temps discret infereix un significat de lapse de temps (\emph{time
+  span}) a vegades també anomenat \emph{chronon}.  
+
+
+Un cas particular de sèries temporals amb trets semàntics de temps
 discret són les que tenen trets de seqüència. Les sèries temporals com
 a seqüències són habituals en l'anàlisi de sèries temporals ja que són
-una manera simple d'observar un conjunt de dades ordenades en el temps
-sense determinar-ne exactament la distància temporal entre elles.
+una manera simple d'observar un conjunt de dades ordenades sense
+determinar-ne exactament la distància temporal entre elles ni la
+posició absoluta en el sistema de coordenades.
 
 
-Un cas que observem amb tret de seqüència són les sèries temporals que
-recullen agregacions d'intervals de temps. Per exemple una sèrie
-temporal que recull les temperatures mitjanes de cada mes
-$S=\{(\text{gen},10),(\text{feb},11),(\text{març},15),\dotsc\}$. En
-aquest cas el temps és discret i té el domini
-$T\in\{\text{gen},\text{feb},\text{març},\dotsc\}$ i cada instant de
-temps es pot observar com un lapse que dura tot el mes. Això no
-obstant, aquestes sèries temporals s'expressen amb més exactitud amb
-temps dens, per exemple en el cas de les mitjanes s'hauran adquirit a
-final de mes i per tant els instants de temps poden ser més precisos
-$S=\{(\text{31-gen 23.59},10),(\text{28-feb 23.59},11),(\text{31-març
-  23.59},15),\dotsc\}$.
+
+
+\begin{example}
+  Un cas que observem amb tret semàntic de seqüència són les sèries
+  temporals que recullen dades per intervals de temps. Per exemple,
+  una sèrie temporal que recull les temperatures mitjanes de cada mes
+  $S=\{(\text{gen99},10),(\text{feb99},11),(\text{març99},15),\dotsc\}$. En
+  aquest cas el temps és discret amb el domini
+  $T\in\{\text{gen99},\text{feb99},\text{març99},\dotsc\}$ i cada
+  instant de temps es pot observar com un lapse que dura tot el
+  mes. Això no obstant, aquestes sèries temporals s'expressen amb més
+  exactitud amb temps dens, per exemple en el cas de les mitjanes
+  s'hauran adquirit a final de mes i per tant els instants de temps
+  poden ser més precisos $S=\{(\text{31-gen-99 23.59},10),(\text{28-feb-99
+    23.59},11),(\text{31-març-99 23.59},15),\dotsc\}$.
 % aquestes no són comptadors, no tenen forma de valor relatiu ni
 % encara que tenen representació zoh/zohc/zohe no són velocitat perquè
 % no tenen unitats de unitats/u.t.
+\end{example}
 
-Un cas que observem amb tret de seqüència són les sèries temporals que
-recullen agregacions d'intervals de temps no continus.  Per exemple
-una sèrie temporal que recull les temperatures mitjanes dels mesos
-d'octubre
-$S=\{(\text{oct98},15),(\text{oct99},10),(\text{oct00},13),\dotsc\}$.
-En aquest cas el temps és discret i té el domini
-$T\in\{\text{oct98},\text{oct99},\text{oct00},\dotsc\}$ i cada instant
-de temps es pot observar com un lapse que dura tot un mes d'octubre
-però no hi ha continuïtat del temps entre els mesos. Així doncs,
-aquestes sèries temporals presenten més dificultats a l'hora
-d'expressar-se amb temps dens, per exemple com en el cas anterior es
-pot precisar amb els instants de temps
-$S=\{(\text{31-oct-98},15),(\text{31-oct-99,10}),(\text{31-oct-00,13}),\dotsc\}$
-o bé refermar-ho amb valors indefinits
-$S=\{(\text{30-set-98},\infty),(\text{31-oct-98},15),(\text{30-set-99},\infty),(\text{31-oct-99,10}),\dotsc\}$,
-però cal anar en compte amb les operacions que s'hi apliquin ja que
-poden no adequar-se a la semàntica si no tenen en compte aquesta
-discontinuïtat del temps. 
+
+\begin{example} 
+  Un altre cas que observem amb trets de seqüència són les sèries
+  temporals que recullen agregacions d'intervals de temps no continus.
+  Per exemple una sèrie temporal que recull les temperatures mitjanes
+  dels mesos d'octubre
+  $S=\{(\text{oct98},15),(\text{oct99},10),(\text{oct00},13),\dotsc\}$.
+  En aquest cas el temps és discret amb el domini
+  $T\in\{\text{oct98},\text{oct99},\text{oct00},\dotsc\}$ i cada
+  instant de temps es pot observar com un lapse que dura tot un mes
+  d'octubre però no hi ha continuïtat del temps entre els mesos. Així
+  doncs, aquestes sèries temporals presenten més dificultats a l'hora
+  d'expressar-se amb temps dens, per exemple com en el cas anterior es
+  pot precisar amb els instants de temps
+  $S=\{(\text{31-oct-98},15),(\text{31-oct-99,10}),(\text{31-oct-00,13}),\dotsc\}$
+  o bé refermar-ho amb valors indefinits
+  $S=\{(\text{30-set-98},\infty),(\text{31-oct-98},15),(\text{1-nov-98},\infty),(\text{30-set-99},\infty),(\text{31-oct-99,10}),\dotsc\}$,
+  però cal anar en compte amb les operacions que s'hi apliquin ja que
+  poden no adequar-se a la semàntica si no tenen en compte aquesta
+  discontinuïtat del temps.
 % De la mateixa manera, les operacions d'anàlisi de seqüències
 % temporals poden no ser totalment certes si no han tingut en compte
 % que el temps és continu, o discret però sense salts.
+\end{example}
+
+
+\begin{example}
+  Un cas semblant als dos exemples anteriors amb trets de seqüència
+  són les sèries temporals que mostren agregacions de dades per
+  intervals de temps. Per exemple, una sèrie temporal que recull la
+  mitjana de les temperatures de cada mes
+  $S=\{(\text{gen},10),(\text{feb},11),\dotsc,(\text{des},15)\}$. En
+  aquest cas el temps és discret amb el domini
+  $T\in\{\text{gen},\text{feb},\dotsc,\text{des}\}$ i el lapse dura
+  tot un mes però sense cap posició absoluta en el sistema de
+  coordenades de temps. Aquest cas no es pot expressar amb temps dens.
+  Encara que aquest i casos semblants compleixen les propietats de
+  sèries temporals, la interpretació del temps és dificultosa i pot
+  resultar més còmode tractar-los com a casos genèrics dels \gls{SGBDR}
+  on la interpretació de l'atribut de temps com a etiqueta o
+  característica agrupada serà més apropiada.
+\end{example}
 
 
 
-\subsubsection{Intervals de temps}
+
+\subsubsection{Intervals temporals}
+
 
 Finalment, hi ha dades que s'anoten en intervals de temps en comptes
 d'instants de temps. Aquests casos pertanyen al model d'intervals de
 temps, el qual és diferent del de sèries temporals. Algunes dades en
-intervals de temps es poden expressar perfectament en sèries temporals
-però altres no resulta tan còmode. Vegem-ne alguns exemples.
+intervals temporals es poden expressar perfectament en sèries
+temporals però altres no resulta tan còmode. Vegem-ne alguns exemples.
+
+
+Sense definir amb detall el model d'intervals
+temporals \parencite{date02:_tempor_data_relat_model}, assumim que en
+el model d'intervals l'estat d'una variable s'indica amb el conjunt
+$I=\{([t_0,t_1),v_0),([t_1,t_2),v_1),\dotsc\}$ que expressa que en
+l'interval de temps $[t_0,t_1)$ la variable mesurada té el valor
+$v_0$, en l'interval de temps següent $[t_1,t_2)$ té el valor $v_1$,
+etc.
+
 
 %El temps pot ser tant dens, $T\in\R$, com discret
 
-Un primer exemple és el tipus d'interès que fixa el Banc Central
-Europeu. En aquest cas es fixen valors cadascun dels quals és vàlid
-durant un determinat interval de temps. Una expressió d'exemple
-possible, sense detallar el model d'intervals temporals, és
-$I=\{([1,2),0.25),([2,4),0.50),([5,7),0.75)\}$ amb els valors en
-unitats de tant per cent. Es pot expressar fàcilment en sèrie temporal
-$S=\{(1,0.25),(2,0.50),(4,0.75),(7,\infty)\}$, i acompanyar-ho amb una
-representació adequada com la ZOH (v.~\autoref{def:sgst:zoh}).
+
+\todo{revisar} 
 
 
+
+
+\begin{example}
+  \label{ex:sgst:bce}
+  Un primer exemple és el tipus d'interès que fixa el Banc Central
+  Europeu. En aquest cas es fixen valors cadascun dels quals és vàlid
+  durant un determinat interval de temps.  Un exemple per a un tipus
+  d'interès expressat en intervals temporals és
+  $I=\{([\text{2012-07-11},\text{2013-05-08}),
+  0{,}75),([\text{2013-05-08},\text{2013-11-13}),
+  0{,}50),([\text{2013-11-13},\text{2014-06-11}),
+  0{,}25),([\text{2014-06-11},+\infty), 0{,}15) \}$ on els valors
+  tenen unitats de tant per cent, $\text{2012-07-11}$ és el primer
+  instant conegut, i $\text{2014-06-11}$ és el darrer instant fixat i
+  per tant el valor $0{,}15$ és d'aplicació fins a un nou canvi. Es
+  pot expressar fàcilment en sèrie temporal $S=\{(\text{2012-07-11},
+  0{,}75),(\text{2013-05-08},0{,}50),(\text{2013-11-13},0{,}25),(\text{2014-06-11},0{,}15)\}$,
+  i acompanyar-ho amb una representació adequada com la \gls{zoh}
+  (v.~\autoref{def:sgst:zoh}).
+\end{example}
+
+
+\begin{example}
 Un segon exemple és una agenda, la qual fixa tasques en intervals de
 temps futurs. Per exemple expressat en intervals temporals
 $I=\{([7,8),\text{transport}),([8,15),\text{feina}),([17,18),
@@ -325,12 +382,26 @@ sèrie temporal $S=\{(7,\text{transport}),(8,\text{feina}), (15,\infty)
 exemple la sèrie temporal no és còmode i és millor el model
 d'intervals temporals, el qual està més orientat a expressar
 el temps de validesa de cada tasca.
+\end{example}
 
 
 
 %- Per exemple un control de versions 
 
 %- altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
+
+
+\todo{en realitat} el model de SGBD per a intervals
+temporals \parencite{date02:_tempor_data_relat_model} és un model que
+es presentat conjuntament com a dades bitemporals. Així permet
+emmagatzemar la informació de canvis en les dades; en
+l'\autoref{ex:sgst:bce} suposem que en un futur instant
+$\text{2014-09-10}$ es fixarà un nou valor, aleshores les dades
+emmagatzemades s'han d'actualitzar i segons el model de dades
+bitemporals es conservarà en l'històric de transaccions que en un
+interval de temps determinat desconeixíem aquest canvi.
+
+
 
 
 \todo{les dades bitemporals extenen el model relacional} En un SGST
@@ -357,8 +428,14 @@ la dada $(15,5)$ queda esborrada.
 
 
 
+
+\subsubsection{Funcions}
+
 \todo{també caldria analitzar els d'aproximació}
 també caldria analitzar els que fan aproximació al senyal original com per exmple last01?. En aquest cas hi podria haver un model d'aproximació a les sèries temporals que només guardés l'agregació dels paràmetres que defineixen la funció, per exemple S=ax+b -> explicar-ho bé en les funcions de representació
+$f(t)=mt+b$ o $f(t)=A\sin(\omega t +\varphi)$
+
+
 
 
 
