@@ -544,21 +544,19 @@ les operacions dels \gls{SGST}.
 
 \subsubsection{Funcions parcials}
 
-\todo{revisar} 
 
 Les funcions parcials no són totalment contínues en el temps sinó que
-són funcions no definides en alguns valors de temps, contràriament les
+són funcions no definides en alguns valors de temps; contràriament les
 funcions definides per tots els valors de temps s'anomenen funcions
-totals. Així, en aquests casos, no hi ha una interpretació clara de
-què hi ha entre dues mesures.  A continuació ho exemplifiquem amb una
-representació que anomenem parcial discreta.
-
-\todo{pensar un nom que no sigui $d$}
+totals. Així, en aquests casos parcials, no hi ha una interpretació
+clara de què hi ha entre dues mesures.  A continuació ho exemplifiquem
+amb una representació que anomenem parcial discreta (\gls{pd}).
 
 \begin{definition}[Funció de representació parcial discreta]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix
-  $\glsdispdef{not:discreta}{S^{\gls{pd}}(t)}$ com la funció de representació
-  discreta de la sèrie temporal $\forall m \in S: S^{\gls{pd}}(t) =
+  $\glsdispdef{not:discreta}{S^{\gls{pd}}(t)}$ com la funció de
+  representació parcial discreta de la sèrie temporal $\forall m \in
+  S: S^{\gls{pd}}(t) =
   \begin{cases}
     V(m) & \text{si }  t=T(m) \\
     \text{no definit} & \text{altrament}
@@ -583,11 +581,11 @@ sèrie temporal: $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t) \equiv
 
 
 
-\begin{example}[Sèrie temporal amb representació discreta]
+\begin{example}[Sèrie temporal amb representació parcial discreta]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, el
-  graf de la representació discreta és $\glssymbol{not:sgst:graf}
-  S^d(t)=\{ (3,1), (4,3), (6,2), (9,1) \}$, el qual es mostra a la
-  \autoref{fig:model:repr:d}.
+  graf de la representació parcial discreta és
+  $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t)=\{ (3,1), (4,3), (6,2), (9,1) \}$,
+  el qual es mostra a la \autoref{fig:model:repr:d}.
 
 
   \begin{figure}[tp]
@@ -603,7 +601,7 @@ sèrie temporal: $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t) \equiv
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
-        title=$S^d$,
+        title=$S^{\gls{pd}}$,
         ]
     \addplot[mark=*,blue,only marks] coordinates { 
         (3,1) 
@@ -618,7 +616,7 @@ sèrie temporal: $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t) \equiv
     \end{axis}
    \end{tikzpicture}
    \caption{Taula d'una sèrie temporal $S$ i
-     $\glssymbol{not:sgst:graf} S^d(t)$}
+     $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t)$}
   \label{fig:model:repr:d}
   \end{figure}
 \end{example}
@@ -628,21 +626,20 @@ sèrie temporal: $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t) \equiv
 
 \subsubsection{A impulsos}
 
-\todo{canviar el símbol de delta, a DD o delta masjúscula o...}
-
 Una família de funcions contínues que recorda a la funció discreta són
-les funcions d'impulsos (\emph{impulse train function}) però que
-pertany a les funcions definides a trossos.  A continuació ho
-exemplifiquem amb una representació que anomenem delta ($\delta$)
-perquè es basa en la funció delta de Dirac, la qual val zero a tot
-arreu excepte en el punt zero.
+les funcions d'impulsos (\emph{impulse train function}), tot i que
+pertanyen a les funcions definides a trossos contínues.  A continuació
+ho exemplifiquem amb una representació que anomenem delta de Dirac
+(\gls{dd}) perquè es basa en la funció homònima, la qual val zero a
+tot arreu excepte en el punt zero.
 
-\begin{definition}[Funció de representació delta]
+\begin{definition}[Funció de representació delta de Dirac]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $\glsdispdef{not:dd}{S^\delta(t)}$ com la
-  funció de representació delta al llarg del temps, $\forall m \in S:$
+  temps, es defineix $\glsdispdef{not:dd}{S^{\gls{dd}}(t)}$ com la
+  funció de representació delta de Dirac al llarg del temps, $\forall
+  m \in S:$
   \begin{align*}
-    S^\delta(t) = &  \\
+    S^{\gls{dd}}(t) = &  \\
     = & \sum_{t\in T} V(m) \delta(t-T(m)): \delta(t)= 
       \begin{cases}
         1 & \text{si }  t=0 \\
@@ -657,12 +654,12 @@ arreu excepte en el punt zero.
 
 
 
-\begin{example}[Sèrie temporal amb representació delta]
+\begin{example}[Sèrie temporal amb representació delta de Dirac]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
-  seva representació delta és $S^\delta(t) = 0 +1\delta(t-3)
+  seva representació \gls{dd} és $S^{\gls{dd}}(t) = 0 +1\delta(t-3)
   +3\delta(t-4) +2\delta(t-6) +1\delta(t-9)$. El graf d'aquesta
-  representació, $\glssymbol{not:sgst:graf} S^\delta(t)$, es mostra a
-  la \autoref{fig:model:repr:delta}.
+  representació, $\glssymbol{not:sgst:graf} S^{\gls{dd}}(t)$, es
+  mostra a la \autoref{fig:model:repr:delta}.
 
 
   \begin{figure}[tp]
@@ -678,7 +675,7 @@ arreu excepte en el punt zero.
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
-        title=$S^\delta$,
+        title=$S^{\gls{dd}}$,
         xmin=0,
         xmax=11,
         xtickmin=0,
@@ -713,7 +710,7 @@ arreu excepte en el punt zero.
     \end{axis}
    \end{tikzpicture}
    \caption{Taula d'una sèrie temporal $S$ i
-     $\glssymbol{not:sgst:graf} S^\delta(t)$}
+     $\glssymbol{not:sgst:graf} S^{\gls{dd}}(t)$}
   \label{fig:model:repr:delta}
   \end{figure}
 \end{example}
@@ -721,11 +718,13 @@ arreu excepte en el punt zero.
 
 \subsubsection{A trossos constants}
 
-Una altra família de funcions són les que es basen en funcions
-definides a trossos constants (\emph{piecewise constant functions}).
-A continuació ho exemplifiquem amb quatre representacions basades en la
-funció graó (\emph{step function} o \emph{staircase function}) atenent
-a quatre de les possibles continuïtats en els intervals de temps. 
+
+Una altra família de funcions contínues són les que es basen en
+funcions definides a trossos constants (\emph{piecewise constant
+  functions}).  A continuació ho exemplifiquem amb quatre
+representacions basades en la funció graó (\emph{step function} o
+\emph{staircase function}) atenent a quatre de les possibles
+continuïtats en els intervals de temps.
 
 
 A les definicions següents s'utilitza la notació de funció
@@ -744,16 +743,16 @@ de temps pertany a un determinat interval de temps:
 %(\emph{right-continuous})
 En primer lloc, definim una representació en base a funcions graó
 contínues per la dreta. L'anomenem representació \emph{zero-order
-  hold} (ZOH) a causa de la semblança que té amb el model utilitzat en
+  hold} (\gls{zoh}) a causa de la semblança que té amb el model utilitzat en
 teoria del senyal per a reconstruir senyals, el qual consisteix en mantenir
 constant cada valor fins al proper.
 \begin{definition}[Funció de representació \emph{zero-order hold}]
   \label{def:sgst:zoh}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\text{ZOH}(t)$ com la funció de representació
+  temps, es defineix $S^{\gls{zoh}}(t)$ com la funció de representació
   \emph{zero-order hold} al llarg del temps, $\forall m \in S:$
   \begin{align*}
-    S^\text{ZOH}(t) = &  \\
+    S^{\gls{zoh}}(t) = &  \\
     = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big[T(m), T(\glssymbol{not:sgst:next}(m)) \big)}(t)\\
     = & \begin{cases}
       0 & \text{si }  t<T(\min(S)) \\
@@ -767,7 +766,7 @@ constant cada valor fins al proper.
 
 En segon lloc, definim una representació en base a funcions graó
 contínues per l'esquerra. L'anomenem representació \emph{zero-order
-  hold} cap enrere (ZOHE) perquè consisteix en mantenir constant cada
+  hold} cap enrere (\gls{zohe}) perquè consisteix en mantenir constant cada
 valor fins al predecessor. Una representació similar s'utilitza a
 \gls{RRDtool} \parencite{lisa98:oetiker}.
 \begin{definition}[Funció de representació \emph{zero-order hold} cap
@@ -775,11 +774,11 @@ valor fins al predecessor. Una representació similar s'utilitza a
          %hold everted}
   \label{def:model:zohe}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $\glsdispdef{not:zohe}{S^\text{ZOHE}(t)}$ com la
+  temps, es defineix $\glsdispdef{not:zohe}{S^{\gls{zohe}}(t)}$ com la
   funció de representació \emph{zero-order hold} cap enrere al llarg
   del temps, $\forall m \in S:$
   \begin{align*}
-    S^\text{ZOHE}(t) = &  \\
+    S^{\gls{zohe}}(t) = &  \\
     = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
     = & \begin{cases}
       0 & \text{si }  t > T(\max(S)) \\
@@ -792,15 +791,15 @@ valor fins al predecessor. Una representació similar s'utilitza a
 
 En tercer lloc, definim una representació en base a funcions graó
 contínues per la dreta centrades en l'interval. L'anomenem
-representació \emph{zero-order hold} centrada en l'interval (ZOHC).
+representació \emph{zero-order hold} centrada en l'interval (\acro{ZOHC}).
 \begin{definition}[Funció de representació \emph{zero-order hold}
   centrada en l'interval]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\text{ZOHC}(t)$ com la funció de representació
+  temps, es defineix $S^\text{\acro{ZOHC}}(t)$ com la funció de representació
   \emph{zero-order hold} centrada en l'interval al llarg del temps,
   $\forall m \in S:$
   \begin{align*}
-    S^\text{ZOHC}(t) = &  \\
+    S^\text{\acro{ZOHC}}(t) = &  \\
    = & \sum_{t\in T} V(m) \glssymbol{not:Ia}_{\left[
         \frac{T(\glssymbol{not:sgst:prev}(m))+T(m)}{2},
         \frac{T(m)+T(\glssymbol{not:sgst:next}(m))}{2}
@@ -816,11 +815,11 @@ representació \emph{zero-order hold} centrada en l'interval (ZOHC).
 
 En quart lloc, representem la sèrie temporal en base a la funció
 rectangular. La funció rectangular és un cas especial de les funcions
-graó a on s'especifiquen valors simètrics per als punts de
+graó en la qual s'especifiquen valors simètrics per als punts de
 discontinuïtat. Definim el rectangle amb manteniment del valor cap a
-la dreta, de manera similar al ZOH, tot i que també es possible
+la dreta, de manera similar al \gls{zoh}, tot i que també és possible
 definir altres translacions del rectangle com s'ha fet per la funció
-graó en el cas del ZOHE i el ZOHC.
+graó en els casos del \gls{zohe} i del \acro{ZOHC}.
 \begin{definition}[Funció de representació rectangular]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
   temps, es defineix $S^\text{rect}(t)$ com la funció de representació
@@ -843,20 +842,18 @@ graó en el cas del ZOHE i el ZOHC.
 \end{definition}
 
 
-% En la representació rectangular només hem definit un cas semblant al
-% del la representació ZOH. També podríem definir variacions de la
-% rectangular com s'ha fet per la ZOH: la ZOHE i la ZOHC. 
 % La variació entre la ZOH i la ZOHC o la ZOHE no és només una translació. 
+% perquè si la sèrie temporal és irregular aleshores el valor dura més o menys
+% segons la interpretació
 
 
-
-\begin{example}[Sèrie temporal amb representació ZOHE]
+\begin{example}[Sèrie temporal amb representació \gls{zohe}]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
-  seva representació ZOHE és $S^\text{ZOHE}(t) =
+  seva representació \gls{zohe} és $S^{\gls{zohe}}(t) =
   1\glssymbol{not:Ia}_{(-\infty,3]} +3\glssymbol{not:Ia}_{(3,4]}
   +2\glssymbol{not:Ia}_{(4,6]} +1\glssymbol{not:Ia}_{(6,9]}
   +0\glssymbol{not:Ia}_{(9,+\infty)}$. El graf d'aquesta
-  representació, $\glssymbol{not:sgst:graf} S^\text{ZOHE}(t)$, es
+  representació, $\glssymbol{not:sgst:graf} S^{\gls{zohe}}(t)$, es
   mostra a la \autoref{fig:model:repr:zohe}.
 
 
@@ -873,7 +870,7 @@ graó en el cas del ZOHE i el ZOHC.
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
-        title=$S^\text{ZOHE}$,
+        title=$S^{\gls{zohe}}$,
         xmin=0,
         xmax=11,
         xtickmin=0,
@@ -920,7 +917,7 @@ graó en el cas del ZOHE i el ZOHC.
     \end{axis}
    \end{tikzpicture}
    \caption{Taula d'una sèrie temporal $S$ i
-     $\glssymbol{not:sgst:graf} S^\text{ZOHE}(t)$}
+     $\glssymbol{not:sgst:graf} S^{\gls{zohe}}(t)$}
   \label{fig:model:repr:zohe}
   \end{figure}
 \end{example}
@@ -1019,17 +1016,18 @@ graó en el cas del ZOHE i el ZOHC.
 
 \subsubsection{A trossos lineals}
 
+
 Una família de funcions d'un ordre superior a les de trossos constants
 són les que es basen en funcions definides a trossos lineals
 (\emph{piecewise linear functions}).  A continuació ho exemplifiquem
 amb una representació basada en la funció triangular (\emph{triangular
-  function}). Seguint amb l'analogia electrònica l'anomenem
-representació \emph{first-order hold}(FOH), el qual consisteix en
-interpolar linealment cada valor fins al proper.
+  function}). Seguint l'analogia amb la teoria del senyal, l'anomenem
+representació \emph{first-order hold} (\acro{FOH}), el qual consisteix
+en interpolar linealment cada valor fins al proper.
 
 
-La definició del FOH amb funcions matemàtiques contínues es construeix
-a partir de la funció triangular $\operatorname{tri}(t)$
+La definició del \acro{FOH} amb funcions matemàtiques contínues es construeix
+a partir de la funció triangular $\operatorname{tri}(t)$:
 \[
 \operatorname{tri}(t) = 
 \begin{cases}
@@ -1045,7 +1043,7 @@ regular amb període $P$ i sigui $T$ el domini del temps, es defineix
 $S^\text{FOH}_ R(t)$ com la funció de representació \emph{first-order
   hold} al llarg del temps, $\forall m \in S:$
 \[
-S_ R^\text{FOH}(t) = \sum_{t\in T} V(m)
+S_ R^\text{\acro{FOH}}(t) = \sum_{t\in T} V(m)
 \operatorname{tri}\left(\frac{t-T(m)}{P}\right)
 \]
 
@@ -1055,13 +1053,13 @@ Per al cas general, tant per a sèries temporals regulars com per a no
 regulars, s'ha de construir a partir de funcions triangulars no
 simètriques:
 \[
-\operatorname{tri}^{-1}(t) = 
+\operatorname{tri}^{\text{ant}}(t) = 
 \begin{cases}
   1-|t| & \text{si } -1 < t < 0\\
   0 & \text{altrament}
 \end{cases}
 \quad
-\operatorname{tri}^1(t) = 
+\operatorname{tri}^{\text{seg}}(t) = 
 \begin{cases}
   1-|t| & \text{si } 0 \leq t < 1\\
   0 & \text{altrament}
@@ -1071,44 +1069,45 @@ simètriques:
 
 \begin{definition}[Funció de representació \emph{first-order hold}]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\text{FOH}(t)$ com la funció de representació
+  temps, es defineix $S^\text{\acro{FOH}}(t)$ com la funció de representació
   \emph{first-order hold} al llarg del temps, $\forall m \in S:$
   \begin{align*}
-    :\; & x_1=T(m), y_1=V(m), \\
-    & m_2=\glssymbol{not:sgst:next}(m), x_2=T(m_s), y_2=V(m_s),\\
-    & m_0=\glssymbol{not:sgst:prev}(m), x_0=T(m_a), y_0=V(m_a) :\\
     S^\text{FOH}(t) = & \\
     = & \sum_{t\in T} y_1
     \left(
-      \operatorname{tri}^{-1}\left(\frac{t-x_1}{x_1-x_0}\right)
-      +\operatorname{tri}^1\left(\frac{t-x_1}{x_2-x_1}\right)
+      \operatorname{tri}^{\text{ant}}\left(\frac{t-x_1}{x_1-x_0}\right)
+      +\operatorname{tri}^{\text{seg}}\left(\frac{t-x_1}{x_2-x_1}\right)
     \right)  \\
     = & \begin{cases}
       V(\min(S)) & \text{si } t<T(\min(S) )\\
       V(\max(S)) & \text{si } t> T(\max(S))  \\
       \frac{y_2-y_1}{x_2-x_1}(t-x_1)+y_1 & \text{si } t\in
       \big[x_1,x_2\big) \wedge t \leq T(\max(S))
-    \end{cases}
+    \end{cases}\\
+    :\; & x_1=T(m), y_1=V(m), \\
+    & m_s=\glssymbol{not:sgst:next}(m), x_2=T(m_s), y_2=V(m_s),\\
+    & m_a=\glssymbol{not:sgst:prev}(m), x_0=T(m_a), y_0=V(m_a) 
   \end{align*}.
 \end{definition}
 
 
 
 
-\begin{example}[Sèrie temporal amb representació FOH]
+\begin{example}[Sèrie temporal amb representació \acro{FOH}]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
-  seva representació amb FOH és $S^\text{FOH}(t) =
-  1\operatorname{tri}^{-1}\left(\frac{t-3}{3-(-\infty)}\right) +
-  1\operatorname{tri}^1\left(\frac{t-3}{4-3}\right)
-  +3\operatorname{tri}^{-1}\left(\frac{t-4}{4-3}\right) +
-  3\operatorname{tri}^1\left(\frac{t-4}{6-4}\right)
-  +2\operatorname{tri}^{-1}\left(\frac{t-6}{6-4}\right) +
-  2\operatorname{tri}^1\left(\frac{t-6}{9-6}\right)
-  +1\operatorname{tri}^{-1}\left(\frac{t-9}{9-6}\right) +
-  1\operatorname{tri}^1\left(\frac{t-9}{+\infty-9}\right)$. El graf
-  d'aquesta representació, $\glssymbol{not:sgst:graf}
-  S^\text{FOH}(t)$, es mostra a la
-  \autoref{fig:model:repr:foh}.
+  seva representació \acro{FOH} és $S^\text{\acro{FOH}}(t) =
+  1\operatorname{tri}^{\text{ant}}\left(\frac{t-3}{3-(-\infty)}\right)
+  + 1\operatorname{tri}^{\text{seg}}\left(\frac{t-3}{4-3}\right)
+  +3\operatorname{tri}^{\text{ant}}\left(\frac{t-4}{4-3}\right) +
+  3\operatorname{tri}^{\text{seg}}\left(\frac{t-4}{6-4}\right)
+  +2\operatorname{tri}^{\text{ant}}\left(\frac{t-6}{6-4}\right) +
+  2\operatorname{tri}^{\text{seg}}\left(\frac{t-6}{9-6}\right)
+  +1\operatorname{tri}^{\text{ant}}\left(\frac{t-9}{9-6}\right) +
+  1\operatorname{tri}^{\text{seg}}\left(\frac{t-9}{+\infty-9}\right)$. El
+  graf d'aquesta representació, $\glssymbol{not:sgst:graf}
+  S^\text{\acro{FOH}}(t)$, es mostra a la \autoref{fig:model:repr:foh}
+  en què en gris es dibuixa cada funció triangular i en blau la funció
+  resultant del sumatori de totes les triangulars.
 
 
   \begin{figure}[tp]
@@ -1124,7 +1123,7 @@ simètriques:
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
-        title=$S^\text{FOH}$,
+        title=$S^\text{\acro{FOH}}$,
         xmin=0,
         xmax=11,
         ymin=0,
@@ -1179,7 +1178,7 @@ simètriques:
     \end{axis}
    \end{tikzpicture}
    \caption{Taula d'una sèrie temporal $S$ i
-     $\glssymbol{not:sgst:graf} S^\text{FOH}(t)$}
+     $\glssymbol{not:sgst:graf} S^\text{\acro{FOH}}(t)$}
   \label{fig:model:repr:foh}
   \end{figure}
 
@@ -1189,20 +1188,24 @@ simètriques:
 
 
 
-\subsubsection{D'ajustament lineal de corbes}
+\subsubsection{D'ajustament de corbes}
+
+
+\todo{revisar} 
+
 
 \todo{potser last01 fa això?}
 
 Una família de funcions diferents als casos anteriors són les funcions
-d'ajustament lineal de corbes amb polinomis.  L'ajustament de corbes
+d'ajustament de corbes amb polinomis.  L'ajustament de corbes
 (\emph{curve fitting}) és una tècnica que es basa en l'aproximació als
 punts donats, a diferència de les funcions definides a trossos que es
-basen en interpolacions que passin exactament pels punts donats.  A
+basen en interpolacions que passin exactament pels punts donats.  
+
+A
 continuació ho exemplifiquem amb una representació basada en
 l'aproximació lineal per mínims quadrats; és a dir la regressió lineal
 (\emph{linear regression}).
-
-
 Definim una representació que consisteix en trobar la recta d'ajust
 mínima quadràtica a les mesures de la sèrie temporal. L'anomenem
 representació \emph{lineal} de la sèrie temporal.
@@ -1210,10 +1213,10 @@ representació \emph{lineal} de la sèrie temporal.
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
   temps, es defineix $S^\text{lineal}(t)$ com la funció de
   representació de regressió lineal al llarg del temps, $\forall m \in
-  S:$
+  S: S^\text{lineal}(t) = \alpha + \beta t$ on els valors de la
+  regressió lineal es calculen aplicant la pseudoinversa:
   \begin{align*}
-    S^\text{lineal}(t) = & \alpha + \beta t \\
-    :\; & 
+    & 
     \left[\begin{array}{c}
         \alpha \\
         \beta
@@ -1231,6 +1234,17 @@ representació \emph{lineal} de la sèrie temporal.
       \end{array}\right]       
    \end{align*}.
 \end{definition}
+
+
+\todo{nova def} Aplicant la pseudoinversa, es pot generalitzar el problema a
+una regressió n-polinomial $S^{\text{polinomi}}(t)=\alpha_0 + \alpha_1 t + \dotsb +\alpha_n t^n$ amb $B$ la mateixa matriu que abans i 
+\[
+ A=\left[\begin{array}{cccc}
+        1 & T(m_0) & \dots & (T(m_0))^n \\
+        \vdots & \vdots & \ddots & \vdots  \\
+        1 & T(m_k) & \dots & (T(m_k))^n 
+      \end{array}\right]
+\]
 
 
 
