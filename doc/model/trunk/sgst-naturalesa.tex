@@ -221,9 +221,6 @@ comportament semblant al de valor relatiu.
 \subsubsection{Continuïtat del temps}
 
 
-
-
-
 Un segon tret semàntic de les sèries temporals també es deu al mètode
 d'adquisició però en aquest cas segons la continuïtat del temps.
 
@@ -317,8 +314,8 @@ posició absoluta en el sistema de coordenades.
   coordenades de temps. Aquest cas no es pot expressar amb temps dens.
   Encara que aquest i casos semblants compleixen les propietats de
   sèries temporals, la interpretació del temps és dificultosa i pot
-  resultar més còmode tractar-los com a casos genèrics dels \gls{SGBDR}
-  on la interpretació de l'atribut de temps com a etiqueta o
+  resultar més còmode tractar-los com a casos genèrics dels
+  \gls{SGBDR} on la interpretació de l'atribut de temps com a
   característica agrupada serà més apropiada.
 \end{example}
 
@@ -345,9 +342,6 @@ etc.
 
 
 %El temps pot ser tant dens, $T\in\R$, com discret
-
-
-\todo{revisar} 
 
 
 
@@ -391,49 +385,52 @@ el temps de validesa de cada tasca.
 %- altre ex. cas d'una partitura musical  $S=\{(1,do),(2,re),(4,silenci),(5,fa),(7,silenci)\}$  es pot descriure com una sèrie temporal conjuntament amb la respresentació ZOH però seria millor fer servir el model d'intervals temporals... $I=\{([1,2),do),([2,4),re),([5,7),fa)\}$
 
 
-\todo{en realitat} el model de SGBD per a intervals
-temporals \parencite{date02:_tempor_data_relat_model} és un model que
-es presentat conjuntament com a dades bitemporals. Així permet
-emmagatzemar la informació de canvis en les dades; en
-l'\autoref{ex:sgst:bce} suposem que en un futur instant
-$\text{2014-09-10}$ es fixarà un nou valor, aleshores les dades
-emmagatzemades s'han d'actualitzar i segons el model de dades
-bitemporals es conservarà en l'històric de transaccions que en un
-interval de temps determinat desconeixíem aquest canvi.
+
+
+% \todo{en realitat} el model de SGBD per a intervals
+% temporals \parencite{date02:_tempor_data_relat_model} és un model que
+% es presentat conjuntament com a dades bitemporals. Així permet
+% emmagatzemar la informació de canvis en les dades; en
+% l'\autoref{ex:sgst:bce} suposem que en un futur instant
+% $\text{2014-09-10}$ es fixarà un nou valor, aleshores les dades
+% emmagatzemades s'han d'actualitzar i segons el model de dades
+% bitemporals es conservarà en l'històric de transaccions que en un
+% interval de temps determinat desconeixíem aquest canvi.
 
 
 
 
-\todo{les dades bitemporals extenen el model relacional} En un SGST
-també podríem tenir històrics, és a dir una relació de capçalera
-(t,v,transaction time). No tindria sentit les dades bitemporal al
-complet (t,v,transaction time,valid time) ja que d'alguna forma
-l'atribut t ja fa de valid time (INTERESSANT això! aleshores les
-temporal data s'haurien classificar en dues: les d'interval temporal i
-les d'instant temporal. De fet per què tenen tant d'interès els de
-temporal data a tenir el model bitemporal tot junt, si l'interessant
-dels històrics és el transaction time?).  Aleshores en una sèrie
-temporal amb històrics podríem anar guardant si hi ha canvis: per
-exemple inicialment mesurem al temps 10: $S=\{(10,5,10)\}$ però si hi
-fem un canvi en el temps 20: $S=\{(10,5,10),(10,4,20)\}$ i un en el
-temps 25: $S=\{(10,5,10),(10,4,20),(11,4,25)\}$. Cal tenir en compte
-també que canviar les dades a posteriori d'una sèrie temporal ja
-adquirida és una cosa rara: però és clar que des del model no es pot
-prohibir. Cal notar que les dades bitemporals proposen el transaction
-time com un interval temporal
-$S=\{(10,5,[10,20]),(10,4,[20,25]),(11,4,[25,+\infty])\}$, això és
-indispensable per a poder esborrar dades, per exemple
-$S=\{(10,5,[10,20]),(10,4,[20,25]),(11,4,[25,+\infty]),(15,5,[15,20])\}$
-la dada $(15,5)$ queda esborrada.
+% \todo{les dades bitemporals extenen el model relacional} En un SGST
+% també podríem tenir històrics, és a dir una relació de capçalera
+% (t,v,transaction time). No tindria sentit les dades bitemporal al
+% complet (t,v,transaction time,valid time) ja que d'alguna forma
+% l'atribut t ja fa de valid time (INTERESSANT això! aleshores les
+% temporal data s'haurien classificar en dues: les d'interval temporal i
+% les d'instant temporal. De fet per què tenen tant d'interès els de
+% temporal data a tenir el model bitemporal tot junt, si l'interessant
+% dels històrics és el transaction time?).  Aleshores en una sèrie
+% temporal amb històrics podríem anar guardant si hi ha canvis: per
+% exemple inicialment mesurem al temps 10: $S=\{(10,5,10)\}$ però si hi
+% fem un canvi en el temps 20: $S=\{(10,5,10),(10,4,20)\}$ i un en el
+% temps 25: $S=\{(10,5,10),(10,4,20),(11,4,25)\}$. Cal tenir en compte
+% també que canviar les dades a posteriori d'una sèrie temporal ja
+% adquirida és una cosa rara: però és clar que des del model no es pot
+% prohibir. Cal notar que les dades bitemporals proposen el transaction
+% time com un interval temporal
+% $S=\{(10,5,[10,20]),(10,4,[20,25]),(11,4,[25,+\infty])\}$, això és
+% indispensable per a poder esborrar dades, per exemple
+% $S=\{(10,5,[10,20]),(10,4,[20,25]),(11,4,[25,+\infty]),(15,5,[15,20])\}$
+% la dada $(15,5)$ queda esborrada.
 
 
 
 
-\subsubsection{Funcions}
+% \subsubsection{Funcions}
 
-\todo{també caldria analitzar els d'aproximació}
-també caldria analitzar els que fan aproximació al senyal original com per exmple last01?. En aquest cas hi podria haver un model d'aproximació a les sèries temporals que només guardés l'agregació dels paràmetres que defineixen la funció, per exemple S=ax+b -> explicar-ho bé en les funcions de representació
-$f(t)=mt+b$ o $f(t)=A\sin(\omega t +\varphi)$
+% \todo{també caldria analitzar els d'aproximació}
+% també caldria analitzar els que fan aproximació al senyal original com per exmple last01?. En aquest cas hi podria haver un model d'aproximació a les sèries temporals que només guardés l'agregació dels paràmetres que defineixen la funció, per exemple S=ax+b -> explicar-ho bé en les funcions de representació
+% $f(t)=mt+b$ o $f(t)=A\sin(\omega t +\varphi)$
+
 
 
 
@@ -443,24 +440,28 @@ $f(t)=mt+b$ o $f(t)=A\sin(\omega t +\varphi)$
 \label{sec:model:repr}
 \glsaddsec{not:sgst:repr} %%%%secció d'operacions
 
+
 Una sèrie temporal és la representació discreta d'una funció contínua;
 la qual és una funció temporal atès que depèn del temps. El model de
-SGST definit formalitza la sèrie temporal com aquesta
+\gls{SGST} definit formalitza la sèrie temporal en aquesta
 representació discreta. Però a partir d'una sèrie temporal es pot
-voler interpretar quina era la funció contínua original; és a dir
-obtenir nous valors segons una funció a la que s'anomena graf d'una
-funció (\emph{graph of a function}), en el sentit de gràfic
-(\emph{plot}) que cal no confondre amb els grafs d'arestes i vèrtexs
-(\emph{vertex-edge graph}).
+interpretar quina era la funció contínua original; és a dir obtenir
+nous valors segons una funció. Aquesta nova co\l.lecció de valors
+s'anomena graf d'una funció (\emph{graph of a function}), en el sentit
+de gràfic (\emph{plot}) que cal no confondre amb els grafs d'arestes i
+vèrtexs (\emph{vertex-edge graph}).
+
+
 
 \begin{definition}[Graf d'una sèrie temporal]%an. graph
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ un domini del
   temps, es defineix el graf de la sèrie temporal
   $\glssymboldef{not:sgst:graf} S(t)$ com un conjunt de parells
   ordenats $(t,S(t))$ : $\glssymboldef{not:sgst:graf} S(t) = \{ (t,S(t)) |
-  t\in T \}$ a on $S(t)$ és una funció de representació de la sèrie
+  t\in T \}$  on $S(t)$ és una funció de representació de la sèrie
   temporal.
 \end{definition}
+
 
 Per a calcular el graf d'una sèrie temporal es necessita una funció de
 representació. Mentre que la funció que permet canviar d'una funció
@@ -473,7 +474,7 @@ emmagatzemades.
 \begin{definition}[Funció de representació]
   \label{def:model:frepr}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix $S(t)$
-  com la funció de representació de la sèrie temporal contínuament al
+  com la funció de representació de la sèrie temporal contínua al
   llarg del temps $t$; és a dir que per cada instant de temps la
   funció pren un valor: $\forall t\in T: v(t) = S(t)$. 
 
@@ -508,47 +509,56 @@ volen fer o segons la naturalesa que s'assumeixi de la sèrie temporal.
 
 
 No obstant això, les funcions de representació s'han d'utilitzar amb
-criteri. Per exemple la naturalesa de la sèrie temporal indueix a unes
-possibles operacions de càlcul que es poden realitzar, per tant
-l'aplicació de qualsevol funció de representació a la sèrie temporal
-pot donar resultats incoherents. O bé un altre exemple és aplicar
+criteri. Per exemple, els trets semàntics de la sèrie temporal
+determinen el significat de les operacions que es calculen per a fer
+la representació, per tant l'aplicació de qualsevol funció de
+representació a una sèrie temporal pot donar resultats
+incoherents. També caldrà tenir en compte la semàntica si s'apliquen
 càlculs successius a una sèrie temporal seguint diferents funcions de
-representació.  
-
-Així i tot, en la formalització del model de funcions de
-representacions no hi definim cap criteri en concret per a, així,
-donar llibertat en les possibilitats de càlcul amb les sèries
-temporals. Al capítol \todo{ref} d'estat actual ja s'ha vist que en
-l'anàlisi de sèries temporals hi ha diversitat en els algoritmes de
-representació que s'utilitzen.
+representació.  Això no obstant, en la formalització del model de
+funcions de representacions no definim cap criteri en concret per a,
+així, donar llibertat en les possibilitats de càlcul amb les sèries
+temporals. En el capítol \todo{ref estat de l'art} s'ha descrit
+breument la diversitat en els algoritmes de representació que
+s'utilitzen per a l'anàlisi de sèries temporals.
 % entre els quals destaquen els que es basen en aproximació als valors
-% de la sèrie temporal. Aquí ens centrem en els algoritmes
+% de la sèrie temporal. Aquí també parlarem  dels algoritmes
 % d'interpolació exactes, els quals són més senzills de comprendre.
 
 
-A continuació, definim diverses funcions de representació per a
+A continuació definim diverses funcions de representació per a
 exemplificar-ne l'ús. Les agrupem per algunes de les seves
-característiques, a les qual podem veure com famílies de funcions de
-representació, i de cada una en definim les més representatives. Per a
-cada definició una oferim, quan es pugui, dues expressions
-equivalents: una en matemàtica contínua, que ajuda a comprendre el
-significat, i una en matemàtica discreta, que utilitza l'àlgebra del
-model de SGST.
+característiques i que, d'alguna manera, formen famílies de funcions
+de representació; així de cada una en definim les més representatives.
+Com a mostra de la diversitat, exemplifiquem tres grans famílies de
+funcions: parcials, a trossos i aproximacions.  En les definicions de
+les funcions a trossos oferim, quan es pugui, dues expressions
+equivalents: una com a sumatori de subfuncions contínues, que ajuda a
+comprendre'n el significat, i una altra com a taula de pertinences,
+que utilitza l'àlgebra del model de \gls{SGST}.
+Finalment, un cop presentats els diversos
+exemples de funcions de representació, explicitem l'ús que tenen en
+les operacions dels \gls{SGST}.
 
 
 
 \subsubsection{Funcions parcials}
-\todo{no sé si aporten res les parcials? cal acabar la secció d'agregadors dels SGSTM i repensar això}
-\todo{Les funcions parcials tenen a veure amb representacions per als casos que tractem les sèries temporals amb operadors de conjunts o seqüències. En aquests casos no hi ha una interpretació clara del què hi ha entre les mesures. Si des de les representacions volem observar aquests casos hem de definir funcions parcials, les quals no són totalment contínues en el temps}
 
+\todo{revisar} 
 
-Primerament, definim una funció de representació anomenada discreta
-pura que no és totalment contínua en el temps sinó que és una funció
-parcial.
-\begin{definition}[Funció de representació discreta pura]
+Les funcions parcials no són totalment contínues en el temps sinó que
+són funcions no definides en alguns valors de temps, contràriament les
+funcions definides per tots els valors de temps s'anomenen funcions
+totals. Així, en aquests casos, no hi ha una interpretació clara de
+què hi ha entre dues mesures.  A continuació ho exemplifiquem amb una
+representació que anomenem parcial discreta.
+
+\todo{pensar un nom que no sigui $d$}
+
+\begin{definition}[Funció de representació parcial discreta]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix
-  $S^d(t)$ com la funció de representació discreta pura de la sèrie
-  temporal $\forall m \in S: S^d(t) =
+  $\glsdispdef{not:discreta}{S^{\gls{pd}}(t)}$ com la funció de representació
+  discreta de la sèrie temporal $\forall m \in S: S^{\gls{pd}}(t) =
   \begin{cases}
     V(m) & \text{si }  t=T(m) \\
     \text{no definit} & \text{altrament}
@@ -557,24 +567,25 @@ parcial.
 
 Aquest és un cas especial de funció de representació perquè permet que
 el graf de la sèrie temporal sigui equivalent a les mesures de la
-sèrie temporal: $\glssymbol{not:sgst:graf} S^d(t) \equiv
+sèrie temporal: $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t) \equiv
 \{m_0,\ldots,m_k\}$.
 
-Es poden definir altres funcions de representació de la família
-parcial, però presenten el problema que el domini queda restringit a
-un subconjunt $T'$ del domini temps $T$; el domini queda restringit
-als instants de temps elegits $T'$ ja que per qualsevol altre instant de
-$T$ no hi ha imatge definida.
-
-Així doncs, és millor definir funcions totals que sempre seran
-funcions ben-definides per al domini temps.
-\todo{sinó, es poden trobar equivalents en les contínues?}
 
 
+% Es poden definir altres funcions de representació de la família
+% parcial, però presenten el problema que el domini queda restringit a
+% un subconjunt $T'$ del domini temps $T$; el domini queda restringit
+% als instants de temps elegits $T'$ ja que per qualsevol altre instant de
+% $T$ no hi ha imatge definida.
 
-\begin{example}[Sèrie temporal amb representació discreta pura]
+% Així doncs, és millor definir funcions totals que sempre seran
+% funcions ben-definides per al domini temps.
+
+
+
+\begin{example}[Sèrie temporal amb representació discreta]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, el
-  graf de la representació discreta pura és $\glssymbol{not:sgst:graf}
+  graf de la representació discreta és $\glssymbol{not:sgst:graf}
   S^d(t)=\{ (3,1), (4,3), (6,2), (9,1) \}$, el qual es mostra a la
   \autoref{fig:model:repr:d}.
 
@@ -620,14 +631,15 @@ funcions ben-definides per al domini temps.
 \todo{canviar el símbol de delta, a DD o delta masjúscula o...}
 
 Una família de funcions contínues que recorda a la funció discreta són
-les funcions d'impulsos (\emph{impulse train function}).  A
-continuació ho exemplifiquem amb una representació que anomenem delta
-($\delta$) perquè es basa en la funció delta de Dirac, la qual val
-zero a tot arreu excepte en el punt zero.
+les funcions d'impulsos (\emph{impulse train function}) però que
+pertany a les funcions definides a trossos.  A continuació ho
+exemplifiquem amb una representació que anomenem delta ($\delta$)
+perquè es basa en la funció delta de Dirac, la qual val zero a tot
+arreu excepte en el punt zero.
 
 \begin{definition}[Funció de representació delta]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $\glsdispdef{not:sgst:deltarepr}{S^\delta(t)}$ com la
+  temps, es defineix $\glsdispdef{not:dd}{S^\delta(t)}$ com la
   funció de representació delta al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\delta(t) = &  \\
