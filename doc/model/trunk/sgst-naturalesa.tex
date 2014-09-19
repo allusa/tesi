@@ -430,7 +430,7 @@ el temps de validesa de cada tasca.
 % \todo{també caldria analitzar els d'aproximació}
 % també caldria analitzar els que fan aproximació al senyal original com per exmple last01?. En aquest cas hi podria haver un model d'aproximació a les sèries temporals que només guardés l'agregació dels paràmetres que defineixen la funció, per exemple S=ax+b -> explicar-ho bé en les funcions de representació
 % $f(t)=mt+b$ o $f(t)=A\sin(\omega t +\varphi)$
-
+%Això és el que fa last01, proposa trobar la millor funció d'aproximació dividint en subintervals de la sèrie temporals
 
 
 
@@ -1022,11 +1022,11 @@ són les que es basen en funcions definides a trossos lineals
 (\emph{piecewise linear functions}).  A continuació ho exemplifiquem
 amb una representació basada en la funció triangular (\emph{triangular
   function}). Seguint l'analogia amb la teoria del senyal, l'anomenem
-representació \emph{first-order hold} (\acro{FOH}), el qual consisteix
+representació \emph{first-order hold} (\gls{foh}), el qual consisteix
 en interpolar linealment cada valor fins al proper.
 
 
-La definició del \acro{FOH} amb funcions matemàtiques contínues es construeix
+La definició del \gls{foh} amb funcions matemàtiques contínues es construeix
 a partir de la funció triangular $\operatorname{tri}(t)$:
 \[
 \operatorname{tri}(t) = 
@@ -1043,7 +1043,7 @@ regular amb període $P$ i sigui $T$ el domini del temps, es defineix
 $S^\text{FOH}_ R(t)$ com la funció de representació \emph{first-order
   hold} al llarg del temps, $\forall m \in S:$
 \[
-S_ R^\text{\acro{FOH}}(t) = \sum_{t\in T} V(m)
+S_ R^\text{\gls{foh}}(t) = \sum_{t\in T} V(m)
 \operatorname{tri}\left(\frac{t-T(m)}{P}\right)
 \]
 
@@ -1069,7 +1069,7 @@ simètriques:
 
 \begin{definition}[Funció de representació \emph{first-order hold}]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ el domini del
-  temps, es defineix $S^\text{\acro{FOH}}(t)$ com la funció de representació
+  temps, es defineix $S^\text{\gls{foh}}(t)$ com la funció de representació
   \emph{first-order hold} al llarg del temps, $\forall m \in S:$
   \begin{align*}
     S^\text{FOH}(t) = & \\
@@ -1093,9 +1093,9 @@ simètriques:
 
 
 
-\begin{example}[Sèrie temporal amb representació \acro{FOH}]
+\begin{example}[Sèrie temporal amb representació \gls{foh}]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
-  seva representació \acro{FOH} és $S^\text{\acro{FOH}}(t) =
+  seva representació \gls{foh} és $S^\text{\gls{foh}}(t) =
   1\operatorname{tri}^{\text{ant}}\left(\frac{t-3}{3-(-\infty)}\right)
   + 1\operatorname{tri}^{\text{seg}}\left(\frac{t-3}{4-3}\right)
   +3\operatorname{tri}^{\text{ant}}\left(\frac{t-4}{4-3}\right) +
@@ -1105,7 +1105,7 @@ simètriques:
   +1\operatorname{tri}^{\text{ant}}\left(\frac{t-9}{9-6}\right) +
   1\operatorname{tri}^{\text{seg}}\left(\frac{t-9}{+\infty-9}\right)$. El
   graf d'aquesta representació, $\glssymbol{not:sgst:graf}
-  S^\text{\acro{FOH}}(t)$, es mostra a la \autoref{fig:model:repr:foh}
+  S^\text{\gls{foh}}(t)$, es mostra a la \autoref{fig:model:repr:foh}
   en què en gris es dibuixa cada funció triangular i en blau la funció
   resultant del sumatori de totes les triangulars.
 
@@ -1123,7 +1123,7 @@ simètriques:
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
-        title=$S^\text{\acro{FOH}}$,
+        title=$S^\text{\gls{foh}}$,
         xmin=0,
         xmax=11,
         ymin=0,
@@ -1178,7 +1178,7 @@ simètriques:
     \end{axis}
    \end{tikzpicture}
    \caption{Taula d'una sèrie temporal $S$ i
-     $\glssymbol{not:sgst:graf} S^\text{\acro{FOH}}(t)$}
+     $\glssymbol{not:sgst:graf} S^\text{\gls{foh}}(t)$}
   \label{fig:model:repr:foh}
   \end{figure}
 
@@ -1191,21 +1191,16 @@ simètriques:
 \subsubsection{D'ajustament de corbes}
 
 
-\todo{revisar} 
-
-
-\todo{potser last01 fa això?}
-
 Una família de funcions diferents als casos anteriors són les funcions
 d'ajustament de corbes amb polinomis.  L'ajustament de corbes
 (\emph{curve fitting}) és una tècnica que es basa en l'aproximació als
-punts donats, a diferència de les funcions definides a trossos que es
-basen en interpolacions que passin exactament pels punts donats.  
+punts donats, a diferència de les funcions definides a trossos
+anteriors que es basen en interpolacions que passin exactament pels
+punts donats.  A continuació ho exemplifiquem amb una representació
+basada en l'aproximació lineal per mínims quadrats, és a dir la
+regressió lineal (\emph{linear regression}), i ho generalitzem per a
+representacions basades en aproximacions polinomials.
 
-A
-continuació ho exemplifiquem amb una representació basada en
-l'aproximació lineal per mínims quadrats; és a dir la regressió lineal
-(\emph{linear regression}).
 Definim una representació que consisteix en trobar la recta d'ajust
 mínima quadràtica a les mesures de la sèrie temporal. L'anomenem
 representació \emph{lineal} de la sèrie temporal.
@@ -1236,16 +1231,53 @@ representació \emph{lineal} de la sèrie temporal.
 \end{definition}
 
 
-\todo{nova def} Aplicant la pseudoinversa, es pot generalitzar el problema a
-una regressió n-polinomial $S^{\text{polinomi}}(t)=\alpha_0 + \alpha_1 t + \dotsb +\alpha_n t^n$ amb $B$ la mateixa matriu que abans i 
-\[
- A=\left[\begin{array}{cccc}
+Aplicant la pseudoinversa es pot generalitzar el problema a
+una regressió n-polinomial.
+\begin{definition}[Funció de representació polinomial]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $T$ el domini del
+  temps i $n$ el grau del polinomi que es vol ajustar, es defineix
+  $S^{\text{polinomi}}(t)$ com la funció de representació de regressió
+  polinomial al llarg del temps, $\forall m \in S:
+  S^{\text{polinomi}}(t)=\alpha_0 + \alpha_1 t + \dotsb +\alpha_n t^n$
+  on els valors de la regressió es calculen aplicant la pseudoinversa:
+  \begin{align*}
+    & 
+    \left[\begin{array}{c}
+        \alpha_0 \\
+        \alpha_1\\
+        \vdots \\
+        \alpha_n
+      \end{array}\right] 
+    = (A^TA)^{-1}A^TB, \\
+    &  A=\left[\begin{array}{cccc}
         1 & T(m_0) & \dots & (T(m_0))^n \\
         \vdots & \vdots & \ddots & \vdots  \\
         1 & T(m_k) & \dots & (T(m_k))^n 
-      \end{array}\right]
-\]
+      \end{array}\right],
+    B=\left[\begin{array}{c}
+        V(m_0) \\
+        \vdots \\
+        V(m_k)
+      \end{array}\right]     
+   \end{align*}.
+\end{definition}
 
+
+
+Hem exemplificat la família d'ajustament de corbes de forma genèrica
+per a tota la sèrie temporal, tot i que també és possible aproximar
+una sèrie temporal a trossos com fan \textcite{last01}. Així, siguin
+$t_a,t_b,t_c,\ldots$ uns instants de temps que defineixen cadascun dels
+intervals on es fa l'aproximació, una representació polinomial a
+trossos $S^\text{tr-polinomial}$  tindria la forma
+\[
+S^\text{tr-polinomial}=
+\begin{cases}
+S[t_a,t_b]^\text{polinomial}(t) & \text{si } t_a \leq t < t_b, \\
+S[t_b,t_c]^\text{polinomial}(t) & \text{si } t_b \leq t < t_c, \\
+\dots
+\end{cases}
+\]
 
 
 \begin{example}[Sèrie temporal amb representació lineal]
@@ -1255,8 +1287,8 @@ una regressió n-polinomial $S^{\text{polinomi}}(t)=\alpha_0 + \alpha_1 t + \dot
   $\glssymbol{not:sgst:graf} S^\text{lineal}(t)$, es mostra a la
   \autoref{fig:model:repr:lineal}.
 
-  Els paràmetres de la regressió lineal provenen de la resolució del
-  sistema d'equacions:
+  Els paràmetres d'aquesta regressió lineal provenen de la resolució del
+  sistema d'equacions següent:
   \begin{gather*}
     S^\text{lineal}(t) =  \alpha + \beta t \\
      A= \left[\begin{array}{cc}
@@ -1400,61 +1432,63 @@ una regressió n-polinomial $S^{\text{polinomi}}(t)=\alpha_0 + \alpha_1 t + \dot
 \subsubsection{Ús en els operadors de funció temporal}
 \label{sec:sgst:repr-intervaltemporal}
 
-Alguns operadors dels SGST presenten particularitats a causa del
+Alguns operadors dels \gls{SGST} presenten particularitats a causa del
 fenomen de representació, aleshores els anomenem operadors de funció
-temporal (v.\ l'apartat~\ref{sec:sgst:operadors-temporals}).
-
+temporal (v.\ \autoref{sec:sgst:operadors-temporals}).
 Els operadors de funció temporal han d'operar tenint en compte les
 funcions de representació; així aquestes esdevenen paràmetres
 d'aquests operadors. Això no obstant, no podem definir un lligam
 genèric entre els operadors de funció temporal i les funcions de
-representació: aquestes darreres són una funció contínua al llarg del
+representació ja que aquestes darreres són una funció contínua al llarg del
 temps mentre que els operadors de funció temporal defineixen com
 manipular les mesures de la sèrie temporal.
 % la interpolació genèrica com a $S(t)$ implica mètodes
 % numèrics, cosa que no encaixa amb el model definit basat en l'àlgebra.
 
-Així doncs, el lligam que modelem entre els operadors de funció
-temporal i les funcions de representació és simbòlic: en els operadors
-de funció temporal, el paràmetre de representació és un nom que indica
-el concepte de representació en el que es basen els càlculs de
+Així doncs, el lligam entre els operadors de funció temporal i les
+funcions de representació és simbòlic: en els operadors de funció
+temporal, el paràmetre de representació és un nom que indica el
+concepte de representació en el que es basen els càlculs de
 l'operació. Per tant, per a cada parella d'operació de funció temporal
 i nom de representació cal definir quins càlculs s'han de dur a terme
 tot interpretant el significat de la funció de representació
-associada. Si bé només és necessari implementar l'operació d'interval
+associada, si bé només és necessari implementar l'operació d'interval
 temporal per a cada representació atès que les altres operacions es
-defineixen a partir d'aquesta. Un exemple d'això és la definició
-d'interval temporal amb representació ZOHE (v.\
-def.~\ref{def:sgst:interval-temporal-zohe}).
+defineixen a partir d'aquesta. 
 
-A continuació es mostren tres exemples més de l'interval temporal
-segons la representació delta, la FOH i la lineal.
+Un exemple d'interpretació de la funció de representació en l'operació
+d'interval temporal (v. \autoref{def:sgst:intervalt}) s'ha vist a la
+\autoref{def:sgst:interval-temporal-zohe} per a la representació
+\gls{zohe}. A continuació apliquem el mateix esquema usat a la
+\autoref{def:sgst:interval-temporal-zohe} a tres altres exemples
+segons les representacions \gls{dd}, \gls{foh} i lineal.
 
-\begin{definition}[Interval temporal delta]
+\begin{definition}[Interval temporal \gls{dd}]
   \label{def:sgst:interval-temporal-delta}
   Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
-  $S^\delta(t)$ la representació delta, es defineix la subsèrie
-  $S[t_0,t_f]^\delta$ com la sèrie temporal
-  $S[t_0,t_f]^\delta = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$ a
-  on $m_0=(t_0,0)$ i $m_f=(t_f,0)$.
+  el mètode de representació $r=\gls{dd}$, es defineix
+  l'interval temporal $S[t_0,t_f]^{\gls{dd}}$ com la sèrie temporal
+  $S[t_0,t_f]^{\gls{dd}} = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$  on
+  $m_0=(t_0,0)$ i $m_f=(t_f,0)$.
 \end{definition}
 
-\begin{definition}[Interval temporal FOH]
+\begin{definition}[Interval temporal \gls{foh}]
   \label{def:sgst:interval-temporal-foh}
-  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
-  $S^\text{FOH}(t)$ la representació FOH, es defineix la subsèrie
-  $S[t_0,t_f]^{\text{FOH}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\text{FOH}} = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$ a
-  on $m_0=(t_0,S^{\text{FOH}}(t_0))$ i $m_f=(t_f,S^{\text{FOH}}(t_f))$.
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i el
+  mètode de representació $r=\gls{foh}$, es defineix l'interval
+  temporal $S[t_0,t_f]^{\gls{foh}}$ com la sèrie temporal
+  $S[t_0,t_f]^{\gls{foh}} = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$ on
+  $m_0=(t_0,S^{\text{FOH}}(t_0))$ i $m_f=(t_f,S^{\gls{foh}}(t_f))$.
 \end{definition}
 
 \begin{definition}[Interval temporal lineal]
   \label{def:sgst:interval-temporal-lineal}
   Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
-  $S^\text{lineal}(t)$ la representació lineal, es defineix la subsèrie
-  $S[t_0,t_f]^{\text{lineal}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\text{lineal}} = \{m_0\} \cup \{m_f\}$ a
-  on $m_0=(t_0,S^{\text{lineal}}(t_0))$ i $m_f=(t_f,S^{\text{lineal}}(t_f))$.
+  el mètode de representació $r=\text{lineal}$, es defineix
+  l'interval temporal $S[t_0,t_f]^{\text{lineal}}$ com la sèrie temporal
+  $S[t_0,t_f]^{\text{lineal}} = \{m_0\} \cup \{m_f\}$ on
+  $m_0=(t_0,S^{\text{lineal}}(t_0))$ i
+  $m_f=(t_f,S^{\text{lineal}}(t_f))$.
 \end{definition}
 
 
@@ -1473,11 +1507,9 @@ En conclusió, l'objectiu principal de les funcions de representació és
 estudiar exactament els grafs que es poden obtenir de la sèrie
 temporal per a posteriorment, agafant-ne el significat, implementar
 les operacions que siguin necessàries
-
-
 D'altra banda, les funcions de representació també es tindran en
 compte a l'hora de definir interpretacions pels agregadors d'atributs
-en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
+en el model de \gls{SGSTM} (v.~\autoref{sec:model:agregador}).
 
 
 
@@ -1495,6 +1527,7 @@ en el model de SGSTM (v.\ l'apartat~\ref{sec:model:agregador}).
 \subsection{Patologies de les sèries temporals}
 \label{sec:sgst:patologies}
 
+
 Les sèries temporals poden no ser ideals a causa de problemes en la
 seva adquisició o del seu tractament. Tot i que segueixen sent sèries
 temporals, tenen unes propietats que poden resultar problemàtiques a
@@ -1511,23 +1544,26 @@ sincronització, de les quals en descriu el funcionament.
 
 
 
-\todo{no confondre les dades desconegudes amb l'absència de dades: és a dir quan no s'han capturat dades i no es volien captura}
-% Els valors desconeguts són aquells valors que no
-% existeixen --es desconeixen (\emph{missing data})-- o que s'ignoren
-% --es descarten (\emph{censoring} o \emph{truncation}). Els valors que
-% no existeixen prenen el valor desconegut en el moment de la mesura, en
-% canvi els valors descartats són marcats com a desconeguts després d'un
-% processament de les dades.
-% també fora de rang
-
-
 Una segona patologia és la de les dades desconegudes. Quan no s'han
 capturat dades o quan s'han capturat erròniament aleshores s'han de
-tractar com a dades desconegudes. És a dir, s'ha de validar que les
+tractar com a dades desconegudes; és a dir, s'ha de validar que les
 dades siguin correctes i en cas contrari rebutjar-les, tot i que cal
 tenir en compte que en alguns casos posteriorment es poden aplicar
-processos de reconstrucció per a aquestes dades errònies.  La
-patologia de dades desconegudes presenta diversitat en les causes:
+processos de reconstrucció per a aquestes dades errònies.  
+%
+Per a marcar dades com a desconegudes cal que el domini de valors
+inclogui un element específic (v.~\autoref{sec:sgst:valor}) i el
+marcatge pot ocórrer en el mateix moment d'adquirir una mesura --és a
+dir quan no existeix valor capturat de la mesura i per tant es
+desconeix la dada (\emph{missing data})-- o provenir d'un processament
+posterior de les dades-- és a dir que les dades s'ignoren o es
+descarten (\emph{censoring} o \emph{truncation}).  Així doncs, cal no
+confondre les dades desconegudes amb les dades no capturades: és a dir quan no s'han capturat dades perquè no
+hi havia intenció de capturar-les i per tant no es pot concloure com a
+fet cert ni que la dada és coneguda ni que és desconeguda.  La
+patologia de dades desconegudes presenta diversitat en les causes, el
+domini de valors podria preveure un element per a marcar cada causa o
+usar el genèric:
 \begin{itemize}
 
 \item Els valors de les magnituds físiques estan limitats en un
@@ -1546,6 +1582,7 @@ patologia de dades desconegudes presenta diversitat en les causes:
   a dir que si entre dues mesures hi ha una durada superior a un temps
   anomenat termini la mesura no és vàlida. Per exemple, es captura una
   dada d'un sensor però aquest no respon en un temps raonable.
+
 \end{itemize}
 
 
@@ -1554,14 +1591,14 @@ Les sèries temporal són els objectes que permeten gestionar de les
 dades recollides en els sistemes de monitoratge, que poden gestionar
 una gran quantitat de variables i en aquests casos pot haver-hi
 dificultats en l'operació i en la visualització de les sèries
-temporals.
-\todo{el gran volum també comporta lentitud en el càlcul d'operacions}
+temporals, lentitud en executar les consultes o realització de càlculs
+innecessaris.
 
 
-Una quarta patologia es dóna quan el període de mostreig no és
-regular, és a dir que les dades no es recullen de manera uniforme en
-el temps, però les aplicacions no ho preveuen o volen treballar amb
-dades a intervals regulars. A continuació aprofundim en aquest tema.
+Una quarta patologia ocorre quan el període de mostreig no és regular,
+és a dir que les dades no es recullen de manera uniforme en el temps,
+però les aplicacions no ho preveuen o volen treballar amb dades a
+intervals regulars. A continuació aprofundim en aquest tema.
 
 
 
@@ -1571,16 +1608,16 @@ dades a intervals regulars. A continuació aprofundim en aquest tema.
 
 
 \subsubsection{Regularitat de les sèries temporals} 
+\glsaddsec{not:sgst:regularitat} %%%%secció d'operacions
 
-\todo{a les computacionals binàries hem dit que aquí diríem què són dues sèries temporals regulars entre elles}
 
 Per a determinar la regularitat d'una sèrie temporal es defineix un
 interval de temps $i_0=[t_I,t_I+\delta]$, a on $t_I$ és un instant de
 temps i $\delta$ una durada de temps, i els seus intervals múltiples
-$i_j=[t_I+j\delta\, ,\, t_I+(j+1)\delta]$ per
-$j=0,1,2\ldots$. Aleshores, la regularitat de la sèrie temporal depèn
+$i_n=[t_I+n\delta\, ,\, t_I+(n+1)\delta]$ per
+$n=0,1,2\ldots$. Aleshores, la regularitat de la sèrie temporal depèn
 de la situació dels temps de les seves mesures en aquests intervals de
-temps $i_j$.
+temps $i_n$.
  
 Quan la situació temporal de les mesures prové del sistema
 d'adquisició de dades aleshores cal notar que, en l'àmbit de
@@ -1590,16 +1627,17 @@ temps inicial del mostreig.
 
 
 Una sèrie temporal és regular quan les mesures són equidistants en el
-temps, tal com ho anomenen \textcite{last:hetland}.  La regularitat
+temps, tal com ho anomena \textcite{last:hetland}.  La regularitat
 d'una sèrie temporal és crítica en algunes operacions perquè hi ha
 algoritmes d'anàlisi de sèrie temporals que només es poden aplicar a
 sèries temporals regulars.
 \begin{definition}[Sèrie temporal regular]
   \label{def:st:regular}
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, $t_I$ un instant de
-  temps i $\delta$ una durada de temps, $S$ és regular si i
-  només si $\forall m \in S(T(\min(S),+\infty):T(m) - T(\ant(m)) =
-  \delta$ on definim $t_I=T(\min(S))$.
+  temps i $\delta$ una durada de temps,
+  \glsdispdef{not:sgst:regular}{$S$ és regular} si i només si $\forall
+  m \in S(T(\min(S),+\infty):T(m) - T(\ant(m)) = \delta$ on definim
+  $t_I=T(\min(S))$.
 \end{definition}
 
 Si una sèrie temporal és regular, l'anomenem sèrie temporal regular de
@@ -1671,7 +1709,7 @@ quan en alguns intervals de mostreig hi ha una mesura o més d'una.
   temps i $\delta$ una durada de temps, els intervals amb
   ultramostreig de $S$ són aquells en què la
   subsèrie corresponent conté més d'una mesura
-  $|S[t_I+n\delta,t_I+(n+1)\delta)|>1$ a on $n\in\N$.
+  $|S[t_I+n\delta,t_I+(n+1)\delta)|>1$ a on $n\in\glssymbol{not:N}$.
 \end{definition}
 
 Una sèrie temporal té intervals amb inframostreig
@@ -1682,17 +1720,39 @@ cap mesura.
   temps i $\delta$ una durada de temps, els intervals amb
   inframostreig de $S$ són aquells en què la
   subsèrie corresponent no conté cap mesura
-  $|S[t_I+n\delta,t_I+(n+1)\delta)|=0$ a on $n\in\N$.
+  $|S[t_I+n\delta,t_I+(n+1)\delta)|=0$ a on $n\in\glssymbol{not:N}$.
 \end{definition}
 
-En conclusió, una sèrie temporal no regular es pot classificar segons
+
+
+En resum, una sèrie temporal no regular es pot classificar segons
 si és de temps real i en el cas que no ho sigui es pot indicar si té
 intervals amb ultramostreig o si en té amb inframostreig. Aquests dos
 darrers casos són possibles alhora per una mateixa sèrie temporal però
 no en un mateix interval.
 
 
+
+
+En el cas de dues sèries temporals, també es pot establir la relació
+de regularitat que tenen segons com són els vectors de temps.
+\begin{definition}[Sèries temporals regulars entre elles]
+  \label{def:sgst:regulars_entre_elles}
+  Siguin $S_1=\{m_0^1, \dotsc, m_k^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_k^2\}$ dues sèries temporals,
+  \glsdispdef{not:sgst:regulars_entre_elles}{$S_1$ i $S_2$ són
+    regulars entre elles} si i només si tenen el mateix vector de
+  temps: $T(m_0^1)=T(m_0^2) \wedge \dotsb \wedge
+  T(m_k^1)=T(m_k^2)$. D'aquesta manera també han de tenir el mateix
+  cardinal $|S_1|=|S_2|$.
+\end{definition}
+
+
+
+
 \subsubsection{Regularització de sèries temporals}
+
+
 
 Per a regularitzar una sèrie temporal, és a dir per a obtenir una
 sèrie temporal regular d'una no regular o per a canviar el període
@@ -1702,21 +1762,23 @@ que compleixin amb les restriccions de temps regulars.
 
 Un dels operadors que faciliten la feina de regularitzar són els de
 funció temporal, en aquests casos la tècnica de regularitzar es basa
-fortament en les funcions de representació (v.\
-sec.~\ref{sec:model:repr}).  Com ja s'ha notat en les propietats del
-mateix operador i que ara podem clarificar amb el vocabulari de sèries
-temporals regulars, la selecció temporal d'una sèrie temporal en un
-conjunt de temps equi-espaiat $i = \{t_I+n\delta | n\in\mathbb{N},
-n\leq s \}$ és una sèrie temporal regular de període $\delta$ iniciada
-a $t_I$ fins a $t_I+s\delta$: $S[i]^r \equiv \{ (t_I, v_0),
-(t_I+\delta,v_1), \dotsc , (t_I+s\delta,v_s)\}$ a on $r$ és una funció
-de representació.
+fortament en les funcions de representació
+(v.~\autoref{sec:model:repr}).  Així, per exemple, la selecció
+temporal (v.~\autoref{def:sgst:selecciot}) d'una sèrie temporal en un
+conjunt de temps equi-espaiat $i = \{t_I+n\delta |
+n,j\in\glssymbol{not:N}, n\leq j n\leq j\}$ és una sèrie temporal
+regular de període $\delta$ iniciada a $t_I$ fins a $t_I+j\delta$:
+$S[i]^r \equiv \{ (t_I, v_0), (t_I+\delta,v_1), \dotsc ,
+(t_I+j\delta,v_j)\}$ on $r$ és un mètode de representació; aquesta
+propietat ja ha estat anunciada anteriorment en la definició de
+l'operador d'interval temporal però ara la clarifiquem amb el
+vocabulari de sèries temporals regulars. 
 
 
 A continuació mostrem algunes tècniques simples per a regularitzar les
 sèries temporals de temps real, les d'ultramostreig i les
 d'inframostreig. Aquestes tenen determinats paràmetres de periodicitat
-que faciliten la conversió a regular, o dit d'una altra manera es pot
+que faciliten la conversió a regular, o dit d'una altra manera, es pot
 planificar des d'un inici el seu mostreig per a posteriorment
 associar-ho a un mètode de regularització adequat.
 
@@ -1732,17 +1794,16 @@ vàlida per a tot l'interval de mostreig.
 Sigui $S$ una sèrie temporal de temps real de període $\delta$
 iniciada a $t_I$, una operació de funció temporal que regularitza de
 manera simple el temps real és la selecció temporal en els instants de
-temps de mostreig regulars $i_r=\{t_I+n\delta | n\in\mathbb{N},
-t_I+n\delta < T(\sup(S))\}$ amb representació ZOHE:
-$S[i_r]^\text{ZOHE}$.
-
+temps de mostreig regulars $i_r=\{t_I+n\delta | n\in\glssymbol{not:N},
+t_I+n\delta < T(\sup(S))\}$ amb representació \gls{zohe}:
+$S[i_r]^{\gls{zohe}}$.
 
 En segon lloc, de manera senzilla es pot assumir que una sèrie
 temporal amb ultramostreig és regular amb intervals en què s'ha
 adquirit més d'una mesura, els quals cal reduir-los a una de sola. El
 cas més simple és descartar les que es trobin més lluny de l'instant
 de temps de mostreig regular, per tant l'operació és la mateixa que en
-el cas anterior $S[i_r]^\text{ZOHE}$.
+el cas anterior $S[i_r]^{\gls{zohe}}$.
 
 Un altre cas, també simple, és el d'agregar les mesures dels intervals
 amb ultramostreig, per exemple amb la mitjana, el màxim, etc.
@@ -1751,15 +1812,15 @@ Proposem un exemple pel cas de la mitjana.
 Sigui $S$ una sèrie temporal d'ultramostreig de període $\delta$
 iniciada a $t_I$, la regularització per agregació mitjana de cada
 interval regular $i_r$ és $\glssymbol{not:sgst:map}\big(S_r, (t,v)
-\mapsto (t,f(t,S,S_r))\big)$ a on
+\mapsto (t,f(t,S,S_r))\big)$  on
 $f(t,S,S_r)=\glssymbol{not:sgst:mitjanav}\big(S[t,
 \glssymbol{not:sgst:next}_{S_i}(t))\big)$ i $S_r=\{ (t_r,0) | t_r\in
 i_r \}$.
 
 Aquesta regularització també es pot expressar mitjançant operadors de
-funció temporal. Sigui la funció de representació de mitjana a trossos
+funció temporal. Sigui una funció de representació de mitjana a trossos
 de la qual definim l'operador d'interval temporal com
-$S[t_0,t_f]^\text{mitjana}=\{(t_0,v_m)\}$ a on
+$S[t_0,t_f]^\text{mitjana}=\{(t_0,v_m)\}$  on
 $v_m=\glssymbol{not:sgst:mitjanav}(S[t_0,t_f))$, l'operació temporal
 corresponent a la regularització per mitjana de l'ultramostreig és
 $S[i_r]^\text{mitjana}$.
@@ -1769,11 +1830,11 @@ En tercer lloc, per a les sèries temporals amb inframostreig es poden
 aplicar tècniques de farciment de forats; és a dir tècniques de
 reconstrucció. Un cas simple de farciment és utilitzar el valor del
 següent interval. Per tant l'operació també és la mateixa que en els
-casos simples anteriors $S[i_r]^\text{ZOHE}$.
+casos simples anteriors $S[i_r]^{\gls{zohe}}$.
 
 En el cas de farcir forats inframostrejats normalment hi ha un durada
 vàlida per a fer el farciment, és a dir un temps de termini que indica
-a partir de la qual els intervals no es podran farcir i les mesures
+a partir del qual els intervals no es podran farcir i les mesures
 s'hauran de considerar desconegudes. Aquest temps de termini és
 diferent del concepte de termini $D$ de temps real descrit
 anteriorment ja que el primer és una durada entre mesures i el segon

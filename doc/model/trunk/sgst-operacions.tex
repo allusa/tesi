@@ -1025,7 +1025,7 @@ junció.
 
 Cal tenir en compte que la junció de la \autoref{def:sgst:join} només
 sap operar amb dues sèries temporals que tinguin el mateix vector de
-temps; és a dir regulars entre elles (v.\ \autoref{def:st:regular}). En el cas que no tinguin el mateix vector
+temps; és a dir regulars entre elles (v.\ \autoref{def:sgst:regulars_entre_elles}). En el cas que no tinguin el mateix vector
 de temps, es pot aplicar la junció temporal de la
 \autoref{def:sgst:joint}.
 
@@ -1168,7 +1168,7 @@ que no conté mesures indefinides i donada la mesura indefinida
 $o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
 sèrie temporal $\glssymbol{not:sgst:prev}_S( (+\infty,\infty) ) =
 \sup(S): \forall m\in S:
-T(m)\in\mathbb{R}$.  % S\equiv S(-\infty,+\infty)
+T(m)\in\glssymbol{not:R}$.  % S\equiv S(-\infty,+\infty)
 \emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
   una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
   $l=\glssymbol{not:sgst:prev}_S(o)$ que compleix
@@ -1259,6 +1259,7 @@ representació de la sèrie temporal que pot incloure noves mesures al
 resultat.
 
 \begin{definition}[Interval temporal]
+  \label{def:sgst:intervalt}
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal, $[t_0,t_f]$ un
   interval de temps i $r$ un mètode de representació, l'interval
   temporal $\glsdispdef{not:sgst:intervalt}{S[t_0,t_f]^r}$ és una
@@ -1308,6 +1309,7 @@ conjunt d'instants de temps.
 
 
 \begin{definition}[Selecció temporal]
+  \label{def:sgst:selecciot}
   Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal,
   $i=\{t_0,t_1,\dotsc,t_n\}$ un conjunt d'instants de temps i $r$ un
   mètode de representació, la selecció temporal
@@ -1326,9 +1328,9 @@ Propietats de la selecció temporal:
   del conjunt d'instants de temps $|S[i]^r| = |i|$
 
 \item La selecció temporal d'una sèrie temporal en un conjunt de temps
-  equi-espaiat $i = \{\tau+n\delta | n\in\mathbb{N}, n\leq s \}$ és una
-  sèrie temporal regular $S[i]^r \equiv \{ (\tau, v_0),
-  (\tau+\delta,v_1), \dotsc , (\tau+s\delta,v_s)\}$
+  equi-espaiat $i = \{\tau+n\delta | n,j\in\glssymbol{not:N}, n\leq j
+  \}$ és una sèrie temporal regular $S[i]^r \equiv \{ (\tau, v_0),
+  (\tau+\delta,v_1), \dotsc , (\tau+j\delta,v_j)\}$
 \end{itemize}
 
 
