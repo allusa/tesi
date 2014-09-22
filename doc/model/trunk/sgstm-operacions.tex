@@ -1,15 +1,15 @@
 \section{Model d'operacions}
 
 En aquesta secció es defineixen els operadors que permeten modelar el
-comportament i la manipulació de les dades en el model de SGSTM.
+comportament i la manipulació de les dades en el model de \gls{SGSTM}.
 
 Per a treballar amb les sèries temporals multiresolució s'utilitzen
-els conceptes descrits al model d'operacions de SGST. El model de
-SGSTM es defineix a partir del model de SGST i per tant les operacions
-dels SGSTM també hi estan basades. Tot i així cal tenir en compte dues
+els conceptes descrits al model d'operacions de \gls{SGST}. El model de
+\gls{SGSTM} es defineix a partir del model de \gls{SGST} i per tant les operacions
+dels \gls{SGSTM} també hi estan basades. Tot i així cal tenir en compte dues
 particularitats.
 
-Per una banda, el model de SGSTM té una estructura específica que
+Per una banda, el model de \gls{SGSTM} té una estructura específica que
 requereix ser manipulada coherentment. Així, es defineixen operadors
 que saben treballar amb aquesta estructura agrupats en dos grups.  El
 primer grup són els operadors requerits pel model estructural;
@@ -19,10 +19,10 @@ necessaris per a manipular l'estructura; és a dir operadors que
 permeten fer canvis en l'esquema de la base de dades o consultar
 paràmetres de l'esquema actual.
 
-Per altra banda, el model de SGSTM treballa amb sèries temporals
+Per altra banda, el model de \gls{SGSTM} treballa amb sèries temporals
 multiresolució. Així, es defineixen operadors que permeten extreure
 les sèries temporals emmagatzemades en aquestes bases de dades amb
-l'objectiu d'aplicar-hi posteriorment els operadors dels SGST.
+l'objectiu d'aplicar-hi posteriorment els operadors dels \gls{SGST}.
 
 
 En el disseny del model d'operacions següent es distingeixen tres
@@ -43,14 +43,14 @@ grups d'operadors segons els casos anteriors:
 \subsection{Estructurals}
 \label{sec:model:sgstm-estructurals}
 
-En el model estructural de SGSTM hem definit les sèries temporals
+En el model estructural de \gls{SGSTM} hem definit les sèries temporals
 multiresolució com un conjunt de subsèries resolució a les quals es
 van afegint mesures compactant-les i consolidant-les. En aquest
 apartat definim els operadors que permeten inserir mesures noves i
 consolidar-les al seu lloc corresponent en l'estructura.
 
 A continuació es descriuen els operadors associats a cada objecte del
-model de SGSTM.
+model de \gls{SGSTM}.
 
 
 \subsubsection{Buffer}
@@ -292,16 +292,16 @@ $\glssymbol{not:F}:R\mapsto R'$.
 \subsection{Manipulació de l'esquema}
 \label{sec:model:sgstm-manipulacio-esquema}
 \todo{alerta! aquesta secció s'ha fet pensant en els instants de consolidació periòdics. Què passa quan no ho són? }
-per exemple event trigerred (només emmatgatzemem informació quan creiem que és interessant). Aleshores potser són casos molt especials i no es pot dibuixar l'esquema? Potser posar tot això com a comentari a la secció d'Altres Estructures: En el model de SGSTM s'ha considerat que la consolidació es feia periòdicament però es podria fer quan es cregués oportú, aleshores no es pot preveure quin esquema de multiresolució hi haurà; són casos que requereixen un estudi més profund. Etc.
+per exemple event trigerred (només emmatgatzemem informació quan creiem que és interessant). Aleshores potser són casos molt especials i no es pot dibuixar l'esquema? Potser posar tot això com a comentari a la secció d'Altres Estructures: En el model de \gls{SGSTM} s'ha considerat que la consolidació es feia periòdicament però es podria fer quan es cregués oportú, aleshores no es pot preveure quin esquema de multiresolució hi haurà; són casos que requereixen un estudi més profund. Etc.
 
 \todo{atenció que no s'ha parlat enlloc del rellotge en els SGBDM? s'hauria de dir que en principi no es diu res sobre el rellotge i que si segueix l'esquema de consolidació proposat les mateixes mesures van entrant ordenades i van marcant el pas del temps}
 
 
 
-El model de SGSTM associa a cada sèrie temporal un esquema de
+El model de \gls{SGSTM} associa a cada sèrie temporal un esquema de
 multiresolució. En aquest apartat definim els operadors que permeten
 consultar i manipular aquest esquema de multiresolució de forma
-coherent amb el model de SGSTM.
+coherent amb el model de \gls{SGSTM}.
 
 L'\glsdispsec{not:esquemaM}{esquema de multiresolució} de
 cada sèrie temporal multiresolució consisteix en quatre paràmetres
@@ -711,21 +711,21 @@ cas que intersequin cal ajuntar les dues subsèries resolució.
 
 En els sistemes de gestió de bases de dades les consultes són les
 operacions que permeten treballar amb les dades emmagatzemades. En el
-cas dels SGSTM les dades són sèries temporals emmagatzemades amb forma
+cas dels \gls{SGSTM} les dades són sèries temporals emmagatzemades amb forma
 de multiresolució. Així doncs, els operadors de consulta que es
 defineixen a continuació permeten extreure les sèries temporals que hi
 ha emmagatzemades amb l'objectiu d’aplicar-hi posteriorment els
 operadors propis de les sèries temporals, com s'ha definit en el model
-dels SGST.
+dels \gls{SGST}.
 
-Els \glsdispsec{not:sgstm:consulta}{operadors de consulta} en un SGSTM
+Els \glsdispsec{not:sgstm:consulta}{operadors de consulta} en un \gls{SGSTM}
 en primer lloc es basen en obtenir sèries temporals de la base de
 dades multiresolució per a en segon lloc aplicar-hi les operacions
-dels SGST.  En aquest apartat definim el operadors que permeten
+dels \gls{SGST}.  En aquest apartat definim el operadors que permeten
 obtenir les sèries temporals a partir d'una sèrie temporal
 multiresolució; l'aplicació posterior d'operadors a les sèries
 temporals segueix les mateixes definicions que en el model
-d'operacions dels SGST (v.~\autoref{sec:model:sgst-operacions}).
+d'operacions dels \gls{SGST} (v.~\autoref{sec:model:sgst-operacions}).
 
 Distingim entre dos tipus d'operadors de consulta. Uns permeten
 extreure les subsèries temporals de les subsèries resolució i uns altres
