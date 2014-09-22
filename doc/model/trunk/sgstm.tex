@@ -32,6 +32,7 @@ model es dissenya en tres parts.
 
 \section{Model estructural de dades}
 
+
 Els objectes estructurals principals d'un \gls{SGSTM}, els quals es
 defineixen en aquesta secció, són els següents:
 \begin{itemize}
@@ -39,7 +40,7 @@ defineixen en aquesta secció, són els següents:
 \item Disc
 \item Subsèrie resolució
 \item Sèrie temporal multiresolució
-\item Base de dades multiresolució
+%\item Base de dades multiresolució
 \end{itemize}
 
 
@@ -214,18 +215,6 @@ de la subsèrie temporal $S_D$ que finalment queda emmagatzemada.
 \subsection{Sèrie temporal multiresolució}
 
 
-
-\todo{revisar}
-
-
-\todo{canviar $S$ per $S_D$}
-
-
-
-\todo{alerta amb el vocabulari que ha canviat!}
-
-
-
 Una sèrie temporal multiresolució és un conjunt de subsèries resolució
 que comparteixen l'entrada de mesures, les quals provenen d'una
 mateixa sèrie temporal. Aquesta sèrie temporal queda regularitzada i
@@ -243,10 +232,25 @@ subsèrie resolució buida és defineix la sèrie temporal multiresolució
 buida.
  
 \begin{definition}\label{def:model:st_multiresolucio_buit}
-  Definim sèrie temporal multiresolució buida com el conjunt de subsèries
-  resolució buides
+  Definim sèrie temporal multiresolució buida o inicial com el conjunt
+  de subsèries resolució buides
   $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$.
 \end{definition}
+
+
+
+Així, una sèrie temporal multiresolució té paràmetres que
+s'han de configurar en el seu estat inicial: la quantitat de subsèries
+resolucions i els paràmetres de cada una --pas de consolidació, funció
+d'agregació d'atributs, darrer instant de consolidació i cardinal
+màxim. Anomenem esquema de multiresolució a les configuracions
+possibles d'aquests paràmetres, de manera que podem observar i
+manipular l'esquema de multiresolució de cada sèrie temporal
+multiresolució, la qual cosa mostrem amb més detall a
+l'\autoref{sec:model:sgstm-manipulacio-esquema}.
+
+
+
 
 Normalment, en una sèrie temporal multiresolució no hi ha dues
 subsèries resolució amb la mateixa informació. És a dir, no hi dues
@@ -257,31 +261,21 @@ $R_i = (B_i, D_i)$, $R_j = (B_j, D_j)$,
 $B_i=(S_i,\tau_i,\delta_i,f_i)$ i $B_j=(S_j,\tau_j,\delta_j,f_j)$.
 
 
-\todo{} 
-Una sèrie temporal multiresolució té uns paràmetres que cal
-configurar: pas de consolidació, funció d'agregació, etc. Anomenem
-esquema de multiresolució a l'efecte que produeixen les configuracions
-possibles d'aquests paràmetres. Així doncs, a cada sèrie temporal
-multiresolució li podem observar i manipular els seus esquemes de
-multiresolució, el qual mostrem amb més detall a
-l'apartat~\ref{sec:model:sgstm-manipulacio-esquema}.
-
-
-
-
-
-
 
 \subsubsection{Relació sèrie temporal multiresolució}
 
+Una sèrie temporal multiresolució s'expressa com un conjunt i com a
+tal és susceptible d'aplicar-hi els conceptes del model dels
+\glspl{SGBDR}, a continuació expressem la forma de sèrie temporal
+multiresolució seguint també el concepte de relació. 
 
-\todo{en vocabulari de SGBDR?}
-Una sèrie temporal multiresolució és una relació de buffers i discs. A
-cada parella buffer-disc l'anomenem subsèrie resolució. Així doncs, una
-sèrie temporal multiresolució és un conjunt de subsèries resolució.
 
+Una sèrie temporal multiresolució és una
+relació de buffers i discs. A cada parella buffer-disc l'anomenem
+subsèrie resolució. Així doncs, una sèrie temporal multiresolució és
+un conjunt de subsèries resolució.
 Com a conjunt de subsèries resolució, una sèrie temporal multiresolució
-s'observa com una relació de grau sis a on la capçalera conté els
+s'observa com una relació de grau sis en què la capçalera conté els
 atributs
 \begin{itemize}
 \item sèrie temporal del buffer ($S_B$),
@@ -292,26 +286,62 @@ atributs
 \item i funció d'agregació d'atributs ($f$).
 \end{itemize}
 
-Una restricció habitual és que $\delta$ i $f$ no estiguin repetits; és
-a dir que ($\delta$,$f$) són els atributs clau de la relació sèrie
-temporal multiresolució.
+Com ja s'ha comentat, una restricció habitual és que $\delta$ i $f$ no
+estiguin repetits; és a dir que ($\delta$,$f$) són els atributs clau
+de les variables relació de sèries temporals multiresolució.
 
-Així doncs observada com a relació, tal com s'ha fet en el model de
-\gls{SGST}, podem escriure una sèrie temporal multiresolució
-\begin{definition}[Representació sèrie temporal multiresolució]
-  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució a on
-  $R_i =(B_i,D_i)$ són subsèries resolució amb domini de sèrie
-  temporal per les sèries temporals, de $\bar{\R{}}$ pels temps, de
-  $\N{}$ pel pas de consolidació i de funció per a la funció
-  d'agregació d'atributs;
-  \glsdispdef{not:sgstm:relaciomultiresolucio}{representada com a relació}
-  s'escriu com $ M = ( S_B: \text{Sèrie Temporal}, S_D: \text{Sèrie
-    Temporal}, \tau: \R{}, \delta: \R{}, k: \N{}, f: \text{funció}\},
-  \{ \{ S_B: S_{B_0} , S_D : S_{D_0} , \tau : \tau_{B_0}, \delta :
-  \delta_{B_0}, k: k_{D_0}, f : f_{B_0} \} , \dotsc, \{ S_B: S_{B_d} ,
-  S_D : S_{D_d} , \tau : \tau_{B_d}, \delta : \delta_{B_d}, k:
-  k_{D_d}, f : f_{B_d} \} \} )$.
+
+
+\todo{revisar}
+
+
+Així doncs observada com a relació, i tal com s'ha fet per a la forma
+canònica de les sèries temporals
+(v.~\autoref{def:sgst:forma-canonica}), podem escriure la forma
+canònica d'una sèrie temporal multiresolució.
+\begin{definition}[Forma canònica]
+  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució on
+  cada subsèrie resolució $R_i =(B_i,D_i),
+  B_i=(S_{B_i},\tau_i,\delta_i,f_i), D_i=(S_{D_i},k_i)$ té domini de
+  sèrie temporal per les sèries temporals $S_{B_i}$ i $S_{D_i}$, de
+  $\glssymbol{not:Rb}$ pels temps $\tau_i$ i $\delta_i$, de
+  $\glssymbol{not:N}$ pel pas de consolidació i de funció per a la
+  funció d'agregació d'atributs; \glsdispdef{not:sgstm:canonica}{en la
+    forma canònica} s'escriu com $ M = ( S_B: \text{Sèrie Temporal},
+  S_D: \text{Sèrie Temporal}, \tau: \R{}, \delta: \R{}, k: \N{}, f:
+  \text{funció}\}, \{ \{ S_B: S_{B_0} , S_D : S_{D_0} , \tau :
+  \tau_{B_0}, \delta : \delta_{B_0}, k: k_{D_0}, f : f_{B_0} \} ,
+  \dotsc, \{ S_B: S_{B_d} , S_D : S_{D_d} , \tau : \tau_{B_d}, \delta
+  : \delta_{B_d}, k: k_{D_d}, f : f_{B_d} \} \} )$.
 \end{definition}
+
+
+%Per les sèries temporals ho hem definit així:
+% \begin{definition}[Forma canònica]
+%   \label{def:sgst:forma-canonica}
+%   Sigui $\glsdispdef{not:sgst-canonica}{S = \{ m_0, m_1 , \dotsc, m_k
+%     \}}$ una sèrie temporal amb domini $\glssymbol{not:Rb}$ pels temps
+%   i els valors de les mesures, la forma canònica com a relació és $S =
+%   ( \{t: \glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \{
+%   (t,t_0),(v,v_0)\}, \{(t,t_1),(v,v_1)\}, \dotsc, \{(t,t_k),(v,v_k)\}
+%   \} )$; és a dir és una parella de capçalera i conjunt de valors
+%   certs.
+
+%   Així doncs, sigui $S_{\emptyset} = \{ \}$ una sèrie temporal buida,
+%   modelada com a relació s'escriu com $S_{\emptyset} = ( \{t:
+%   \glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \} )$.
+% \end{definition}
+%
+% A causa del format esquemàtic de les sèries temporals, en simplifiquem
+% l'escriptura de la forma canònica com a conjunt de tuples $(t,v)$ a on
+% $t$ és el temps i $v$ és el valor. Així doncs quan no hi ha dubte
+% sobre els dominis ni els noms d'atributs, una sèrie temporal es pot
+% escriure de manera simplificada com a $S = \{ (t_0,v_0), (t_1,v_1),
+% \dotsc, (t_k,v_k) \}$, la qual es correspon amb la forma de la sèrie
+% temporal expressada inicialment.
+
+
+
 
 De la mateixa manera que per a les sèries temporals en el model de
 \gls{SGST}, una sèrie temporal multiresolució es pot escriure de manera
