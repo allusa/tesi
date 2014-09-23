@@ -40,16 +40,18 @@ defineixen en aquesta secció, són els següents:
 \item Disc
 \item Subsèrie resolució
 \item Sèrie temporal multiresolució
-%\item Base de dades multiresolució
+\item Esquema de multiresolució
 \end{itemize}
 
 
 Resumint, una base de dades multiresolució és una solució
-d'emmagatzematge per a sèries temporals en què la informació de cada
-una es distribueix mitjançant diferents resolucions temporals.  Així,
-una base de dades multiresolució és un contenidor de sèries temporals
-multiresolució on cada una és una subsèrie resolució formada per una
-relació d'un buffer amb un disc.
+d'emmagatzematge per a sèries temporals en què la informació de
+cadascuna es distribueix mitjançant diferents resolucions
+temporals. Així, una base de dades multiresolució és un contenidor de
+sèries temporals multiresolució on cadascuna és una subsèrie resolució
+formada per una relació d'un buffer amb un disc. Cada sèrie temporal
+multiresolució té un esquema de multiresolució que indica de quina
+manera s'ha de resumir la informació i calcular les resolucions.
 
 \begin{figure}[tp]
 \centering
@@ -223,6 +225,7 @@ diferents, tal com s'ha vist a la \autoref{fig:model:bdstm}
 
 
 \begin{definition}[Sèrie temporal multiresolució]
+  \label{def:sgstm:stm}
   Definim \emph{sèrie temporal multiresolució} com el conjunt de subsèries
   resolució \glsdispdef{not:seriemultiresolucio}{$M=\{R_0,\dotsc,R_d\}$}.
 \end{definition}
@@ -236,20 +239,6 @@ buida.
   de subsèries resolució buides
   $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$.
 \end{definition}
-
-
-
-Així, una sèrie temporal multiresolució té paràmetres que
-s'han de configurar en el seu estat inicial: la quantitat de subsèries
-resolucions i els paràmetres de cada una --pas de consolidació, funció
-d'agregació d'atributs, darrer instant de consolidació i cardinal
-màxim. Anomenem esquema de multiresolució a les configuracions
-possibles d'aquests paràmetres, de manera que podem observar i
-manipular l'esquema de multiresolució de cada sèrie temporal
-multiresolució, la qual cosa mostrem amb més detall a
-l'\autoref{sec:model:sgstm-manipulacio-esquema}.
-
-
 
 
 Normalment, en una sèrie temporal multiresolució no hi ha dues
@@ -286,13 +275,18 @@ atributs
 \item i funció d'agregació d'atributs ($f$).
 \end{itemize}
 
+
+
 Com ja s'ha comentat, una restricció habitual és que $\delta$ i $f$ no
-estiguin repetits; és a dir que ($\delta$,$f$) són els atributs clau
-de les variables relació de sèries temporals multiresolució.
+estiguin repetits, és a dir que és una restricció que indica que els
+atributs $\{\delta,f\}$ són la clau primària.  El predicat
+corresponent a les sèries temporals multiresolució és similar a: «La
+resolució amb pas de consolidació \emph{$\delta$} i funció d'agregació
+\emph{$f$}, de la qual se n'emmagatzemarà com a màxim \emph{$k$}
+mesures, s'ha consolidat amb la sèrie temporal \emph{$S_D$} per darrer
+cop a l'instant \emph{$\tau$} i té pendent per consolidar la sèrie
+temporal \emph{$S_B$}».
 
-
-
-\todo{revisar}
 
 
 Així doncs observada com a relació, i tal com s'ha fet per a la forma
@@ -305,68 +299,72 @@ canònica d'una sèrie temporal multiresolució.
   B_i=(S_{B_i},\tau_i,\delta_i,f_i), D_i=(S_{D_i},k_i)$ té domini de
   sèrie temporal per les sèries temporals $S_{B_i}$ i $S_{D_i}$, de
   $\glssymbol{not:Rb}$ pels temps $\tau_i$ i $\delta_i$, de
-  $\glssymbol{not:N}$ pel pas de consolidació i de funció per a la
-  funció d'agregació d'atributs; \glsdispdef{not:sgstm:canonica}{en la
-    forma canònica} s'escriu com $ M = ( S_B: \text{Sèrie Temporal},
-  S_D: \text{Sèrie Temporal}, \tau: \R{}, \delta: \R{}, k: \N{}, f:
-  \text{funció}\}, \{ \{ S_B: S_{B_0} , S_D : S_{D_0} , \tau :
-  \tau_{B_0}, \delta : \delta_{B_0}, k: k_{D_0}, f : f_{B_0} \} ,
-  \dotsc, \{ S_B: S_{B_d} , S_D : S_{D_d} , \tau : \tau_{B_d}, \delta
-  : \delta_{B_d}, k: k_{D_d}, f : f_{B_d} \} \} )$.
+  $\glssymbol{not:N}$ pel cardinal $k$, i de funció per a la funció
+  d'agregació d'atributs; \glsdispdef{not:sgstm:canonica}{en la forma
+    canònica} s'escriu com $ M = ( \{S_B: \text{sèrie temporal}, S_D:
+  \text{sèrie temporal}, \tau: \glssymbol{not:Rb}, \delta:
+  \glssymbol{not:Rb}, k: \glssymbol{not:N}, f: \text{funció}\}, \{ \{
+  (S_B, S_{B_0}) , (S_D , S_{D_0}) , (\tau, \tau_0), (\delta,
+  \delta_0), (k, k_0), (f, f_0) \} , \dotsc, \{ (S_B,
+  S_{B_d}) , (S_D , S_{D_d}) , (\tau, \tau_d), (\delta,
+  \delta_d), (k, k_d), (f, f_d) \} \} )$.
 \end{definition}
 
 
-%Per les sèries temporals ho hem definit així:
-% \begin{definition}[Forma canònica]
-%   \label{def:sgst:forma-canonica}
-%   Sigui $\glsdispdef{not:sgst-canonica}{S = \{ m_0, m_1 , \dotsc, m_k
-%     \}}$ una sèrie temporal amb domini $\glssymbol{not:Rb}$ pels temps
-%   i els valors de les mesures, la forma canònica com a relació és $S =
-%   ( \{t: \glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \{
-%   (t,t_0),(v,v_0)\}, \{(t,t_1),(v,v_1)\}, \dotsc, \{(t,t_k),(v,v_k)\}
-%   \} )$; és a dir és una parella de capçalera i conjunt de valors
-%   certs.
 
-%   Així doncs, sigui $S_{\emptyset} = \{ \}$ una sèrie temporal buida,
-%   modelada com a relació s'escriu com $S_{\emptyset} = ( \{t:
-%   \glssymbol{not:Rb}, v: \glssymbol{not:Rb}\}, \{ \} )$.
-% \end{definition}
-%
-% A causa del format esquemàtic de les sèries temporals, en simplifiquem
-% l'escriptura de la forma canònica com a conjunt de tuples $(t,v)$ a on
-% $t$ és el temps i $v$ és el valor. Així doncs quan no hi ha dubte
-% sobre els dominis ni els noms d'atributs, una sèrie temporal es pot
-% escriure de manera simplificada com a $S = \{ (t_0,v_0), (t_1,v_1),
-% \dotsc, (t_k,v_k) \}$, la qual es correspon amb la forma de la sèrie
-% temporal expressada inicialment.
+De la mateixa manera que per a les sèries temporals, també escrivim
+una sèrie temporal multiresolució de manera simplificada com el
+conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} , \tau_0, \delta_0, k_0,
+f_0 ), \dotsc, (S_{B_d}, S_{D_d} , \tau_d, \delta_d, k_d, f_d ) \}$,
+la qual es correspon amb la forma expressada inicialment a la
+\autoref{def:sgstm:stm} amb els tuples de $B_i$ i $D_i$ units.  També
+com amb les sèries temporals, les sèries temporals multiresolució es
+poden visualitzar com a taules, cosa que mostrem en exemples
+posteriors.
 
 
 
 
-De la mateixa manera que per a les sèries temporals en el model de
-\gls{SGST}, una sèrie temporal multiresolució es pot escriure de manera
-simplificada com al conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} ,
-\tau_{B_0}, \delta_{B_0}, k_{D_0}, f_{B_0} ), \dotsc, (S_{B_d},
-S_{D_d} , \tau_{B_d}, \delta_{B_d}, k_{D_d}, f_{B_d} ) \}$.
 
 
+\subsection{Esquema de multiresolució}
+
+Una sèrie temporal multiresolució té paràmetres que
+s'han de configurar en el seu estat inicial: la quantitat de subsèries
+resolucions i els paràmetres de cada una --pas de consolidació, funció
+d'agregació d'atributs, darrer instant de consolidació i cardinal
+màxim. Anomenem esquema de multiresolució a les configuracions
+possibles d'aquests paràmetres.
 
 
-\todo{Parlar de l'esquema multiresolució expressat com:}
-$M$ una sèrie temporal
-multiresolució i $\text{e} = \{ (\delta_0,\tau_0,f_0,k_0),
-(\delta_1,\tau_1,f_1,k_1), \ldots, (\delta_d,\tau_d,f_d,k_d)\}$ els
-paràmetres de l'esquema de multiresolució de $M$ expressats com una relació. El paràmetres es poden obtenir fent la projecció de la relació de la sèrie temporal multiresolució: $\glssymbol{not:sgst:project}{\delta,\tau,f,k}(M)$
+En la forma canònica de les sèries temporals multiresolució es pot
+observar més clarament que els atributs $\{\delta,\tau,f,k\}$ són els
+paràmetres configurables al conjunt de tuples dels quals anomenem
+esquema de multiresolució.
+\begin{definition}[Esquema de multiresolució]
+  \label{def:sgstm:esquema}
+  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució, el
+  seu \glsdispdef{not:esquemaM}{esquema de multiresolució $e$} és la
+  projecció dels atributs que constitueixen els paràmetres
+  configurables:
+  $e=\glssymbol{not:sgst:project}_{\{\delta,\tau,f,k\}}(M)$. Així,
+  l'esquema de multiresolució de $M$ es pot expressar com la relació
+  $e = \{ (\delta_0,\tau_0,f_0,k_0), \dotsc,
+  (\delta_d,\tau_d,f_d,k_d)\}$, és a dir una relació amb la capçalera
+  $\{\delta,\tau,f,k\}$.
+\end{definition}
 
 
-
-
+Per a cada sèrie temporal multiresolució es pot estudiar i manipular
+l'esquema de multiresolució, la qual cosa mostrem amb més detall a
+l'\autoref{sec:model:sgstm-manipulacio-esquema}.
 
 
 
 
 
 \subsection{Exemples}
+
 
 \begin{example} [Sèrie temporal multiresolució]
 \label{ex:model:bdm1}%ATENCIÓ als canvis: les dades d'aquest exemple s'utilitzen en altres apartat.
@@ -377,10 +375,10 @@ resolució amb els paràmetres següents:
 \begin{itemize}
 \item La subsèrie resolució $R_0$ té un pas de consolidació de 5
   unitats de temps, una mida màxima de 4 mesures i una funció de
-  consolidació de 'mitjana' de les mesures.
+  consolidació de `mitjana' de les mesures.
 \item La subsèrie resolució $R_1$ té un pas de consolidació de 10
   unitats de temps, una mida màxima de 3 mesures i una funció de
-  consolidació de 'mitjana' de les mesures.
+  consolidació de `mitjana' de les mesures.
 \end{itemize}
 
 \begin{figure}[tp]
@@ -443,8 +441,8 @@ mesures consolidades:
   l'instant $5$ ja s'ha perdut.
 \item Per a la subsèrie resolució $R_1$ hi ha pendent de consolidar
   l'interval de temps $[20,30]$ i al disc hi ha emmagatzemades 2
-  mesures. El disc encara no ha arribat al cardinal màxim $k=3$ degut
-  a que la base de dades s'ha iniciat a l'instant $0$ i la primera
+  mesures. El disc encara no ha arribat al cardinal màxim $k=3$ a
+  causa que la base de dades s'ha iniciat a l'instant $0$ i la primera
   consolidació d'aquesta subsèrie ha estat a l'instant $10$.
 \end{itemize}
 
@@ -486,7 +484,7 @@ mesures consolidades:
        \end{tabular}  
        & 20 & 10 & 3 & mitjana  \\ \hline
   \end{tabular}
-  \caption{Taula d'una sèrie temporal multiresolució}
+  \caption{Taula d'una sèrie temporal multiresolució a l'instant $29$}
   \label{fig:model:stm}
 \end{figure}
 
@@ -495,7 +493,15 @@ mesures consolidades:
 
 \begin{example} [Sèrie temporal multiresolució amb vistes]
 
-  En el model relacional de SGBD molt sovint s'utilitzen vistes per a
+
+
+\todo{revisar}
+
+
+
+
+
+  En el model \gls{SGBDR} molt sovint s'utilitzen vistes per a
   agrupar informació de vàries relacions, per a mostrar-ne una part,
   etc. Una vista és una variable relació virtual derivada d'una
   expressió relacional \parencite{date13}. En aquest exemple mostrem
@@ -504,24 +510,26 @@ mesures consolidades:
   relacionals.
 
 
-  Sigui $M_2^{\text{series}}= ((S':\text{nom},S:\text{sèrie
-    temporal}),\{ (S_{B1},\{(26,0),(29,0)\}),
-  (S_{B2},\{(22,0),(26,0),(29,0)\}),
-  (S_{D1},\{(10,0),(15,0),(20,0),(25,0)\}),
-  (S_{D2},\{(10,0),(20,0)\} )\})$ una relació de sèries
-  temporals i noms, i $M_2'=
-  ((S'_B:\text{nom},S'_D:\text{nom},\tau:\R,\delta:\R,k:\N,f:\text{funció}
-  ),\{ (S_{B1},S_{D1},25 ,5 ,4 ,\text{mitjana} ), ( S_{B2},S_{D2},20 ,
-  10 ,3 , \text{mitjana} ) \})$ una sèrie temporal multiresolució amb
-  noms als atributs de sèries temporals; la vista de la sèrie temporal
+  Sigui una relació de sèries temporals i noms $M_2^{\text{series}}=
+  ((S':\text{nom},S:\text{sèrie temporal}),\{
+  (S_{B1},\{(26,0),(29,0)\}), (S_{B2},\{(22,0),(26,0),(29,0)\}),
+  (S_{D1},\{(10,0), (15,0), (20,0), (25,0)\}), (S_{D2},\{(10,0),
+  (20,0)\} )\})$ i una sèrie temporal multiresolució amb noms com a
+  domini dels atributs de sèries temporals $M_2^{\text{noms}}=
+  ((S'_B:\text{nom},S'_D:\text{nom}, \tau:\glssymbol{not:Rb},
+  \delta:\glssymbol{not:Rb}, k:\glssymbol{not:N}, f:\text{funció} ),\{
+  (S_{B1},S_{D1},25 ,5 ,4 ,\text{mitjana} ), ( S_{B2},S_{D2},20 , 10
+  ,3 , \text{mitjana} ) \})$; la vista de la sèrie temporal
   multiresolució es mostra a la \autoref{fig:model:stm:vistes} i es
-  defineix com a
+  defineix com
   \begin{align*}
-    \text{vista } M_2 =& (M_2' \join ( M_2^{\text{series}} \rename S' \as S_B', S \as S_B )) \\
-    &\join ( M_2^{\text{series}} \rename S' \as S_D', S \as S_D )
+    \text{vista } M_2 =& (M_2^{\text{noms}} \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{S'/S_B', S/S_B} M_2^{\text{series}}) \\
+    & \glssymbol{not:sgst:join} ( M_2^{\text{series}} \rename S' \as S_D', S \as S_D )
     \{\text{all but } S_B',S_D' \}
   \end{align*}
 
+  aplicant les operacions relacionals de junció, reanomena i
+  projecció.
 
 
 
@@ -561,11 +569,11 @@ mesures consolidades:
 
   D'aquesta manera $M_2$ té els mateixos valors que la $M_1$ definida
   a l'exemple anterior; observant només el resultat de $M_2$ no es pot
-  distingir que és una vista. Així doncs, les vistes ens permeten
-  organitzar una sèrie temporal multiresolució de forma més còmoda i,
-  a més tal com es descriu a \textcite{date13}, mantenint que totes
-  les operacions i propietats que són d'aplicació a les relacions ho
-  són també a les seves vistes.
+  distingir que és una vista. Així doncs, les vistes permeten
+  organitzar una sèrie temporal multiresolució de forma més còmoda i a
+  més, tal com descriu \textcite{date13}, mantenir que totes les
+  operacions i propietats que són d'aplicació a les relacions ho són
+  també a les seves vistes.
 
 
 %S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} sobre valors relació). No obstant les mesures que entren a la base de dades provenen de la mateixa sèrie temporal i per tant les sèries temporals emmagatzemades sempre seran del mateix tipus.
