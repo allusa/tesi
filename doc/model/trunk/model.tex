@@ -1,6 +1,8 @@
 \chapter{Introducció als models}
 
 
+\todo{}
+
 En els capítols següents es dissenya un model matemàtic per a la
 gestió en bases de dades de la multiresolució de sèries temporals.
 
@@ -18,19 +20,22 @@ La definició del model s'estructura en dues parts:
 \end{itemize}
 
 
+
   
 En aquest capítol, es relaciona i s'explica més bé el concepte de
 model matemàtic pels \gls{SGBD} del capítol d'estat de l'art
 \todo{ref} amb el model que proposem. Sobretot s'aclareixen alguns termes i conceptes que altrament podrien ser confusos. 
 
+També es resumeixen els objectius de la definició dels models.
 
 
 
 
+\section{Introducció als conceptes generals}
 
-\section{Introducció}
+%Sobre què és una base de dades i un sistema que la gestiona
 
-
+\paragraph{Què és una base de dades i un sistema que la gestiona.}
 Una definició més particular de base de dades que l'exposada en el
 capítol d'estat de l'art \todo{ref} és ``conjunt de dades organitzades
 segons una estructura coherent i accessibles des de més d'un programa
@@ -52,7 +57,7 @@ físicament les dades.
 D'aquestes definicions cal destacar la precisió en els termes
 d'estructura, organitzada i coherent, és a dir que s'enumeren els
 requisits per al correcte emmagatzematge de les dades en concordança
-amb l'expressat en el mode relacional.  En aquestes definicions, a
+amb l'expressat en el model relacional.  En aquestes definicions, a
 més, caldria afegir que els \gls{SGBD} han de ser capaços d'inferir
 informació, és a dir a partir de les dades emmagatzemades deduir-ne de
 noves mitjançant les consultes.
@@ -63,51 +68,59 @@ noves mitjançant les consultes.
 \todo{Sobre model}
 %Sobre model aproximat i model exacte
 
+\paragraph{Què es modelitza amb exactitud i què amb aproximació.}
+Els models de \gls{SGST} i \gls{SGSTM} que proposem són models lògics
+matemàtics, és a dir són models formals i abstractes que defineixen
+amb exactitud l'estructura i la manipulació d'unes dades
+independentment de la realitat.  Així doncs es defineixen models de
+\gls{SGBD} i es presenten com un model matemàtic formal, per tant la
+realitat que es modelitza són els \gls{SGBD}. Un cop definit el model,
+aleshores els \gls{SGBD} s'usen com a eines per a modelitzar la
+realitat, és a dir en el procés de dissenyar un model que aproximi i
+simplifiqui una realitat. Cal no confondre la definició del model
+formal matemàtic amb la interpretació del model en una realitat
+concreta.
 
-Aquí es tracta d'establir un model de SGBD, per tant la realitat directa que volem modelar és un SGBD: ho podem fer de forma exacta? Ara bé, aquest SGBD serà un model per a aproximar la realitat. 
+Tot i tenir tot el sentit matemàtic, un model lògic abstracte no té
+sentit pràctic si no es té en compte la descripció que fa de la
+realitat, és a dir que també s'ha d'interpretar el significat que té
+el model en la realitat.  Aquest procés d'interpretació construeix un
+model aproximat i simplificat de la realitat; és a dir que consisteix
+en definir per a un determinat context quines variables hi ha, de quin
+tipus són els valors, quina forma tenen, com s'interpreten, etc.  Els
+\gls{SGBD} descriuen la realitat mitjançant predicats que indiquen
+quins fets es consideren certs, però els models de \gls{SGBD}
+parteixen d'assumir que aquests predicats són la realitat, en tot cas
+deixen per altres teories l'avaluació de com els predicats s'aproximen
+a la realitat.
+
+En l'àmbit dels \gls{SGST} i els \gls{SGSTM}, els models descriuen
+exactament com a fet cert la mesura d'un valor i deixen que altres
+teories, com per exemple podria ser la teoria de la mesura, avaluïn
+fins a quin punt el valor mesurat s'aproxima a la
+realitat. Particularment, si els fets descriuen allò que s'ha mesurat
+aleshores podem plantejar el cas de mesurar valors desconeguts, mentre
+si descriuen directament allò que realment val la variable en el model
+no hi tenen cabuda les propietats de l'adquisició de la mesura. 
 
 
- 1 m. [QU] Representació ideal d’un aspecte concret de la realitat física emprada amb finalitats d’interpretació i de quantificació dels fenòmens i dels comportaments. 
-4 2 m. [MT] Teoria o descripció matemàtica d’un objecte o fenomen real. 
-4 3 m. [LC] [ECT] Simplificació de la realitat que intenta detectar els elements fonamentals d’un problema concret, eliminant-ne aspectes secundaris. 
+
+%  D'alguna manera, els SGBD descriuen exactament els
+% fets que es coneixen i mitjançant altres teories es dedueix en quina
+% mesura aquests fets coneguts s'aproximen a la realitat (particularment
+% un fet descrit com a cert en un SGBD pot ser totalment esbiaixat de la
+% realitat però això no se n'ocupen els SGBD; és a dir el predicat exacte és el d'allò que és observat tot i que mitjançant altres teories es pot assegurar un predicat d'allò que és la realitat).
+% ; i per tant
+% la interpretació del significat dels models matemàtics a la realitat,
+% i com a conseqüència la modelització aproximada de la realitat, depèn del
+% conjunt del model lògic de SGBD més altres teories. 
 
 
-Kopetz en el llibre de temps real (capítol 2 o 3?) diu que un model té l'objectiu d'estudiar una realitat simplificada per a facilitar la comprensió d'una determinada característica. Potser la definició que fa i la intencionalitat que té no és ben bé la mateixa que el tipus de model que parlem aquí? Si és el cas potser estaria bé fer notar que hi ha diferències en el concepte de model segon l'àmbit i que aquí s'utilitza en tal sentit.
+% Kopetz en el llibre de temps real (capítol 2 o 3?) diu que un model té l'objectiu d'estudiar una realitat simplificada per a facilitar la comprensió d'una determinada característica. Potser la definició que fa i la intencionalitat que té no és ben bé la mateixa que el tipus de model que parlem aquí? Si és el cas potser estaria bé fer notar que hi ha diferències en el concepte de model segon l'àmbit i que aquí s'utilitza en tal sentit.
 
-Per exemple, Fabian Pascal parla de representar la realitat de manera simple (i no tant de simplificar la realitat):
-``For the informational purpose that RM satisfies--inferencing facts that are logical implications of facts represented in databases--the RM is superior, because it is the simplest way to guarantee logically correct results with respect to the real world and it has the highest scope-to-simplicity ratio: it can represent any reality with the least and simplest of constructs''
+% Per exemple, Fabian Pascal parla de representar la realitat de manera simple (i no tant de simplificar la realitat):
+% ``For the informational purpose that RM satisfies--inferencing facts that are logical implications of facts represented in databases--the RM is superior, because it is the simplest way to guarantee logically correct results with respect to the real world and it has the highest scope-to-simplicity ratio: it can represent any reality with the least and simplest of constructs''
 
-
-
-* Sobre model aproximat i model exacte
-
-El model de SGST i SGSTM que proposem són models lògics
-matemàtics. Per tant, són models abstractes i exactes: defineixen un
-discurs que és exacte i alhora independent de la realitat.  Ara bé,
-aquest model ha de servir per a descriure la realitat; és a dir que
-també s'ha d'interpretar el significat que té el model en la
-realitat. Aleshores aquest procés d'interpretació construeix un model
-aproximat; és a dir que consisteix en definir quines variables hi
-haurà, de quin tipus seran els valors, quina forma tenen, com
-s'interpreten, etc. i per tant és un model aproximat i simplificat de
-la realitat. La mateixa diferència entre el model aproximat i model
-exacte es pot aplicar pels SGBD en general: és a dir cal no confondre
-la definició del model matemàtic amb la interpretació del model en una
-realitat concreta. D'alguna manera, els SGBD descriuen exactament els
-fets que es coneixen i mitjançant altres teories es dedueix en quina
-mesura aquests fets coneguts s'aproximen a la realitat (particularment
-un fet descrit com a cert en un SGBD pot ser totalment esbiaixat de la
-realitat però això no se n'ocupen els SGBD; és a dir el predicat exacte és el d'allò que és observat tot i que mitjançant altres teories es pot assegurar un predicat d'allò que és la realitat).  En l'àmbit dels nostres
-models de sèries temporals, això vol dir que els SGST i SGSTM
-descriuen exactament el fet que coneixem que hem mesurat un valor però
-cal una teoria, com per exemple la teoria de la mesura, que avaluï
-fins a quin punt el valor mesurat s'aproxima a la realitat (particularment si els fets descriuen allò que s'ha mesurat aleshores ens podem plantejar la mesura de valors desconeguts mentre que si descriuen allò que realment valia la variable no podem parlar sobre aspectes de les mesures); i per tant
-la interpretació del significat dels models matemàtics a la realitat,
-i com a conseqüència el modelatge aproximat de la realitat, depèn del
-conjunt del model lògic de SGBD més altres teories. Cal aclarir que
-not té sentit pràctic només el model lògic abstracte sense tenir en
-compte la vessant d'interpretació de model aproximat, encara que sí
-que té tot el sentit matemàtic.
 
 
 
@@ -237,22 +250,6 @@ Però el model de SGSTM també es pot fer servir per altres aplicacions:
 
 
 
-
-
-
-% \dots
-% \ldots
-% \cdots
-% \vdots
-% \ddots diagonal dots
-% \iddots  inverse diagonal dots (requires the mathdots package)
-% \hdotsfor{n} to be used in matrices, it creates a row of dots spanning n columns
-
-% A_1,A_2,\dotsc,   with commas
-% A_1+\dotsb+A_N    with binary operators/relations
-% A_1 \dotsm A_N    multiplication dots
-% \int_a^b \dotsi   with integrals
-% A_1\dotso A_N     other dots
 
 
 
