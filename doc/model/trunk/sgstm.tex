@@ -370,13 +370,13 @@ l'\autoref{sec:model:sgstm-manipulacio-esquema}.
 \label{ex:model:bdm1}%ATENCIÓ als canvis: les dades d'aquest exemple s'utilitzen en altres apartat.
 
 
-Sèrie temporal multiresolució $M_1=\{R_0,R_1\}$ que té dues subsèries
+Sèrie temporal multiresolució $M_1=\{R_1,R_2\}$ que té dues subsèries
 resolució amb els paràmetres següents:
 \begin{itemize}
-\item La subsèrie resolució $R_0$ té un pas de consolidació de 5
+\item La subsèrie resolució $R_1$ té un pas de consolidació de 5
   unitats de temps, una mida màxima de 4 mesures i una funció de
   consolidació de `mitjana' de les mesures.
-\item La subsèrie resolució $R_1$ té un pas de consolidació de 10
+\item La subsèrie resolució $R_2$ té un pas de consolidació de 10
   unitats de temps, una mida màxima de 3 mesures i una funció de
   consolidació de `mitjana' de les mesures.
 \end{itemize}
@@ -395,9 +395,9 @@ multiresolució es pot veure a la \autoref{fig:model:ex1}.
 de multiresolució que correspon als instants de consolidació, des de 0
 fins a 30, és el següent:
 \begin{itemize}
-\item La subsèrie resolució $R_0$ serà consolidada en els instants 5,
+\item La subsèrie resolució $R_1$ serà consolidada en els instants 5,
   10, 15, 20, 25 i 30.
-\item La subsèrie resolució $R_1$ serà consolidada en els instants 10,
+\item La subsèrie resolució $R_2$ serà consolidada en els instants 10,
   20 i 30.
 \end{itemize}
 
@@ -435,11 +435,11 @@ Es pot observar que als buffers hi ha emmagatzemades les mesures
 pendents de consolidar per a cada subsèrie i als discs les darreres
 mesures consolidades:
 \begin{itemize}
-\item Per a la subsèrie resolució $R_0$ hi ha pendent de consolidar
+\item Per a la subsèrie resolució $R_1$ hi ha pendent de consolidar
   l'interval de temps $[25,30]$ i al disc hi ha emmagatzemades les 4
   mesures màximes permeses; és a dir que la que s'havia consolidat a
   l'instant $5$ ja s'ha perdut.
-\item Per a la subsèrie resolució $R_1$ hi ha pendent de consolidar
+\item Per a la subsèrie resolució $R_2$ hi ha pendent de consolidar
   l'interval de temps $[20,30]$ i al disc hi ha emmagatzemades 2
   mesures. El disc encara no ha arribat al cardinal màxim $k=3$ a
   causa que la base de dades s'ha iniciat a l'instant $0$ i la primera
@@ -494,13 +494,6 @@ mesures consolidades:
 \begin{example} [Sèrie temporal multiresolució amb vistes]
 
 
-
-\todo{revisar}
-
-
-
-
-
   En el model \gls{SGBDR} molt sovint s'utilitzen vistes per a
   agrupar informació de vàries relacions, per a mostrar-ne una part,
   etc. Una vista és una variable relació virtual derivada d'una
@@ -510,7 +503,7 @@ mesures consolidades:
   relacionals.
 
 
-  Sigui una relació de sèries temporals i noms $M_2^{\text{series}}=
+  Siguin una relació de sèries temporals i noms $M_2^{\text{series}}=
   ((S':\text{nom},S:\text{sèrie temporal}),\{
   (S_{B1},\{(26,0),(29,0)\}), (S_{B2},\{(22,0),(26,0),(29,0)\}),
   (S_{D1},\{(10,0), (15,0), (20,0), (25,0)\}), (S_{D2},\{(10,0),
@@ -519,16 +512,16 @@ mesures consolidades:
   ((S'_B:\text{nom},S'_D:\text{nom}, \tau:\glssymbol{not:Rb},
   \delta:\glssymbol{not:Rb}, k:\glssymbol{not:N}, f:\text{funció} ),\{
   (S_{B1},S_{D1},25 ,5 ,4 ,\text{mitjana} ), ( S_{B2},S_{D2},20 , 10
-  ,3 , \text{mitjana} ) \})$; la vista de la sèrie temporal
-  multiresolució es mostra a la \autoref{fig:model:stm:vistes} i es
-  defineix com
+  ,3 , \text{mitjana} ) \})$, les quals es mostren a la
+  \autoref{fig:model:stm:vistes}, la vista de la sèrie temporal
+  multiresolució es defineix com
   \begin{align*}
-    \text{vista } M_2 =& (M_2^{\text{noms}} \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{S'/S_B', S/S_B} M_2^{\text{series}}) \\
-    & \glssymbol{not:sgst:join} ( M_2^{\text{series}} \rename S' \as S_D', S \as S_D )
-    \{\text{all but } S_B',S_D' \}
+    \text{vista } M_2 =& \glssymbol{not:sgst:project}_{\text{tots llevat } \{S_B',S_D'\} } \big( M_2^{\text{noms}} \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{\{S'/S_B', S/S_B\}} M_2^{\text{series}}) \\
+    & \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{\{S'/S_D',
+      S/S_D\}} M_2^{\text{series}} )\big)
   \end{align*}
 
-  aplicant les operacions relacionals de junció, reanomena i
+  aplicant les operacions relacionals de reanomena, junció i
   projecció.
 
 
@@ -536,7 +529,7 @@ mesures consolidades:
   \begin{figure}[tp]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
-      \multicolumn{2}{c}{$M'_2$} \\ \hline
+      \multicolumn{2}{c}{$M_2^{\text{noms}}$} \\ \hline
       $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
       $S_{B1}$ & $S_{D1}$ & 25 & 5  & 4 & mitjana  \\
       $S_{B2}$ & $S_{D2}$ & 20 & 10 & 3 & mitjana  \\ \hline
@@ -568,12 +561,13 @@ mesures consolidades:
 
 
   D'aquesta manera $M_2$ té els mateixos valors que la $M_1$ definida
-  a l'exemple anterior; observant només el resultat de $M_2$ no es pot
-  distingir que és una vista. Així doncs, les vistes permeten
-  organitzar una sèrie temporal multiresolució de forma més còmoda i a
-  més, tal com descriu \textcite{date13}, mantenir que totes les
-  operacions i propietats que són d'aplicació a les relacions ho són
-  també a les seves vistes.
+  a l'exemple anterior és a dir que es visualitza amb la mateixa taula
+  que la de la \autoref{fig:model:stm}; observant només el resultat de
+  $M_2$ no es pot distingir que és una vista. Així doncs, les vistes
+  permeten organitzar una sèrie temporal multiresolució de forma més
+  còmoda i a més, tal com descriu \textcite{date13}, mantenint que
+  totes les operacions i propietats que són d'aplicació a les
+  relacions ho són també a les seves vistes.
 
 
 %S'observa que per tal de complir amb les propietats de les relacions, totes les sèries temporals dels buffers han de ser del mateix tipus, és a dir tenir la mateixa capçalera. El mateix succeeix amb les sèries temporals dels discs. (Vegeu els exemples de la secció \ref{par:model:exemple-relvalues} sobre valors relació). No obstant les mesures que entren a la base de dades provenen de la mateixa sèrie temporal i per tant les sèries temporals emmagatzemades sempre seran del mateix tipus.
@@ -583,12 +577,11 @@ mesures consolidades:
 \end{example}
 
 
-
 \begin{example} [Sèrie temporal multiresolució amb desfasaments]
 \label{ex:model:bdm-desfasaments}
 
 A l'\autoref{ex:model:bdm1} s'ha mostrat una sèrie temporal
-multiresolució en la que la consolidació de les dues subsèries obeeix
+multiresolució en què la consolidació de les dues subsèries obeeix
 a la mateixa funció d'agregador d'atributs $f$. En aquest exemple
 treballem amb els mateixos valors que a l'\autoref{ex:model:bdm1} però
 ara canviem la funció de la segona subsèrie resolució per un agregador
@@ -653,13 +646,14 @@ mostra a la \autoref{fig:model:stm:desfasaments} en forma de taula.
 
 Així doncs, mentre que l'esquema de multiresolució segueix sent el
 mateix pel que fa als instants de consolidació, els instants de temps
-de la sèrie temporal emmagatzemada a la subsèrie resolució $R_1$ tenen
+de la sèrie temporal emmagatzemada a la subsèrie resolució $R_2$ tenen
 un retard de $5$ unitats de temps.  Per una banda, es pot observar a
-la $S_{B2}$ que el buffer ara és 5 unitats més gran i emmagatzema
-mesures de l'interval $[15,30]$. Per altra banda, es pot observar a la
-$S_{D2}$ que els instants emmagatzemats són $5$ i $15$ corresponents
-als instants de consolidació $10$ i $20$. Pel que fa a la resta de
-valors, no han variat respecte de l'\autoref{ex:model:bdm1}.
+la $S_{B2}$ que el buffer ara és 5 unitats de temps més gran i
+emmagatzema mesures de l'interval $[15,30]$. Per altra banda, es pot
+observar a la $S_{D2}$ que els instants emmagatzemats són $5$ i $15$
+corresponents als instants de consolidació $10$ i $20$. Pel que fa a
+la resta de valors, no han variat respecte de
+l'\autoref{ex:model:bdm1}.
 
 
 
