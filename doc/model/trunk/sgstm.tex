@@ -140,10 +140,64 @@ k\in\glssymbol{not:N}$. Aquests instants de temps de consolidació
 també defineixen els intervals de temps de consolidació del buffer de
 la forma $i=[\tau,\tau+\delta]$. La consolidació de la sèrie temporal
 $S_B$ d'un buffer en un interval de temps $i$ dóna com a resultat una
-mesura $m=(t,v)$ calculada a partir de la funció d'agregació
-d'atributs $m = f (S, i)$. Més endavant a la
+mesura $m'=(t,v)$ calculada a partir de la funció d'agregació
+d'atributs $m' = f (S, i)$. Més endavant a la
 \autoref{sec:model:agregador} detallem el concepte de funció
 d'agregació d'atributs.
+
+
+\begin{figure}[tp]
+  \centering
+   \begin{tikzpicture}
+    \begin{axis}[
+        ymin = 0,
+        yticklabels= {,,,,valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,,$\underbrace{\tau_{0}\vphantom{\delta}}_{\tau^0}$,,$\underbrace{\tau^0+\delta}_{\tau^1}$,,$\underbrace{\tau^1+\delta}_{\tau^2}$,,$\underbrace{\tau^2+\delta}_{\tau^3 \ldots}$},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (19,4)
+        (22,6)
+        (25,7)
+        (29,8)
+        (30,4)
+        (35,2)
+        (41,5)
+        (45,8)
+    };
+
+    \end{axis}
+  \end{tikzpicture}
+
+  \caption{Intervals de consolidació d'un buffer}
+  \label{fig:sgstm:consB}
+\end{figure}
+
+
+
+
+A la \autoref{fig:sgstm:consB} es mostra un exemple de sèrie temporal
+les mesures de la qual es mostren amb punts vermells i en línies
+blaves verticals s'indiquen els intervals de consolidació d'un buffer
+sobre aquesta sèrie temporal.  Sigui $\tau_0$ l'instant inicial de
+consolidació, el primer instant de consolidació $\tau$, anomenant-lo
+$\tau^0$ com el primer valor que pren, és $\tau^0=\tau_0$. El següent
+valor que prendrà és $\tau^1=\tau^0+\delta$ i així successivament.
+Per tant el primer interval de consolidació és
+$i^0=[\tau^0,\tau^1]$. Quan es consolida el buffer per aquest
+interval, resulta que el darrer instant de consolidació esdevé
+$\tau^1$ i es calcula una mesura $m'=f(S,[\tau^0,\tau^1])$; la qual
+per facilitar la comprensió podem assumir de moment que és el resultat
+de calcular una agregació sobre les mesures en l'interval
+$[\tau^0,\tau^1]$ .
 
 
 
@@ -173,7 +227,6 @@ pel cardinal màxim. Amb aquesta finalitat es defineix un disc inicial.
   (\emptyset,k)$, el qual conté una sèrie temporal buida i el cardinal
   màxim que podrà prendre $S_D$.
 \end{definition}
-
 
 
 
@@ -209,8 +262,46 @@ Les subsèries resolució es consoliden seguint els criteris del seu
 buffer i emmagatzemant al seu disc la mesura que resulta de la
 consolidació. Així, els paràmetres del buffer i del disc d'una
 subsèrie resolució ($\tau_0, \delta, f, k$) caracteritzen la resolució
-de la subsèrie temporal $S_D$ que finalment queda emmagatzemada.
+de la subsèrie temporal $S_D$ que finalment queda emmagatzemada.  A la
+\autoref{fig:sgstm:bdsubserie} es mostra un esquema semblant a la
+\autoref{fig:model:bdstm} on es veu una subsèrie resolució amb la
+relació d'aquests paràmetres entre el buffer i el disc, llevat de
+$\tau_0$ que és difícil de representar.
 
+
+\begin{figure}[tp]
+  \centering
+  
+\begin{tikzpicture}
+ \tikzset{
+        myarrow/.style={->, >=latex',  thick},
+      }
+      
+
+  %discr
+  
+  \node[ellipse,draw,minimum height=3.5cm,minimum width=2.5cm,alias=discr0]  {};
+
+  \node[cylinder, draw, shape border rotate=90, aspect=0.25,alias=buffer0] [below=3mm of discr0.north] {$f$};
+  \node[circle, draw,alias=disc0,minimum width=1.2cm]  [above=3mm of discr0.south] {$\delta$} ;
+  \draw [->] (disc0.center)++(.2:.2cm) arc(0:180:.2cm);
+  \draw[myarrow] (buffer0.bottom) -- (disc0.north);
+
+  \node[circle,minimum width=9mm] (d0boles) [below=0mm of disc0.center,anchor=center] {};
+  \node[below=0mm of d0boles.north,anchor=center] {$\circ$};
+  \node[below=0mm of d0boles.east,anchor=center] {$\circ$};
+  \node[below=0mm of d0boles.south,anchor=center] {$\circ$};
+  \node[below=0mm of d0boles.west,anchor=center] {$\circ$};
+
+  \node[below=0mm of d0boles.east,anchor=south west] {$k)$};
+
+%  \node[circle, draw,dotted,minimum width=1cm]  (disc0.center) {} ;
+  \draw [dotted] (disc0.center)++(.5:.5cm) arc(0:360:.5cm);
+
+\end{tikzpicture}
+  \caption{Paràmetres d'una subsèrie temporal resolució}
+  \label{fig:sgstm:bdsubserie}
+\end{figure}
 
 
 

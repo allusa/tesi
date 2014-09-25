@@ -4,10 +4,10 @@ En aquesta secció es defineixen els operadors que permeten modelar el
 comportament i la manipulació de les dades en el model de \gls{SGSTM}.
 
 Per a treballar amb les sèries temporals multiresolució s'utilitzen
-els conceptes descrits al model d'operacions de \gls{SGST}. El model de
-\gls{SGSTM} es defineix a partir del model de \gls{SGST} i per tant les operacions
-dels \gls{SGSTM} també hi estan basades. Tot i així cal tenir en compte dues
-particularitats.
+els conceptes descrits al model d'operacions de \gls{SGST}. El model
+de \gls{SGSTM} es defineix a partir del model de \gls{SGST} i per tant
+les operacions dels \gls{SGSTM} també hi estan basades. Tot i així cal
+tenir en compte dues particularitats.
 
 Per una banda, el model de \gls{SGSTM} té una estructura específica que
 requereix ser manipulada coherentment. Així, es defineixen operadors
@@ -81,61 +81,23 @@ reduïda.
 \begin{definition}[Consolida el buffer]\label{def:model:consolidacio-buffer}
   Sigui $B=(S,\tau,\delta,f)$ un buffer, la consolidació del buffer
   $\glssymboldef{consolidaB}(B)$ en l'interval de temps
-  $[\tau,\tau+\delta]$ és un buffer $B'=(S',\tau',\delta,f)$, amb el
-  nou instant de consolidació, i la mesura $m'=(t',v')$ resultant de
-  la consolidació: $\glssymbol{consolidaB}(B) =
-  (S',\tau+\delta,\delta,f) \times m'$ a on
-  $m'=f(S,[\tau,\tau+\delta])$ i $S'$ és el resultat d'eliminar les
-  dades històriques que no es necessiten més.
+  $[\tau,\tau+\delta]$ és un nou buffer amb el nou instant de
+  consolidació i una mesura resultant de la consolidació:
+  $\glssymbol{consolidaB}(B) = (B',m')$ on $B'=(S',\tau',\delta,f)$,
+  $m'=f(S,[\tau,\tau+\delta])$, $\tau'=\tau+\delta$ i $S'$ és el
+  resultat d'eliminar les dades històriques que no es necessiten més.
 
-  \emph{Nota}: En el model teòric es pot donar $S'=S$ tot i que a les
-  implementacions normalment caldrà eliminar les dades ja no
-  necessàries per no ocupar espai amb per exemple $S'=
-  S[\tau+\delta,+\infty]$.
+  \emph{Sobre eliminar les dades històriques}: En el model teòric es
+  pot donar $S'=S$ tot i que a les implementacions normalment caldrà
+  eliminar les dades ja no necessàries per no ocupar espai amb per
+  exemple $S'= S[\tau+\delta,+\infty]$.
 \end{definition}
-
-
-\todo{explicar dibuix}
-  \begin{tikzpicture}
-    \begin{axis}[
-        width=4cm,
-        scale only axis, height=2.3cm,
-        ymin = 0,
-        yticklabels= {,,\tiny valors},
-        y tick label style = {rotate=90,anchor=south},
-        x tick label style = {font=\tiny},        
-        xticklabels={$\underbrace{\tau_{}}_{\tau_0}$,$\underbrace{\tau_0+\delta}_{\tau_1}$,$\underbrace{\tau_1+\delta}_{\tau_2}$,$\underbrace{\tau_2+\delta}_{\tau_3 \ldots}$},
-        ]
- 
-    \addplot[ycomb,blue] coordinates {
-        (20,10)
-        (30,10)
-        (40,10)
-        (50,10)
-    }; 
-
-    \addplot[red,only marks, mark = *] coordinates {
-        (19,4)
-        (22,6)
-        (25,7)
-        (29,8)
-        (30,4)
-        (35,2)
-        (41,5)
-        (45,8)
-    };
-
-    \end{axis}
-  \end{tikzpicture}
-
-
-
 
 
 De manera simplificada, hem definit que cada consolidació només
 s'aplica a l'interval de consolidació actual; així la consolidació
 total del buffer és l'aplicació successiva de l'operació de
-consolidació.
+consolidació. 
 
 Aquesta consolidació successiva requereix que les mesures s'insereixen
 al buffer ordenades en el temps, sinó un cop duta a terme la
@@ -167,7 +129,7 @@ cardinal permès.
   Sigui $D=(S,k)$ un disc i $m=(t,v)$ una mesura, la inserció de la
   mesura al disc $\glssymboldef{addD}(D,m)$ és un disc $D'=(S',k)$
   amb la mesura afegida a la sèrie temporal del disc mantenint el
-  cardinal màxim: $\glssymbol{addD}(D,m) = (S',k)$ a on $S'=
+  cardinal màxim: $\glssymbol{addD}(D,m) = (S',k)$ on $S'=
   \begin{cases}
       S\cup\{m\} &\text{si }  |S|<k\\
       (S-\{\min(S)\}) \cup \{m\} &\text{altrament}
@@ -191,8 +153,8 @@ afegir-la al buffer.
   Sigui $R=(B,D)$ una subsèrie resolució i $m=(t,v)$ una mesura, la
   inserció de la mesura a la subsèrie resolució
   $\glssymboldef{addR}(R,m)$ és una subsèrie resolució $R'=(B',D)$
-  amb la mesura afegida al buffer: $\glssymbol{addR}(R,m) = (B',D)$ a
-  on $B'=\glssymbol{addB}=(B,m)$.
+  amb la mesura afegida al buffer: $\glssymbol{addR}(R,m) = (B',D)$ 
+  on $B'=\glssymbol{addB}(B,m)$.
 \end{definition}
 
 
@@ -202,7 +164,7 @@ actual, i desar-la al disc.
 \begin{definition}[Consolida la subsèrie resolució]
   Sigui $R=(B,D)$ una subsèrie resolució, la consolidació de la
   subsèrie resolució $\glssymboldef{consolidaR}(R)$ és una subsèrie
-  resolució $R'=(B',D')$ a on $(B',m') = \glssymbol{consolidaB}(B)$ i
+  resolució $R'=(B',D')$ on $(B',m') = \glssymbol{consolidaB}(B)$ i
   $D'=\glssymbol{addD}(D,m')$.
 \end{definition}
 
@@ -246,13 +208,13 @@ consolidables.
   $M'=\{R_0',\dotsc,R_d'\}$ que consolida les subsèries resolució
   consolidables:
   \[
-  \glssymbol{consolidaM}(M) = \big\{ \forall R_i\in M:
+  \glssymbol{consolidaM}(M) = \left\{ \forall R_i\in M:
   \begin{cases}
     \glssymbol{consolidaR}(R_i) & \text{si }
     \glsdisp{consolidableR}{R_i \text{ és
         consolidable}}\\
     R_i & \text{altrament}
-  \end{cases}\big\}
+  \end{cases}\right\}
   \].
 \end{definition}
 
@@ -263,10 +225,10 @@ resolució. Per a tractar amb tots i cadascun dels elements del conjunt
 és útil tenir l'operació de mapatge, de manera similar a com s'ha
 definit per les sèries temporals però que es pugui obtenir qualsevol
 conjunt de valors.
- \begin{definition}[Mapa d'una sèrie temporal multiresolució] %angl. span
+ \begin{definition}[Mapa d'una sèrie temporal multiresolució]
    Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució i
    \glssymbol{not:F} una funció sobre una subsèrie resolució que
-   retorna un valor $v'$ a on $\glssymbol{not:F}:R\mapsto v'$, el mapa
+   retorna un valor $v'$ on $\glssymbol{not:F}:R\mapsto v'$, el mapa
    de \glssymbol{not:F} a $M$ és un conjunt de valors resultant
    d'aplicar la funció a cada subsèrie resolució:
    $\glssymboldef{not:sgstm:map}(M,\glssymbol{not:F}) = \{
@@ -292,13 +254,17 @@ $\glssymbol{not:F}:R\mapsto R'$.
 \subsection{Manipulació de l'esquema}
 \label{sec:model:sgstm-manipulacio-esquema}
 
+
+
+\todo{revisar}
+
+
 \todo{Atenció!: la definició d'esquema multiresolució s'ha fet al model estructural}
 
 
 \todo{alerta! aquesta secció s'ha fet pensant en els instants de consolidació periòdics. Què passa quan no ho són? }
 per exemple event trigerred (només emmatgatzemem informació quan creiem que és interessant). Aleshores potser són casos molt especials i no es pot dibuixar l'esquema? Potser posar tot això com a comentari a la secció d'Altres Estructures: En el model de \gls{SGSTM} s'ha considerat que la consolidació es feia periòdicament però es podria fer quan es cregués oportú, aleshores no es pot preveure quin esquema de multiresolució hi haurà; són casos que requereixen un estudi més profund. Etc.
 
-\todo{atenció que no s'ha parlat enlloc del rellotge en els SGBDM? s'hauria de dir que en principi no es diu res sobre el rellotge i que si segueix l'esquema de consolidació proposat les mateixes mesures van entrant ordenades i van marcant el pas del temps}
 
 
 
@@ -309,8 +275,7 @@ coherent amb el model de \gls{SGSTM}.
 
 \todo{substituir per la referencia a la def def:sgstm:esquema}
 L'esquema de multiresolució de
-cada sèrie temporal multiresolució consisteix en quatre paràmetres
-variables: el darrer instant de consolidació ($\tau$), el pas de
+cada sèrie temporal multiresolució consisteix en quatre paràmetres: el darrer instant de consolidació ($\tau$), el pas de
 consolidació ($\delta$), el cardinal màxim ($k$) i la funció
 d'agregació d'atributs ($f$).
 

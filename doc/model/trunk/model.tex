@@ -31,10 +31,9 @@ També es resumeixen els objectius de la definició dels models.
 
 
 
-\section{Introducció als conceptes generals}
+\section{Introducció als conceptes de model}
 
 %Sobre què és una base de dades i un sistema que la gestiona
-
 \paragraph{Què és una base de dades i un sistema que la gestiona.}
 Una definició més particular de base de dades que l'exposada en el
 capítol d'estat de l'art \todo{ref} és ``conjunt de dades organitzades
@@ -65,9 +64,8 @@ noves mitjançant les consultes.
 
 
 
-\todo{Sobre model}
-%Sobre model aproximat i model exacte
 
+%Sobre model aproximat i model exacte
 \paragraph{Què es modelitza amb exactitud i què amb aproximació.}
 Els models de \gls{SGST} i \gls{SGSTM} que proposem són models lògics
 matemàtics, és a dir són models formals i abstractes que defineixen
@@ -75,11 +73,11 @@ amb exactitud l'estructura i la manipulació d'unes dades
 independentment de la realitat.  Així doncs es defineixen models de
 \gls{SGBD} i es presenten com un model matemàtic formal, per tant la
 realitat que es modelitza són els \gls{SGBD}. Un cop definit el model,
-aleshores els \gls{SGBD} s'usen com a eines per a modelitzar la
-realitat, és a dir en el procés de dissenyar un model que aproximi i
-simplifiqui una realitat. Cal no confondre la definició del model
-formal matemàtic amb la interpretació del model en una realitat
-concreta.
+aleshores els \gls{SGBD} s'usen com a eines simbòliques per a
+modelitzar la realitat, és a dir en el procés de dissenyar un model
+que aproximi i simplifiqui una realitat. Cal no confondre la definició
+del model formal matemàtic amb la interpretació del model en una
+realitat concreta.
 
 Tot i tenir tot el sentit matemàtic, un model lògic abstracte no té
 sentit pràctic si no es té en compte la descripció que fa de la
@@ -92,9 +90,12 @@ tipus són els valors, quina forma tenen, com s'interpreten, etc.  Els
 quins fets es consideren certs, però els models de \gls{SGBD}
 parteixen d'assumir que aquests predicats són la realitat, en tot cas
 deixen per altres teories l'avaluació de com els predicats s'aproximen
-a la realitat.
+a la realitat i deixen per als usuaris la interpretació del significat
+dels predicats a la realitat llevat d'allò que es pot expressar
+mitjançant regles d'integritat.
 
-En l'àmbit dels \gls{SGST} i els \gls{SGSTM}, els models descriuen
+
+En l'àmbit dels \gls{SGST}, el model descriu
 exactament com a fet cert la mesura d'un valor i deixen que altres
 teories, com per exemple podria ser la teoria de la mesura, avaluïn
 fins a quin punt el valor mesurat s'aproxima a la
@@ -102,6 +103,10 @@ realitat. Particularment, si els fets descriuen allò que s'ha mesurat
 aleshores podem plantejar el cas de mesurar valors desconeguts, mentre
 si descriuen directament allò que realment val la variable en el model
 no hi tenen cabuda les propietats de l'adquisició de la mesura. 
+En l'àmbit dels \gls{SGSTM}, el model descriu com a fet cert unes
+resolucions de la sèrie temporal i mitjançant altres teories, com per
+exemple la teoria de la informació, s'avalua com s'aproximen a la
+informació d'una sèrie temporal original.
 
 
 
@@ -124,6 +129,47 @@ no hi tenen cabuda les propietats de l'adquisició de la mesura.
 
 
 
+\paragraph{Quin nivell es modela.}
+Al capítol d'estat de l'art\todo{ref} s'han nombrat els tres nivells
+de l'arquitectura dels \gls {SGBD}: el físic, el lògic i el d'usuari.
+Els models que es proposen pertanyen al nivell lògic, és a dir són
+models lògics per les dades i pel comportament dels \gls{SGST} i
+\gls{SGSTM}. En el capítol \todo{ref} es proposen implementacions per
+a aquests models i per tant pertanyen al nivell físic.  En alguns
+exemples i descripcions de propietats dels models, s'avalua el
+significat en un context particular del model, és a dir la semàntica
+del model, cosa que pertany a descriure com els usuaris poden
+interpretar el model lògic per a modelitzar la realitat.
+% és a dir descriu la relació entre el nivell lògic i el d'usuari \todo{???}
+
+
+
+
+
+\paragraph{Àlgebra o càlcul relacional.} Els models que definim són
+similars a l'àlgebra relacional. L'àlgebra relacional es basa en la
+teoria de conjunts, que és més propera a la definició d'una sèrie
+temporal com a conjunt de mesures i a aplicar-hi operacions de manera
+prescriptiva. Alternativament, el càlcul relacional, que com s'ha
+descrit al capítol d'estat de l'art \todo{ref} és equivalent a
+l'àlgebra relacional, es basa en la lògica de predicats i és més
+proper a aplicar les operacions de manera descriptiva. Això no
+obstant, en les definicions usem tant l'àlgebra com la lògica de
+conjunts segons convingui i faciliti la comprensió de les definicions.
+
+
+
+
+% \paragraph{Model com a relació o com a tipus de dades.} 
+% Aquesta és una pregunta complicada. Sobretot perquè el model
+% relacional no ho aclareix; descriu les relacions com si no fossin un
+% tipus de dades tot i que després accepta que hi hagi relacions amb
+% atributs de relacions. Nosaltres volem presentar un model de gestió
+% de dades per a tipus complexos, les sèries temporals i les
+% multiresolució, i aleshores veiem la necessitat d'abordar-ho des del
+% model relacional al complet (com si fossin uns SGBD específics per a
+% aquelles tasques). Ara bé, en un SGBD genèric aquests models de
+% dades s'entendrien com a tipus de dades.
 
 
 
@@ -131,16 +177,110 @@ no hi tenen cabuda les propietats de l'adquisició de la mesura.
 
 
 
-\todo{sobre tres nivells}
-A l'estat de l'art s'ha d'haver explicat els tres nivell de model de dades segons Date i deixar clar aquí que nosaltres definim un model pel segon nivell: nivell de model lògic. Els models lògics modelen les dades, en canvi els models conceptuals modelen la realitat, Fabian Pascal posa d'exemple conceptual el model E/RM.
+\section{Introducció a les sèries temporals}
+
+
+\todo{}
 
 
 
-Segons Date,~\cite{date:introduction}, ``una base de dades és un contenidor informàtic per a una co\l.lecció de dades''. El sistemes informàtics que tracten amb bases de dades s'anomenen sistemes de gestió de bases de dades (SGBD) i tenen l'objectiu d'emmagatzemar informació i permetre consultar i afegir aquesta informació  per part dels usuaris.
-Per complir aquests objectius, els SGBD ofereixen a l'usuari diferents operacions a fer amb la base de dades, com per exemple crear-la, afegir dades o consultar informació a partir de les dades emmagatzemades.
 
-Els SGBD es basen en teories matemàtiques que reben el nom de model de dades, un SGBD és una implementació d'un model de dades.
-Segons Date, ``un model de dades és una definició abstracta, auto continguda i lògica dels objectes, de les operacions i  de la resta que conjuntament constitueixen la màquina abstracta amb la que els usuaris interactuen. Els objectes permeten modelar l'estructura de les dades. Les operacions permeten modelar el comportament''.
+* Nosaltres ens ocuparem de les sèries temporals des de la visió més
+  genèrica possible; és a dir una sèrie temporal com a conjunt de
+  dades que s'han adquirit en uns certs instants de temps.  En aquest
+  sentit, les sèries temporals poden representar dades molt variades i
+  que pertanyen a àmbits molt diferents. Alguns d'aquests àmbits tenen
+  estudis més particulars, focalitzant i simplificant l'estudi en les
+  propietats específiques de les dades. Per exemple la teoria del
+  senyal es focalitza en dades adquirides regularment i amb components
+  de periodicitat o, més particularment encara, l'estudi del so es
+  focalitza en una seqüència de valors que han de complir una relació.
+  Així doncs, l'estudi genèric de les sèries temporals no pretén
+  substituir aquests estudis propis de cada àmbit sinó que pretén
+  oferir una visió més àmplia i comuna a totes aquestes dades i oferir
+  un estudi per a aquelles dades que no tenen un comportament
+  clarament definit. Aquest és el cas, per exemple, de les dades
+  adquirides en un monitoratge en entorns no controlats d'una variable
+  física: aquestes variables són aleatòries, el temps d'adquisició pot
+  ser irregular i per tant cal estudiar-les genèricament com a sèries
+  temporals.  Cal dir, que a vegades les sèries temporals es redueixen
+  a seqüències temporals; és a dir a estudis de dades on només importa
+  l'ordre en què s'han adquirit i el període d'adquisició es
+  constant. Nosaltres no fem aquesta reducció sinó que tractem les
+  sèries temporals des del punt de vista més genèric on cal saber
+  també la posició de temps absoluta que ocupen i la distància de
+  temps entre els valors.
+  
+
+* La interpretació genèrica d'una sèrie temporal és: en el temps t la
+  variable mesurada té el valor v, per cada parella de mesura (t,v).
+  Així doncs, una sèrie temporal conté mesures pertanyents a una
+  mateixa variable o fenomen físic.  De forma més particular i en una
+  interpretació més lligada a l'adquisició i monitoratge una sèrie
+  temporal indica: en el temps t s'ha mesurat el valor v, per cada
+  parella de mesura (t,v); la mesura d'un mateix fenomen o variable física. És a dir que el fet que sabem que és
+  totalment cert és que segons un rellotge i un aparell de mesura hem
+  adquirit una parella de temps i valor.  Mitjançant el model de SGST
+  que definim podrem definir la metodologia i assegurar la correctesa
+  en la inferència d'informació a partir d'aquests fets certs que
+  coneixem. I alhora la sèrie temporal des del punt de vista
+  relacional també ens ofereix com a cert els fets que no hi són: és a
+  dir que en un temps t que no hi és no s'ha mesurat res; en canvi si
+  s'ha mesurat però el valor era erroni s'hauria de marcar amb un
+  valor especial.
+
+  Per una banda, cal destacar que deduir informació sobre la variable
+  mesurada a partir de la mesura és competència d'altres teories
+  (p.ex. si l'aparell de mesura està avariat la informació inferida en
+  el SGST serà totalment certa des del punt de vista que aquell és el
+  valor mesurat per l'aparell però, evidentment, no serà cert que la
+  variable hagi tingut aquell valor). (Aquest seria el principi
+  d'inferència d'informació de bases de dades: a partir d'un fet que
+  donem com a cert, establim com a totalment certa la informació que
+  inferim. I és responsabilitat de qui escriu la consulta establir-ne
+  la interpretació, és a dir determinar si aquella operació
+  efectivament es correspon amb la informació que vol inferir. Per
+  això, els models de SGBD defineixen uns operadors neutres que només
+  tenen en compte l'estructura de les dades i la interpretació del
+  significat de les operacions és extern al model; de fet com en
+  qualsevol altra àlgebra, per exemple pensem en el cas de la suma on
+  la definició matemàtica no explica com s'ha d''interpretar la
+  validesa del resultat)
+
+  Per altra banda, això no vol dir que totes les sèries temporals hagin de
+  ser adquirides directament, poden ser resultat d'operacions amb
+  altres sèries temporals o resultat de consultes on el temps sigui
+  una variable (p.ex. consultar les mitjanes mensuals de temperatures)
+ %(p.ex també l'evolució al llarg del temps de la  quantitat de visites a un portal segons el país d'origen)
+ , però sí
+  que és important no perdre'n de vista la interpretació genèrica. En
+  alguns casos la interpretació, a més, es pot particularitzar, com en
+  els casos descrits de senyal i so. O al revés, unes dades que es
+  consideraven un senyal de so es tracten genèricament com a sèries
+  temporals.
+
+  Particularment, en els casos similars a la consulta de les mitjanes
+  mensuals de temperatures i a les particularitzacions amb seqüències,
+  el temps és discret i no fa tanta referència a un posicionament
+  absolut sobre la línia temporal.
+
+
+Per aquesta interpretació de valor adquirit en un temps d'una mateixa variable, en una sèrie temporal no hi pot haver temps repetits. No tindria sentit que un aparell hagués mesurat alhora dos valors diferents.
+  
+
+
+* Potser cal dir, doncs, que nosaltres pensem sobretot en el tractament de les sèries temporals adquirides d'un monitoratge continu?
+
+
+
+
+
+\section{Introducció a la multiresolució}
+
+
+\todo{}
+Caldria dir que establir un esquema de multiresolució per a una sèrie temporal és una decisió consensuada. És a dir, emmagatzemar una sèrie temporal multiresolució no és totalment equivalent a emmagatzemar una sèrie temporal, a més cal pensar adequadament els paràmetres de l'esquema multiresolució. Per tant, hom pren la decisió d'emmagatzemar multiresolució i aquestes són les dades que vol gestionar: en el nivell d'usuari haurà de ser conscient d'aquest fet.
+
 
 Les bases de dades multiresolució per a sèries temporals són bases de dades que contenen sèries temporals. Les sèries temporals són una co\l.lecció de dades mesurades en diferents instants de temps i necessiten un tractament adequat per part de la base de dades. 
 El model de dades multiresolució és una solució d'emmagatzematge per a les sèries temporals que, resumint, consisteix a repartir la informació d'una sèrie temporal en intervals de temps diferents.
@@ -159,7 +299,6 @@ en una tesi de màster \parencite{llusa11:tfm}.
 
 
 
-Així doncs, a continuació es presenten els model de dades.
 
 En el model per a sèries temporals es defineixen els objectes principals d'estudi: les \emph{mesures} i les \emph{sèries temporals}. Les mesures són dades mesurades en un instant de temps i les sèries temporals són co\l.leccions de mesures.
 
@@ -175,20 +314,10 @@ estructures o bé per a fer consultes.
 
 
 
-\todo{sobre àlgebra relacional i càlcul relacional}
-Els models que definim es basen en l'àlgebra relacional. Es podria definir el mateix des del càlcul relacional.
-
-
-Perquè l'àlgebra?
-
-
-http://cacm.acm.org/magazines/2014/2/171675-a-new-type-of-mathematics/fulltext
-
-for a century, mathematicians have considered set theory to be an adequate basis for formalizing all of mathematics. Starting with concepts like the null set (corresponding to zero) and the set containing only the null set (corresponding to one), one can, in principle, systematically construct all the objects of mathematics. In practice, however, the process is clunky and time-consuming—and therefore, rare. The proponents of HoTT hope it will provide easier and more intuitive tools that will allow rigorously formalized mathematics to become standard practice. Tot i que aquests proposen HoTT: HoTT is based on a mathematical framework called type theory. Unlike sets, which are like bags that can contain various kinds of object, objects of a particular type have specific rules about how they can be manipulated. They are reminiscent of the data types that help enforce rigor in high-level programming languages, but the mathematical version of types can be more elaborate; 
 
 
 
-\section{Resum dels objectius models}
+
 
 
 En el model de SGST s'observen algunes patologies que poden presentar les sèries temporals. El model de SGSTM soluciona algunes d'aquestes patologies:
@@ -210,6 +339,9 @@ Però el model de SGSTM també es pot fer servir per altres aplicacions:
 
 
 
+
+
+\todo{atenció que no s'ha parlat enlloc del rellotge en els SGBDM? s'hauria de dir que en principi no es diu res sobre el rellotge i que si segueix l'esquema de consolidació proposat les mateixes mesures van entrant ordenades i van marcant el pas del temps}
 
 
 
