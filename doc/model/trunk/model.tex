@@ -180,56 +180,82 @@ conjunts segons convingui i faciliti la comprensió de les definicions.
 \section{Introducció a les sèries temporals}
 
 
+Una sèrie temporal és una representació per a unes variables o
+magnituds físiques que evolucionen al llarg del temps.  En els models
+usarem les sèries temporals des de la visió més genèrica possible, és
+a dir una sèrie temporal com a conjunt de dades que s'han adquirit en
+uns certs instants de temps.  En aquest sentit, les sèries temporals
+poden representar dades molt variades i que pertanyen a àmbits molt
+diferents.
+
+
+Les mateixes dades, la variació en el temps de magnituds, són
+estudiades en altres teories com la teoria del senyal; de fet les
+sèries temporals són una de les eines en aquesta teoria.  Això no
+obstant, en les anàlisis aquests senyals normalment s'assumeixen com a
+periòdics, afitats en freqüència, valors adquirits com a seqüències
+equiespaiades i amb un fort anàlisis en els components freqüencials.
+L'aproximació que presentem en sèries temporals és un raonament
+similar més genèric però més propi de l'àlgebra discreta matemàtica
+mentre que la teoria del senyal és més pròpia de l'àmbit del càlcul
+matemàtic. 
+
+
+%\todo{potser parlar de wavelets també?}
+
+
+Així doncs, l'estudi genèric proposat de les sèries temporals no
+pretén substituir aquests estudis propis de cada àmbit sinó que pretén
+oferir una visió més àmplia i comuna a totes aquestes dades i oferir
+un estudi per a aquelles dades que no tenen un comportament clarament
+definit. Aquest és el cas, per exemple, de les dades adquirides en un
+monitoratge en entorns no controlats d'una variable física: aquestes
+variables són aleatòries, el temps d'adquisició pot ser irregular i
+per tant cal estudiar-les com a sèries temporals genèriques.
+Cal dir, que a vegades les sèries temporals es redueixen a seqüències
+temporals, és a dir a estudis de dades on només importa l'ordre en què
+s'han adquirit i el període d'adquisició es constant. No fem
+aquesta reducció sinó que tractem les sèries temporals des del punt de
+vista més genèric on cal saber també la posició de temps absoluta que
+ocupen i la distància de temps entre els valors.
+Aquests estudis més particulars de les sèries temporals, els quals es
+focalitzen i simplifiquen algunes propietats, permeten concentrar-se
+més en àmbits específics i oferir solucions molt ben raonades.  Per
+tant és interessant poder incorporar aquests estudis en els models, en
+aquest sentit per exemple utilitzarem conceptes de la teoria del
+senyal per a interpretar propietats de les sèries temporals.
+
+
+
+
+\paragraph{Interpretació de la sèrie temporal.} 
+La interpretació genèrica d'una sèrie temporal és un conjunt de
+predicats `en el temps $t$ la variable observada té el valor $v$'
+pertanyents a una mateixa variable o fenomen físic.  De forma més
+particular i en una interpretació més lligada a l'adquisició i
+monitoratge continu de fenòmens una sèrie temporal indica la mesura
+d'un valor en un temps, és a dir que el fet que es constata com a cert
+és que segons un rellotge i un aparell de mesura s'ha adquirit una
+parella de temps i valor.  
+
+
+El models de \gls{SGBD} defineixen la metodologia i asseguren la
+correctesa en la inferència d'informació a partir dels fets que es
+donen com a certs. Des del punt de vista del model relacional, alhora
+també es donen com a certs els fets que no són constats; és a dir que
+si en una sèrie temporal no hi apareix un temps $t$ significa que no
+s'ha mesurat res i en canvi si s'ha mesurat però s'ha obtingut un
+valor erroni aleshores hauria d'aparèixer marcat amb un valor
+especial.
+
+
 \todo{}
 
 
 
 
-* Nosaltres ens ocuparem de les sèries temporals des de la visió més
-  genèrica possible; és a dir una sèrie temporal com a conjunt de
-  dades que s'han adquirit en uns certs instants de temps.  En aquest
-  sentit, les sèries temporals poden representar dades molt variades i
-  que pertanyen a àmbits molt diferents. Alguns d'aquests àmbits tenen
-  estudis més particulars, focalitzant i simplificant l'estudi en les
-  propietats específiques de les dades. Per exemple la teoria del
-  senyal es focalitza en dades adquirides regularment i amb components
-  de periodicitat o, més particularment encara, l'estudi del so es
-  focalitza en una seqüència de valors que han de complir una relació.
-  Així doncs, l'estudi genèric de les sèries temporals no pretén
-  substituir aquests estudis propis de cada àmbit sinó que pretén
-  oferir una visió més àmplia i comuna a totes aquestes dades i oferir
-  un estudi per a aquelles dades que no tenen un comportament
-  clarament definit. Aquest és el cas, per exemple, de les dades
-  adquirides en un monitoratge en entorns no controlats d'una variable
-  física: aquestes variables són aleatòries, el temps d'adquisició pot
-  ser irregular i per tant cal estudiar-les genèricament com a sèries
-  temporals.  Cal dir, que a vegades les sèries temporals es redueixen
-  a seqüències temporals; és a dir a estudis de dades on només importa
-  l'ordre en què s'han adquirit i el període d'adquisició es
-  constant. Nosaltres no fem aquesta reducció sinó que tractem les
-  sèries temporals des del punt de vista més genèric on cal saber
-  també la posició de temps absoluta que ocupen i la distància de
-  temps entre els valors.
-  
-
-* La interpretació genèrica d'una sèrie temporal és: en el temps t la
-  variable mesurada té el valor v, per cada parella de mesura (t,v).
-  Així doncs, una sèrie temporal conté mesures pertanyents a una
-  mateixa variable o fenomen físic.  De forma més particular i en una
-  interpretació més lligada a l'adquisició i monitoratge una sèrie
-  temporal indica: en el temps t s'ha mesurat el valor v, per cada
-  parella de mesura (t,v); la mesura d'un mateix fenomen o variable física. És a dir que el fet que sabem que és
-  totalment cert és que segons un rellotge i un aparell de mesura hem
-  adquirit una parella de temps i valor.  Mitjançant el model de SGST
-  que definim podrem definir la metodologia i assegurar la correctesa
-  en la inferència d'informació a partir d'aquests fets certs que
-  coneixem. I alhora la sèrie temporal des del punt de vista
-  relacional també ens ofereix com a cert els fets que no hi són: és a
-  dir que en un temps t que no hi és no s'ha mesurat res; en canvi si
-  s'ha mesurat però el valor era erroni s'hauria de marcar amb un
-  valor especial.
-
-  Per una banda, cal destacar que deduir informació sobre la variable
+  Per una banda, cal destacar, des de l'asusmpció de la interpretació en el monitoratge,
+ que deduir informació sobre la variable
   mesurada a partir de la mesura és competència d'altres teories
   (p.ex. si l'aparell de mesura està avariat la informació inferida en
   el SGST serà totalment certa des del punt de vista que aquell és el
@@ -267,9 +293,6 @@ conjunts segons convingui i faciliti la comprensió de les definicions.
 
 Per aquesta interpretació de valor adquirit en un temps d'una mateixa variable, en una sèrie temporal no hi pot haver temps repetits. No tindria sentit que un aparell hagués mesurat alhora dos valors diferents.
   
-
-
-* Potser cal dir, doncs, que nosaltres pensem sobretot en el tractament de les sèries temporals adquirides d'un monitoratge continu?
 
 
 
@@ -338,7 +361,7 @@ Però el model de SGSTM també es pot fer servir per altres aplicacions:
 * Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
 
 
-
+Tres possibles camps d'aplicació de la multiresolució: comptadors (conservar els totals), soroll d'un senyal (conservar la mitjana), temperatura (aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes).
 
 
 \todo{atenció que no s'ha parlat enlloc del rellotge en els SGBDM? s'hauria de dir que en principi no es diu res sobre el rellotge i que si segueix l'esquema de consolidació proposat les mateixes mesures van entrant ordenades i van marcant el pas del temps}
