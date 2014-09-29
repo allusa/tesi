@@ -226,6 +226,7 @@ resolució. Per a tractar amb tots i cadascun dels elements del conjunt
 definit per les sèries temporals però que es pugui obtenir qualsevol
 conjunt de valors.
  \begin{definition}[Mapa d'una sèrie temporal multiresolució]
+   \label{def:sgstm:mapa}
    Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució i
    \glssymbol{not:F} una funció sobre una subsèrie resolució que
    retorna un valor $v'$ on $\glssymbol{not:F}:R\mapsto v'$, el mapa
@@ -255,115 +256,111 @@ $\glssymbol{not:F}:R\mapsto R'$.
 \label{sec:model:sgstm-manipulacio-esquema}
 
 
-
-\todo{revisar}
-
-
-\todo{Atenció!: la definició d'esquema multiresolució s'ha fet al model estructural}
-
-
-\todo{alerta! aquesta secció s'ha fet pensant en els instants de consolidació periòdics. Què passa quan no ho són? }
-per exemple event trigerred (només emmatgatzemem informació quan creiem que és interessant). Aleshores potser són casos molt especials i no es pot dibuixar l'esquema? Potser posar tot això com a comentari a la secció d'Altres Estructures: En el model de \gls{SGSTM} s'ha considerat que la consolidació es feia periòdicament però es podria fer quan es cregués oportú, aleshores no es pot preveure quin esquema de multiresolució hi haurà; són casos que requereixen un estudi més profund. Etc.
-
-
-
-
 El model de \gls{SGSTM} associa a cada sèrie temporal un esquema de
 multiresolució. En aquest apartat definim els operadors que permeten
 consultar i manipular aquest esquema de multiresolució de forma
 coherent amb el model de \gls{SGSTM}.
+Segons s'ha descrit a la~\autoref{def:sgstm:esquema}, l'esquema de
+multiresolució de cada sèrie temporal multiresolució consisteix en el
+nombre de subsèries resolució i els quatre paràmetres de cadascuna: el
+darrer instant de consolidació ($\tau$), el pas de consolidació
+($\delta$), el cardinal màxim ($k$) i la funció d'agregació d'atributs
+($f$).  Així doncs, quan es manipula una base de dades multiresolució
+cal conservar o tractar adequadament aquests esquemes de
+multiresolució.
 
-\todo{substituir per la referencia a la def def:sgstm:esquema}
-L'esquema de multiresolució de
-cada sèrie temporal multiresolució consisteix en quatre paràmetres: el darrer instant de consolidació ($\tau$), el pas de
-consolidació ($\delta$), el cardinal màxim ($k$) i la funció
-d'agregació d'atributs ($f$).
 
-Així doncs, quan es manipula una base de dades multiresolució cal
-conservar o tractar adequadament aquest esquema de multiresolució.  A
-continuació es descriuen operadors per a poder estudiar aquest
+A continuació es descriuen operadors per a poder estudiar aquest
 esquema, operadors per a canviar-lo i operadors per a unir o ajuntar
-dos esquemes.
-
-
-A cada sèrie temporal multiresolució li correspon un esquema de
-multiresolució.  Una sèrie temporal multiresolució és un conjunt de
-subsèries resolució i per tant l'esquema de multiresolució és també un
-conjunt de l'esquema de cada subsèrie.  A continuació definim els
-operadors de manipulació per a les subsèries resolució, els quals es
-poden estendre fàcilment a una sèrie temporal multiresolució
-mitjançant l'operació de mapatge.
+dos esquemes.  Una sèrie temporal multiresolució és un conjunt de
+subsèries resolució i per tant podem observar també l'esquema de
+multiresolució com a conjunt de l'esquema de cada subsèrie.  Així, per
+simplicitat, definim la majoria dels operadors de manipulació sobre
+les subsèries resolució, tot i que es poden estendre fàcilment a una sèrie
+temporal multiresolució mitjançant l'operació de mapatge
+(v.~\autoref{def:sgstm:mapa}), on la funció $\glssymbol{not:F}$
+correspon a l'operador d'esquema que es vol aplicar a totes i
+cadascuna de les subsèries resolució.
 
 
 
 
 \subsubsection{Propietats de l'esquema}
 
-La configuració dels quatre paràmetres variables de l'esquema de
-multiresolució confereix una sèrie de propietats als objectes d'una
-base de dades multiresolució. A continuació definim algunes propietats
-que es poden estudiar a partir d'un esquema de multiresolució.
+
+La configuració dels paràmetres de l'esquema de multiresolució
+infereix diverses propietats a les sèries temporals multiresolució. A
+continuació definim algunes de les propietats que es poden estudiar a
+partir d'un esquema de multiresolució.
 
 
-Donat un esquema de multiresolució podem dibuixar la situació relativa
-en el temps que prendran les mesures. A aquest dibuix de l'esquema de
-multiresolució l'anomenem cronograma. Per exemple, sigui la sèrie
-temporal multiresolució $M^d=\{R_0,R_1\}$ de
+A partir d'un esquema de multiresolució es pot dibuixar la situació
+relativa en el temps que prendran les mesures. A aquest dibuix de
+l'esquema de multiresolució l'anomenem cronograma. Per exemple, sigui
+la sèrie temporal multiresolució $M_3=\{R_0,R_1\}$ de
 l'\autoref{ex:model:bdm-desfasaments} dibuixem el seu cronograma a la
 \autoref{fig:model:cronograma} per a l'instant de temps $30$, just
-abans de la seva consolidació. Les subsèries resolució de $M^d$ tenen
+abans de la seva consolidació. Les subsèries resolució de $M_3$ tenen
 els paràmetres $\delta_0=5$, $\delta_1=10$, $k_1=4$, $k_2=3$,
-$f_1=\text{mitjana}$ i $f_2=\text{mitjanad5}$ a on la funció
-$\text{mitjanad5}$ té un desfasament de $5$ unitats de temps. Tot
-seguit definim els conceptes que apareixen al cronograma.
+$f_1=\text{mitjana}$ i $f_2=\text{mitjanad5}$ on la funció
+$\text{mitjanad5}$, ja utilitzada a
+l'\autoref{ex:model:bdm-desfasaments}, té un desfasament de $5$
+unitats de temps. Tot seguit definim els conceptes que apareixen al
+cronograma.
 
 \begin{figure}[tp]
   \centering
   \input{imatges/model/sgstm-cronograma.tex}
-  \caption{Cronograma d'un esquema multiresolució just abans de la consolidació, a on $\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:lapseB}(R_i)$}
+  \caption{Cronograma d'un esquema multiresolució just abans de la consolidació,  on $\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:lapseB}(R_i)$}
   \label{fig:model:cronograma}
 \end{figure}
 
 
 Els paràmetres $k$, $\delta$ i $f$ d'una subsèrie resolució són fixats
 per l'esquema, mentre que el paràmetre $\tau$ és fixat a un valor
-inicial i va sent canviat per l'operació de consolidar. Així doncs,
+inicial i va essent canviat per l'operació de consolidació. Així doncs,
 les propietats que impliquin a $\tau$ dependran de l'instant temporal
-en que es faci la consulta i les que no l'impliquin seran fixes per a
+en què es faci la consulta i les que no l'impliquin seran fixes per a
 cada esquema.
 
 Una propietat que observem en el cronograma és el lapse temporal d'una
-subsèrie resolució; és a dir una mesura de la mida temporal que ocupa
-la subsèrie temporal emmagatzemada en el seu disc.
+subsèrie resolució, és a dir la mida temporal que ocupa
+la sèrie temporal emmagatzemada en el disc.
 \begin{definition}[Lapse de la subsèrie resolució] %angl. span
-  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució, el seu
-  lapse $\glssymboldef{not:sgstm:lapseR}(R)$ és una durada de temps $t^d$
-  que mesura la mida de l'interval que ocupa el disc:
+  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució, el lapse
+  $\glssymboldef{not:sgstm:lapseR}(R)$ és una durada de temps que
+  indica la mida de l'interval que ocupa el disc:
   $\glssymbol{not:sgstm:lapseR}(R) = k\delta$.
 \end{definition}
 
 
-Si definim l'interval del lapse com a $[\tau - k\delta, \tau]$
-i l'interval temporal real de la sèrie temporal del disc com a
+Si definim l'interval de temps del lapse com a $[\tau - k\delta,
+\tau]$ i l'interval de temps real de la sèrie temporal del disc com a
 $[\min(S_D),\max(S_D)]$, aleshores normalment es complirà que
-$\max(S_D)=\tau$ i $\min(S_D)=\tau - (k-1)\delta$. No obstant, això
-pot no complir-se si la sèrie temporal no és regular, si $\tau$ i
-$\max(S_D)$ no coincideixen, etc. 
-
-Quan $\tau$ i $\max(S_D)$ no coincideixen és degut a un desfasament
-provocat per la funció d'agregació i ho anomenem desfasament de la
-subsèrie resolució.
+$\max(S_D)=\tau$ i $\min(S_D)=\tau - (k-1)\delta$. No obstant això,
+pot no complir-se per exemple si la sèrie temporal no és regular o per
+exemple si $\tau$ i $\max(S_D)$ no coincideixen.  Aquest darrer fet
+que $\tau$ i $\max(S_D)$ no coincideixen ocorre quan la funció
+d'agregació d'atributs causa un desfasament; ho anomenem desfasament
+de la subsèrie resolució.
 \begin{definition}[Desfasament de la subsèrie resolució] %angl. offset
   \label{def:sgstm:desdsamentR}
   Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució, el seu
-  desfasament $\glssymboldef{not:sgstm:desfasamentR}(R)$ és una durada de
-  temps $t^d$ que mesura la distància entre $\tau$ i $\max(S_D)$
-  deguda a la funció d'agregació $f$. Així havent definit la
-  consolidació sobre $m'=f(S,[\tau,\tau+\delta]$
-  (v.~\autoref{def:model:consolidacio-buffer}), la funció d'agregació
-  amb desfasament retornarà una mesura $m'=(\tau - r,v)$ a on
+  desfasament $\glssymboldef{not:sgstm:desfasamentR}(R)$ és una durada
+  de temps que indica la distància entre $\tau$ i $\max(S_D)$ causada
+  per la funció d'agregació $f$. Així havent definit la consolidació
+  sobre $m'=f(S,[\tau,\tau+\delta]$
+  (v.~\autoref{def:model:consolidacio-buffer}), una funció d'agregació
+  amb desfasament retorna una mesura $m'=(\tau - r,v)$ con
   $\glssymbol{not:sgstm:desfasamentR}(R) = r$.
 \end{definition}
+
+
+
+
+\todo{revisar}
+
+ 
 
 
 Un altre desfasament que es produeix, aquest però variable, és la
@@ -435,6 +432,8 @@ correspon amb un moment abans que es consolidin les dues subsèries
 resolució. Aquest és un moment a on es compleix la
 propietat$\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:lapseB}(R_i)$; és a dir a on el
 període de buffer té la mida màxima.
+
+\todo{a la figura canviar $R_0$ per $R_1$ i 1 per 2}
 
 \begin{figure}[tp]
   \centering
