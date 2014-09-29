@@ -38,47 +38,47 @@
 
  %R1 d2 k4 tau0 f-1
   \node (R1) [above=1cm of 0] {};
-  \node[ellipse,draw,minimum width=3*\ut cm] (R1b) [left=0mm of R1.center, anchor=east] {$S_{B1}$};
-  \node[rectangle,draw,minimum width=2*\ut cm] (R1d1) [left=0mm of R1b.west, anchor=east] {$S_{D1}^1$};
-  \node[rectangle,draw,minimum width=2*\ut cm,align=center] (R1d2) [left=0mm of R1d1.west, anchor=east] {$S_{D1}^2$};
-  \node[rectangle,draw,minimum width=2*\ut cm,align=center] (R1d3) [left=0mm of R1d2.west, anchor=east] {$S_{D1}^3$};
+  \node[ellipse,draw,minimum width=3*\ut cm] (R1b) [left=0mm of R1.center, anchor=east] {$S_{B2}$};
+  \node[rectangle,draw,minimum width=2*\ut cm] (R1d1) [left=0mm of R1b.west, anchor=east] {$S_{D2}^1$};
+  \node[rectangle,draw,minimum width=2*\ut cm,align=center] (R1d2) [left=0mm of R1d1.west, anchor=east] {$S_{D2}^2$};
+  \node[rectangle,draw,minimum width=2*\ut cm,align=center] (R1d3) [left=0mm of R1d2.west, anchor=east] {$S_{D2}^3$};
 
 
 
   %R0 d1 k4 tau0
   \node (R0) [above=2.5cm of R1.center] {};
   \node[ellipse,draw,minimum width=\ut cm,align=center] (R0b) [left=0mm of R0.center, anchor=east] {$S_{B1}$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d1) [left=0mm of R0b.west, anchor=east] {$S_{D0}^1$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d2) [left=0mm of R0d1.west, anchor=east] {$S_{D0}^2$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d3) [left=0mm of R0d2.west, anchor=east] {$S_{D0}^3$};
-  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d4) [left=0mm of R0d3.west, anchor=east] {$S_{D0}^4$};
+  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d1) [left=0mm of R0b.west, anchor=east] {$S_{D1}^1$};
+  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d2) [left=0mm of R0d1.west, anchor=east] {$S_{D1}^2$};
+  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d3) [left=0mm of R0d2.west, anchor=east] {$S_{D1}^3$};
+  \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d4) [left=0mm of R0d3.west, anchor=east] {$S_{D1}^4$};
 
 
   %definicions
   \node (R0la) [above=5mm of R0d4.west] {};
   \node (R0lb) [above=5mm of R0d1.east] {};
-  \draw[<->] (R0la.center) -- (R0lb.center) node [above,sloped,midway] {$lapseR(R_0)$};
+  \draw[<->] (R0la.center) -- (R0lb.center) node [above,sloped,midway] {$lapseR(R_1)$};
 
   \node (R1la) [above=5mm of R1d3.west] {};
   \node (R1lb) [above=5mm of R1d1.east] {};
-  \draw[<->] (R1la) -- (R1lb) node [above,sloped,midway] {$lapseR(R_1)$};
+  \draw[<->] (R1la) -- (R1lb) node [above,sloped,midway] {$lapseR(R_2)$};
 
 
   \node (R0ba) [above=5mm of R0b.west] {};
   \node (R0bb) [above=5mm of R0b.east] {};
-  \draw[<->] (R0ba) -- (R0bb) node [above,sloped,midway] {$periodeB(R_0)$};
+  \draw[<->] (R0ba) -- (R0bb) node [above,sloped,midway] {$periodeB(R_1)$};
 
   \node (R1ba) [above=12mm of R1b.west] {};
   \node (R1bb) [above=12mm of R1b.east] {};
-  \draw[<->] (R1ba) -- (R1bb) node [above,sloped,midway] {$periodeB(R_1)$};
+  \draw[<->] (R1ba) -- (R1bb) node [above,sloped,midway] {$periodeB(R_2)$};
 
   \node (R1da) [above=5mm of R1b.west] {};
   \node (R1db) [above=5mm of -2] {};
-  \draw[<->] (R1da.center) -- (R1da-|R1db) node [above,sloped,midway] {$desfasamentR(R_1)$};
+  \draw[<->] (R1da.center) -- (R1da-|R1db) node [above,sloped,midway] {$desfasamentR(R_2)$};
 
-  \node [below=0mm of -1] {$\tau_0$};
-  \node [below=0mm of -2] {$\tau_1$};
-  \node (tau0d) [below=0mm of 0] {$\tau_0+\delta_0$};
-  \node [below=0mm of tau0d] {$\tau_1+\delta_1$};
+  \node [below=0mm of -1] {$\tau_1$};
+  \node [below=0mm of -2] {$\tau_2$};
+  \node (tau0d) [below=0mm of 0] {$\tau_1+\delta_1$};
+  \node [below=0mm of tau0d] {$\tau_2+\delta_2$};
 
 \end{tikzpicture}
