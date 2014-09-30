@@ -297,11 +297,11 @@ partir d'un esquema de multiresolució.
 A partir d'un esquema de multiresolució es pot dibuixar la situació
 relativa en el temps que prendran les mesures. A aquest dibuix de
 l'esquema de multiresolució l'anomenem cronograma. Per exemple, sigui
-la sèrie temporal multiresolució $M_3=\{R_0,R_1\}$ de
+la sèrie temporal multiresolució $M_3=\{R_1,R_2\}$ de
 l'\autoref{ex:model:bdm-desfasaments} dibuixem el seu cronograma a la
 \autoref{fig:model:cronograma} per a l'instant de temps $30$, just
 abans de la seva consolidació. Les subsèries resolució de $M_3$ tenen
-els paràmetres $\delta_0=5$, $\delta_1=10$, $k_1=4$, $k_2=3$,
+els paràmetres $\delta_1=5$, $\delta_2=10$, $k_1=4$, $k_2=3$,
 $f_1=\text{mitjana}$ i $f_2=\text{mitjanad5}$ on la funció
 $\text{mitjanad5}$, ja utilitzada a
 l'\autoref{ex:model:bdm-desfasaments}, té un desfasament de $5$
@@ -373,10 +373,11 @@ període de buffer.
 \end{definition}
 
 Si la consolidació de la subsèrie resolució es realitza immediatament
-cada cop que estigui en estat de consolidable, aleshores el període de
-buffer té una variació afitada atès que, per ser la consolidació
-immediata, $t_N - \tau \leq \delta$. En aquest cas, el mínim que pot
-prendre el període de buffer és el desfasament,
+cada cop que estigui en estat de consolidable i existeix una mesura
+$m\in S_B$ que compleix $T(m)=t_N$, aleshores el període de buffer té
+una variació afitada atès que, per ser la consolidació immediata, $t_N
+- \tau \leq \delta$. En aquest cas, el mínim que pot prendre el
+període de buffer és el desfasament,
 $\glssymbol{not:sgstm:desfasamentR}(R)\leq
 \glssymbol{not:sgstm:periodeB}(R)$, que correspon a l'instant
 $t_N=\tau$. El màxim que pot prendre l'anomenem lapse de buffer de la
@@ -418,27 +419,80 @@ consolidació (vegeu més endavant
 la \autoref{def:sgstm:canviad}). 
 
 
+Resumint, podem dir que una subsèrie resolució té, per una banda,
+informació consolidada per un lapse temporal de
+$\glssymbol{not:sgstm:lapseR}(R)$, el qual es posiciona absolutament
+des de $\tau + \glssymbol{not:sgstm:desfasamentR}(R)$ enrere. Per
+altra banda, la subsèrie resolució té informació no consolidada al
+davant de la consolidada per un interval de mida
+$\glssymbol{not:sgstm:periodeB}(R)$ i de com a màxim
+$\glssymbol{not:sgstm:lapseB}(R)$. A continuació mostrem aquestes
+propietats en cronogrames d'esquemes multiresolució per a la mateixa
+sèrie temporal multiresolució però en diferents situacions temporals
+d'exemple.
 
-\todo{revisar}
-
- 
 
 
-Resumint, podem dir que una subsèrie resolució té, per una
-banda, informació consolidada per un lapse temporal de
-$\glssymbol{not:sgstm:lapseR}(R)$ el qual es posiciona absolutament des de $\tau +
-\glssymbol{not:sgstm:desfasamentR}(R)$ enrere. Per altra banda, la subsèrie resolució
-té informació no consolidada al davant de la consolidada per un
-interval de mida $\glssymbol{not:sgstm:periodeB}(R)$ i de com a màxim
-$\glssymbol{not:sgstm:lapseB}(R)$. 
+\begin{example}[Instant de temps just abans de la consolidació]
+  \label{ex:sgstm:abanscons}
+  El cronograma de la \autoref{fig:model:cronograma} mostra la sèrie
+  temporal multiresolució $M_3=\{R_1,R_2\}$ de
+  l'\autoref{ex:model:bdm-desfasaments} a l'instant de temps
+  determinat, el $t_N=30$. Exactament mostra una fotografia en
+  l'instant just abans d'aplicar l'operació de consolidació per a
+  totes dues subsèries, les quals ja són consolidables:
+  $t_N\geq\delta_1+\tau_1$ i $t_N\geq\delta_2+\tau_2$ assumint que
+  existeixen les mesures $m_1\in S_{D1}: T(m_1)=t_N$ i $m_2\in S_{D2}:
+  T(m_2)=t_N$.  Aquest és un moment en què es compleix la propietat
+  $\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:lapseB}(R_i)$,
+  és a dir en què el període de buffer té la mida màxima.
 
-A la \autoref{fig:model:cronograma} s'ha pogut observar totes les
-propietats definides pel cronograma multiresolució. Aquest cronograma
-mostra una fotografia a l'instant de temps determinat, el $30$, que es
-correspon amb un moment abans que es consolidin les dues subsèries
-resolució. Aquest és un moment a on es compleix la
-propietat$\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:lapseB}(R_i)$; és a dir a on el
-període de buffer té la mida màxima.
+  En aquest cronograma es poden observar totes les propietats d'un
+  cronograma multiresolució que ara, un cop definides, en calculem els
+  valors concrets per l'exemple:
+  \begin{itemize}
+  \item Lapses de les subsèries:
+    $\glssymbol{not:sgstm:lapseR}(R_1)=k_1\delta_1=20$ i
+    $\glssymbol{not:sgstm:lapseR}(R_2)=k_2\delta_2=30$.
+  \item Desfasaments de les subsèries:
+    $\glssymbol{not:sgstm:desfasamentR}(R_1)=0$ i
+    $\glssymbol{not:sgstm:desfasamentR}(R_2)=5$, segons interpretació
+    de la $f_1=\text{mitjana}$ i $f_2=\text{mitjanad5}$.
+  \item Períodes de buffer: $\glssymbol{not:sgstm:periodeB}(R_1)
+    =t_N-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
+    =30-(25-0)=5$ i $\glssymbol{not:sgstm:periodeB}(R_2)
+    =t_N-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
+    =30-(20-5)=15$ atès que en l'instant de temps actual $t_N=30$ just
+    abans de consolidar-se $\tau_1=25$ i $\tau_2=20$.
+  \item Lapses de buffer: $\glssymbol{not:sgstm:lapseB}(R_1)=
+    \delta_1+\glssymbol{not:sgstm:desfasamentR}(R_1)=5$ i
+    $\glssymbol{not:sgstm:lapseB}(R_2)=
+    \delta_2+\glssymbol{not:sgstm:desfasamentR}(R_2)=15$.
+  \item Subsèrie amb més resolució:
+    $\glssymboldef{not:sgstm:maxR}(R_1,R_2)=R_1$ atès que
+    $\delta_1=\min(\delta_1,\delta_2)$.
+  \end{itemize}
+
+
+
+
+\end{example}
+
+
+
+\begin{example}[Instant de temps just després de la consolidació]
+   \label{ex:sgstm:desprescons}
+
+
+   El cronograma canvia amb el pas del temps i per tant també canvia
+   la mida dels buffers i la posició temporal dels discs.  Ara el
+   cronograma de la \autoref{fig:model:cronograma} mostra el mateix
+   cas que l'\autoref{ex:sgstm:abanscons} per $t_N=30$ però exactament
+   en una fotografia a l'instant just després d'aplicar l'operació de
+   consolidació per a totes dues subsèries. Aquest és un moment en què
+   es compleix la propietat $\glssymbol{not:sgstm:periodeB}(R_i)=
+   \glssymbol{not:sgstm:desfasamentR}(R_i)$, és a dir en què el
+   període de buffer té la mida mínima.
 
 \begin{figure}[tp]
   \centering
@@ -447,13 +501,75 @@ període de buffer té la mida màxima.
   \label{fig:model:cronograma-consolidat}
 \end{figure}
 
-El cronograma canvia amb el pas del temps; és a dir canvia la mida
-dels buffers i la posició temporal dels discs. Es pot veure a la
-\autoref{fig:model:cronograma-consolidat} a on s'ha dibuixat l'exemple anterior
-però en instant de temps $30$ just després de la consolidació de les
-dues subsèries resolució. Aquest és un moment a on es compleix la
-propietat $\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:desfasamentR}(R_i)$; és a dir a
-on el període de buffer té la mida mínima.  
+
+
+Pel que fa als valors de les propietats del cronograma, tots són els
+mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
+ \begin{itemize}
+  \item Períodes de buffer: $\glssymbol{not:sgstm:periodeB}(R_1)
+    =t_N-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
+    =30-(30-0)=0$ i $\glssymbol{not:sgstm:periodeB}(R_2)
+    =t_N-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
+    =30-(30-5)=5$ atès que en l'instant de temps actual $t_N=30$ just
+    després de consolidar-se $\tau_1=30$ i $\tau_2=30$.
+  \end{itemize}
+ 
+
+\end{example}
+
+
+
+
+\begin{example}[Cas no ideal amb consolidació retardada]
+
+  L'\autoref{ex:sgstm:desprescons} és la continuació temporal
+  (instantània) de l'\autoref{ex:sgstm:abanscons} assumint que en
+  l'instant $t_N=30$ s'aplica l'operació de consolidació.  Ara
+  descrivim un cas no ideal en què aquesta operació de consolidació no
+  s'aplica fins a l'instant $t_N=35$. Això podria ser degut que no es
+  vol executar l'operació en el mateix moment que les subsèries siguin
+  consolidables o bé que encara no són consolidables perquè no
+  existeixen les mesures $m_1\in S_{B1}: 30\leq T(m_1)\leq 35$ i
+  $m_2\in S_{B2}: 30\leq T(m_2)\leq 35$.
+
+
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgstm-cronograma-noideal.tex}
+  \caption{Cronograma d'un esquema multiresolució amb consolidació retardada,  on $\glssymbol{not:sgstm:periodeB}(R_i)>\glssymbol{not:sgstm:lapseB}(R_i)$}
+  \label{fig:model:cronograma-noideal}
+\end{figure}
+
+
+  Així doncs, reprenem l'\autoref{ex:sgstm:abanscons} i avancem el
+  temps actual fins a l'instant $t_N=35$ però sense aplicar la
+  consolidació. El cronograma es mostra a la
+  \autoref{fig:model:cronograma-noideal}, en línia contínua vertical
+  es mostra l'instant de temps actual $t_N=30$ i en línia discontínua
+  es mostra la consolidació immediata ideal que hauria estat a
+  l'instant $30$.  Aquest és un moment en què apareix la propietat
+  $\glssymbol{not:sgstm:periodeB}(R_i)>\glssymbol{not:sgstm:lapseB}(R_i)$,
+  és a dir en què el període de buffer supera la mida màxima que té en
+  cas de consolidació immediata.
+
+
+
+Pel que fa als valors de les propietats del cronograma, tots són els
+mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
+ \begin{itemize}
+ \item Períodes de buffer: $\glssymbol{not:sgstm:periodeB}(R_1)
+   =t_N-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
+   =35-(25-0)=10$ i $\glssymbol{not:sgstm:periodeB}(R_2)
+   =t_N-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
+   =35-(20-5)=20$ atès que en l'instant de temps actual $t_N=35$
+   encara queda pendent de consolidar-se $\tau_1=25$ i $\tau_2=20$.
+  \end{itemize}
+
+\end{example}
+
+
 
 \begin{figure}[tp]
   \centering
@@ -462,15 +578,20 @@ on el període de buffer té la mida mínima.
   \label{fig:model:cronograma-simplificat}
 \end{figure}
 
-Així doncs, el cronograma evoluciona amb el temps i a cada instant
-determinat presenta una forma. No obstant, les formes es repeteixen
-periòdicament en el temps; el període de repetició és de $\delta$ per
-a cada subsèrie resolució. Per a simplificar dibuixarem un cronograma
-que només mostri aquesta informació periòdica; així establirem
-l'instant 0 com aquell on totes les subsèries resolució es consoliden
-al mateix temps i dibuixarem els lapses enrere en el temps. A la
+
+\paragraph{Cronograma periòdic}
+El cronograma evoluciona amb el temps i a cada instant determinat
+presenta una forma. Això no obstant totes les propietats de l'esquema
+són fixes llevat del període de buffer que varia segons $t_N$, a més
+si assumim el cas ideal de consolidació immediata aleshores les formes
+es repeteixen periòdicament en el temps de $\delta$ per a cada
+subsèrie resolució.  Per a simplificar, dibuixem un cronograma on no
+aparegui el període de buffer i que només mostri la informació
+periòdica del cronograma.  A tal efecte, establim l'instant 0 com
+aquell on totes les subsèries resolució es consoliden al mateix temps
+i dibuixem els lapses enrere en el temps. A la
 \autoref{fig:model:cronograma-simplificat} es pot veure el cronograma
-periòdic per als exemples anteriors a on l'eix del temps ens indica
+periòdic per als exemples anteriors on l'eix del temps  indica
 les durades i les posicions relatives dels discs de les subsèries
 resolució. La informació referent al pas de consolidació i la
 resolució dels discs es dibuixa a la part superior amb formes
@@ -479,7 +600,9 @@ resolució.
 
 
 
-\subsubsection{Canvis de l'esquema}
+
+\subsubsection{Canvis en l'esquema}
+
 
 Canviar l'esquema multiresolució d'una sèrie temporal significa crear
 un esquema nou de multiresolució i emmagatzemar-hi les dades de
@@ -492,13 +615,13 @@ dades multiresolució de forma coherent amb les dades emmagatzemades.
 L'operació que canvia la mida del disc d'una subsèrie resolució ha de
 controlar que si la mida disminueix s'han d'eliminar dades.
 \begin{definition}[Canvi de mida d'una subsèrie resolució]
-  Sigui $R=(B,D)$ una subsèrie resolució, a on $D=(S_D,k)$ és el disc
-  de la subsèrie, i $k'$ un nou cardinal màxim, el canvi de mida de la
-  subsèrie resolució $\glssymboldef{not:sgstm:canviaK}(R,k')$ és una
-  nova subsèrie resolució $R'=(B,D')$ amb les dades antigues afegides
-  de nou al disc: $\glssymbol{not:sgstm:canviaK}(R,k')= (B,D')$ a on
-  s'aplica l'operació $\forall m_i \in S_D: \glssymbol{addD}(D',m_i)$
-  amb $D'=(\{\},k')$ com a disc inicial.
+  Sigui $R=(B,D)$ una subsèrie resolució, en què $D=(S_D,k)$ és el
+  disc de la subsèrie, i $k'$ un nou cardinal màxim, el canvi de mida
+  de la subsèrie resolució $\glssymboldef{not:sgstm:canviaK}(R,k')$ és
+  una nova subsèrie resolució $R'=(B,D')$ amb les dades antigues
+  afegides de nou al disc: $\glssymbol{not:sgstm:canviaK}(R,k')=
+  (B,D')$ aplicant l'operació $\forall m_i \in S_D:
+  \glssymbol{addD}(D',m_i)$ amb $D'=(\{\},k')$ com a disc inicial.
 \end{definition}
 
 
@@ -517,7 +640,7 @@ emmagatzemada s'anirà canviant quan es consolidin noves mesures.
 Hi ha altres canvis de l'esquema que tampoc no requereixen tenir en
 compte les dades, com per exemple canviar la funció d'agregació
 d'atribut. Atès que són molt semblants al canvi de pas de
-consolidació, no definim operadors específics per a aquestes
+consolidació, no mostrem les definicions específics per a aquestes
 operacions.
 
 
@@ -530,12 +653,12 @@ criteri de representació.
   una funció de representació per a la sèrie temporal, $k'$ un nou
   cardinal màxim i $\delta'$ un nou pas de consolidació, el canvi de
   resolució de la subsèrie resolució
-  $\glssymboldef{not:sgstm:canviaR}(R,k',\delta')$ és una nova subsèrie
+  $\glssymboldef{not:sgstm:canviaR}(R,k',\delta',r)$ és una nova subsèrie
   resolució $R' = (S_B,S_D',\delta',\tau,k',f)$ amb una selecció
   temporal segons el criteri de representació en el nou conjunt
   regular de temps:
-  $\glssymbol{not:sgstm:canviaR}(R,k',\delta')=(S_B,S_D',\delta',\tau,k',f)$
-  a on $S_D' = S_D[T]^r$ i $T=\{ \tau-n\delta' | n\in\mathbb{N},n<k'
+  $\glssymbol{not:sgstm:canviaR}(R,k',\delta',r)=(S_B,S_D',\delta',\tau,k',f)$
+  a on $S_D' = S_D[i]^r$ i $i=\{ \tau-n\delta' | n\in\mathbb{N},n<k'
   \}$.
 \end{definition}
 
@@ -557,11 +680,15 @@ tindrà un nom.
     $S'_{D} = \map(S_D,(t,v)\mapsto(t,(v,\infty)))$.
 \end{definition}
 
-
-
+Per a eliminar un multivalor només cal eliminar l'atribut a totes les
+sèries temporals del buffer i dels disc de cada subsèrie resolució.
+Atès que és més senzill que afegir un multivalor, no en mostrem la
+definició específica.
 
 
 \subsubsection{Unió i junció de dos esquemes}
+
+
 
 Dos casos particulars de canvi d'esquema multiresolució són el d'unió
 i el de junció de dos esquemes. En aquests canvis cal crear un nou
@@ -574,12 +701,6 @@ s'emmagatzemen com a sèrie temporal multiresolució en una base de
 dades però durant un altre temps s'emmagatzemen en una altra base de
 dades. En acabar es volen unir els valors emmagatzemats a les dues
 bases de dades.
-
-Un exemple d'aplicació de la junció de dos esquemes és el següent.  Es
-mesuren els valors de dues sèries temporals diferents i s'emmagatzemen
-com a dues sèries temporals multiresolució diferents. En acabar es
-volen ajuntar els dos valors en una mateixa sèrie temporal
-multivaluada.
 
 
 
@@ -683,7 +804,12 @@ cas que intersequin cal ajuntar les dues subsèries resolució.
 
 \subsection{Consultes}
 
-En els sistemes de gestió de bases de dades les consultes són les
+
+\todo{revisar}
+
+
+
+En els \glspl{SGBD} les consultes són les
 operacions que permeten treballar amb les dades emmagatzemades. En el
 cas dels \gls{SGSTM} les dades són sèries temporals emmagatzemades amb forma
 de multiresolució. Així doncs, els operadors de consulta que es
@@ -806,7 +932,7 @@ totes les operacions de les sèries temporals. En mostrem dos exemples:
 \item Per a extreure una resolució determinada de la sèrie temporal
   emmagatzemada a una base de dades multiresolució, es consulta la
   sèrie temporal total i s'aplica una selecció de resolució:
-  $\glssymbol{not:sgstm:serietotal}(M)[i]^r$ a on $i$ és un conjunt
+  $\glssymbol{not:sgstm:serietotal}(M)[i]^r$ on $i$ és un conjunt
   d'instants de temps i $r$ la representació de la sèrie temporal.
 
 \item Per a sumar dues sèries temporals emmagatzemades a una base de

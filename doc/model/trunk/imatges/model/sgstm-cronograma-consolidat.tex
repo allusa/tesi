@@ -45,7 +45,7 @@
 
 
   %R0 d1 k4 tau0
-  \node (R0) [above=2cm of R1.center] {};
+  \node (R0) [above=2.3cm of R1.center] {};
 %  \node[ellipse,draw,minimum width=\ut cm,align=center] (R0b) [left=0mm of R0.center, anchor=east] {$S_{B1}$};
   \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d1) [left=0mm of R0.center, anchor=east] {$S_{D1}^1$};
   \node[rectangle,draw,minimum width=\ut cm,align=center] (R0d2) [left=0mm of R0d1.west, anchor=east] {$S_{D1}^2$};
@@ -56,20 +56,25 @@
   %definicions
   \node (R0la) [above=5mm of R0d4.west] {};
   \node (R0lb) [above=5mm of R0d1.east] {};
-  \draw[<->] (R0la.center) -- (R0lb.center) node [above,sloped,midway] {$lapseR(R_1)$};
+  \draw[<->] (R0la) -- (R0lb) node [above,sloped,midway] {$\glssymbol{not:sgstm:lapseR}(R_1)$};
 
   \node (R1la) [above=5mm of R1d3.west] {};
   \node (R1lb) [above=5mm of R1d1.east] {};
-  \draw[<->] (R1la) -- (R1lb) node [above,sloped,midway] {$lapseR(R_2)$};
+  \draw[<->] (R1la) -- (R1lb) node [above,sloped,midway] {$\glssymbol{not:sgstm:lapseR}(R_2)$};
 
 
-%  \node (R0ba) [above=5mm of R0b.west] {};
-%  \node (R0bb) [above=5mm of R0b.east] {};
-%  \draw[<->] (R0ba) -- (R0bb) node [above,sloped,midway] {$periodeB(R_0)$};
+ \node (R0ba) [above=5mm of R0d1.east] {};
+ \node (R0bb) [right=\ut of R0ba.west] {};
+ \draw[<->] (R0ba) -- (R0bb) node [above,sloped,midway] {$\glssymbol{not:sgstm:lapseB}(R_1)$};
 
   \node (R1ba) [above=5mm of R1b.west] {};
   \node (R1bb) [above=5mm of R1b.east] {};
-  \draw[<->] (R1ba) -- (R1bb) node [above,sloped,midway] {$periodeB(R_2)$};
+  \draw[<->] (R1ba) -- (R1bb) node [above,sloped,midway] {$\glssymbol{not:sgstm:periodeB}(R_2)$};
+
+ \node (R1lba) [above=12mm of R1d1.east] {};
+ \node (R1lbb) [right=3*\ut of R1lba.west] {};
+ \draw[<->] (R1lba) -- (R1lbb) node [above,sloped,midway] {$\glssymbol{not:sgstm:lapseB}(R_2)$};
+
 
   % \node (R1da) [above=5mm of R1b.west] {};
   % \node (R1db) [above=5mm of -2] {};
