@@ -1295,6 +1295,10 @@ Propietats de l'interval temporal:
   $S[t_a,t_a]^r$ és equivalent a la funció contínua de la sèrie
   temporal avaluada en aquest punt: $S[t_a,t_a]^r\equiv \{(t_a,
   S(t_a)^r)\}$.
+
+%$S[T(\min(S),T(\max(S)]^r \neq S$
+%$S[-\infty,+\infty]^zohe = S \cup \{ (+\infty,\infty) \}$
+
 \end{itemize}
 
 
@@ -1350,11 +1354,11 @@ primera.
   m_{k_2}^2\}$ dues sèries temporals i $r$ un mètode de representació,
   la concatenació temporal de les dues sèries temporals $S_1
   \glssymboldef{not:sgst:concatenatet}^r S_2$, és una sèrie temporal
-  que conté totes les mesures de $S_1$ i les mesures de $S_2$ que no
+  que conté les mesures de $S_1$ i les mesures de $S_2$ que no
   intersequen en l'interval temporal de $S_1$; $S_1
-  \glssymbol{not:sgst:concatenatet}^r S_2 = S_1 \cup ( S_2
-  \glssymboldef{not:sgst:minust} S_2[t_1,t_2]^r )$ on $t_1=T(\inf
-  S_1)$ i $t_2=T(\sup S_1)$.
+  \glssymbol{not:sgst:concatenatet}^r S_2 = S_1[t_1,t_2]^r \cup
+  S_2[-\infty,t_1]^r \cup S_2[t_2,+\infty]^r$ on $t_1=T(\inf S_1)$ i
+  $t_2=T(\sup S_1)$.
 \end{definition}
 
 Propietats de la concatenació temporal:
@@ -1363,6 +1367,9 @@ Propietats de la concatenació temporal:
 \end{itemize}
 
 
+% Exemples $S_1=\{(2,1),(4,1),(6,1)\}$ i $S_2=\{(1,2),(2,2)\}$,
+% $S_1 \glssymbol{not:sgst:concatenatet}^\gls{zohe} S_2 = \{(1,2),(2,2),(4,1),(6,1),(+\infty,\infty)\}$
+% $S_2 \glssymbol{not:sgst:concatenatet}^\gls{zohe} S_1 = \{(1,1),(2,3),(4,1),(6,1),(+\infty,\infty)\}$
 
 
 \subsubsection{Junció temporal}
