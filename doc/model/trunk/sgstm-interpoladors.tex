@@ -6,54 +6,305 @@
 
 Les funcions d'agregació d'atributs s'utilitzen en la consolidació
 dels buffers per tal de compactar certa informació de la sèrie
-temporals. Sigui $S$ una sèrie temporal i $t_0$ i $t_f$ dos instants
+temporals. Sigui $S$ una sèrie temporal i $t_a$ i $t_b$ dos instants
 de temps, una funció d'agregació d'atributs $f$ calcula una mesura que
-resumeix la informació de $S$ en un interval de temps $i=[t_0,t_f]$:
+resumeix la informació de $S$ en un interval de temps $i=[t_a,t_b]$:
 \[
 f: \text{sèrie temporal} \times \text{interval de temps}
 \longrightarrow \text{mesura}
 \]
 \[
-f: S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \longrightarrow  m'
+f: S=\{m_0,\dotsc,m_k\} \times i=[t_a,t_b] \longrightarrow  m'
 \]
 
-\todo{vist com dues operacions}
-where, generally, $m'$ results from two operations on the time series: (i) a time subseries selection $S'$ depending on the consolidating interval, for example $S' = S[t_0,t_f]$, and (ii) an aggregation over this time subseries  $m' = \agg(S',m_i a)$ with $a: m_i \times m\rightarrow m''$. \todo{mirar bé la sintaxi agg}
+
+Generalment, $m'$ resulta d'aplicar dues operacions a $S$: 
+\begin{enumerate}
+\item una selecció d'una subsèrie $S'$ segons l'interval de temps $i$,
+  per exemple $S' = S[t_a,t_b]$
+\item i una agregació en aquesta subsèrie $m' =
+  \glssymbol{not:sgst:aggregate}(S',m_i,\glssymbol{not:sgst:fagg})$ on
+  $\glssymbol{not:sgst:fagg}$ i $m_i$ són els atributs d'aquesta agregació.
+\end{enumerate}
+
+
+% Recordem que en la consolidació dels buffers l'interval de temps es
+% correspon a $t_a=\tau$ i $t_b=\tau+\delta$ i que és consolidable quan existeix una mesura $T(m)>\tau+\delta$ \todo{ref a allà on es diu}.
+
+
 
 Atès que hi ha maneres diferents de resumir la informació d'una sèrie
-temporal, hi ha diferents funcions d'agregació d'atributs. Per
+temporal, cal plantejar diferents funcions d'agregació d'atributs. Per
 exemple, es poden calcular estadístics de la sèrie temporal, com el
 valor màxim o la mitjana, o aplicar operacions de processament digital
-del senyal, com fan \textcite{zhang11}.  La representació de les
-sèries temporals (v.\ sec.~\ref{sec:model:repr}) pot afectar els
-càlculs que es fan en l'agregació i l'agregació pot ser utilitzada per
-a tractar algunes de les patologies de les sèries temporals
-(v.\ sec.~\ref{sec:sgst:patologies}).
+del senyal, com fan \textcite{zhang11}. A més a més, la representació
+de les sèries temporals (v.~\autoref{sec:model:repr}) pot afectar els
+càlculs que es fan en l'agregació o bé es pot aprofitar l'agregació
+per a tractar algunes de les patologies de les sèries temporals
+(v.~\autoref{sec:sgst:patologies}).  Així doncs, es poden definir una
+enorme varietat de funcions d'agregació d'atributs i no hi ha cap
+assumpció global que es pugui fer, cada usuari ha d'interpretar quina
+combinació d'agregació i representació s'adiu més amb el fenomen
+mesurat. Com a conseqüència, els \gls{SGSTM} han de donar llibertat
+als usuaris per a definir funcions d'agregació d'atributs
+personalitzades.
 
 
-Així doncs, es poden definir una enorme varietat de funcions
-d'agregació d'atributs i no hi ha cap assumpció global que es pugui
-fer. Com a conseqüència, els \gls{SGSTM} han de donar llibertat als usuaris
-per a definir funcions d'agregació d'atributs personalitzades.
-
-A continuació descrivim algunes interpretacions possibles que es poden
-fer de les funcions d'agregació, tant pel que fa al càlcul de
-l'instant de temps de consolidació com pel que fa al càlcul amb
-representació de sèries temporals, i descrivim com utilitzar les
-funcions d'agregació per a tractar i validar dades desconegudes en les
-sèries temporals.
+Com a mostra de com dissenyar funcions d'agregació d'atributs, a
+continuació descrivim algunes interpretacions possibles que se'n poden
+fer, tant pel que fa al càlcul de l'instant de temps resultant de la
+consolidació com pel que fa al càlcul amb representació de sèries
+temporals, i descrivim com utilitzar-les per a tractar i validar dades
+desconegudes en les sèries temporals.
 
 
 
-\todo{explicar dibuix i situar al lloc correcte}
+\subsection{Interpretació de l'agregació}
 
+
+L'agregació d'una sèrie temporal en un interval resulta en una mesura
+$m'=(t',v')$. Així per a definir les operacions d'agregació cal
+interpretar quin ha de ser el temps resultant $t'=T(m')$ i el valor
+resultant $v'=V(m')$.
+
+
+Podem definir patrons generals de funcions d'agregació d'atributs que
+indiquin quina informació o estadístic es resumeix de la sèrie
+temporal, és a dir patrons generals que indiquin com s'ha de calcular
+el valor resultant $V(m')$ independentment del mètode de representació
+que es vulgui associar a la sèrie temporal.  Tot i així, el temps
+resultant $T(m')$ no queda definit sinó que s'ha interpretar
+coherentment per a cada cas particular de representació.
+
+
+
+
+
+\todo{revisar}
+
+
+A continuació mostrem alguns exemples de patrons generals per a
+calcular el valor resultant $V(m')$ que resumeix atributs d'una sèrie
+temporal $S$ en un interval $i=[t_a,t_B]$. Sigui $S^r(t)$ la funció de
+representació de la sèrie temporal i $t\in T$ els instants de temps
+en el domini de temps:
+\begin{itemize}
+\item màxim: $S \times i \mapsto m'$ on $V(m') = \max_{\forall t \in
+    [t_a,t_b]}(S^r(t))$. Resumeix $S$ amb el màxim dels valors de les
+  mesures a l'interval $i$.
+\item darrer: $S \times i \mapsto m'$ on $V(m') = S^r(t_b)$. Resumeix
+  $S$ amb el valor del darrer instant de temps de l'interval $i$.
+
+\item mitjana: $S \times i \mapsto m'$ on $V(m') =
+  \frac{1}{t_b-t_a} \int_{t_a}^{t_b} S^r(t)dt$. Resumeix $S$ amb la
+  \emph{mitjana de la funció} \parencite{weisstein:averagefunction} a
+  l'interval $i$.  
+  % Explicació:
+  % If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
+  % $$
+  % \int_a^b f(x)dx = f(x^*)(b-a)
+  % $$
+
+  % The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
+  % $S(t)$ ha de ser contínua en l'interval $i$.
+\end{itemize}
+
+
+En els patrons d'aquestes funcions es treballa sobre una funció
+contínua $S^r(t)$, que a cada cas serà una funció de representació
+concreta i el temps d'agregació resultant $T(m')$ serà interpretat
+coherentment. 
+
+A banda del temps resultant $T(m')$, per a cada representació concreta també cal interpretar amb matemàtica discreta el càlcul del valor resultant $V(m')$. 
+els patrons
+estan definits com a problemes d'anàlisi numèric però a cada cas
+$S(t)$ és una funció que prové d'un conjunt de mesures i podem
+expressar els operadors segons el model de \gls{SGST} descrit amb matemàtica
+discreta. Així doncs, les funcions d'agregació acaben tenint forma
+discreta tot i que a l'hora d'interpretar-les cal observar si el patró
+té origen continu o discret.
+
+A continuació s'exemplifiquen algunes interpretacions possibles de
+l'instant de temps resultant i de les representacions per a aquests
+patrons. 
+
+
+
+
+
+\subsubsection{Temps d'agregació resultant}
+
+L'objectiu de les funcions d'agregació d'atributs és determinar un
+instant de temps $T(m')$ i un valor $V(m')$. Aquest càlcul del temps i
+del valor es pot realitzar al mateix temps però també pot ser
+independent. Així normalment el temps resultant serà independent i
+valdrà $T(m')=t_b$ per estar d'acord amb l'operació de consolidació
+del buffer i no provocar desfasament de la subsèrie resolució
+(v.~\autoref{def:sgstm:desdsamentR}), però en alguns casos aquest
+$T(m')$ serà dependent del valor calculat o estarà subjecte a una
+interpretació adient com és el cas per les representacions a
+l'apartat següent.
+
+
+Un exemple de funció d'agregació on temps i valor són dependents és
+una que retorni la primera mesura que troba, $\operatorname{primera}:
+S \times i \mapsto m'$ a on $m' = \min(S[t_a,t_b))$ i llavors el temps
+resultant pot ser $t_a \leq T(m') < t_b$. En aquest cas la sèrie
+temporal resultant no és regular.
+
+
+Un exemple de funció d'agregació on temps i valor són independents i
+on la subsèrie resolució resultant és regular però amb desfasament, és
+una funció que fa la mitjana amb un desfasament de 5 unitats de temps.
+$\operatorname{mitjanad5}: S \times i \mapsto m'$ a on $V(m')=
+\glssymbol{not:sgst:mitjanav}(S[t_a-5,t_b-5))$ i $T(m')=t_b-5$. La
+funció d'agregació $\operatorname{mitjanad5}$ s'ha utilitzat
+anteriorment a l'\autoref{ex:model:bdm-desfasaments}.
+
+%De què pot servir la mitjanad5? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal?
+
+
+%mitjana mòbil, MM
+%moving average, MA
+
+
+
+
+\subsubsection{Agregació amb representació}
+
+La varietat de funcions de representació per les sèries temporals
+indueix a una varietat de funcions d'agregació per a un mateix
+atribut. Per exemple, la funció d'agregació per l'atribut de màxim$^c$
+dóna com a resultat valors diferents si es considera una representació
+lineal o una representació a trossos constant. A continuació mostrem
+la interpretació dels patrons continus definits anteriorment per a
+tres representacions: la parcial, la delta i la ZOHE.
+
+
+
+\paragraph{Parcial.} 
+En primer lloc, les funcions d'agregació amb forma discreta (d)
+treballen amb operadors de conjunts sobre la sèrie temporal. En els
+patrons d'aquestes funcions, a banda del temps d'agregació resultant
+$T(m')$, l'interval de consolidació $i=[t_a,t_b]$ també es pot
+interpretar per a cada cas. Així sigui $S$ la sèrie original, el
+resultat es pot calcular sobre una subsèrie amb interval obert
+$S'=S(t_a,t_b)$, tancat $S'=S(t_a,t_b]$, semiobert $S'=S(t_a,t_b]$ o
+$S'=S[t_a,t_b)$, o altres combinacions com per exemple tenir
+desfasaments $S'=S[t_a-d,t_b-d]$ a on $d$ és una durada. A continuació
+es mostren alguns exemples de patrons per a resumir determinats
+atributs:
+\begin{itemize}
+\item màxim$^d$: $S \times i \mapsto m'$ a on $V(m') = \max_{\forall m
+    \in S'}(V(m))$. Resumeix $S'$ amb el màxim dels valors de les
+  mesures.
+
+  % Amb operacions de \gls{SGST} es pot calcular amb
+  % $V\big(\glssymbol{not:sgst:aggregate}(S',(0,\infty), (t^i,v^i)
+  % \times (t,v) \mapsto [(0,v^i) \text{ if } v < v^i \wedge
+  % v^i\neq\infty \text{ else } (0,v) ])\big)$.
+
+\item darrer$^d$: $S \times i \mapsto m'$ a on $V(m') =
+  \max(S')$. Resumeix $S'$ amb el valor de la mesura màxima.
+\item mitjana aritmètica$^d$: $S \times i \mapsto m'$ a on $V(m') =
+  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$, o bé $V(m') =
+  \glssymbol{not:sgst:mitjanav}(S')$ segons definit al model de
+  \gls{SGST}. Resumeix $S'$ amb la mitjana dels valors de les mesures.
+\end{itemize}
+
+
+
+
+
+
+
+
+\paragraph{Delta} 
+Per a les funcions d'agregació delta interpretem el temps d'agregació
+resultant centrat en l'interval $T(m')=\frac{t_b+t_a}{2}$, tot i que
+en aquest cas altres interpretacions també es podrien considerar com
+per exemple $T(m')=t_b$. Així de forma general podem definir les
+funcions d'agregació d'atributs amb representació delta $f^\delta\in
+f$ com $f^\delta: S \times [t_a,t_b] \mapsto m'$ a on
+$m'=(\frac{t_b+t_a}{2},v')$ i el valor resultant depèn de l'atribut
+que es vulgui resumir calculat en l'interval temporal delta
+$S'=S[t_a,t_b]^\delta$:
+
+\todo{la delta ha canviat el nom a DD}
+
+\begin{itemize}
+\item \glssymboldef{not:sgstm:maxdd}\todo{canviar} màxim$^\delta$: $S
+  \times i \mapsto m'$ a on $V(m') = \max\big(0,\max_{\forall m \in
+    S'}(V(m))\big)$ i $T(m')=\frac{t_b+t_a}{2}$. \todo{símbol declarat
+    a la notació} \todo{s'hauria de dir que $\max(V(m))$ és el mateix
+    que $\glssymbol{not:sgst:maxv}(S')$}
+
+\item darrer$^\delta$: $S \times i \mapsto m'$ a on $V(m') =
+  \max(S')$ i $T(m')=\frac{t_b+t_a}{2}$.
+
+\item \glssymboldef{not:sgstm:mitjanadd}\todo{canviar}
+  mitjana$^\delta$: $S \times i \mapsto m'$ a on $V(m') =
+  \frac{1}{t_b-t_a}\sum\limits_{\forall m \in S'} V(m)$ i
+  $T(m')=\frac{t_b+t_a}{2}$. Nota: la funció delta té la propietat
+  fonamental $\int \delta(t)dt = 1$. \todo{símbol declarat a la
+    notació} \todo{relació amb  $\glssymbol{not:sgst:mitjanav}(S')?$}
+\end{itemize}
+
+
+
+Per a les funcions d'agregació ZOHE interpretem sempre el temps
+d'agregació resultant com $T(m')=t_b$, atès que la representació ZOHE
+es defineix amb funcions graó contínues per l'esquerra. Així de forma
+general podem definir les funcions d'agregació d'atributs amb
+representació ZOHE $f^{\text{ZOHE}}\in f$ com $f^{\text{ZOHE}}: S
+\times [t_a,t_b] \mapsto m'$ a on $m'=(t_b,v')$ i el valor resultant
+depèn de l'atribut que es vulgui resumir calculat en l'interval
+temporal ZOHE $S'=S[t_a,t_b]^\text{ZOHE}$:
+\begin{itemize}
+\item màxim$^\text{ZOHE}$: $S \times i \mapsto m'$ a on $V(m') = \max_{\forall m
+    \in S'}(V(m))$ i $T(m')=t_b$.
+
+\item darrer$^\text{ZOHE}$: $S \times i \mapsto m'$ a on $V(m') =
+  \max(S')$ i $T(m')=t_b$.
+
+\item \todo{declarar a la notació}\todo{potser estaria bé fer-ne un dibuix} mitjana$^\text{ZOHE}$: $S \times i \mapsto m'$ a on $V(m') =
+  \frac{1}{t_b-t_a} \big[ (T(o)-t_a)V(o) +
+  \sum\limits_{\forall m \in S''}( T(m)- T(\glssymbol{not:sgst:prev}_S
+  m) )V(m) \big]$, $o=\min(S')$, $S''= S' - \{o\}$ i
+  $T(m')=t_b$. 
+% \[
+%   \begin{split}
+%   V(m')  = & \frac{1}{t_b-T_0} 
+%   \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) \\
+%     & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
+%    \end{split}
+%   \]
+% Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
+\end{itemize}
+
+
+
+\todo{dibuixar bé la figura}
+Així, sigui $S=\{m_0,\dotsc,m_{a-1},m_{a+1},\dotsc,m_{b-1},m_{b+1},
+\ldots,m_k\}$ una sèrie temporal on $ T(m_{a-1}) < t_a \leq T(m_{a+1})
+< \dotsc < T(m_{b-1}) \leq t_b < T(m_{b+1})$. La funció d'agregació
+d'atributs $f(S,[t_a,t_b])$ 
+
+de moment assumim $T(m')=t_b$
+
+Així, sigui $S=\{m_0,\ldots,m_k\}$ 
+
+
+\begin{figure}[tp]
+  \centering
+ 
     \begin{tikzpicture}
         \begin{axis}[
           % width=10cm,
           scale only axis, height=3cm,
           ymin = 0,
           yticklabels= {},
-          xticklabels={$\ldots$,$t_{i-1}^N$,$t_i^N$},
+          xticklabels={,,$\ldots$,$t_{i-1}^N$,$t_i^N$},
           ]
           \addplot[ycomb,blue] coordinates {
             (20,10)
@@ -82,212 +333,13 @@ sèries temporals.
         \end{axis}
       \end{tikzpicture}
 
-
-
-\subsection{Interpretació de l'agregació}
-
-L'agregació d'una sèrie temporal es pot dur a terme en forma discreta
-o en forma contínua.  En la forma discreta es tracta la sèrie temporal
-com a conjunt o seqüència de mesures, és per tant semblant a la
-representació amb funcions parcials, i en canvi en la forma contínua
-es tracta la sèrie temporal com a funció temporal, per tant s'utilitza
-una representació contínua de la sèrie temporal.
-
-De forma general podem definir patrons per a les funcions d'agregació
-d'atributs en forma discreta i en forma contínua. Tot i així, en
-ambdós casos l'instant de temps d'agregació resultant $T(m')$ no queda
-definit sinó que es pot interpretar per a cada cas, la qual cosa es detalla
-més endavant.
-
-
-En primer lloc, les funcions d'agregació amb forma discreta (d)
-treballen amb operadors de conjunts sobre la sèrie temporal. En els
-patrons d'aquestes funcions, a banda del temps d'agregació resultant
-$T(m')$, l'interval de consolidació $i=[t_0,t_f]$ també es pot
-interpretar per a cada cas. Així sigui $S$ la sèrie original, el
-resultat es pot calcular sobre una subsèrie amb interval obert
-$S'=S(t_0,t_f)$, tancat $S'=S(t_0,t_f]$, semiobert $S'=S(t_0,t_f]$ o
-$S'=S[t_0,t_f)$, o altres combinacions com per exemple tenir
-desfasaments $S'=S[t_0-d,t_f-d]$ a on $d$ és una durada. A continuació
-es mostren alguns exemples de patrons per a resumir determinats
-atributs:
-\begin{itemize}
-\item màxim$^d$: $S \times i \mapsto m'$ a on $V(m') = \max_{\forall m
-    \in S'}(V(m))$. Resumeix $S'$ amb el màxim dels valors de les
-  mesures.
-
-  % Amb operacions de \gls{SGST} es pot calcular amb
-  % $V\big(\glssymbol{not:sgst:aggregate}(S',(0,\infty), (t^i,v^i)
-  % \times (t,v) \mapsto [(0,v^i) \text{ if } v < v^i \wedge
-  % v^i\neq\infty \text{ else } (0,v) ])\big)$.
-
-\item darrer$^d$: $S \times i \mapsto m'$ a on $V(m') =
-  \max(S')$. Resumeix $S'$ amb el valor de la mesura màxima.
-\item mitjana aritmètica$^d$: $S \times i \mapsto m'$ a on $V(m') =
-  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$, o bé $V(m') =
-  \glssymbol{not:sgst:mitjanav}(S')$ segons definit al model de
-  \gls{SGST}. Resumeix $S'$ amb la mitjana dels valors de les mesures.
-\end{itemize}
-
-
-En segon lloc, les funcions d'agregació amb forma contínua (c)
-treballen amb operadors de funció temporal sobre la sèrie temporal.
-En els patrons d'aquestes funcions es treballa sobre una funció
-contínua $S(t)$, que a cada cas serà una funció de representació
-concreta i el temps d'agregació resultant $T(m')$ serà interpretat
-coherentment.  A continuació es mostren alguns exemples de patrons per
-a resumir determinats atributs, sigui el temps continu per tot el
-domini de temps $t\in T$:
-\begin{itemize}
-\item màxim$^c$: $S \times i \mapsto m'$ a on $V(m') = \max_{\forall t
-    \in [t_0,t_f]}(S(t))$. Resumeix $S$ amb el màxim dels valors de
-  les mesures a l'interval $i$.
-\item darrer$^c$: $S \times i \mapsto m'$ a on $V(m') =
-  S(t_f)$. Resumeix $S$ amb el valor del darrer instant de temps de
-  l'interval $i$.
-
-\item mitjana$^c$: $S \times i \mapsto m'$ a on $V(m') =
-  \frac{1}{t_f-t_0} \int_{t_0}^{t_f} S(t)dt$. Resumeix $S$ amb la
-  \emph{mitjana de la funció} \parencite{weisstein:averagefunction} a
-  l'interval $i$.  
-  % Explicació:
-  % If $f$ is continuous on a closed interval $[a,b]$, then there is at least one number $x^*$ in $[a,b]$ such that
-  % $$
-  % \int_a^b f(x)dx = f(x^*)(b-a)
-  % $$
-
-  % The average value of the function ($\bar f$)  on this interval is then given by  $f(x^*)$.
-  % $S(t)$ ha de ser contínua en l'interval $i$.
-\end{itemize}
-
-
-A continuació s'exemplifiquen algunes interpretacions possibles de
-l'instant de temps resultant i de les representacions per a aquests
-patrons. 
-
-Per al cas de funcions d'agregació amb forma discreta es poden
-interpretar des de les representacions parcials i per tant
-implementar-les amb operadors de conjunts o de seqüències.  
-Per al cas de funcions d'agregació amb forma contínua, els patrons
-estan definits com a problemes d'anàlisi numèric però a cada cas
-$S(t)$ és una funció que prové d'un conjunt de mesures i podem
-expressar els operadors segons el model de \gls{SGST} descrit amb matemàtica
-discreta. Així doncs, les funcions d'agregació acaben tenint forma
-discreta tot i que a l'hora d'interpretar-les cal observar si el patró
-té origen continu o discret.
+    
+  \caption{Agregació de la mitjana$^\text{ZOHE}$  d'un interval de la sèrie temporal}
+  \label{fig:sgstm:aggmitjzohe}
+\end{figure}
 
 
 
-
-\subsubsection{Temps d'agregació resultant}
-
-L'objectiu de les funcions d'agregació d'atributs és determinar un
-instant de temps $T(m')$ i un valor $V(m')$. Aquest càlcul del temps i
-del valor es pot realitzar al mateix temps però també pot ser
-independent. Així normalment el temps resultant serà independent i
-valdrà $T(m')=t_f$ per estar d'acord amb l'operació de consolidació
-del buffer i no provocar desfasament de la subsèrie resolució
-(v.~\autoref{def:sgstm:desdsamentR}), però en alguns casos aquest
-$T(m')$ serà dependent del valor calculat o estarà subjecte a una
-interpretació adient com és el cas per les representacions a
-l'apartat següent.
-
-
-Un exemple de funció d'agregació on temps i valor són dependents és
-una que retorni la primera mesura que troba, $\operatorname{primera}:
-S \times i \mapsto m'$ a on $m' = \min(S[t_0,t_f))$ i llavors el temps
-resultant pot ser $t_0 \leq T(m') < t_f$. En aquest cas la sèrie
-temporal resultant no és regular.
-
-
-Un exemple de funció d'agregació on temps i valor són independents i
-on la subsèrie resolució resultant és regular però amb desfasament, és
-una funció que fa la mitjana amb un desfasament de 5 unitats de temps.
-$\operatorname{mitjanad5}: S \times i \mapsto m'$ a on $V(m')=
-\glssymbol{not:sgst:mitjanav}(S[t_0-5,t_f-5))$ i $T(m')=t_f-5$. La
-funció d'agregació $\operatorname{mitjanad5}$ s'ha utilitzat
-anteriorment a l'\autoref{ex:model:bdm-desfasaments}.
-
-%De què pot servir la mitjanad5? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal?
-
-
-%mitjana mòbil, MM
-%moving average, MA
-
-
-
-
-\subsubsection{Agregació amb representació}
-
-La varietat de funcions de representació per les sèries temporals
-indueix a una varietat de funcions d'agregació per a un mateix
-atribut. Per exemple, la funció d'agregació per l'atribut de màxim$^c$
-dóna com a resultat valors diferents si es considera una representació
-lineal o una representació a trossos constant. A continuació mostrem
-la interpretació dels patrons continus definits anteriorment per a
-dues representacions: la delta i la ZOHE.
-
-Per a les funcions d'agregació delta interpretem el temps d'agregació
-resultant centrat en l'interval $T(m')=\frac{t_f+t_0}{2}$, tot i que
-en aquest cas altres interpretacions també es podrien considerar com
-per exemple $T(m')=t_f$. Així de forma general podem definir les
-funcions d'agregació d'atributs amb representació delta $f^\delta\in
-f$ com $f^\delta: S \times [t_0,t_f] \mapsto m'$ a on
-$m'=(\frac{t_f+t_0}{2},v')$ i el valor resultant depèn de l'atribut
-que es vulgui resumir calculat en l'interval temporal delta
-$S'=S[t_0,t_f]^\delta$:
-
-\todo{la delta ha canviat el nom a DD}
-
-\begin{itemize}
-\item \glssymboldef{not:sgstm:maxdd}\todo{canviar} màxim$^\delta$: $S
-  \times i \mapsto m'$ a on $V(m') = \max\big(0,\max_{\forall m \in
-    S'}(V(m))\big)$ i $T(m')=\frac{t_f+t_0}{2}$. \todo{símbol declarat
-    a la notació} \todo{s'hauria de dir que $\max(V(m))$ és el mateix
-    que $\glssymbol{not:sgst:maxv}(S')$}
-
-\item darrer$^\delta$: $S \times i \mapsto m'$ a on $V(m') =
-  \max(S')$ i $T(m')=\frac{t_f+t_0}{2}$.
-
-\item \glssymboldef{not:sgstm:mitjanadd}\todo{canviar}
-  mitjana$^\delta$: $S \times i \mapsto m'$ a on $V(m') =
-  \frac{1}{t_f-t_0}\sum\limits_{\forall m \in S'} V(m)$ i
-  $T(m')=\frac{t_f+t_0}{2}$. Nota: la funció delta té la propietat
-  fonamental $\int \delta(t)dt = 1$. \todo{símbol declarat a la
-    notació} \todo{relació amb  $\glssymbol{not:sgst:mitjanav}(S')?$}
-\end{itemize}
-
-
-
-Per a les funcions d'agregació ZOHE interpretem sempre el temps
-d'agregació resultant com $T(m')=t_f$, atès que la representació ZOHE
-es defineix amb funcions graó contínues per l'esquerra. Així de forma
-general podem definir les funcions d'agregació d'atributs amb
-representació ZOHE $f^{\text{ZOHE}}\in f$ com $f^{\text{ZOHE}}: S
-\times [t_0,t_f] \mapsto m'$ a on $m'=(t_f,v')$ i el valor resultant
-depèn de l'atribut que es vulgui resumir calculat en l'interval
-temporal ZOHE $S'=S[t_0,t_f]^\text{ZOHE}$:
-\begin{itemize}
-\item màxim$^\text{ZOHE}$: $S \times i \mapsto m'$ a on $V(m') = \max_{\forall m
-    \in S'}(V(m))$ i $T(m')=t_f$.
-
-\item darrer$^\text{ZOHE}$: $S \times i \mapsto m'$ a on $V(m') =
-  \max(S')$ i $T(m')=t_f$.
-
-\item \todo{declarar a la notació}\todo{potser estaria bé fer-ne un dibuix} mitjana$^\text{ZOHE}$: $S \times i \mapsto m'$ a on $V(m') =
-  \frac{1}{t_f-t_0} \big[ (T(o)-t_0)V(o) +
-  \sum\limits_{\forall m \in S''}( T(m)- T(\glssymbol{not:sgst:prev}_S
-  m) )V(m) \big]$, $o=\min(S')$, $S''= S' - \{o\}$ i
-  $T(m')=T_f$. 
-% \[
-%   \begin{split}
-%   V(m')  = & \frac{1}{T_f-T_0} 
-%   \big[ (T(o)-T_0)V(o) -( T(n)-T_f)V(n) \\
-%     & {}+\sum\limits_{\forall m \in S''}( T(m)- T(\prev_S m) )V(m) \big]   
-%    \end{split}
-%   \]
-% Nota: s'aplica la definició $0 \times \infty = 0$ tal com es fa habitualment a la teoria de mesura, \cite{wiki:extendedreal}.
-\end{itemize}
 
 \textcite{rrdtool} utilitza a RRDtool una funció d'agregació com la
 mitjana$^\text{ZOHE}$ per a resumir la informació conservant el
@@ -307,7 +359,7 @@ interpretació més complexa que la mitjana aritmètica$^d$. En aquest
 cas també es podria dissenyar una mitjana aritmètica en l'interval
 temporal ZOHE, és a dir una mitjana simple sense tenir en compte els
 pesos del temps
-$\glssymbol{not:sgst:mitjanav}(S[t_0,t_f]^\text{ZOHE})$. Però llavors
+$\glssymbol{not:sgst:mitjanav}(S[t_a,t_b]^\text{ZOHE})$. Però llavors
 s'hauria d'interpretar quin patró continu d'origen li correspondria,
 altrament aquesta operació d'agregació podria no tenir sentit real.
 
@@ -363,7 +415,7 @@ desconeguts conservant l'àrea coneguda; és a dir, l'àrea total
 coneguda quedarà escampada en l'interval de consolidació.
 \begin{gather*}
   \operatorname{mitjana}^{cu}: S \times i \mapsto m' \text{ a on }\\
-  V(m') = \frac{1}{t_f-t_0}\int_{t_0}^{t_f} S^u(t)dt \text{ i }
+  V(m') = \frac{1}{t_b-t_a}\int_{t_a}^{t_b} S^u(t)dt \text{ i }
   S^u(t)=
   \begin{cases}
     0 &\text{si }  S(t)=\infty\\
@@ -388,7 +440,7 @@ límit superior de 2 (S2).
 \begin{gather*}
   \operatorname{m\grave{a}xim}^{\delta S2}: S \times i \mapsto m' \text{ a on }\\
   m' = \begin{cases}
-    (T(m''),\infty) &\text{si }  \exists m\in S[t_0,t_f]: V(m)>2\\
+    (T(m''),\infty) &\text{si }  \exists m\in S[t_a,t_b]: V(m)>2\\
     m'' & \text{altrament }
   \end{cases} \text{ i } m''= \operatorname{m\grave{a}xim}^\delta(S,i)
 \end{gather*}
