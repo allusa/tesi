@@ -290,25 +290,22 @@ $S'=S[t_a,t_b]^{\gls{zohe}}$.
 
 
 
-
-\todo{revisar}
-
-
 Un cop definits els tres exemples de famílies d'agregacions, podem
 comparar-les en funció de com resumeixen la informació de la sèrie
-temporal. En la consolidació dels buffers
-(v.~\autoref{sec:model:buffer}) l'interval de temps es correspon a
-$t_a=\tau$ i $t_b=\tau+\delta$ i és consolidable quan existeix una
-mesura $T(m)\geq\tau+\delta$. A la \autoref{fig:sgstm:agg} dibuixem
-les mesures d'una sèrie temporal en vermell, un interval de
-consolidació del buffer en línies blaves i la mesura resultant de
-consolidació en verd.  Així, sigui
+temporal. Reprenent la consolidació dels buffers
+(v.~\autoref{sec:model:buffer}), l'interval de consolidació es
+correspon a $t_a=\tau$ i $t_b=\tau+\delta$ i és consolidable quan
+existeix una mesura $T(m)\geq\tau+\delta$. A la
+\autoref{fig:sgstm:agg} dibuixem les mesures d'una sèrie temporal en
+vermell, un interval de consolidació del buffer en línies blaves i la
+mesura resultant de consolidació en verd.  Així, sigui
 $S=\{\dotsc,m_{a-1},m_{a+1},\dotsc,m_{b-1},m_{b+1}, \ldots\}$ una
 sèrie temporal on $ T(m_{a-1}) < t_a < T(m_{a+1}) < \dotsc <
 T(m_{b-1}) < t_b < T(m_{b+1})$ i la consolidació del buffer que
-calcula la funció d'agregació d'atributs $m'=f(S,[t_a,t_b])$. 
-En el dibuix, per simplificar, assumim $T(m')=t_b$. 
-De manera general, el càlcul del valor resultant és una agregació sobre:
+calcula la mesura resultant $m'=f(S,[t_a,t_b])$ amb la funció
+d'agregació d'atributs $f$.  Assumim $T(m')=t_b$ per simplificar el
+dibuix, de manera general el càlcul del valor resultant és una
+agregació a partir de les mesures:
 \begin{itemize}
 \item $\{m_{a+1},\dotsc,m_{b-1}\}$ en el cas de les agregacions \gls{pd}
 \item $\{(t_a,0),(\ldots,0),m_{a+1},\dotsc,(\ldots,0),\dotsc,m_{b-1},(\ldots,0),(t_b,0)\}$ en el cas de les
@@ -412,11 +409,12 @@ senyal original.
 
 \subsection{Tractament i validació de dades}
 
-Les funcions d'agregació d'atributs poden cooperar en els processos de
-validació i tractament de dades En les patologies de les sèries
-temporals (v.\ apartat~\ref{sec:sgst:patologies}) s'ha descrit el
-problema de les dades desconegudes, les funcions d'agregació poden
-marcar o tractar les dades desconegudes:
+
+En les patologies de les sèries temporals
+(v.~\autoref{sec:sgst:patologies}) s'ha descrit el problema de les
+dades desconegudes, les funcions d'agregació d'atributs poden cooperar
+en els processos de validació i tractament de dades. Així, les
+funcions d'agregació poden marcar o tractar dades desconegudes:
 \begin{itemize}
 \item Marcar dades com a desconegudes. És a dir determinar quan el
   resultat d'una agregació ha de ser desconegut perquè la sèrie
@@ -425,7 +423,7 @@ marcar o tractar les dades desconegudes:
 
 \item Tractar dades que són desconegudes, ja sigui perquè d'origen són
   desconegudes o perquè les hem marcat abans com a desconegudes.
-  Si una funció d'agregació rep valor que són desconeguts, des d'un
+  Si una funció d'agregació rep valors que són desconeguts, des d'un
   punt de vista estricte el resultat de l'agregació ha de ser
   desconegut. No obstant això, es poden aplicar operacions que tractin
   aquest valors desconeguts: reconstrucció del senyal, ignorar els
@@ -434,53 +432,55 @@ marcar o tractar les dades desconegudes:
 
  
 A continuació definim el procés que fan les funcions d'agregació per a
-ambdós casos. Utilitzem el nombres reals projectius
-\glssymbol{not:R*} amb els quals representem el valor desconegut
-amb l'element infinit ($\infty$), segons la
-\autoref{def:model:mesura_valor_indefinit} de mesura de valor indefinit.
+ambdós casos. Com a exemple de domini pels valors utilitzem els
+nombres reals projectius \glssymbol{not:R*}, en els quals representem
+el valor desconegut mitjançant l'element infinit ($\infty$), segons la
+\autoref{def:model:mesura_valor_indefinit} de mesura de valor
+indefinit. Això no obstant, el domini de valors podria tenir diversos
+valors per a marcar diferents casos de dades desconegudes.
 
-
+\paragraph{Tractament de dades desconegudes.}
 Una funció d'agregació d'atributs $f^u \in f$ que tracti dades
 desconegudes és aquella que pot calcular un resultat quan la sèrie
 temporal original conté valors desconeguts
 \[
-f^u: S \times i \mapsto m' \text{ a on } \exists m \in S: V(m)=\infty
+f^u: S \times i \mapsto m' \text{ on } \exists m \in S: V(m)=\infty
 \]
 
-Per exemple, podem redefinir la funció d'agregació mitjana$^c$ en una
-$\operatorname{mitjana}^{cu}$ que sigui capaç de tractar valors
-desconeguts conservant l'àrea coneguda; és a dir, l'àrea total
+Per exemple, podem redefinir el patró de la funció d'agregació mitjana
+en una $\operatorname{mitjana}^{u}$ que sigui capaç de tractar valors
+desconeguts conservant l'àrea coneguda, és a dir, l'àrea total
 coneguda quedarà escampada en l'interval de consolidació.
 \begin{gather*}
-  \operatorname{mitjana}^{cu}: S \times i \mapsto m' \text{ a on }\\
+  \operatorname{mitjana}^{cu}: S \times i \mapsto m' \text{ on }\\
   V(m') = \frac{1}{t_b-t_a}\int_{t_a}^{t_b} S^u(t)dt \text{ i }
   S^u(t)=
   \begin{cases}
-    0 &\text{si }  S(t)=\infty\\
-    S(t) & \text{altrament }
+    0 &\text{si }  S^r(t)=\infty\\
+    S^r(t) & \text{altrament }
   \end{cases}
 \end{gather*}
 
 
-
+\paragraph{Marcatge de dades desconegudes.}
 Una funció d'agregació d'atributs $f^{mu} \in f$ que marqui
 dades desconegudes és aquella que pot retornar una mesura de valor
-indefinit com a resultat.
+indefinit com a resultat
 \[
-f^{mu}: S \times i \mapsto m' \text{ a on } V(m')\in \glssymbol{not:R*}
+f^{mu}: S \times i \mapsto m' \text{ on } V(m')\in \glssymbol{not:R*}
 \]
 
 
-Per exemple, podem definir una funció d'agregació d'atribut
-màxim$^{\delta S2}$ que, basat la funció màxim$^\delta$, retorni valor desconegut
+Per exemple, podem definir un patró de funció d'agregació d'atribut
+màxim que retorni valor desconegut
 si hi ha un a mesura amb el valor més gran que 2; és a dir establim un
-límit superior de 2 (S2). 
+límit superior de 2 (L2). 
 \begin{gather*}
-  \operatorname{m\grave{a}xim}^{\delta S2}: S \times i \mapsto m' \text{ a on }\\
+  \operatorname{m\grave{a}xim}^{L2}: S \times i \mapsto m' \text{ on }\\
   m' = \begin{cases}
     (T(m''),\infty) &\text{si }  \exists m\in S[t_a,t_b]: V(m)>2\\
     m'' & \text{altrament }
-  \end{cases} \text{ i } m''= \operatorname{m\grave{a}xim}^\delta(S,i)
+  \end{cases} \text{ i } m''= \operatorname{m\grave{a}xim}(S,i)
 \end{gather*}
 
 
