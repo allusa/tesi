@@ -743,6 +743,10 @@ una pèrdua de qualitat perceptible mentre compleixi amb els requisits de
 l'aplicació que se li vol donar.
 Els mètode de compressió amb pèrdua se solen usar per a compressió de multimèdia, per tal de valorar-ne la qualitat de percepció humana s'utilitzen testos subjectius com per exemple el test ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
 
+%  Lossy methods are most often used for compressing sound, images or videos. This is because these types of data are intended for human interpretation where the mind can easily "fill in the blanks" or see past very minor errors or inconsistencies – ideally lossy compression is transparent (imperceptible), which can be verified via an ABX test. http://en.wikipedia.org/wiki/ABX_test
+% Flaws caused by lossy compression that are noticeable to the human eye or ear are known as compression artifacts.
+
+
 
 
 \todo{information algebra}
@@ -755,7 +759,19 @@ algebra of information, describing basic modes of information processing. Such a
 % El procediment
 % que se segueix és: comprimir, emmagatzemar, descomprimir i
 % visualitzar.
+% compressed data must be decompressed to use -> en els sgstm no? bé si vull veure tota la sèrie temporal sí que he de concatenar el que hi tinc i per tant es pot veure com una descompressió (al marge que hi pot haver una compressió/descompressió en els agregadors usats, per exemple si és un so emmatgatzemar la freqüència i després s'haurà de descomprimir a amplitud al llarg del temps).
+% The design of data compression schemes involves trade-offs among various factors, including the degree of compression, the amount of distortion introduced (e.g., when using lossy data compression), and the computational resources required to compress and uncompress the data.
+% * No hi ha descompressió. Els algoritmes de compressió amb pèrdua normalment van associats amb les tècniques de compressió/descompressió; és a dir que les dades s'emmagatzemen amb estructures intermitges, que ocupen menys mida, i que cal descomprimir per recuperar-les. En els cas dels SGSTM les dades s'emmagatzemen com a subsèries temporals en els discs i per tant a l'hora de recuperar-les ja són sèries temporals, com a molt potser fa falta concatenar-les per a obtenir tota la sèrie temporal.
 
+
+
+% The main drawback of lossy compression techniques is that they
+% rely on specific patterns for providing a good approximation of the given time series.
+% This is the main reason why lossy compression has been rarely applied to network
+% monitoring contexts, where the patterns of time series can drastically change due to
+% anomalous events or to transient networking issues.
+
+%http://www.data-compression.com/theory.shtml
 
 
 \subsection{Error en la informació de la multiresolució}
@@ -843,6 +859,7 @@ contextos:
   pantalla on es visualitzen els resultats: no cal treballar amb una
   sèrie temporal amb molta resolució si no és possible observar-la
   \todo{ref}.
+  % RRDtool expliquen un criteri que és definir les k dels discs inferior a l'amplada en píxels de la pantalla. Aquest és un criteri basat en una consulta per a fer visualització immediatament. Llavors no té sentit tenir més nombre de dades que les que es poden visualitzar.  Per exemple si capturem dades cada 5 minuts al llarg d'un any obtenim 43800 punts; si no disposem d'un monitor amb aquest nombre de píxels d'amplada no els podrem percebre.
   %Això potser també té relació amb el camp de gràfics 3D, on la multiresolució s'aplica per a no treballar amb objectes que només seran percebuts com un píxel?
 
 \end{itemize}
