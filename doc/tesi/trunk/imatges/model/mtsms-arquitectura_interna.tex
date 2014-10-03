@@ -1,0 +1,52 @@
+\usetikzlibrary{shapes,arrows,positioning}
+
+\begin{tikzpicture}
+ \tikzset{
+        myarrow/.style={->, >=latex',  thick},
+      }
+      
+
+  \node[rectangle,draw,minimum height=6cm,minimum width=9cm] (m) {};
+  \draw[shift=( m.south west)]   
+  node[above right] {sèrie temporal multiresolució};
+
+
+  %discmig
+  \node (m.center) (discr1) {...};
+
+  %discr
+  
+  \node[ellipse,draw,minimum height=3.5cm,minimum width=2.5cm,alias=discr0] [left=of discr1] {};
+  \node[above=0cm of discr0.north] {$R_0$};
+  \node[below=0cm of discr0] {subsèrie resolució};
+
+  \node[cylinder, draw, shape border rotate=90, aspect=0.25,alias=buffer0] [below=3mm of discr0.north] {buffer};
+  \node[circle, draw,alias=disc0]  [above=3mm of discr0.south] {disc} ;
+  \draw [->] (disc0.center)++(.4:.4cm) arc(0:180:.4cm);
+  \draw[myarrow] (buffer0.bottom) -- (disc0.north);
+
+
+  %discrd
+
+  \node[ellipse,draw,minimum height=3.5cm,minimum width=2.5cm,alias=discrd] [right=of discr1] {};
+  \node[above=0cm of discrd] {$R_d$};
+  \node[below=0cm of discrd] {subsèrie resolució};
+
+  \node[cylinder, draw, shape border rotate=90, aspect=0.25,alias=bufferd] [below=3mm of discrd.north] {buffer};
+  \node[circle, draw,alias=discd]  [above=3mm of discrd.south] {disc} ;
+  \draw [->] (discd.center)++(.4:.4cm) arc(0:180:.4cm);
+  \draw[myarrow] (bufferd.bottom) -- (discd.north);
+
+
+
+  %mesura 
+  \node[above=1cm of m.north] (m0) {};
+
+  \draw[myarrow] (m0) -- (m.north) 
+  node[right,midway] {mesura};
+
+  \draw[myarrow] (m.north) -- (buffer0);
+  \draw[myarrow] (m.north) -- (bufferd);
+  \draw[myarrow] (m.north) -- (discr1);
+
+\end{tikzpicture}

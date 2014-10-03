@@ -1,0 +1,1445 @@
+\section{Model d'operacions}
+\label{sec:model:sgst-operacions}
+
+En aquesta secció definim les operacions d'un \gls{SGST} que permeten
+manipular les sèries temporals.  Una sèrie temporal té un atribut de
+temps que ha de ser tingut en compte pels operadors que la manipulin.
+Així, atenent a aquest atribut de temps, el comportament d'una sèrie
+temporal pot tenir naturaleses diferents:
+\begin{itemize}
+\item Conjunt, és a dir els operadors només atenent a la forma
+  estructural bàsica.
+\item Seqüència, en la qual els operadors la tracten com a conjunts
+  amb ordre.
+\item Funció temporal, en la qual els operadors treballen tenint en
+  compte que una sèrie temporal és la representació d'un funció
+  contínua.
+\end{itemize}
+
+
+
+En el disseny del model d'operacions següent es distingeix el
+comportament per als tres casos anteriors.  Es dissenyen les
+operacions bàsiques que permeten que posteriorment es combinin per
+a elaborar-ne de més complexes.
+
+
+Les manipulacions de les sèries temporals es defineixen abstractament
+per a qualsevol sèrie temporal que tingui l'estructura de \gls{SGST}.
+Les definicions dels operadors avaluen els conceptes algebraics i
+lògics de les dades però no avaluen la semàntica en un context
+particular, com també ocorre per exemple en el model d'operacions del
+model relacional. És a dir, en cada context particular de manipulació
+d'una sèrie temporal s'ha de decidir si aquella àlgebra té significat
+o, al contrari, no pot ser aplicada. Per exemple una suma de valors de
+diferents unitats podria ser semànticament errònia. A
+l'\autoref{sec:sgst:tretssemantics} estudiem el significat d'algunes
+propietats de les sèries temporals.
+
+
+% es treballa amb la forma canònica de les sèries temporals llevat que
+% s'indiqui el contrari. 
+
+
+
+\subsection{Bàsiques de conjunts}
+\glsaddsec{not:op-conjunts} %%%%secció d'operacions
+
+En el model estructural de \gls{SGST} hem definit les sèries temporals
+utilitzant conjunts. En aquest apartat definim operadors per a les
+sèries temporals recollint els operadors habituals que tenen els
+conjunts.   
+
+El model relacional de \gls{SGBDR} defineix els seus operadors bàsics
+a partir de l'àlgebra de
+conjunts \parencite[cap.~7]{date04:introduction8}. En aquest apartat
+apliquem el mateix estudi per al model de \gls{SGST}. Tot i així de
+manera simplificada, a les definicions no es descriuen les sèries
+temporals com a relacions amb capçaleres sinó que se n'escriuen només
+els conjunts de valors. Seguint el model relacional es poden estendre
+les definicions i introduir el model complet de relacions.
+
+
+
+En les operacions binàries de sèries temporals, entre les mesures
+d'ambdós conjunts hi ha les dues possibles relacions d'ordre de la
+\autoref{def:model:mesura-relacio-ordre}, és a dir poden tenir ordre o
+parcial. Com a conseqüència, aquests dos ordres possibles indueixen
+dues definicions per a alguns operadors de conjunts. Als operadors amb
+ordre total els anomenarem temporals i hi afegirem un superíndex $t$
+per a indicar-ho.
+
+
+Les operacions que agrupen els elements dels conjunts habitualment se
+solen representar gràficament mitjançant diagrames de Venn. A la
+\autoref{fig:model:sgst:venn} es mostren els diagrames de Venn per a
+cinc de les operacions dels \gls{SGSTM} que descrivim a continuació:
+inclusió, unió, diferència, intersecció i diferència simètrica; tant
+en la seva vessant parcial com en la seva vessant temporal.  
+
+Per a dibuixar aquest diagrames de Venn, a banda del conjunt
+corresponent a cada sèrie temporal $A$ i $B$ i la seva intersecció,
+cal dibuixar uns subconjunts $t_A$ i $t_B$ que indiquen les mesures
+que comparteixen el mateix temps amb una altra mesura de l'altre
+conjunt però no el mateix valor. És a dir $t_A = \{ m_A \in A |
+\exists m_B \in B: m_A =^t m_B \}$ i $t_B = \{ m_B \in B | \exists m_A
+\in A: m_B =^t m_A \}$ segons la relació d'ordre total definida en de
+les mesures.  Aquests dos subconjunts $t_A$ i $t_B$ són importants per
+a les operacions dels \gls{SGST} perquè no hi pot haver cap sèrie
+temporal resultant que els inclogui a tots dos, ja que significaria
+que conté temps repetits. Per exemple, una operació que tingui la
+sèrie resultant $t_A \cup t_B$, com es mostra a la
+\autoref{fig:model:sgst:venn-impossible}, és impossible
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgst-venn.tex}
+  \caption{Diagrames de Venn per a les operacions dels \gls{SGSTM}. Els
+    subconjunts $t_A$ i $t_B$ indiquen les mesures $m_A =^t m_B$.}
+  \label{fig:model:sgst:venn}
+\end{figure}
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgst-venn-impossible.tex}
+  \caption{Diagrama de Venn impossible per a les operacions dels
+    \gls{SGSTM}. Els subconjunts $t_A$ i $t_B$ indiquen les mesures
+    $m_A =^t m_B$.}
+  \label{fig:model:sgst:venn-impossible}
+\end{figure}
+
+
+\subsubsection{Pertinença i inclusió}
+
+
+La pertinença determina si un element pertany a un conjunt.  Sigui
+$S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m$ una mesura, es
+defineix de la mateixa manera que en els conjunts la pertinença de la
+mesura a la sèrie temporal $m \in S$. Aquesta pertinença es defineix a
+partir de l'ordre parcial, és a dir que dues mesures són iguals quan
+ho són els seus temps i valor.
+\begin{definition}[Pertinença]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m=(t,v)$ una
+  mesura, direm que la mesura pertany a la sèrie temporal
+  $m \glssymboldef{not:sgst:in} S$ si i només si $\exists m_a \in S :
+  T(m) = T(m_a) \wedge V(m) = V(m_a)$.
+\end{definition}
+
+
+
+
+A partir de l'ordre total, és a dir que dues mesures són iguals quan
+ho són els seus temps, es defineix la pertinença temporal d'una mesura
+a una sèrie temporal.
+\begin{definition}[Pertinença temporal]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m=(t,v)$ una
+  mesura, direm que la mesura pertany temporalment a la sèrie temporal
+  $m \glssymboldef{not:sgst:int} S$ si i només si $\exists m_a \in S :
+  T(m) = T(m_a)$.
+\end{definition}
+
+
+Si una mesura pertany a una sèrie temporal, $m\in S$, aleshores també
+hi pertany temporalment, $m \glssymbol{not:sgst:int} S$.
+
+
+
+La inclusió determina si tots els elements d'un conjunt pertanyen a un
+altre conjunt. La inclusió de conjunts en el cas de les sèries
+temporals està relacionada amb l'ordre parcial.
+\begin{definition}[Inclusió]
+  Siguin $S_1=\{m_0^1,\ldots,m_k^1\}$ i $S_2=\{m_0^2,\ldots,m_l^2\}$
+  dues sèries temporals, la primera sèrie temporal està inclosa en la
+  segona $S_1 \glssymboldef{not:sgst:sub} S_2$ si i només si $\forall
+  m \in S_1: m \in S_2$. Aleshores, $S_1$ és una subsèrie temporal de
+  $S_2$.
+\end{definition}
+
+
+
+Atenent a la pertinença temporal, es defineix la inclusió temporal
+d'una mesura a una sèrie temporal.
+\begin{definition}[Inclusió temporal]
+  Siguin $S_1=\{m_0^1,\ldots,m_k^1\}$ i $S_2=\{m_0^2,\ldots,m_l^2\}$
+  dues sèries temporals, la primera sèrie temporal està inclosa
+  temporalment en la segona $S_1 \glssymboldef{not:sgst:subt} S_2$ si
+  i només si $\forall m \in S_1: m \glssymbol{not:sgst:int} S_2$.
+\end{definition}
+
+
+
+
+\begin{example}
+  Siguin les mesures $m_1=(1,1)$, $m_2=(3,1)$, $m_3=(3,2)$ i
+  $m_4=(4,0)$ i les sèries temporals $S_1=\{m_1,m_2\}$ i
+  $S_2=\{m_1,m_3,m_4\}$ aleshores les operacions següents són certes:
+  $m_2 \in S_1$, $m_2 \notin S_2$, $m_2 \glssymbol{not:sgst:int} S_1$,
+  $m_2 \glssymbol{not:sgst:int} S_2$, $S_1\not\subseteq S_2$ i
+  $S_1\glssymbol{not:sgst:subt} S_2$.
+\end{example}
+
+\subsubsection{Màxim i suprem}
+
+
+En una sèrie temporal les mesures tenen relació d'ordre total. Com que
+la sèrie temporal s'ha considerat finita i sense elements repetits,
+quan la sèrie temporal no és buida això comporta l'existència d'un
+màxim i d'un mínim.  Si $S$ és una sèrie temporal, $\max(S)$ i
+$\min(S)$ són respectivament la mesura màxima i mínima d'$S$.
+
+\begin{definition}[Màxim i mínim]
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\glssymboldef{not:sgst:max}(S)$ és el màxim de
+  la sèrie temporal si i només si $\forall m \in S: n \geq m $.  Direm
+  que $n=\glssymboldef{not:sgst:min}(S)$ és el mínim de la sèrie
+  temporal si i només si $\forall m \in S: n \leq m$.
+\end{definition}
+
+El $\max(S)$ i el $\min(S)$ no estan definits quan la sèrie temporal
+és buida: $S= \emptyset$. En canvi si considerem el domini de temps
+com a conjunt tancat, el suprem i l'ínfim estan definits per qualsevol
+sèrie temporal, tal com passa amb el conjunt estès de nombres reals
+\cite{cantrell:extendedreal}. A continuació seguim identificant amb
+infinit ($\infty$) els valors impropis que tanquen el domini, tal com
+hem exemplificat en el model estructural.
+\begin{definition}[Suprem i
+  ínfim]\label{def:sgst:sup}\label{def:sgst:inf}
+  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n\in S$ una
+  mesura.  Direm que $n=\glssymboldef{not:sgst:sup}(S)$ és el suprem
+  de la sèrie temporal si $n=\max(S)$ en cas que el màxim estigui
+  definit o $n=(-\infty,\infty)$ en cas contrari.  Direm que
+  $n=\glssymboldef{not:sgst:inf}(S)$ és l'ínfim de la sèrie temporal
+  si $n=\min(S)$ en cas que el mínim estigui definit o
+  $n=(+\infty,\infty)$ en cas contrari.
+\end{definition}
+
+Quan la sèrie temporal no és buida, per
+ser un conjunt finit i d'ordre total, sempre hi ha un i només un màxim
+i un mínim i per tant es corresponen amb el suprem i l'ínfim
+respectivament.
+
+
+\begin{example}
+  Siguin les sèries temporals $S_1=\{(1,1),m_2=(3,1)\}$ i $S_2=\{\}$
+  aleshores les operacions següents són certes:
+  $\min(S_1)=\inf(S_1)=(1,1)$ i $\sup(S_2)=(-\infty,\infty)$.
+\end{example}
+
+
+
+
+
+\subsubsection{Unió}
+
+
+La unió de dos conjunts és un conjunt que conté tots els elements
+d'ambdós conjunts.  Per a poder unir dos conjunts amb estructura de
+relació, $A \cup B$, cal que tots dos tinguin la mateixa estructura;
+és a dir, en termes de \gls{SGBDR} cal que $A$ i $B$ tinguin la
+mateixa capçalera.
+
+Per tal que l'operació d'unió de conjunts sigui vàlida per a les
+sèries temporals cal, a més, tenir en compte quan dues sèries
+temporals tenen mesures en el mateix instant de temps. En cas
+d'utilitzar l'operació d'unió de conjunts la sèrie temporal resultant
+no compliria amb la \autoref{def:serie_temporal} ja que contindria
+mesures amb temps repetits. Com a conseqüència, es defineixen dues
+operacions d'unió per a les sèries temporals que resolen la restricció
+del temps de forma diferent.  Per a definir ambdues unions cal usar la
+pertinença temporal ja que cal treballar amb els conjunts $t_A$ i
+$t_B$, per tant és difícil establir la referència de pertinença per a
+cada una.  Definim la primera unió com la més propera possible a la
+unió de conjunts.
+
+
+
+En primer lloc, es defineix la unió de dues sèries temporals que
+escull les mesures del primer operand en cas de mesures amb el mateix
+temps però diferent valor.
+\begin{definition}[unió]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió de les dues sèries
+  temporals $S_1 \glssymboldef{not:sgst:cup} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de
+  $S_1$ i les mesures de $S_2$ que no tenen temps repetits: $S_1 \cup
+  S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 | m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
+\end{definition}
+
+Propietats de la unió de sèries temporals:
+\begin{itemize}
+\item El cardinal de la sèrie temporal resultant està fitat a
+  $|S_1| \leq |S| \leq |S_1| + |S_2|$. 
+\item No commutativa. En general
+  $S_1\cup S_2 \neq S_2\cup S_1$ tot i que sí que es compleix
+  l'equivalència respecte al cardinal $|S_1 \cup S_2| = |S_2\cup S_1|$.
+\end{itemize}
+
+En segon lloc, es defineix la unió temporal de dues sèries temporals
+que és la unió sense tenir en compte les mesures que tenen el mateix
+instant de temps i diferent valor.
+\begin{definition}[unió temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la unió temporal de les dues
+  sèries temporals $S_1 \glssymboldef{not:sgst:cupt} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$ i
+  de $S_2$ excloent les que només comparteixen el temps: $S_1
+  \glssymbol{not:sgst:cupt} S_2 = \{ m^1 \in S_1 \vee m^2 \in S_2 |
+  m^1 \not\glssymbol{not:sgst:int} S_2 \vee m^1 \in S_2, m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
+\end{definition}
+
+
+Propietats de la unió temporal:
+\begin{itemize}
+\item Commutativa
+\end{itemize}
+
+%DEfinir quina de les dues és la unió i quina la unió temporal és difícil. Fem l'anterior definició perquè per la unió és la que més s'acosta a la unió de conjunts i compleix que $A \subseteq A \cup B$. El definim amb la pertinença temporal per comoditat, si no la definició és més rebuscada: $\{ m_1 \in S_1 \vee (m_2 \in S_2 \wedge (m_2\leq m_1 \vee m_1 \geq m_2) )$
+
+
+
+\begin{example}\label{ex:model:s1s2}
+  Siguin les dues sèries temporals $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$
+  and $S_2=\{(2,2),(3,2),(4,0),(6,2)\}$.  La unió de la primera amb la
+  segona és $S_1 \cup S_2 = \{(1,1),(2,2), (3,1),
+  (4,0),(5,1),(6,2)\}$. La unió temporal de totes dues és $S_1
+  \glssymbol{not:sgst:cupt} S_2 = S_2 \glssymbol{not:sgst:cupt} S_1 =
+  \{(1,1),(2,2),(4,0),(5,1),(6,2)\}$. %
+
+  A la \autoref{fig:model:venn-unio} es mostren els diagrames Venn per
+  a les dues operacions, on l'àrea pintada és la sèrie temporal
+  resultant. L'àrea central d'intersecció dels dos conjunts són les
+  mesures que comparteixen temps i valor, en aquest cas la mesura
+  $(2,0)$. L'àrea central esquerra són les mesures de $S_1$ que només
+  comparteixen temps amb una mesura de $S_2$, és a dir la $(3,1)$, i
+  dualment a l'àrea central dreta hi ha la $(3,2)$. Les àrees més
+  externes es corresponen amb la resta de mesures.  A la
+  \autoref{fig:model:venn-unio} també es mostren les mateixes
+  operacions amb la visualització en taula de les sèries temporals.
+
+  \begin{figure}
+    \centering 
+    \input{imatges/model/sgst-unio-venn.tex}
+
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_1$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 1 \\
+    3  & 1 \\
+    4  & 0 \\
+    5  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    2  & 2 \\
+    3  & 2 \\
+    4  & 0 \\
+    6  & 2 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_1 \cup S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 1 \\
+    2  & 2 \\
+    3  & 1 \\
+    4  & 0 \\
+    5  & 1 \\
+    6  & 2 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_1 \glssymbol{not:sgst:cupt} S_2$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 1 \\
+    2  & 2 \\
+    4  & 0 \\
+    5  & 1 \\
+    6  & 2 \\ \hline
+  \end{tabular} 
+
+    \caption{Diagrames Venn i taules per als exemples d'unió i
+      d'unió temporal}
+    \label{fig:model:venn-unio}
+  \end{figure}
+
+ \end{example}
+
+
+
+
+
+\subsubsection{Diferència}
+
+La diferència de dos conjunts és un conjunt que conté tots els
+elements del primer conjunt que no pertanyen al segon.  Per a poder
+restar dos conjunts amb estructura de relació, $A - B$, cal que tots
+dos tinguin la mateixa estructura; és a dir, en termes de \gls{SGBDR}
+cal que $A$ i $B$ tinguin la mateixa capçalera.
+En la definició de l'operació de diferència cal tenir en compte les
+dues pertinences possibles.
+
+En primer lloc, es defineix la diferència atenent a la pertinença
+estricta de conjunts. És a dir s'aplica la diferència de
+conjunts a les sèries temporals.
+\begin{definition}[diferència]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència de les dues sèries
+  temporals $S_1 \glssymboldef{not:sgst:minus} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de
+  $S_1$ que no pertanyen a $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin
+  S_2 \}$.
+\end{definition}
+
+En segon lloc, es defineix la diferència atenent a la pertinença
+temporal.
+\begin{definition}[diferència temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència temporal de les
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:minust} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les
+  mesures de $S_1$ que no pertanyen temporalment a $S_2$: $S_1
+  \glssymbol{not:sgst:minust} S_2 = \{ m \glssymbol{not:sgst:int} S_1 | m
+  \not\glssymbol{not:sgst:int} S_2 \}$.
+\end{definition}
+
+
+
+
+\subsubsection{Intersecció}
+
+La intersecció de dos conjunts és un conjunt que conté els elements
+comuns als dos conjunts.  Per a poder intersecar dos conjunts amb estructura
+de relació, $A \cap B$, cal que tots dos tinguin la mateixa
+estructura; és a dir, en termes de \gls{SGBDR} cal que $A$ i $B$ tinguin la
+mateixa capçalera.
+
+En la definició de l'operació d'intersecció cal tenir en compte les
+dues pertinences possibles.
+
+En primer lloc, es defineix la diferència atenent a la pertinença
+estricta de conjunts. És a dir s'aplica l'operació d'intersecció de
+conjunts.
+\begin{definition}[intersecció]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la intersecció de les dues
+  sèries temporals $S_1 \glssymboldef{not:sgst:cap} S_2$ és una sèrie
+  temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de $S_1$
+  repetides a $S_2$: $S_1 \cap S_2 = \{ m \in S_1 | m \in S_2 \}$.
+\end{definition}
+
+En segon lloc, es defineix la intersecció atenent a la pertinença
+temporal tenint en compte quan dues sèries temporals tenen mesures en
+el mateix instant de temps però de valor diferent.
+\begin{definition}[intersecció temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la intersecció temporal de les
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:capt} S_2$ és una
+  sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
+  $S_1$ repetides temporalment a $S_2$: $S_1 \glssymbol{not:sgst:capt}
+  S_2 = \{ m \glssymbol{not:sgst:int} S_1 | m \glssymbol{not:sgst:int} S_2 \}$.
+\end{definition}
+
+Propietats de la intersecció:
+\begin{itemize}
+\item La intersecció és commutativa però la intersecció temporal no és
+  commutativa.
+\item A partir de la diferència es pot definir la intersecció: $S_1
+  \cap S_2 \equiv S_1 - (S_1 - S_2)$.
+\end{itemize}
+
+
+\subsubsection{Diferència simètrica}
+
+La diferència simètrica de dos conjunts és un conjunt que conté els
+elements no comuns dels dos conjunts. La diferència simètrica de dos
+conjunts $A \ominus B$ es defineix a partir de la diferència i la
+unió:
+\begin{align*}
+A \ominus B  & \equiv (A-B)\cup(B-A)\\
+             & \equiv (A\cup B)-(A\cap B)  \\
+A \ominus B  & \subseteq A\cup B
+\end{align*}
+
+Seguint aquestes propietats es defineixen dues diferències
+simètriques: una a partir de la diferència i la unió de sèries
+temporals i una altra a partir de la diferència temporal i la unió
+temporal.  Per tal que l'operació de diferència simètrica sigui vàlida
+per a les sèries temporals cal tenir en compte quan dues sèries
+temporals tenen mesures en el mateix instant de temps.
+
+En primer lloc, es defineix la diferència simètrica excloent les
+mesures amb el mateix temps però de valor diferent.
+\begin{definition}[diferència simètrica]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència simètrica de les
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:ominus} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
+  $S_1$ o exclusivament les de $S_2$: $S_1 \ominus S_2 = \{ m^1 \in
+  S_1 \vee m^2 \in S_2 | m^1 \notin S_2, m^2
+  \not\glssymbol{not:sgst:int} S_1 \}$.
+\end{definition}
+
+En segon lloc, es defineix la diferència simètrica temporal excloent les
+mesures amb el mateix temps.
+\begin{definition}[diferència simètrica temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la diferència simètrica de les
+  dues sèries temporals $S_1 \glssymboldef{not:sgst:ominust} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté les mesures de
+  $S_1$ o exclusivament les de $S_2$: $S_1
+  \glssymbol{not:sgst:ominust} S_2 = \{ m^1 \glssymbol{not:sgst:int}
+  S_1 \vee m^2 \glssymbol{not:sgst:int} S_2 | m^1
+  \not\glssymbol{not:sgst:int} S_2, m^2 \not\glssymbol{not:sgst:int}
+  S_1 \}$.
+\end{definition}
+
+
+
+\subsubsection{Selecció}
+
+La selecció és una operació dels \gls{SGBDR} que selecciona uns tuples
+determinats d'un conjunt, a vegades també s'anomena restricció.
+
+\begin{definition}[selecció]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, $a_1$ i $a_2$ dos
+  noms d'atributs que pertanyen a $S$, i $a_1 \Theta a_2$ una
+  expressió booleana sobre $a_1$ i $a_2$, la selecció de $S$ per
+  l'expressió booleana s'escriu com
+  $\glssymboldef{not:sgst:select}_{a_1 \Theta a_2}(S)$  i es defineix
+  de la mateixa manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+\end{definition}
+
+En una forma més genèrica, l'expressió booleana pot incloure un o més
+atributs i està formada per més d'una expressió lògica.
+
+
+\begin{example}
+  Sigui la sèrie temporal $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$, la
+  selecció dels temps més grans que $3$ és
+  $\glssymbol{not:sgst:select}_{t>3}(S_1) = \{(4,0),(5,1)\}$.
+\end{example}
+
+
+
+
+
+\subsubsection{Projecció}
+
+
+La projecció és una operació dels \gls{SGBDR} que selecciona uns
+atributs determinats d'un conjunt. Aquesta operació treballa amb la
+capçalera de la sèrie temporal, és a dir amb els atributs que
+genèricament són $t$ i $v$ però que també poden tenir altres noms.
+
+\begin{definition}[projecció]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$ i sigui $A=\{a_0,
+  \dotsc, a_n\}$ un conjunt de noms d'atributs, la projecció de la
+  sèrie temporal en els atributs s'escriu com
+  $\glssymboldef{not:sgst:project}_A(S)$ i es defineix de la mateixa
+  manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}. Aleshores
+  aquesta nova sèrie temporal $\glssymbol{not:sgst:project}_A(S)$
+  només inclou els atributs $A$ de les mesures.
+\end{definition}
+
+En l'operació de projecció, si els
+atributs seleccionats no inclouen l'atribut temps o només n'inclouen
+un el resultat no és una sèrie temporal sinó que és un conjunt
+relacional. 
+
+
+% \todo{definir? la definició embolica}
+% \begin{definition}[projecció]
+%   Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, on les mesures
+%   poden ser multiavaluades $m_i=(t_i,v^1_i,\dotsc,v^n_i)$, expressada
+%   en la forma completa amb capçalera $S = ( \{t, n_1,\dotsc,n_n \}, \{
+%   \{ (t,t_0),(n_1,v^1_0),\dotsc,(n_n,v^n_0)\}, \dotsc, \{
+%   (t,t_0),(n_1,v^1_1),\dotsc,(n_n,v^n_n)\} \} )$ on $t, n_1, \dotsc,
+%   n_n$ són els noms dels atributs; i sigui $A=\{a_0, \dotsc, a_n\}$ un
+%   conjunt de noms d'atributs. La projecció de la sèrie temporal en els
+%   atributs és $\glssymboldef{not:sgst:project}_A(S) = \{ ()  \}$
+% \end{definition}
+
+
+
+
+\begin{example}
+  Sigui la sèrie temporal $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$, la
+  projecció en l'atribut de temps és el conjunt
+  $\glssymbol{not:sgst:project}_{\{t\}}(S_1) = \{ 1,3,4,5 \}$.  Sigui
+  la sèrie temporal multivaluada $S_2 = ( (t,\text{ temp},\text{
+    cons},\text{ vol}),\{ (2,1,2,3), (3,2,1,0), (6,1,2,3) \})$, la
+  projecció en els atributs $t$ i \emph{temp} és la sèrie temporal
+  $\glssymbol{not:sgst:project}_{ \{t,\text{temp}\}}(S_1) = (
+  (t,\text{ temp}),\{ (2,1), (3,2), (6,1) \})$
+\end{example}
+
+
+
+
+
+
+
+\subsubsection{Reanomena}
+
+El reanomena és una operació dels \gls{SGBDR} que canvia el nom dels
+atributs.  Aquesta operació treballa amb la
+capçalera de la sèrie temporal.
+
+
+\begin{definition}[reanomena]
+  Sigui la sèrie temporal $S=\{ m_0,\dotsc,m_k\}$, $a$ un nom
+  d'atribut que pertany a $S$ i $b$ un que no hi pertany, reanomenar
+  $a$ per $b$ s'escriu com $\glssymboldef{not:sgst:rename}_{a/b} (S)$
+  i es defineix de la mateixa manera que en els
+  \gls{SGBDR} \parencite[cap.~7]{date04:introduction8}.
+\end{definition}
+
+En una forma més genèrica, es poden reanomenar més d'un atribut
+alhora.
+
+\begin{example}
+  Sigui la sèrie temporal multivaluada $S_2 = ( (t,\text{ temp},\text{
+    cons},\text{ vol}),\{ (2,1,2,3), (3,2,1,0), (6,1,2,3) \})$, reanomenar 
+  l'atribut \emph{temp} per \emph{v1} és la sèrie temporal
+  $\glssymbol{not:sgst:rename}_{\text{temp}/\text{v1}}(S_1) = ( (t,\text{ v1},\text{
+    cons},\text{ vol}),\{ (2,1,2,3), (3,2,1,0), (6,1,2,3) \})$.
+\end{example}
+
+
+
+\subsubsection{Producte i junció}
+
+El producte cartesià de dos conjunts és un conjunt que conté totes les
+parelles possibles d'elements d'ambdós conjunts.  Per a poder
+multiplicar dos conjunts amb estructura de relació, $A \times B$, en
+termes de \gls{SGBDR} cal que $A$ i $B$ no tinguin en comú noms
+d'atributs.  En els \gls{SGBDR}, a diferència del producte de conjunts, el
+conjunt resultant no és un conjunt de parells de tuples sinó un
+conjunt de tuples.
+
+Definim el producte de dues sèries temporals, les qual en
+forma canònica tinguin els atributs $t$ i $v$, com una sèrie temporal
+amb atributs $t_1$, $v_1$, $t_2$ i $v_2$. Així doncs, per a sèries
+temporals el producte resulta en una sèrie temporal amb dos atributs
+de temps, a la qual anomenem sèrie temporal doble (v.\
+\autoref{def:sgst:st-doble}).
+\begin{definition}[producte]
+  Siguin $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica, el producte de
+  les dues sèries temporals $S_1 \glssymboldef{not:sgst:times}
+  S_2$ és una sèrie temporal doble $S=\{m_0, \dotsc, m_k\}$ que conté
+  la unió de totes les parelles de mesures de $S_1$ i $S_2$: $S_1
+  \times S_2 = \{ (t_1,v_1,t_2,v_2) | (t_1,v_1) \in S_1 \wedge
+  (t_2,v_2) \in S_2 \}$
+\end{definition}
+
+Propietats del producte:
+\begin{itemize}
+\item El cardinal resultant és $|S|=|S_1||S_2|$
+\item El grau resultant és $4$
+\end{itemize}
+
+
+
+La junció (\emph{join}) de dos conjunts és un conjunt que conté les
+parelles d'elements d'ambdós conjunts que tenen el mateix valor per
+als atributs comuns.  La junció de dos conjunts amb estructura de
+relació, $A \operatorname{join} B$, es defineix com una selecció sobre el
+producte \parencite[cap.~7]{date04:introduction8}.
+
+
+Per a les sèries temporals, definim la junció com l'ajuntament de les
+parelles que tenen el mateix atribut de temps en ambdues sèries
+temporals . El resultat de la junció és una sèrie temporal
+multivaluada.
+\begin{definition}[junció]\label{def:sgst:join}
+  Siguin $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica, la junció de
+  les dues sèries temporals $S_1 \glssymboldef{not:sgst:join} S_2$ és
+  una sèrie temporal multivaluada $S=\{m_0, \dotsc, m_k\}$ que
+  selecciona del producte de $S_1$ amb $S_2$ les mesures dobles amb
+  temps iguals: $S_1 \glssymbol{not:sgst:join} S_2 = \{ (t,v_1,v_2) |
+  (t_1,v_1,t_2,v_2) \in S_1\times S_2 \wedge t=t_1=t_2 \}$.
+\end{definition}
+
+
+Propietats de la junció:
+\begin{itemize}
+\item El cardinal resultant és $|S|\leq\min(|S_1|,|S_2|)$
+\item És commutativa; tenint en compte que els atributs tenen nom i
+  per tant l'ordre no importa.
+\end{itemize}
+
+
+
+
+\begin{example}\label{ex:model:s1s2}
+  Siguin les dues sèries temporals $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$
+  and $S_2=\{(2,2),(3,2),(4,0),(6,2)\}$.  La junció de totes dues és
+  $S_1 \glssymbol{not:sgst:join} S_2 = \{(3,1,2),(4,0,0)\}$.
+\end{example}
+
+
+
+\subsubsection{Computacionals: mapa, agregació i plec}
+\glsaddsec{not:sgst:computacional} %%%%secció d'operacions
+
+Per a poder operar amb els conjunts, a més de l'àlgebra definida fins
+ara, es necessiten operadors amb funcionalitats computacionals; és a
+dir, operadors que calculin amb els valors continguts en els conjunts. 
+
+En els \gls{SGBDR} els operadors computacionals bàsics són
+\emph{extend}, \emph{aggregate} i
+\emph{summarize} \parencite[cap.~7]{date04:introduction8}.  Per a les
+sèries temporals definim operacions equivalents a les dues primeres de
+la manera amb què habitualment s'utilitzen per als conjunts.  La
+tercera, el \emph{summarize}, és una operació que s'utilitza per a
+sintetitzar informació mitjançant grups, és a dir aplica operacions
+\emph{aggregate} a conjunts que prèviament s'han agrupat segons un
+atribut compartit.  Per a les sèries temporals, però, necessitem una
+operació computacional més genèrica que ens permeti calcular
+recursivament sense haver de definir grups.
+
+
+ % Operacions
+ %  d'agregació per intervals de temps,
+ %  p.ex. $\{(gen,25),(feb,4),(mar,10)\}$, com es faria això?}
+% No obstant, es pot aplicar el \emph{summarize} per a l'atribut de
+% valors: summarize S per S {v} add ...  però això ja no mapa a una
+% sèrie temporal.
+
+% De l'operador \emph{aggregate} dels SGBDR definit per
+% \textcite{date:introduction} cal tenir en compte que en defineix
+% dues vessants. Per una banda, defineix els \emph{aggregate operator
+% invocation} que retornen valors escalars. Per altra banda, defineix
+% els \emph{aggregate operator invocation} que serveixen per a
+% treballar amb el \emph{summarize}.
+
+Així doncs, a continuació es defineix l'operador mapa (\emph{map}) com
+a equivalent a l'\emph{extend}, l'operador agregació (\emph{aggregate})
+com a equivalent a l'\emph{aggregate} i l'operador plec (\emph{fold})
+com una forma més general de calcular recursivament amb les mesures
+que \emph{summarize}.
+
+
+
+L'operació de mapatge aplica una funció a cada element del conjunt.
+\begin{definition}[mapa]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal i
+  $\glssymboldef{not:sgst:fmap}$ una funció de mapatge sobre una
+  mesura, $\glssymboldef{not:sgst:fmap}:m\mapsto m'$, el mapa de
+  $\glssymbol{not:sgst:fmap}$ a $S$ és una sèrie temporal $S'=\{m_0',
+  \dotsc, m_k'\}$ amb la funció aplicada a cada mesura:
+  $\glssymboldef{not:sgst:map}(S,\glssymbol{not:sgst:fmap}) =
+  \{\forall m\in S : \glssymbol{not:sgst:fmap}(m) \}$.
+\end{definition}
+
+
+L'operació d'agregació sintetitza en una mesura la informació dels
+elements del conjunt segons un criteri, per exemple estadístics.
+\begin{definition}[agregació]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $m_i$ una mesura
+  inicial i $\glssymboldef{not:sgst:fagg}$ una funció d'agregació de
+  dues mesures, $\glssymbol{not:sgst:fagg}: m_r \times m_b \mapsto
+  m_r'$, l'agregació de $S$ segons $\glssymbol{not:sgst:fagg}$ és una
+  mesura $m' = (t',v')$ que sintetitza la informació de les mesures
+  seguint el criteri de la funció a partir de la mesura inicial:
+  $\glssymboldef{not:sgst:aggregate}(S,m_i,\glssymbol{not:sgst:fagg})
+  = \glssymbol{not:sgst:fagg}(\dots(
+  \glssymbol{not:sgst:fagg}(\glssymbol{not:sgst:fagg}(\glssymbol{not:sgst:fagg}
+  (m_i, m_0), m_1), m_2 )\dots),m_k)$.
+\end{definition}
+
+% Més compactament descrit amb
+% \begin{align*}
+%   \text{fold}: & S=\{m_0,\dotsc,m_k\} \times m_i \times f \longrightarrow m'= \\
+%   & \begin{cases}
+%     m_i & \text{si} |S|=0, \\
+%     \text{fold}(S_1,f(m_i,m_1),f) & \text{altrament}
+%   \end{cases}\\
+%   \text{ a on } & m_1 \in S, S_1 = S - \{m_1\}
+% \end{align*}
+
+
+L'operació de plegament combina recursivament els elements del conjunt
+segons un criteri.
+\begin{definition}[plec]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ una sèrie temporal, $S_i=\{m_{i0},
+  \dotsc, m_{ik}\}$ una sèrie temporal inicial i
+  $\glssymboldef{not:sgst:ffold}$ una funció de plegament d'una mesura
+  amb una sèrie temporal, $\glssymbol{not:sgst:ffold}: S_r \times m
+  \mapsto S_r'$, el plec de $S$ segons $\glssymbol{not:sgst:ffold}$ és
+  una sèrie temporal $S'= \{m_0', \dotsc, m_k'\}$ amb les mesures
+  combinades seguint el criteri de la funció a partir de la sèrie
+  temporal inicial:
+  $\glssymboldef{not:sgst:fold}(S,S_i,\glssymbol{not:sgst:ffold}) =
+  \glssymbol{not:sgst:ffold}(\dots(
+  \glssymbol{not:sgst:ffold}(\glssymbol{not:sgst:ffold}(
+  \glssymbol{not:sgst:ffold}(S_i,m_0),m_1),\allowbreak m_2
+  )\dots),\allowbreak m_k)$.
+\end{definition}
+
+
+Les operacions d'agregació i plegament tal com s'han definit es
+realitzen en ordre aleatori de mesures. Segons el criteri que
+s'utilitzi, l'ordre és important i per tant cal una operació que
+computi tenint-lo en compte. A tal efecte, a continuació s'amplia la
+definició de la funció de plegament per a tenir en compte l'ordre; per
+a la funció d'agregació es pot aplicar el mateix concepte.
+\begin{definition}[plec amb ordre]
+  Sigui $S=\{m_0, \dotsc, m_k\}$ i $S_i=\{m_{i0}, \dotsc, m_{ik}\}$
+  dues sèries temporals, $\glssymbol{not:sgst:ffold}$ una funció d'una
+  mesura amb una sèrie temporal i $\glssymbol{not:sgst:forder}$ una
+  funció que retorna una mesura continguda a una sèrie temporal,
+  $\glssymboldef{not:sgst:forder}: S_c \mapsto m'$, el plec de $S$
+  segons $\glssymbol{not:sgst:ffold}$ amb valor inicial $S_i$ i ordre
+  $\glssymbol{not:sgst:forder}$ és una sèrie temporal $S'= \{m_0',
+  \dotsc, m_k'\}$ que combina les mesures seguint
+  el criteri i l'ordre de les funcions:
+  $\glssymboldef{not:sgst:ofold}(S,S_i,
+  \glssymbol{not:sgst:ffold},\glssymbol{not:sgst:forder}) =
+  \begin{cases}
+    S_i & \text{si } |S|=0, \\
+    \glssymbol{not:sgst:ofold}(S_o,\glssymbol{not:sgst:ffold}(S_i,m_o),
+    \glssymbol{not:sgst:ffold},\glssymbol{not:sgst:forder}) &
+    \text{altrament}
+  \end{cases}$ on $m_o = \glssymbol{not:sgst:forder}(S)$ i $S_o = S
+  - \{m_o\}$.
+\end{definition}
+
+El plec amb ordre és necessari quan la funció
+$\glssymbol{not:sgst:ffold}$ no és associativa ni commutativa perquè
+llavors l'ordre dels càlculs és important. Es pot observar que el plec
+sense ordre és un plec amb ordre aleatori:
+$\glssymbol{not:sgst:fold}(S,S_i,\glssymbol{not:sgst:ffold})\equiv
+\glssymbol{not:sgst:ofold}(S,S_i,\glssymbol{not:sgst:ffold},
+\glssymbol{not:sgst:forder})$ a on
+$\glssymbol{not:sgst:forder}=\text{aleatori}(S_c)$.
+
+% la funció de plegament en els plecs sense ordre ha de ser commutativa i ¿associativa? Si no ho és, el resultat és aleatori
+%De manera semblant $\agg(S,m_i,f)\equiv \agg(S,m_i,f,o)$ on $o=\text{aleatori}(S)$.
+
+
+
+Propietats de les operacions computacionals:
+\begin{itemize}
+\item El plec d'una sèrie temporal buida és la sèrie inicial;
+  $\glssymbol{not:sgst:fold}: \{\} \times S_i \times
+  \glssymbol{not:sgst:ffold} \mapsto S_i$.
+
+\item El plec per una funció que sempre retorni la sèrie inicial és la
+  sèrie inicial; $\glssymbol{not:sgst:fold}: S \times S_i \times \glssymbol{not:sgst:ffold} \mapsto S_i$ on
+  $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto S_r$.
+
+\item El plec per una funció que només retorni la mesura original és
+  una sèrie amb una sola mesura; $\glssymbol{not:sgst:fold}: S \times
+  S_i \times \glssymbol{not:sgst:ffold} \mapsto S'$ on
+  $\glssymbol{not:sgst:ffold}:S_r\times m \mapsto \{m\}$ i $|S'|=1$.
+
+
+\item La funció d'unió en el plegament permet fer la identitat, $S
+  \equiv \glssymbol{not:sgst:fold}(S,\{\},\glssymbol{not:sgst:ffold})$
+  on $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto S_r \cup \{m\}$.
+
+
+\item Els mapes es poden implementar com a plecs,
+  $\glssymbol{not:sgst:map}(S,\glssymbol{not:sgst:fmap}) \equiv
+  \glssymbol{not:sgst:fold}(S,\{\},\glssymbol{not:sgst:ffold})$ on
+  $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto
+  \{\glssymbol{not:sgst:fmap}(m)\} \cup S_r$.  De manera semblant,
+  \textcite{lammel08:mapreduce} també exemplifica com els mapes es
+  poden implementar com a plecs. %pàg. 5 Asides on folding
+
+\item Les agregacions es poden implementar com a plecs,
+  $\glssymbol{not:sgst:aggregate}(S,m_i,\glssymbol{not:sgst:fagg})
+  \equiv
+  \glssymbol{not:sgst:fold}(S,\{m_i\},\glssymbol{not:sgst:ffold})$ on
+  $\glssymbol{not:sgst:ffold}: S_r \times m \mapsto
+  \{\glssymbol{not:sgst:fagg}(m_r,m)\}$ i $S_r =\{m_r\}$.
+
+\end{itemize}
+
+
+
+
+
+\begin{example}
+  Definicions de funcions d'exemple a partir de l'operació
+  computacional de mapatge:
+
+\begin{itemize}
+\item $\operatorname{identitat}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t,v))$
+\item $\operatorname{intercanvi}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(v,t))$
+\item $\glssymbolex{not:sgst:duplica-t}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t,t))$
+\item $\operatorname{translaci\acute{o}}: S \times d \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t+d,v))$
+\item $\operatorname{multiplica\_tv}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(S,(t,v)\mapsto(t,t\cdot v))$
+
+%Encara no s'ha definit ant, per tant no es pot fer l'exemple
+% \item $\operatorname{tpredecessors_{v1}}: S \mapsto S'$ on $S'= \glssymbol{not:sgst:map}(S,(t,v)
+%   \mapsto (t,T(\ant_S(m)))$, usant l'operació predecessor de la
+%   \autoref{def:sgst:ant}
+% \item $\operatorname{vpredecessors}: S \mapsto S'$ on $S'= \glssymbol{not:sgst:map}(S,(t,v)
+%   \mapsto (t,V(\ant_S(m)))$, usant l'operació predecessor de la
+%   \autoref{def:sgst:ant}
+
+\end{itemize}
+\end{example}
+
+\begin{example}
+  Definicions de funcions d'exemple a partir de l'operació
+  computacional d'agregació. Ens els exemples següents utilitzem la
+  notació $(t^i,v^i) \times(t,v)$ per a indicar la funció
+  $\glssymbol{not:sgst:fagg}: m_r \times m_b \mapsto m'$ on $t^i
+  = T(m_r)$, $v^i=V(m_r)$, $t=T(m_b)$ i $v=V(m_b)$.
+
+
+\begin{itemize}
+\item $\operatorname{cardinal}: S \mapsto v'\in \glssymbol{not:N}$ on
+  $v'=V\big( \glssymbol{not:sgst:aggregate}
+  (S,(0,0),\glssymbol{not:sgst:fagg}) \big)$ i
+  $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times(t,v) \mapsto
+  (t^i,v^i+1) $. Aquesta funció és una implementació del cardinal de
+  la \autoref{def:sgst:cardinal} a partir de l'agregació.
+
+
+\item $\glssymbolex{not:sgst:sumav}: S \mapsto v'$ on $v'=V\big(
+  \glssymbol{not:sgst:aggregate} (S,(0,0),\glssymbol{not:sgst:fagg} )
+  \big)$ i $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times (t,v)
+  \mapsto(t^i,v+v^i)$
+
+\item $\glssymbolex{not:sgst:mitjanav}: S \mapsto v'$ on $v'=
+  \operatorname{suma\_v}(S) / \operatorname{cardinal}(S)$ 
+  % alerta amb 0/0, es deixa indefinit...
+
+\item $\operatorname{sup}: S \mapsto m'$ on $m'=
+  \glssymbol{not:sgst:aggregate}(S,(-\infty,\infty),\glssymbol{not:sgst:fagg}
+  )$ i $\glssymbol{not:sgst:fagg}: (t^i,v^i)\times(t,v) \mapsto \big(
+  (t^i,v^i) \text{ si } t < t^i, \text{ o } (t,v) \text{ en cas
+    contrari}\big) $. Aquesta funció és una implementació de
+  l'operació suprem de la \autoref{def:sgst:sup} a partir de
+  l'agregació.
+
+\item $\glssymbolex{not:sgst:maxv}: S \mapsto v'$ on $v'= V\big(
+  \glssymbol{not:sgst:aggregate}
+  (S,(0,-\infty),\glssymbol{not:sgst:fagg} ) \big)$ i
+  $\glssymbol{not:sgst:fagg}: (t^i,v^i) \times (t,v)
+  \mapsto(t^i,\max(v,v^i))$. A diferència del $\sup(S)$ o del
+  $\max(S)$, el $\glssymbol{not:sgst:maxv}(S)$ calcula el màxim dels
+  valors.
+
+
+%Encara no s'ha definit ant, per tant no es pot fer l'exemple
+% \item $\operatorname{ant}: S \times m \mapsto m'$ on $m'=
+%   \glssymbol{not:sgst:aggregate}(S,(-\infty,\infty),(t^i,v^i)\times(t,v)\mapsto
+%   [(t,v) \text{ if } t^i < t < T(m) \text{ else } (t^i,v^i)
+%   ])$. Aquesta funció és una implementació de l'operació predecessor
+%   de la \autoref{def:sgst:ant} a partir de l'agregació.
+\end{itemize}
+\end{example}
+
+\begin{example}
+  Definicions de funcions d'exemple a partir de l'operació
+  computacional de plegament. 
+
+\begin{itemize}
+\item  $\operatorname{tpredecessors}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:fold}(S,S, \glssymbol{not:sgst:ffold})$ on $
+  \glssymbol{not:sgst:ffold}: S_r\times m \mapsto \{(T(m),t_p)\} \cup
+  S_r$ i $t_p=T(\sup( \glssymbol{not:sgst:select}_{t <
+    T(m)}(S_r)))$. Per a cada mesura de la sèrie temporal indica quin
+  és el temps de la mesura precedent.
+  % , sense usar l'operació predecessor  a diferència de l'exemple $\operatorname{tpredecessors_{v1}}$ 
+  %De fet aquesta operació es pot definir amb un mapa en comptes de plec i potser s'entén més? S'=mapa(S,(t',v') mapsto (t', T(sup(seleccio(S,t<t')))  ))
+
+\item $\glssymbolex{not:sgst:vpredecessors}: S \mapsto S'$ on $S'=
+  \glssymbol{not:sgst:map}(\operatorname{tpredecessors}(S),
+  \glssymbol{not:sgst:fmap})$ i $\glssymbol{not:sgst:fmap}:
+  (t',v')\mapsto (t, V(\sup(\glssymbol{not:sgst:select}_{t=v'}(S))) ) $.
+  Per a cada mesura de la sèrie temporal indica quin és el valor de la
+  mesura precedent, és una definició a partir de l'operació de
+  $\operatorname{tpredecessors}$.
+
+\end{itemize}
+
+\end{example}
+
+
+\begin{example}
+  Sigui la sèrie temporal $S=\{(1,1),(3,1),(4,0),(5,1)\}$. %
+  La duplicació dels temps en els valors de la sèrie temporal és
+  $\glssymbol{not:sgst:duplica-t}(S)=\{(1,1),(3,3),(4,4),(5,5)\}$. %
+  La mitjana dels valors de la sèrie temporal és
+  $\glssymbol{not:sgst:mitjanav}(S) = 0,75$. %
+  Els temps predecessors de cada mesura de la sèrie temporal és
+  $\operatorname{tpredecessors}(S)=\{(1,-\infty),(3,1),(4,3),(5,4)\}$
+  i els valors predecessors
+  $\glssymbol{not:sgst:vpredecessors}(S)=\{(1,\infty),(3,1),(4,1),(5,0)\}$.
+\end{example}
+
+
+
+
+\subsubsection{Computacionals binàries amb els valors}
+
+Una operació en els conjunts és la que aplica un operador binari a
+totes les parelles possibles dels elements de dos conjunts. Per
+exemple la suma, és a dir l'operador binari $+$, aplicada a dos
+conjunts $A$ i $B$ és un conjunt $A + B = \{ e_a+e_b : (e_a,e_b) \in
+A\times B \}$.
+
+Per a les sèries temporals també calen operacions computacionals amb
+les mesures de dues sèries temporals. En el cas d'operar amb dues
+sèries temporals primer cal ajuntar les dues sèries temporals que es
+volen operar i després aplicar les operacions computacionals binàries
+a la sèrie temporal resultant.
+
+
+El producte i la junció són els operadors que permeten crear parelles
+de mesures de dues sèries temporals. Per a operar amb els valors de
+dues sèries temporals la junció és més adequada ja que permet ajuntar
+el valors que tenen temps comuns. Així doncs, es defineix l'aplicació
+d'un operador binari de valors a dues sèries temporals a partir de la
+junció.
+\begin{definition}[Operació computacional binària amb els valors]
+  Siguin $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals i sigui
+  $\glssymboldef{not:sgst:opbinari}$ un operador binari que computi
+  amb dos valors, $\glssymbol{not:sgst:opbinari}:v_1 \times v_2
+  \mapsto v'$, l'aplicació d'aquest operador binari a dues sèries
+  temporals és $\glssymboldef{not:sgst:computacionalbinaria}: S_1
+  \times S_2 \longrightarrow S'$ on $S' = \glssymbol{not:sgst:map}
+  (S_1 \glssymbol{not:sgst:join} S_2, (t,v_1,v_2) \mapsto (t,v_1
+  \glssymbol{not:sgst:opbinari} v_2))$. Usem la notació
+  $m=(t,v_1,v_1)$ on $m\in S_1 \glssymbol{not:sgst:join} S_2$.
+\end{definition}
+
+Cal tenir en compte que la junció de la \autoref{def:sgst:join} només
+sap operar amb dues sèries temporals que tinguin el mateix vector de
+temps; és a dir regulars entre elles (v.\ \autoref{def:sgst:regulars_entre_elles}). En el cas que no tinguin el mateix vector
+de temps, es pot aplicar la junció temporal de la
+\autoref{def:sgst:joint}.
+
+
+\begin{example}
+  Exemples de l'aplicació d'operacions computacionals binàries en què
+  s'aplica un operador binari $ \glssymbol{not:sgst:opbinari}$ als
+  valors de dues sèries temporals
+  \begin{itemize}
+  \item $S' = S_1 + S_2$ 
+  \item $S' = S_1 \operatorname{subtraccio} S_2$. Indiquem amb el
+    nom complet, $\operatorname{subtraccio}$, l'operació computacional
+    de dues sèries temporals corresponent a l'operació aritmètica de
+    resta, per no confondre-la amb l'operació de diferència de
+    conjunts que té el guionet per símbol (\emph{-}).
+  \end{itemize}
+  
+  Les operacions computacionals binàries també es poden usar per a
+  definir altres operacions, per exemple per a calcular els increments de valor
+  d'una sèrie temporal:
+  \begin{itemize}
+  \item $\glssymbolex{not:sgst:increments}: S \mapsto S'$ on $S'=
+    S \operatorname{subtraccio} \glssymbol{not:sgst:vpredecessors}(S)$.
+  \end{itemize}
+\end{example}
+
+
+
+
+\begin{example}
+  Siguin les dues sèries temporals $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$
+  and $S_2=\{(1,2),(3,2),(4,0),(5,2)\}$. %
+  La suma de les dues sèries temporals és
+  $S_1+S_2=\{(1,3),(3,3),(3,3),(4,0)\}$. %
+  Els increments de la primera sèrie temporal són
+  $\glssymbol{not:sgst:increments}(S_1)=\{(1,\infty),(3,0),(4,-1),(5,1)\}$.
+\end{example}
+
+
+
+
+\subsection{Bàsiques de seqüències}
+\glsaddsec{not:op-sequencies} %%%%secció d'operacions
+
+
+Atesa la relació d'ordre induïda pel temps en una sèrie temporal
+(def.\ \ref{def:model:mesura-relacio-ordre}), les sèries temporals es
+poden tractar com a seqüències.  En aquest apartat definim operadors
+per a les sèries temporals recollint els operadors habituals que tenen
+les seqüències. 
+
+Els operadors que treballen amb seqüències tenen en compte l'atribut
+que marca un ordre total en el conjunt. En el cas de les sèries
+temporals aquest atribut és el temps.
+
+
+
+\subsubsection{Interval}
+
+L'interval sobre una seqüència és la subseqüència compresa entre dos
+elements.  Per a les sèries temporals és possible definir el concepte
+d'interval sobre la seqüència com la subsèrie entre dos instants de
+temps, semblant a com es fa a \cite{last:keogh,last:hetland}.  És una
+operació de selecció però amb la notació habitual en les seqüències.
+
+
+\begin{definition}[Interval]
+  \label{def:model:st-interval}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i siguin $r$ i $t$
+  dos instants de temps. Definim el subconjunt
+  $S\glsdispdef{not:sgst:interval}{(r,t)} \subseteq S$ com la sèrie
+  temporal $S(r,t)=\{m\in S | r<T(m)<t\}$.
+
+  Tal com es fa en les seqüències, es defineix una notació de
+  parèntesis i claudàtors per indicar si l'interval és obert, tancat o
+  semiobert:
+
+  $S\glsdispdef{not:sgst:intervalsemi}{[r,t)}=\{m\in S  | r\leq T(m)< t\}$
+
+  $S(r,t]=\{m\in S  | r<T(m)\leq t\}$
+
+  $S\glsdispdef{not:sgst:intervaltancat}{[r,t]}=\{m\in S | r\leq
+  T(m)\leq t\}$
+\end{definition}
+
+
+Propietats:
+\begin{itemize}
+\item La subsèrie $S[-\infty,t)\subseteq S$ és equivalent a la sèrie
+  temporal $S[-\infty,t) \equiv S[T(\inf(S)),t)$. De la mateixa manera
+  $S(r,+\infty] \equiv S(r,T(\sup(S))]$.
+
+\item L'interval degenerat $S[t,t]\subseteq S$ és equivalent a la
+  sèrie temporal $S[t,t] \equiv \{m\in S | T(m)=t \}$. El intervals
+  $S(t,t]\subseteq S$ i $S[t,t)\subseteq S$ són equivalents a la sèrie
+  temporal buida $S(t,t] \equiv S[t,t) \equiv \emptyset$ ja que per
+  ser els temps d'ordre total $\nexists T(m): t < T(m) \leq t$ o
+  $\nexists T(m): t \leq T(m) < t$, respectivament. 
+
+\item La subsèrie $S[-\infty,+\infty] \subseteq S$ és equivalent a la
+  sèrie temporal original $S[-\infty,+\infty] = S$. La subsèrie
+  $S(-\infty,+\infty) \subseteq S$ només és equivalent a la sèrie
+  temporal original quan aquesta no conté mesures indefinides
+  $S(-\infty,+\infty) \equiv S: (-\infty,v_a)\notin S \wedge
+  (+\infty,v_b)\notin S$.
+\end{itemize}
+
+
+
+
+\subsubsection{Successió}
+
+Atenent a la relació d'ordre induïda pel temps en una sèrie temporal, es
+defineix el concepte de mesura següent i mesura anterior en una
+seqüència.
+
+
+\begin{definition}[Successor i
+  predecessor]\label{def:sgst:seg}\label{def:sgst:ant}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal i siguin $l$ i $n$
+  dues mesures on la primera pertany a la sèrie temporal, $l\in
+  S$. Direm que $l$ és el successor de $n$ en $S$ i ho notarem com
+  $l=\glssymboldef{not:sgst:next}_S(n)$ si i només si
+  $l=\inf(S(T(n),+\infty])$.  Direm que $l$ és el predecessor de $n$
+  en $S$ i ho notarem com $l=\glssymboldef{not:sgst:prev}_S(n)$ si i
+  només si $l=\sup(S[-\infty,T(n)))$.
+
+  Quan no hi hagi dubte de la sèrie temporal que marca l'ordre, per
+  exemple quan $n\in S$, podrem escriure
+  $\glssymbol{not:sgst:next}(n)$ i $\glssymbol{not:sgst:prev}(n)$.
+\end{definition}
+
+S'observa que s'obtenen mesures indefinides en els casos que la
+mesura següent o anterior es calcula respectivament per la mesura
+suprema o ínfima de la sèrie temporal: $\glssymbol{not:sgst:next}_S(\sup
+S)=(+\infty,\infty)$ i $\glssymbol{not:sgst:prev}_S(\inf S)=(-\infty,\infty)$.
+
+De la definició anterior es dedueix que donada una sèrie temporal $S$
+que no conté mesures indefinides i donada la mesura indefinida
+$o=(+\infty,\infty)$, el predecessor de $o$ sempre és el suprem de la
+sèrie temporal $\glssymbol{not:sgst:prev}_S( (+\infty,\infty) ) =
+\sup(S): \forall m\in S:
+T(m)\in\glssymbol{not:R}$.  % S\equiv S(-\infty,+\infty)
+\emph{Demostració: Sigui $S$ una sèrie temporal i $o=(+\infty,\infty)$
+  una mesura indefinida, el predecessor de $o$ en $S$ és una mesura
+  $l=\glssymbol{not:sgst:prev}_S(o)$ que compleix
+  $l=\sup(S[-\infty,T(o)))$. Substituint, s'obté que
+  $l=\sup(S[-\infty,+\infty))=\sup(S-m):m\in S:T(m)=+\infty \notin
+  \glssymbol{not:R}$, i per tant com que $S$ no té mesures indefinides es
+  demostra que $l=\sup(S)$.  } De manera semblant es pot demostrar que
+$\glssymbol{not:sgst:next}_S( (-\infty,\infty) ) = \inf(S): \forall
+m\in S: T(m)\in\glssymbol{not:R}$.
+
+
+\subsubsection{Concatenació}
+
+La concatenació és una operació que uneix dues seqüències amb els
+elements de la primera seqüència seguits pels de la segona. Així
+doncs, la concatenació de les seqüències té un sentit semblant al que
+la unió té en els conjunts. 
+
+Per a les sèries temporals, per tal que l'operació de concatenació
+uneixi amb ordre els operands, cal tenir en compte l'interval que
+ocupa cada sèrie temporal segons el seu atribut de temps.  És a dir,
+la concatenació de dues sèries temporals consisteix a unir la part de
+la segona sèrie temporal que no està inclosa en el rang temporal de la
+primera.
+
+Per a poder concatenar dues sèries temporals cal que ambdues tinguin
+la mateixa estructura, de la mateixa manera que ja s'ha vist amb
+l'operació d'unió.
+
+
+\begin{definition}[concatenació]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals, la concatenació de les dues
+  sèries temporals $S_1 \glssymboldef{not:sgst:concatenate} S_2$ és
+  una sèrie temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les
+  mesures de $S_1$ i les mesures de $S_2$ que no intersequen en
+  l'interval de $S_1$; $S_1 \glssymbol{not:sgst:concatenate} S_2 = S_1
+  \cup ( S_2 - S_2[t_1,t_2] )$ on $t_1=T(\inf S_1)$ i $t_2=T(\sup
+  S_1)$.
+\end{definition}
+
+
+Propietats
+\begin{itemize}
+\item La concatenació no és commutativa
+\end{itemize}
+
+
+
+
+
+
+
+\subsection{Funció temporal}
+\label{sec:sgst:operadors-temporals}
+\glsaddsec{not:op-funcio} %%%%secció d'operacions
+
+Atenent al fet que una sèrie temporal és la representació d'un funció
+contínua cal definir operacions per a tractar convenientment aquesta
+naturalesa.
+En aquest apartat definim aquestes operacions com una redefinició de
+les bàsiques anteriors, i així poder aplicar-les considerant una sèrie
+temporal com una funció contínua.  
+
+
+A l'\autoref{sec:model:repr} es detalla més el concepte de funció
+representació contínua d'una sèrie temporal i s'ofereixen exemples de
+diversos mètodes de representació. Les operacions definides a
+continuació han de ser contextualitzades per a un mètode de
+representació particular, ho indiquem a cada operació amb un
+superíndex $r$. De fet, a partir de l'operació d'interval temporal es
+poden definir els altres operadors de funció temporals; per tant cal
+oferir una definició d'interval temporal per a cada mètode de
+representació que es vulgui usar.
+
+
+
+\subsubsection{Interval temporal}
+
+Sigui $S$ una sèrie temporal i $[t_0,t_f]$ un interval de temps, per
+una banda s'ha definit l'interval sobre la seqüència d'una sèrie
+temporal $S(t_0,t_f)$ (v.\ \autoref{def:model:st-interval}) i per
+altra banda la sèrie temporal pot tenir un mètode de representació $r$
+que permet calcular la funció contínua de la sèrie temporal $S(t)^r$
+(v.\ \autoref{def:model:frepr}).  Per seleccionar un interval temporal
+cal tenir en compte tant l'interval sobre la seqüència com la
+representació de la sèrie temporal que pot incloure noves mesures al
+resultat.
+
+\begin{definition}[Interval temporal]
+  \label{def:sgst:intervalt}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal, $[t_0,t_f]$ un
+  interval de temps i $r$ un mètode de representació, l'interval
+  temporal $\glsdispdef{not:sgst:intervalt}{S[t_0,t_f]^r}$ és una
+  sèrie temporal amb les mesures que són dins del rang temporal $i$
+  segons marca la funció de representació: $S[t_0,t_f]^r= \forall t
+  \in [t_0,t_f] : S' = S(t)^r$
+\end{definition}
+
+Aquesta és una definició genèrica difícil d'implementar, per tant per
+a cada mètode de representació cal interpretar una operació d'interval
+temporal.  A continuació s'exemplifica utilitzant el mètode de
+representació \gls{zohe}. Més endavant, un cop profunditzat en el
+concepte de funció de representació, es detalla la representació
+\gls{zohe} (v.\ \autoref{def:model:zohe}) i s'ofereixen més exemples
+d'intervals temporals amb altres mètodes de representació (v.\
+\autoref{sec:sgst:repr-intervaltemporal}).
+\begin{definition}[Interval temporal \gls{zohe}]
+  \label{def:sgst:interval-temporal-zohe}
+  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i el
+  mètode representació $r=\gls{zohe}$, es defineix l'interval temporal
+  \gls{zohe} $S[t_0,t_f]^{\glssymbol{not:zohe}}$ com la sèrie temporal
+    $S[t_0,t_f]^{\glssymbol{not:zohe}} = S(t_0,t_f] \cup \{m\}$ on $m=(t_f,v)$
+    i $v= V(\inf( S[t_f,+\infty] ))$.
+\end{definition}
+  %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
+
+
+
+Propietats de l'interval temporal:
+
+\begin{itemize}
+\item Sigui $t_a$ un instant de temps, l'interval temporal
+  $S[t_a,t_a]^r$ és equivalent a la funció contínua de la sèrie
+  temporal avaluada en aquest punt: $S[t_a,t_a]^r\equiv \{(t_a,
+  S(t_a)^r)\}$.
+
+%$S[T(\min(S),T(\max(S)]^r \neq S$
+%$S[-\infty,+\infty]^zohe = S \cup \{ (+\infty,\infty) \}$
+
+\end{itemize}
+
+
+
+
+\subsubsection{Selecció temporal}
+
+
+La selecció  temporal d'una sèrie temporal permet canviar, en el
+context d'una representació, la resolució a una de marcada per un
+conjunt d'instants de temps. 
+
+
+\begin{definition}[Selecció temporal]
+  \label{def:sgst:selecciot}
+  Sigui $S=\{m_0, \ldots, m_k\}$ una sèrie temporal,
+  $i=\{t_0,t_1,\dotsc,t_n\}$ un conjunt d'instants de temps i $r$ un
+  mètode de representació, la selecció temporal
+  $\glsdispdef{not:sgst:selectt}{S[i]^r}$ és una sèrie temporal que
+  conté mesures amb els temps d'$i$ segons marca el mètode de
+  representació: $S[i]^r= S[t_0,t_0]^r \cup S[t_1,t_1]^r \cup \dotsb
+  \cup S[t_n,t_n]^r$.
+\end{definition}
+
+
+
+Propietats de la selecció temporal:
+\begin{itemize}
+
+\item El cardinal de la sèrie temporal resultant és el mateix que el
+  del conjunt d'instants de temps $|S[i]^r| = |i|$
+
+\item La selecció temporal d'una sèrie temporal en un conjunt de temps
+  equi-espaiat $i = \{\tau+n\delta | n,j\in\glssymbol{not:N}, n\leq j
+  \}$ és una sèrie temporal regular $S[i]^r \equiv \{ (\tau, v_0),
+  (\tau+\delta,v_1), \dotsc , (\tau+j\delta,v_j)\}$
+\end{itemize}
+
+
+
+
+\subsubsection{Concatenació temporal}
+
+La concatenació temporal és l'operació de concatenació que té en
+compte la representació de les sèries temporals.  És a dir, la
+concatenació temporal de dues sèries temporals uneix la part de la
+segona sèrie temporal que no està inclosa en l'interval temporal de la
+primera.
+
+
+\begin{definition}[concatenació temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals i $r$ un mètode de representació,
+  la concatenació temporal de les dues sèries temporals $S_1
+  \glssymboldef{not:sgst:concatenatet}^r S_2$, és una sèrie temporal
+  que conté les mesures de $S_1$ i les mesures de $S_2$ que no
+  intersequen en l'interval temporal de $S_1$; $S_1
+  \glssymbol{not:sgst:concatenatet}^r S_2 = S_1[t_1,t_2]^r \cup
+  S_2[-\infty,t_1]^r \cup S_2[t_2,+\infty]^r$ on $t_1=T(\inf S_1)$ i
+  $t_2=T(\sup S_1)$.
+\end{definition}
+
+Propietats de la concatenació temporal:
+\begin{itemize}
+\item No commutativa
+\end{itemize}
+
+
+% Exemples $S_1=\{(2,1),(4,1),(6,1)\}$ i $S_2=\{(1,2),(2,2)\}$,
+% $S_1 \glssymbol{not:sgst:concatenatet}^\gls{zohe} S_2 = \{(1,2),(2,2),(4,1),(6,1),(+\infty,\infty)\}$
+% $S_2 \glssymbol{not:sgst:concatenatet}^\gls{zohe} S_1 = \{(1,1),(2,3),(4,1),(6,1),(+\infty,\infty)\}$
+
+
+\subsubsection{Junció temporal}
+
+La junció temporal de dues sèries temporals és la junció que té en
+compte la representació de les sèries temporals. És a dir, la junció
+temporal de dues sèries temporals ajunta parelles de mesures
+seleccionant el mateix atribut de temps en ambdues sèries temporals.
+
+
+\begin{definition}[junció temporal]\label{def:sgst:joint}
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ un mètode
+  de representació, la junció temporal de les dues sèries temporals
+  $S_1 \glssymboldef{not:sgst:joint}^r S_2$, és una sèrie temporal
+  multivaluada que ajunta les mesures seleccionant els mateixos temps
+  a cada sèrie temporal segons el mètode de representació; $S_1
+  \glssymbol{not:sgst:joint}^r S_2 = \{\forall t' \in T': (t',v_1,v_2)
+  | (t',v_1) \in S_1[t']^r \wedge (t',v_2) \in S_2[t']^r \}$ on $T' =
+  \glssymbol{not:sgst:project}_{t}(S_1) \cup
+  \glssymbol{not:sgst:project}_{t}(S_2)$.
+\end{definition}
+
+
+Propietats de la junció temporal:
+\begin{itemize}
+\item El cardinal resultant és $|S'| \leq |S_1| + |S_2|$
+\item És commutativa; tenint en compte que els atributs tenen nom i
+  per tant l'ordre no importa.
+\end{itemize}
+
+
+
+També es defineix l'operació de semijunció temporal que és una junció
+no commutativa on la primera sèrie temporal marca el vector de temps
+de junció.
+
+\begin{definition}[semijunció temporal]
+  Sigui $S_1=\{m_0^1, \dotsc, m_{k_1}^1\}$ i $S_2=\{m_0^2, \dotsc,
+  m_{k_2}^2\}$ dues sèries temporals en forma canònica i $r$ un mètode
+  de representació, la semijunció temporal de les dues sèries
+  temporals $S_1 \glssymboldef{not:sgst:semijoint}^r S_2$, és una
+  sèrie temporal multivaluada que ajunta les mesures de la primera
+  sèrie temporal a les mesures de la segona segons el mètode de
+  representació; $S_1 \glssymboldef{not:sgst:semijoint}^r S_2 = S_1
+  \glssymboldef{not:sgst:joint}^r S_2[\glssymbol{not:sgst:project}_{t}(S_1)]^r$.
+\end{definition}
+
+
+Propietats de la semijunció temporal:
+\begin{itemize}
+\item El cardinal resultant és $|S'| = |S_1|$.
+\item No és commutativa.
+\end{itemize}
+
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+
+
+
+
+
+
+
+% LocalWords:  SGST
