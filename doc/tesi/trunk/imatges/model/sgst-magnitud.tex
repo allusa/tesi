@@ -1,0 +1,36 @@
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_m$} \\ \hline
+    $t$  & $v$ \\ \hline
+    0   & 0 \\
+    2   & 1 \\
+    3   & 1{,}5 \\
+    4   & 0 \\
+    5   & 2 \\ 
+    8   & 2 \\ \hline
+  \end{tabular} \qquad
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S_m$,
+        ]
+    \addplot[blue] coordinates {
+        (0,0)
+        (2,1)
+        (3,1.5)
+        (4,0)
+        (5,2)
+        (8,2)
+    };
+    %\addlegendentry{Valor absolut}
+    \addplot[only marks,mark=*,red] coordinates {
+        (0,0)
+        (2,1)
+        (3,1.5)
+        (4,0)
+        (5,2)
+        (8,2)
+    };
+    % \addlegendentry{Punts de mesura}
+    \end{axis}
+  \end{tikzpicture}
+ 
