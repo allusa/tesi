@@ -1,27 +1,32 @@
 
-\chapter{Esquemes de multiresolució aplicats als SGST}
-
-\todo{}
+\chapter{Funció de multiresolució aplicada a les sèries temporals}
 
 
-Definim una funció de multiresolució com una consulta sobre una sèrie
-temporal que retorna una nova sèrie temporal. Aquesta nova sèrie
-temporal és el resultat d'aplicar un esquema de multiresolució a la
-sèrie temporal original.
+En aquest capítol definim la multiresolució com una funció que
+s'aplica a una sèrie temporal i retorna una nova sèrie temporal.
+Aquesta nova sèrie temporal és el resultat d'aplicar, en l'àmbit dels
+\glspl{SGST}, un esquema de multiresolució a la sèrie temporal
+original. Aquesta aplicació té el mateix efecte que utilitzar, en
+l'àmbit dels \glspl{SGSTM}, una sèrie temporal multiresolució amb
+aquest esquema. Però les aplicacions que resulten d'ambdós casos no
+tenen les mateixes propietats.
 
-
-
-La funció de multiresolució permet:
-
+En el model de \gls{SGSTM} s'ha definit la
+multiresolució com una estructura de base de dades en què cal
+emmagatzemar i tractar una sèrie temporal. En canvi, ara observem la
+multiresolució com una funció simple que opera sobre una sèrie
+temporal i no té capacitats d'emmagatzematge d'informació.  D'aquesta
+manera, una funció de multiresolució permet:
 \begin{itemize}
 
-\item Plantejar problemes on la multiresolució sigui gestionada com una consulta
-  sobre una sèrie temporal; és a dir com una operació que calcula
-  parelles d'agregació d'atributs i resolucions temporals per a una
-  sèrie temporal.
+\item Plantejar problemes on la multiresolució sigui gestionada com
+  una consulta sobre una sèrie temporal, és a dir com una operació
+  dels \gls{SGST} que calcula parelles d'agregació d'atributs i
+  resolucions temporals per a una sèrie temporal.
 
-\item Dissenyar sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb operacions
-  de consulta multiresolució.
+\item Dissenyar sistemes duals de \glspl{SGSTM} i \glspl{SGST} amb
+  operacions de consulta multiresolució, en els quals una sèrie
+  temporal és emmagatzemada doblement en tots dos sistemes.
 
 \item Estudiar altres implementacions de la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
 
@@ -133,6 +138,46 @@ diferit, són equivalents
 
 
 
+
+
+
+
+
+Definim la consulta de sèrie temporal total dels \gls{SGSTM} a partir
+del plegament dels \gls{SGST} de manera que, en computació per temps
+diferit, són equivalents
+\[
+\glssymbol{not:sgstm:serietotal}(M') \equiv \glssymbol{not:sgstm:multiresolucio}(S,e)
+\]
+
+\begin{definition}[plec de \glssymbol{not:sgstm:serietotal}]
+  Sigui $S$ una sèrie temporal i $M$ una sèrie temporal multiresolució
+  amb esquema $e = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
+  (\delta_d,f_d,\tau_d,k_d)\}$, el qual es pot observar com una sèrie
+  temporal multivaluada.  L'expressió de
+  $\glssymbol{not:sgstm:serietotal}(M)$ com a plec d'una sèrie
+  temporal és $\glssymboldef{not:sgstm:multiresolucio}(S,e)=
+  \glssymbol{not:sgst:ofold}(e,\{\},\glssymbol{not:sgst:ffold},\min)$
+  on $\glssymbol{not:sgst:ffold}: S_i \times (\delta_c,f_c,\tau_c,k_c)
+  \mapsto S_i ||
+  \glssymbol{not:sgstm:dmap}(S,\delta_c,f_c,\tau_c,k_c)$.
+
+  Així, el plec de \glssymbol{not:sgstm:serietotal} és la concatenació de
+  tots els \glssymbol{not:sgstm:dmap} possibles per l'esquema $e$
+  ordenats per $\delta$, assumint que $e$ no conté $\delta$ repetits.
+\end{definition}
+
+
+
+En resum: en temps diferit, s'insereixen les mateixes mesures a un
+\gls{SGST} i a un \gls{SGSTM}. Per una banda es consolida el
+\gls{SGSTM} i s'obté la sèrie total i per altra banda es consulta la
+multiresolució en el \gls{SGST}. Aleshores s'obté la mateixa sèrie
+temporal. 
+
+
+Vegem en dos exemples el càlcul de la funció de multiresolució. \todo{millor que hi hagi també el càlcul amb \gls{SGSTM} i així es vegi l'equivalència?}
+
 \begin{example}
   \label{ex:multiresolucio:dmap}
   Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i els
@@ -209,43 +254,6 @@ diferit, són equivalents
 \end{figure}
  
 \end{example}
-
-
-
-
-
-Definim la consulta de sèrie temporal total dels \gls{SGSTM} a partir
-del plegament dels \gls{SGST} de manera que, en computació per temps
-diferit, són equivalents
-\[
-\glssymbol{not:sgstm:serietotal}(M') \equiv \glssymbol{not:sgstm:multiresolucio}(S,e)
-\]
-
-\begin{definition}[plec de \glssymbol{not:sgstm:serietotal}]
-  Sigui $S$ una sèrie temporal i $M$ una sèrie temporal multiresolució
-  amb esquema $e = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
-  (\delta_d,f_d,\tau_d,k_d)\}$, el qual es pot observar com una sèrie
-  temporal multivaluada.  L'expressió de
-  $\glssymbol{not:sgstm:serietotal}(M)$ com a plec d'una sèrie
-  temporal és $\glssymboldef{not:sgstm:multiresolucio}(S,e)=
-  \glssymbol{not:sgst:ofold}(e,\{\},\glssymbol{not:sgst:ffold},\min)$
-  on $\glssymbol{not:sgst:ffold}: S_i \times (\delta_c,f_c,\tau_c,k_c)
-  \mapsto S_i ||
-  \glssymbol{not:sgstm:dmap}(S,\delta_c,f_c,\tau_c,k_c)$.
-
-  Així, el plec de \glssymbol{not:sgstm:serietotal} és la concatenació de
-  tots els \glssymbol{not:sgstm:dmap} possibles per l'esquema $e$
-  ordenats per $\delta$, assumint que $e$ no conté $\delta$ repetits.
-\end{definition}
-
-
-
-En resum: en temps diferit, s'insereixen les mateixes mesures a un
-\gls{SGST} i a un \gls{SGSTM}. Per una banda es consolida el
-\gls{SGSTM} i s'obté la sèrie total i per altra banda es consulta la
-multiresolució en el \gls{SGST}. Aleshores s'obté la mateixa sèrie
-temporal.
-
 
 \begin{example}
   Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i l'esquema
@@ -715,29 +723,33 @@ les compleixen (S) o si no les compleixen (N).
 
 
 
-\todo{}
-Paraula clau: consultes aproximades?
 
-Estudiar l'aplicació de la teoria de la informació per a
-  l'esquema de multiresolució
+En aquest capítol reflexionem sobre el problema d'identificar la
+informació que selecciona un esquema de multiresolució i per tant
+també d'observar quina informació no queda emmagatzemada i es perd.
+Així doncs, cal estudiar l'aplicació de la teoria de la informació per
+a l'esquema de multiresolució.  
 
-
-En aquesta secció descrivim el problema d'identificar la informació
-que selecciona un esquema de multiresolució i per tant també
-d'observar quina informació no queda emmagatzemada i es perd.  En
-aquest context, els \gls{SGSTM} són un sistemes que emmagatzemen les
-dades comprimides amb pèrdua d'una certa part de la informació
-original.
-
-
+En aquest context, els \gls{SGSTM} són un sistemes que emmagatzemen
+les dades comprimides amb pèrdua d'una certa part de la informació
+original. Aleshores, les consultes que es resolguin a partir d'un
+\gls{SGSTM} són consultes aproximades a la informació total original,
+llevat que mitjançant una anàlisi determinem que poden oferir
+consultes exactes. A continuació reflexionem sobre com analitzar
+l'error de les consultes de multiresolució respecte a la informació
+original:
 \begin{itemize}
-\item Primer, descrivim la teoria de la informació que està
-  relacionada amb la quantificació de la informació.
+\item Primer, descrivim de forma molt genèrica la teoria de la
+  informació, la qual està relacionada amb la quantificació de la
+  informació.
 \item Segon, definim el problema de calcular l'error en la multiresolució.
 \item Tercer, mostrem exemples d'anàlisi de la informació per alguns
   esquemes de multiresolució.
 \end{itemize}
 
+
+
+\todo{canviar subseccions a seccions}
 
 
 \subsection{Teoria de la informació}
@@ -829,17 +841,18 @@ contenen les dades originals.
 
 El problema genèric de la informació en la multiresolució és el següent.
 \begin{definition}[Error en la informació de la multiresolució]
-Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
-resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
-temporal multiresolució es pot consultar la sèrie temporal total
-$S'=\glssymbol{not:sgstm:serietotal}(M)$, o bé de forma equivalent com
-s'ha vist abans $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$
-és l'esquema de $M$.  S'executa una operació de consulta $o$ sobre la
-sèrie temporal original $r_1=o(S)$ i la mateixa operació sobre la
-sèrie temporal de la multiresolució $r_2=o(S')$ . Es pot avaluar l'error
-de multiresolució $\epsilon=d(r_1,r_2)$ on $d$ és una funció que permet avaluar
-la distància entre els dos resultats, per exemple mínims quadrats si
-els resultats són sèries temporals \todo{ref?}.
+  Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
+  resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
+  temporal multiresolució es pot consultar la sèrie temporal total
+  $S'=\glssymbol{not:sgstm:serietotal}(M)$, o bé de forma equivalent
+  com s'ha vist abans\todo{ara és un capítol}
+  $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$ és l'esquema
+  de $M$.  S'executa una operació de consulta $o$ sobre la sèrie
+  temporal original $r_1=o(S)$ i la mateixa operació sobre la sèrie
+  temporal de la multiresolució $r_2=o(S')$ . Es pot avaluar l'error
+  de multiresolució $\epsilon=d(r_1,r_2)$ on $d$ és una funció que
+  permet avaluar la distància entre els dos resultats, per exemple
+  mínims quadrats si els resultats són sèries temporals \todo{ref?}.
 \end{definition}
 
 
