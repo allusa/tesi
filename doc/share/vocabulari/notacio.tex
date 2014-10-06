@@ -2,7 +2,7 @@
 
 % %   \caption{Some disambiguation on common mathematical symbols used, for others see \cite{wiki:mathematical-symbols}}
 
-\newglossaryentry{not:mat}{ name={\colorbox{lightgray}{\textbf{Símbols matemàtics}}}, description={\nopostdesc},sort=0}
+\newglossaryentry{not:mat}{ name={Símbols matemàtics}, description={\nopostdesc},sort=0}
 %description={Per altres v.~\cite{wiki:mathematical-symbols}}
 
 \newglossaryentry{not:coma}{description={\ensuremath{a, b, c} (coma i espai)},name={Separació d'elements}, parent={not:mat}} %també a; b; c?
@@ -33,10 +33,10 @@
 
 
 
-\newglossaryentry{not:sgst}{ name={\colorbox{lightgray}{\textbf{Notació SGST}}}, description={\nopostdesc},sort=10}
+\newglossaryentry{not:sgst}{ name={Notació SGST}, description={\nopostdesc},sort=10}
 
 
-\newglossaryentry{not:temps}{ name={temps}, description={\ensuremath{t\in T}},sort=20}
+\newglossaryentry{not:temps}{ name={temps}, description={\ensuremath{t\in T}},sort=20,parent={not:sgst}}
 
 \newglossaryentry{not:instant}{description={\ensuremath{t^i}},name={Instant de temps}, parent={not:temps}, sort=1 }
 \newglossaryentry{not:durada}{name={durada},description={\ensuremath{t^d}},parent={not:temps}, sort=2 }
@@ -45,12 +45,12 @@
 \newglossaryentry{not:temps-domini}{name={Domini del temps },description={\ensuremath{T} (p.ex.~$\glssymbol{not:Rb}$)},parent={not:temps}, sort=5 }
 
 
-\newglossaryentry{not:valor}{ name={valor}, description={\ensuremath{v\in V}},sort=30}
+\newglossaryentry{not:valor}{ name={valor}, description={\ensuremath{v\in V}},sort=30,parent={not:sgst}}
 \newglossaryentry{not:valor-domini}{name={Domini del valor},description={\ensuremath{V} (p.ex.~$\glssymbol{not:R*}$)},parent={not:valor}, sort=5 }
 
 
 
-\newglossaryentry{not:mesura}{ name={mesura}, description={\ensuremath{m=(t,v)}},sort=40}
+\newglossaryentry{not:mesura}{ name={mesura}, description={\ensuremath{m=(t,v)}},sort=40,parent={not:sgst}}
 
 \newglossaryentry{not:mesura-temps}{name={Temps},description={\ensuremath{T(m)}},parent={not:mesura}, sort=1 }
 \newglossaryentry{not:mesura-valor}{name={Valor},description={\ensuremath{V(m)}},parent={not:mesura}, sort=2 }
@@ -63,7 +63,7 @@
 
 
 
-\newglossaryentry{not:serietemporal}{ name={sèrie temporal}, description={\ensuremath{S=\{m_0,\dotsc,m_k\}}},sort=50}
+\newglossaryentry{not:serietemporal}{ name={sèrie temporal}, description={\ensuremath{S=\{m_0,\dotsc,m_k\}}},sort=50,parent={not:sgst}}
 
 \newglossaryentry{not:sgst-canonica}{name={Canònica},description={\ensuremath{( \{t, v\}, \{ \dots \} )}},parent={not:serietemporal}}
 \newglossaryentry{not:sgst-multivaluada}{name={Multivaluada},description={\ensuremath{( \{t, v_1,\dotsc, v_n\}, \{ \dots \} )}},parent={not:serietemporal} }
@@ -71,7 +71,7 @@
 \newglossaryentry{not:sgst:cardinal}{name={Cardinal},description={$|S|$},parent={not:serietemporal} }
 
 
-\newglossaryentry{not:op-conjunts}{name={operacions de conjunts},description={\nopostdesc},sort=60 }
+\newglossaryentry{not:op-conjunts}{name={operacions de conjunts},description={\nopostdesc},sort=60,parent={not:sgst} }
 
 \newglossaryentry{not:sgst:in}{name={pertinença},description={\ensuremath{m\in S}},parent={not:op-conjunts},symbol={\ensuremath{\in}}}
 \newglossaryentry{not:sgst:int}{name={pertinença temporal},description={\ensuremath{m\in^t S}},parent={not:op-conjunts},symbol={\ensuremath{\in^t}}}
@@ -100,7 +100,7 @@
 
 
 
-\newglossaryentry{not:sgst:computacional}{name={Computacionals},description={\nopostdesc},sort=65}
+\newglossaryentry{not:sgst:computacional}{name={Computacionals},description={\nopostdesc},sort=65,parent={not:sgst}}
 
 \newglossaryentry{not:sgst:fmap}{name={Funció de mapatge},description={\ensuremath{\glssymbol{not:F}^m:m\mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^m}}}
 \newglossaryentry{not:sgst:fagg}{name={Funció d'agregació},description={\ensuremath{\glssymbol{not:F}^a:m\times m_b\mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^a}}}
@@ -130,7 +130,7 @@
 
 
 
-\newglossaryentry{not:op-sequencies}{name={operacions de seqüències},description={\nopostdesc},sort=70 }
+\newglossaryentry{not:op-sequencies}{name={operacions de seqüències},description={\nopostdesc},sort=70,parent={not:sgst} }
 
 \newglossaryentry{not:sgst:interval}{name={interval obert},description={\ensuremath{S(t^i_a,t^i_b)}},parent={not:op-sequencies}}
 \newglossaryentry{not:sgst:intervaltancat}{name={interval tancat},description={\ensuremath{S[t^i_a,t^i_b]}},parent={not:op-sequencies}}
@@ -142,7 +142,7 @@
 
 
 
-\newglossaryentry{not:op-funcio}{name={operacions de funció},description={\nopostdesc},sort=80 }
+\newglossaryentry{not:op-funcio}{name={operacions de funció},description={\nopostdesc},sort=80,parent={not:sgst} }
 
 \newglossaryentry{not:sgst:intervalt}{name={interval temporal},description={\ensuremath{S[t^i_a,t^i_b]^r}},parent={not:op-funcio}}
 \newglossaryentry{not:sgst:selectt}{name={selecció temporal},description={\ensuremath{S[\{t_0,\dotsc,t_n\}]^r}},parent={not:op-funcio}}
@@ -153,7 +153,7 @@
 
 
 
-\newglossaryentry{not:sgst:repr}{name={Representació},description={$r$ (nom de mètode)},symbol={\ensuremath{r}},sort=90 }
+\newglossaryentry{not:sgst:repr}{name={Representació},description={$r$ (nom de mètode)},symbol={\ensuremath{r}},sort=90,parent={not:sgst} }
 
 \newglossaryentry{not:sgst:graf}{name={Graf},description={$\operatorname{graf} S(t)$},parent={not:sgst:repr}, symbol={\ensuremath{\operatorname{graf}}}}
 \newglossaryentry{not:sgst:frepr}{name={Funció de representació},description={$S^r(t)$},parent={not:sgst:repr}}
@@ -167,7 +167,7 @@
 
 
 %regularitat
-\newglossaryentry{not:sgst:regularitat}{name={Regularitat},description={\nopostdesc},sort=95 }
+\newglossaryentry{not:sgst:regularitat}{name={Regularitat},description={\nopostdesc},sort=95,parent={not:sgst} }
 
 \newglossaryentry{not:sgst:regular}{name={regular},description={$S$ és regular},parent={not:sgst:regularitat} }
 \newglossaryentry{not:sgst:regulars_entre_elles}{name={regulars entre elles},description={$S_1$ i $S_2$ regulars entre elles},parent={not:sgst:regularitat} }
@@ -179,10 +179,10 @@
 
 
 
-\newglossaryentry{not:sgstm}{ name={\colorbox{lightgray}{\textbf{Notació SGSTM}}}, description={\nopostdesc},sort=100}
+\newglossaryentry{not:sgstm}{ name={Notació SGSTM}, description={\nopostdesc},sort=100}
 
 
-\newglossaryentry{not:buffer}{ name={buffer}, description={\ensuremath{B=(S_B,\tau,\delta,f)}},sort=110}
+\newglossaryentry{not:buffer}{ name={buffer}, description={\ensuremath{B=(S_B,\tau,\delta,f)}},sort=110,parent={not:sgstm}}
 
 \newglossaryentry{not:sgstm:sb}{name={sèrie temporal del buffer},description={$S_B$},parent={not:buffer}}
 \newglossaryentry{not:sgstm:tau}{name={Darrer instant de consolidació},description={$\tau$},parent={not:buffer}}
@@ -194,21 +194,21 @@
 \newglossaryentry{consolidableB}{name={consolidable},description={$B$ és consolidable},parent={not:buffer}}
  
 
-\newglossaryentry{not:disc}{ name={disc}, description={\ensuremath{D=(S_D,k)}},sort=120}
+\newglossaryentry{not:disc}{ name={disc}, description={\ensuremath{D=(S_D,k)}},sort=120,parent={not:sgstm}}
 
 \newglossaryentry{not:sgstm:sd}{name={sèrie temporal del disc},description={$S_D$},parent={not:disc}}
 \newglossaryentry{not:sgstm:k}{name={màxim cardinal},description={$k$},parent={not:disc}}
 \newglossaryentry{addD}{name={afegeix mesura},description={$\operatorname{afegeixD}(D,m)$},parent={not:disc},symbol=\ensuremath{\operatorname{afegeixD}}}
 
 
-\newglossaryentry{not:subserieresolucio}{ name={subsèrie resolució}, description={\ensuremath{R=(B,D)}},sort=130}
+\newglossaryentry{not:subserieresolucio}{ name={subsèrie resolució}, description={\ensuremath{R=(B,D)}},sort=130,parent={not:sgstm}}
 
 \newglossaryentry{addR}{name={afegeix mesura},description={$\operatorname{afegeixR}(R,m)$},parent={not:subserieresolucio},symbol=\ensuremath{\operatorname{afegeixR}}}
 \newglossaryentry{consolidaR}{name={consolida},description={$\operatorname{consolidaR}(R)$},parent={not:subserieresolucio},symbol=\ensuremath{\operatorname{consolidaR}}}
 \newglossaryentry{consolidableR}{name={consolidable},description={$R$ és consolidable},parent={not:subserieresolucio}}
 
 
-\newglossaryentry{not:seriemultiresolucio}{ name={sèrie temporal multiresolució}, description={\ensuremath{M=\{R_0,\dotsc,R_d\}}},sort=140}
+\newglossaryentry{not:seriemultiresolucio}{ name={sèrie temporal multiresolució}, description={\ensuremath{M=\{R_0,\dotsc,R_d\}}},sort=140,parent={not:sgstm}}
 
 \newglossaryentry{not:sgstm:canonica}{name={canònica},description={$(\{S_B,S_D,\tau,\delta,k,f\},\{\dots\})$},parent={not:seriemultiresolucio}}
 \newglossaryentry{addM}{name={afegeix mesura},description={$\operatorname{afegeixM}(M,m)$},parent={not:seriemultiresolucio},symbol=\ensuremath{\operatorname{afegeixM}}}
@@ -219,7 +219,7 @@
 
 
 \newglossaryentry{not:esquemaM}{ name={Esquema multiresolució},
-  description={ $e = (\{\delta,\tau,f,k\}, \{\ldots\})$},sort=150}
+  description={ $e = (\{\delta,\tau,f,k\}, \{\ldots\})$},sort=150,parent={not:sgstm}}
 
 \newglossaryentry{not:sgstm:lapseR}{name={lapse de subsèrie},description={$\operatorname{lapseR}(R)$},parent={not:esquemaM},symbol=\ensuremath{\operatorname{lapseR}}}
 \newglossaryentry{not:sgstm:lapseB}{name={lapse de buffer},description={$\operatorname{lapseB}(R)$},parent={not:esquemaM},symbol=\ensuremath{\operatorname{lapseB}}}
@@ -240,7 +240,7 @@
 
 
 
-\newglossaryentry{not:sgstm:consulta}{ name={consultes}, description={\nopostdesc},sort=160}
+\newglossaryentry{not:sgstm:consulta}{ name={consultes}, description={\nopostdesc},sort=160,parent={not:sgstm}}
 
 \newglossaryentry{not:sgstm:seriedisc}{name={selecció de disc},description={$\operatorname{S\grave{e}rieDisc}(M,\delta,f)$},parent={not:sgstm:consulta},symbol=\ensuremath{\operatorname{S\grave{e}rieDisc}}}
 \newglossaryentry{not:sgstm:serietotal}{name={sèrie temporal total},description={$\operatorname{S\grave{e}rieTotal}(M)$},parent={not:sgstm:consulta},symbol=\ensuremath{\operatorname{S\grave{e}rieTotal}}}
@@ -251,7 +251,7 @@
 
 
 
-\newglossaryentry{not:sgstm:fdef}{ name={F. d'agregació d'atributs}, description={\nopostdesc},sort=170}
+\newglossaryentry{not:sgstm:fdef}{ name={F. d'agregació d'atributs}, description={\nopostdesc},sort=170,parent={not:sgstm}}
 
 \newglossaryentry{not:sgstm:meanzohe}{name={agregació mitjana \gls{zohe}},description={$\operatorname{mitjana}^{\glssymbol{not:zohe}}$},symbol={\ensuremath{\operatorname{mitjana}^{\glssymbol{not:zohe}}}},parent={not:sgstm:fdef}}
 
