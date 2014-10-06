@@ -1,5 +1,5 @@
 
-\chapter{Discussió sobre els esquemes de multiresolució}
+\chapter{Esquemes de multiresolució aplicats als SGST}
 
 \todo{}
 
@@ -25,8 +25,7 @@ La funció de multiresolució permet:
 
 \item Estudiar altres implementacions de la consulta de multiresolució, p.ex. para\l.lelisme. (vegeu secció implementació \todo{})
 
-\item Estudiar la teoria de la informació per a l'esquema de
-  multiresolució
+
 
 \end{itemize}
 
@@ -39,8 +38,8 @@ La funció de multiresolució permet:
 
 En el model de \gls{SGSTM} hem definit un model de dades per a
 gestionar sèries temporals multiresolució. Aquest model té una
-estructura i per tant emmagatzema informació d'una sèrie temporal en
-una forma determinada: la de multiresolució.  La definició com a
+estructura que emmagatzema la informació d'una sèrie temporal en una
+forma determinada: la de multiresolució.  La definició com a
 \gls{SGSTM} té com a objectius l'emmagatzematge compacte de les dades
 i la selecció de la informació ja preparada per a consultes
 posteriors.
@@ -64,15 +63,22 @@ transformació d'una sèrie temporal a una nova sèrie temporal.
 
 \todo{ref a la definició d'esquema multiresolució def:sgstm:esquema}
 
-És a dir, sigui $S$ una sèrie temporal, $M$ una sèrie temporal
-multiresolució i $e = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
-(\delta_d,f_d,\tau_d,k_d)\}$ els paràmetres de l'esquema de
+És a dir, sigui $S=\{m_0,m_1,\dotsc,m_k\}$ una sèrie temporal, $M$ una
+sèrie temporal multiresolució i $e = \{ (\delta_0,f_0,\tau_0,k_0),
+\ldots, (\delta_d,f_d,\tau_d,k_d)\}$ els paràmetres de l'esquema de
 multiresolució de $M$. Afegim totes les mesures de la sèrie temporal a
-la multiresolució, $\forall m \in S:
-M=\glssymbol{addM}(M,m)$\todo{matemàticament és correcte recursivitat
-  M=f(M)?}, i la consolidem, $M=\glssymbol{consolidaM}(M')$ fins que
-$M$ no sigui consolidable. Consultem la sèrie temporal multiresolució
-amb les dues consultes bàsiques, les quals retornen sèries temporals,
+la multiresolució, $\forall m \in S:$
+\[
+M_0=\glssymbol{addM}(M,m_0),M_1=\glssymbol{addM}(M_0,m_1),\dotsc,M_k=\glssymbol{addM}(M_{k-1},m_k)
+\]
+i la consolidem fins que no sigui consolidable, sigui
+$c\in\glssymbol{not:N}:$
+\[
+M'_0=\glssymbol{consolidaM}(M_k),\dotsc,M'_{c}=\glssymbol{consolidaM}(M'_{c-1}),M'=\glssymbol{consolidaM}(M'_{c})
+\]
+on $M_k,M'_{0},\dotsc,M'_{c-1},M'_{c}$ són consolidables i $M'$ no és
+consolidable.  Consultem la sèrie temporal multiresolució amb les dues
+consultes bàsiques, les quals retornen sèries temporals,
 $S'=\glssymbol{not:sgstm:serietotal}(M')$ i $S_{\delta
   f}'\glssymbol{not:sgstm:seriedisc}=(M',\delta,f)$ on $\delta$ i $f$
 són dos paràmetres de l'esquema de multiresolució de $M$ que van
@@ -110,7 +116,7 @@ diferit, són equivalents
   Sigui $S$ una sèrie temporal, $M$ una sèrie temporal multiresolució
   amb esquema $e$ i $(\delta,f,\tau,k)\in e$ els paràmetres de
   multiresolució d'una subsèrie resolució. L'expressió de
-  $\glssymbol{not:sgstm:seriedisc}(M,\delta,f)$ com a mapa d'una sèrie
+  $\glssymbol{not:sgstm:seriedisc}(M',\delta,f)$ com a mapa d'una sèrie
   temporal és $\glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,k)=
   \glssymbol{not:sgst:map}(S_I,\glssymbol{not:sgst:fmap})$ on
   \[
@@ -131,7 +137,7 @@ diferit, són equivalents
   \label{ex:multiresolucio:dmap}
   Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i els
   paràmetres de multiresolució
-  $((\delta,5),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,2))$.  El
+  $(\delta_0=5,f_0=\glssymbol{not:sgstm:maxdd},\tau_0=0,k_0=2)$.  El
   mapa de \glssymbol{not:sgstm:seriedisc} és una sèrie temporal $S'=
   \glssymboldef{not:sgstm:dmap}(S,5,0,\glssymbol{not:sgstm:maxdd},2)$
   on $S'=\{(5,1),(10,1)\}$. Expressem el càlcul pas a pas, a la
@@ -169,8 +175,6 @@ diferit, són equivalents
   \end{enumerate}
 
 
-  
-
 
 \begin{figure}[tp]
   \centering
@@ -189,10 +193,10 @@ diferit, són equivalents
     10  & $\infty$ \\ \hline
   \end{tabular} \qquad
   \begin{tabular}[c]{|c|c|}
-    \multicolumn{2}{c}{$S_B$} \\ \hline
+    \multicolumn{2}{c}{$S_B$} \\ \hline 
     $t$  & $v$ \\ \hline
-    5  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 1&0\\ 3&0 \\\hline  \end{tabular} \\\hline
-    10  & \begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 6&0\\ 10&1 \\\hline  \end{tabular} \\ \hline
+    5  &  \raisebox{0pt}[1ex+\height][1ex+\depth]{\begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 1&0\\ 3&0 \\\hline  \end{tabular}} \\\hline
+    10  & \raisebox{0pt}[1ex+\height][1ex+\depth]{\begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 6&0\\ 10&1 \\\hline  \end{tabular}} \\ \hline
   \end{tabular} \qquad
  \begin{tabular}[c]{|c|c|}
     \multicolumn{2}{c}{$S'$} \\ \hline
@@ -246,8 +250,8 @@ temporal.
 \begin{example}
   Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i l'esquema
   de multiresolució
-  $e=\{\{(\delta,5),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,2)\},
-  \{(\delta,2),(f,\glssymbol{not:sgstm:maxdd}),(\tau,0),(k,3)\}\}$.
+  $e=\{(\delta_0=5,f_0=\glssymbol{not:sgstm:maxdd},\tau_0=0,k_0=2),
+  (\delta_1=2,f_1=\glssymbol{not:sgstm:maxdd},\tau_1=0,k_1=3)\}$.
   El plec de $\glssymbol{not:sgstm:serietotal}$ és una sèrie temporal
   $S'= \glssymboldef{not:sgstm:multiresolucio}(S,e)$ on
   $S'=\{(5,1),(6,0),(8,0),(10,1)\}$. Expressem el càlcul pas a pas, a la
@@ -256,17 +260,17 @@ temporal.
 
   \begin{enumerate}
   \item En primer lloc es calcula la sèrie temporal pels paràmetres de
-    multiresolució $\delta_1$:
-    $S_{D1}=\glssymbol{not:sgstm:dmap}(5,\glssymbol{not:sgstm:maxdd}),0,2)=\{(5,1),(10,1)\}$,
+    multiresolució $\delta_0$:
+    $S_{D0}=\glssymbol{not:sgstm:dmap}(5,\glssymbol{not:sgstm:maxdd},0,2)=\{(5,1),(10,1)\}$,
     com ja s'ha vist a l'\autoref{ex:multiresolucio:dmap}.
 
   \item En segon lloc, es calcula la sèrie temporal pels paràmetres de
-    multiresolució $\delta_2$:
-    $S_{D2}=\glssymbol{not:sgstm:dmap}(2,\glssymbol{not:sgstm:maxdd}),0,3)=\{(6,0),(8,0),(10,1)\}$,
-    de manera similar a $S_{D1}$.
+    multiresolució $\delta_1$:
+    $S_{D1}=\glssymbol{not:sgstm:dmap}(2,\glssymbol{not:sgstm:maxdd},0,3)=\{(6,0),(8,0),(10,1)\}$,
+    de manera similar a $S_{D0}$.
 
   \item En tercer lloc es concatenen les sèries temporals per ordre de
-    $\delta$: $\delta_2<\delta_1$. Així, $S'= S_{D2} || S_{D1}$.
+    $\delta$: $\delta_1<\delta_0$. Així, $S'= S_{D1} || S_{D0}$.
 
   \end{enumerate}
   
@@ -555,7 +559,7 @@ gràfiques com les que ofereix RRDtool \cite{rrdtool}.
 
 
 Les sèries temporals són dades que s'adquireixen contínuament i per
-tant cada cop és més gran el volum de dades que s'han d'emmagatzemar i
+tant cada cop és més gran el volum de dades que s'ha d'emmagatzemar i
 tractar. Aquest gran volum de dades és un problema per a operar amb
 les sèries temporals i és un problema en els sistemes que tenen
 l'emmagatzematge limitat. En aquest sentit, originalment hem
@@ -659,16 +663,37 @@ senzill identificar i predir quan la informació emmagatzemada en el
 
 
 
-Així, encara que l'objectiu final sigui l'emmagatzematge de les sèries
+En conclusió, encara que l'objectiu final sigui l'emmagatzematge de les sèries
 temporals comprimides amb pèrdua en un \gls{SGSTM}, és a dir el model
 proposat originalment, els sistemes duals de multiresolució es poden
 utilitzar mentre hi hagi dubtes sobre quin esquema de multiresolució
-escollir i un eliminar-los un cop es consideri que l'esquema és
+escollir i eliminar-los un cop es consideri que l'esquema és
 correcte. Aleshores, l'estructura de sistema dual serveix per a
 observar clarament que els \gls{SGSTM} ofereixen una sèrie temporal
 $S'$ que és una aproximació a una certa informació que hi ha en
 l'original $S$ i que, per tant, permeten resoldre consultes
-aproximades.
+aproximades.%
+A la \autoref{fig:multiresolucio:comparacio-propietats} es mostra una
+taula que resumeix les propietats descrites dels \gls{SGST}, dels
+\gls{SGSTM} i dels \gls{SGST}+\gls{SGSTM}, on es comparen segons si
+les compleixen (S) o si no les compleixen (N).
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{r|ccc}
+  & \gls{SGST} & \gls{SGSTM} & \gls{SGST}+\gls{SGSTM}\\\hline
+  càlcul de la multiresolució & S & S & S \\
+  emmagatzematge comprimit i limitat & N & S & N+S\\
+  pèrdua de dades & N & S & N\\
+  redundància de dades & N & N & S\\ 
+  actualització de la multiresolució & S & N & S\\
+  precomputacions en flux & N & S & S\\
+  precomputacions en para\l.lel & S & N & S\\
+\end{tabular}
+  \caption{Comparació de les propietats dels \gls{SGST}, dels \gls{SGSTM} i dels \gls{SGST}+\gls{SGSTM}}
+  \label{fig:multiresolucio:comparacio-propietats}
+\end{figure}
 
 
 
@@ -680,7 +705,22 @@ aproximades.
 
 
 
-\section{Informació en la multiresolució}
+
+
+
+
+
+
+\chapter{Reflexions sobre la informació en la multiresolució}
+
+
+
+\todo{}
+Paraula clau: consultes aproximades?
+
+Estudiar l'aplicació de la teoria de la informació per a
+  l'esquema de multiresolució
+
 
 En aquesta secció descrivim el problema d'identificar la informació
 que selecciona un esquema de multiresolució i per tant també
@@ -736,12 +776,16 @@ de representar millor les dades també es coneix amb el nom de
 codificació perceptiva (\emph{perceptual encoding}).
 
 
-La compressió amb pèrdua és més complicada perquè requereix valorar la
-percepció humana. L'objectiu és aconseguir menys volum de dades però
-que conservin la mateixa percepció que les originals, o fins i tot amb
-una pèrdua de qualitat perceptible mentre compleixi amb els requisits de
-l'aplicació que se li vol donar.
-Els mètode de compressió amb pèrdua se solen usar per a compressió de multimèdia, per tal de valorar-ne la qualitat de percepció humana s'utilitzen testos subjectius com per exemple el test ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
+
+Els mètodes de compressió amb pèrdua se solen usar per a compressió de
+multimèdia. L'objectiu és aconseguir menys volum de dades però que
+conservin la mateixa percepció que les originals, o fins i tot amb una
+pèrdua de qualitat perceptible mentre compleixi amb els requisits de
+l'aplicació que se li vol donar. Així doncs, la compressió de
+multimèdia sovint requereix valorar la percepció humana, per tal de
+valorar la qualitat de percepció humana s'utilitzen testos
+subjectius com per exemple el test
+ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
 
 %  Lossy methods are most often used for compressing sound, images or videos. This is because these types of data are intended for human interpretation where the mind can easily "fill in the blanks" or see past very minor errors or inconsistencies – ideally lossy compression is transparent (imperceptible), which can be verified via an ABX test. http://en.wikipedia.org/wiki/ABX_test
 % Flaws caused by lossy compression that are noticeable to the human eye or ear are known as compression artifacts.
