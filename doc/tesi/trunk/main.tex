@@ -21,10 +21,10 @@ twoside,fontsize=11pt,BCOR12mm,
 %\ExecuteBibliographyOptions{annotation=true,backref=true}
 %backref=true, urldate=long, abbreviate=false,%%format web 
 %---------- Mode esborrany --------------------
-\includeonly
-{model,
-sgst,sgst-operacions,sgst-naturalesa,
-sgstm,sgstm-operacions,sgstm-interpoladors,sgstm-aplicacions}
+%\includeonly
+%{model}
+%{sgst,sgst-operacions,sgst-naturalesa}
+%{sgstm,sgstm-operacions,sgstm-interpoladors,sgstm-aplicacions}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{fancyhdr}\pagestyle{fancyplain}\rhead{\fancyplain{--- esborrany \today\ ---}{\color{gray}{\today}}}\renewcommand{\headrulewidth}{0pt}
 %\usepackage[showframe]{geometry}%page margins
@@ -61,7 +61,6 @@ sgstm,sgstm-operacions,sgstm-interpoladors,sgstm-aplicacions}
 
 
 
-%\usepackage{longtable}
 \usepackage{subcaption}
 \usepackage{multirow}
 \usepackage{pgfplots}
@@ -92,6 +91,8 @@ sgstm,sgstm-operacions,sgstm-interpoladors,sgstm-aplicacions}
 \newcommand{\hyperbfsec}[1]{\textbf{\S\hypersf{#1}}}
 \newcommand{\hyperbfex}[1]{\textbf{ex.\hypersf{#1}}}
 \newcommand{\glsaddsec}{\glsadd[format=hyperbfsec,counter=subsection]}
+\newcommand{\glsaddchap}{\glsadd[format=hyperbfsec,counter=chapter]}
+\newcommand{\glsaddsection}{\glsadd[format=hyperbfsec,counter=section]}
 \newcommand{\glsdispsec}{\glsdisp[format=hyperbfsec,counter=subsection]}
 \newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
 \newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
@@ -168,10 +169,18 @@ sgstm,sgstm-operacions,sgstm-interpoladors,sgstm-aplicacions}
 \cleardoublepage
 %\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
 %\pdfbookmark{\glossaryname}{bookmark:glossari}
-\chapter{Nomenclatura i abreviacions}
+\chapter{Abreviacions i nomenclatura}
 \glsaddall
 %\printglossary
 \printglossary[type=\acronymtype]
+Name and symbol notation. Divided into \acro{TSMS} and \acro{MTSMS}
+notation and each organised into its components.
+
+\renewcommand{\glossarypreamble}{Taula de notació segons nom, símbol i
+  referència on es defineix --definició, secció (\S) o exemple
+  (ex.). Organitzada en símbols matemàtics i notació de
+  \gls{SGST} i \gls{SGSTM}, aquests darrers també organitzats per
+  components.\\[2ex]}
 \printglossary[type=notation,style=estil-notation]
 %------- Bibliografia ------
 \cleardoublepage
