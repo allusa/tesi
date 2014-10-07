@@ -45,8 +45,10 @@ twoside,fontsize=11pt,BCOR12mm,
 %teoremes
 \theoremstyle{plain}
 \newtheorem{definition}{Definició}
+%\declaretheorem{definition}
 \theoremstyle{definition}
 \newtheorem{example}{Exemple}
+%\declaretheorem{example}
 \def\figureautorefname{figura} %ús: \autoref{}
 \def\tableautorefname{taula} %ús: \autoref{}
 \def\definitionautorefname{definició} %ús: \autoref{}
@@ -58,7 +60,9 @@ twoside,fontsize=11pt,BCOR12mm,
 \numberwithin{definition}{chapter}
 \numberwithin{example}{chapter}
 
-
+\renewcommand\lstlistingname{Llistat} %%%PENSAR bé el nom
+\renewcommand\lstlistlistingname{Índex de llistats}
+\def\lstlistingautorefname{llistat} %ús: \autoref{}
 
 
 \usepackage{subcaption}
@@ -116,7 +120,6 @@ twoside,fontsize=11pt,BCOR12mm,
 
 \begin{document}
 
-
 %------------- Pàgina de títol ------------
 %\maketitle
 %\input{portada}
@@ -128,13 +131,9 @@ twoside,fontsize=11pt,BCOR12mm,
 %\end{abstract}
 %----------------------------------------------
 
-%------------- Índexs ------------
-%\listoftodos
+%------------- Índex de continguts ------------
 \cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents{}
 %\addtocontents{toc}{\protect\enlargethispage{1cm}}
-%\listoffigures
-%\listoftables
-%\lstlistoflistings
 %----------------------------------------------
 
 
@@ -156,7 +155,7 @@ twoside,fontsize=11pt,BCOR12mm,
 
 
 
-\part{PENDENT}
+%\part{PENDENT}
 
 \include{sgstm-aplicacions}
 
@@ -170,26 +169,49 @@ twoside,fontsize=11pt,BCOR12mm,
 %\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
 %\pdfbookmark{\glossaryname}{bookmark:glossari}
 \chapter{Abreviacions i nomenclatura}
-\glsaddall
+\newcommand{\hypernul}[1]{}
+\glsaddall[
+%counter=section,
+format=hypernul
+]
 %\printglossary
-\printglossary[type=\acronymtype]
-Name and symbol notation. Divided into \acro{TSMS} and \acro{MTSMS}
-notation and each organised into its components.
 
-\renewcommand{\glossarypreamble}{Taula de notació segons nom, símbol i
-  referència on es defineix --definició, secció (\S) o exemple
-  (ex.). Organitzada en símbols matemàtics i notació de
-  \gls{SGST} i \gls{SGSTM}, aquests darrers també organitzats per
-  components.\\[2ex]}
+\printglossary[type=abreviatura]
+
+\printglossary[type=\acronymtype]
+
+\renewcommand{\glossarypreamble}{Índex de notació segons nom, símbol i
+  referència --pàgina o en negreta lloc on es defineix el concepte:
+  definició, secció (\S) o exemple (ex.). Organitzada en símbols
+  matemàtics que requereixen aclariment i notació dels
+  components dels \gls{SGST} i dels \gls{SGSTM}.\\[2ex]}
 \printglossary[type=notation,style=estil-notation]
+
+
+
+%\backmatter
+
 %------- Bibliografia ------
 \cleardoublepage
-%\phantomsection\addcontentsline{toc}{chapter}{\bibname}
-\pdfbookmark{\bibname}{bookmark:bibliografia}
+\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+%\pdfbookmark{\bibname}{bookmark:bibliografia}
 \printbibliography
 %----------------------------------------------
 
-%\backmatter
+%------------- Índexs ------------
+%ATENCIÓ, hi ha problemes quan s'activen molts índexs
+% \cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}
+% \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
+% \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
+% %\cleardoublepage\phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings
+% \renewcommand\listtheoremname{Índex de definicions}
+% \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={definition}]
+% % \renewcommand\listtheoremname{Índex d'exemples}
+% % \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={example}]
+\listoftodos %%%%mode esborrany
+%----------------------------------------------
+
+
 
 \end{document}
 
