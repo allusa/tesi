@@ -81,7 +81,7 @@ Per a dibuixar aquest diagrames de Venn, a banda del conjunt
 corresponent a cada sèrie temporal $A$ i $B$ i la seva intersecció,
 cal dibuixar uns subconjunts $t_A$ i $t_B$ que indiquen les mesures
 que comparteixen el mateix temps amb una altra mesura de l'altre
-conjunt però no el mateix valor. És a dir $t_A = \{ m_A \in A |
+conjunt però no el mateix valor. És a dir $t_A = \{ m_A \in A \glsdisp{not::}{|}
 \exists m_B \in B: m_A =^t m_B \}$ i $t_B = \{ m_B \in B | \exists m_A
 \in A: m_B =^t m_A \}$ segons la relació d'ordre total definida en de
 les mesures.  Aquests dos subconjunts $t_A$ i $t_B$ són importants per
@@ -124,7 +124,7 @@ ho són els seus temps i valor.
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $m=(t,v)$ una
   mesura, direm que la mesura pertany a la sèrie temporal
   $m \glssymboldef{not:sgst:in} S$ si i només si $\exists m_a \in S :
-  T(m) = T(m_a) \wedge V(m) = V(m_a)$.
+  T(m) = T(m_a) \glssymbol{not:wedge} V(m) = V(m_a)$.
 \end{definition}
 
 
@@ -264,7 +264,7 @@ temps però diferent valor.
   temporals $S_1 \glssymboldef{not:sgst:cup} S_2$ és una sèrie
   temporal $S=\{m_0, \dotsc, m_k\}$ que conté totes les mesures de
   $S_1$ i les mesures de $S_2$ que no tenen temps repetits: $S_1 \cup
-  S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 | m^2
+  S_2 = \{m^1 \in S_1 \glssymbol{not:vee} m^2 \in S_2 | m^2
   \not\glssymbol{not:sgst:int} S_1 \}$.
 \end{definition}
 
@@ -616,11 +616,11 @@ alhora.
 
 El producte cartesià de dos conjunts és un conjunt que conté totes les
 parelles possibles d'elements d'ambdós conjunts.  Per a poder
-multiplicar dos conjunts amb estructura de relació, $A \times B$, en
-termes de \gls{SGBDR} cal que $A$ i $B$ no tinguin en comú noms
-d'atributs.  En els \gls{SGBDR}, a diferència del producte de conjunts, el
-conjunt resultant no és un conjunt de parells de tuples sinó un
-conjunt de tuples.
+multiplicar dos conjunts amb estructura de relació, $A
+\glsdisp{not:times}{\times} B$, en termes de \gls{SGBDR} cal que $A$ i
+$B$ no tinguin en comú noms d'atributs.  En els \gls{SGBDR}, a
+diferència del producte de conjunts, el conjunt resultant no és un
+conjunt de parells de tuples sinó un conjunt de tuples.
 
 Definim el producte de dues sèries temporals, les qual en
 forma canònica tinguin els atributs $t$ i $v$, com una sèrie temporal

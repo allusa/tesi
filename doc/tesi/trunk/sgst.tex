@@ -135,27 +135,27 @@ temps i com s'han d'assenyalar els instants de temps.
 que existeixen, dels quals a continuació comentem els més habituals.
 
 Actualment l'estàndard de temps habitual per mesurar el pas del temps
-és el Temps Atòmic Internacional (TAI), del qual se'n deriva un altre
-estàndard més conegut que és el Temps Universal Coordinat (UTC).
-Ambdós estàndards assenyalen el instants de temps segons el calendari
-Gregorià i el calendari julià. Actualment, de forma genèrica s'utilitza
-UTC per a sincronitzar rellotges tot i que en el futur es podria
-canviar per un nou estàndard, el Temps Internacional (TI), el qual
-també es base en el TAI.
+és el \gls{TAI}, del qual se'n deriva un altre estàndard més conegut
+que és el \gls{UTC}.  Ambdós estàndards assenyalen el instants de
+temps segons el calendari gregorià i segons el dia julià. Actualment,
+de forma genèrica s'utilitza \gls{UTC} per a sincronitzar rellotges,
+tot i que en el futur es podria canviar per altres estàndards nous com
+per exemple un anomenat Temps Internacional o simplement TI, el qual
+també es basaria en el \gls{TAI}.
 
-El calendari julià utilitza un estàndard de comptar el temps com a
+El dia julià utilitza un estàndard de comptar el temps com a
 nombre de dies que han passat des d'una data concreta, la qual
 s'anomena època. L'època es correspon amb el concepte d'instant de
 temps marc de referència de la \autoref{def:model:temps}. Per defecte
 l'època se situa a l'inici del Període Julià tot i que també se solen
 utilitzar altres dates assenyalades.
 
-Un altre estàndard semblant al julià és l'Hora POSIX o Hora Unix, el
+Així, un estàndard semblant al julià és l'Hora POSIX o Hora Unix, el
 qual compta el nombre de segons des de l'1 de gener de 1970 basant-se
-en el les mesures d'UTC. L'Hora Unix és l'estàndard de temps habitual
-en els sistemes operatius de la família Unix. No obstant, aquest
-estàndard presenta un problema d'ambigüitat a causa que no té no té en
-compte els segons addicionals d'UTC.
+en el les mesures d'\gls{UTC}. L'Hora Unix és l'estàndard de temps
+habitual en els sistemes operatius de la família Unix. No obstant
+això, aquest estàndard presenta un problema d'ambigüitat a causa que
+no té en compte els segons addicionals d'\gls{UTC}.
 
 
 
@@ -166,32 +166,33 @@ compte els segons addicionals d'UTC.
 Un cas particular del temps és el calendari. Els calendaris són
 definicions pel domini temps que consisteixen en noms per als punts de
 la línia de temps i regles per establir la durada entre ells per tal
-de que el temps tingui certa relació amb la rotació de la Terra. A
-l'apartat anterior hem definit el domini temps de manera general
-amb el conjunt de reals, els quals exemplifiquen més clarament el
-concepte de sistema de coordenades de temps absolut.
+que el temps tingui certa relació amb la rotació de la Terra. A
+l'apartat anterior hem definit el domini temps de manera general amb
+el conjunt de reals, els quals exemplifiquen més clarament el concepte
+de sistema de coordenades de temps absolut sense entrar en detall en
+conceptes de calendari.
 
 \textcite{dreyer94} situen els calendaris i les seves operacions com a
-essencials en els SGST. Tanmateix, pot no ser necessari modelar les
+essencials en els \gls{SGST}. Tanmateix, pot no ser necessari modelar les
 dates i regles de calendari en el model de temps. Els calendaris es
 poden observar com a noms que fan referència a instants de temps
 quantificables, com els de la \autoref{def:model:temps}. Aleshores,
 només cal una eina que sigui capaç de convertir els noms de calendari
 a instants de temps.
 
-El fet de que un calendari sigui més o menys complicat no afecta al
-model de SGST, sols té incidència en les funcions de conversió
+El fet que un calendari sigui més o menys complicat no afecta al
+model de \gls{SGST}, sols té incidència en les funcions de conversió
 d'instant de temps a calendari i viceversa. Tampoc afecta que els
 calendaris siguin ambigus (p.ex.\ dos noms per al mateix instant o
 instants sense nom) o que continguin propietats impredictibles (p.ex.\
-cas dels segons addicionals en UTC) ja que aquests casos es
+cas dels segons addicionals en \gls{UTC}) ja que aquests casos es
 corresponen amb la bona definició dels sistemes de calendari.
 
-Així doncs, els calendaris en el model de SGST es poden implementar
+Així doncs, els calendaris en el model de \gls{SGST} es poden implementar
 com una extensió del model de temps. El tipus de dades ordinal de
-calendari Gregorià implementat per
+calendari gregorià implementat per
 \textcite[cap.~16]{date02:_tempor_data_relat_model} pot servir com a
-guia per a la implementació dels calendaris en els SGST.
+guia per a la implementació dels calendaris en els \gls{SGST}.
 
 
 
@@ -245,8 +246,9 @@ Una mesura està formada per la parella de temps i valor.
 \begin{definition}[Mesura]
   \label{def:model:mesura}
   Definim una \emph{mesura} $m$ com el tuple
-  $\glsdispdef{not:mesura}{m=(t,v)}$, en què $v$ és el valor de la
-  mesura i $t$ és l'instant de temps en que s'ha pres aquesta mesura.
+  $\glsdispdef{not:mesura}{m=(t\glsdisp{not:coma}{,}v)}$, en què $v$
+  és el valor de la mesura i $t$ és l'instant de temps en que s'ha
+  pres aquesta mesura.
 \end{definition}
 
 
@@ -354,8 +356,8 @@ tipus.
 \begin{definition}[Sèrie temporal]
   \label{def:serie_temporal}
   Una sèrie temporal $\glsdispdef{not:serietemporal}{S}$ és un conjunt
-  de mesures $S=\{m_0,\ldots,m_k\}$ en què no hi ha temps repetits
-  $\forall i,j: i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$.
+  de mesures $S=\{m_0\glsdisp{not:coma}{,}\ldots,m_k\}$ en què no hi ha temps repetits
+  $\forall i,j\glsdisp{not::}{:} i\leq k, j\leq k, i\neq j : T(m_i)\neq T(m_j)$.
 \end{definition}
 
 % En una sèrie temporal no hi pot haver temps repetits perquè una mateixa mesura no pot haver estat mesurada en el mateix temps i tenir diferent valor (mesurada en el mateix temps, amb el mateix aparell...) seria una contradicció \todo{}
@@ -514,7 +516,7 @@ $S^{mc}_{\emptyset} = ( \{t: \glssymbol{not:Rb}, v: V \}, \{ \} )$ a on el
 domini de l'atribut valor és de tipus relació $V = \{ v_1:
 \glssymbol{not:Rb}\, v_2: \glssymbol{not:Rb}, \dotsc, v_n \}$ amb restricció que els
 valors relació que hi pertanyen només poden tenir un tuple $\forall r
-\in V: |r| = 1$.
+\in V: \glsdisp{not:cardinal}{|r|} = 1$.
 
 
 La forma canònica s'utilitza per a
@@ -542,7 +544,7 @@ tenen dos atributs de temps i que anomenem forma doble.
   $m_i=(t_1,v_1,t_2,v_2)$ a on $t_1$ i $t_2$ són instants de temps i
   $v_1$ i $v_2$ són valors. De la mateixa manera, a aquesta mesura
   $m_i$ l'anomenem mesura doble.  Una sèrie temporal doble no té dues
-  parelles de temps repetides $|\{(t_1,t_2) | t_1,t_2\in S\}| = |S|$.
+  parelles de temps repetides $|\{(t_1,t_2): t_1,t_2\in S\}| = |S|$.
 \end{definition}
 
 La sèrie temporal doble prové d'un producte de dues sèries
