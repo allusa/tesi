@@ -1,10 +1,52 @@
-\chapter{Implementació amb MapReduce}
+\chapter{Implementació amb para\l.lelisme}
+
+
+El disseny de la funció de multiresolució \todo{ref al capítol}
+defineix una funció sobre una sèrie temporal. Aquesta funció té
+bàsicament dues parts: un plec sobre un esquema de multiresolució i
+mapes sobre la sèrie temporal. Així doncs, plantegem de resoldre
+aquesta funció mitjançant computació para\l.lela. 
+
+
+Una tècnica de computació para\l.lela és MapReduce, la qual s'adequa
+bé al problema ja que es basa en aplicar operacions de mapa
+(\emph{map}) i posteriorment plegar-les (\emph{reduce}). Un \gls{SGBD}
+que es basa exclusivament en aquesta tècnica és Hadoop.\todo{refs}
+
+
+En primer lloc, estudiem Hadoop i la tècnica MapReduce.  En segon
+lloc, implementem usant Hadoop un \gls{SGSTM} anomenat
+\emph{RoundRobindoop}. Aquest és un \gls{SGSTM} específic amb
+l'objectiu de mostrar una implementació que resolgui la multiresolució
+d'una sèrie temporal en temps diferit (\emph{offline}) i computant
+para\l.lelament.
 
 
 
-hadoop
+\section{Hadoop i MapReduce}
+
+\todo{sobre Hadoop}
 
 
+
+\todo{sobre MapReduce}
+
+MapReduce és un algoritme per a processar unes dades que es basa en
+resoldre les operacions en dues etapes --primer en una etapa de mapes
+i segon en una etapa de plecs-- de tal manera que els mapes i els
+plecs es puguin computar para\l.lelament. Aquestes dues etapes són
+l'algoritme bàsic de l'algoritme MapReduce, però hi ha variacions que
+afegeixen més etapes.  L'etapa de mapa correspon al nom en anglès Map,
+i l'etapa de plec correspon a l'anglès fold que també és equivalent a
+Reduce.\todo{abordar aquesta qüestió de notació}
+
+
+
+
+
+
+
+\section{RoundRobindoop}
 
 
 
