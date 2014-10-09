@@ -8,10 +8,12 @@ mapes sobre la sèrie temporal. Així doncs, plantegem de resoldre
 aquesta funció mitjançant computació para\l.lela. 
 
 
-Una tècnica de computació para\l.lela és MapReduce, la qual s'adequa
-bé al problema ja que es basa en aplicar operacions de mapa
-(\emph{map}) i posteriorment plegar-les (\emph{reduce}). Un \gls{SGBD}
-que es basa exclusivament en aquesta tècnica és Hadoop.\todo{refs}
+Una tècnica de computació para\l.lela és
+MapReduce \parencite{deanghemawat04:mapreduce}, la qual s'adequa bé al
+problema ja que es basa en aplicar operacions de mapa (\emph{map}) i
+posteriorment plegar-les (\emph{reduce}). Un sistema que es basa
+exclusivament en aquesta tècnica és
+Hadoop \parencite{hadoop}.
 
 
 En primer lloc, estudiem Hadoop i la tècnica MapReduce.  En segon
@@ -23,22 +25,98 @@ para\l.lelament.
 
 
 
+
 \section{Hadoop i MapReduce}
 
-\todo{sobre Hadoop}
+
+Apache Hadoop, o simplement Hadoop, \parencite{hadoop} és un sistema
+de computació distribuïda que permet processar grans volums de dades
+amb diferents computadors en para\l.lel. El sistema inclou la gestió
+de l'emmagatzematge per a distribuir les dades als diferents
+computadors, la qual cosa s'anomena \gls{HDFS}; la gestió dels
+diferents processos en els diversos computadors; i el model de
+programació para\l.lela, el qual és MapReduce.
+
+
+MapReduce \parencite{deanghemawat04:mapreduce,lammel08:mapreduce} és
+un model de programació per processar algoritmes en para\l.lel. Es
+basa en resoldre els algoritmes en dues etapes --primer en una etapa
+de \emph{maps} i segon en una etapa de \emph{reduces}.  Aquestes dues
+etapes són l'algoritme bàsic i per això s'anomena MapReduce tot i que
+hi ha variacions que afegeixen més etapes.
+\textcite{lammel08:mapreduce} compara les operacions \emph{map} i
+\emph{reduce} amb les operacions d'alt ordre mapa i plec, però conclou
+que no són exactament el mateix.  A la~\autoref{fig:mapreduce:esquema}
+es mostra l'esquema de funcionament de MapReduce:
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/implementacio/mapreduce.tex}
+  \caption{Esquema de funcionament de MapReduce}
+  \label{fig:mapreduce:esquema}
+\end{figure}
 
 
 
-\todo{sobre MapReduce}
+\begin{enumerate}
 
-MapReduce és un algoritme per a processar unes dades que es basa en
-resoldre les operacions en dues etapes --primer en una etapa de mapes
-i segon en una etapa de plecs-- de tal manera que els mapes i els
-plecs es puguin computar para\l.lelament. Aquestes dues etapes són
-l'algoritme bàsic de l'algoritme MapReduce, però hi ha variacions que
-afegeixen més etapes.  L'etapa de mapa correspon al nom en anglès Map,
-i l'etapa de plec correspon a l'anglès fold que també és equivalent a
-Reduce.\todo{abordar aquesta qüestió de notació}
+\item Hi ha unes dades originals que es poden partir en
+  trossos. Hadoop està orientat a fitxers, mitjançant \gls{HDFS}, i
+  per tant cada tros de dades és cadascun dels fitxers que es volen
+  processar o bé conjunts de línies d'un fitxer.
+
+\item Cada tros de les dades es processa mitjançant una operació
+  map. Cada map es pot computar en para\l.lel i distribuït.
+
+\item Cada operació map ha de retornar un nou conjunt de dades
+  formats per parelles d'identificador i valor. Aquests conjunts de
+  dades s'ordenen per identificador. 
+
+\item Cada conjunt de dades amb el mateix identificador es processa
+  mitjançant una operació reduce. Cada reduce es pot computar en
+  para\l.lel i distribuït.
+
+\item Cada reduce ha de retornar un tros del resultat final. És a dir,
+  que unint les dades que retornen els reduce s'obtenen les dades
+  finals. En l'orientació a fitxers de Hadoop, el resultat final és un
+  fitxer per a cada reduce.
+
+\end{enumerate}
+
+
+
+\todo{i com es calcula amb mapreduce?}
+*restricció: les dades s'han de poder partir
+* s'ha de poder aplicar el càlcul i l'agregació per separat
+
+Users specify a map function that processes a
+key/value pair to generate a set of intermediate key/value
+pairs, and a reduce function that merges all intermediate
+values associated with the same intermediate key. Many
+real world tasks are expressible in this model, as shown
+in the paper.
+Programs written in this functional style are automati-
+cally parallelized and executed on a large cluster of com-
+modity machines. The run-time system takes care of the
+details of partitioning the input data, scheduling the pro-
+gram’s execution across a set of machines, handling ma-
+chine failures, and managing the required inter-machine
+communication. This allows programmers without any
+experience with parallel and distributed systems to eas-
+ily utilize the resources of a large distributed system.
+Our implementation of MapReduce runs on a large
+cluster of commodity machines and is highly scalable:
+a typical MapReduce computation processes many ter-
+abytes of data on thousands of machines. Programmers
+find the system easy to use: hundreds of MapReduce pro-
+grams have been implemented and upwards of one thou-
+sand MapReduce jobs are executed on Google’s clusters
+every day.
+
+A MapReduce program is composed of a Map() procedure that performs filtering and sorting (such as sorting students by first name into queues, one queue for each name) and a Reduce() procedure that performs a summary operation (such as counting the number of students in each queue, yielding name frequencies). 
+
+
 
 
 
@@ -48,6 +126,143 @@ Reduce.\todo{abordar aquesta qüestió de notació}
 
 \section{RoundRobindoop}
 
+
+
+Només farem una configuració de Single Node Setup. 
+Després es podria estendre de forma senzilla a una Cluster Setup, on
+només caldria decidir com distribuir les dades i els processos de map
+i reduce als diferents computadors.
+
+
+\todo{també es pot executar fora de Hadoop via pipeline del shell}
+
+
+
+
+\begin{figure}[tp]
+  \centering
+
+  \begin{tikzpicture}
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+ \node[mynode,verd] (m1) {map 1};
+ \node (ml1) [below=of m1] {};
+ \node[mynode,verd] (m2) [below=of ml1] {map 2};
+ \node (ml2) [below=of m2] {};
+ \node[mynode,verd,dotted] (mn) [below=of ml2] {};
+
+
+ \node[mynode] (d1) [right=of m1] {
+   \begin{tabular}{|c|cc|}\hline
+     \multirow{2}{*}{$B$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
+       & \multicolumn{1}{|c|}{t} & v \\\hline
+      & & \\
+      & &\\\hdashline
+      & &\\
+      & &\\\hline
+   \end{tabular}
+ };
+
+ \node[mynode] (d2) [right=of m2] {
+   \begin{tabular}{|c|cc|}\hline
+     \multirow{2}{*}{$B$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
+       & \multicolumn{1}{|c|}{t} & v \\\hline
+      & &\\\hdashline
+      & &\\\hline
+   \end{tabular}
+ };
+
+ \node[mynode,dotted] (dn) [right=2cm of mn] {};
+
+
+
+ \node[mynode,verd] (r1) [right=of d1] {reduce 1};
+ \node[mynode,verd] (r2) [below=2cm of r1] {reduce 2};
+ \node[mynode,verd,dotted] (rn) [right=2cm of dn] {};
+
+
+
+
+ \node[mynode] (o) [above left=of m1, anchor=north east] {
+   \begin{tabular}{|cc|}\hline
+     t & v \\\hline
+      & \\
+      & \\
+     \parbox[c][7cm][s]{0cm}{\vfill}& \\
+      & \\
+      & \\\hline
+   \end{tabular}
+ };
+ \node [above=0cm of o] {$S$ original};
+ \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {
+   \begin{tabular}{|ccc|}\hline
+    $D$ & t & v \\\hline
+      & & \\
+      & & \\
+     \parbox[c][7cm][s]{0cm}{\vfill}& & \\
+      & & \\
+      & & \\\hline
+   \end{tabular}
+};
+ \node [above=0cm of f] {final};
+
+
+
+
+ \draw[dashed] (ml1) -- (ml1-|o.west);
+ \draw[dashed] (ml2) -- (ml2-|o.west);
+
+ \draw[myarrow] (o.center|-m1) -- (m1);
+ \draw[myarrow] (o.center|-m2) -- (m2);
+ \draw[myarrow,dotted] (o.center|-mn) -- (mn);
+
+
+ \draw[myarrow] (m1) -- (d1);
+ \draw[myarrow] (m2) -- (d2);
+ \draw[myarrow,dotted] (mn) -- (dn);
+
+ \draw[myarrow] (d1.center) -- (r1);
+ \node (d1b) [above=3ex of d1.280] {}; 
+ \draw[myarrow] (d1b.center) -- (r2);
+
+ \draw[myarrow] (d2.center) -- (r1);
+ \node (d2b) [above=3ex of d2.280] {}; 
+ \draw[myarrow] (d2b.center) -- (r2);
+
+ \draw[myarrow,dotted] (dn) -- (r1) ;
+ \draw[myarrow,dotted] (dn) -- (r2) ;
+ \draw[myarrow,dotted] (dn) -- (rn) ;
+
+
+ \node (r1l) [below=of r1] {};
+ \draw[dashed] (r1l) -- (r1l-|f.east);
+ \node (r2l) [below=of r2] {};
+ \draw[dashed] (r2l) -- (r2l-|f.east);
+
+
+ \draw[myarrow] (r1) -- (r1-|f.center) ;
+ \draw[myarrow] (r2) -- (r2-|f.center) ;
+ \draw[myarrow,dotted] (rn) -- (rn-|f.center) ;
+
+
+  \end{tikzpicture}
+  
+  \caption{Esquema de funcionament de RoundRobindoop}
+  \label{fig:roundrobindoop:esquema}
+\end{figure}
 
 
 
