@@ -1,11 +1,10 @@
 \chapter{Implementació amb para\l.lelisme}
 
-
-El disseny de la funció de multiresolució \todo{ref al capítol}
-defineix una funció sobre una sèrie temporal. Aquesta funció té
-bàsicament dues parts: un plec sobre un esquema de multiresolució i
-mapes sobre la sèrie temporal. Així doncs, plantegem de resoldre
-aquesta funció mitjançant computació para\l.lela. 
+En el capítol \todo{ref al capítol} hem definit la funció de
+multiresolució com una funció sobre una sèrie temporal. Aquesta funció
+té bàsicament dues parts: un plec sobre un esquema de multiresolució i
+mapes sobre la sèrie temporal. Ara implementem
+aquesta funció mitjançant computació para\l.lela.
 
 
 Una tècnica de computació para\l.lela és
@@ -15,9 +14,8 @@ posteriorment plegar-les (\emph{reduce}). Un sistema que es basa
 exclusivament en aquesta tècnica és
 Hadoop \parencite{hadoop}.
 
-
-En primer lloc, estudiem Hadoop i la tècnica MapReduce.  En segon
-lloc, implementem usant Hadoop un \gls{SGSTM} anomenat
+A continuació, en primer lloc, estudiem Hadoop i la tècnica MapReduce.
+En segon lloc, implementem usant Hadoop un \gls{SGSTM} anomenat
 \emph{RoundRobindoop}. Aquest és un \gls{SGSTM} específic amb
 l'objectiu de mostrar una implementació que resolgui la multiresolució
 d'una sèrie temporal en temps diferit (\emph{offline}) i computant
@@ -40,14 +38,20 @@ programació para\l.lela, el qual és MapReduce.
 
 MapReduce \parencite{deanghemawat04:mapreduce,lammel08:mapreduce} és
 un model de programació per processar algoritmes en para\l.lel. Es
-basa en resoldre els algoritmes en dues etapes --primer en una etapa
-de \emph{maps} i segon en una etapa de \emph{reduces}.  Aquestes dues
-etapes són l'algoritme bàsic i per això s'anomena MapReduce tot i que
-hi ha variacions que afegeixen més etapes.
-\textcite{lammel08:mapreduce} compara les operacions \emph{map} i
-\emph{reduce} amb les operacions d'alt ordre mapa i plec, però conclou
-que no són exactament el mateix.  A la~\autoref{fig:mapreduce:esquema}
-es mostra l'esquema de funcionament de MapReduce:
+basa en resoldre els algoritmes en dues etapes: primer en una etapa de
+\emph{maps} i segon en una etapa de \emph{reduces}.  Aquestes dues
+etapes són l'algoritme bàsic i per això s'anomena MapReduce, tot i que
+hi ha variacions que afegeixen més etapes.  Els noms de \emph{map} i
+\emph{reduce} també s'usen per a les operacions d'alt ordre, com les
+mapa (\emph{map}) i plec (\emph{fold} o també \emph{reduce}), que hem
+definit en el model dels \gls{SGST}, però
+\textcite{lammel08:mapreduce} compara les de MapReduce amb les d'alt
+ordre i conclou que no són exactament el mateix; aquí distingirem els
+conceptes usant els noms en anglès map i reduce per a MapReduce.
+
+
+A la~\autoref{fig:mapreduce:esquema}
+es mostra l'esquema de funcionament de MapReduce, que és el següent:
 
 
 \begin{figure}[tp]
@@ -80,42 +84,31 @@ es mostra l'esquema de funcionament de MapReduce:
 \item Cada reduce ha de retornar un tros del resultat final. És a dir,
   que unint les dades que retornen els reduce s'obtenen les dades
   finals. En l'orientació a fitxers de Hadoop, el resultat final és un
-  fitxer per a cada reduce.
+  fitxer, o bé un tros d'un fitxer, per a cada reduce.
 
 \end{enumerate}
 
 
 
-\todo{i com es calcula amb mapreduce?}
-*restricció: les dades s'han de poder partir
-* s'ha de poder aplicar el càlcul i l'agregació per separat
+Per a resoldre un algoritme amb MapReduce, cal definir l'operació de
+map i l'operació de reduce. El map ha de calcular un filtre sobre les
+dades, sobretot establir grups de dades, i el reduce ha de calcular
+agregacions o resums per a cada grup. MapReduce té una gran similitud
+amb l'operació \emph{summarize} dels
+\gls{SGBDR} \parencite[cap.~7]{date04:introduction8}, però separada
+convenientment en les dues etapes.  A més, MapReduce imposa les
+següents restriccions: les dades s'han de poder partir i l'algoritme
+s'ha de poder expressar separat en les dues operacions de map i de
+reduce.  \textcite{deanghemawat04:mapreduce} mostren exemples
+d'algoritmes que es poden expressar amb MapReduce.
 
-Users specify a map function that processes a
-key/value pair to generate a set of intermediate key/value
-pairs, and a reduce function that merges all intermediate
-values associated with the same intermediate key. Many
-real world tasks are expressible in this model, as shown
-in the paper.
-Programs written in this functional style are automati-
-cally parallelized and executed on a large cluster of com-
-modity machines. The run-time system takes care of the
-details of partitioning the input data, scheduling the pro-
-gram’s execution across a set of machines, handling ma-
-chine failures, and managing the required inter-machine
-communication. This allows programmers without any
-experience with parallel and distributed systems to eas-
-ily utilize the resources of a large distributed system.
-Our implementation of MapReduce runs on a large
-cluster of commodity machines and is highly scalable:
-a typical MapReduce computation processes many ter-
-abytes of data on thousands of machines. Programmers
-find the system easy to use: hundreds of MapReduce pro-
-grams have been implemented and upwards of one thou-
-sand MapReduce jobs are executed on Google’s clusters
-every day.
 
-A MapReduce program is composed of a Map() procedure that performs filtering and sorting (such as sorting students by first name into queues, one queue for each name) and a Reduce() procedure that performs a summary operation (such as counting the number of students in each queue, yielding name frequencies). 
 
+Un cop s'ha modelat un algoritme amb MapReduce, aleshores Hadoop ja és
+capaç d'executar els maps i els reduces en para\l.lel i distribuïts. A
+més, Hadoop també gestiona el compromís dels recursos entre el temps
+de distribuir les dades, la quantitat de processos en para\l.lel que
+s'han de crear i el temps afegit que suposa cada procés nou.
 
 
 
@@ -127,14 +120,57 @@ A MapReduce program is composed of a Map() procedure that performs filtering and
 \section{RoundRobindoop}
 
 
+\todo{}
 
-Només farem una configuració de Single Node Setup. 
-Després es podria estendre de forma senzilla a una Cluster Setup, on
-només caldria decidir com distribuir les dades i els processos de map
-i reduce als diferents computadors.
+RoundRobindoop implementa un \gls{SGSTM} específic que resol la funció
+de multiresolució amb el model de programació MapReduce. 
+\todo{atenció només resol l'operació de Dmap!}
+
+Primer, dissenyem les operacions de MapReduce per a la multiresolució. Segon, 
 
 
-\todo{també es pot executar fora de Hadoop via pipeline del shell}
+
+\subsection{Multiresolució amb MapReduce}
+
+L'algoritme que implementem amb MapReduce és el de la funció de
+multiresolució definida a la secció \todo{ref secció
+  sec:multiresolucio:funcio}. Aquesta funció principalment té dues
+parts, una de mapa i una de plec, que com ja s'ha dit no es poden
+correspondre exactament amb les operacions de map i de reduce. 
+ Així
+doncs, dissenyem les operacions de map i de reduce que tenen el mateix
+efecte que calcular la funció de multiresolució, en què el resultat
+final no és la sèrie temporal total sinó el resultat de totes les
+funcions $\glssymbol{not:sgstm:dmap}$, és a dir el resultat final són
+les sèries temporals dels discs del model de \gls{SGSTM} la
+concatenació dels quals resulta en la sèrie temporal total.
+
+
+
+Sigui $S=\{m_0,m_1,\dotsc,m_k\}$ una sèrie temporal, i $e = \{
+(\delta_0,f_0,\tau_0,k_0),\ldots, (\delta_d,f_d,\tau_d,k_d)\}$ els
+paràmetres d'un esquema de multiresolució, definim l'algoritme
+MapReduce que calcula $\operatorname{mapreduce}(S,e) = \{
+(\delta_0,f_0,
+\glssymbol{not:sgstm:dmap}(S,\delta_0,f_0,\tau_0,k_0)),\dotsc,
+(\delta_c,f_c,\glssymbol{not:sgstm:dmap}(S,\delta_c,f_c,\tau_c,k_c))
+\}$. És a dir, calcula tots els $\glssymbol{not:sgstm:dmap}$ possibles
+i els identifica amb el pas de consolidació $\delta$ i la funció
+d'agregació d'atributs $f$, els quals identifiquen les subsèries
+resolució assumint que no n'hi ha de repetits.
+%i que per tant tenenassociats el cardinal màxim $k$ i un instant de consolidació $\tau$.
+
+
+
+
+
+L'esquema de funcionament de RoundRobindoop és el de
+la~\autoref{fig:roundrobindoop:esquema}, el qual és la implementació
+particular de l'esquema de la~\autoref{fig:mapreduce:esquema} per a la
+multiresolució. A continuació expliquem com són les dades originals,
+les d'entremig i les finals, i per tant quina operació realitzen els
+map i els reduce.
+
 
 
 
@@ -162,7 +198,7 @@ i reduce als diferents computadors.
  \node (ml1) [below=of m1] {};
  \node[mynode,verd] (m2) [below=of ml1] {map 2};
  \node (ml2) [below=of m2] {};
- \node[mynode,verd,dotted] (mn) [below=of ml2] {};
+ \node[mynode,verd,dotted] (mn) [below=of ml2] {map M};
 
 
  \node[mynode] (d1) [right=of m1] {
@@ -208,13 +244,13 @@ i reduce als diferents computadors.
  };
  \node [above=0cm of o] {$S$ original};
  \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {
-   \begin{tabular}{|ccc|}\hline
-    $D$ & t & v \\\hline
-      & & \\
-      & & \\
-     \parbox[c][7cm][s]{0cm}{\vfill}& & \\
-      & & \\
-      & & \\\hline
+   \begin{tabular}{|cc|}\hline
+    $\delta\, f$ & t v \\\hline
+      & \\
+       & \\
+     \parbox[c][7cm][s]{0cm}{\vfill}&  \\
+       & \\
+       & \\\hline
    \end{tabular}
 };
  \node [above=0cm of f] {final};
@@ -225,9 +261,9 @@ i reduce als diferents computadors.
  \draw[dashed] (ml1) -- (ml1-|o.west);
  \draw[dashed] (ml2) -- (ml2-|o.west);
 
- \draw[myarrow] (o.center|-m1) -- (m1);
- \draw[myarrow] (o.center|-m2) -- (m2);
- \draw[myarrow,dotted] (o.center|-mn) -- (mn);
+ \draw[myarrow] (o.center|-m1) -- (m1)  node[sloped,above,near end] {$S'_1$};
+ \draw[myarrow] (o.center|-m2) -- (m2) node[sloped,above,near end] {$S'_2$};
+ \draw[myarrow,dotted] (o.center|-mn) -- (mn) node[sloped,above,near end] {$S'_M$};
 
 
  \draw[myarrow] (m1) -- (d1);
@@ -266,6 +302,68 @@ i reduce als diferents computadors.
 
 
 
+
+
+
+Les dades originals són la sèrie temporal $S$ és a dir un conjunt de
+parelles de temps i valor, a les quals anomenem mesures. Un sèrie
+temporal es pot partir en trossos on cada tros és un subconjunt de
+mesures, és a dir una subsèrie temporal. Per tant, cada operació map
+rep una subsèrie temporal de l'original: $S'_1 =
+\{m_0,\dotsc,m_{o1}\}, S'_2 = \{m_{o1+1},\dotsc,m_{o2}\}, \dotsc, S'_M
+= \{\dotsc,m_{k}\}$ on $M$ són el nombre de maps i $o_1 < o_2 < k$.
+
+
+
+Les dades finals són les sèries temporals dels discs, és a dir les
+mesures consolidades per a cada subsèrie resolució. Així doncs, les
+dades finals vistes com a conjunt són un conjunt de dades
+consolidades $R=\{ D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada
+és un tuple $D'=(\delta,f,m')$ que indica quina mesura $m'=(t,v)$ és i a
+quin disc pertany identificat per $\delta$ i $f$.  Per tant, cada
+operació reduce, assumint que hi ha un
+reduce per cada resolució, calcula un subconjunt de $R$: $R'_1 = \{(\delta_0,f_0,m'_0),\dotsc,(\delta_0,f_0,m'_{k1})\}$
+
+$\{m'_0,\dotsc,m'_{r1}\}, R'_2 = \{m'_{r1+1},\dotsc,m'_{r2}\}, \dotsc,
+R'_d = \{\dotsc,m'_{r}\}$ on $d$ són el nombre de reduces
+i $(\delta_0,f_0,m'_0)$   $(\delta_0,f_0,m'_{k1})$  
+
+
+
+
+
+
+, per tant  $d=|e|$ 
+
+
+ i $r_1 < r_2
+< r$.  Per a l'esquema de multiresolució $e$, i assumint que hi ha un
+reduce per cada resolució, $d=|e|$ 
+
+El nombre total de mesures consolidades $r$ és afitat ja
+que per a l'esquema de multiresolució $e$ és $r+1 \leq k_0+\dotsb+k_d$.
+
+
+
+
+
+
+
+
+
+
+\subsection{Execució de l'algoritme}
+
+Proposem dues maneres per a executar l'algoritme implementat amb
+MapReduce: Hadoop i shell.  \todo{també es pot executar fora de Hadoop
+  via pipeline del shell}
+
+
+A Hadoop:\todo{}
+Només farem una configuració de Single Node Setup. 
+Després es podria estendre de forma senzilla a una Cluster Setup, on
+només caldria decidir com distribuir les dades i els processos de map
+i reduce als diferents computadors.
 
 
 %%% Local Variables:
