@@ -201,7 +201,7 @@ map i els reduce.
  \node[mynode,verd,dotted] (mn) [below=of ml2] {map M};
 
 
- \node[mynode] (d1) [right=of m1] {
+ \node[mynode] (d1) [right=0.5cm of m1] {
    \begin{tabular}{|c|cc|}\hline
      \multirow{2}{*}{$B$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
        & \multicolumn{1}{|c|}{t} & v \\\hline
@@ -212,7 +212,7 @@ map i els reduce.
    \end{tabular}
  };
 
- \node[mynode] (d2) [right=of m2] {
+ \node[mynode] (d2) [right=0.5cm of m2] {
    \begin{tabular}{|c|cc|}\hline
      \multirow{2}{*}{$B$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
        & \multicolumn{1}{|c|}{t} & v \\\hline
@@ -221,36 +221,36 @@ map i els reduce.
    \end{tabular}
  };
 
- \node[mynode,dotted] (dn) [right=2cm of mn] {};
+ \node[mynode,dotted] (dn) [right=1.5cm of mn] {};
 
 
 
- \node[mynode,verd] (r1) [right=of d1] {reduce 1};
- \node[mynode,verd] (r2) [below=2cm of r1] {reduce 2};
- \node[mynode,verd,dotted] (rn) [right=2cm of dn] {};
+ \node[mynode,verd] (r1) [right=0.5cm of d1] {\parbox{1cm}{reduce $\delta_0,f_0$}};
+ \node[mynode,verd] (r2) [below=2cm of r1] {\parbox{1cm}{reduce $\delta_1,f_1$}};
+ \node[mynode,verd,dotted] (rn) [right=1cm of dn] {\parbox{1cm}{reduce $\delta_d,f_d$}};
 
 
 
 
  \node[mynode] (o) [above left=of m1, anchor=north east] {
-   \begin{tabular}{|cc|}\hline
-     t & v \\\hline
-      & \\
-      & \\
-     \parbox[c][7cm][s]{0cm}{\vfill}& \\
-      & \\
-      & \\\hline
+   \begin{tabular}{|c|}\hline
+     t v \\\hline
+       \\
+       \\
+     \parbox[c][7cm][s]{0cm}{\vfill} \\
+       \\
+       \\\hline
    \end{tabular}
  };
  \node [above=0cm of o] {$S$ original};
  \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {
-   \begin{tabular}{|cc|}\hline
-    $\delta\, f$ & t v \\\hline
-      & \\
-       & \\
-     \parbox[c][7cm][s]{0cm}{\vfill}&  \\
-       & \\
-       & \\\hline
+   \begin{tabular}{|c|}\hline
+    $\delta\, f$ t v \\\hline
+       \\
+        \\
+     \parbox[c][7cm][s]{0cm}{\vfill}  \\
+        \\
+        \\\hline
    \end{tabular}
 };
  \node [above=0cm of f] {final};
@@ -289,9 +289,9 @@ map i els reduce.
  \draw[dashed] (r2l) -- (r2l-|f.east);
 
 
- \draw[myarrow] (r1) -- (r1-|f.center) ;
- \draw[myarrow] (r2) -- (r2-|f.center) ;
- \draw[myarrow,dotted] (rn) -- (rn-|f.center) ;
+ \draw[myarrow] (r1) -- (r1-|f.center)  node[sloped,above,near start] {$R'_0$};
+ \draw[myarrow] (r2) -- (r2-|f.center)  node[sloped,above,near start] {$R'_1$};
+ \draw[myarrow,dotted] (rn) -- (rn-|f.center)  node[sloped,above,near start] {$R'_d$};
 
 
   \end{tikzpicture}
@@ -315,39 +315,103 @@ rep una subsèrie temporal de l'original: $S'_1 =
 
 
 
+\todo{} Les dades d'entremig són les sèries temporals dels buffers, és
+a dir les mesures pendents de consolidar per a cada subsèrie
+resolució.  Així doncs, les dades d'entremig vistes com a conjunt són
+un conjunt de dades pendents de consolidar $E=\{ D_{0}, \dotsc, D_r\}$
+on cada dada pendent de consolidar és un tuple $D=((\delta,f,n),m)$ on
+$(\delta,f,n)$ funciona com a identificador i $m=(t,v)$ com a valor.
+És a dir, que indica les mesures $m$ que s'han de consolidar per a una
+resolució $\delta$, $f$ i $n\in\glssymbol{not:N}$
+
+
+Què és aquest n?\todo{}
+L'esquema multiresolució $e$ 
+
+
+
+
+
+\todo{ERROR:cada reduce calcula amb les mesures de delta,f i n}
 Les dades finals són les sèries temporals dels discs, és a dir les
 mesures consolidades per a cada subsèrie resolució. Així doncs, les
-dades finals vistes com a conjunt són un conjunt de dades
-consolidades $R=\{ D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada
-és un tuple $D'=(\delta,f,m')$ que indica quina mesura $m'=(t,v)$ és i a
-quin disc pertany identificat per $\delta$ i $f$.  Per tant, cada
-operació reduce, assumint que hi ha un
-reduce per cada resolució, calcula un subconjunt de $R$: $R'_1 = \{(\delta_0,f_0,m'_0),\dotsc,(\delta_0,f_0,m'_{k1})\}$
-
-$\{m'_0,\dotsc,m'_{r1}\}, R'_2 = \{m'_{r1+1},\dotsc,m'_{r2}\}, \dotsc,
-R'_d = \{\dotsc,m'_{r}\}$ on $d$ són el nombre de reduces
-i $(\delta_0,f_0,m'_0)$   $(\delta_0,f_0,m'_{k1})$  
-
-
-
-
-
-
-, per tant  $d=|e|$ 
-
-
- i $r_1 < r_2
-< r$.  Per a l'esquema de multiresolució $e$, i assumint que hi ha un
-reduce per cada resolució, $d=|e|$ 
-
-El nombre total de mesures consolidades $r$ és afitat ja
-que per a l'esquema de multiresolució $e$ és $r+1 \leq k_0+\dotsb+k_d$.
+dades finals vistes com a conjunt són un conjunt de dades consolidades
+$F=\{ D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada és un tuple
+$D'=(\delta,f,m')$ que indica quina mesura $m'=(t,v)$ és i a quin disc
+pertany identificat per $\delta$ i $f$.  Per tant, cada operació
+reduce, assumint que hi ha un reduce per cada resolució de l'esquema
+$e$, calcula un subconjunt de $F$: $F'_0 =
+\{(\delta_0,f_0,m'_0),\dotsc,(\delta_0,f_0,m'_{r1})\}, F'_1 =
+\{(\delta_1,f_1,m'_{r1+1}),\dotsc,(\delta_1,f_1,m'_{r2})\},\dotsc,F'_d
+= \{\dotsc,(\delta_d,f_d,m'_{r})\}$ on $d+1=|e|$ són el nombre de
+reduces i $r_1 < r_2 < r$. Aquest nombre total de mesures consolidades
+$r$ és afitat ja que cada subconjunt té limitat el cardinal màxim per
+l'esquema, $|F'_0| \leq k_1, \dotsc, |F'_d| \leq k_d$, i
+per tant $|F|=r+1 \leq k_1 + \dotsb + k_d$.
 
 
 
 
+Definim el map:
+
+map: $S' \times e \mapsto E'$ on $E'= \forall m \in S':
+\bigcup\operatorname{classifica}(m,e)$
+
+i aquesta funció de classificació $\operatorname{classifica}(m,e)=\{
+\forall (\delta,f,\tau,k) \in e: (\delta,f,\tau+n\delta,t,v) |
+\tau+(n-1)\delta < t \leq \tau+n\delta, n\in\glssymbol{not:Z}, t >
+\tau \}$.  Atenció que $t > \tau$ indica que $\tau$ és el temps
+d'inici de la resolució i per tant no té sentit incloure mesures
+anteriors. En aquesta funció de classificació hi ha dues restriccions:
+no es tenen en compte els cardinals màxims i s'assumeix que la $f$
+treballa sobre $S[\tau+(n-1)\delta ,\tau+n\delta]$. En cas que no
+sigui així per a $f$, cal modificar aquests intervals de
+classificació. Si es vol tenir en compte els cardinals màxims, cal
+adequar bé els $\tau$ de $e$: coneixem $t_k=T(\max(S))$ per tant volem
+que $\tau'+k\delta \leq t_k$ però $tau'$ ha de complir
+$\tau+n\delta=\tau'$ on $n\in\glssymbol{not:Z}$: resolent aquestes
+inequacions es troba el valor de $\tau'$.
+
+%per tant  $\tau+n\delta+k\delta \leq t_k$ ; $\tau+(n+k)\delta \leq t_k$; $n \leq \frac{t_k-\tau}{\delta}-k$;  $n = ROUNDLOW \frac{t_k-\tau}{\delta}-k$   .
 
 
+
+
+
+El sistema, per exemple Hadoop, agrupa de tots els $E'$ amb el
+mateix identificador, és a dir sigui $E$ la unió de tots els $E'$ un
+ $E''_{\delta,f,t_b} = \{ (\delta,f,t_b,m) \in E \}$
+
+
+
+Definim el reduce:
+
+reduce: $E'' \mapsto R'$. Sigui $E''= \{ (\delta,f,t_b,m_0) ,\dotsc,
+(\delta,f,t_b,m_k) \}$. $R'=f(\{m_0,\dotsc,m_k\},i)$ on
+$i=[t_b-\delta,t_b]$. De fet no cal l'interval $i$ perquè ja hem
+classificat les mesures d'aquest interval a l'operació map, aquí només
+l'indiquem per a compatibilitat amb les funcions d'agregació
+d'atributs, que tenen la forma $f(S,i)$.
+
+
+
+
+\todo{} En conclusió, el map i el reduce no es corresponen exactament
+amb les definicions de les funcions de $\glssymbol{not:sgstm:dmap}$ i
+$\glssymbol{not:sgstm:multiresolucio}$, sinó que el map classifica les
+mesures de la sèrie temporal segons el buffer que els correspon i el
+reduce calcula les mesures consolidades per un disc. És a dir, que un
+map i un reduce equivalen a la funcionalitat de la funció
+$\glssymbol{not:sgstm:dmap}$ però el conjunt de tots els maps i
+reduces equivalen a la funció de
+$\glssymbol{not:sgstm:multiresolucio}$, sense expressar-ho en forma de
+sèrie temporal total.
+
+
+
+\todo{} En realitat, alguns maps i alguns reduces es poden ajuntar en
+el mateix procés de càlcul però això no afecta al resultat. Mai, però,
+se separa el mateix identificador en diferents reduces.
 
 
 
