@@ -120,13 +120,11 @@ s'han de crear i el temps afegit que suposa cada procés nou.
 \section{RoundRobindoop}
 
 
-\todo{}
-
 RoundRobindoop implementa un \gls{SGSTM} específic que resol la funció
-de multiresolució amb el model de programació MapReduce. 
-\todo{atenció només resol l'operació de Dmap!}
-
-Primer, dissenyem les operacions de MapReduce per a la multiresolució. Segon, 
+de multiresolució amb el model de programació MapReduce.  Per a
+construir RoundRobindoop, primer dissenyem l'algoritme de MapReduce
+que s'adequa a la multiresolució. Segon, proposem dues maneres per a
+executar RoundRobindoop: amb Hadoop i la shell del sistema.
 
 
 
@@ -166,9 +164,9 @@ resolució assumint que no n'hi ha de repetits.
 L'esquema de funcionament de RoundRobindoop és el de
 la~\autoref{fig:roundrobindoop:esquema}, el qual és la implementació
 particular de l'esquema de la~\autoref{fig:mapreduce:esquema} per a la
-multiresolució. A continuació expliquem com són les dades originals,
-les d'entremig i les finals, i finalment quina operació realitzen els
-map i els reduce.
+multiresolució. A continuació expliquem com són les dades originals
+($O$), les d'entremig ($E$) i les finals ($F$), i finalment definim
+l'operació de map i la de reduce.
 
 
 
@@ -241,7 +239,7 @@ map i els reduce.
        \\\hline
    \end{tabular}
  };
- \node [above=0cm of o] {$S$ original};
+ \node [above=0cm of o] {$O$};
  \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {
    \begin{tabular}{|c|}\hline
     $\delta\, f$ t v \\\hline
@@ -252,7 +250,8 @@ map i els reduce.
         \\\hline
    \end{tabular}
 };
- \node [above=0cm of f] {final};
+ \node [above=0cm of f] {$F$};
+ \node [above=0cm of d1] {$E$};
 
 
 
@@ -271,14 +270,14 @@ map i els reduce.
 
  \draw[myarrow] (d1.center) -- (r1) node[sloped,above,near end] {$E_{1}^0$};
  \node (d1b) [above=3ex of d1.280] {}; 
- \draw[myarrow] (d1b.center) -- (r2) node[sloped,above,near end] {$E_{0}^1$};
+ \draw[myarrow] (d1b.center) -- (r2) ;
 
- \draw[myarrow] (d2.center) -- (r1) node[sloped,above,near end] {$E_{1}^0$};
+ \draw[myarrow] (d2.center) -- (r1) node[sloped,above,near end] {$E_{2}^0$};
  \node (d2b) [above=3ex of d2.280] {}; 
- \draw[myarrow] (d2b.center) -- (r2) node[sloped,above,near end] {$E_{1}^1$};
+ \draw[myarrow] (d2b.center) -- (r2) ;
 
- \draw[myarrow,dotted] (dn) -- (r1) node[sloped,above,near end] {$E_{d}^0$};
- \draw[myarrow,dotted] (dn) -- (r2) node[sloped,above,near end] {$E_{d}^1$};
+ \draw[myarrow,dotted] (dn) -- (r1) node[sloped,above,near end] {$E_{1}^1$};
+ \draw[myarrow,dotted] (dn) -- (r2);
  \draw[myarrow,dotted] (dn) -- (rn) node[sloped,above,near end] {$E_{d}^d$};
 
 
@@ -318,45 +317,47 @@ rep una subsèrie temporal de l'original: $S'_1 =
 Les dades d'entremig són les sèries temporals dels buffers, és a dir
 les mesures pendents de consolidar per a cada subsèrie resolució.
 Així doncs, les dades d'entremig vistes com a conjunt són un conjunt
-de dades pendents de consolidar $E=\{ D_{0}, \dotsc, D_t\}$ \todo{s'ha
-de dir quan val $t$} on cada dada pendent de consolidar és un tuple
-$D=(i,m)$ on $i=(\delta,f,t_b)$ funciona com a identificador i
-$m=(t,v)$ com a valor.  És a dir, que classifica cada mesura $m$ a
-quines resolucions s'han de consolidar identificades pel pas de
-consolidació $\delta$, per la funció d'agregació d'atributs $f$ i pel
-temps resultant de consolidació $t_b$. Per tant, cada operació map
-resulta en un subconjunt de les dades d'entremig: $E'_1=\{
-(\delta_0,f_0, t_{b0}^0, t_0,v_0), (\delta_1,f_1, t_{b1}^0, t_0,v_0),
-\dotsc , (\delta_d,f_d, t_{bd}^0, t_0,v_0), (\delta_0,f_0, t_{b0}^1,
-t_1,v_1), \dotsc, \dotsc, (\delta_d,f_d, t_{bd}^{o1}, t_{o1},v_{o1})
-\}$, i $E'_2$ i $E'_M$ de manera similar.
+de dades pendents de consolidar $E=\{ D_{0}, \dotsc, D_t\}$ on cada
+dada pendent de consolidar és un tuple $D=(i,m)$ on $i=(\delta,f,t_b)$
+funciona com a identificador i $m=(t,v)$ com a valor.  És a dir, que
+classifica cada mesura $m$ a quines resolucions s'han de consolidar
+identificades pel pas de consolidació $\delta$, per la funció
+d'agregació d'atributs $f$ i pel temps resultant de consolidació
+$t_b$. Per tant, cada operació map resulta en un subconjunt de les
+dades d'entremig: $E'_1=\{ (\delta_0,f_0, t_{b0}^0, t_0,v_0),
+(\delta_1,f_1, t_{b1}^0, t_0,v_0), \dotsc , (\delta_d,f_d, t_{bd}^0,
+t_0,v_0), (\delta_0,f_0, t_{b0}^1, t_1,v_1), \dotsc, (\delta_d,f_d,
+t_{bd}^{o1}, t_{o1},v_{o1}) \}$, i $E'_2$ i $E'_M$ de manera similar.
+En total, les dades d'entremig tenen un cardinal de $|E|=t+1=|e||S|$
+és a dir la quantitat de resolucions de l'esquema multiplicat per la
+quantitat de mesures de la sèrie temporal original.
+
+
+Un cop calculades, les dades d'entremig $E$ s'ordenen i
+s'agrupen per identificadors $(\delta,f, t_b)$ idèntics.  Així s'obté
+unes dades d'entremig ordenades, de les quals expressem a continuació
+cada subconjunt de forma simplificada agrupant per $\delta$ i $f$
+sense tenir en comte els $t_b$. Siguin $ t_b, t,v$ variables lliures,
+cada subconjunt agrupat de $E$ té la forma:
+% Del subconjunt $E'_1$ s'obtenen els subconjunts $O_0^0= \{  (\delta_0,f_0, t_{b0}^0, t,v) \in E'_1 \}, O_0^1= \{  (\delta_0,f_0, t_{b0}^1, t,v) \in E'_1 \},\dotsc,  O_0^d= \{  (\delta_0,f_0, t_{b0}^{r0}, t,v) \in E'_1 \}$
+a partir del subconjunt $E'_1$ s'obtenen $E_1^0=\{ (\delta_0,f_0, t_b,
+t,v) \in E'_1 \}, E_1^1=\{ (\delta_1,f_1, t_b, t,v) \in E'_1 \},
+\dotsc, E_1^d=\{ (\delta_d,f_d, t_b, t,v) \in E'_1 \}$, i de manera
+similar s'obtenen els subconjunts agrupats a partir de
+$E'_2,\dotsc,E'_d$.  D'aquesta manera cada operació reduce rep, en la
+forma simplificada, tots els tuples de $E$ amb el mateix $\delta$ i
+$f$: per a $\delta_0$ i $f_0$ rep $E^0 = E_1^0 \cup E_2^0 \cup \dotsb
+\cup E_d^0$, per a $\delta_1$ i $f_1$ rep $E^1$, etc.  Com hem dit,
+hem expressat aquests conjunts de forma simplificada per a $\delta$ i
+$f$ tot i a més hi ha un reduce per a cada $t_b$ diferent; a
+continuació per a les dades finals ho expressem de totes dues maneres.
 
 
 
-\todo{}
-Un cop calculades, les dades d'entremig s'ordenen i s'agrupen per
-identificadors $(\delta,f, t_b)$ idèntics. 
-Així s'obté unes dades d'entremig ordenades $E''=\{ D_{0}, \dotsc, D_M\}=E$ 
-però on cada subconjunt de les dades d'entremig ordenades és:
-
-$E''_1 = \{  (\delta_0,f_0, t_{b0}^0, t_0,v_0), \dotsc, (\delta_0,f_0, t_{b0}^0, t_0,v_0) \}$
-
-
-$E''= \{ (\delta,f,t_b,m_0) ,\dotsc, (\delta,f,t_b,m_k) \}$ un
-  subconjunt de les dades d'entremig ordenades 
-
-
-\todo{En el dibuix}
-agrupem els reduce per delta i f, sense tenir en compte els tb; per tal de no complicar més.
-
-
-
-
-\todo{ERROR:cada reduce calcula amb les mesures de delta,f i n} Les
-dades finals són les sèries temporals dels discs, és a dir les mesures
-consolidades per a cada subsèrie resolució. Així doncs, les dades
-finals vistes com a conjunt són un conjunt de dades consolidades $F=\{
-D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada és un tuple
+Les dades finals són les sèries temporals dels discs, és a dir les
+mesures consolidades per a cada subsèrie resolució. Així doncs, les
+dades finals vistes com a conjunt són un conjunt de dades consolidades
+$F=\{ D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada és un tuple
 $D'=(\delta,f,m')$ que indica quina mesura $m'=(t_b,v')$ és i a quin
 disc pertany identificat per $\delta$ i $f$.  Per tant, cada operació
 reduce calcula un subconjunt de $F$: $F_0^0
@@ -366,29 +367,28 @@ reduce calcula un subconjunt de $F$: $F_0^0
 \dotsc, F_d^0= \dotsc, F_d^{rd}=
 \{(\delta_d,f_d,t_{bd}^{rd},v_d^{rd})\}$ on el nombre de mesures
 consolidades per cada disc és afitat als cardinals màxims, $r_0 +1
-\leq k_0,r_1 +1 \leq k_1, \dotsc r_d +1 \leq k_d$, i per tant el
+\leq k_0, r_1 +1 \leq k_1, \dotsc r_d +1 \leq k_d$, i per tant el
 nombre total de reduces està afitat a $|F| \leq k_0+k_1\dotsb+k_d$.
 Per a simplificar la~\autoref{fig:roundrobindoop:esquema} s'han
 agrupat els reduce per $\delta$ i $f$, és a dir $F'_0 =
 \{(\delta_0,f_0,t_{b0}^0,v_0^0),(\delta_0,f_0,t_{b0}^1,v_0^1),\dotsc,
-(\delta_0,f_0,t_{b0}^{r0},v_0^{r0})\}$, etc. i per tant $d+1= |e|$ són
-el nombre total de reduces agrupats.
+(\delta_0,f_0,t_{b0}^{r0},v_0^{r0})\}$, etc.\ i per tant $d+1= |e|$
+són el nombre total de reduces agrupats.
 
 
-
-
-
-\todo{en les defincions, escriure completament cada variable de partida}
 
 L'operació map calcula les dades d'entremig a partir de les dades
 originals i un esquema multiresolució, treballa en subconjunts de les
 dades per a així poder-se computar para\l.lelament.
 \begin{definition}[Operació Map]
-  Sigui $S'$ una subsèrie temporal de les dades originals, $e$ un
-  esquema de multiresolució i $E'$ un subconjunt de les dades
-  d'entremig abans de ser ordenades, l'operació map de l'algoritme
-  MapReduce és $E'=\operatorname{map}(S',e)$ on $E'= \forall m \in S':
-  \bigcup\operatorname{classifica}(m,e)$.
+  Sigui $S'=\{m_0,\dotsc,m_{o1}\}$ una subsèrie temporal de les dades
+  originals, $e=\{ (\delta_0,f_0,\tau_0,k_0),\ldots,
+  (\delta_d,f_d,\tau_d,k_d)\}$ un esquema de multiresolució i
+  $E'=\{(\delta_0,f_0, t_{b0}^0, t_0,v_0),\dotsc, \dotsc,
+  (\delta_d,f_d, t_{bd}^{o1}, t_{o1},v_{o1}) \}$ un subconjunt de les
+  dades d'entremig abans de ser ordenades, l'operació map de
+  l'algoritme MapReduce és $E'=\operatorname{map}(S',e)$ on $E'=
+  \forall m \in S': \bigcup\operatorname{classifica}(m,e)$.
 
   La funció $\operatorname{classifica}$ indica per a cada mesura a quins
   discs s'ha de consolidar: $\operatorname{classifica}(m,e)=\{ \forall
@@ -481,8 +481,6 @@ computar para\l.lelament.
 
 
 
-
-
 En conclusió, el map i el reduce no es corresponen exactament
 amb les definicions de les funcions de $\glssymbol{not:sgstm:dmap}$ i
 $\glssymbol{not:sgstm:multiresolucio}$ \todo{ref a la secció?}, sinó
@@ -502,20 +500,141 @@ sèrie temporal total.
 
 \subsection{Execució de l'algoritme}
 
-Proposem dues maneres per a executar l'algoritme implementat amb
-MapReduce: Hadoop i shell.  \todo{també es pot executar fora de Hadoop
-  via pipeline del shell}
+\lstMakeShortInline[style=py,basicstyle=\sffamily]{@}
 
 
-A Hadoop:\todo{}
-Només farem una configuració de Single Node Setup. 
-Després es podria estendre de forma senzilla a una Cluster Setup, on
-només caldria decidir com distribuir les dades i els processos de map
-i reduce als diferents computadors.
+Hadoop s'encarrega de l'execució de l'algoritme de MapReduce i de la
+gestió de les dades d'entrada i de sortida.  Per a implementar-lo, cal
+dissenyar un programa per al map i un programa per al reduce, els
+quals reben de Hadoop els subconjunts de dades escaients i han de
+retornar els subconjunts també escaients.  
 
-\todo{} En realitat, alguns maps i alguns reduces es poden ajuntar en
-el mateix procés de càlcul però això no afecta al resultat. Mai, però,
-se separa el mateix identificador en diferents reduces.
+El programa es comunica amb Hadoop mitjançant l'entrada estàndard
+(stdin) per a rebre dades i mitjançant la sortida estàndard (stdout)
+per a retornar els resultats. 
+Les dades d'entrada són... Les dades de sortida són...
+\todo{s'ha d'explicar més com són
+  aquestes dades, potser comentar-ho a través de l'exemple de la shell} 
+
+
+Gràcies a aquesta generalització del programa, també
+es pot executar de manera senzilla al shell del sistema operatiu, cosa
+que facilita l'experimentació amb l'algoritme.
+
+
+
+
+Es pot utilitzar diferents llenguatges de programació a l'hora
+d'implementar l'algoritme de MapReduce, hem escollit el llenguatge
+Python \parencite{python:doc2}.  Implementem l'algoritme de MapReduce
+que hem definit, RoundRobindoop, en un mateix programa que anomenem
+@rrdoop.py@. El programa té un paràmetre que permet escollir l'etapa,
+@rrdoop.py -map@ o @rrdoop.py -reduce@. A més també hi ha un paràmetre
+per a definir l'esquema de multiresolució utilitzat, %
+@rrdoop.py -map -schema e@.
+
+
+
+
+
+El~\autoref{lst:rrdoop:shell} és un exemple de l'execució de
+@rrdoop.py@ al shell del sistema operatiu. Només hi ha un procés map i
+un procés reduce. Es comuniquen les dades a través de pipes de la
+shell i d'un procés d'ordenació (\texttt{sort}) que emula el procés
+d'ordenació per identificador que faria Hadoop. A més, també s'emula
+el procés de lectura (\texttt{cat}) de les dades originals.
+
+\begin{lstlisting}[style=sh,caption=Execució a la shell de
+  rrdoop.py,label=lst:rrdoop:shell]
+cat original.csv | ./rrdoop.py -map -schema e.pickle | sort -k1,1 | ./rrdoop.py -reduce -schema e.pickle
+\end{lstlisting}
+
+El~\autoref{lst:rrdoop:sortidashell} mostra la sortida\todo{}
+
+\begin{lstlisting}[style=stdout,caption=Sortida de rrdoop.py -reduce,label=lst:rrdoop:sortidashell]
+??
+\end{lstlisting}
+
+
+
+El~\autoref{lst:rrdoop:hadoop} mostra l'execució de @rrdoop.py@ a
+Hadoop. Primer cal copiar la sèrie temporal original al \gls{HDFS},
+després s'executa l'algoritme MapReduce i finalment es recupera el
+resultat del \gls{HDFS}.\todo{}
+
+
+
+\begin{lstlisting}[style=sh,caption=Execució a Hadoop de
+  rrdoop.py,label=lst:rrdoop:hadoop]
+
+
+hadoop dfs -copyFromLocal matriu0.csv /user/aleix/matriu0.csv
+
+
+
+hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -mapper 'rrdoop.py -map' -reducer 'rrdoop.py -reduce' -input /user/aleix/matriu0.csv -output /user/aleix/matriu
+
+
+hadoop dfs -copyToLocal /user/aleix/matriu/part-00000 mtsdb0.csv
+
+\end{lstlisting}
+
+
+Hadoop gestiona automàticament la distribució i la quantitat dels
+processos map i reduce. Així, alguns dels map o reduces es poden
+ajuntar en el mateix procés, per exemple els reduce poden rebre tant
+els subconjunts $E^0$ o $E''$ de la secció anterior, però mai se
+separa el mateix identificador en diferents reduces.
+
+
+Per tal d'observar de manera senzilla l'execució de l'algoritme a
+Hadoop hem realitzat una configuració anomenada \emph{Single Node
+  Setup}, és a dir on només hi ha un computador que processa.  Un cop
+verificat es podria estendre a una configuració de \emph{Cluster
+  Setup}, en què hi hagués més computadors on distribuir les dades i
+els processos.
+
+
+
+
+\subsubsection{Anàlisi de temps}
+
+Analitzem el temps que triga en executar-se l'algoritme de MapReduce,
+tant en la shell com a Hadoop. En aquest darrer cas no incloem el
+temps de treballar amb el \gls{HDFS}.
+
+
+\begin{verbatim}
+* shell
+
+time cat matriu0.csv | ./rrdoop.py -map | sort -k1,1 | ./rrdoop.py -reduce > provant.csv::
+
+ real   0m21.639s
+ user   0m21.513s
+ sys    0m0.864s
+
+
+* hadoop
+
+time hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -mapper 'rrdoop.py -map' -reducer 'rrdoop.py -reduce' -input /user/aleix/matriu0.csv -output /user/aleix/matriu::
+
+ real   0m28.314s
+ user   0m1.640s
+ sys    0m0.152s
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+\lstDeleteShortInline{@}
+
 
 
 %%% Local Variables:
