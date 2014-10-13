@@ -133,8 +133,7 @@ Primer, dissenyem les operacions de MapReduce per a la multiresolució. Segon,
 \subsection{Multiresolució amb MapReduce}
 
 L'algoritme que implementem amb MapReduce és el de la funció de
-multiresolució definida a la secció \todo{ref secció
-  sec:multiresolucio:funcio}. Aquesta funció principalment té dues
+multiresolució definida a la secció \todo{ref sec: multiresolucio: funcio}. Aquesta funció principalment té dues
 parts, una de mapa i una de plec, que com ja s'ha dit no es poden
 correspondre exactament amb les operacions de map i de reduce. 
  Així
@@ -168,7 +167,7 @@ L'esquema de funcionament de RoundRobindoop és el de
 la~\autoref{fig:roundrobindoop:esquema}, el qual és la implementació
 particular de l'esquema de la~\autoref{fig:mapreduce:esquema} per a la
 multiresolució. A continuació expliquem com són les dades originals,
-les d'entremig i les finals, i per tant quina operació realitzen els
+les d'entremig i les finals, i finalment quina operació realitzen els
 map i els reduce.
 
 
@@ -203,7 +202,7 @@ map i els reduce.
 
  \node[mynode] (d1) [right=0.5cm of m1] {
    \begin{tabular}{|c|cc|}\hline
-     \multirow{2}{*}{$B$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
+     \multirow{2}{*}{$i$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
        & \multicolumn{1}{|c|}{t} & v \\\hline
       & & \\
       & &\\\hdashline
@@ -214,7 +213,7 @@ map i els reduce.
 
  \node[mynode] (d2) [right=0.5cm of m2] {
    \begin{tabular}{|c|cc|}\hline
-     \multirow{2}{*}{$B$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
+     \multirow{2}{*}{$i$} & \multicolumn{2}{|c|}{valor} \\\cline{2-3}
        & \multicolumn{1}{|c|}{t} & v \\\hline
       & &\\\hdashline
       & &\\\hline
@@ -232,7 +231,7 @@ map i els reduce.
 
 
 
- \node[mynode] (o) [above left=of m1, anchor=north east] {
+ \node[mynode] (o) [above left=1.5cm and 0.5cm of m1, anchor=north east] {
    \begin{tabular}{|c|}\hline
      t v \\\hline
        \\
@@ -266,21 +265,21 @@ map i els reduce.
  \draw[myarrow,dotted] (o.center|-mn) -- (mn) node[sloped,above,near end] {$S'_M$};
 
 
- \draw[myarrow] (m1) -- (d1);
- \draw[myarrow] (m2) -- (d2);
- \draw[myarrow,dotted] (mn) -- (dn);
+ \draw[myarrow] (m1) -- (d1) node[sloped,above,near start] {$E'_1$};
+ \draw[myarrow] (m2) -- (d2) node[sloped,above,near start] {$E'_2$};
+ \draw[myarrow,dotted] (mn) -- (dn)  node[sloped,above,near start] {$E'_M$};
 
- \draw[myarrow] (d1.center) -- (r1);
+ \draw[myarrow] (d1.center) -- (r1) node[sloped,above,near end] {$E_{1}^0$};
  \node (d1b) [above=3ex of d1.280] {}; 
- \draw[myarrow] (d1b.center) -- (r2);
+ \draw[myarrow] (d1b.center) -- (r2) node[sloped,above,near end] {$E_{0}^1$};
 
- \draw[myarrow] (d2.center) -- (r1);
+ \draw[myarrow] (d2.center) -- (r1) node[sloped,above,near end] {$E_{1}^0$};
  \node (d2b) [above=3ex of d2.280] {}; 
- \draw[myarrow] (d2b.center) -- (r2);
+ \draw[myarrow] (d2b.center) -- (r2) node[sloped,above,near end] {$E_{1}^1$};
 
- \draw[myarrow,dotted] (dn) -- (r1) ;
- \draw[myarrow,dotted] (dn) -- (r2) ;
- \draw[myarrow,dotted] (dn) -- (rn) ;
+ \draw[myarrow,dotted] (dn) -- (r1) node[sloped,above,near end] {$E_{d}^0$};
+ \draw[myarrow,dotted] (dn) -- (r2) node[sloped,above,near end] {$E_{d}^1$};
+ \draw[myarrow,dotted] (dn) -- (rn) node[sloped,above,near end] {$E_{d}^d$};
 
 
  \node (r1l) [below=of r1] {};
@@ -289,9 +288,9 @@ map i els reduce.
  \draw[dashed] (r2l) -- (r2l-|f.east);
 
 
- \draw[myarrow] (r1) -- (r1-|f.center)  node[sloped,above,near start] {$R'_0$};
- \draw[myarrow] (r2) -- (r2-|f.center)  node[sloped,above,near start] {$R'_1$};
- \draw[myarrow,dotted] (rn) -- (rn-|f.center)  node[sloped,above,near start] {$R'_d$};
+ \draw[myarrow] (r1) -- (r1-|f.center)  node[sloped,above,near start] {$F'_0$};
+ \draw[myarrow] (r2) -- (r2-|f.center)  node[sloped,above,near start] {$F'_1$};
+ \draw[myarrow,dotted] (rn) -- (rn-|f.center)  node[sloped,above,near start] {$F'_d$};
 
 
   \end{tikzpicture}
@@ -311,107 +310,192 @@ temporal es pot partir en trossos on cada tros és un subconjunt de
 mesures, és a dir una subsèrie temporal. Per tant, cada operació map
 rep una subsèrie temporal de l'original: $S'_1 =
 \{m_0,\dotsc,m_{o1}\}, S'_2 = \{m_{o1+1},\dotsc,m_{o2}\}, \dotsc, S'_M
-= \{\dotsc,m_{k}\}$ on $M$ són el nombre de maps i $o_1 < o_2 < k$.
+= \{\dotsc,m_{k}\}$ on $M$ són el nombre de maps i $o_1,o_2\in
+\glssymbol{not:N}$, $o_1 < o_2 < k$.
 
 
 
-\todo{} Les dades d'entremig són les sèries temporals dels buffers, és
-a dir les mesures pendents de consolidar per a cada subsèrie
-resolució.  Així doncs, les dades d'entremig vistes com a conjunt són
-un conjunt de dades pendents de consolidar $E=\{ D_{0}, \dotsc, D_r\}$
-on cada dada pendent de consolidar és un tuple $D=((\delta,f,n),m)$ on
-$(\delta,f,n)$ funciona com a identificador i $m=(t,v)$ com a valor.
-És a dir, que indica les mesures $m$ que s'han de consolidar per a una
-resolució $\delta$, $f$ i $n\in\glssymbol{not:N}$
-
-
-Què és aquest n?\todo{}
-L'esquema multiresolució $e$ 
-
-
-
-
-
-\todo{ERROR:cada reduce calcula amb les mesures de delta,f i n}
-Les dades finals són les sèries temporals dels discs, és a dir les
-mesures consolidades per a cada subsèrie resolució. Així doncs, les
-dades finals vistes com a conjunt són un conjunt de dades consolidades
-$F=\{ D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada és un tuple
-$D'=(\delta,f,m')$ que indica quina mesura $m'=(t,v)$ és i a quin disc
-pertany identificat per $\delta$ i $f$.  Per tant, cada operació
-reduce, assumint que hi ha un reduce per cada resolució de l'esquema
-$e$, calcula un subconjunt de $F$: $F'_0 =
-\{(\delta_0,f_0,m'_0),\dotsc,(\delta_0,f_0,m'_{r1})\}, F'_1 =
-\{(\delta_1,f_1,m'_{r1+1}),\dotsc,(\delta_1,f_1,m'_{r2})\},\dotsc,F'_d
-= \{\dotsc,(\delta_d,f_d,m'_{r})\}$ on $d+1=|e|$ són el nombre de
-reduces i $r_1 < r_2 < r$. Aquest nombre total de mesures consolidades
-$r$ és afitat ja que cada subconjunt té limitat el cardinal màxim per
-l'esquema, $|F'_0| \leq k_1, \dotsc, |F'_d| \leq k_d$, i
-per tant $|F|=r+1 \leq k_1 + \dotsb + k_d$.
+Les dades d'entremig són les sèries temporals dels buffers, és a dir
+les mesures pendents de consolidar per a cada subsèrie resolució.
+Així doncs, les dades d'entremig vistes com a conjunt són un conjunt
+de dades pendents de consolidar $E=\{ D_{0}, \dotsc, D_t\}$ \todo{s'ha
+de dir quan val $t$} on cada dada pendent de consolidar és un tuple
+$D=(i,m)$ on $i=(\delta,f,t_b)$ funciona com a identificador i
+$m=(t,v)$ com a valor.  És a dir, que classifica cada mesura $m$ a
+quines resolucions s'han de consolidar identificades pel pas de
+consolidació $\delta$, per la funció d'agregació d'atributs $f$ i pel
+temps resultant de consolidació $t_b$. Per tant, cada operació map
+resulta en un subconjunt de les dades d'entremig: $E'_1=\{
+(\delta_0,f_0, t_{b0}^0, t_0,v_0), (\delta_1,f_1, t_{b1}^0, t_0,v_0),
+\dotsc , (\delta_d,f_d, t_{bd}^0, t_0,v_0), (\delta_0,f_0, t_{b0}^1,
+t_1,v_1), \dotsc, \dotsc, (\delta_d,f_d, t_{bd}^{o1}, t_{o1},v_{o1})
+\}$, i $E'_2$ i $E'_M$ de manera similar.
 
 
 
+\todo{}
+Un cop calculades, les dades d'entremig s'ordenen i s'agrupen per
+identificadors $(\delta,f, t_b)$ idèntics. 
+Així s'obté unes dades d'entremig ordenades $E''=\{ D_{0}, \dotsc, D_M\}=E$ 
+però on cada subconjunt de les dades d'entremig ordenades és:
 
-Definim el map:
+$E''_1 = \{  (\delta_0,f_0, t_{b0}^0, t_0,v_0), \dotsc, (\delta_0,f_0, t_{b0}^0, t_0,v_0) \}$
 
-map: $S' \times e \mapsto E'$ on $E'= \forall m \in S':
-\bigcup\operatorname{classifica}(m,e)$
 
-i aquesta funció de classificació $\operatorname{classifica}(m,e)=\{
-\forall (\delta,f,\tau,k) \in e: (\delta,f,\tau+n\delta,t,v) |
-\tau+(n-1)\delta < t \leq \tau+n\delta, n\in\glssymbol{not:Z}, t >
-\tau \}$.  Atenció que $t > \tau$ indica que $\tau$ és el temps
-d'inici de la resolució i per tant no té sentit incloure mesures
-anteriors. En aquesta funció de classificació hi ha dues restriccions:
-no es tenen en compte els cardinals màxims i s'assumeix que la $f$
-treballa sobre $S[\tau+(n-1)\delta ,\tau+n\delta]$. En cas que no
-sigui així per a $f$, cal modificar aquests intervals de
-classificació. Si es vol tenir en compte els cardinals màxims, cal
-adequar bé els $\tau$ de $e$: coneixem $t_k=T(\max(S))$ per tant volem
-que $\tau'+k\delta \leq t_k$ però $tau'$ ha de complir
-$\tau+n\delta=\tau'$ on $n\in\glssymbol{not:Z}$: resolent aquestes
-inequacions es troba el valor de $\tau'$.
+$E''= \{ (\delta,f,t_b,m_0) ,\dotsc, (\delta,f,t_b,m_k) \}$ un
+  subconjunt de les dades d'entremig ordenades 
 
-%per tant  $\tau+n\delta+k\delta \leq t_k$ ; $\tau+(n+k)\delta \leq t_k$; $n \leq \frac{t_k-\tau}{\delta}-k$;  $n = ROUNDLOW \frac{t_k-\tau}{\delta}-k$   .
+
+\todo{En el dibuix}
+agrupem els reduce per delta i f, sense tenir en compte els tb; per tal de no complicar més.
 
 
 
 
+\todo{ERROR:cada reduce calcula amb les mesures de delta,f i n} Les
+dades finals són les sèries temporals dels discs, és a dir les mesures
+consolidades per a cada subsèrie resolució. Així doncs, les dades
+finals vistes com a conjunt són un conjunt de dades consolidades $F=\{
+D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada és un tuple
+$D'=(\delta,f,m')$ que indica quina mesura $m'=(t_b,v')$ és i a quin
+disc pertany identificat per $\delta$ i $f$.  Per tant, cada operació
+reduce calcula un subconjunt de $F$: $F_0^0
+=\{(\delta_0,f_0,t_{b0}^0,v_0^0)\}, F_0^1
+=\{(\delta_0,f_0,t_{b0}^1,v_0^1)\}, \dotsc, F_0^{r0}
+=\{(\delta_0,f_0,t_{b0}^{r0},v_0^{r0})\}, F_1^0= \dotsc, F_1^{r1}=
+\dotsc, F_d^0= \dotsc, F_d^{rd}=
+\{(\delta_d,f_d,t_{bd}^{rd},v_d^{rd})\}$ on el nombre de mesures
+consolidades per cada disc és afitat als cardinals màxims, $r_0 +1
+\leq k_0,r_1 +1 \leq k_1, \dotsc r_d +1 \leq k_d$, i per tant el
+nombre total de reduces està afitat a $|F| \leq k_0+k_1\dotsb+k_d$.
+Per a simplificar la~\autoref{fig:roundrobindoop:esquema} s'han
+agrupat els reduce per $\delta$ i $f$, és a dir $F'_0 =
+\{(\delta_0,f_0,t_{b0}^0,v_0^0),(\delta_0,f_0,t_{b0}^1,v_0^1),\dotsc,
+(\delta_0,f_0,t_{b0}^{r0},v_0^{r0})\}$, etc. i per tant $d+1= |e|$ són
+el nombre total de reduces agrupats.
 
-El sistema, per exemple Hadoop, agrupa de tots els $E'$ amb el
-mateix identificador, és a dir sigui $E$ la unió de tots els $E'$ un
- $E''_{\delta,f,t_b} = \{ (\delta,f,t_b,m) \in E \}$
-
-
-
-Definim el reduce:
-
-reduce: $E'' \mapsto R'$. Sigui $E''= \{ (\delta,f,t_b,m_0) ,\dotsc,
-(\delta,f,t_b,m_k) \}$. $R'=f(\{m_0,\dotsc,m_k\},i)$ on
-$i=[t_b-\delta,t_b]$. De fet no cal l'interval $i$ perquè ja hem
-classificat les mesures d'aquest interval a l'operació map, aquí només
-l'indiquem per a compatibilitat amb les funcions d'agregació
-d'atributs, que tenen la forma $f(S,i)$.
 
 
 
 
-\todo{} En conclusió, el map i el reduce no es corresponen exactament
+\todo{en les defincions, escriure completament cada variable de partida}
+
+L'operació map calcula les dades d'entremig a partir de les dades
+originals i un esquema multiresolució, treballa en subconjunts de les
+dades per a així poder-se computar para\l.lelament.
+\begin{definition}[Operació Map]
+  Sigui $S'$ una subsèrie temporal de les dades originals, $e$ un
+  esquema de multiresolució i $E'$ un subconjunt de les dades
+  d'entremig abans de ser ordenades, l'operació map de l'algoritme
+  MapReduce és $E'=\operatorname{map}(S',e)$ on $E'= \forall m \in S':
+  \bigcup\operatorname{classifica}(m,e)$.
+
+  La funció $\operatorname{classifica}$ indica per a cada mesura a quins
+  discs s'ha de consolidar: $\operatorname{classifica}(m,e)=\{ \forall
+  (\delta,f,\tau,k) \in e: (\delta,f,\tau+n\delta,t,v) |
+  \tau+(n-1)\delta < t \leq \tau+n\delta, n\in\glssymbol{not:Z}, t >
+  \tau \}$. Cal tenir en compte que $t > \tau$ indica que $\tau$ és el temps
+  d'inici de la resolució i per tant no té sentit incloure mesures
+  anteriors.
+\end{definition}
+
+
+
+
+
+
+Hi ha dues restriccions a la funció $\operatorname{classifica}$ que
+hem definit: 
+\begin{itemize}
+
+\item S'assumeix que la $f$ treballa sobre l'interval de la sèrie
+  original $S(\tau+(n-1)\delta ,\tau+n\delta]$. En cas que no sigui
+  així per a la $f$ escollida, caldria modificar aquests intervals de
+  classificació.
+
+\item No es tenen en compte els cardinals màxims. Si es volen tenir en
+  compte, cal adequar bé els $\tau$ inicials. Així sigui $e$ l'esquema
+  de multiresolució original, per a tenir en compte els cardinals
+  màxims s'haurà d'usar un nou esquema $e'$ en què cada $\tau$
+  original sigui canviat a un altre temps de consolidació múltiple
+  $\tau'= \tau+n\delta$ (1) on $n\in\glssymbol{not:Z}$.  \emph{Càlcul
+    de $n$:} es coneix $t_k=T(\max(S))$ i per a tenir en compte els
+  cardinals s'ha de complir que $\tau'+k\delta \leq t_k$ (2), és a dir
+  que les mesures entre $[\tau'+k\delta,t_k]$ encara no es poden
+  consolidar.  Substituint la (1) a la (2) $\tau+n\delta+k\delta \leq
+  t_k$, operant $\tau+(n+k)\delta \leq t_k$ i $n \leq
+  \frac{t_k-\tau}{\delta}-k$ d'on es conclou que $n = \left\lfloor
+    \frac{t_k-\tau}{\delta}-k \right\rfloor$ .  A més a més, si no es
+  considera vàlid $\tau'<\tau$, és a dir que no es volen mesures abans
+  del temps d'inici original, aleshores $n$ com a mínim pot valdre
+  zero.
+
+\end{itemize}
+
+
+
+\begin{example}[Classificació d'una mesura en les resolucions]
+  Sigui l'esquema de multiresolució
+  $e=\{(\delta_0=2,f_0,\tau_0=0,k_0=4),(\delta_1=5,f_1,\tau_1=10,k_1=3)\}$
+  i la mesura $m=(25,1)$, aquesta és classificada per a consolidar-se
+  en les dues resolucions $\operatorname{classifica}(m,e)=\{
+  (2,f_0,t_{b0},25,1), (5,f_1,t_{b1}=,25,1) \}$ on
+  $\tau_0+(n-1)\delta_0 < 25 \leq \tau_0+n\delta_0,
+  n\in\glssymbol{not:Z}$ i $t_{b0}=\tau_0+n\delta_0 = 26$, i de manera
+  semblant $t_{b1}= 25$.
+
+  Ara es volen tenir en compte els cardinals màxims, sigui
+  $t_k=T(\max(S))=35$ el temps de la mesura màxima de la sèrie
+  temporal original. Aleshores cal canviar l'esquema de multiresolució
+  $e'=\{(\delta_0=2,f_0,\tau'_0,k_0=4),(\delta_1=5,f_1,\tau'_1,k_1=3)\}$
+  on $\tau'_0=26$ i $\tau'_1=20$. La classificació esdevé
+  $\operatorname{classifica}(m,e')=\{ (5,f_1,25,25,1) \}$ on no hi ha
+  la resolució $\delta_0,f_0$ perquè $25< \tau'_0$.
+\end{example}
+
+
+
+
+
+Un cop s'han obtingut les dades d'entremig $E$, el sistema com per
+exemple Hadoop agrupa els tuples de $E$ amb el mateix identificador i
+els processa a un mateix reduce. És a dir, sigui $E$ la unió de tots
+els $E'$ calculats pels map, un subconjunt de les dades ordenades és
+$E''_{\delta,f,t_b} = \{ (\delta,f,t_b,m) \in E \}$.  L'operació
+reduce calcula les dades finals a partir de les dades d'entremig
+ordenades, treballa en subconjunts de les dades per a així poder-se
+computar para\l.lelament.
+\begin{definition}[Operació Reduce]
+  Sigui $E''= \{ (\delta,f,t_b,m_0) ,\dotsc, (\delta,f,t_b,m_k) \}$ un
+  subconjunt de les dades d'entremig ordenades i $F'=\{
+  (\delta,f,t_b,v) \}$ un subconjunt de les dades finals, l'operació
+  reduce de l'algoritme MapReduce és $F'=\operatorname{reduce}(E'')$
+  on $F'= (\delta,f,t_b,v)$ i $v= V( f(\{m_0,\dotsc,m_k\},i))$ i
+  $i=[t_b-\delta,t_b]$.
+
+  L'expressió de l'interval $i$ es pot ometre ja que l'operació map ja
+  ha classificat les mesures d'aquest interval, tot i així l'indiquem
+  per a seguir la forma genèrica $f(S,i)$ de les funcions d'agregació
+  d'atributs de la definició \todo{ref a la secció faa}.
+\end{definition}
+
+
+
+
+
+En conclusió, el map i el reduce no es corresponen exactament
 amb les definicions de les funcions de $\glssymbol{not:sgstm:dmap}$ i
-$\glssymbol{not:sgstm:multiresolucio}$, sinó que el map classifica les
-mesures de la sèrie temporal segons el buffer que els correspon i el
-reduce calcula les mesures consolidades per un disc. És a dir, que un
-map i un reduce equivalen a la funcionalitat de la funció
-$\glssymbol{not:sgstm:dmap}$ però el conjunt de tots els maps i
-reduces equivalen a la funció de
+$\glssymbol{not:sgstm:multiresolucio}$ \todo{ref a la secció?}, sinó
+que el map classifica les mesures de la sèrie temporal segons el
+buffer que els correspon i el reduce calcula les mesures consolidades
+per un disc. És a dir, que un map i un reduce equivalen a la
+funcionalitat de la funció $\glssymbol{not:sgstm:dmap}$ però el
+conjunt de tots els maps i reduces equivalen a la funció de
 $\glssymbol{not:sgstm:multiresolucio}$, sense expressar-ho en forma de
 sèrie temporal total.
 
 
 
-\todo{} En realitat, alguns maps i alguns reduces es poden ajuntar en
-el mateix procés de càlcul però això no afecta al resultat. Mai, però,
-se separa el mateix identificador en diferents reduces.
 
 
 
@@ -428,6 +512,10 @@ Només farem una configuració de Single Node Setup.
 Després es podria estendre de forma senzilla a una Cluster Setup, on
 només caldria decidir com distribuir les dades i els processos de map
 i reduce als diferents computadors.
+
+\todo{} En realitat, alguns maps i alguns reduces es poden ajuntar en
+el mateix procés de càlcul però això no afecta al resultat. Mai, però,
+se separa el mateix identificador en diferents reduces.
 
 
 %%% Local Variables:
