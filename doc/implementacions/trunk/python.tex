@@ -432,6 +432,8 @@ Gràfic de la sèrie temporal æ$s_2$æ amb representació æ\gls{zohe}æ
 \end{lstlisting}
 
 
+
+
 \begin{figure}[tp]
   \centering
   \begin{tikzpicture}
@@ -450,6 +452,40 @@ Gràfic de la sèrie temporal æ$s_2$æ amb representació æ\gls{zohe}æ
    \caption{$s_2$ amb representació \gls{zohe}}
    \label{fig:python:plotzohe}
 \end{figure}
+
+
+
+
+Al~\autoref{lst:pytsms:ex1} s'ha mostrat l'ús de funcionalitats
+complementàries de Pytsms, el qual s'ha dissenyat extensible per a
+poder incorporar noves operacions, per a la regularitat.  En
+el~\autoref{lst:pytsms:storage} cas es mostra l'ús d'operacions
+d'emmagatzematge en fitxers, del mòdul @storage@. Primer s'emmagatzema
+la @s2@ del~\autoref{lst:pytsms:ex1} en un fitxer amb format de
+\gls{CSV}, en què cada línia és una parella de temps i valor separats
+per una coma, i després es recupera del fitxer la sèrie temporal
+emmagatzemada. Les dades emmagatzemades al fitxer es mostren
+al~\autoref{lst:pytsms:csv}.
+\begin{lstlisting}[style=py,caption=Operacions complementàries de Pytsms per a l'emmagatzematge,label=lst:pytsms:storage]
+#Importació dels objectes necessaris
+>>> from pytsms.storage import SaveCsv, LoadCsv
+
+#Emmagatzematge en format æ\gls{CSV}æ de nom st2.csv
+>>> s2.accept(SaveCsv('st2.csv'))
+#Recuperació a partir de format æ\gls{CSV}æ
+>>> sr = TimeSeries([])
+>>> sr.accept(LoadCsv('st2.csv'))
+TimeSeries([m(2,2), m(3,2), m(4,0), m(6,2)])
+\end{lstlisting}
+
+\begin{lstlisting}[style=file,caption=Dades del fitxer st2.csv,label=lst:pytsms:csv]
+2,2
+3,2
+4,0
+6,2
+\end{lstlisting}
+
+
 
 
 
@@ -559,8 +595,27 @@ TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 
 
 
+Al~\autoref{lst:roundrobinson:storage} s'ha mostrat l'ús de
+funcionalitats complementàries de RoundRobinson, el qual s'ha
+dissenyat extensible per a poder incorporar noves operacions, per als
+gràfics.  En el~\autoref{lst:roundrobinson:storage} es mostra l'ús
+d'operacions d'emmagatzematge en fitxers, del mòdul @storage@. Primer
+s'emmagatzema la @M@ del~\autoref{lst:roundrobinson:storage} en un
+fitxer amb format Pickle, que és un format d'emmagatzematge de
+Python \parencite{python:doc2}, i després es recupera del fitxer la
+sèrie temporal multiresolució emmagatzemada. 
+\begin{lstlisting}[style=py,caption=Operacions complementàries de RoundRobinson per a l'emmagatzematge,label=lst:roundrobinson:storage]
+#Importació dels objectes necessaris
+>>> from roundrobinson.storage import SavePickle, LoadPickle
 
-
+#Emmagatzematge en format Pickle de nom mrd.csv
+>>> M.accept(SavePickle('mrd.pickle'))
+#Recuperació a partir de format Pickle
+>>> Mr = MultiresolutionSeries([])
+>>> Mr = Mr.accept(LoadPickle('mrd.pickle'))
+>>> Mr == M
+True
+\end{lstlisting}
 
 
 % \todo{}
