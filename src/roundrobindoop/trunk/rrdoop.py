@@ -342,18 +342,24 @@ def despickle_f(f):
     func = types.FunctionType(code, globals(), name)
     return func
 
+
+
 def schema_load_pickle(fname):
-        with open(fname,'r') as f:
-            mts = pickle.load(f)
-            f.close()
 
-        for i,r in enumerate(mts):
-            delta,tau,f,k = r
-            f = despickle_f(f)
-            mts[i] = (delta,tau,f,k)
+    from roundrobinson import MultiresolutionSeries
+    from roundrobinson.storage import LoadPickle
+    
+    M = MultiresolutionSeries([])
+    M = M.accept(LoadPickle(fname))
+    mts = []
 
-        return mts
-
+    for r in M:
+        delta = r.delta()
+        tau = r.tau()
+        f = r.f()
+        k = r.k()
+        mts.append((delta,tau,f,k))
+    return mts
 
 
 

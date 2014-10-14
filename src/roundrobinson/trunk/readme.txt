@@ -15,6 +15,17 @@ the referent implementation for the data model MTSMS described in
 http://escriny.epsem.upc.edu/projects/rrb/
 
 
+
+Installation
+============
+
+This is implemented as a Python library. There is not an official
+release yet.  It can be installed as a Python library or to only test
+you can rename this directory to `roundrobinson` and use it locally
+with `python`.
+
+
+
 Quick tutorial
 ==============
 

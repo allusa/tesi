@@ -500,29 +500,13 @@ sèrie temporal total.
 
 \subsection{Execució de l'algoritme}
 
-\lstMakeShortInline[style=py,basicstyle=\sffamily]{@}
-
+\lstMakeShortInline[style=sh]{@}
 
 Hadoop s'encarrega de l'execució de l'algoritme de MapReduce i de la
 gestió de les dades d'entrada i de sortida.  Per a implementar-lo, cal
 dissenyar un programa per al map i un programa per al reduce, els
 quals reben de Hadoop els subconjunts de dades escaients i han de
 retornar els subconjunts també escaients.  
-
-El programa es comunica amb Hadoop mitjançant l'entrada estàndard
-(stdin) per a rebre dades i mitjançant la sortida estàndard (stdout)
-per a retornar els resultats. 
-Les dades d'entrada són... Les dades de sortida són...
-\todo{s'ha d'explicar més com són
-  aquestes dades, potser comentar-ho a través de l'exemple de la shell} 
-
-
-Gràcies a aquesta generalització del programa, també
-es pot executar de manera senzilla al shell del sistema operatiu, cosa
-que facilita l'experimentació amb l'algoritme.
-
-
-
 
 Es pot utilitzar diferents llenguatges de programació a l'hora
 d'implementar l'algoritme de MapReduce, hem escollit el llenguatge
@@ -533,28 +517,148 @@ que hem definit, RoundRobindoop, en un mateix programa que anomenem
 per a definir l'esquema de multiresolució utilitzat, %
 @rrdoop.py -map -schema e@.
 
+El programa es comunica amb Hadoop mitjançant l'entrada estàndard
+(stdin) per a rebre dades i mitjançant la sortida estàndard (stdout)
+per a retornar els resultats.  Gràcies a la generalització del
+programa amb comunicació per stdin i stdout, també es pot executar
+l'algoritme de MapReduce al shell del sistema operatiu, cosa que
+facilita l'experimentació amb l'algoritme.  Així, a continuació,
+primer mostrem l'execució pas a pas de @rrdoop.py@ al shell i després
+mostrem l'execució a Hadoop.
 
 
 
+\subsubsection{Execució a la shell}
 
-El~\autoref{lst:rrdoop:shell} és un exemple de l'execució de
+El~\autoref{lst:rrdoop:shell} és l'execució de
 @rrdoop.py@ al shell del sistema operatiu. Només hi ha un procés map i
-un procés reduce. Es comuniquen les dades a través de pipes de la
-shell i d'un procés d'ordenació (\texttt{sort}) que emula el procés
+un procés reduce. Es comuniquen les dades a través de pipes (@|@) de la
+shell i d'un procés d'ordenació (@sort@) que emula el procés
 d'ordenació per identificador que faria Hadoop. A més, també s'emula
-el procés de lectura (\texttt{cat}) de les dades originals.
+el procés de lectura (@cat@) de les dades originals.
 
 \begin{lstlisting}[style=sh,caption=Execució a la shell de
   rrdoop.py,label=lst:rrdoop:shell]
-cat original.csv | ./rrdoop.py -map -schema e.pickle | sort -k1,1 | ./rrdoop.py -reduce -schema e.pickle
+cat original.csv | rrdoop.py -map -schema e.pickle | sort -k1,1 | rrdoop.py -reduce -schema e.pickle
 \end{lstlisting}
+
+
+Les dades d'entrada són un fitxer, que també podrien ser fitxers de
+dades, de les quals Hadoop en processa conjunts de línies a cada
+procés map.  Aquestes dades no cal que siguin ordenades i cal tenir en
+compte que es poden trencar per qualsevol línia, tot i que Hadoop
+permet configurar etapes que defineixin com s'han de partir els
+fitxers.  Al~\autoref{lst:rrdoop:stdin} mostrem les dades d'entrada
+emmagatzemades en el fitxer @original.csv@, que es corresponen
+amb la sèrie temporal ja utilitzada
+al~\autoref{lst:roundrobinson:ex1}.  Aquest fitxer de dades té format
+de \gls{CSV}, com ja s'ha vist al~\autoref{lst:pytsms:storage} en les
+funcionalitats complementàries per a l'emmagatzematge de Pytsms.
+\begin{lstlisting}[style=file,caption=Dades d'entrada @original.csv@,label=lst:rrdoop:stdin]
+1,6
+8,5
+5,2
+10,0
+14,1
+19,6
+26,6
+29,0
+22,11
+\end{lstlisting}
+
+
+El fitxer @original.csv@ es transmet a través de @cat@ i pipe a
+l'stdin del procés de map %
+@rrdoop.py -map -schema e.pickle@.  El procés de map té un esquema de
+multiresolució com a paràmetre, @rrdoop.py@ a través del paràmetre
+@-schema@ admet una sèrie temporal multiresolució en format Pickle,
+com s'ha vist al~\autoref{lst:roundrobinson:storage}, l'esquema de la
+qual serà el que s'utilitzi. En aquest cas, @e.pickle@ es correspon
+amb el fitxer @mrd.pickle@ del~\autoref{lst:roundrobinson:storage} i
+per tant amb l'esquema de multiresolució
+del~\autoref{lst:roundrobinson:ex1}:
+$e=\{(\delta_0=5,k_0=4,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0),(\delta_1=10,k_1=2,f_1=\glssymbol{not:sgstm:maxzohe},\tau_1=0)\}$.
+
+El procés de map retorna el resulta a través de l'stdout, el qual es mostra
+al~\autoref{lst:rrdoop:sortidamap}, el qual es correspon amb les dades
+d'entremig de MapReduce. El format és el requerit per Hadoop, és a dir
+cada línia és una parella d'identificador i valor separats per un
+tabulador. L'identificador és $(\delta,\tau,t_b)$ però escrit en el
+format $\delta$/$\tau$--$t_b$ i el valor és $(t,v)$ escrit separat per
+un espai. Es pot observar com es comença classificant la primera
+mesura $(1,6)$ en l'instant de consolidació $10$ per $\delta_1$ i $5$
+per $\delta_0$ i així per a totes fins a la darrera $(22,11)$.
+\begin{lstlisting}[style=stdout,caption=Sortida del procés map,label=lst:rrdoop:sortidamap]
+10/maximum_zohe-10	1 6.0
+5/mean_zohe-5	1 6.0
+10/maximum_zohe-10	8 5.0
+5/mean_zohe-10	8 5.0
+10/maximum_zohe-10	5 2.0
+5/mean_zohe-5	5 2.0
+10/maximum_zohe-10	10 0.0
+5/mean_zohe-10	10 0.0
+10/maximum_zohe-20	14 1.0
+5/mean_zohe-15	14 1.0
+10/maximum_zohe-20	19 6.0
+5/mean_zohe-20	19 6.0
+10/maximum_zohe-30	26 6.0
+5/mean_zohe-30	26 6.0
+10/maximum_zohe-30	29 0.0
+5/mean_zohe-30	29 0.0
+10/maximum_zohe-30	22 11.0
+5/mean_zohe-25	22 11.0
+\end{lstlisting}
+
+
+A continuació el procés d'ordenació @sort -k1,1@ ordena per
+identificadors, el qual es mostra
+al~\autoref{lst:rrdoop:sortidasort}. Hadoop agruparia els mateixos
+identificadors i els transmetria a l'stdin d'un procés de reduce.
+
+\begin{lstlisting}[style=stdout,caption=Sortida del procés d'ordenació,label=lst:rrdoop:sortidasort]
+10/maximum_zohe-10	10 0.0
+10/maximum_zohe-10	1 6.0
+10/maximum_zohe-10	5 2.0
+10/maximum_zohe-10	8 5.0
+10/maximum_zohe-20	14 1.0
+10/maximum_zohe-20	19 6.0
+10/maximum_zohe-30	22 11.0
+10/maximum_zohe-30	26 6.0
+10/maximum_zohe-30	29 0.0
+5/mean_zohe-10	10 0.0
+5/mean_zohe-10	8 5.0
+5/mean_zohe-15	14 1.0
+5/mean_zohe-20	19 6.0
+5/mean_zohe-25	22 11.0
+5/mean_zohe-30	26 6.0
+5/mean_zohe-30	29 0.0
+5/mean_zohe-5	1 6.0
+5/mean_zohe-5	5 2.0
+\end{lstlisting}
+
+
+Finalment,el procés de reduce %
+@rrdoop.py -reduce -schema e.pickle@
+
+Les dades de sortida també són un fitxer o fitxers de dades\todo{}
+
+
 
 El~\autoref{lst:rrdoop:sortidashell} mostra la sortida\todo{}
 
 \begin{lstlisting}[style=stdout,caption=Sortida de rrdoop.py -reduce,label=lst:rrdoop:sortidashell]
 ??
+    10/mean\t10 15.0 20.0 25.0
+    5/mean\t5 10.0 15.0 20.0
+    5/mean\t10 20.0 25.0 30.0
+
 \end{lstlisting}
 
+
+
+
+
+\subsubsection{Execució a Hadoop}
 
 
 El~\autoref{lst:rrdoop:hadoop} mostra l'execució de @rrdoop.py@ a
