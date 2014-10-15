@@ -46,9 +46,8 @@ def default_parser(l):
 
 
 def buff_class(t,delta,tau):
-    """
-    Resolves Natural `n` in the equation tau+n*delta >= t and returns
-    tau+(n)*delta
+    """Resolves Natural `n` in the equation `tau+(n-1)*delta t <= tau+n*delta` and returns `tau+(n)*delta`.
+
 
     :type t: int
     :type tau: int
@@ -86,14 +85,26 @@ def fname(f):
     return name
 
 
-def buffer_measure(m,sch,parser_line=None):
-    """
-    Classifies a measure in the buffers where it belongs
+def buffer_measure(m,sch,parser_line=None,l=0,g=0):
+    """Classifies a measure in the buffers where it belongs
     
-    
+    For each delta/f/tau measures (t,v) are classified by the resulting
+    consolidation time tb: `tb-delta < t <= tb`
+
+    However, the equation can be parametrised by optional parameters
+    `l` and `g` where for each delta/f/tau measures are classified into 
+    `tb-(l+1)*delta < t <= tb+g*delta`
+
+
     :param m: A measure in a table format t v where t is the time and v is the value
     :type m: str
     :param sch: A multiresolution schema [(delta1,tau1,f1,k1), (delta2,tau2,f2,k2),...]
+    
+    :param l: an integer for left multiple classification
+    :param g: an integer for right multiple classification
+    :type l: int
+    :type g: int
+    
     :return: The measure classification in a table format B t v where B are the buffers
     :rtype: None (prints to stdout)
 
@@ -108,6 +119,23 @@ def buffer_measure(m,sch,parser_line=None):
     >>> buffer_measure("6 10.0 15.0 20.0",sch) # doctest: +NORMALIZE_WHITESPACE
     5/mean-10\t6 10.0 15.0 20.0
     10/mean-10\t6 10.0 15.0 20.0
+
+    ## parameters l g
+    >>> buffer_measure("2 10.0",sch,l=0,g=0) # doctest: +NORMALIZE_WHITESPACE
+    5/mean-5\t2 10.0
+    10/mean-10\t2 10.0
+    >>> buffer_measure("2 10.0",sch,l=0,g=1) # doctest: +NORMALIZE_WHITESPACE
+    5/mean-5\t2 10.0
+    10/mean-10\t2 10.0
+    >>> buffer_measure("2 10.0",sch,l=1,g=0) # doctest: +NORMALIZE_WHITESPACE
+    5/mean-5\t2 10.0
+    5/mean-10\t2 10.0
+    10/mean-10\t2 10.0
+    10/mean-20\t2 10.0
+    >>> buffer_measure("6 10.0",sch,l=0,g=1) # doctest: +NORMALIZE_WHITESPACE
+    5/mean-10\t6 10.0
+    5/mean-5\t6 10.0
+    10/mean-10\t6 10.0
     """
 
     if parser_line is None:
@@ -119,18 +147,27 @@ def buffer_measure(m,sch,parser_line=None):
         t,v = parser_line(m)
         if isinstance(v,list):
             v = ' '.join(str(e) for e in v)
-    
+
+
         bclass = buff_class(t,delta,tau)
-        if bclass < tau:
-            #descartem t < tau
-            continue
+        #extensio de l'interval
+        bclasses = [bclass]
+        for i in range(g):
+            bclasses.append( bclass-delta*(i+1) )
+        for i in range(l):
+            bclasses.append( bclass+delta*(i+1) )
 
-        s = "{0}/{1}-{2}\t{3} {4}".format(delta,fname(f),bclass,t,v)
-        print s
+        for tb in bclasses:
+            if tb <= tau:
+                #descartem t <= tau
+                continue
+
+            s = "{0}/{1}-{2}\t{3} {4}".format(delta,fname(f),tb,t,v)
+            print s
 
 
 
-def buffer_ts(f,sch,parser_line=None):
+def buffer_ts(f,sch,parser_line=None,lg=[0,0]):
     """
     Classifies the measures of the time series
     
@@ -150,7 +187,7 @@ def buffer_ts(f,sch,parser_line=None):
     """
     for line in f:
         line = line.rstrip()
-        buffer_measure(line,sch,parser_line)
+        buffer_measure(line,sch,parser_line,lg[0],lg[1])
 
 
 
@@ -209,11 +246,21 @@ def _mean(s):
 
 
 
+def _convert_to_timeseries(l):
+    from roundrobinson import TimeSeries, Measure
 
-def aggregate(s,f=None):
+    s = TimeSeries()
+    for m in l:
+        t,v = m
+        s.add(Measure(t,v))
+    return s
+
+def aggregate(s,f=None,i=None):
     if f is None or isinstance(f,str):
         return _mean(s)
-    return f(s,None)
+
+    s = _convert_to_timeseries(s)
+    return f(s,i).v
 
 
 def extract_aggregators(schema):
@@ -264,15 +311,15 @@ def reduce(f,sch=None):
                 ts.append((t,v))
             else:
                 if previous is not None:
-                    agg = aggregate(ts,select_agregator(f,aggs))
                     pd,pf,pn = previous 
+                    agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(pn)-float(pd),float(pn)])
                     print '{delta}/{f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
                 ts = [(t,v)]
                 previous = (delta,f,n)
 
     #last
     if ts:
-        agg = aggregate(ts,f)
+        agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(n)-float(delta),float(n)])
         print '{delta}/{f}\t{t} {v}'.format(delta=delta,f=f,t=n,v=agg)
 
 
@@ -377,18 +424,29 @@ if __name__ == '__main__':
         return (int(t.strftime('%s')),float(v))
 
 
+    #rrdoop -map|-reduce [-schema e] [-mapl I] [-mapg I]
 
     if len(sys.argv) > 1:
 
-        if len(sys.argv) == 4:
-            if sys.argv[2] == '-schema':
-                sch = schema_load_pickle(sys.argv[3])
+        if '-schema' in sys.argv:
+            pos = sys.argv.index('-schema')
+            sch = schema_load_pickle(sys.argv[pos+1])
 
-        if sys.argv[1] == '-map':
-            buffer_ts(sys.stdin,sch)
-        elif sys.argv[1] == '-reduce':
+
+        if '-map' in sys.argv:
+            lg = [0,0]
+            if '-mapl' in sys.argv:
+                pos = sys.argv.index('-mapl')
+                lg[0] = int(sys.argv[pos+1])
+            if '-mapg' in sys.argv:
+                pos = sys.argv.index('-mapg')
+                lg[1] = int(sys.argv[pos+1])
+
+            buffer_ts(sys.stdin,sch,lg=lg)
+
+        elif '-reduce' in sys.argv:
             reduce(sys.stdin,sch)
-        elif sys.argv[1] == '-mapdatetime':
+        elif '-mapdatetime' in sys.argv:
             buffer_ts(sys.stdin,sch,pl)
 
 

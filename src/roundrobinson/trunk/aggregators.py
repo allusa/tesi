@@ -103,6 +103,8 @@ def area_zohe(s,i):
     True
     >>> area_zohe(s,(-1,0)) == Measure(0,10)
     True
+    >>> area_zohe(s,(0,6)) == Measure(6,None) #no es pot calcular
+    True
     >>> from pytsms.measure import MeasureInf
     >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,10); m3 = MeasureInf(5,40)
     >>> s2 = TimeSeries([m1,m2,m3])
@@ -112,6 +114,10 @@ def area_zohe(s,i):
     t0,tf = i
 
     sp = s.interval_temporal(t0,tf,Zohe)
+    if sp.sup().v is None:
+        #error, aquesta area no es pot calcular
+        return s.mtype()(tf,None)  
+
     o = min(sp)
     #spp = sp - TimeSeries([o])
     spp = sp[o.t::'l']
@@ -142,6 +148,8 @@ def mean_zohe(s,i):
     True
     >>> mean_zohe(s,(0,1)) == Measure(1,10)
     True
+    >>> mean_zohe(s,(0,6)) == Measure(6,None)#no es pot calcular
+    True
     >>> from pytsms.measure import MeasureInf
     >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,10); m3 = MeasureInf(5,40)
     >>> s2 = TimeSeries([m1,m2,m3])
@@ -150,6 +158,8 @@ def mean_zohe(s,i):
     """
     t0,tf = i
     area = area_zohe(s,i).v
+    if area is None:
+        return  s.mtype()(tf,None)
     v = area/(tf-t0)
     return  s.mtype()(tf,v)
 
