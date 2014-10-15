@@ -164,9 +164,13 @@ resolució assumint que no n'hi ha de repetits.
 L'esquema de funcionament de RoundRobindoop és el de
 la~\autoref{fig:roundrobindoop:esquema}, el qual és la implementació
 particular de l'esquema de la~\autoref{fig:mapreduce:esquema} per a la
-multiresolució. A continuació expliquem com són les dades originals
-($O$), les d'entremig ($E$) i les finals ($F$), i finalment definim
-l'operació de map i la de reduce.
+multiresolució.  De forma resumida, RoundRobindoop en l'etapa de map
+classifica les mesures en funció de a quin disc i temps resultant es
+consolidaran i en l'etapa de reduce calcula la funció d'agregació per
+a les mesures que s'hagin de consolidar al mateix disc.  A continuació
+expliquem detalladament com són les dades originals ($O$), les
+d'entremig ($E$) i les finals ($F$), i finalment definim l'operació de
+map i la de reduce.
 
 
 
@@ -411,7 +415,8 @@ hem definit:
 \item S'assumeix que la $f$ treballa sobre l'interval de la sèrie
   original $S(\tau+(n-1)\delta ,\tau+n\delta]$. En cas que no sigui
   així per a la $f$ escollida, caldria modificar aquests intervals de
-  classificació.
+  classificació. A continuació d'aquest apartat contextualitzem aquest
+  problema de les $f$.
 
 \item No es tenen en compte els cardinals màxims. Si es volen tenir en
   compte, cal adequar bé els $\tau$ inicials. Així sigui $e$ l'esquema
@@ -472,13 +477,13 @@ computar para\l.lelament.
   reduce de l'algoritme MapReduce és $F'=\operatorname{reduce}(E'')$
   on $F'= (\delta,f,t_b,v)$ i $v= V( f(\{m_0,\dotsc,m_k\},i))$ i
   $i=[t_b-\delta,t_b]$.
-
-  L'expressió de l'interval $i$ es pot ometre ja que l'operació map ja
-  ha classificat les mesures d'aquest interval, tot i així l'indiquem
-  per a seguir la forma genèrica $f(S,i)$ de les funcions d'agregació
-  d'atributs de la definició \todo{ref a la secció faa}.
 \end{definition}
 
+L'expressió de l'interval $i$ es pot ometre ja que l'operació map ja
+ha classificat les mesures d'aquest interval, tot i així l'indiquem
+per a seguir la forma genèrica $f(S,i)$ de les funcions d'agregació
+d'atributs de la definició. A continuació d'aquest apartat
+contextualitzem aquest problema de les $f$.
 
 
 En conclusió, el map i el reduce no es corresponen exactament
@@ -492,6 +497,54 @@ conjunt de tots els maps i reduces equivalen a la funció de
 $\glssymbol{not:sgstm:multiresolucio}$, sense expressar-ho en forma de
 sèrie temporal total.
 
+
+
+\subsubsection{Quant a les $f$ a RoundRobindoop}
+\label{sec:mapreduce:f}
+
+Al model de \gls{SGSTM} hem definit de forma genèrica les funcions
+d'agregació d'atributs com a $m=f(S,i)$ (v. def.\todo{ref}). Aquestes funcions
+principalment realitzen dues operacions: una selecció sobre la sèrie
+temporal i una agregació de les mesures seleccionades. 
+
+A RoundRobindoop, l'operació de selecció es duu a terme a l'etapa de
+map i en canvi l'agregació, a l'etapa de reduce.  En l'algoritme de
+MapReduce definit per a RoundRobindoop usem el model de $f$ descrit
+anteriorment, però per a implementar correctament aquestes funcions
+cal interpretar-ne el significat per a l'etapa de map i per a la de
+reduce. És a dir, cada $f$ hauria de tenir dos components: un amb les
+operacions de selecció per a ser usades en els map i l'altre amb les
+operacions d'agregació per als reduce.
+
+Recordem que en l'algoritme de RoundRobindoop definit hem assumit que
+l'interval de selecció en l'etapa map sempre és $(t_b-\delta,t_b]$ i
+en l'etapa reduce usem el model genèric d'agregació $f(S,i)$ tot i que
+les mesures ja han estat seleccionades. Per tant, la interpretació en
+l'etapa map no és vàlida per a totes les $f$.
+
+
+Així doncs, caldria afegir en els paràmetres de RoundRobindoop
+l'operació de selecció d'interval per a cada $f$ que s'utilitzi. Però
+això complica la resolució de l'algoritme de MapReduce. Per exemple,
+resoldre l'interval temporal \gls{zohe}
+--$S[t_0,t_f]^{\glssymbol{not:zohe}} = S(t_0,t_f] \cup \{
+(t_f,V(\inf(S[t_f,+\infty))) \}$ (v.~def.\todo{ref a la def})--
+implica conèixer la mesura següent a un $t_f$ i per tant treballar
+sobre tota la sèrie temporal original, cosa que no és possible perquè
+en les etapes map només es treballa sobre un subconjunt de la sèrie
+temporal original. Això no obstant, per al RoundRobindoop definit, si
+considerem que la sèrie temporal és de temps real aleshores en l'etapa
+map podem fer la selecció prèvia per l'interval
+$S(t_b-\delta,t_b+\delta]$, és a dir assumim que hi ha mesura a
+$[t_b,t_b+\delta]$, i a l'etapa reduce ja es calcula correctament
+$f(S,[t_b-\delta,t_b])$. \todo{això ho veurem en un exemple a continuació}
+
+
+
+
+En resum, el model de programació limita les capacitats dels
+\gls{SGSTM}, sobretot pel que fa a les funcions d'agregació
+d'atributs. 
 
 
 
@@ -539,13 +592,13 @@ el procés de lectura (@cat@) de les dades originals.
 
 \begin{lstlisting}[style=sh,caption=Execució a la shell de
   rrdoop.py,label=lst:rrdoop:shell]
-cat original.csv | rrdoop.py -map -schema e.pickle | sort -k1,1 | rrdoop.py -reduce -schema e.pickle
+cat original.csv | rrdoop.py -map -schema e.pickle -mapg 1 | sort -k1,1 | rrdoop.py -reduce -schema e.pickle
 \end{lstlisting}
 
 
 Les dades d'entrada són un fitxer, que també podrien ser fitxers de
 dades, de les quals Hadoop en processa conjunts de línies a cada
-procés map.  Aquestes dades no cal que siguin ordenades i cal tenir en
+procés map. Aquestes dades no cal que siguin ordenades i cal tenir en
 compte que es poden trencar per qualsevol línia, tot i que Hadoop
 permet configurar etapes que defineixin com s'han de partir els
 fitxers.  Al~\autoref{lst:rrdoop:stdin} mostrem les dades d'entrada
@@ -569,7 +622,7 @@ funcionalitats complementàries per a l'emmagatzematge de Pytsms.
 
 El fitxer @original.csv@ es transmet a través de @cat@ i pipe a
 l'stdin del procés de map %
-@rrdoop.py -map -schema e.pickle@.  El procés de map té un esquema de
+@rrdoop.py -map -schema e.pickle -mapg 1@.  El procés de map té un esquema de
 multiresolució com a paràmetre, @rrdoop.py@ a través del paràmetre
 @-schema@ admet una sèrie temporal multiresolució en format Pickle,
 com s'ha vist al~\autoref{lst:roundrobinson:storage}, l'esquema de la
@@ -579,34 +632,60 @@ per tant amb l'esquema de multiresolució
 del~\autoref{lst:roundrobinson:ex1}:
 $e=\{(\delta_0=5,k_0=4,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0),(\delta_1=10,k_1=2,f_1=\glssymbol{not:sgstm:maxzohe},\tau_1=0)\}$.
 
-El procés de map retorna el resulta a través de l'stdout, el qual es mostra
-al~\autoref{lst:rrdoop:sortidamap}, el qual es correspon amb les dades
+
+\todo{ALERTA!!}
+Per això hi ha el paràmetre -mapg
+Hem de fer la selecció $S(t_b-\delta,t_b+\delta]$,
+Ara haurem d'aplicar el problema de les $f$ per a \gls{zohe}. És a dir que hem de classificar(m,e) en $t_b$ i $t_b-\delta$
+
+
+
+El procés de map retorna el resulta a través de l'stdout, el qual es
+mostra al~\autoref{lst:rrdoop:sortidamap} i es correspon amb les dades
 d'entremig de MapReduce. El format és el requerit per Hadoop, és a dir
 cada línia és una parella d'identificador i valor separats per un
 tabulador. L'identificador és $(\delta,\tau,t_b)$ però escrit en el
 format $\delta$/$\tau$--$t_b$ i el valor és $(t,v)$ escrit separat per
 un espai. Es pot observar com es comença classificant la primera
-mesura $(1,6)$ en l'instant de consolidació $10$ per $\delta_1$ i $5$
-per $\delta_0$ i així per a totes fins a la darrera $(22,11)$.
+mesura $(1,6)$ en l'instant de consolidació $t_b=10$ per $\delta_1$ i
+$t_b=5$ per $\delta_0$.  A continuació la mesura $(8,5)$ es classifica
+a l'instant de consolidació $t_b=10$ per $\delta_1$ i en els $t_b=10$
+i $t_b=5$ per $\delta_0$, en aquest darrer cas s'aplica l'aproximació
+de la selecció \gls{zohe} per l'interval $(t_b-\delta,t_b+\delta]$;
+cal destacar que en els casos anteriors no s'aplica perquè resultaria en
+un $t_b<= \tau$.  I així per a totes fins a la darrera mesura
+$(22,11)$.
 \begin{lstlisting}[style=stdout,caption=Sortida del procés map,label=lst:rrdoop:sortidamap]
 10/maximum_zohe-10	1 6.0
 5/mean_zohe-5	1 6.0
 10/maximum_zohe-10	8 5.0
 5/mean_zohe-10	8 5.0
+5/mean_zohe-5	8 5.0
 10/maximum_zohe-10	5 2.0
 5/mean_zohe-5	5 2.0
 10/maximum_zohe-10	10 0.0
 5/mean_zohe-10	10 0.0
+5/mean_zohe-5	10 0.0
 10/maximum_zohe-20	14 1.0
+10/maximum_zohe-10	14 1.0
 5/mean_zohe-15	14 1.0
+5/mean_zohe-10	14 1.0
 10/maximum_zohe-20	19 6.0
+10/maximum_zohe-10	19 6.0
 5/mean_zohe-20	19 6.0
+5/mean_zohe-15	19 6.0
 10/maximum_zohe-30	26 6.0
+10/maximum_zohe-20	26 6.0
 5/mean_zohe-30	26 6.0
+5/mean_zohe-25	26 6.0
 10/maximum_zohe-30	29 0.0
+10/maximum_zohe-20	29 0.0
 5/mean_zohe-30	29 0.0
+5/mean_zohe-25	29 0.0
 10/maximum_zohe-30	22 11.0
+10/maximum_zohe-20	22 11.0
 5/mean_zohe-25	22 11.0
+5/mean_zohe-20	22 11.0
 \end{lstlisting}
 
 
@@ -614,44 +693,72 @@ A continuació el procés d'ordenació @sort -k1,1@ ordena per
 identificadors, el qual es mostra
 al~\autoref{lst:rrdoop:sortidasort}. Hadoop agruparia els mateixos
 identificadors i els transmetria a l'stdin d'un procés de reduce.
-
+Observem per exemple la primera resolució @10/maximum_zohe-10@ que
+conté les mesures en els instants de temps 10, 14, 1 ,19, 5 i 8;
+l'agregació posterior haurà de treballar en l'interval \gls{zohe}
+[0,10] i per tant ara queda clar que les mesures de 14 i 19 no són
+necessàries, però això no ho podíem resoldre en l'etapa de map.
 \begin{lstlisting}[style=stdout,caption=Sortida del procés d'ordenació,label=lst:rrdoop:sortidasort]
 10/maximum_zohe-10	10 0.0
+10/maximum_zohe-10	14 1.0
 10/maximum_zohe-10	1 6.0
+10/maximum_zohe-10	19 6.0
 10/maximum_zohe-10	5 2.0
 10/maximum_zohe-10	8 5.0
 10/maximum_zohe-20	14 1.0
 10/maximum_zohe-20	19 6.0
+10/maximum_zohe-20	22 11.0
+10/maximum_zohe-20	26 6.0
+10/maximum_zohe-20	29 0.0
 10/maximum_zohe-30	22 11.0
 10/maximum_zohe-30	26 6.0
 10/maximum_zohe-30	29 0.0
 5/mean_zohe-10	10 0.0
+5/mean_zohe-10	14 1.0
 5/mean_zohe-10	8 5.0
 5/mean_zohe-15	14 1.0
+5/mean_zohe-15	19 6.0
 5/mean_zohe-20	19 6.0
+5/mean_zohe-20	22 11.0
 5/mean_zohe-25	22 11.0
+5/mean_zohe-25	26 6.0
+5/mean_zohe-25	29 0.0
 5/mean_zohe-30	26 6.0
 5/mean_zohe-30	29 0.0
+5/mean_zohe-5	10 0.0
 5/mean_zohe-5	1 6.0
 5/mean_zohe-5	5 2.0
+5/mean_zohe-5	8 5.0
 \end{lstlisting}
 
 
-Finalment,el procés de reduce %
-@rrdoop.py -reduce -schema e.pickle@
+Finalment, el procés de reduce %
+@rrdoop.py -reduce -schema e.pickle@ obté de l'stdin les dades
+del~\autoref{lst:rrdoop:sortidasort} i retorna les dades finals per
+l'stdout que es mostren al~\autoref{lst:rrdoop:sortidashell}.  En el
+procés de reduce cal tenir en compte que hi pot haver més d'un
+identificador per processar, com és el cas de l'execució en la shell. 
+
+
+9 mesures consolidades finals
+
 
 Les dades de sortida també són un fitxer o fitxers de dades\todo{}
 
-
+S'observa que RoundRobindoop no té en compte les $k$: apareixen el 5/mean_zohe-5 que ja hauria d'haver estat eliminat i el 5/mean_zohe-30 o el 10/maximum_zohe-30  que encara no es podien calcular: de fet tenen valor nul (None)
 
 El~\autoref{lst:rrdoop:sortidashell} mostra la sortida\todo{}
 
 \begin{lstlisting}[style=stdout,caption=Sortida de rrdoop.py -reduce,label=lst:rrdoop:sortidashell]
-??
-    10/mean\t10 15.0 20.0 25.0
-    5/mean\t5 10.0 15.0 20.0
-    5/mean\t10 20.0 25.0 30.0
-
+10/maximum_zohe	10 6.0
+10/maximum_zohe	20 11.0
+10/maximum_zohe	30 None
+5/mean_zohe	10 3.0
+5/mean_zohe	15 2.0
+5/mean_zohe	20 7.0
+5/mean_zohe	25 8.0
+5/mean_zohe	30 None
+5/mean_zohe	5 2.8
 \end{lstlisting}
 
 
@@ -677,6 +784,8 @@ hadoop dfs -copyFromLocal matriu0.csv /user/aleix/matriu0.csv
 
 
 hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -mapper 'rrdoop.py -map' -reducer 'rrdoop.py -reduce' -input /user/aleix/matriu0.csv -output /user/aleix/matriu
+
+!!Hi falta -schema i -mapg 1
 
 
 hadoop dfs -copyToLocal /user/aleix/matriu/part-00000 mtsdb0.csv
