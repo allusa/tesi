@@ -640,7 +640,7 @@ el procés de lectura (@cat@) de les dades originals.
 
 \begin{lstlisting}[style=sh,caption=Execució a la shell de
   rrdoop.py,label=lst:rrdoop:shell]
-cat original.csv | rrdoop.py -map -schema e.pickle -mapg 1 | sort -k1,1 | rrdoop.py -reduce -schema e.pickle
+cat original.csv | rrdoop.py -map -schema e.pickle -mapg 1 | sort -k1,1 | rrdoop.py -reduce -schema e.pickle  > final.csv
 \end{lstlisting}
 
 
@@ -655,7 +655,7 @@ amb la sèrie temporal ja utilitzada
 al~\autoref{lst:roundrobinson:ex1}.  Aquest fitxer de dades té format
 de \gls{CSV}, com ja s'ha vist al~\autoref{lst:pytsms:storage} en les
 funcionalitats complementàries per a l'emmagatzematge de Pytsms.
-\begin{lstlisting}[style=file,caption=Dades d'entrada @original.csv@,label=lst:rrdoop:stdin]
+\begin{lstlisting}[style=file,caption=Dades d'entrada original.csv,label=lst:rrdoop:stdin]
 1,6
 8,5
 5,2
@@ -785,15 +785,16 @@ necessàries, però això no ho podíem resoldre en l'etapa de map.
 
 
 Finalment, el procés de reduce %
-@rrdoop.py -reduce -schema e.pickle@ obté de l'stdin les dades
-del~\autoref{lst:rrdoop:sortidasort} i retorna les dades finals per
-l'stdout que es mostren al~\autoref{lst:rrdoop:sortidashell}.  Hadoop
+@rrdoop.py -reduce -schema e.pickle > final.csv@ obté de l'stdin les
+dades del~\autoref{lst:rrdoop:sortidasort} i retorna les dades finals
+per l'stdout que està redirigit al fitxer @final.csv@, el contingut
+del qual es mostra al~\autoref{lst:rrdoop:sortidashell}.  Hadoop
 emmagatzemaria aquestes dades en un fitxer o fitxers de dades.
 Aquestes dades tenen el format $\delta$/$f$ $t_b$ $v$ on $(t_b,v)$ és
 la mesura consolidada per a la resolució identificada per
-$(\delta,f)$. 
+$(\delta,f)$.
 
-\begin{lstlisting}[style=stdout,caption=Sortida de rrdoop.py -reduce,label=lst:rrdoop:sortidashell]
+\begin{lstlisting}[style=file,caption=Dades de sortida final.csv,label=lst:rrdoop:sortidashell]
 10/maximum_zohe	10 6.0
 10/maximum_zohe	20 11.0
 10/maximum_zohe	30 None
@@ -829,37 +830,28 @@ Així aquest resultat és el mateix que el de les consultes $\glssymbol{not:sgst
 \subsubsection{Execució a Hadoop}
 
 
-El~\autoref{lst:rrdoop:hadoop} mostra els passos d'execució de @rrdoop.py@ a
-Hadoop. Primer cal copiar la sèrie temporal original al \gls{HDFS},
-després s'executa l'algoritme MapReduce i finalment es recupera el
-resultat del \gls{HDFS}.
+El~\autoref{lst:rrdoop:hadoop} mostra els passos d'execució de
+@rrdoop.py@ a Hadoop. Primer cal copiar la sèrie temporal original a
+\gls{HDFS}, després s'executa l'algoritme MapReduce i finalment es
+recupera el resultat de \gls{HDFS}.  Hadoop streaming és l'eina que
+permet l'execució a Hadoop de qualsevol programa, en qualsevol
+llenguatge, que tingui el model de MapReduce.
+Per a més detall sobre les ordres
+i els processos vegeu la documentació de Hadoop~\parencite{hadoop}.
+%http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/HadoopStreaming.html
 
+\todo{simplificar alguns path, no cal tant detall aquí}
 
 \begin{lstlisting}[style=sh,caption=Execució a Hadoop de
   rrdoop.py,label=lst:rrdoop:hadoop]
+hadoop dfs -copyFromLocal original.csv /user/aleix/original.csv
 
+hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -file e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1' -reducer 'rrdoop.py -reduce -schema e.pickle' -input /user/aleix/original.csv -output /user/aleix/final
 
-hadoop dfs -copyFromLocal original.csv /user/aleix/matriu0.csv
-
-
-hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -mapper 'rrdoop.py -map -mapg 1' -reducer 'rrdoop.py -reduce' -input /user/aleix/matriu0.csv -output /user/aleix/matriu
-
-
-hadoop dfs -copyToLocal /user/aleix/matriu/part-00000 final.csv
-
-\end{lstlisting}\todo{simplificar alguns path, no cal tant detall aquí}
-\todo{falta afegir mapg i schema}
-
-El resultat és el mateix que per a l'execució a la shell, és a dir
-el~\autoref{lst:rrdoop:sortidashell}.  Hadoop gestiona automàticament
-la distribució i la quantitat dels processos map i reduce. Així,
-alguns dels map o reduces es poden ajuntar en el mateix procés, per
-exemple els reduce poden rebre tant els subconjunts $E^0$ o $E''$ de
-la secció anterior, però mai se separa el mateix identificador en
-diferents reduces. De fet, aquest és el cas quan s'executa a la shell,
-on només hi ha un procés map i un de reduce.
-
-
+hadoop dfs -copyToLocal /user/aleix/final/part-00000 final.csv
+\end{lstlisting}
+%per esborrar: hadoop dfs -rmr /user/aleix/final
+%requisit, tenir disponible roundrobinson, p.ex. cp -r ~/pfc_svn/src/roundrobinson/trunk/ /usr/local/lib/python2.7/dist-packages/roundrobinson
 
 Per tal d'observar de manera senzilla l'execució de l'algoritme a
 Hadoop hem realitzat una configuració anomenada \emph{Single Node
@@ -867,6 +859,19 @@ Hadoop hem realitzat una configuració anomenada \emph{Single Node
 verificat es podria estendre a una configuració de \emph{Cluster
   Setup}, en què hi hagués més computadors on distribuir les dades i
 els processos.
+
+
+El resultat és el mateix fitxer @final.csv@ que per a l'execució a la
+shell, és a dir el~\autoref{lst:rrdoop:sortidashell}.  Hadoop gestiona
+automàticament la distribució i la quantitat dels processos map i
+reduce. Així, alguns dels map o reduces es poden ajuntar en el mateix
+procés, per exemple els reduce poden rebre tant els subconjunts $E^0$
+o $E''$ de la secció anterior, però mai se separa el mateix
+identificador en diferents reduces. De fet, aquest és el cas quan
+s'executa a la shell, on només hi ha un procés map i un de reduce.
+
+
+
 
 
 
