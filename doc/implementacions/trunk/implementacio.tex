@@ -3,43 +3,62 @@
 
 \chapter{Introducció a les implementacions}
 
+En aquest capítol implementem \glspl{SGST} i \glspl{SGSTM} segons els
+models definits.
 
-Implementem els models definits de \gls{SGST} i de \gls{SGSTM}
 
-
-\todo{on oferirem els codis de les implementacions?}
-Podem posar un enllaç a l'escriny? 
 
 Idealment, en un \gls{SGBD} l'usuari executa una consulta i
 l'optimitzador s'encarrega d'executar les operacions físiques més
-eficients. El model relacional permet trobar expressions equivalents
-donada una determinada consulta. Això no obstant, i com s'ha detallat
-a l'estat actual dels \gls{SGBD} \todo{ref}, una implementació de
-\gls{SGBD} no pot abastar i ser eficient en tots els àmbits. Així
-doncs, no és tan senzill mantenir totalment la independència entre
-l'usuari i la implementació ja que cal que aquest decideixi un
-\gls{SGBD} adequat per a cada context i fins i tot que declari com
-resoldre algunes operacions. Sí que es pot mantenir la independència
-del nivell lògic, respecte a les implementacions; i és en aquest
-sentit que a continuació avaluem diferents implementacions per als
-models definits de \gls{SGST} i de \gls{SGSTM}, on cada implementació
-està pensada per a un context determinat.
+eficients, en aquest sentit el model relacional permet trobar
+expressions equivalents donada una determinada consulta. Això no
+obstant, i com s'ha detallat a l'estat actual dels \gls{SGBD}
+\todo{ref}, una implementació de \gls{SGBD} no pot abastar i ser
+eficient en tots els àmbits i contextos. Així doncs, no és tan senzill
+mantenir totalment la independència entre l'usuari i la implementació
+ja que cal que aquest decideixi un \gls{SGBD} adequat per a cada
+context i fins i tot que declari com resoldre algunes operacions.  Ara
+bé, és possible mantenir la independència del nivell lògic respecte a
+les implementacions, i és en aquest sentit que a continuació avaluem
+diferents implementacions per als models definits de \gls{SGST} i de
+\gls{SGSTM}, on cada implementació està pensada per a un context
+determinat.
+
+
+Anomenem de forma diferent cada implementació que dissenyem per tal de
+distingir-les clarament. Són les següents:
+
+\begin{itemize}
+\item Pytsms i RoundRobinson: Implementacions a alt nivell per a
+  observar el funcionament a nivell acadèmic, amb llenguatge
+  Python. Aquesta és la nostra implementació de referència per als
+  models de \gls{SGST} i \gls{SGSTM}, la qual a més usem per als
+  experiments amb dades.
+
+\item RoundRobindoop: Implementació específica per a la resolució en
+  diferit i amb computació para\.lela de la multiresolució, amb model
+  de programació MapReduce i en el sistema de computació distribuïda
+  Hadoop.
+
+\item Reltsms: Implementació a alt nivell en un \gls{SGBDR}, amb
+  llenguatge Tutorial~D i en el sistema Rel.
+
+\item RoundRobinhard: Implementació a baix nivell d'estructures
+  específiques, amb disseny de circuits digitals o amb llenguatge
+  VHDL.
+
+
+%S'avaluen implementacions específiques com RRDtool?
+
+\end{itemize}
 
 
 
 
-
-Es realitzen implementacions a alt nivell per a observar el funcionament a nivell acadèmic: Python. Implementem els models de \gls{SGST} i \gls{SGSTM} amb Python, aquesta és la nostra implementació de referència, la qual usem per als exemples amb dades.
-
-Es realitzen implementacions a alt nivell per a observar l'encaix amb el model relacional: Tutorial D.
-
-Es realitzen implementacions a baix nivell d'estructures específiques: VHDL o circuit digital.
+\todo{codis?}  Hem d'oferir els codis complets de les implementacions?
+Hem de posar un enllaç a l'escriny?
 
 
-Es realitzen implementacions específiques per a la resolució offline de la multiresolució com a consulta sobre els \gls{SGST}: MapReduce
-
-
-S'avaluen implementacions específiques com RRDtool?
 
 
 
@@ -76,10 +95,12 @@ sol definir el nivell d'usuari, que és el llenguatge que serà visible
 per als usuaris. Les implementacions que realitzem volen ser molt
 properes al model lògic i per tant el nivell d'usuari que se'n deriva
 és molt similar. Per a ser un llenguatge d'usuari complet es
-requereixen facilitats de llenguatge de programació --bucles,
-condicionals, declarar variables, \dots--, per a la qual cosa ens
-basem en els recursos particulars de cada implementació: Python,
-Tutorial~D, etc.
+requereixen facilitats i capacitats de llenguatge de programació
+--bucles, condicionals, declarar variables, \dots--, per a la qual
+cosa ens basem en els recursos particulars de cada implementació:
+Python, Tutorial~D, etc. L'objectiu principal, però, d'aquestes
+implementacions és acadèmic i per tant no considerem prioritari el
+llenguatge d'usuari.
 
 % Aquestes facilitats en el nivell lògic no s'expliciten ja que es
 % consideren inherents a les matemàtiques.
@@ -87,22 +108,20 @@ Tutorial~D, etc.
 
 
 En la implementació s'afegeixen alguns operadors que en el model
-estructural no estaven explícitament definits perquè són propis de
-l'àlgebra de conjunts. Així, alguns d'aquests operadors que s'han
-d'implementar són els relacionats amb la notació de creació de
-conjunts, %set-builder notation (set comprehension)
+estructural no havíem definit explícitament perquè ja són propis de
+l'àlgebra de conjunts. Així per exemple, alguns d'aquests operadors
+que s'han d'implementar són els relacionats amb la notació de creació
+de conjunts, %set-builder notation (set comprehension)
 els quals en els \gls{SGBD} s'inclouen en el que es coneix com a
-\emph{llenguatge de definició de dades} (DDL, de l'anglès \emph{data
-  definition language}), o els relacionats amb la manipulació de les
-dades amb assignació, inserció, modificació o esborrament, els quals
-en els SGBD es coneixen com a \emph{llenguatge de manipulació de
-  dades} (DML, de l'anglès \emph{data manipulation language}) .  En el
-cas del model de \gls{SGSTM} sí que hem definit operacions de DDL i DML per
-a l'esquema multiresolució ja que aquest requereix ser manipulat
+\gls{DDL}, o els relacionats amb la manipulació de les dades amb
+assignació, inserció, modificació o esborrament, els quals en els
+\gls{SGBD} es coneixen com a \gls{DML}.  En el cas dels \gls{SGSTM} sí
+que hem definit en el model algunes operacions de \gls{DDL} i \gls{DML} per a
+l'esquema multiresolució, ja que aquest requereix ser manipulat
 coherentment.
 
-Pel que fa al llenguatge de consultes (\emph{query language}),
-s'implementa seguint el model d'operacions de consulta de cada cas.
+% Pel que fa al llenguatge de consultes (\emph{query language}),
+% s'implementa seguint el model d'operacions de consulta de cada cas.
 
 
 

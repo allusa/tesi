@@ -20,6 +20,13 @@ descrit a http://escriny.epsem.upc.edu/projects/rrb/
 Amb el suport de la Universitat Politècnica de Catalunya (UPC).
 """
 
+
+#REFER 
+#mirar http://www.hadoopy.com/en/latest/tutorial.html
+
+
+
+
 from roundrobinson import MultiresolutionSeries, Measure, TimeSeries
 
 from timeseriesdoop import TsDoopPipe

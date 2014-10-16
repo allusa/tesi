@@ -13,9 +13,14 @@ Implementació de la representació i graf de Sèrie Temporal.
 
 #Hi ha un bug al Matplotlib????
 #Per defecte fa 'TkAgg' i no funciona?
-import matplotlib
-matplotlib.use('GTKAgg')
-from matplotlib import pyplot
+try:
+    import matplotlib
+    matplotlib.use('GTKAgg')
+    from matplotlib import pyplot
+except RuntimeError:
+    pass # Error 'could not create GdkCursor object' quan no hi ha pantalla?
+
+
 
 from measure import Measure
 
