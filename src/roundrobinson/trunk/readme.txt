@@ -8,7 +8,7 @@ RoundRobinson
 :Date: 	2014-07-15
 :Abstract: Python implementation for a Multiresolution Time Series DBMS (MTSMS).
 :Copyright: GPLv3
-:Depends: pytsms0.2-dev
+:Depends: pytsms0.2-dev, python2.7
 
 Python implementation for multiresolution time series (MTSMS). It is
 the referent implementation for the data model MTSMS described in
@@ -20,9 +20,19 @@ Installation
 ============
 
 This is implemented as a Python library. There is not an official
-release yet.  It can be installed as a Python library or to only test
-you can rename this directory to `roundrobinson` and use it locally
-with `python`.
+release yet.  It can be installed as a Python library, rename this directory to `roundrobinson` and choose:
+
+* To only test use it locally with `python`.  
+
+* To use as a locally installed library, copy it to `/usr/local/lib/python2.7/dist-packages/roundrobinson/`.  
+
+* Create a virtualenv.
+
+It has only been tested with python2.7.
+
+
+RounRobinson depends on pyTsms, which is included but can also be
+installed separately.
 
 
 
@@ -82,6 +92,7 @@ Consolidating
 Query the time series in consolidated disc
 >>> M.seriedisc(2,maximum_zohe)
 TimeSeries([m(2,3),m(4,5)])
+
 
 Acknowledgements
 ================
