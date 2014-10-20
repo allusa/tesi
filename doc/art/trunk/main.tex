@@ -15,7 +15,7 @@
 }
 %\bibitemsep 0cm \biblabelsep 0cm \bibhang 0cm \renewcommand{\bibfont}{\normalfont\footnotesize}
 %---------- Mode esborrany --------------------
-\includeonly{sgbd}
+%\includeonly{sgbd}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{fancyhdr}\pagestyle{fancyplain}\chead{\fancyplain{--- esborrany \today\ ---}{\footnotesize\today}}
 %%\renewcommand{\headrulewidth}{0pt}
@@ -37,6 +37,44 @@
 \def\tableautorefname{taula} %ús: \autoref{}
 \def\sectionautorefname{secció} %ús: \autoref{}
 \numberwithin{equation}{chapter}
+
+
+
+\usepackage[
+          acronym,
+          %%nonumberlist,
+          %%toc,
+          section,
+          numberedsection=autolabel,
+          sanitize=none, %pels accents en el vegeu
+          ]{glossaries}
+%\renewcommand*{\glspostdescription}{}%anul·la el punt final
+\renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
+%Índex d'abreviacions?? si conté abreviatures o símbols
+% \short<type>name,
+\input{vocabulari/glossari.tex}
+\loadglsentries{vocabulari/abreviacions.tex}
+\loadglsentries[notation]{vocabulari/notacio.tex}
+\newcommand{\glssymboldef}{\glssymbol[format=hyperbf,counter=definition]}
+\newcommand{\glsdispdef}{\glsdisp[format=hyperbf,counter=definition]}
+\newcommand{\hyperbfsec}[1]{\textbf{\S\hypersf{#1}}}
+\newcommand{\hyperbfex}[1]{\textbf{ex.\hypersf{#1}}}
+\newcommand{\glsaddsec}{\glsadd[format=hyperbfsec,counter=subsection]}
+\newcommand{\glsaddchap}{\glsadd[format=hyperbfsec,counter=chapter]}
+\newcommand{\glsaddsection}{\glsadd[format=hyperbfsec,counter=section]}
+\newcommand{\glsdispsec}{\glsdisp[format=hyperbfsec,counter=subsection]}
+\newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
+\newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
+
+
+
+
+
+
+
+
+
+
 %-------------- dades --------------------------
 \hypersetup{
     pdftitle={Model dels SGBD per sèries temporals},
@@ -59,7 +97,21 @@
 \include{art}
 \include{seriestemporals}
 \include{sgbd}
-\include{temporaldata}
+\include{sistemessimilars}
+
+
+
+
+\chapter{Abreviacions i nomenclatura}
+%\glsaddall[counter=section]
+%\printglossary
+
+\printglossary[type=abreviatura]
+
+\printglossary[type=\acronymtype]
+
+\printglossary[type=notation,style=estil-notation]
+
 
 
 
