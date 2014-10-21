@@ -29,10 +29,6 @@
 
 
 
-
-\todo{}
-explicar el data mining com a background per a les oepracions que es poden fer amb les sèries temporals: pattern search, similiraties, etc.
-
 \section{Sèries temporals}
 \label{sec:art:seriestemporals}
 
@@ -55,7 +51,7 @@ categories \parencite{assfalg08:thesis}.
   definit prèviament, en la qual la dada està associada a un instant
   de temps.
 \item La segona, que s'anomena dades bitemporals (\emph{bitemporal
-    data}), la formen co\l.leccions de dades en que cada element té
+    data}), la formen co\l.leccions de dades en què cada element té
   dos atributs temporals: el rang de validesa, que indica l'interval
   de temps en que la dada és vàlida, i el temps de transacció, que
   indica quan es va desar la dada a la base de dades.
@@ -81,7 +77,7 @@ de la planificació semafòrica \parencite{last11}, estimació del temps
 de viatge en autopistes \parencite{soriguera10} o transmissió
 d'informació en xarxes de
 sensors \parencite{jainagrawal05,yaogehrke02}.
-\todo{també sèries temporals van de bracet amb GIS, exemple en dades hidrològiques [bollaert06:thesis]}
+% \todo{també sèries temporals van de bracet amb SIG, exemple en dades hidrològiques [bollaert06:thesis]}
 
 
 Aquest apartat té com a objectiu mostrar l'estat de l'art dels
@@ -89,7 +85,15 @@ principals processos vinculats en el treball amb sèries temporals. A
 tal efecte s'organitza en tres subapartats.
  
 
-El primer subapartat se centra en l'adquisició de dades. El primer
+
+El primer subapartat tracta de l'anàlisi de sèries temporals, que és
+la formalització de les tècniques que s'utilitzen per extreure
+informació. A vegades aquesta extracció també es coneix com
+descobriment de coneixement i es pot emmarcar dins de l'inte\l.ligència
+artificial.
+
+
+El segon subapartat se centra en l'adquisició de dades. El primer
 requeriment d'una sèrie temporal és l'adquisició de dades. Els
 sistemes de monitoratge s'encarreguen de recollir dades dels sensors,
 periòdicament o en base a esdeveniments.  Els problemes que es donen
@@ -97,37 +101,144 @@ durant l'adquisició generen defectes específics en les sèries
 temporals que cal analitzar i tractar convenientment.
 
 
-El segon subapartat tracta de l'anàlisi de sèries temporals, que és
-la formalització de les tècniques que s'utilitzen per extreure
-informació. A vegades aquesta extracció també es coneix com
-descobriment de coneixement i s'emmarca dins de l'inte\l.ligència
-artificial.
-
-
-El tercer subapartat es dedica als sistemes d'emmagatzemat de sèries
+El tercer subapartat es dedica als sistemes d'emmagatzematge de sèries
 temporals. L'emmagatzematge de les dades i la implementació de les
-tècniques d'anàlisi té lloc en els sistemes de gestió de bases de
-dades. Aquests s'encarreguen de l'organització correcte de la
-informació i de respondre a les operacions de consulta. Les sèries
-temporals necessiten un tractament específic per part d'aquests
-sistemes.
+tècniques d'anàlisi ocorre en els \glspl{SGBD}. Aquests s'encarreguen
+de l'organització correcte de la informació i de respondre a les
+operacions de consulta. Les sèries temporals necessiten un tractament
+específic per part d'aquests sistemes.
+
+
+
+\subsection{Anàlisi de sèries temporals}
+
+
+% explicar el data mining com a background per a les oepracions que es poden fer amb les sèries temporals: pattern search, similiraties, etc.
+
+
+L'anàlisi de sèries temporals consisteix en l'aplicació de
+metodologies i d'algoritmes que permeten tasques com per exemple
+l'extracció de característiques o obtenció de models.  Aquestes
+tècniques es recullen en el que es coneix amb el nom de mineria de
+sèries temporals (\emph{time series data mining}). La mineria de
+dades, en la qual s'inscriu la de sèries temporals, és l'estudi
+d'algoritmes específics per a extreure patrons de comportament de les
+dades i s'inclou com un pas del procés general de descobriment de
+coneixement a les bases de dades (\emph{knowledge discovery in
+  databases}) \parencite{fayyad96,last01}
+
+% [M. E. Mueller, Relational Knowledge Discovery, Cambridge 2012. sec1.1p7]
+%knowledge discovery: process of extracting new knowledge from a set of data about that set of data, This means that the acquisition of new lnowledge requires us to build a new model of the data.
+% Data mining: refers mostly to the extraction of parts of information with respect to a given model. 
+%Exemple: correlació, si dues coses tenen correlació no vol dir que necessàriament hi hagi una dependència causal entre les dades.
+
+Actualment, les sèries temporals es consideren com un dels deu problemes
+prioritaris en la mineria de dades \parencite{yangwu06}. Tal com
+esmenta \textcite{fu11} en un article recent, la recerca en mineria de
+sèries temporals s'ha incrementat en la darrera dècada. L'objectiu
+principal és reduir la mida de les sèries temporals per tal de
+disminuir el temps de processat de les dades.  \citeauthor{fu11}
+resumeix l'estat actual de la mineria de sèries temporals de forma
+exhaustiva i conclou que encara queden molts problemes per investigar
+i resoldre. La recerca en tasques de mineria ha estat intensa però es
+necessita millorar la representació de sèries temporals, ja que es
+considera el pas que redueix la mida de les dades.
+
+Segons \textcite{keogh02}, les quatre tasques que centren l'atenció de
+la recerca actual de sèries temporals són l'indexat (\emph{indexing}),
+que treballa amb una estructura comprimida de les dades; l'agrupament
+(\emph{clustering}), que agrupa les dades segons la similitud entre
+elles per tal de descobrir patrons; la classificació
+(\emph{classification}), que etiqueta les dades segons les
+característiques que presentin; i la segmentació
+(\emph{segmentation}), que parteix una sèrie temporal en
+subseqüències.  A més, \citeauthor{keogh02} comparen alguns algoritmes
+experimentals duts a terme en aquests camps per diversos
+autors. Recomanen a la comunitat de mineria de sèries temporals que
+segueixi el seu estudi com a punt de referència per avaluar el
+rendiment d'algoritmes similars.
+
+
+
+Un pas comú previ a les quatre tasques anteriors és el de
+representació de la sèrie temporal. Les sèries temporals són
+discretes, són valors en punts de temps discrets, i la representació
+és el model de funció que aproxima la sèrie temporal a la seva
+naturalesa contínua original. La mineria de sèries temporals aprofita
+la representació per reduir la mida de les sèries temporals. 
+
+
+
+\textcite{last:keogh}, cita vàries representacions per les sèries
+temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets},
+\emph{Symbolic Mappings} o \gls{PLR}, però assenyala aquesta última
+com la representació més utilitzada.  La
+\gls{PLR} \parencite{keogh97,keogh98} és una representació definida a
+trossos lineals que s'aproxima a la sèrie temporal. Els trossos
+podrien ser polinomis de qualsevol grau, però la manera més comuna de
+representar sèries temporals és amb funcions lineals ja que és més
+propera a la visió de l'ésser humà que segmenta les corbes en línies
+rectes.  A banda de la \gls{PLR}, \textcite{keogh00,keogh01} exploren
+altres representacions de sèries temporals per tal de reduir la mida
+d'una sèrie temporal i poder-la indexar més fàcilment. Proposen dues
+tècniques eficients en el càlcul: la \emph{Piecewise Aggregate
+  Aproximation} i la \emph{Adaptive Piecewise Constant Approximation},
+ambdues basades en la representació a trossos constants de la sèrie
+temporal.  D'aquestes dues tècniques, \citeauthor{keogh00,keogh01}
+conclouen que mantenen una bona aproximació a la sèrie temporal i que
+a més tenen molt menys cost de càlcul que altres de més complicades,
+com ara la \emph{Discrete Fourier Transform}, la \emph{Singular Value
+  Decomposition} o la \emph{Discrete Wavelet Transform}.
+
+Altres representacions també aproximen una sèrie temporal a trossos
+però generalitzen la funció d'aproximació. Per exemple
+\textcite{last01} proposa aproximar una sèrie temporal partint-la en
+subintervals i calculant per a cada un la funció que més s'hi
+aproxima.  Un altre àmbit on s'aplica l'anàlisi de sèries temporals és
+en teoria del senyal.  Aleshores també podem utilitzar les
+representacions habituals en teoria del senyal, per exemple es pot
+representar una sèrie temporal amb una funció graó (\emph{step} o
+\emph{staircase function}); és a dir, amb una funció definida a
+trossos constant (\emph{piecewise constant representation}).
+
+
+% Per aproximar el segment $S(t_a,t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$ \parencite{keogh02}.
+
+
+
+% \paragraph{Representació de sèries temporals}
+
+% Però també es pot representar una sèrie temporal amb una funció graó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
+% La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
+% El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
+
+%http://en.wikipedia.org/wiki/Piecewise
+
+%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
+
+%http://en.wikipedia.org/wiki/Rectangular_function
+
+%http://en.wikipedia.org/wiki/Step_function
+
+% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
+
+% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
 
 
 
 
 
 
-\subsection{Adquisició de sèries temporals}
+\subsection{Adquisició i monitoratge de sèries temporals}
 
-Els sistemes de monitoratge són un part important d'interacció entre
+Els sistemes de monitoratge són una part important d'interacció entre
 un procés i els usuaris, entenent com a procés qualsevol sistema
 físic, químic, ambiental, etc.\ del qual es pugui recollir informació
 continuada, ja sigui de forma periòdica o en funció
 d'esdeveniments. Principalment, aquests sistemes s'encarreguen de
 recollir dades, conèixer l'estat actual del procés i informar a
 l'usuari. Els sistemes de monitoratge constitueixen la part principal
-dels sistemes SCADA (\emph{Supervisory Control And Data
-  Acquisition}). Un SCADA és el sistema encarregat de recollir i
+dels \glspl{SCADA}. Un \gls{SCADA} és un sistema encarregat de recollir i
 centralitzar les dades de manera periòdica en el temps.
 
 
@@ -156,8 +267,7 @@ procés. Aleshores s'incideix en diferents nivells des de llaços de
 control modificant directament un accionament, fet que no sol ser
 habitual ja que els llaços de control solen realitzar-se els sistemes
 electrònics que resideixen prop dels sistemes controlats, fins a
-gestió de modes de funcionament i coordinació entre màquines, fet més
-habitual.
+gestió de modes de funcionament i coordinació entre màquines.
 
 L'ús generalitzat dels sistemes de monitoratge és el de proporcionar
 informació de l'estat actual del procés. També disposen de la
@@ -165,21 +275,20 @@ possibilitat de generar alarmes senzilles com per exemple que no s'han
 pogut adquirir les dades o que el sensor ha assolit un valor
 crític. Per a usuari ens referim tant a un usuari humà com a un altre
 sistema supervisor dotat amb inte\l.ligència artificial.
-
+%
 Per a càlculs més complicats amb les dades, els sistemes de
-monitoratge utilitzen sistemes de gestió de bases de dades
-(SGBD). Mitjançant els SGBD, s'emmagatzemen les dades en bases de
-dades i posteriorment l'usuari les consulta per observar els històrics
-o per obtenir informació i elaborar coneixement a partir de les dades
-emmagatzemades.
+monitoratge utilitzen \glspl{SGBD}. Mitjançant els \gls{SGBD},
+s'emmagatzemen les dades en bases de dades i posteriorment l'usuari
+les consulta per observar els històrics o per obtenir informació i
+elaborar coneixement a partir de les dades emmagatzemades.
 
 La \autoref{fig:sistema_monitoratge} presenta una visió centralitzada
 de l'adquisició de dades. Ara bé, els sistemes de monitoratge
 internament poden tenir estructura distribuïda quan els sensors tenen
 suficient capacitat de processament, com per exemple les xarxes de
-sensors. En aquests casos els monitors cedeixen parts al sensors,
-sobretot pel que fa als SGBD que passen a tenir un paper més rellevant
-en la comunicació.
+sensors. En aquests casos els monitors distribueixen parts al sensors,
+sobretot pel que fa als \gls{SGBD} que passen a tenir un paper més
+rellevant en la comunicació.
 
 
 Un dels camps recents on l'adquisició de sèries temporals hi juga un
@@ -189,15 +298,18 @@ inte\l.ligents \parencite{jainagrawal05,yaogehrke02}, els quals tenen
 processador i ràdio incorporats però tenen recursos limitats pel que
 fa a transmissió, energia i processament i estan sotmesos a la
 incertesa dels sensors. Així doncs, el problema de les xarxes de
-sensors rau en estudiar l'ús eficient d'aquests recursos, pel qual
-actualment trobem dues propostes.  Una solució consisteix en
+sensors rau en estudiar l'ús eficient d'aquests recursos, per la qual
+cosa actualment trobem dues propostes.  Una solució consisteix en
 transmetre la informació a un node central comprimint-la tant amb
-agregacions (estadístics) com amb
+agregacions o estadístics com amb
 aproximacions \parencite{deligiannakis07}.  Una altra solució
 consisteix en tenir les dades distribuïdes en diferents sensors i
 decidir com s'ha de resoldre cada consulta tenint en compte que el
 processament local és més barat que la
 comunicació \parencite{yaogehrke02,gehrkemadden04,bonnet01}.
+
+
+\todo{revisar}
 
 \todo{el tema d'agregar informació en xarxes de sensors és interessant, potser hauria de tenir una secció pròpia}
 
@@ -215,6 +327,9 @@ doi:10.1155/2012/625798
 
 
 \subsubsection{Problemes en el monitoratge}
+
+
+\todo{dir que una aplicació emergent és l'anàlisi de dades en temps real/en línia amb el procés per a prendre decisions?}
 
 Els sistemes de monitoratge habitualment presenten problemes derivats
 de la reco\l.lecció de dades. Principalment distingim tres problemes.
@@ -255,113 +370,24 @@ En conclusió, per tal de gestionar la complexitat derivada de la recollida de d
 
 
 
-\subsection{Anàlisi de sèries temporals}
-
-\todo{dir que una aplicació emergent és l'anàlisi de dades en temps real/en línia amb el procés per a prendre decisions}
-
-L'anàlisi de sèries temporals consisteix en l'aplicació de
-metodologies i d'algoritmes que permeten tasques com per exemple
-l'extracció de característiques o obtenció de models.  Aquestes
-tècniques es recullen en el que es coneix amb el nom de mineria de
-sèries temporals (\emph{time series data mining}). La mineria de
-dades, en la qual s'inscriu la de sèries temporals, és l'estudi
-d'algoritmes específics per a extreure patrons de comportament de les
-dades i s'inclou com un pas del procés general de descobriment de
-coneixement a les bases de dades (\emph{knowledge discovery in
-  databases}) \parencite{fayyad96,last01}
-
-\todo{}
-dir que last01 proposa aproximar una sèrie temporal dividint-la en subintervals i calculant per a cada un la funció que més s'hi aproxima. potser comparar-ho amb la PAA de Keogh on ell diu que amb l'aproximació lineal ja n'hi ha prou?
-
-.
-% [M. E. Mueller, Relational Knowledge Discovery, Cambridge 2012. sec1.1p7]
-%knowledge discovery: process of extracting new knowledge from a set of data about that set of data, This means that the acquisition of new lnowledge requires us to build a new model of the data.
-% Data mining: refers mostly to the extraction of parts of information with respect to a given model. 
-%Exemple: correlació, si dues coses tenen correlació no vol dir que necessàriament hi hagi una dependència causal entre les dades.
-
-Actualment, les sèries temporals es consideren com un dels deu problemes
-prioritaris en la mineria de dades \parencite{yangwu06}. Tal com
-esmenta \textcite{fu11} en un article recent, la recerca en mineria de
-sèries temporals s'ha incrementat en la darrera dècada. L'objectiu
-principal és reduir la mida de les sèries temporals per tal de
-disminuir el temps de processat de les dades.  \citeauthor{fu11}
-resumeix l'estat actual de la mineria de sèries temporals de forma
-exhaustiva i conclou que encara queden molts problemes per investigar
-i resoldre. La recerca en tasques de mineria ha estat intensa però es
-necessita millorar la representació de sèries temporals, ja que es
-considera el pas que redueix la mida de les dades.
-
-Segons \textcite{keogh02}, les quatre tasques que centren l'atenció de
-la recerca actual de sèries temporals són l'indexat (\emph{indexing}),
-que treballa amb una estructura comprimida de les dades; l'agrupament
-(\emph{clustering}), que agrupa les dades segons la similitud entre
-elles per tal de descobrir patrons; la classificació
-(\emph{classification}), que etiqueta les dades segons les
-característiques que presentin; i la segmentació
-(\emph{segmentation}), que parteix una sèrie temporal en
-subseqüències.  A més, \citeauthor{keogh02} comparen alguns algoritmes
-experimentals duts a terme en aquests camps per diversos
-autors. Recomanen a la comunitat de mineria de sèries temporals que
-segueixi el seu estudi com a punt de referència per avaluar el
-rendiment d'algoritmes similars.
-
-Un pas comú previ a les quatre tasques anteriors és el de representació de la sèrie temporal. Les sèries temporals són discretes, són valors en punts de temps discrets, i la representació és el model de funció que aproxima la sèrie temporal a la seva naturalesa contínua original. La mineria de sèries temporals aprofita la representació per reduir la mida de les sèries temporals.
-La representació de sèries temporals a trossos lineals (PLR, \emph{Piecewise Linear Representation}) \parencite{keogh97,keogh98} {é}s la més habitual actualment per ser més propera als usuaris ja que la visió de l'ésser humà segmenta les corbes en línies rectes.
-Després de definir la PLR, \textcite{keogh00,keogh01} exploren altres representacions de sèries temporals per tal de reduir la mida d'una sèrie temporal i poder-la indexar més fàcilment. Proposen dues tècniques eficients en el càlcul: la \emph{Piecewise Aggregate Aproximation} i la \emph{Adaptive Piecewise Constant Approximation}, ambdues basades en la representació a trossos constants de la sèrie temporal. 
-D'aquestes dues tècniques, \citeauthor{keogh00,keogh01} conclouen que mantenen una bona aproximació a la sèrie temporal i que a més  tenen molt menys cost de càlcul que altres de més complicades, com ara la \emph{Discrete Fourier Transform},  la  \emph{Singular Value Decomposition} o la \emph{Discrete Wavelet Transform}.
-
-\todo{arreglar perquè quedi ben explicat; després en el model fem menció d'aquestes representacions}
-
-\todo{potser posar-ho a estat de l'art tot això?}
-
-
-In the design of the attribute interpolation function we can interpret
-a time series in different ways, that is what we call the
-representation of a time series. Keogh et al.\ \cite{last:keogh} cite
-some possible representations for time series such as \emph{Fourier
-  Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} or
-\emph{Piecewise Linear Representation} (PLR). This last is remarked as
-the most used owing to the most common representation is with linear
-functions \cite{keogh01}.
-
-
-\todo{last01} també fa una mena d'agregacions amb l'objectiu de trobar un a funció que s'aproximi a un interval de la sèrie temporal. Seria un mètode d'agregació amb aproximació?
-
-
-
-\todo{wavelet}
-
-També hi ha l'anàlisi de les sèries temporals amb wavelet analysis. Aquest es basa en anàlisis de la freqüència dels senyals. 
-
-A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design method of most of the practically relevant discrete wavelet transforms (DWT) and the justification for the algorithm of the fast wavelet transform (FWT). It was introduced in this context in 1988/89 by Stephane Mallat and Yves Meyer and has predecessors in the microlocal analysis in the theory of differential equations (the ironing method) and the pyramid methods of image processing as introduced in 1981/83 by Peter J. Burt, Edward H. Adelson and James Crowley.
-
-
-\paragraph{Representació de sèries temporals}
-
-\textcite{last:keogh}, cita vàries representacions per les sèries temporals com per exemple \emph{Fourier Transforms}, \emph{Wavelets}, \emph{Symbolic Mappings} o \emph{Piecewise Linear Representation} (PLR), però assenyala aquesta última com la representació més utilitzada. 
-La PLR, funció definida a trossos lineal, és l'aproximació d'una sèrie temporal $S$, de llargada $n$, amb $K$ segments rectes. Els segments podrien ser polinomis de qualsevol grau, però la manera més comuna de representar sèries temporals és amb funcions lineals, segons Keogh, \cite{keogh02}.
-Per aproximar el segment $S(t_a,t_b]$ d'una sèrie $S$, Keogh defineix dues tècniques: interpolació lineal, la recta que connecta $t_a$ i $t_b$, i regressió lineal, la millor recta que aproxima per mínims quadrats el segment entre $t_a$ i $t_b$.
-
-Però també es pot representar una sèrie temporal amb una funció graó (\emph{step} o \emph{staircase function}); és a dir, amb una funció definida a trossos constant (\emph{piecewise constant representation}).
-La representació a trossos constant és utilitzada en electrònica als convertidors digital-analògic (DAC, \emph{digital-to-analog converter}). En aquest cas, un senyal discret es considera una sèrie temporal i per reconstruir el senyal continu típicament s'aplica el model de \emph{zero-order hold}, equivalent a la representació a trossos constant,  o el de \emph{first-order hold},  equivalent a la representació a trossos lineal.
-El model de \emph{zero-order hold} consisteix en mantenir constant cada valor fins al proper. S'obté una representació a trossos constant que en electrònica s'anomena seqüència de pulsos rectangulars (\emph{rectangular pulses}).
-
-%http://en.wikipedia.org/wiki/Piecewise
-
-%http://ca.wikipedia.org/wiki/Funció_definida_a_trossos
-
-%http://en.wikipedia.org/wiki/Rectangular_function
-
-%http://en.wikipedia.org/wiki/Step_function
-
-% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
-
-% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
-
-
-
 
 \subsection{Emmagatzematge i gestió de sèries temporals}
+
+
+
+
+\todo{}
+Time series can be stored and managed by Structured Query Language
+(\acro{SQL}) relational database management systems. However, some
+authors \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11} notice
+that the use of \acro{SQL} systems as a time series backend suffers
+some drawbacks.  On the one hand, \emph{NoSQL} or \emph{NewSQL}
+products are being developed in order to increase the performance and
+flexibility of \acro{SQL} systems
+\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
+however the continue acquisition nature of time series is an issue for
+storing and analysing offline all the data \cite{keogh97}.
+
 
 
 Els sistemes de gestió de bases de dades (SGBD) són els sistemes informàtics que s'encarreguen d'emmagatzemar informació i de permetre a l'usuari consultar-la. A la secció \ref{sec:art:sgbd} es descriu com es formalitzen els SGBD, en aquest apartat ens centrarem en les necessitats que tenen les sèries temporals dels SGBD.
@@ -430,20 +456,6 @@ correlacions.
 
 
 
-\subsection{Sèries temporals vs. senyals digitals}
-\todo{}
-
-Un senyal digital és un senyal (una quantitat que té informació) representat per una seqüència de valors discrets de la quantitat. Un senyal analògic és un senyal representat per una quantitat que varia contínuament.
-
-La similitud és gran entre els conceptes de sèrie temporal i de senyal digital. La possible diferència rau en els principis assumits en els senyals digitals:
-\begin{itemize}
-\item Un senyal digital generalment es considera com a dades equi-espaiades en el temps.
-\item La posició absoluta en el temps de les mostres d'un senyal digital no és rellevant. A més el temps no es considera continu (com a les sèries temporals) sinó que s'assumeix en el sentit estricte de seqüència a on els elements tenen ordre entre ells i una distància segons el ja dit de dades equi-espaiades.
-\item Un senyal digital s'entén com un senyal amb una certa periodicitat (conseqüentment té sentit estudiar-los en el domini de la freqüència).
-\item El teorema de mostreig de Shanon-Nyquist és vital en els senyals digitals. A les sèries temporals l'inframostreig pot ser tolerat en alguns casos.
-\end{itemize}
-
-Quan una sèrie temporal compleix els paràmetres anteriors aleshores és totalment semblant a un senyal digital. Moltes vegades en el treball amb sèries temporals s'assumeixen aquests principis i per tant realment s'estan aplicant operacions del processat digital de senyal.
 
 
 

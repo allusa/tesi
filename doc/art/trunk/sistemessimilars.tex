@@ -1,5 +1,5 @@
 
-\section{Implementacions actuals}
+\section{Sistemes i projectes similars}
 
 Hi ha hagut vàries implementacions de sistemes específics per a sèries
 temporals. Algunes són només l'aplicació d'un algoritme d'anàlisi per
@@ -7,6 +7,209 @@ un problema concret de sèries temporals però altres són més elaborades
 i es defineixen com a SGBD per a sèries temporals.  En aquest apartat
 resumim algunes aplicacions que considerem que implementem conceptes
 dels SGST.
+
+
+
+
+
+
+
+On the other hand, compression techniques for time series are
+considered in the form of approximation to the original signal in
+order to compute analysis such as similarity or pattern search
+\cite{fu11,keogh01,last01} or in the form of compression and
+aggregation approaches for massive data streams
+\cite{cormode08:pods,bonnet01}. However, treating time series as data
+streams does not consider adequately the time dimension nor computes
+the evolution of aggregated parameters along time, which is
+interesting for monitoring purposes.  On a similar approach,
+\emph{RRDtool} \cite{rrdtool} is a system that stores time series
+aggregated in different resolutions in order to compact data and to do
+faster visualisations. However, \emph{RRDtool} is very specific and
+has limited aggregation operations to applications of network
+counters.
+
+
+
+
+\subsection{Database approaches}
+
+Some authors treat \acro{TSMS} as a particular \acro{DBMS} field
+\cite{last01}.  Segev and Shoshani \cite{segev87:sigmod} propose an
+structured language for querying \acro{TSMS}. Their time series
+structures include the notion of regularity and temporal
+representation and their operations are \acro{SQL}-like.  Dreyer et
+al.\ \cite{dreyer94} propose the requirements of special purpose
+\acro{TSMS} and base the model on five basic structural elements:
+events, time series, groups, metadata and time series bases. They
+implement a \acro{TSMS} called \emph{Calanda} which includes calendar
+operations, allows grouping time series and operating with simple
+queries. They exemplify it with financial data. In \cite{schmidt95}
+\emph{Calanda} is compared with temporal systems designed for time
+series.
+
+
+
+ 
+Others implement \acro{TSMS} with array database approaches.
+\emph{SciDB} \cite{stonebraker09:scidb} and \emph{SciQL}
+\cite{zhang11} are array database systems intended for science
+applications, in which time series play a principal role. They
+structure time series into arrays in order to achieve multidimensional
+analysis and they store other data into tables.  \emph{SciDB} is based
+on arrays which, according to the authors, allow to represent time
+series.  In contrast, \emph{SciQL} defines time series as a mixture of
+array, set, and sequence properties and exhibits some time series
+managing characteristics that include time series regularities,
+interpolation or correlation queries.
+% However,
+% difference between tables and arrays seems too physical and leads to
+% ambiguity when representing time series.  
+% Our TSMS model proposes time
+% series as firmly based on relational algebra, clarifying this
+% ambiguity and describing them coherently in terms of information
+% systems theory.
+
+
+
+
+
+Bitemporal \acro{DBMS}, sometimes referred directly as temporal data,
+is a database field related with time. Bitemporal data manages
+historical data and events in databases by associating pairs of
+\emph{valid} and \emph{transaction} time intervals to data.
+Bitemporal data and time series data are not exactly the same and so
+can not be treated interchangeably \cite{schmidt95}, however, there
+are some similarities that can be considered. Moreover, \acro{DBMS}
+research represents bitemporal data as relations extended with time
+intervals attributes and extends relational operations in order to
+deal with related time aspects
+\cite{jensen99:temporaldata,date02:_tempor_data_relat_model}.  We
+formalise time series similarly as how bitemporal data is formalised
+for relational \acro{DBMS}.
+% On the other hand, some bitemporal time concepts might be taken
+% into account by \acro{TSMS}, such as the discussions about time
+% granularities.
+
+
+
+\subsection{Compression techniques}
+
+
+% As \acro{TSMS} suffer from problematic properties of time
+% series, like the ones we describe in
+% Section~\ref{sec:model:properties} mainly the huge data volume,
+% compression techniques are used.  Next, we summarise some current work
+% in \acro{TSMS} with compression.
+
+
+
+\emph{RRDtool} from Oetiker, \cite{rrdtool,lisa98:oetiker}, is a free
+software database management system. It is designed to be used for
+monitoring systems. Because of this, it is focused to a particular
+kind of data, gauges and counters, and it lacks general time series
+operations. \emph{RRDtool} can store multiple time resolution data,
+however Plonka et al.\ \cite{lisa07:plonka} evaluated \emph{RRDtool}
+performance and found limitations when storing huge number of
+different time series. They propose a caching system on top of
+\emph{RRDtool} as a solution.  \emph{RRDtool} is extremely used by the
+free software community so it inspired us to develop a model from its
+main characteristics, that is now what we call multiresolution. A
+similar approach is done by \cite{weigel10} in a system called
+\emph{TSDS} that caches queries by aggregate parameters. They notice
+that data needs to be shown over its full time range and not only
+subsets of data as it is usually provided.  They develop the software
+package \emph{TSDS} where time series are stored fully and then
+requested by date ranges or by applying different filters and
+operations to the time series data.  Our \acro{MTSMS} model is a generic
+approach to the multiresolution features, we define it open so that
+users can define any attribute aggregate functions.
+
+
+Deri et al.\ \cite{deri12:tsdb_compressed_database} present
+\emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
+series that share the same time instants of acquisition. Different
+time series are stored grouped by the time of acquisition instead of
+each time series isolated.  They compare \emph{Tsdb} with \emph{RRDtool} and
+with a relational product. As a consequence of \emph{Tsdb} structure,
+they achieve a better measure addition time but a worse global
+retrieval time as data has to be contiguously regrouped. However, when
+measures have same time this is seen as the same time series in a
+\acro{MTSMS}, so it would be interesting to use this implementation
+architecture of shared time arrays in \acro{MTSMS} for resolution subseries
+with same delta time in order to achieve better performance requirements
+when having much equal acquired time series.
+
+
+There are other lossy compression techniques for time series devoted
+to the optimal approximation representation, that is finding the
+compromise between least data that can reconstruct the original signal
+with least error. Keogh et al.\ \cite{keogh01} cite some possible
+approximation representations for time series such as Fourier
+transforms, wavelets, symbolic mappings or piecewise linear
+representation. They remark this last one as very usual due to its
+simplicity and develop a system called \emph{iSAX}
+\cite{keogh08:isax,keogh10:isax} in order to analyse and index massive
+collections of time series. They describe that the main problem is in
+the indexing of time series and they propose methods for processing
+efficiently. The first method proposed is based on a constant
+piecewise approximation. The time series representation obtained with
+\emph{iSAX} allows reducing the stored space and indexing faster with
+the same quality as other more complex representation methods.  These
+compression techniques are candidates for being used as attribute
+aggregate functions in the \acro{MTSMS} model, as instance it would be
+interesting to define aggregations in the frequency domain of time
+series.
+
+
+ 
+
+
+\subsection{Data stream}
+
+
+
+There are other \acro{TSMS} specifically designed for a particular
+field requirements.  \emph{Cougar} \cite{bonnet01} is a sensor
+database system that has two main structures: one for sensor
+properties stored into relational tables and another for time series
+stored into data sequences from sensors. Time series have specific
+operations and can combine relations and sequences. \emph{Cougar}
+target field is sensor networks, where data is stored distributed in
+different locations. Queries are resolved combining sensor data in a
+data stream abstraction that improves processing performance.
+
+Time series as data streams are also considered when aggregating
+statistically data in order to do fast approximate queries with
+compressed data. Cormode et al.\ \cite{cormode08:pods} develop
+aggregation techniques that consider giving more weight to recent
+information.  Our \acro{MTSMS} model applies a similar approach of
+weighting more recent data but specifically to time series, with
+multiple aggregations and considering time irregularities.  Dou et
+al.\ \cite{dou14:historic_queries_flash_storage} create index
+structures as multiresolution aggregates, like average, count, or top,
+for historical data managed in flash storage; they consider a specific
+storage solution based on register with pointers similar to the
+multiresolution storage in \emph{RRDtool} \cite{lisa98:oetiker}.
+
+
+
+
+
+
+
+\todo{wavelet}
+
+També hi ha l'anàlisi de les sèries temporals amb wavelet analysis. Aquest es basa en anàlisis de la freqüència dels senyals. 
+
+A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design method of most of the practically relevant discrete wavelet transforms (DWT) and the justification for the algorithm of the fast wavelet transform (FWT). It was introduced in this context in 1988/89 by Stephane Mallat and Yves Meyer and has predecessors in the microlocal analysis in the theory of differential equations (the ironing method) and the pyramid methods of image processing as introduced in 1981/83 by Peter J. Burt, Edward H. Adelson and James Crowley.
+
+
+
+
+
+
+
 
 
 
@@ -22,6 +225,9 @@ dels SGST.
 
  
 \item[iSAX] \textcite{keogh08:isax,keogh10:isax} estudien l'anàlisi i l'indexat de co\l.lecions massives de sèries temporals. Descriuen que el problema principal del tractament rau en l'indexat de les sèries temporals i proposen mètodes per calcular-lo de manera eficient. El mètode principal que proposen està basat en l'aproximació a trossos constants de la sèrie temporal \parencite{keogh00}.  Ho implementen en una estructura de gestió de dades que anomenen \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. Les representacions de sèries temporals que s'obtenen amb aquesta eina permeten reduir l'espai emmagatzemat i indexar tant bé com altres mètodes de representació més complexos.
+% Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
+
+% Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
 
 
 
