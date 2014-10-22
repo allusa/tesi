@@ -1,0 +1,103 @@
+
+\documentclass[
+%  prepint,
+  review,
+  twocolumn,
+  5p,
+  sort&compress,
+]{elsarticle}
+
+\journal{Information Systems}
+
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+
+
+% \usepackage{todonotes}
+% \presetkeys%
+% {todonotes}
+% {inline}
+% {}
+
+
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{dateplot}
+\usetikzlibrary{shapes,arrows,positioning}
+\input{imatges/estils_pgf.tex}
+\usepackage{imatges/tikz-uml}
+
+%%%Export fig as esp
+\usepgfplotslibrary{external}
+\tikzexternalize[prefix=fig/]
+
+
+\usepackage{listings}
+\lstdefinestyle{py}{
+  language=python,
+  escapechar=æ,
+  breaklines=true,
+  %basicstyle=\ttfamily,
+  showspaces=false,
+  keepspaces=true,
+}
+
+
+\usepackage{supertabular}
+
+
+
+
+
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+\newcommand{\R}{\mathbb{R}} % the set of real numbers
+\newcommand{\Rb}{\bar\R} % the set of bar real numbers
+\newcommand{\N}{\mathbb{N}} % the set of natural
+\newcommand{\zohe}{\acro{zohe}}
+\newcommand{\dd}{\acro{DD}}
+
+\DeclareMathOperator*{\inst}{\in^t}
+\DeclareMathOperator*{\notinst}{\notin^t}
+\DeclareMathOperator*{\subseteqt}{\subseteq^t}
+\DeclareMathOperator*{\cupt}{\cup^t}
+\DeclareMathOperator*{\dift}{-^t}
+\DeclareMathOperator*{\join}{join}
+\DeclareMathOperator*{\map}{map}
+\DeclareMathOperator*{\fold}{fold}
+\DeclareMathOperator*{\agg}{aggregate}
+\DeclareMathOperator*{\orderfold}{ofold}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+\DeclareMathOperator*{\graph}{graph}
+
+\DeclareMathOperator{\addB}{addB}
+\DeclareMathOperator{\consB}{consB}
+\DeclareMathOperator{\addD}{addD}
+\DeclareMathOperator{\addR}{addR}
+\DeclareMathOperator{\consR}{consR}
+\DeclareMathOperator{\addM}{addM}
+\DeclareMathOperator{\consM}{consM}
+\DeclareMathOperator{\seriedisc}{SerieDisc}
+\DeclareMathOperator{\totalseries}{TotalSeries}
+
+\DeclareMathOperator{\dmap}{Dmap}
+\DeclareMathOperator{\multiresolution}{multiresolution}
+
+\DeclareMathOperator{\meanz}{mean^\zohe}
+\DeclareMathOperator{\maxz}{maximum^\zohe}
+
+
+
+\bibliographystyle{elsarticle-num}
+
+
+
+
+\begin{document}
+
+\pagestyle{empty}
+
+\setlength{\unitlength}{1.3mm}
+\input{imatges/mtsdb-time_window.tex}
+
+\end{document}

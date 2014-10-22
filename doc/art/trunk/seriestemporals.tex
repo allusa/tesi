@@ -1,34 +1,5 @@
 
 
-
-
-
-
-
-
-\todo{ordre?}
-
-* Sèries temporals
-  
-  - mineria
-  - aplicacions
-  - monitoratge de sèries temporals i problemes
-     * censura
-     * mostreig
-
-  - sgst: 
-      ficar aquí els sgbd per sèries temporals i més endavant ja es parlarà dels sgbd en general i com modelar-los i implementar-los.
-
-
-  * Sèries temporals (històrics, predicció, diagnosis, prognosis, etc.)
-  * Mostreig: docs quan període de mostreig no regular
-  * Bases de dades (docs d'emmagatzematge quan la memòria és finita, docs quan període de mostreig no és regular, altres sistemes semblants (comercials,prototips))
-
-
-
-
-
-
 \section{Sèries temporals}
 \label{sec:art:seriestemporals}
 
@@ -306,36 +277,15 @@ aproximacions \parencite{deligiannakis07}.  Una altra solució
 consisteix en tenir les dades distribuïdes en diferents sensors i
 decidir com s'ha de resoldre cada consulta tenint en compte que el
 processament local és més barat que la
-comunicació \parencite{yaogehrke02,gehrkemadden04,bonnet01}.
-
-
-\todo{revisar}
-
-\todo{el tema d'agregar informació en xarxes de sensors és interessant, potser hauria de tenir una secció pròpia}
-
-\todo{citar kim12}:
-Research Article
-Aggregate Queries in Wireless Sensor Networks
-Jeong-Joon Kim,1 In-Su Shin,1 Yan-Sheng Zhang,2 Dong-Oh Kim,3 and Ki-Joon Han1
-Hindawi Publishing Corporation
-International Journal of Distributed Sensor Networks
-Volume 2012, Article ID 625798, 15 pages
-doi:10.1155/2012/625798
-
-
+comunicació \parencite{yaogehrke02,gehrkemadden04,bonnet01,kim12:aggregate_sensor_networks}.
 
 
 
 \subsubsection{Problemes en el monitoratge}
 
 
-\todo{dir que una aplicació emergent és l'anàlisi de dades en temps real/en línia amb el procés per a prendre decisions?}
-
 Els sistemes de monitoratge habitualment presenten problemes derivats
 de la reco\l.lecció de dades. Principalment distingim tres problemes.
-
-\todo{parlar també del problema de la sincronització de rellotges}
-\textcite[cap.~3]{kopetz11:realtime}
 
 
 \begin{enumerate}
@@ -353,18 +303,43 @@ Així doncs, cal comprovar que les dades emmagatzemades són correctes, mitjanç
 
 \item El tercer problema es dóna quan el període de mostreig no és regular, és a dir que les dades no es recullen de manera uniforme en el temps, però les aplicacions no ho contemplen o volen treballar amb dades a intervals regulars, també anomenat dades equi-espaiades.
 
-Una causa de la irregularitat es deu a que els sistemes de monitoratge informàtics sovint no són capaços de complir amb exactitud el temps de mesura sinó que presenten una certa variació, ja sigui deguda a retards en els sensors, les comunicacions o la planificació del monitoratge amb altres tasques concurrents del sistema operatiu. Aquesta causa, però, es pot atenuar si els sensors envien el temps de mesura juntament amb el valor mesurat. Aleshores, el problema recau en la sincronització dels rellotges dels sensors. \todo{busca jitter en el periodic sampling de control}
+Una causa de la irregularitat es deu a que els sistemes de monitoratge informàtics sovint no són capaços de complir amb exactitud el temps de mesura sinó que presenten una certa variació, ja sigui deguda a retards en els sensors, les comunicacions o la planificació del monitoratge amb altres tasques concurrents del sistema operatiu. Aquesta causa, però, es pot atenuar si els sensors envien el temps de mesura juntament amb el valor mesurat. Aleshores, el problema recau en la sincronització dels rellotges dels sensors que descriu \textcite[cap.~3]{kopetz11:realtime}.
 
-Una altra causa es deu a que l'adquisició de dades prové de processos sotmesos a sistemes de control, els quals prenen el control de l'adquisició de dades. És a dir, el sistema de monitoratge ha d'obeir a les restriccions de temps imposades pels llaços de control. Aquestes restriccions són especialment crítiques en els sistemes de control en temps real ja que, aleshores, el sistema de monitoratge no pot imposar restriccions de temps diferents de les que s'han calculat per als llaços de control.  \textcite{lozoya08} mostren que s'ha de vigilar amb les entrades i sortides de les tasques periòdiques als sistemes en temps real. L'actuació dels sistemes de control es degrada quan no es té en compte que les operacions d'entrada i sortida estan subjectes a fluctuacions degudes al mostreig i a latències. Aquest problema afecta als sistemes de monitoratge en dues vessants.
-Per una banda, els sistemes de monitoratge tenen una part de l'adquisició controlada per les aplicacions de control en temps real i per tant el període de mostreig resultant que veu el monitor no és regular. 
-Per altra banda, les aplicacions que analitzen les dades obtingudes del monitoratge poden veure com la seva actuació es degrada si no consideren que l'adquisició de dades és irregular, el qual és similar a la regressió que s'observa \parencite{lozoya08} quan en el disseny d'un controlador discret es considera que es mostreja i s'actua periòdicament però en la implementació amb un sistema en temps real aquest pot fluctuar la periodicitat.
-\todo{event based sampling/control}
 
+Una altra causa es deu a que l'adquisició de dades prové de processos
+sotmesos a sistemes de control, els quals prenen el control de
+l'adquisició de dades. És a dir, el sistema de monitoratge ha d'obeir
+a les restriccions de temps imposades pels llaços de control. Aquestes
+restriccions són especialment crítiques en els sistemes de control en
+temps real ja que, aleshores, el sistema de monitoratge no pot imposar
+restriccions de temps diferents de les que s'han calculat per als
+llaços de control.  \textcite{lozoya08} mostren que s'ha de vigilar
+amb les entrades i sortides de les tasques periòdiques als sistemes en
+temps real. L'actuació dels sistemes de control es degrada quan no es
+té en compte que les operacions d'entrada i sortida estan subjectes a
+fluctuacions degudes al mostreig i a latències. Aquest problema afecta
+als sistemes de monitoratge en dues vessants.  Per una banda, els
+sistemes de monitoratge tenen una part de l'adquisició controlada per
+les aplicacions de control en temps real i per tant el període de
+mostreig resultant que veu el monitor no és regular.  
+%
+Per altra banda,
+les aplicacions que analitzen les dades obtingudes del monitoratge
+poden veure com la seva actuació es degrada si no consideren que
+l'adquisició de dades és irregular. Això és similar a la regressió que
+s'observa \parencite{lozoya08} quan en el disseny d'un controlador
+discret es considera que es mostreja i s'actua periòdicament però hi
+ha un sistema en temps real que fa fluctuar la periodicitat, sobretot
+si el control basa el mostreig segons els esdeveniments que ocorren.
 \end{enumerate}
 
 
 
-En conclusió, per tal de gestionar la complexitat derivada de la recollida de dades i també la complexitat de les consultes posteriors per part de l'usuari, els sistemes de monitoratge es recolzen en sistemes de gestió de bases de dades per gestionar l'emmagatzematge de les dades i la recuperació d'informació.
+En conclusió, per tal de gestionar la complexitat derivada de la
+recollida de dades i també la complexitat de les consultes posteriors
+per part de l'usuari, els sistemes de monitoratge es recolzen en
+\gls{SGBD} per gestionar l'emmagatzematge de les dades i la
+recuperació d'informació.
 
 
 
@@ -374,82 +349,124 @@ En conclusió, per tal de gestionar la complexitat derivada de la recollida de d
 \subsection{Emmagatzematge i gestió de sèries temporals}
 
 
+Els \gls{SGBD} són els sistemes informàtics que s'encarreguen
+d'emmagatzemar informació i de permetre a l'usuari consultar-la. Més
+endavant, a la~\autoref{sec:art:sgbd}, descrivim com es formalitzen els
+\gls{SGBD}, en aquest apartat ens centrem en les necessitats que tenen
+les sèries temporals dels \gls{SGBD}.
 
 
-\todo{}
-Time series can be stored and managed by Structured Query Language
-(\acro{SQL}) relational database management systems. However, some
-authors \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11} notice
-that the use of \acro{SQL} systems as a time series backend suffers
-some drawbacks.  On the one hand, \emph{NoSQL} or \emph{NewSQL}
-products are being developed in order to increase the performance and
-flexibility of \acro{SQL} systems
-\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
-however the continue acquisition nature of time series is an issue for
-storing and analysing offline all the data \cite{keogh97}.
+Les sèries temporals es diferencien d'altres tipus de dades en el fet
+que els seus valors són dependents d'una variable: el temps. Com a
+conseqüència, qualsevol \gls{SGBD} que les vulgui tractar no ho pot
+fer de manera independent pels valors i pel temps; ha de conservar la
+coherència temporal.  
+%
+Per poder aplicar les tècniques d'anàlisi de sèries temporals de
+manera eficient cal disposar de \gls{SGBD} específics.  Durant
+l'última dècada, el maquinari informàtic ha millorat tant des del punt
+de vista tecnològic com econòmic \parencite{deligiannakis07}, la qual
+cosa ha facilitat el procés d'adquisició de dades, per exemple amb
+xarxes de sensors, i alhora ha ampliat la capacitat per emmagatzemar
+les dades.  Així doncs, el volum de dades a tractar en els \gls{SGBD}
+cada cop esdevé més crític, cosa que a vegades s'agrupa amb el nom de
+\emph{Big Data} \parencite{jagadish14:bigdata}.
 
 
-
-Els sistemes de gestió de bases de dades (SGBD) són els sistemes informàtics que s'encarreguen d'emmagatzemar informació i de permetre a l'usuari consultar-la. A la secció \ref{sec:art:sgbd} es descriu com es formalitzen els SGBD, en aquest apartat ens centrarem en les necessitats que tenen les sèries temporals dels SGBD.
-
-
-Les sèries temporals es diferencien d'altres tipus de dades en que els seus valors són dependents d'una variable: el temps. Com a conseqüència, qualsevol SGBD que hi vulgui tractar no ho pot fer de manera independent pels valors i pel temps; ha de conservar la coherència temporal.
-
-Per poder aplicar les tècniques d'anàlisis de les sèries temporals de manera eficient cal disposar de SGBD específics. 
-Durant l'última dècada, el maquinari informàtic ha millorat tant des del punt de vista tecnològic com de l'econòmic \parencite{deligiannakis07}, el qual ha facilitat l'adquisició de dades, per exemple amb xarxes de sensors, i alhora ha ampliat la capacitat per emmagatzemar les dades. 
-Per tant, el volum de dades a tractar  en els SGBD cada cop esdevé més crític.
 
  
-En els SGBD, el problema de grans quantitats de dades també es troba en altres camps com demostren \textcite{mylopoulos96} sobre la necessitat de grans bases de dades de coneixement. Els SGBD que tracten amb aquestes dades s'anomenen \emph{very large databases} (VLDB) i han de construir, accedir i gestionar la quantitat de dades de manera eficient.
+En l'àmbit d'aplicació dels \gls{SGBD}, el problema de grans
+quantitats de dades també es troba en altres camps com demostren
+\textcite{mylopoulos96} sobre la necessitat de grans bases de dades de
+coneixement. Els \gls{SGBD} que tracten aquestes dades s'anomenen
+\gls{VLDB}, els quals han de construir, accedir i gestionar la
+quantitat de dades de manera eficient.
+%
+\textcite{ogras06} consideren que les aproximacions que fan les
+\gls{VLDB} estan pensades per a bases de dades estàtiques i en canvi
+observen que les sèries temporal normalment són dinàmiques, és a dir
+de naturalesa contínua i de mida no fitada. Conseqüentment, conclouen
+que les solucions tradicionals, les quals analitzen a posteriori i
+sense tenir en compte l'ordre, no es poden aplicar a les sèries
+temporals a causa de l'arribada seqüencial i contínua de les dades.
+Com a solució proposen resumir dinàmicament les sèries temporals amb
+les tècniques de compressió que s'apliquen en altres aplicacions on hi
+ha bases de dades grans.
 
-\textcite{ogras06} consideren que les aproximacions que fan les VLDB
-estan pensades per a bases de dades estàtiques. No obstant, observen
-que les sèries temporal normalment són dinàmiques, és a dir de
-naturalesa contínua i de mida no fitada. Conseqüentment, conclouen que
-les solucions tradicionals, les quals analitzen a posteriori i sense
-tenir en compte l'ordre, no es poden aplicar a causa de l'arribada
-seqüencial i contínua de les dades.  Com a solució proposen resumir
-dinàmicament les sèries temporals amb les tècniques de compressió que
-s'apliquen en altres aplicacions on hi ha bases de dades grans.
 
 
+Les sèries temporals es poden emmagatzemar i gestionar en els
+\gls{SGBD} habituals per a altres dades, com els sistemes amb
+\gls{SQL}.  Això no obstant, alguns
+autors \parencite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}
+consideren problemàtic l'ús de sistemes \gls{SQL} com a suport per a
+les sèries temporals. Per tal d'incrementar-ne el rendiment i la
+flexibilitat, s'estan desenvolupant productes \emph{NoSQL} o
+\emph{NewSQL} \parencite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
+encara que la naturalesa d'adquisició contínua de les sèries temporals
+és un repte per a emmagatzemar i analitzar en temps diferit totes les
+dades capturades \parencite{keogh97}.
 
 
-\textcite{dreyer94} proposen desenvolupar SGBD que implementin operacions específiques per les sèries temporals, aleshores els anomenen sistemes de gestió de bases de dades per sèries temporals (SGST, \emph{time series database management systems}). Consideren que els altres SGBD no són adequats per tractar sèries temporals, tot i que després de comparar els SGBD per dades temporals i els SGST \parencite{schmidt95} troben que hi ha aspectes comuns entre els dos sistemes.
-Els SGST estan optimitzats per gestionar les dades segons les operacions de temps i rotació, les quals són molt comunes en la gestió de les sèries temporals.  A més també cal controlar el creixement de la base de dades i la consulta ha de ser flexible i d'alta velocitat \parencite{keogh10:isax}. 
-No obstant, fins a on coneixem, les propietats d'un model de SGST no s'han investigat més enllà  ja que la recerca s'ha concentrat en tasques de mineria de dades. Per exemple \textcite{last01} estudien una metodologia general per descobrir coneixement en els SGST, tant pel que fa a 
-patrons temporals %(groups of events ordered by time)
+\textcite{dreyer94} proposen desenvolupar \gls{SGBD} que implementin
+operacions específiques per les sèries temporals, aleshores els
+anomenen \glspl{SGST}. Consideren que els altres \gls{SGBD} no són
+adequats per a tractar sèries temporals, tot i que després de comparar
+els \gls{SGBD} per a dades bitemporals i els
+\gls{SGST} \parencite{schmidt95} troben que hi ha aspectes comuns
+entre tots dos sistemes.  Els \gls{SGST} estan optimitzats per
+gestionar les dades segons les operacions de temps i rotació, les
+quals són molt comunes en la gestió de les sèries temporals.  A més
+també cal controlar el creixement de la base de dades i la consulta ha
+de ser flexible i d'alta velocitat \parencite{keogh10:isax}.  No
+obstant això, fins on coneixem, les propietats d'un model de
+\gls{SGST} no s'han investigat més enllà ja que la recerca s'ha
+concentrat en tasques de mineria de dades. Per exemple
+\textcite{last01} estudien una metodologia general per descobrir
+coneixement en els \gls{SGST}, tant pel que fa a patrons
+temporals %(groups of events ordered by time)
 com a regles temporals%(cause-effect relationships between events)
-, i breument noten l'existència del model \cite{dreyer94} pels SGST.
+, i breument noten l'existència de la proposta  de \textcite{dreyer94} pels
+\gls{SGST}.
 
 
-Altres estudis proposen tractar les sèries temporals com a tipus que tenen ordre, per exemple seqüències o matrius.
 
-\textcite{seshadri96:thesis} proposa que les sèries temporals són un subconjunt de les seqüències i per tant el model i les operacions per les seqüències \parencite{seshadri95} serveixen per les sèries temporals. 
-\textcite{bonnet01} utilitzen el model de seqüències en SGBD distribuïts per xarxes de sensors, aleshores l'estratègia de comunicació inclou agregacions de les sèries temporals en els sensors \parencite{demers03}.
-També es relaciona el model de seqüències de les sèries temporals amb els \emph{data streams} \parencite{babcock02,jagadish95,ogras06}. Els \emph{data streams} són dades que arriben contínuament i amb ordre temporal i es modelen com una seqüència on només s'hi poden afegir elements. Aleshores les consultes poden ser contínues, és a dir cada cop que arriba una dada nova s'actualitza incrementalment la informació. Per les sèries temporals s'utilitza en el càlcul de correlacions i prediccions de forma incremental \parencite{yi00} i en la cerca de patrons \parencite{bai05}.
+Altres estudis proposen tractar les sèries temporals com a tipus que
+tenen ordre, per exemple seqüències o matrius.
+
+\textcite{seshadri96:thesis} proposa que les sèries temporals són un
+subconjunt de les seqüències i per tant el model i les operacions per
+les seqüències \parencite{seshadri95} serveixen per les sèries
+temporals.  \textcite{bonnet01} utilitzen el model de seqüències en
+\gls{SGBD} distribuïts per xarxes de sensors, aleshores l'estratègia
+de comunicació inclou agregacions de les sèries temporals en els
+sensors \parencite{demers03}.  També es relaciona el model de
+seqüències de les sèries temporals amb els \emph{data
+  streams} \parencite{babcock02,jagadish95,ogras06}. Els \emph{data
+  streams} són dades que arriben contínuament i amb ordre temporal i
+es modelen com una seqüència on només s'hi poden afegir
+elements. Aleshores les consultes poden ser contínues, és a dir cada
+cop que arriba una dada nova s'actualitza incrementalment la
+informació. Per les sèries temporals s'utilitza en el càlcul de
+correlacions i prediccions de forma incremental \parencite{yi00} i en
+la cerca de patrons \parencite{bai05}.
 %Data Stream Management System (DSMS) is an extension of Data Base Management System  
 
-\todo{tot i així sembla que el concepte de bases de dades científiques ja apareix des de fa força temps \cite{segev87:sigmod}} 
-En els SGBD per matrius \emph{arrays} destaquen els anomenats sistemes
-de gestió de bases de dades científiques, camp en el qual les sèries
-temporals hi tenen un paper de primer
-ordre \parencite{zhang11}. \textcite{stonebraker09:scidb} estudien les
-necessitats d'aquests sistemes sobretot en l'àmbit de la
+En els \gls{SGBD} per matrius (\emph{arrays}) destaquen els anomenats
+sistemes de gestió de bases de dades científiques, camp en el qual les
+sèries temporals hi tenen un paper de primer
+ordre \parencite{zhang11,segev87:sigmod}. \textcite{stonebraker09:scidb}
+estudien les necessitats d'aquests sistemes sobretot en l'àmbit de la
 ciència. \textcite{kersten11} proposen un sistema molt semblant però a
-més integren el seu llenguatge, anomenat SciQL (\emph{SQL for
-  science applications}), amb la sintaxi de SQL (\emph{Structured Query Language},
-vegeu apartat \ref{sec:estat:sgbdr}). \textcite{zhang11} exemplifiquen
-detalladament l'ús de SciQL en les sèries temporals per a algunes de
-les seves propietats: regularitat, interpolació i cerca de
-correlacions.
+més integren el seu llenguatge, anomenat SciQL (\emph{\gls{SQL} for
+  science applications}), amb la sintaxi de
+\gls{SQL}. \textcite{zhang11} exemplifiquen detalladament l'ús de
+SciQL en les sèries temporals per a algunes de les seves propietats:
+regularitat, interpolació i cerca de correlacions.
 
 
 
 
-\todo{big data}
-
-\url{http://cacm.acm.org/magazines/2014/7/176204-big-data-and-its-technical-challenges/fulltext}
 
 
 
