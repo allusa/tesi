@@ -1,0 +1,787 @@
+\section{Sistemes de gestió de bases de dades}
+\sectionmark{SGBD}
+\label{sec:art:sgbd}
+\glsreset{SGBD}
+\glsreset{SQL}
+
+Segons \textcite{date:introduction}, ``una base de dades és un
+contenidor informàtic persistent per a una co\l.lecció de dades''. El
+sistemes informàtics que tracten amb bases de dades s'anomenen
+\glspl{SGBD} i tenen els
+objectius d'emmagatzemar informació i permetre consultar i modificar
+aquesta informació per part dels usuaris.  Per complir aquests
+objectius, els \gls{SGBD} ofereixen a l'usuari diferents operacions com per
+exemple crear una base de dades, afegir dades o operar amb les dades
+emmagatzemades.
+
+Els àmbits d'aplicació dels \gls{SGBD} són varis: operacions repetitives i
+rutinàries de producció, anomenades \emph{online transaction
+  processing}; sistemes per a prendre decisions empresarials, a
+vegades anomenats \emph{data warehouse}; processament de dades
+científiques; etc.  Alguns dels avantatges de gestionar aquestes dades
+en bases de dades són: evitar la disgregació de la informació i
+tenir-la perfectament organitzada, poder compartir la mateixa
+informació entre diverses aplicacions, garantir la consistència i la
+integritat de les dades i evitar redundàncies innecessàries, afegir
+seguretat a la gestió de les dades o optimitzar les consultes que
+l'usuari so\l.licita.
+
+
+Els \gls{SGBD} es poden descriure mitjançant teories matemàtiques que reben
+el nom de \emph{model de dades}.  Segons
+\citeauthor{date:introduction}, ``un model de dades és una definició
+abstracta, auto continguda i lògica dels objectes, de les operacions i
+de la resta que conjuntament constitueixen la màquina abstracta amb
+què els usuaris interaccionen. Els objectes permeten modelar
+l'estructura de les dades. Les operacions permeten modelar el
+comportament''. Ara bé, \citeauthor{date:introduction} avisa que el
+concepte \emph{model de dades} també s'usa per a definir una
+estructura o esquema persistent de dades concreta i, per tant, cal distingir
+adequadament entre tots dos significats.  Tal com fa Date, en aquest
+document parlarem de model de dades, o simplement de model, en el
+primer sentit de màquina abstracta. També distingeix entre els
+conceptes de \emph{dades} --allò que està emmagatzemat a la base de
+dades-- i \emph{informació} --el significat que algú dóna a aquestes
+dades.
+
+
+Un model de \gls{SGBD} que ha s'ha consolidat i ha esdevingut un
+referent és el model relacional (\emph{relational model}). L'èxit
+d'aquest model és degut principalment que es fonamenta en teories
+matemàtiques consolidades: la lògica de predicats i la teoria de
+conjunts \parencite{date:introduction}. En base al model relacional es
+va definir el llenguatge \gls{SQL} per operar amb bases de dades que
+ha esdevingut un estàndard en molts \gls{SGBD}.
+
+
+Els \gls{SGBD} se solen dissenyar amb una arquitectura de tres nivells: el
+físic, el lògic i el d'usuari \parencite{date:introduction}. 
+\begin{itemize}
+
+\item El nivell d'usuari o extern agrupa les eines que tenen
+  disponibles els usuaris per a interactuar amb la base de dades, per
+  exemple en el cas relacional \gls{SQL} pertany a aquest nivell.
+
+\item El nivell lògic o conceptual és l'abstracció formal dels
+  conceptes dels \gls{SGBD}. En aquest nivell hi pertanyen els models de
+  dades, per exemple el mateix model relacional en el cas relacional.
+
+\item El nivell físic o intern agrupa la programació informàtica de
+  com s'han d'emmagatzemar físicament les base dades i de com s'has
+  d'executar les operacions. Per exemple en aquest nivell apareixen
+  els registres de memòria, punters, mètodes d'accés als fitxers,
+  etc., conceptes que no tenen res de relacional.
+\end{itemize}
+
+
+Una bona diferenciació entre els tres nivells d'arquitectura aporta
+independència a les dades (\emph{data
+  independence}) \parencite{date:dictionary}. Date considera que és
+una de les propietats més importants que han de complir els \gls{SGBD}. De
+forma resumida, la independència a les dades significa que el nivell
+lògic no ha de contenir detalls d'implementació ni parlar d'objectius
+de rendiment sinó que aquests són part del nivell físic. Així ha de
+ser possible canviar el nivell físic sense afectar el nivell lògic.
+mantenint.  Així doncs, un model de dades concret pot tenir diverses
+implementacions en el nivell físic, per exemple
+\emph{PostgreSQL} \parencite{postgresql} per al model
+relacional. \textcite{dbdebunk} detalla algunes confusions actuals
+sobre la independència entre el model i la implementació.
+
+ 
+
+
+\subsection{Sistemes relacionals}
+\label{sec:estat:sgbdr}
+
+El model relacional va ser proposat per \textcite{codd69,codd70} com una
+teoria abstracta de dades per tal de formalitzar els \gls{SGBD} amb teories
+matemàtiques consolidades.  El model relacional va significar un gran
+canvi en la recerca en \gls{SGBD} ja que, a diferència dels models antics,
+possibilitava l'estudi dels problemes amb teories matemàtiques: la
+lògica i l'àlgebra de
+conjunts \parencite{atzeni13:relational_model_dead}.  A partir de
+llavors el model relacional ha evolucionat fins a aconseguir una gran
+solidesa, amb \textcite{date04:introduction8,date06,date:dictionary} com
+a principal divulgador.  Quan els \gls{SGBD} es basen en el model relacional
+s'anomenen \glspl{SGBDR}.
+
+
+
+El model relacional defineix el nucli dels \gls{SGBD} en tres parts:
+\begin{itemize}
+\item Estructural: les relacions com a estructura principal per a
+  representar les dades. Els tipus de dades també són necessaris per a
+  representar les dades però no es defineixen en l'estructura
+  principal sinó que són considerats ortogonals, cosa que a l'apartat
+  següent expliquem en més detall.
+%(v.~\autoref{sec:art:relacional-tipus}=
+
+\item Manipulació: operacions sobre les relacions i que resulten en
+  noves relacions. Són definides dualment a partir de l'àlgebra de
+  conjunts i de la lògica, anomenades àlgebra relacional i càlcul
+  lògic respectivament. Totes dues tenen una definició independent
+  però són equivalents.
+
+\item Integritat: regles d'integritat o restriccions que han de
+  complir les variables relació. La integritat es basa en aplicar
+  operacions que han de retornar el valor cert. La integritat s'ha de
+  complir sempre, normalment es comprova durant les assignacions.  Per
+  exemple la clau primària és una regla d'integritat.
+\end{itemize}
+
+
+La definició de les relacions inicialment es basava en el concepte
+matemàtic homònim en el sentit de producte cartesià de conjunts, però
+el model relacional ha anat evolucionat i ara ja no són exactament el
+mateix. Tampoc no s'ha de confondre el terme relació (\emph{relation})
+del model relacional amb el terme relació de parentiu
+(\emph{relationship}). El primer és el concepte basat en conjunts que
+definim a continuació mentre que el segon és el concepte de parentiu
+entre entitats: una a molts, molts a molts, etc. De fet, les
+estructures de parentiu és una de les moltes dades que poden ser
+expressades en el model relacional. Alguns autors del model relacional
+prefereixen el terme taula relacional (\emph{relational table}) en
+comptes de relació \parencite{dbdebunk}.
+
+
+
+Les relacions es defineixen com una parella de capçalera
+(\emph{heading}) i cos (\emph{body}). El cos és un conjunt de tuples
+on cada tuple és un conjunt de parelles atribut i valor. Tots els
+tuples d'una mateixa relació tenen els mateixos atributs, així es
+distingeix entre la capçalera de la relació --els atributs-- i el cos
+de la relació --els tuples.
+
+Per exemple una relació entre un nom i una edat és
+$r_1=(\{\text{nom},\text{edat} \}, \{
+\{(\text{nom},\text{a}),(\text{edat},21)\},
+\{(\text{nom},\text{b}),(\text{edat},23) \} \})$.  Simplificant i
+sense explicitar que els atributs no tenen ordre, la mateixa relació
+es pot expressar de forma més compacta $r_1=(
+(\text{nom},\text{edat}), \{ (\text{a},21),(\text{b},23) \})$.  En la
+definició estructural del model relacional, els valors sempre
+pertanyen a un tipus de dades i cada atribut és restringit a un únic
+tipus de dades. Així, de manera més completa hauríem d'escriure la
+capçalera de la relació $r1$ com $\{\text{nom}: \text{text},\,
+\text{edat}:\text{enter} \}$.
+
+
+En el context lògic del model relacional, les relacions tenen la
+interpretació següent: les capçaleres són predicats i els tuples són
+proposicions certes per al predicat. En un context informàtic també es
+pot interpretar que les capçaleres són funcions amb paràmetres i els
+tuples contenen els arguments que fan certes les funcions. 
+%També a vegades definit com a intensió/extensió de la relació
+Aquesta interpretació lògica és la que realment estableix el
+significat de les relacions en un context determinat.  Així, per
+exemple, la capçalera de la relació $r_1$ podria correspondre al
+predicat ``L'estudiant \emph{nom} té \emph{edat} anys'' i les
+proposicions certes són: ``L'estudiant a té 21 anys'' i ``L'estudiant
+b té 23 anys''.  Les relacions es defineixen segons el principi de
+\emph{Closed World Assumption}; és a dir que els tuples que apareixen
+són proposicions certes i els que no apareixen són proposicions
+falses. Així, per exemple, podem dir que la proposició ``L'estudiant a
+té 22 anys'' és falsa.
+
+
+
+Les relacions es poden representar gràficament com a taules, per
+exemple a la \autoref{fig:art:relacio:taula} es visualitza la relació
+$r_1$.  Així, els conceptes de taules s'associen als de relacions i,
+informalment, les relacions s'anomenen taules, els tuples, files o
+registres, i els atributs, columnes o camps.
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$r_1$} \\ \hline
+    nom  & edat \\ \hline
+    a  & 21 \\
+    b  & 23 \\ \hline
+  \end{tabular} 
+  \caption{Visualització com a taula d'una relació}
+  \label{fig:art:relacio:taula}
+\end{figure}
+
+El nombre de tuples d'una relació s'anomena cardinal
+(\emph{cardinality}) i el nombre d'atributs, grau
+(\emph{degree}). Així doncs, la relació $r_1$ té cardinal 2 i grau 2.
+Hi ha només dues relacions que tenen grau zero. Tenen un nom
+específic, són la relació amb la capçalera i el cos buits
+$\text{table\_DUM} = (\{\},\{\})$ i la relació amb la capçalera buida
+i un tuple buit $\text{table\_DEE} = (\{\},\{\{\}\})$. Aquestes, però, no
+tenen una representació clara com a taula.  
+
+
+
+Pel que fa als operadors, en el cas de l'àlgebra relacional estan
+fortament relacionats amb l'àlgebra de conjunts. Així hi ha els
+operadors habituals de conjunts, com per exemple la unió, la
+diferència, la intersecció o el producte; i altres d'específics per a
+les relacions, com per exemple la projecció, la selecció, la junció o
+el reanomena \parencite[\gls{capitol}~7]{date04:introduction8}.  En el cas del
+càlcul lògic, també anomenat càlcul relacional, estan relacionats amb
+la lògica de predicats. Així per exemple hi ha un operador de rang per
+recórrer el conjunt de tuples, el quantificador existencial o el
+quantificador universal.\parencite[cap.~8]{date04:introduction8}.
+
+
+
+En el model relacional es distingeix entre les variables relació o
+relvar (\emph{relation variable}) i els valors relació (\emph{relation
+  value}). El valor relació s'anomena simplement relació, com ja hem
+definit fins ara.  Una relvar és una variable a les qual s'assigna una
+relació.  L'assignació a les relvar es defineix amb el símbol $:=$ a
+diferència de la igualtat algebraica o la definició de variables
+algebraiques de símbol $=$, com ja hem usat.  Les relvar són els
+objectes bàsics d'emmagatzematge a les bases de dades i per tant són
+els objectes bàsics als quals s'apliquen les regles
+d'integritat. També hi ha operacions que treballen sobre les relvar,
+per exemple la inserció, l'actualització o l'esborrat, que són àlies
+de combinacions de l'assignació amb altres operacions relacionals.
+Unes relvar especials són les vistes. Les vistes són relvar derivades
+a partir d'operacions a altres relvar; és a dir són àlies
+d'expressions relacionals i actuen com a relvar en altres
+expressions. A causa d'això les vistes també s'anomenen relvar
+virtuals mentre que les relvar que no són derivades s'anomenen relvar
+base. Les relvar s'emmagatzemen en una relació especial de les bases
+de dades: el catàleg.
+
+
+
+
+
+
+\subsubsection{Extensió del model amb nous tipus}
+\label{sec:art:relacional-tipus}
+%Com s'ha d'estendre el model relacional?
+
+El model relacional ha evolucionat però no es considera que hi hagi hagut
+cap revolució des de la seva aparició
+\parencite[cap.~19]{date06}. %[date06ch19pp254]
+Consideren que el model relacional és bastant complet i que segueix
+evolucionant en la comprensió de les teories i els conceptes que hi
+intervenen, com per exemple la recent àlgebra relacional
+`A' \parencite[\gls{apendix}~A]{date06:_datab_types_relat_model}.  En aquest
+context d'evolució, es preveuen les investigacions que poden estendre
+el model relacional. Aquestes investigacions estudien propietats de
+les dades, com per exemple seguretat, redundància o optimitzacions de
+les consultes, a partir del nucli del model relacional i permeten
+aconseguir abstraccions més generals de les
+dades \parencite[cap.~25]{date06}. %[date06ch25pp441]
+
+
+En el sentit d'extensió cal destacar la definició de nous tipus de
+dades, els quals estenen els \gls{SGBD} en funcionalitat.  Els tipus de
+dades (\emph{data type}, també anomenats dominis, tipus de dades
+abstracte o solament tipus, són la definició d'un conjunt de
+valors. Cada tipus té associat un conjunt d'operadors, en alguns casos
+fins i tot s'entén que la definició tipus inclou aquests operadors.
+De manera informal \parencite{date04:introduction8} fa correspondre
+els conceptes de tipus i de relacions amb els conceptes lingüístics de
+noms i frases.
+
+
+Com s'ha dit anteriorment, la teoria de tipus i el model relacional
+són ortogonals: el model relacional requereix que hi hagi un sistema
+de tipus de dades però diu molt poc de la naturalesa d'aquest sistema,
+si bé el model relacional defineix que com a mínim hi ha d'haver el
+tipus booleà i el tipus
+relació \parencite{date:thethirdmanifesto}. 
+Pel que fa a implementar
+els tipus de dades en els \gls{SGBD}, destaquen les primeres propostes fetes per
+\textcite{stonebraker86} per tal que els usuaris puguin definir els
+seus propis tipus de dades i les de \textcite{seshadri98:_enhan} que
+estudia la definició de tipus de dades complexos per tal que es puguin
+tractar eficientment.
+
+
+Normalment els \gls{SGBD} tenen uns tipus predefinits, com els enters, els
+reals o els caràcters. Això no obstant, els tipus de dades poden
+definir qualssevol nous valors, com per exemple matrius, documents de
+text, imatges o fins i tot relacions.  Aquests nous tipus de dades
+poden afegir estructures i operadors que ja siguin expressables amb
+l'àlgebra relacional o bé també poden definir-se a partir de l'àlgebra
+relacional. No obstant això, disposar d'un bon model d'un tipus de
+dades serveix per augmentar el nivell d'abstracció en el tractament
+dels conceptes relacionats amb aquestes dades
+\parencite{date02:_tempor_data_relat_model}. %[date02:_tempor_data_relat_model:prefaceppxix]
+
+
+El tipus de dades d'una relació és determinat per la seva capçalera.
+Així doncs, la relació $r1$ és de tipus relació $\{\text{nom}:
+\text{text},\, \text{edat}:\text{enter} \}$.  El tipus relació pot ser
+usat a qualsevol definició on puguin ser usats els altres tipus de
+dades: definicions de variables, operadors, nous tipus de dades,
+etc. Tot i així la definició del tipus relació és molt rígida quant
+als tipus dels seus atributs, cosa que, per exemple, no permet definir
+nous operadors genèrics per a qualsevol relació.  Recentment ha
+aparegut una proposta preliminar de
+\textcite{darwen13:generic_relation_type} per a solucionar aquest
+problema. Aquesta proposta permetria definir capçaleres genèriques de
+relacions mitjançant el símbol asterisc; és a dir capçaleres amb
+atributs i tipus genèrics. Així per exemple permetria usar el tipus
+relació $\{ * \}$ que determinaria una relació de qualsevol tipus; és
+a dir que el conjunt de valors del tipus relació $\{ * \}$ contindria
+totes les relacions possibles: la table\_DUM, la table\_DEE, la $r1$,
+etc. Això no obstant, encara cal flexibilitzar més les definicions
+dels tipus relació. Per exemple no és possible definir nous tipus de
+dades que siguin subtipus del tipus relació, cosa que permetria que
+els valors d'aquests subtipus funcionessin com a arguments en els
+operadors predefinits de l'àlgebra relacional.
+
+
+
+
+En algunes extensions, el model relacional ha incorporat conceptes
+d'altres disciplines. En destaca sobretot la incorporació de conceptes
+dels models d'orientació a objectes en el cas dels tipus de dades i de
+l'herència.  Des d'aquesta perspectiva, els \gls{SGBDR} també s'anomenen
+\gls{SGBD} objecte/relacionals (\emph{object/relational})
+\parencite{date02:foundation}.  Tot i així, \textcite[cap.~6]{date06}
+avisa de l'ús de la mateixa terminologia amb significat lleugerament
+diferent entre el model relacional i l'orientació a objectes, sobretot
+pel que fa als termes valor, variable i tipus. %[date06ch6pp91]
+Les diferències provenen principalment del fet que el model relacional
+és un model de dades i el model d'orientació a objectes és un
+paradigma de programació i és més proper a un model d'emmagatzematge.
+% 'the object model' is closer to being a model of storage than it is
+% to being a model of data. [date06ch6pp92]
+
+
+
+
+
+% A la \autoref{tab:sgbd:relacional-objectes} es resumeix la possible
+% equivalència lògica dels conceptes entre el model relacional i
+% l'orientació a objectes tal com Date exposa al capítol 6, tot i que
+% cal tenir en compte que la semblança és difusa.
+
+% \begin{table}
+% \centering
+% \begin{tabular}[ht]{ll}
+%   relacional & objectes \\\hline \hline
+%   tipus & tipus, classe, interfície \\\hline
+%   representació & classe, atributs, propietats \\\hline
+%   valor relació, objecte, instància & valor, estat, objecte/instància immutable/estàtic \\\hline
+%   relvar & valor, objecte/instància mutable/dinàmic \\\hline
+%   relvar??? & variable \\\hline
+%   operador & funció, mètode \\\hline
+% \end{tabular}
+% \caption{Possible equivalència lògica de termes entre el model relacional i l'orientació a objectes \parencite[cap.~6]{date06}.}
+% \label{tab:sgbd:relacional-objectes}
+% \end{table}
+
+% Relacional: tipus | representació |  valor, objecte, instància  | variable  | referència (adreça continguda en una variable) | operadors (de lectura i de modificació)
+% Objectes: tipus, classe (tipus amb atributs i mètodes), interfície | classe, atributs,propietats  |  valor, estat, objecte/instància immutable/estàtic |  valor, objecte/instància mutable/dinàmic  | variable | funcions,mètodes (funcions dins de classes) (purs o modificadors)
+
+
+
+
+
+
+
+
+\paragraph{Casos d'exemple}
+Finalment, com a exemple de nous tipus de dades, cal destacar que en
+l'àmbit dels \glspl{SIG} hi va haver un gran impacte quan els
+\gls{SGBDR} es van estendre amb el tipus de dades
+espacials \parencite{nunes13:icc_geospacial}.  Inicialment els
+\gls{SIG} usaven programes informàtics específics per a la gestió de
+les dades geogràfiques. Hi va haver una recerca intensa en els
+\gls{SGBDR} per tal d'establir models que permetessin emmagatzemar i
+consultar dades geomètriques i les propietats espacials de la
+informació geogràfica. D'aquesta manera es van definir el que es
+coneix com a bases de dades espacials o geoespacials, les quals han
+permès desenvolupar tots els avantatges dels \gls{SGBD} en els
+\gls{SIG}. %[bollaert06:thesis]
+
+
+
+Una altra extensió de tipus important en els \gls{SGBDR} s'ha produït
+amb l'estudi de les dades
+temporals \parencite{date02:_tempor_data_relat_model}.  Amb el model
+de dades temporals basat en el model relacional s'obtenen \gls{SGBDR}
+capaços d'emmagatzemar i consultar dades històriques, que a vegades
+també s'anomenen multiversió perquè emmagatzemen diverses versions
+d'unes mateixes dades. Cal precisar, però, que de forma genèrica
+s'anomena dades temporals al que hem definit com a dades bitemporals a
+la~\autoref{sec:art:seriestemporals}, tot i fins i tot seria més
+còmode anomenar-lo model d'intervals temporals per a distingir-lo
+clarament del model de sèries temporals. A continuació, aclarim els
+termes temporals, bitemporals i intervals temporals.
+
+
+El problema de les dades temporals ha sigut una controvèrsia en
+l'àmbit dels \gls{SGBDR} però finalment se n'han consolidat els
+conceptes
+\parencite{jensen99:temporaldata,jensen98:temporal_database_glossary,tansel93:temporal_databases}. %,jensen00:thesis,
+\textcite{date02:_tempor_data_relat_model} descriuen el model de dades
+temporals fortament basat en la teoria del model relacional, de fet
+\textcite[cap.~28]{date06} compara aquest model per dades temporals
+amb altres aproximacions que s'han fet no basades en el model
+relacional.  El model de les dades
+temporals \parencite{date02:_tempor_data_relat_model} es basa en
+estendre les relacions amb un atribut que és un interval
+temporal. Aquest interval temporal indica el rang temporal de validesa
+de les proposicions descrites en la relació. A més el model també
+defineix les operacions necessàries per a tractar amb les dades
+temporals, aquestes operacions són extensions de l'àlgebra relacional.
+De fet, i més particularment, el model de dades temporals representa
+les dades històriques amb dos atributs d'interval temporal; aleshores
+també es poden anomenar dades bitemporals. En aquest model de dades
+bitemporals
+\parencite[cap.~15]{date02:_tempor_data_relat_model,jensen99:temporaldata} % cap.~15 date02
+un dels atributs d'interval temporal s'anomena temps vàlid
+(\emph{valid time}) i l'altre, temps de transacció (\emph{transaction
+  time}). De forma resumida, el temps vàlid registra els canvis de les
+proposicions en la realitat i el temps de transacció, en la base de
+dades.
+
+
+
+
+Segons \textcite{schmidt95}, els \gls{SGBD} per a dades bitemporals no
+es consideren adequats com a \gls{SGBD} per sèries temporals ja que
+els primers estan pensats per a històrics, es descriuen amb intervals
+temporals, i els segons per a anàlisi d'observacions seqüencials, es
+descriuen amb instants temporals. Tot i així, per a desenvolupaments
+futurs observen que hi aspectes temporals comuns entre els dos
+sistemes i es pregunten si es podran trobar sistemes que els englobin
+a tots dos o cadascun necessitarà sistemes específics.  A causa de la
+relació entre les dades temporals i les sèries temporals, sobretot pel
+que fa a l'atribut de temps, compararem ambdues dades amb més detall
+un cop definida l'estructura de les sèries temporals (v.~\todo{ref sec
+  model}).
+
+
+%a algun lloc deia Date que el seu model per dades temporals no era del tot adequat per les sèries temporals?, potser perquè els intervals no estaven pensat per a instants? date02ch16.8?
+
+
+
+
+
+
+
+\subsubsection{Implementacions relacionals}
+
+
+Les implementacions més populars de \gls{SGBDR} són les que ofereixen a
+l'usuari el llenguatge \gls{SQL} per a operar amb les bases de dades, per
+exemple MySQL o PostgreSQL, a continuació ens hi referim com a \gls{SGBD}
+\gls{SQL}.  
+
+Segons \textcite{datedarwen13:notosql_notonosql} els \gls{SGBD} \gls{SQL} es
+desvien considerablement del model relacional: permeten files
+duplicades, tenen ordre en les columnes, permeten valors
+nuls \parencite{date08:nulls}, etc.  Les diferències entre els \gls{SGBD}
+\gls{SQL} i el model relacional han contribuït que hi hagi hagut diversos
+malentesos i errors, alguns dels quals han estat avaluats i
+desmentits \parencite{dbdebunk,date06}.
+  
+
+Actualment \textcite{date:thethirdmanifesto} estan treballant en el
+\emph{Third Manifesto} com a proposta per a obtenir \gls{SGBDR} purament
+relacionals. Destaquen que, en el model relacional, els tipus de dades
+i les relacions són necessaris i suficients per representar qualssevol
+dades a nivell lògic. %[date06ch21,369]
+Defineixen dos principis bàsics dels \gls{SGBDR}: l'\emph{Information
+  Principle} o \emph{The Principle of Uniform
+  Representation} \parencite{date:dictionary}, segons el qual una base
+de dades només conté variables relacions, i el principi
+d'ortogonalitat entre la teoria de tipus i el model
+relacional \parencite[cap.~6]{date06}, segons el qual relacions i
+tipus de dades són independents i a meś els atributs de les relacions
+admeten qualsevol tipus.  
+%In other words, types give us our vocabulary the things we can talk about and relations give us the ability to say things about the things we can talk about. (There's a nice analogy here that might help: Types are to relations as nouns are to sentences.) %[date05ch4secMore on Relations Versus Types]
+
+En la proposta per a obtenir \gls{SGBDR} purament relacionals
+\textcite{date06:_datab_types_relat_model,date:tutoriald} classifiquen
+com a \emph{D} els llenguatges que segueixin els principis del Third
+Manifesto. Particularment, defineixen un llenguatge que compleix amb
+els principis D anomenat \emph{Tutorial D}, amb l'objectiu que s'usi
+pels estudis del model relacional a nivell acadèmic. Utilitzen aquest
+llenguatge en les seves obres per a exemplificar els conceptes
+del model relacional, tot i que en alguns casos també ofereixen
+exemples amb \gls{SQL}.
+
+
+\textcite[cap.~2]{date06} %ch2pp21-22
+considera que actualment no hi cap implementació comercial, per
+exemple les de \gls{SGBD} \gls{SQL}, que segueixi fidelment el model relacional.
+Si bé recull diverses implementacions que
+S'estan desenvolupant i que segueixen les
+especificacions del Third
+Manifesto \parencite[Projects]{date:thethirdmanifesto.com}.  Algunes
+d'aquestes implementacions són:
+\begin{itemize}
+\item Rel \parencite{rel}, que és un dels més consolidats i usa
+  Tutorial D com a llenguatge
+\item Dee \parencite{dee}, que és una implementació molt diferent a
+  les altres ja que defineix el llenguatge relacional com una extensió
+  de Python
+% Dee és una implementació en Python de D
+% http://www.quicksort.co.uk/ 
+%És interessant, no es basa en fer una implementació declarativa sinó en fer una implementació relacional integrada a Python
+\end{itemize}
+% tot i que esmenta algunes
+% implementacions prometedores com \emph{Dataphor} o la seva proposta
+% tecnològica \emph{TransRelational} \parencite{date:transrelational}.
+
+
+
+
+
+
+
+
+
+
+\subsection{Recerca actual}
+
+Actualment es poden distingir quatre corrents majoritaris d'opinió en
+l'àmbit dels \gls{SGBD}: els \gls{SGBD} \gls{SQL}, el NoSQL, el Third Manifesto i el
+NewSQL.
+
+Els \gls{SGBD} \gls{SQL} són els productes tradicionals que van implementar el
+model relacional inicial. Aquests productes estan molt consolidats i
+són els més usats. Algunes propietats que tenen són les següents:
+garantia de propietats ACID (\emph{atomicity, consistency, isolation,
+  durability}) amb transaccions, optimització de consultes,
+emmagatzematge de grans volums de dades o gestió de seguretat i
+permisos.  Això no obstant, ja no són considerats com l'única solució
+per a tots els problemes de bases dades, cosa que se sentencia amb el
+lema \emph{one size does not fit
+  all} \parencite{stonebraker07,stonebraker09}; és a dir que en cada
+camp d'aplicació les bases de dades tenen uns requisits diferents i
+per tant una determinada implementació pot ser eficient en un camp
+concret però no en tots. A més, cada camp d'aplicació pot requerir uns
+requisits diferents d'eficiència: temps d'execució ràpid, poca despesa
+d'energia, poques dades transmeses per la xarxa, etc. Per exemple en
+els sistemes encastats potser no es pot implementar tot el model de
+dades sinó que només una
+part \parencite{saake09:_downs_data_manag_embed_system}.
+
+
+
+El NoSQL és un corrent modern en l'àmbit dels \gls{SGBD} que té com a
+objectiu millorar les limitacions d'eficiència dels \gls{SGBD}
+\gls{SQL} \parencite{edlich:nosql,stonebraker10}. El terme NoSQL és un nom
+propi lexicalitzat per al lema del corrent \emph{Not Only SQL}.  Tot i
+que hi ha molta varietat en els productes NoSQL, s'ha d'entendre NoSQL
+com una crítica a les implementacions comercials actuals del model
+relacional, principalment els \gls{SGBD} \gls{SQL}, i no com una crítica al model
+relacional ja que els objectius parlen de millorar el rendiment dels
+\gls{SGBD}, cosa que és només atribuïble al nivell físic però no al nivell
+lògic.  Alguns investigadors de \gls{SGBDR} veuen compatible la coexistència
+dels \gls{SGBD} \gls{SQL} amb els NoSQL perquè tenen objectius molt diferents
+\parencite{atzeni13:relational_model_dead}.  En el corrent NoSQL hi ha
+molts productes diferents i s'agrupen segons el model que utilitzen,
+alguns exemples de models NoSQL són \parencite{edlich:nosql}: grafs, 
+objectes, clau/valor, columna o semiestructurat en arbres mitjançant \gls{XML}.
+Per exemple ZODB \parencite{zodb} és un sistema amb model d'objectes o
+Hadoop \parencite{hadoop} té model de columna i a més és basa en un
+model de programació para\l.lela de les consultes anomenat
+MapReduce \parencite{deanghemawat04:mapreduce}. %[lemel08]
+
+
+El Third Manifesto, que ja hem comentat, principalment defineix els
+requisits D per a les implementacions. Defensa que els models teòrics
+dels \gls{SGBD} tenen més sentit que mai ja que permeten mantenir una
+definició comuna per a les diverses implementacions que hi pugui
+haver.  És un corrent molt crític amb els \gls{SGBD} \gls{SQL} i els NoSQL perquè
+s'allunyen del model relacional
+teòric \parencite{datedarwen13:notosql_notonosql}, sobretot pel que fa
+al concepte de l'\emph{Information Principle} \parencite[part
+7]{date06}. Consideren que alguns models del NoSQL recuperen models
+obsolets, com el jeràrquic o el de xarxa, ja explorats en el passat;
+en aquest sentit avaluen alguns productes NoSQL com els \gls{SGBD} \gls{XML}
+basats en estructures
+d'arbre \parencite[cap.~14]{date06} \parencite[cap.~27]{date04:introduction8}
+o els ODMG basats en objectes \parencite[cap.~27]{date06}.
+\textcite[cap.~21--25]{date06} considera que els nous models de \gls{SGBD},
+a vegades anomenats post-relacionals, no estan fundats tan sòlidament
+en teories matemàtiques i la lògica de predicats com el model
+relacional ni tenen el mateix nivell teòric de
+formalització. %[date06ch19pp354,date06ch20pp365]
+Considera, però, la possibilitat que es pugui definir un model més
+potent que el relacional tot i que no veu cap indici que sigui el cas
+dels nous model proposats. Per tant, aconsella que per ara els \gls{SGBD} no
+s'allunyin del model relacional. %[date06ch25,ch21pp379-380]
+Precisament, actualment del Third Manifesto destaca la proposta del
+llenguatge Tutorial D, fidel al model relacional i que a més no és
+\gls{SQL}. Tot i així, actualment no hi ha completada cap implementació
+totalment fidedigna al model relacional del Third Manifesto. Aquest és
+un model matemàtic de gran potència i molta abstracció i per tant és
+difícil obtenir-ne una implementació completa. A més les
+implementacions que s'estan desenvolupant són per a usos acadèmics,
+encara no hi ha cap intent per a aconseguir implementacions
+productives o comercials que tinguin en compte aspectes d'eficiència.
+
+
+
+
+El NewSQL és el corrent més recent i apareix com a contrapartida dels
+\gls{SGBD} \gls{SQL} tradicionals i el NoSQL. Si bé critiquen els \gls{SGBD} \gls{SQL} actuals
+per voler ser \emph{one size fits all}, proposen el disseny de noves
+implementacions dels \gls{SGBD} \gls{SQL} que tinguin en compte els requisits
+d'eficiència dels problemes
+actuals \parencite{stonebraker07,stonebraker10}.  És un corrent crític
+amb alguns productes NoSQL perquè no solucionen cap problema que no
+estigui previst en els \gls{SGBD} actuals i perquè defineixen models de
+programació que tenen poc a veure amb la teoria de \gls{SGBD}, en canvi
+veuen amb bons ulls la recerca NoSQL en camps on els \gls{SGBD} \gls{SQL} no hi
+funcionen gaire bé com la gestió de documents o dades
+semiestructurades \parencite{stonebraker11:nocoug}.  Per exemple,
+avaluen que les aportacions del model de programació MapReduce ja
+estan suportades pels \gls{SGBD} para\l.lels des de fa molt
+temps \parencite{pavlo09:sigmod}.  Alguns exemples de sistemes NewSQL
+són: SciDB \parencite{stonebraker09:scidb}, els autors del qual
+critiquen que els classifiquen incorrectament com a NoSQL, o
+H-Store \parencite{hstore}, el qual és un \gls{SGBD} amb programació
+para\l.lela.
+%http://www.theregister.co.uk/Print/2010/09/13/michael_stonebraker_interview/
+
+
+%\subsubsection{Resum}
+
+En conclusió, per una banda el Third Manifesto considera que molts
+dels productes NoSQL retornen a models pre-relacional fallits. Per
+altra banda, els NoSQL reclamen que fins a l'arribada dels seus
+productes no hi havia cap sistema de bases de dades capaç de resoldre
+eficientment determinades aplicacions. Si bé és cert que els productes
+NoSQL són implementacions amb models propers al nivell físic, gràcies
+a això disposen de més facilitats per a investigar noves estructures
+eficients ja que no han de tenir en compte tota la potència del model
+relacional. Per una tercera banda, el NewSQL recull aquestes
+estructures que milloren l'eficiència i intenta expressar-les en el
+model relacional; així doncs els NoSQL motiven noves millores en els
+\gls{SGBD} \gls{SQL}, com per exemple el NoSQL de MapReduce ha esperonat el NewSQL
+de HStore. En els sistemes NoSQL, el model de grafs és el que parteix
+de més bona base teòrica i per tant és un candidat a formalitzar-se
+amb un nivell semblant que el model relacional, tot i així les
+aplicacions actuals estan restringides per a representar dades de
+tipus relació de parentiu (\emph{relationship}).  
+% sobretot molt bo per al problema de
+% regles d'integritat
+% amb claus:
+% primàries, foranes,
+% etc.
+Finalment, cal destacar que, tot i aquests nous productes, els \gls{SGBD}
+\gls{SQL} tradicionals encara són el més usats perquè en moltes aplicacions
+segueixen sent l'opció més eficient.  A més, el model relacional té
+molt prestigi acadèmic com a teoria dels sistemes d'informació.
+
+
+
+% Per altra banda, la definició del concepte de SGBD ha hagut de canviar. Primer anava acompanyada de requisits particulars (propietats ACID, transaccions, seguretat, optimització de les consultes) però ara s'ha hagut de generalitzar i centrar-se en el nucli dels SGBD: de fet és exactament el que descriu el model relacional. En canvi els requisits particulars es descriuen com a complements d'aquest nucli. (alguns fins i tot diuen que el sistema de fitxers es pot veure com un SGBD).
+
+
+
+%%GRAFS
+%Fabian Pascal %\url{http://www.dbdebunk.com/2013/11/more-on-erm-still-not-data-model.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+blogspot%2FTuHQT+%28DATABASE+DEBUNKINGS%29}:
+% ``There have been attempts to structure and manipulate data based on other logics/theories e.g. graph theory or 2nd order logic, but they have proved more complex and less flexible and comprehensible than RT. In my modeling paper I provide a criterion for comparing data models on superiority, but doing it right is non-trivial and nobody has ever claimed superiority to RT on sound grounds.''
+
+% \url{http://stackoverflow.com/questions/19570654/do-graph-databases-deprecate-relational-databases/19572483#19572483}
+% Graph databases were deprecated by relational-ish technology some 20 to 30 years ago.
+
+% The major theoretical disadvantage is that graph databases use TWO basic concepts to represent information (nodes and edges), whereas a relational database uses only one (the relation). This bleeds over into the language for data manipulation, in that a graph-based language must provide two distinct sets of operators : one for operating on nodes, and one for operating on edges. The relational model can suffice with only one.
+
+% More operators means more operators to implement for the DBMS builder, more opportunity for bugs, and for the user it means more distinct language constructs to learn. For example, adding information to a database is just INSERT in relational, in graph-based it can be either STORE (nodes) or CONNECT (edges). Removing information is just DELETE (relational), as opposed to either ERASE (nodes) or DISCONNECT (edges).
+
+% share|improve this answer
+% answered Oct 24 '13 at 17:21
+
+% Erwin Smout
+
+
+% \todo{}
+% Diferència entre SGBD i llenguatges de programació: independència de les dades quant al model lògic i al nivell físic: \emph{``It appears that
+% current NoSQL systems make no distinction be-
+% tween the logical and physical schema. Thus, the
+% fundamental advantages of the ANSI SPARC ar-
+% chitecture have been voided, which complicates the
+% maintenance of these databases. Storing objects as
+% they are programmed essentially negates the data
+% independence requirement that then remains to be
+% adequately addressed for NoSQL database systems.''}  \textcite{atzeni13:relational_model_dead}.
+
+
+
+
+
+
+
+
+% http://cacm.acm.org/magazines/2014/2/171675-a-new-type-of-mathematics/fulltext
+
+% for a century, mathematicians have considered set theory to be an adequate basis for formalizing all of mathematics. Starting with concepts like the null set (corresponding to zero) and the set containing only the null set (corresponding to one), one can, in principle, systematically construct all the objects of mathematics. In practice, however, the process is clunky and time-consuming—and therefore, rare. The proponents of HoTT hope it will provide easier and more intuitive tools that will allow rigorously formalized mathematics to become standard practice. Tot i que aquests proposen HoTT: HoTT is based on a mathematical framework called type theory. Unlike sets, which are like bags that can contain various kinds of object, objects of a particular type have specific rules about how they can be manipulated. They are reminiscent of the data types that help enforce rigor in high-level programming languages, but the mathematical version of types can be more elaborate; 
+
+
+
+
+
+
+
+
+
+% \subsection{Conclusió}
+
+% \todo{}
+
+% Actualment l'àmbit informàtic de SGBD se centra en les
+% implementacions, com ho demostra el nou corrent NoSQL concentrat en
+% trobar models d'implementacions que tinguin bon rendiment. A tal
+% efecte la recerca es concentra en temes de garantia de propietats ACID
+% (\emph{atomicity, consistency, isolation, durability}), d'optimització
+% de consultes, d'emmagatzematge de grans volums de dades, de consultes
+% via web, de distribució de bases de dades, de reduir la despesa en
+% energia, etc. \parencite{stonebraker07,stonebraker10}, la qual cosa és
+% exce\l.lent per a disposar d'un SGBD adequat a cada aplicació.
+% \textcite{haerder05:_dbms_archit} descriu diferents models
+% d'implementació per als SGBD, ja que indica que per obtenir bon
+% rendiment la implementació d'un SGBD s'ha d'estudiar per cada
+% aplicació. És més, una implementació d'un SGBD que vulgui obtenir un
+% bon rendiment en una determinada aplicació potser no pot implementar
+% el model de dades complet sinó que només una part, com per exemple en
+% els sistemes
+% encastats \parencite{saake09:_downs_data_manag_embed_system}.
+
+% Per altra banda, l'àmbit matemàtic de SGBD, amb el model relacional
+% com a màxim exponent, se centra en els conceptes teòrics, és a dir
+% respon a la pregunta de què són els SGBD. Recerca en millorar-ne la
+% comprensió, en obtenir la màxima potència i facilitat de cara a la
+% gestió de dades per part de l'usuari o en obtenir nous models. Tot i
+% així, actualment encara no s'ha trobat cap altre model que tingui la
+% mateixa potència que el relacional. Cal destacar que tot i que el
+% model relacional té conceptes madurs i consolidats, i que a més han
+% tingut èxit amb els SGBD SQL, s'obre una nova perspectiva amb
+% l'evolució de conceptes que proposa el \emph{Third Manifesto},
+% especialment amb \emph{Tutorial D} i les implementacions que comencen a prendre
+% cos a nivell acadèmic.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
+
+% LocalWords:  monitoratge SGBD SGBDR SQL
