@@ -20,21 +20,18 @@ dels SGST.
 
 
 
-Refs principals\todo{}:
+
+\todo{} També hi ha molts sistemes propis d'empreses que van lligats
+amb els seus productes. Ara bé ofereixen molt poques capacitats de
+SGST i les que ofereixen són molt restringides a l'àmbit a on estan
+dirigits els productes; és a dir que no són genèrics i són més aviat
+controladors del procés d'adquisició. Per exemple Keller
+\url{http://www.catsensors.com/ca/productes/varis__software/logger_4x}, permet desar dades cada un cert període amb estructura d'anell (és a dir eliminant les més antigues quan és ple) però només té un anell. A banda permet detectar certs esdeveniments i aleshores canviar el període de mostreig. A banda permet també emmatgazemar alguns estadístics de les dades: mitjana i rang cada certs segons.
 
 
-\textbf{Sistemes de gestió de bases de dades similars:}
-\begin{itemize}
-\item RRDtool: \cite{lisa98:oetiker,rrdtool}
-\item sciql: \cite{sciql,zhang11,kersten11}
-\item scidb: \cite{stonebraker09:scidb,scidb}
-\item tsdb: \cite{deri12:tsdb_compressed_database}
-\item iSAX: \cite{keogh10:isax,keogh08:isax}
-\item tinydb: %\cite{madden05}
-\item Cougar: %\cite{yaogehrke02,demers03}
-\item T-Time: %\cite{assfalg08:ttime}
-\item TSDS: %\cite{tsds,weigel10}
-\end{itemize}
+
+
+
 
 On the other hand, compression techniques for time series are
 considered in the form of approximation to the original signal in
@@ -50,6 +47,12 @@ aggregated in different resolutions in order to compact data and to do
 faster visualisations. However, \emph{RRDtool} is very specific and
 has limited aggregation operations to applications of network
 counters.
+
+
+
+
+\url{http://en.wikipedia.org/wiki/Time_series_database}
+
 
 
 
@@ -235,28 +238,96 @@ A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design
 
 
 
+
+
+
+\subsection{Sistemes de bases de dades genèrics}
+
+
+
+
 \begin{description}
 
 
+\item[Calanda] \textcite{dreyer94} proposen els requeriments de
+  propòsit específic que han de complir els \gls{SGST} i basen el
+  model en quatre elements estructurals bàsics: esdeveniments, sèries
+  temporals, grups i metadades, a banda de les bases de dades per
+  sèries temporals. Implementen un \gls{SGST} anomenat
+  Calanda \parencite{dreyer94b,dreyer95,dreyer95b} que té operacions
+  de calendari, pot agrupar sèries temporals i respondre consultes
+  simples i ho exemplifiquen amb dades econòmiques. A \cite{schmidt95}
+  es compara Calanda amb els \gls{SGBD} per a dades bitemporals.
 
 
-\item[Calanda] \textcite{dreyer94} proposen els requeriments de propòsit específic que han de complir els SGST i basen el model en quatre elements estructurals bàsics: esdeveniments, sèries temporals, grups i metadades, a banda de les bases de dades per sèries temporals. Implementen un SGST anomenat Calanda \parencite{dreyer94b,dreyer95,dreyer95b} que té operacions de calendari, pot agrupar sèries temporals i respondre consultes simples i ho exemplifiquen amb dades econòmiques. A \cite{schmidt95} es compara Calanda amb els SGBD temporals que operen amb sèries temporals. 
+\item[TDM] \textcite{segev87:sigmod} presenten un model, que anomenen
+  \emph{Temporal Data Management} (TDM), per a dades temporals amb un
+  llenguatge molt semblant a \gls{SQL}. Les seqüències temporals que
+  presenten són molt similars a les que definim en el model de
+  \gls{SGST}, tot i que molt lligades a un tercer atribut que indica
+  l'objecte de referència. Principalment estudien les operacions
+  d'agregació sobre les sèries temporals.
 
 
 
-\item[TDM] \textcite{segev87:sigmod} presenten un model per a dades temporals amb un llenguatge molt semblant a \gls{SQL}. Les seqüències temporals que presenten són molt similars a les que definim en el model de \gls{SGST}, tot que molt lligades a un tercer atribut que indica l'objecte de referència.
-
-\todo{comprovar citats}
-%http://dl.acm.org/citation.cfm?id=38713.38760&coll=DL&dl=GUIDE&CFID=588214465&CFTOKEN=95471293
+\item[SciDB]
+\textcite{stonebraker09:scidb} estudien els SGBD científiques amb models  de dades basats en matrius. Estan desenvolupant SciDB \parencite{scidb}, un SGBD productiu i optimitzat per treballar amb matrius.
 
 
+\item[SciQL]
+\textcite{kersten11} descriuen SciQL, un llenguatge per a SGBD científiques basades en matrius. Hi ha un prototip en desenvolupament de SciQL \parencite{sciql}.
 
 
-\item[T-Time] \textcite{assfalg08:thesis} mostra un sistema que pot cercar similituds calculades com a distàncies entre sèries temporals. Principalment, dues sèries temporals es marquen com a similars si la seva distància és menor que un llindar en cada interval. A partir d'aquest mètode dissenya algoritmes eficients que implementa en un programa anomenat T-Time \parencite{assfalg08:ttime}.
 
+
+\item[Pandas i altres]
+Aquests potser no són sistemes de gestió de bases de dades però sí que gestionen sèries temporals.
+
+\url{http://pandas.pydata.org/pandas-docs/stable/index.html}
+
+\url{http://pytseries.sourceforge.net/}
+
+
+
+
+\end{description}
+
+
+
+%SETL http://setl.org/setl/ un llenguatge de programació d'alt nivell que té els conjunts i els mapes de primer ordre com a parts fonamentals. Els tipus bàsics són conjunts, conjunts desordenats i seqüències (també anomenades tuples). Els mapes són conjunts de parelles (tuples de mida dos). Les operacions bàsiques inclouen la pertinença, la unió, la intersecció, etc.
+
+
+
+
+\subsection{Tècniques de compressió i aproximació}
+
+
+
+
+\begin{description}
+
+
+\item[T-Time] \textcite{assfalg08:thesis} mostra un sistema que pot
+  cercar similituds entre sèries temporals, calculades segons funcions
+  de distàncies entre sèries temporals. Principalment, dues sèries
+  temporals es marquen com a similars si la seva distància és menor
+  a un llindar per cada interval de temps. A partir d'aquest mètode dissenya
+  algoritmes eficients que implementa en un programa anomenat
+  T-Time \parencite{assfalg08:ttime}.
 
  
-\item[iSAX] \textcite{keogh08:isax,keogh10:isax} estudien l'anàlisi i l'indexat de co\l.lecions massives de sèries temporals. Descriuen que el problema principal del tractament rau en l'indexat de les sèries temporals i proposen mètodes per calcular-lo de manera eficient. El mètode principal que proposen està basat en l'aproximació a trossos constants de la sèrie temporal \parencite{keogh00}.  Ho implementen en una estructura de gestió de dades que anomenen \emph{indexable Symbolic Aggregate approXimation} (iSAX) \parencite{isax}. Les representacions de sèries temporals que s'obtenen amb aquesta eina permeten reduir l'espai emmagatzemat i indexar tant bé com altres mètodes de representació més complexos.
+\item[iSAX] \textcite{keogh08:isax,keogh10:isax} estudien l'anàlisi i
+  l'indexat de co\l.lecions massives de sèries temporals. Descriuen
+  que el problema principal del tractament rau en l'indexat de les
+  sèries temporals i proposen mètodes per calcular-lo de manera
+  eficient. El mètode principal que proposen està basat en
+  l'aproximació a trossos de la sèrie
+  temporal \parencite{keogh00}.  Ho implementen en una estructura de
+  gestió de dades que anomenen \emph{indexable Symbolic Aggregate
+    approXimation} (iSAX) \parencite{isax}. Les representacions de
+  sèries temporals que s'obtenen amb aquesta eina permeten reduir
+  l'espai emmagatzemat i indexar tant bé com altres mètodes de
+  representació més complexos.
 % Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
 
 % Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
@@ -268,7 +339,6 @@ A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design
 \textcite{weigel10} noten la necessitat de mostrar les dades en tot el seu rang temporal i no només en un subconjunt com normalment s'ofereixen. Desenvolupen el paquet informàtic \emph{Time Series Data Server} (TSDS) \parencite{tsds} a on es poden introduir les dades de sèries temporals per posteriorment consultar-les per rangs temporals o aplicant-hi filtres i operacions.
 
 
-és el mateix que openTSDB? \url{http://opentsdb.net/docs/build/html/user_guide/query/aggregators.html}  Aquest també defineix el concepte d'agregadors, però només sap interpolar linealment. Sobretot per a fer visualització. Basa l'emmagatzematge en Apache Hadoop i HBase, emmagatzema les dades originals i calcula totes les operacions durant l'execució de les consultes.
 
 
 \item[RRDtool]
@@ -279,81 +349,76 @@ Actualment, s'està estudiant l'eficiència i rapidesa de RRDtool a processar s�
 Finalment, és destacable l'ús emergent de RRDtool en entorns d'experimentació, com és el cas de \textcite{zhang07} i \textcite{chilingaryan10} que hi emmagatzemen dades experimentals per posteriorment predir o validar-les.
 
 
-\item[Cougar]
-\textcite{cougar,fung02} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
-Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
+\item[Whisper] Whisper és el sistema de base de dades que utilitza Graphite. És molt semblant a RRDtool, de fet inicialment Graphite usava RRDtool com a sistema d'emmagatzematge.
 
-\item[TinyDB]
-Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a Cougar és TinyDB \parencite{tinyDB,madden05}. A part de les característiques descrites per Cougar, aquest sistema  modifica i s'implica en parts del procés d'adquisició de les dades com és el temps, la freqüència o l'ordre de mostreig. Per exemple donada una consulta que vol correlacionar les dades de dos sensors, el sistema indica als sensors implicats que han d'adquirir amb la mateixa freqüència.
-
-\item[SciDB]
-\textcite{stonebraker09:scidb} estudien els SGBD científiques amb models  de dades basats en matrius. Estan desenvolupant SciDB \parencite{scidb}, un SGBD productiu i optimitzat per treballar amb matrius.
-
-
-\item[SciQL]
-\textcite{kersten11} descriuen SciQL, un llenguatge per a SGBD científiques basades en matrius. Hi ha un prototip en desenvolupament de SciQL \parencite{sciql}.
-
-
+\url{http://graphite.wikidot.com/whisper}
 \url{http://graphite.wikidot.com/} graphite, semblant a RRDtool
+
+
 
 \end{description}
 
 
-%SETL http://setl.org/setl/ un llenguatge de programació d'alt nivell que té els conjunts i els mapes de primer ordre com a parts fonamentals. Els tipus bàsics són conjunts, conjunts desordenats i seqüències (també anomenades tuples). Els mapes són conjunts de parelles (tuples de mida dos). Les operacions bàsiques inclouen la pertinença, la unió, la intersecció, etc.
+
+\subsection{Processament en flux}
 
 
-\todo{}
+
+\begin{description}
+
+\item[Cougar]
+\textcite{cougar,fung02} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
+Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
+
+
+\item[TinyDB]
+Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a Cougar és TinyDB \parencite{tinyDB,madden05}. A part de les característiques descrites per Cougar, aquest sistema  modifica i s'implica en parts del procés d'adquisició de les dades com és el temps, la freqüència o l'ordre de mostreig. Per exemple donada una consulta que vol correlacionar les dades de dos sensors, el sistema indica als sensors implicats que han d'adquirir amb la mateixa freqüència.
+
+
+\end{description}
+
+
+
+
+% \url{http://2013.nosql-matters.org/bcn/abstracts/#abstract_gianmarco}
+
+% Streaming data analysis in real time is becoming the fastest and most efficient way to obtain useful knowledge from what is happening now, allowing organizations to react quickly when problems appear or to detect new trends helping to improve their performance. In this talk, we present SAMOA, an upcoming platform for mining big data streams. SAMOA is a platform for online mining in a cluster/cloud environment. It features a pluggable architecture that allows it to run on several distributed stream processing engines such as S4 and Storm. SAMOA includes algorithms for the most common machine learning tasks such as classification and clustering. 
+
+
+
+
+\subsection{Emmagatzematge massiu}
+
+\todo{} Hi ha sistemes que aborden l'emmagatzematge massiu de les
+sèries temporals, és a dir de grans volums de dades, seguint
+l'enfocament de \gls{VLDB}. 
+
+
+\begin{description}
+
+\item[OpenTSDB]
+\url{http://opentsdb.net/docs/build/html/user_guide/query/aggregators.html}  Aquest també defineix el concepte d'agregadors, però només sap interpolar linealment. Sobretot per a fer visualització. Basa l'emmagatzematge en Apache Hadoop i HBase, emmagatzema les dades originals i calcula totes les operacions durant l'execució de les consultes. És a dir, emmagatzema totes les dades originals i es basa en una estructura distribuïda d'emmagatzematge en què és ràpid d'escriure-hi les dades i localitzar-les, ja que HBase té uns índex potents per a les dades.  Permet fer consultes amb agregacions en què les agregacions siguin per a un interval temporal petit de les dades.
+
 
 
 OpenTSDB \cite{deri12:tsdb_compressed_database}
 \url{http://opentsdb.net/}
 Han fet anàlisis del rendiment de RRDtool, MySQL i la seva implementació TSDB i conclouen que RRDtool és el que pitjor funciona per a sèries temporals. La seva implementació, TSDB, es basa en la compressió de dades. Assumeixen que les sèries temporals són regulars i totes tenen el mateix patró de mostreig, fet que els permet implementar les gestió de les sèries temporals de manera més senzilla.
-\todo{Potser hauria de classificar els SGST segons si es basen en compressió de dades (aquest tsdb, iSAX..), en Round Robin (RRDtool), vectors (SciQL), SQL (?) ...}
+\todo{Potser aquest va a compressió de dades doncs?}
 
 
-
-
-\url{http://pandas.pydata.org/pandas-docs/stable/index.html}
-
-\url{http://pytseries.sourceforge.net/}
-
-
-
-http://stackoverflow.com/questions/4814167/storing-time-series-data-relational-or-non
-
-
-
-\url{http://2013.nosql-matters.org/bcn/abstracts/#abstract_gianmarco}
-
-Streaming data analysis in real time is becoming the fastest and most efficient way to obtain useful knowledge from what is happening now, allowing organizations to react quickly when problems appear or to detect new trends helping to improve their performance. In this talk, we present SAMOA, an upcoming platform for mining big data streams. SAMOA is a platform for online mining in a cluster/cloud environment. It features a pluggable architecture that allows it to run on several distributed stream processing engines such as S4 and Storm. SAMOA includes algorithms for the most common machine learning tasks such as classification and clustering. 
+\end{description}
 
 
 
 
 
-
-\todo{} També hi ha molts sistemes propis d'empreses que van lligats
-amb els seus productes. Ara bé ofereixen molt poques capacitats de
-SGST i les que ofereixen són molt restringides a l'àmbit a on estan
-dirigits els productes; és a dir que no són genèrics i són més aviat
-controladors del procés d'adquisició. Per exemple Keller
-\url{http://www.catsensors.com/ca/productes/varis__software/logger_4x}, permet desar dades cada un cert període amb estructura d'anell (és a dir eliminant les més antigues quan és ple) però només té un anell. A banda permet detectar certs esdeveniments i aleshores canviar el període de mostreig. A banda permet també emmatgazemar alguns estadístics de les dades: mitjana i rang cada certs segons.
-
-\url{http://en.wikipedia.org/wiki/Time_series_database}
+% http://stackoverflow.com/questions/4814167/storing-time-series-data-relational-or-non
 
 
 
-\subsection{Conclusió}
-
-Els SGST actuals bàsicament resolen alguns problemes d'anàlisis de sèries temporals.
-Però no solen atendre la relació entre la base de dades i el sistema de monitoratge, és a dir la manera com s'adquireixen les dades. En aquest pas intermig hi ha un sèrie de problemes, com per exemple forats, dades falses o irregularitat en els temps de mostreig, que cal gestionar correctament. Concretament un dels problemes que no s'atén és el de mostreig irregular ja que es considera que les mostres estan a intervals regulars (equi-espaiades) encara que els sistemes de monitoratge informàtics sovint no són capaços de complir-ho amb exactitud sinó que presenten una certa variació en els temps de mesura. 
-
-RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
-
-També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
 
 
-SciQL, un model recent per SGBD  basat en matrius, és el que més es pot considerar com a SGST, ja que s'està desenvolupant per complir-ne algunes propietats.
 
 
 
