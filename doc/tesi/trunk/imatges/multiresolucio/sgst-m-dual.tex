@@ -1,0 +1,75 @@
+%\usetikzlibrary{shapes,arrows,positioning}
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+
+
+ \node[mynode] (m) {$S$};
+
+ \node[right=2cm of m] (mdins) {};
+
+ \node[mynode, verd, above right=0.6cm and 1cm of mdins] (tsms) {\glstext{SGST}};
+
+ \node[mynode, verd, below right=0.6cm and 1cm of mdins] (mtsms) {\glstext{SGSTM}};
+
+ \node[rectangle,draw,minimum height=6cm,minimum width=9.5cm,right=-0.25cm of mdins] (dual) {};
+
+\draw[shift=( dual.south west)]   
+  node[above right] {\glstext{SGST} dual};
+
+
+
+
+
+
+ \node[mynode,right=3cm of mtsms] (ts) {$S'$};
+
+
+
+ \draw (m.east) -- (mdins.east) node[above right,at start]
+ {afegeix$(m)$};
+
+ \draw[myarrow] (mdins.east) -- (tsms.west);
+ \draw[myarrow] (mdins.east) -- (mtsms.west);
+
+
+ \draw[myarrow] (tsms) -- (ts) node[above,midway,sloped]
+ {$\glssymbol{not:sgstm:multiresolucio}(S)$}; 
+ 
+ \draw[myarrow] (mtsms) -- (ts) node[above,midway,sloped]
+ {$\glssymbol{not:sgstm:serietotal}(M)$};
+
+
+
+
+ \node[right=6cm of tsms] (consdins) {};
+
+ \draw (tsms) -- (consdins.center);
+ \draw (ts) -- (consdins.center);
+
+ \node[right=2.5cm of consdins] (consultes) {};
+ \draw[myarrow] (consdins.center) -- (consultes) node[above,midway,sloped]
+ {consultes};
+
+
+
+\end{tikzpicture}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "../main"
+%%% End:
