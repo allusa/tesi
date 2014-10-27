@@ -49,173 +49,12 @@ has limited aggregation operations to applications of network
 counters.
 
 
-
-
 \url{http://en.wikipedia.org/wiki/Time_series_database}
 
 
 
 
-
-\subsection{Database approaches}
-
-Some authors treat \acro{TSMS} as a particular \acro{DBMS} field
-\cite{last01}.  Segev and Shoshani \cite{segev87:sigmod} propose an
-structured language for querying \acro{TSMS}. Their time series
-structures include the notion of regularity and temporal
-representation and their operations are \acro{SQL}-like.  Dreyer et
-al.\ \cite{dreyer94} propose the requirements of special purpose
-\acro{TSMS} and base the model on five basic structural elements:
-events, time series, groups, metadata and time series bases. They
-implement a \acro{TSMS} called \emph{Calanda} which includes calendar
-operations, allows grouping time series and operating with simple
-queries. They exemplify it with financial data. In \cite{schmidt95}
-\emph{Calanda} is compared with temporal systems designed for time
-series.
-
-
-
  
-Others implement \acro{TSMS} with array database approaches.
-\emph{SciDB} \cite{stonebraker09:scidb} and \emph{SciQL}
-\cite{zhang11} are array database systems intended for science
-applications, in which time series play a principal role. They
-structure time series into arrays in order to achieve multidimensional
-analysis and they store other data into tables.  \emph{SciDB} is based
-on arrays which, according to the authors, allow to represent time
-series.  In contrast, \emph{SciQL} defines time series as a mixture of
-array, set, and sequence properties and exhibits some time series
-managing characteristics that include time series regularities,
-interpolation or correlation queries.
-% However,
-% difference between tables and arrays seems too physical and leads to
-% ambiguity when representing time series.  
-% Our TSMS model proposes time
-% series as firmly based on relational algebra, clarifying this
-% ambiguity and describing them coherently in terms of information
-% systems theory.
-
-
-
-
-
-Bitemporal \acro{DBMS}, sometimes referred directly as temporal data,
-is a database field related with time. Bitemporal data manages
-historical data and events in databases by associating pairs of
-\emph{valid} and \emph{transaction} time intervals to data.
-Bitemporal data and time series data are not exactly the same and so
-can not be treated interchangeably \cite{schmidt95}, however, there
-are some similarities that can be considered. Moreover, \acro{DBMS}
-research represents bitemporal data as relations extended with time
-intervals attributes and extends relational operations in order to
-deal with related time aspects
-\cite{jensen99:temporaldata,date02:_tempor_data_relat_model}.  We
-formalise time series similarly as how bitemporal data is formalised
-for relational \acro{DBMS}.
-% On the other hand, some bitemporal time concepts might be taken
-% into account by \acro{TSMS}, such as the discussions about time
-% granularities.
-
-
-
-\subsection{Compression techniques}
-
-
-% As \acro{TSMS} suffer from problematic properties of time
-% series, like the ones we describe in
-% Section~\ref{sec:model:properties} mainly the huge data volume,
-% compression techniques are used.  Next, we summarise some current work
-% in \acro{TSMS} with compression.
-
-
-
-\emph{RRDtool} from Oetiker, \cite{rrdtool,lisa98:oetiker}, is a free
-software database management system. It is designed to be used for
-monitoring systems. Because of this, it is focused to a particular
-kind of data, gauges and counters, and it lacks general time series
-operations. \emph{RRDtool} can store multiple time resolution data,
-however Plonka et al.\ \cite{lisa07:plonka} evaluated \emph{RRDtool}
-performance and found limitations when storing huge number of
-different time series. They propose a caching system on top of
-\emph{RRDtool} as a solution.  \emph{RRDtool} is extremely used by the
-free software community so it inspired us to develop a model from its
-main characteristics, that is now what we call multiresolution. A
-similar approach is done by \cite{weigel10} in a system called
-\emph{TSDS} that caches queries by aggregate parameters. They notice
-that data needs to be shown over its full time range and not only
-subsets of data as it is usually provided.  They develop the software
-package \emph{TSDS} where time series are stored fully and then
-requested by date ranges or by applying different filters and
-operations to the time series data.  Our \acro{MTSMS} model is a generic
-approach to the multiresolution features, we define it open so that
-users can define any attribute aggregate functions.
-
-
-Deri et al.\ \cite{deri12:tsdb_compressed_database} present
-\emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
-series that share the same time instants of acquisition. Different
-time series are stored grouped by the time of acquisition instead of
-each time series isolated.  They compare \emph{Tsdb} with \emph{RRDtool} and
-with a relational product. As a consequence of \emph{Tsdb} structure,
-they achieve a better measure addition time but a worse global
-retrieval time as data has to be contiguously regrouped. However, when
-measures have same time this is seen as the same time series in a
-\acro{MTSMS}, so it would be interesting to use this implementation
-architecture of shared time arrays in \acro{MTSMS} for resolution subseries
-with same delta time in order to achieve better performance requirements
-when having much equal acquired time series.
-
-
-There are other lossy compression techniques for time series devoted
-to the optimal approximation representation, that is finding the
-compromise between least data that can reconstruct the original signal
-with least error. Keogh et al.\ \cite{keogh01} cite some possible
-approximation representations for time series such as Fourier
-transforms, wavelets, symbolic mappings or piecewise linear
-representation. They remark this last one as very usual due to its
-simplicity and develop a system called \emph{iSAX}
-\cite{keogh08:isax,keogh10:isax} in order to analyse and index massive
-collections of time series. They describe that the main problem is in
-the indexing of time series and they propose methods for processing
-efficiently. The first method proposed is based on a constant
-piecewise approximation. The time series representation obtained with
-\emph{iSAX} allows reducing the stored space and indexing faster with
-the same quality as other more complex representation methods.  These
-compression techniques are candidates for being used as attribute
-aggregate functions in the \acro{MTSMS} model, as instance it would be
-interesting to define aggregations in the frequency domain of time
-series.
-
-
- 
-
-
-\subsection{Data stream}
-
-
-
-There are other \acro{TSMS} specifically designed for a particular
-field requirements.  \emph{Cougar} \cite{bonnet01} is a sensor
-database system that has two main structures: one for sensor
-properties stored into relational tables and another for time series
-stored into data sequences from sensors. Time series have specific
-operations and can combine relations and sequences. \emph{Cougar}
-target field is sensor networks, where data is stored distributed in
-different locations. Queries are resolved combining sensor data in a
-data stream abstraction that improves processing performance.
-
-Time series as data streams are also considered when aggregating
-statistically data in order to do fast approximate queries with
-compressed data. Cormode et al.\ \cite{cormode08:pods} develop
-aggregation techniques that consider giving more weight to recent
-information.  Our \acro{MTSMS} model applies a similar approach of
-weighting more recent data but specifically to time series, with
-multiple aggregations and considering time irregularities.  Dou et
-al.\ \cite{dou14:historic_queries_flash_storage} create index
-structures as multiresolution aggregates, like average, count, or top,
-for historical data managed in flash storage; they consider a specific
-storage solution based on register with pointers similar to the
-multiresolution storage in \emph{RRDtool} \cite{lisa98:oetiker}.
 
 
 
@@ -241,12 +80,38 @@ A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design
 
 
 
-\subsection{Sistemes de bases de dades genèrics}
+\subsection{Sistemes genèrics}
+
+
+La recerca en dades bitemporals formalitza de forma adequada els
+\gls{SGBD} per a poder tractar històrics i esdeveniments
+temporals \parencite{jensen99:temporaldata,date02:_tempor_data_relat_model}. Això
+no obstant, com ja hem notat, les sèries temporals i les dades
+bitemporals no són exactament el mateix i no poden ser tractats de la
+mateixa manera \parencite{schmidt95}. Hi ha, però, certes similituds
+que es poden tenir en compte, per exemple les nocions de temps
+discret. A més, formalitzarem les sèries temporals de manera similar a
+com les dades bitemporals es formalitzen en els \gls{SGBDR}.
+
+
+
+Per altra banda, alguns autors descriuen sistemes genèrics per a
+tractar sèries temporals, és a dir amb un model adequat per a sèries temporals però sense cap tècnica específica per a processar-les\todo{?}. A continuació en descrivim alguns breument.
 
 
 
 
 \begin{description}
+
+
+\item[TDM] \textcite{segev87:sigmod} presenten un model, que anomenen
+  \emph{Temporal Data Management} (TDM), per a dades temporals amb un
+  llenguatge molt semblant a \gls{SQL}. Les seqüències temporals que
+  presenten són similars a les que definim en el model de
+  \gls{SGST}, inclouen la noció de regularitat i representació
+  temporal, tot i que molt lligades a un tercer atribut que indica
+  l'objecte de referència. Principalment estudien les operacions
+  d'agregació sobre les sèries temporals.
 
 
 \item[Calanda] \textcite{dreyer94} proposen els requeriments de
@@ -260,33 +125,18 @@ A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design
   es compara Calanda amb els \gls{SGBD} per a dades bitemporals.
 
 
-\item[TDM] \textcite{segev87:sigmod} presenten un model, que anomenen
-  \emph{Temporal Data Management} (TDM), per a dades temporals amb un
-  llenguatge molt semblant a \gls{SQL}. Les seqüències temporals que
-  presenten són molt similars a les que definim en el model de
-  \gls{SGST}, tot i que molt lligades a un tercer atribut que indica
-  l'objecte de referència. Principalment estudien les operacions
-  d'agregació sobre les sèries temporals.
 
 
-
-\item[SciDB]
-\textcite{stonebraker09:scidb} estudien els SGBD científiques amb models  de dades basats en matrius. Estan desenvolupant SciDB \parencite{scidb}, un SGBD productiu i optimitzat per treballar amb matrius.
-
-
-\item[SciQL]
-\textcite{kersten11} descriuen SciQL, un llenguatge per a SGBD científiques basades en matrius. Hi ha un prototip en desenvolupament de SciQL \parencite{sciql}.
-
-
-
-
-\item[Pandas i altres]
-Aquests potser no són sistemes de gestió de bases de dades però sí que gestionen sèries temporals.
-
-\url{http://pandas.pydata.org/pandas-docs/stable/index.html}
-
-\url{http://pytseries.sourceforge.net/}
-
+\item[Pandas] Pandas \parencite{pandas} és una eina d'anàlisis de
+  dades. Tot i no ser un \gls{SGBD} sí que en té una forta orientació
+  ja que gestiona les dades a partir d'una estructura tabular i amb
+  molts conceptes relacionals.  Una de les principals aplicacions és
+  en les sèries temporals, inclou per exemple la regularització de
+  sèries temporals. Així, Pandas és semblant a altres eines d'anàlisi
+  estadística per a computació científica però incorpora la gestió de
+  sèries temporals i dades similars. Un sistema similar d'anàlisi de
+  sèries temporals, scikits.timeseries \parencite{pytseries}, ja no es
+  desenvolupa més i està previst que s'incorpori a Pandas.
 
 
 
@@ -301,6 +151,25 @@ Aquests potser no són sistemes de gestió de bases de dades però sí que gesti
 
 \subsection{Tècniques de compressió i aproximació}
 
+
+
+% As \acro{TSMS} suffer from problematic properties of time
+% series, like the ones we describe in
+% Section~\ref{sec:model:properties} mainly the huge data volume,
+% compression techniques are used.  Next, we summarise some current work
+% in \acro{TSMS} with compression.
+
+Els \gls{SGST} han de gestionar les propietats problemàtiques de les
+sèries temporals, com les descrites a
+la~\autoref{sec:art:problemes}. Principalment, el gran volum de dades
+comporta que s'explorin tècniques de compressió de les dades o de
+treballar amb dades que s'aproximin a la informació original.  La
+compressió i aproximació es pot explorar tant amb emmagatzematge amb
+pèrdua de les dades originals o sense pèrdua o fins i tot intentant
+resoldre el problema de trobar el compromís entre les mínimes dades
+que poden reconstruir el senyal original amb el mínim error. A
+continuació descrivim breument els projectes que exploren la
+compressió i aproximació de sèries temporals.
 
 
 
@@ -321,13 +190,17 @@ Aquests potser no són sistemes de gestió de bases de dades però sí que gesti
   que el problema principal del tractament rau en l'indexat de les
   sèries temporals i proposen mètodes per calcular-lo de manera
   eficient. El mètode principal que proposen està basat en
-  l'aproximació a trossos de la sèrie
-  temporal \parencite{keogh00}.  Ho implementen en una estructura de
-  gestió de dades que anomenen \emph{indexable Symbolic Aggregate
-    approXimation} (iSAX) \parencite{isax}. Les representacions de
-  sèries temporals que s'obtenen amb aquesta eina permeten reduir
-  l'espai emmagatzemat i indexar tant bé com altres mètodes de
-  representació més complexos.
+  l'aproximació a trossos de la sèrie temporal \parencite{keogh00}.
+  Ho implementen en una estructura de gestió de dades que anomenen
+  \emph{indexable Symbolic Aggregate approXimation}
+  (iSAX) \parencite{isax}. Les representacions de sèries temporals que
+  s'obtenen amb aquesta eina permeten reduir l'espai emmagatzemat i
+  indexar tant bé com altres mètodes de representació més complexos.
+  Aquestes tècniques de compressió són candidates per a ser usades com
+  a funcions d'agregació d'atributs en el model de \gls{SGSTM} que
+  definim, així seria interessant poder definir agregacions en el
+  domini freqüencial de les sèries temporals.
+
 % Piecewise Aggregate Approximation (PAA) \cite{keogh00}: aproxima una sèrie temporal partint-la en segments de la mateixa mida i emmagatzemant la mitjana dels punts que cauen dins del segment. Redueix de dimensió $n$ a dimensió $N$
 
 % Adaptive Piecewise Constant Approximation (APCA) \cite{keogh01}: com el PAA però amb segments de mida variable.
@@ -335,25 +208,107 @@ Aquests potser no són sistemes de gestió de bases de dades però sí que gesti
 
 
 
-\item[TSDS]
-\textcite{weigel10} noten la necessitat de mostrar les dades en tot el seu rang temporal i no només en un subconjunt com normalment s'ofereixen. Desenvolupen el paquet informàtic \emph{Time Series Data Server} (TSDS) \parencite{tsds} a on es poden introduir les dades de sèries temporals per posteriorment consultar-les per rangs temporals o aplicant-hi filtres i operacions.
-
-
-
-
 \item[RRDtool]
-RRDtool \parencite{rrdtool} {é}s un SGBD molt usat per la comunitat de programari lliure. Projectes en diversos camps l'utilitzen com a SGBD, en els quals hi ha sistemes de monitoratge professionals, també en l'àmbit de programari lliure, com Nagios/Icinga \parencite{nagios,icinga} o el Multi Router Traffic Grapher (MRTG) \parencite{mrtg}. Aquests monitors transfereixen a RRDtool la responsabilitat de gestionar l'emmagatzematge i d'operar amb les dades, i així es poden centrar en l'adquisició de dades i la gestió d'alarmes. 
-En l'evolució de RRDtool hi ha dues millores destacables. En primer lloc, \textcite{lisa98:oetiker} va separar el sistema de gestió de RRDtool de MRTG i el va dissenyar amb una estructura característica de Round Robin. En segon lloc,  \textcite{lisa00:brutlag} va estendre RRDtool amb algoritmes de predicció i detecció de comportaments aberrants. 
+  \parencite{rrdtool,lisa98:oetiker} desenvolupa un \gls{SGBD}
+  anomenat RRDtool que és molt usat per la comunitat de programari
+  lliure en l'àmbit dels sistemes de monitoratge. A causa d'això es
+  focalitza en unes dades en particular, les magnituds i els
+  comptadors, i hi manquen operacions genèriques de sèries temporals.
+  La principal característica és l'emmagatzematge de les dades amb la
+  tècnica que anomenen Round Robin, la qual consisteix en emmagatzemar
+  més resolució per als temps recents i en perdre resolució per als
+  temps més antics tot gestionant els registres d'emmagatzematge de
+  manera circular.
 
-Actualment, s'està estudiant l'eficiència i rapidesa de RRDtool a processar sèries temporals. \textcite{carder:rrdcached} ha dissenyat una aplicació, \emph{rrdcached}, que millora el rendiment de RRDtool amb la qual s'aconsegueix fer funcionar  simultàniament sistemes amb grans quantitats de bases de dades RRDtool \parencite{lisa07:plonka}. \textcite{jrobin} han dissenyat una adaptació de RRDtool anomenada \emph{JRobin}. 
-Finalment, és destacable l'ús emergent de RRDtool en entorns d'experimentació, com és el cas de \textcite{zhang07} i \textcite{chilingaryan10} que hi emmagatzemen dades experimentals per posteriorment predir o validar-les.
+  Hi ha diversos projectes que utilitzen RRDtool com a \gls{SGBD}, en
+  els quals hi ha sistemes de monitoratge professionals, també en
+  l'àmbit de programari lliure, com
+  Nagios/Icinga \parencite{nagios,icinga} o el Multi Router Traffic
+  Grapher (MRTG) \parencite{mrtg}. Aquests monitors transfereixen a
+  RRDtool la responsabilitat de gestionar l'emmagatzematge i d'operar
+  amb les dades, i així es poden centrar en l'adquisició de dades i la
+  gestió d'alarmes. Altres projectes adapten la tècnica de RRDtool en
+  altres llenguatges, com per exemple
+  \emph{JRobin} \parencite{jrobin}. També és destacable l'ús emergent
+  de RRDtool en entorns d'experimentació, com és el cas de
+  \textcite{zhang07} i \textcite{chilingaryan10} que hi emmagatzemen
+  dades experimentals per posteriorment predir o validar-les.  A causa
+  del gran ús que es fa de RRDtool, sobretot en la comunitat de
+  programari lliure, ens ha inspirat per a desenvolupar un model a
+  partir de les principals característiques, la qual cosa és el que
+  anomenem multiresolució.
 
 
-\item[Whisper] Whisper és el sistema de base de dades que utilitza Graphite. És molt semblant a RRDtool, de fet inicialment Graphite usava RRDtool com a sistema d'emmagatzematge.
+  En l'evolució de RRDtool hi ha dues millores destacables. En primer
+  lloc, \textcite{lisa98:oetiker} va separar el sistema de gestió de
+  RRDtool d'un sistema de monitoratge particular, MRTG, i el va
+  dissenyar amb l'estructura característica de Round Robin. En segon
+  lloc, \textcite{lisa00:brutlag} va estendre RRDtool amb algoritmes
+  de predicció i detecció de comportaments aberrants.  Actualment,
+  s'està estudiant l'eficiència i rapidesa de RRDtool en processar les
+  sèries temporals.  RRDtool pot emmagatzemar múltiples resolucions de
+  les dades, però \textcite{lisa07:plonka} troben limitacions de
+  rendiment quan s'han d'emmagatzemar grans quantitats de sèries
+  temporals diferents. Una solució que observen per a aquest problema
+  és l'aplicació de \emph{cache} dissenyada per
+  \textcite{carder:rrdcached}, anomenada \emph{rrdcached}, que permet
+  fer funcionar simultàniament sistemes amb grans quantitats de bases
+  de dades RRDtool.
 
-\url{http://graphite.wikidot.com/whisper}
-\url{http://graphite.wikidot.com/} graphite, semblant a RRDtool
 
+
+
+\item[Whisper] Una eina per a visualitzar gràfics de dades que tenen
+  forma de sèries temporals és Graphite \parencite{graphite}. Graphite
+  utilitza un \gls{SGBD} anomenat Whisper que té un disseny molt
+  similar a RRDtool, de fet inicialment Graphite usava RRDtool com a
+  sistema d'emmagatzematge.
+
+
+
+
+
+\item[Tsdb]
+Alerta que no és el mateix tsdb que opentsdb??
+
+\todo{aquest potser hauria d'anat a compressió}
+
+Diuen que OpenTSDB té una arquitectura massa complicada i només és útil per a sistemes distribuïts.
+
+Han fet anàlisis del rendiment de RRDtool, MySQL i la seva implementació TSDB i conclouen que RRDtool és el que pitjor funciona per a sèries temporals. La seva implementació, TSDB, es basa en la compressió de dades. Assumeixen que les sèries temporals són regulars i totes tenen el mateix patró de mostreig, fet que els permet implementar les gestió de les sèries temporals de manera més senzilla.
+\todo{Potser aquest va a compressió de dades doncs?}
+
+Deri et al.\ \cite{deri12:tsdb_compressed_database} present
+\emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
+series that share the same time instants of acquisition. Different
+time series are stored grouped by the time of acquisition instead of
+each time series isolated.  They compare \emph{Tsdb} with \emph{RRDtool} and
+with a relational product. As a consequence of \emph{Tsdb} structure,
+they achieve a better measure addition time but a worse global
+retrieval time as data has to be contiguously regrouped. However, when
+measures have same time this is seen as the same time series in a
+\acro{MTSMS}, so it would be interesting to use this implementation
+architecture of shared time arrays in \acro{MTSMS} for resolution subseries
+with same delta time in order to achieve better performance requirements
+when having much equal acquired time series.
+
+
+
+
+
+\item[Emmagatzematge en memòries Flash]
+  \textcite{dou14:historic_queries_flash_storage} se centren en
+  l'àmbit de l'emmagatzematge de sèries temporals en memòries de tipus
+  Flash, de les quals noten que tenen propietats diferents a
+  l'emmagatzematge tradicional en discs.  Proposen emmagatzemar
+  informació de cada sèrie temporal per a poder resoldre tres tipus de
+  consultes: agregacions temporals, històrics basats en mostrejos
+  aleatoris i cerca de patrons similars.  La tècnica d'agregacions
+  temporals que utilitzen és molt semblant a la de RRDtool, és a dir
+  agregar i emmagatzemar les dades amb diferents resolucions, tot i
+  que implementada i particularitzada per a les memòries Flash, amb
+  registre i punters. Per a la cerca de patrons similars indexen les
+  sèries temporals de manera similar als algoritmes de iSAX.
 
 
 \end{description}
@@ -363,16 +318,49 @@ Finalment, és destacable l'ús emergent de RRDtool en entorns d'experimentació
 \subsection{Processament en flux}
 
 
+Les sèries temporals també es tracten com a fluxos de dades
+(\emph{data stream}) per tal de resoldre consultes d'agregació
+estadística de les dades mitjançant consultes aproximades.  Com a
+fluxos de dades, s'exploren tècniques per a processar les consultes de
+forma incremental cada cop que arriba una dada nova.
+\textcite{cormode08:pods} exploren tècniques d'agregació en flux per a
+sèries temporals que consideren donar més pes a les dades més recents,
+és a dir de manera molt similar a la multiresolució que proposem però
+només per a una resolució i per a unes funcions d'agregació
+determinades.
+
+El processament en flux  s'usa sobretot en l'àmbit de les xarxes de
+sensors, del qual a continuació en descrivim alguns projectes.
+
 
 \begin{description}
 
-\item[Cougar]
-\textcite{cougar,fung02} proposen Cougar com un SGBD per xarxes de sensors (\emph{sensor database systems}). El sistema té dues estructures \parencite{bonnet01}: una basada en relacions per les característiques dels sensors i una basada en seqüències per les dades dels sensors, les quals són sèries temporals.
-Les consultes es processen de manera distribuïda: cada sensor és un node amb capacitat de processament que pot resoldre una part de la consulta i fusionar-la amb les altres. D'aquesta manera es minimitza l'ús de comunicacions però l'estructura i estratègia de comunicació dels nodes esdevé una part crítica a configurar \parencite{demers03}.
+\item[Cougar] \textcite{cougar,fung02} proposen Cougar com un
+  \gls{SGBD} per a xarxes de sensors (\emph{sensor database
+    systems}). El sistema té dues estructures \parencite{bonnet01}:
+  una per a les característiques dels sensors emmagatzemades com a
+  taules relacionals i una altra per a les sèries temporals dels
+  sensor emmagatzemades com a seqüències de dades.  Les consultes es
+  processen de manera distribuïda. Cada sensor és un node amb
+  capacitat de processament que pot resoldre una part de la consulta i
+  fusionar-la amb les altres. D'aquesta manera les dades
+  s'emmagatzemen distribuïdes en els sensors i les consultes es
+  resolen combinant les dades amb orientació de flux, cosa que millora
+  el rendiment del processament i es minimitza l'ús de les
+  comunicacions.  Això no obstant, l'estructura i l'estratègia de
+  comunicació dels nodes esdevé una part crítica a configurar en
+  aquests sistemes \parencite{demers03}.
 
 
-\item[TinyDB]
-Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a Cougar és TinyDB \parencite{tinyDB,madden05}. A part de les característiques descrites per Cougar, aquest sistema  modifica i s'implica en parts del procés d'adquisició de les dades com és el temps, la freqüència o l'ordre de mostreig. Per exemple donada una consulta que vol correlacionar les dades de dos sensors, el sistema indica als sensors implicats que han d'adquirir amb la mateixa freqüència.
+\item[TinyDB] Un altre prototip de \gls{SGBD} per a xarxes de sensors
+  desenvolupat para\l.lelament a Cougar és
+  TinyDB \parencite{tinyDB,madden05}. A més de les característiques
+  descrites per Cougar, aquest sistema s'implica i modifica el procés
+  d'adquisició de les dades com ara els instants de temps, la
+  freqüència o l'ordre de mostreig. Per exemple donada una consulta
+  que vol correlacionar les dades de dos sensors diferents, el sistema
+  indica als sensors implicats que han d'adquirir amb la mateixa
+  freqüència.
 
 
 \end{description}
@@ -389,22 +377,92 @@ Un altre prototip de SGBD per xarxes de sensors desenvolupat para\l.lelament a C
 
 \subsection{Emmagatzematge massiu}
 
-\todo{} Hi ha sistemes que aborden l'emmagatzematge massiu de les
+Hi ha sistemes que aborden l'emmagatzematge massiu de les
 sèries temporals, és a dir de grans volums de dades, seguint
-l'enfocament de \gls{VLDB}. 
+l'enfocament de les \gls{VLDB}.  A continuació en descrivim alguns
+projectes.
+
 
 
 \begin{description}
 
-\item[OpenTSDB]
-\url{http://opentsdb.net/docs/build/html/user_guide/query/aggregators.html}  Aquest també defineix el concepte d'agregadors, però només sap interpolar linealment. Sobretot per a fer visualització. Basa l'emmagatzematge en Apache Hadoop i HBase, emmagatzema les dades originals i calcula totes les operacions durant l'execució de les consultes. És a dir, emmagatzema totes les dades originals i es basa en una estructura distribuïda d'emmagatzematge en què és ràpid d'escriure-hi les dades i localitzar-les, ja que HBase té uns índex potents per a les dades.  Permet fer consultes amb agregacions en què les agregacions siguin per a un interval temporal petit de les dades.
+
+
+\item[TSDS] \textcite{weigel10} noten la necessitat de mostrar les
+  dades en tot el seu rang temporal i no només en un subconjunt com
+  molts altres sistemes ofereixen. Desenvolupen el paquet informàtic
+  \emph{Time Series Data Server} (TSDS) \parencite{tsds} en què es
+  poden introduir les dades de sèries temporals per posteriorment
+  consultar-les per rangs temporals o aplicant-hi filtres i
+  operacions. La particularitat de TSDS és el fet que incorpora un
+  sistema de \emph{cache} per a les consultes que, de forma similar a
+  la tècnica descrita per RRDtool, emmagatzema els resultats de les
+  consultes segons la resolució i agregació realitzada. D'aquesta
+  manera els resultats es poden aprofitar per a altres consultes
+  similars. Això no obstant, aquestes consultes s'han de basar en els
+  operadors predefinits de TSDS.
 
 
 
-OpenTSDB \cite{deri12:tsdb_compressed_database}
-\url{http://opentsdb.net/}
-Han fet anàlisis del rendiment de RRDtool, MySQL i la seva implementació TSDB i conclouen que RRDtool és el que pitjor funciona per a sèries temporals. La seva implementació, TSDB, es basa en la compressió de dades. Assumeixen que les sèries temporals són regulars i totes tenen el mateix patró de mostreig, fet que els permet implementar les gestió de les sèries temporals de manera més senzilla.
-\todo{Potser aquest va a compressió de dades doncs?}
+
+
+
+
+\item[SciDB] \textcite{stonebraker09:scidb} estudien l'emmagatzematge
+  de dades científiques en \gls{SGBD} basats en models de matrius.
+  Les sèries temporals són les dades científiques per exce\l.lència, i
+  per tant són les aplicacions que principalment exploren.  Dissenyen
+  SciDB, un \gls{SGBD} que implementa les sèries temporals com
+  a matrius i permet aconseguir anàlisis multidimensonals amb més bon
+  rendiment. Les altres dades que acompanyen les sèries temporals les
+  emmagatzemen en taules. 
+\todo{més?}
+
+
+% However,
+% difference between tables and arrays seems too physical and leads to
+% ambiguity when representing time series.  
+% Our TSMS model proposes time
+% series as firmly based on relational algebra, clarifying this
+% ambiguity and describing them coherently in terms of information
+% systems theory.
+
+
+
+\item[SciQL] \textcite{kersten11,zhang11} descriuen SciQL, un
+  llenguatge per a \gls{SGBD} de dades científiques basades en
+  matrius, del qual n'estan desenvolupant un
+  prototip \parencite{sciql}. És molt semblant a la proposta de SciDB,
+  però a diferència SciQL defineix les sèries temporals com una mescla
+  de matrius, conjunts i seqüències. A més mostren com gestionar
+  algunes característiques de sèries temporals com per exemple la
+  regularitat, la interpolació o les consultes de correlació.
+\todo{} 
+
+
+
+
+
+
+
+\item[OpenTSDB] OpenTSDB \parencite{opentsdb} és un sistema
+  d'emmagatzematge distribuït de sèries temporals. Basa
+  l'emmagatzematge en Apache Hadoop i HBase, els quals permeten
+  distribuir les dades ens diferents nodes. Gràcies a aquests
+  sistemes, pot emmagatzemar totes les dades originals ja que és una
+  estructura en què és ràpid d'escriure-hi i localitzar les dades, cal
+  destacar que HBase crea uns índex potents de les dades i això
+  s'aprofita per a indexar l'atribut de temps de les sèries temporals.
+  Per a consultar les dades defineixen el concepte d'agregadors, tot i
+  que només per a interpolacions lineals, i les operacions d'agregació
+  es processen en el mateix moment d'executar la consulta.  Així
+  doncs, si bé pot recuperar les dades de forma molt ràpida,
+  restringeix les consultes a intervals temporals petits per tal que
+  les execucions siguin ràpides. Per tant, és un sistema útil sobretot
+  per a visualitzar i comparar intervals temporals petits de diferents
+  sèries temporals.
+
+
 
 
 \end{description}
