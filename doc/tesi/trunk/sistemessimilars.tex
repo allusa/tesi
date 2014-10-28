@@ -3,81 +3,55 @@
 
 
 
-\todo{revisar}
 
-Similars a què? Similars als models que presentem? explicar-ho
-
-
-Hi ha hagut vàries implementacions de sistemes específics per a sèries
+Hi ha vàries implementacions de sistemes per a gestionar sèries
 temporals. Algunes són només l'aplicació d'un algoritme d'anàlisi per
-un problema concret de sèries temporals però altres són més elaborades
-i es defineixen com a SGBD per a sèries temporals.  En aquest apartat
-resumim algunes aplicacions que considerem que implementem conceptes
-dels SGST.
+a un problema concret de sèries temporals però altres són més
+elaborades i es defineixen com a \gls{SGBD} específics per a sèries
+temporals. En aquests secció resumim algunes aplicacions que
+considerem que implementem conceptes dels \gls{SGST}.
+
+
+
+Explorem l'estat de la recerca en sistemes i projectes
+similars a l'objectiu dels nostres models: gestionar les sèries
+temporals i aplicar-hi alguna tècnica, com la multiresolució, per tal
+de solucionar algunes de les propietats problemàtiques. Cal notar que
+hi ha una gran quantitat de sistemes propis de productes, sobretot
+lligats a la reco\l.lecció de dades de sensors, que gestionen algunes
+característiques de les dades adquirides. Ara bé, ofereixen capacitats
+molt restringides a l'àmbit on es dirigeixen els productes, és a dir
+que no són genèrics i són més aviat controladors del procés
+d'adquisició. Per exemple Keller \parencite{keller} permet desar dades
+cada un cert període amb estructura d'anell, és a dir elimina les més
+antigues quan és ple, però només té un anell, a banda també permet
+detectar certs esdeveniments i emmagatzemar alguns estadístics de les
+dades.  Aquests sistemes, però, són tancats i no s'especifica amb
+detall el seu funcionament ni la seva estructura i per tant són
+difícils d'avaluar.
+% A banda permet detectar certs esdeveniments i aleshores canviar el període de mostreig. A banda permet també emmatgazemar alguns estadístics de les dades: mitjana i rang cada certs segons.
 
 
 
 
 
 
-
-\todo{} També hi ha molts sistemes propis d'empreses que van lligats
-amb els seus productes. Ara bé ofereixen molt poques capacitats de
-SGST i les que ofereixen són molt restringides a l'àmbit a on estan
-dirigits els productes; és a dir que no són genèrics i són més aviat
-controladors del procés d'adquisició. Per exemple Keller
-\url{http://www.catsensors.com/ca/productes/varis__software/logger_4x}, permet desar dades cada un cert període amb estructura d'anell (és a dir eliminant les més antigues quan és ple) però només té un anell. A banda permet detectar certs esdeveniments i aleshores canviar el període de mostreig. A banda permet també emmatgazemar alguns estadístics de les dades: mitjana i rang cada certs segons.
-
-
-
-
+Classifiquem els sistemes en quatre apartats segons la característica
+principal que els defineixi, tot i que no és una classificació
+absoluta ja que alguns en poden tenir més d'una:
+\begin{itemize}
+\item Sistemes genèrics
+\item Compressió i aproximació
+\item Processament en flux
+\item Emmagatzematge massiu
+\end{itemize}
 
 
-On the other hand, compression techniques for time series are
-considered in the form of approximation to the original signal in
-order to compute analysis such as similarity or pattern search
-\cite{fu11,keogh01,last01} or in the form of compression and
-aggregation approaches for massive data streams
-\cite{cormode08:pods,bonnet01}. However, treating time series as data
-streams does not consider adequately the time dimension nor computes
-the evolution of aggregated parameters along time, which is
-interesting for monitoring purposes.  On a similar approach,
-\emph{RRDtool} \cite{rrdtool} is a system that stores time series
-aggregated in different resolutions in order to compact data and to do
-faster visualisations. However, \emph{RRDtool} is very specific and
-has limited aggregation operations to applications of network
-counters.
-
-
-\url{http://en.wikipedia.org/wiki/Time_series_database}
 
 
 
 
  
-
-
-
-
-
-
-
-\todo{wavelet}
-
-També hi ha l'anàlisi de les sèries temporals amb wavelet analysis. Aquest es basa en anàlisis de la freqüència dels senyals. 
-
-A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design method of most of the practically relevant discrete wavelet transforms (DWT) and the justification for the algorithm of the fast wavelet transform (FWT). It was introduced in this context in 1988/89 by Stephane Mallat and Yves Meyer and has predecessors in the microlocal analysis in the theory of differential equations (the ironing method) and the pyramid methods of image processing as introduced in 1981/83 by Peter J. Burt, Edward H. Adelson and James Crowley.
-
-
-
-
-
-
-\todo{}
-
-
-
-
 
 
 \subsection{Sistemes genèrics}
@@ -96,7 +70,9 @@ com les dades bitemporals es formalitzen en els \gls{SGBDR}.
 
 
 Per altra banda, alguns autors descriuen sistemes genèrics per a
-tractar sèries temporals, és a dir amb un model adequat per a sèries temporals però sense cap tècnica específica per a processar-les\todo{?}. A continuació en descrivim alguns breument.
+tractar sèries temporals, és a dir amb un model adequat per a sèries
+temporals però sense cap tècnica específica per a processar-les. A
+continuació en descrivim alguns breument.
 
 
 
@@ -229,7 +205,7 @@ compressió i aproximació de sèries temporals.
   amb les dades, i així es poden centrar en l'adquisició de dades i la
   gestió d'alarmes. Altres projectes adapten la tècnica de RRDtool en
   altres llenguatges, com per exemple
-  \emph{JRobin} \parencite{jrobin}. També és destacable l'ús emergent
+  JRobin \parencite{jrobin}. També és destacable l'ús emergent
   de RRDtool en entorns d'experimentació, com és el cas de
   \textcite{zhang07} i \textcite{chilingaryan10} que hi emmagatzemen
   dades experimentals per posteriorment predir o validar-les.  A causa
@@ -251,7 +227,7 @@ compressió i aproximació de sèries temporals.
   rendiment quan s'han d'emmagatzemar grans quantitats de sèries
   temporals diferents. Una solució que observen per a aquest problema
   és l'aplicació de \emph{cache} dissenyada per
-  \textcite{carder:rrdcached}, anomenada \emph{rrdcached}, que permet
+  \textcite{carder:rrdcached}, anomenada RRDcached, que permet
   fer funcionar simultàniament sistemes amb grans quantitats de bases
   de dades RRDtool.
 
@@ -268,29 +244,29 @@ compressió i aproximació de sèries temporals.
 
 
 
-\item[Tsdb]
-Alerta que no és el mateix tsdb que opentsdb??
+\item[Tsdb] \textcite{deri12:tsdb_compressed_database} desenvolupen
+  Tsdb, un \gls{SGST} d'emmagatzematge amb compressió sense pèrdua per
+  a les sèrie temporals. Les sèries temporals han de compartir
+  exactament els mateixos instants de temps d'adquisició i aleshores
+  tots els valors s'emmagatzemen agrupats per temps en comptes de
+  tenir cada sèrie temporal aïllada.  Així doncs, assumeixen que les
+  sèries temporals són regular i tenen el mateix patró de
+  mostreig. Els valors s'emmagatzemen aplicant tècniques de compressió
+  sense pèrdua, a diferència d'altres sistemes que també emmagatzemen
+  tota la sèrie temporal original però amb tècniques massives, com per
+  exemple OpenTSDB del qual comenten que té una arquitectura massa
+  complicada i només és útil per a sistemes distribuïts.
 
-\todo{aquest potser hauria d'anat a compressió}
-
-Diuen que OpenTSDB té una arquitectura massa complicada i només és útil per a sistemes distribuïts.
-
-Han fet anàlisis del rendiment de RRDtool, MySQL i la seva implementació TSDB i conclouen que RRDtool és el que pitjor funciona per a sèries temporals. La seva implementació, TSDB, es basa en la compressió de dades. Assumeixen que les sèries temporals són regulars i totes tenen el mateix patró de mostreig, fet que els permet implementar les gestió de les sèries temporals de manera més senzilla.
-\todo{Potser aquest va a compressió de dades doncs?}
-
-Deri et al.\ \cite{deri12:tsdb_compressed_database} present
-\emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
-series that share the same time instants of acquisition. Different
-time series are stored grouped by the time of acquisition instead of
-each time series isolated.  They compare \emph{Tsdb} with \emph{RRDtool} and
-with a relational product. As a consequence of \emph{Tsdb} structure,
-they achieve a better measure addition time but a worse global
-retrieval time as data has to be contiguously regrouped. However, when
-measures have same time this is seen as the same time series in a
-\acro{MTSMS}, so it would be interesting to use this implementation
-architecture of shared time arrays in \acro{MTSMS} for resolution subseries
-with same delta time in order to achieve better performance requirements
-when having much equal acquired time series.
+  Comparen el rendiment de Tsdb amb RRDtool i un producte
+  \gls{SQL}. Gràcies a l'estructura de Tsdb aconsegueixen un millor
+  temps d'addició de les mesures però un pitjor temps de recuperació
+  de les dades ja que per obtenir una sèrie temporal s'han de
+  reagrupar els valors. Tot i així, és una aproximació interessant per
+  a ser aplicada en els \gls{SGSTM} quan cal agrupar sèries temporals
+  que comparteixen els mateixos instants d'adquisició: aleshores es
+  podria dissenyar una implementació amb aquesta arquitectura en què
+  els valors fossin vectors i les operacions es processessin alhora
+  per a totes les sèries temporals en el mateix moment de l'addició.
 
 
 
@@ -412,11 +388,12 @@ projectes.
   de dades científiques en \gls{SGBD} basats en models de matrius.
   Les sèries temporals són les dades científiques per exce\l.lència, i
   per tant són les aplicacions que principalment exploren.  Dissenyen
-  SciDB, un \gls{SGBD} que implementa les sèries temporals com
-  a matrius i permet aconseguir anàlisis multidimensonals amb més bon
+  SciDB, un \gls{SGBD} que implementa les sèries temporals com a
+  matrius i permet aconseguir anàlisis multidimensonals amb més bon
   rendiment. Les altres dades que acompanyen les sèries temporals les
-  emmagatzemen en taules. 
-\todo{més?}
+  emmagatzemen en taules. Això no obstant, la diferència entre taules
+  i matrius sembla massa del nivell físic i comporta ambigüitat per a
+  representar les sèries temporals.
 
 
 % However,
@@ -437,7 +414,7 @@ projectes.
   de matrius, conjunts i seqüències. A més mostren com gestionar
   algunes característiques de sèries temporals com per exemple la
   regularitat, la interpolació o les consultes de correlació.
-\todo{} 
+
 
 
 
@@ -472,6 +449,18 @@ projectes.
 
 
 % http://stackoverflow.com/questions/4814167/storing-time-series-data-relational-or-non
+%\url{http://en.wikipedia.org/wiki/Time_series_database}
+
+
+
+
+
+
+% \todo{wavelet}
+
+% També hi ha l'anàlisi de les sèries temporals amb wavelet analysis. Aquest es basa en anàlisis de la freqüència dels senyals. 
+
+% A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design method of most of the practically relevant discrete wavelet transforms (DWT) and the justification for the algorithm of the fast wavelet transform (FWT). It was introduced in this context in 1988/89 by Stephane Mallat and Yves Meyer and has predecessors in the microlocal analysis in the theory of differential equations (the ironing method) and the pyramid methods of image processing as introduced in 1981/83 by Peter J. Burt, Edward H. Adelson and James Crowley.
 
 
 
