@@ -1,16 +1,11 @@
 \chapter{Introducció als models}
 
-
-\todo{}
-
 En els capítols següents es dissenya un model matemàtic per a la
-gestió en bases de dades de la multiresolució de sèries temporals.
+gestió en bases de dades de la multiresolució de sèries temporals.  Es
+defineixen els objectes que ens permeten modelar l'estructura de les
+dades i els operadors que s'hi poden aplicar.
 
-En els següents capítols es defineixen els objectes que ens permeten
-modelar l'estructura de les dades i els operadors que s'hi poden
-aplicar.
-
-La definició del model s'estructura en dues parts:
+La definició del model s'estructura en dos capítols:
 
 \begin{itemize}
 \item Un model pels \gls{SGST}  que defineix mesura i sèrie temporals.
@@ -22,36 +17,36 @@ La definició del model s'estructura en dues parts:
 
 
   
-En aquest capítol, es relaciona i s'explica més bé el concepte de
-model matemàtic pels \gls{SGBD} del capítol d'estat de l'art
-\todo{ref} amb el model que proposem. Sobretot s'aclareixen alguns termes i conceptes que altrament podrien ser confusos. 
-
-També es resumeixen els objectius de la definició dels models.
-
-
+En aquest capítol d'introducció, resumim els objectius de la definició
+dels models i aclarim alguns termes i conceptes que altrament podrien
+resultar confusos.  Primer, relacionem el concepte de model matemàtic
+pels \gls{SGBD} de la~\autoref{sec:art:sgbd} amb el model que
+proposem. Segon, introduïm el context i els supòsits que utilitzarem a
+l'hora de treballar amb les sèries temporals.  Tercer, introduïm les
+característiques principals de la multiresolució i la motivació per a
+definir-la.
 
 
 \section{Introducció als conceptes de model}
 
 %Sobre què és una base de dades i un sistema que la gestiona
 \paragraph{Què és una base de dades i un sistema que la gestiona.}
-Una definició més particular de base de dades que l'exposada en el
-capítol d'estat de l'art \todo{ref} és ``conjunt de dades organitzades
-segons una estructura coherent i accessibles des de més d'un programa
-o aplicació, de manera que qualsevol d'aquestes dades pot ésser
-extreta del conjunt i actualitzada, sense que això afecti ni
-l'estructura del conjunt ni les altres dades'' \parencite[s.~v.~base
-de dades]{termcat} amb la corresponent definició per als sistemes que
-les gestionen de ``sistema informàtic que permet la gestió automàtica
-d'una base de dades, generalment la creació, l'emmagatzematge, la
-modificació i la protecció de les dades que s'hi
-contenen'' \parencite[s.~v.~sistema de gestió de bases de
-dades]{termcat}.  En aquest cas, hem de precisar que en els capítols
-següents ens centrem en la teoria dels sistemes d'informació,
-basant-nos en el model relacional \parencite{date04:introduction8},
-per a proposar el model lògic i deixem de banda els aspectes més
-d'implementació informàtica, com per exemple accedir o manipular
-físicament les dades.
+Una definició més particular de base de dades que l'exposada en
+la~\autoref{sec:art:sgbd} és ``conjunt de dades organitzades segons
+una estructura coherent i accessibles des de més d'un programa o
+aplicació, de manera que qualsevol d'aquestes dades pot ésser extreta
+del conjunt i actualitzada, sense que això afecti ni l'estructura del
+conjunt ni les altres dades'' \parencite[s.~v.~base de dades]{termcat}
+amb la corresponent definició per als sistemes que les gestionen de
+``sistema informàtic que permet la gestió automàtica d'una base de
+dades, generalment la creació, l'emmagatzematge, la modificació i la
+protecció de les dades que s'hi contenen'' \parencite[s.~v.~sistema de
+gestió de bases de dades]{termcat}.  En aquest cas, hem de precisar
+que en els capítols següents ens centrem en la teoria dels sistemes
+d'informació, basant-nos en el model
+relacional \parencite{date04:introduction8}, per a proposar el model
+lògic i deixem de banda els aspectes més d'implementació informàtica,
+com per exemple accedir o manipular físicament les dades.
 
 D'aquestes definicions cal destacar la precisió en els termes
 d'estructura, organitzada i coherent, és a dir que s'enumeren els
@@ -130,7 +125,7 @@ informació d'una sèrie temporal original.
 
 
 \paragraph{Quin nivell es modela.}
-Al capítol d'estat de l'art\todo{ref} s'han nombrat els tres nivells
+En la~\autoref{sec:art:sgbd} s'han nombrat els tres nivells
 de l'arquitectura dels \gls {SGBD}: el físic, el lògic i el d'usuari.
 Els models que es proposen pertanyen al nivell lògic, és a dir són
 models lògics per les dades i pel comportament dels \gls{SGST} i
@@ -151,7 +146,7 @@ similars a l'àlgebra relacional. L'àlgebra relacional es basa en la
 teoria de conjunts, que és més propera a la definició d'una sèrie
 temporal com a conjunt de mesures i a aplicar-hi operacions de manera
 prescriptiva. Alternativament, el càlcul relacional, que com s'ha
-descrit al capítol d'estat de l'art \todo{ref} és equivalent a
+descrit a la~\autoref{sec:art:sgbd} és equivalent a
 l'àlgebra relacional, es basa en la lògica de predicats i és més
 proper a aplicar les operacions de manera descriptiva. Això no
 obstant, en les definicions usem tant l'àlgebra com la lògica de
@@ -254,7 +249,7 @@ especial.
 
 
 
-  Per una banda, cal destacar, des de l'asusmpció de la interpretació en el monitoratge,
+  Per una banda, cal destacar, des de l'asusmpció/supòsit/context de la interpretació en el monitoratge,
  que deduir informació sobre la variable
   mesurada a partir de la mesura és competència d'altres teories
   (p.ex. si l'aparell de mesura està avariat la informació inferida en

@@ -21,10 +21,10 @@ twoside,fontsize=11pt,BCOR12mm,
 \ExecuteBibliographyOptions{annotation=true,backref=true}
 %backref=true, urldate=long, abbreviate=false,%%format web 
 %---------- Mode esborrany --------------------
-%\includeonly
+\includeonly
 %{intro}
 %{art,seriestemporals,sgbd,sistemessimilars}
-%{model}
+{model}
 %{sgst,sgst-operacions,sgst-naturalesa}
 %{sgstm,sgstm-operacions,sgstm-interpoladors}
 %{multiresolucio}
@@ -84,14 +84,17 @@ twoside,fontsize=11pt,BCOR12mm,
 \usepackage{arydshln} %hdashline a les taules
 
 
+\usepackage{bookmark}%per netejar l'ordre de \part{}
+
+
 %glossaris
 %\usepackage{supertabular}
 \usepackage[
           acronym,
           %%nonumberlist,
-          %%toc,
+          toc,
           section,
-          numberedsection=autolabel,
+          numberedsection=false,%numberedsection=autolabel,
           sanitize=none, %pels accents en el vegeu
           ]{glossaries}
 %\renewcommand*{\glspostdescription}{}%anul·la el punt final
@@ -112,7 +115,6 @@ twoside,fontsize=11pt,BCOR12mm,
 \newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
 \newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
 
-\usepackage{bookmark}
 
 
 %-------------- dades --------------------------
@@ -234,7 +236,7 @@ twoside,fontsize=11pt,BCOR12mm,
 
 \printglossary[type=abreviatura]
 
-\printglossary[type=\acronymtype]
+\printglossary[type=\acronymtype,title=Sigles]
 
 \renewcommand{\glossarypreamble}{Índex de notació segons nom, símbol i
   referència --pàgina o en negreta lloc on es defineix el concepte:
@@ -247,8 +249,8 @@ twoside,fontsize=11pt,BCOR12mm,
 
 %------------- Índexs ------------
 %ATENCIÓ, hi ha problemes quan s'activen molts índexs
-% \cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}
-% \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
+%\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}
+%\cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
 % \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
 % %\cleardoublepage\phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings
 % \renewcommand\listtheoremname{Índex de definicions}
