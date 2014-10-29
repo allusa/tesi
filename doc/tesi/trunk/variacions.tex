@@ -29,6 +29,200 @@ Per altra banda a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls
 
 
 
+
+
+
+
+
+
+
+\section{Estructures interessants}
+
+
+
+\subsection{Discos enllaçats}
+
+
+Aquesta pot ser útil per al filó distribuït. 
+
+* Si quan s'entra una mesura aquesta ha d'anar a totes les subsèries resolució, aleshores el filó distribuït no té sentit perquè igualment han d'arribar les mesures noves al node central.
+
+* Però si hi ha discos enllaçats aleshores només cal anar transferint la subsèrie consolidada cap amunt i llavors un cop es llança una consulta aquesta decideix si té prou resolució al node on és o ha d'anar a buscar-ne d'un altre. Aquesta decissió de la consulta pot fer-se a mà, consultes amb SerieDisc()  indiquen quin disc s'ha d'anar a buscar, per tant l'usuari tria quin vol i sap si s'haurà d'anar a buscar a fora. 
+
+
+\paragraph{Exemple 2}
+
+Les taules es poden veure a la \autoref{fig:model:mtsdb:cadena} a on la base de dades multiresolució és la vista-relació 
+\begin{verbatim}
+M_2 = ( ((M_2' RENAME S'_B AS S') JOIN (M^{series}_2 RENAME S AS S_B)) RENAME S'_D AS S') JOIN (M^{series}_2 RENAME S AS S_D)
+\end{verbatim}
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \multicolumn{2}{c}{$M'_2$} \\ \hline
+    $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 2 & mitjana  \\
+    $S_{D1}$ & $S_{D2}$ & 40 & 10 & 4 & mitjana  \\ \hline
+  \end{tabular}\qquad
+  \begin{tabular}{|c|c|c|}
+    \multicolumn{3}{c}{$M^{series}_{2}$} \\ \hline
+    \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
+    & $t$      & $v$  \\ \hline
+    \multirow{3}{*}{$S_{B1}$} & 46 & 0 \\ 
+    & 48 & 0 \\ 
+    & 49 & 0 \\ \hline
+    \multirow{2}{*}{$S_{D1}$} & 40 & 0 \\ 
+    & 45 & 0 \\ \hline
+    \multirow{4}{*}{$S_{D2}$} & 10 & 0 \\ 
+    & 20 & 0 \\ 
+    & 30 & 0 \\ 
+    & 40 & 0 \\ \hline
+  \end{tabular}
+  \caption{Taula d'una mtsdb en cadena}
+  \label{fig:model:mtsdb:cadena}
+\end{figure}
+
+\todo{per a fer l'exemple falta conèixer els operadors estructurals}
+
+\todo{falta definir qui són els buffer d'entrada de mesures}
+definir una $M^{in}_2$.
+
+
+
+
+
+Respecte a l'estructura general, l'estructura enllaçada restringeix
+els períodes de consolidació de les sèries temporals: aquests són
+múltiples dels discs anteriors.
+
+
+
+\subsection{Data stream}
+
+
+
+Base de dades multiresolució a on les sèries temporals dels buffers
+només tenen una mesura; és a dir tenen cardinal afitat a 1.
+
+
+Per a orientar a streams els buffers s'han de canviar els operadors
+d'afegir i consolidar:
+
+Es canvia l'operador d'afegir per tal que incorpori el càlcul orientat
+a stream cada cop:
+\[
+\text{addB}^{\text{stream}}: B \times m \longrightarrow B' =
+(streamB(S,m),\tau,\delta,f)
+\]
+
+Es canvia l'operador de consolidar per tal que reconegui la sèrie
+temporal del buffer com a consolidada amb stream.
+
+  \[
+  \text{consolidaB}^{\text{stream}}: B \longrightarrow B' \times m'
+  \]
+  \[
+  B'= (S',\tau+\delta,\delta,f)
+  \]
+  \[
+  S' = S(\tau+\delta,\infty)
+  \]
+  \[
+  m' \in S(\tau,\tau+\delta] 
+  \]
+
+
+Per a orientar a streams els buffers es defineix un nou operador
+\[
+\text{streamB}: S \times m \longrightarrow S' = \{f^{\text{stream}}(m_o,m)\}
+\]
+\[
+m_o \in S
+\]
+\[
+f^{\text{stream}} \text{ és un agregador d'atributs orientat a streams}
+\]
+ 
+
+Aleshores els agregadors d'atributs funcionen orientats a stream;
+nota: no tots els agregadors d'atributs es poden definir com a
+streams.
+
+
+Per exemple l'interpolador mitjana orientat a stream:
+
+\[
+\text{mitjana}^{\text{stream}}: m_o \times m_n \longrightarrow m' = (T(m_n),v')
+\]
+\[
+\text{a on } v' = (V(m_0) + V^1(m_n), V^2(m_n) + 1 )
+\]
+
+
+
+
+
+
+\subsection{Compartició de buffers}
+
+
+Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
+
+
+Tenir un buffer únic per a totes les subsèries i que no s'esborrin mesures.
+
+\subsection{Lapses de buffer o no lapses}
+
+Podem tenir esquemes de multiresolució a on les diferents subsèries
+resolució coincideixin en els temps recents o a on no coincideixin:
+les subsèries més velles acabin on comencen les noves de manera
+semblant a l'estructura de buffers enllaçats.
+
+La primera opció pot servir per quan hi ha moltes dades tenir diferents resums preparats per a ser visualitzats, així permet triar ràpidament entre diferents zooms de les dades.
+
+La segona opció serveix per aprofitar al màxim la resolució i l'espai d'emmagatzematge, sense que cap subsèrie desi informació per al mateix interval de temps. Així permet conservar una sèrie temporal al llarg del seu temps amb diferents resolucions. També pot servir per usar la informació d'altres buffers i no haver de repetir emmagatzematge de buffers.
+
+
+
+
+
+
+
+
+
+\subsection{Push i pull}
+
+Estudiar Push o pull aplicada als SGSTM i quines implicacions pot tenir.
+
+
+\subsection{Rellotge}
+
+Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
+
+* intern (pull): el SGSTM té un rellotge que li va marcant cada quan consolidar; per tant és ell que va decidint quines mesures s'agafaven i quines no i com. En diem de tipus pull perquè d'alguna forma és el SGSTM qui tiba les mesures; en aquest cas fins i tot es podrien contemplar escenaris a on el SGSTM reclamés mesures quan li semblés que no disposa de prou informació.
+
+* extern (push): el SGSTM no té rellotge sinó que les mesures que entren ja tenen un temps i s'assumeix que entren ordenades en el temps; aleshores d'aquesta entrada de mesures s'extreu el rellotge; és a dir que es van sabent els instants de consolidació a partir de les mesures. Això pot provocar un cert decalatge del temps del SGSTM amb el del rellotge real; ja que el primer només canvia quan té mesures noves. En diem de tipus push perquè les mesures són les que controlen el procés (bé el sistema de monitoratge extern). 
+
+* discret: tipus la cpu marca el rellotge; en aquest cas no hi ha un rellotge real sinó que es compten esdeveniments i el rellotge es crea relativament a aquest comptatge. Per exemple és el cas de sistemes encapsulats a on no hi ha RTC i el clock diu cada quan s'ha de consolidar (en aquest moment es consoliden les mesures de què es disposi, les quals potser tampoc tenen temps i per tant el rellotge del SGSTM serà relatiu) o bé un altre exemple és quan la consolidació d'una subsèrie resolució depèn d'una altra subsèrie (p.ex. es consolida cada cop que l'altre ha expulsat quatre mesures).
+
+
+
+
+\todo{}
+* orientat a esdeveniments (event triggered)
+* amb rellotge (time triggered)
+
+* en cas de comptadors digitals, aquests cada cop que incrementen el valor poden fer un push a la base de dades. En comptadors analògics no ho poden fer perquè van incrementant contínuament i no discretament.
+
+
+
+
+
+
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
