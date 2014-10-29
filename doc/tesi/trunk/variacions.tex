@@ -1,0 +1,40 @@
+\chapter{Introducció a variacions del model}
+
+
+\todo{falta raonar sobre variacions importants}
+
+
+El model de \gls{SGSTM} que hem definit té l'objectiu de ser genèric i senzill, és a dir sense entrar en detalls particulars o en aspectes que potser són útils a la pràctica però que compliquen l'estructura del model.
+
+
+Particularment, hi ha una generalització en els buffers que a l'hora d'implementar-se pot resultar estranya. És el fet que de forma genèrica hem definit que en els buffers s'acumula tota la sèrie temporal original independentment en cadascun dels buffers. Això és útil en el model perquè permet definir-ho de forma molt abstracta i abastar diferents possibles variacions, però és bo d'explorar aquestes possibles variacions que podrà tenir en les implementacions.
+
+\begin{itemize}
+\item La funció d'agregació d'atributs treballa amb orientació a flux
+
+\item Les resolucions estan encadenades
+
+\item S'emmagatzema tota la sèrie temporal original en un \gls{SGST} i el
+\gls{SGSTM} treballa sobre aquestes mesures, és a dir que realment els
+buffers no les emmagatzemen sinó que seleccionen les que necessiten a
+cada moment. En aquest cas pensem en \gls{SGST} d'emmagatzematge
+massiu com els descrits a l'\autoref{art:massius}. A
+la~\autoref{sec:multiresolucio:dual} explorarem l'estructura i les
+aplicacions de sistemes \gls{SGST} i \gls{SGSTM} conjunts.
+
+\end{itemize}
+
+Per altra banda a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls{SGSTM} es poden definir com una funció sobre una sèrie temporal. Aquests casos ja operaran directament sobre un \gls{SGST} amb tota la sèrie temporal emmagatzemada i per tant els buffers no emmagatzemaran temporalment sinó que treballaran sobre mesures ja emmagatzemades. 
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
+
+
+
+
+
