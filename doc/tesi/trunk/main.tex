@@ -112,6 +112,7 @@ twoside,fontsize=11pt,BCOR12mm,
 \newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
 \newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
 
+\usepackage{bookmark}
 
 
 %-------------- dades --------------------------
@@ -130,6 +131,7 @@ twoside,fontsize=11pt,BCOR12mm,
 
 
 \begin{document}
+%\frontmatter
 %------------- Pàgina de títol ------------
 %\maketitle
 %\input{portada}
@@ -149,8 +151,9 @@ twoside,fontsize=11pt,BCOR12mm,
 
 
 %------------- Cos ------------
-%\frontmatter
 %\mainmatter
+
+\part{Introducció}
 
 \include{intro}
 
@@ -161,6 +164,8 @@ twoside,fontsize=11pt,BCOR12mm,
 \include{sistemessimilars}
 
 
+
+\part{Models}
 %-- MODELS --
 \include{model}
 
@@ -173,6 +178,8 @@ twoside,fontsize=11pt,BCOR12mm,
 \include{sgstm-interpoladors}
 
 
+
+\part{Altres?}
 %-- POST-MODELS --
 
 \include{variacions}
@@ -180,6 +187,8 @@ twoside,fontsize=11pt,BCOR12mm,
 \include{multiresolucio}
 
 
+
+\part{Experimentació}
 %-- Implementacions --
 
 \include{implementacio}
@@ -191,12 +200,28 @@ twoside,fontsize=11pt,BCOR12mm,
 
 
 
+\part{Conclusions}
+
+\include{conclusions}
+
 
 
 %------- Annexos ------
-\appendix
+%\appendix
 
-\include{sgstm-aplicacions}
+
+
+
+\backmatter
+\bookmarksetup{startatroot}%  per eliminar les parts
+\addtocontents{toc}{\bigskip}% perhaps as well
+
+%------- Bibliografia ------
+\cleardoublepage
+\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+%\pdfbookmark{\bibname}{bookmark:bibliografia}
+\printbibliography
+%----------------------------------------------
 
 
 %------- Glossari ------
@@ -219,16 +244,6 @@ twoside,fontsize=11pt,BCOR12mm,
 
 \printglossary[type=notation,style=estil-notation]
 
-
-
-%\backmatter
-
-%------- Bibliografia ------
-\cleardoublepage
-\phantomsection\addcontentsline{toc}{chapter}{\bibname}
-%\pdfbookmark{\bibname}{bookmark:bibliografia}
-\printbibliography
-%----------------------------------------------
 
 %------------- Índexs ------------
 %ATENCIÓ, hi ha problemes quan s'activen molts índexs
