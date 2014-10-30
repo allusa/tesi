@@ -28,7 +28,6 @@ twoside,fontsize=11pt,BCOR12mm,
 %{sgst,sgst-operacions,sgst-naturalesa}
 %{sgstm,sgstm-operacions,sgstm-interpoladors}
 %{multiresolucio}
-%{sgstm-aplicacions}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{scrpage2}\pagestyle{scrheadings}\chead[--- esborrany \today\ ---]{\color{gray}{\today}}   
 %\usepackage[showframe,a4paper]{geometry}%page margins %\geometry{layoutheight=230mm,layoutwidth=160mm,layoutvoffset=30mm,showcrop}
@@ -54,12 +53,35 @@ twoside,fontsize=11pt,BCOR12mm,
 \theoremstyle{definition}
 \newtheorem{example}{Exemple}
 %\declaretheorem{example}
-\def\figureautorefname{figura} %ús: \autoref{}
-\def\tableautorefname{taula} %ús: \autoref{}
-\def\definitionautorefname{definició} %ús: \autoref{}
-\def\exampleautorefname{exemple} %ús: \autoref{}
-\def\sectionautorefname{secció} %ús: \autoref{}
-\def\subsectionautorefname{apartat} %ús: \autoref{}
+%modificar autoref per babel catala
+\let\orgautoref\autoref
+%per: (v. fig. 3)
+\providecommand{\seeref}
+{%
+\def\chapterautorefname{\gls{capitol}}%
+\def\sectionautorefname{\gls{seccio}\ignorespaces}%
+\gls{vegeu}~\orgautoref%
+}
+%per: a la figura 3 !Problemes en les contraccions amb noms masculins! evitar a i de davant de capítol!
+\providecommand{\textref}
+{%
+\def\chapterautorefname{el capítol}% al/del capítol???
+\def\sectionautorefname{la secció}%
+\def\subsectionautorefname{l'apartat}% 
+\orgautoref%
+}
+%per defecte
+\renewcommand{\autoref}
+{%
+\def\figureautorefname{figura}%ús: \autoref{}
+\def\tableautorefname{taula}%ús: \autoref{}
+\def\definitionautorefname{definició}%ús: \autoref{}
+\def\exampleautorefname{exemple}%ús: \autoref{}
+\def\sectionautorefname{secció}%ús: \autoref{}
+\def\chapterautorefname{capítol}%ús: \autoref{}
+\def\subsectionautorefname{apartat}%ús: \autoref{}
+\orgautoref%
+}
 %numeracions d'equacions, definicions, etc.
 \numberwithin{equation}{chapter}
 \numberwithin{definition}{chapter}
