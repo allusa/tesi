@@ -330,11 +330,16 @@ té un estat estable.
 
 
 
-En resum, les sèries temporals tenen un atribut, l'instant de
-temps, que ofereix unes particularitats a l'estructura i amb què cal
-operar coherentment.
+En resum, les sèries temporals tenen un atribut, l'instant de temps,
+que ofereix unes particularitats a l'estructura i amb què cal operar
+coherentment. Tant els instants de temps com els valors poden ser de
+qualsevol tipus, tot i així sobretot els exemplificarem amb nombres
+reals per tal de facilitar-ne la comprensió i per ser més propers a
+l'anàlisi de sèries temporals que sol focalitzar-se en mètodes
+estadístics per a variables numèriques \parencite{last04:book}.
 
 
+% * El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
 
 
 
@@ -343,12 +348,7 @@ operar coherentment.
 
 \section{Introducció a la multiresolució}
 
-
-
-\todo{}
-
-
-La multiresolució és una tècnica que aplicarem a una sèrie temporal
+La multiresolució és una tècnica que s'aplica a una sèrie temporal
 per tal de compactar-ne i resumir-ne certa informació.  Bàsicament la
 multiresolució consisteix a calcular un conjunt de resolucions d'una
 sèrie temporal on cada resolució consisteix en aplicar una funció
@@ -362,47 +362,184 @@ recents i menys resolució per a les dades més antigues. Tot i així, es
 podrien establir variacions d'aquesta estructura mitjançant les quals,
 per exemple, es pogués retenir una resolució per a un període temporal
 que ha resultat interessant o que calgués investigar més profundament.
+Aquesta idea de multiresolució prové de l'\gls{SGBD}
+RRDtool \parencite{rrdtool}, del qual en estudis anteriors n'hem
+analitzat profundament els conceptes i n'hem abstret i formalitzat les
+característiques essencials \parencite{llusa11:tfm,llusa12:ptd}.  Els
+objectius principals són la formalització d'un model abstracte de
+\gls{SGBD} per a la multiresolució i la inclusió de conceptes més
+genèrics per tal de descriure els \gls{SGSTM} contextualitzats en els
+\gls{SGST}.
+
+En el mateix sentit que hem comparat les sèries temporals i els
+senyals digitals, en altres àmbits també s'utilitzen tècniques amb
+propòsits semblants als de la multiresolució.  Per exemple en el
+processament del senyal digital s'utilitzen anàlisis temps-freqüència
+mitjançant Fourier o \emph{wavelets} per tal d'identificar atributs en
+els senyals. També com en el cas per les sèries temporals, aquestes
+anàlisis del senyal tenen un fort component freqüencial i en canvi
+proposem la multiresolció des d'un punt de vista més genèric.  Això no
+treu, però, que fóra interessant estudiar en els \gls{SGSTM}
+agregacions en el domini freqüencial.
+
+
+% També hi ha l'anàlisi de les sèries temporals amb wavelet analysis. Aquest es basa en anàlisis de la freqüència dels senyals. 
+% A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design method of most of the practically relevant discrete wavelet transforms (DWT) and the justification for the algorithm of the fast wavelet transform (FWT). It was introduced in this context in 1988/89 by Stephane Mallat and Yves Meyer and has predecessors in the microlocal analysis in the theory of differential equations (the ironing method) and the pyramid methods of image processing as introduced in 1981/83 by Peter J. Burt, Edward H. Adelson and James Crowley.
+
+
+
+La multiresolució aplicada a una sèrie temporal implica una selecció
+d'informació i per tant és alhora una compressió de dades amb
+pèrdua. Abans d'aplicar la multiresolució cal decidir quins atributs
+se seleccionaran mitjançant uns paràmetres, els quals bàsicament són les
+definicions del períodes de temps, les funcions que han d'agregar els atributs
+i el nombre màxim de valors que s'han d'emmagatzemar.  Així doncs,
+aplicar la multiresolució ha de ser una decisió consensuada, s'ha de
+tenir en compte que és una compressió amb pèrdua i s'ha de pensar
+adequadament la configuració dels paràmetres. O, dit d'una altra
+manera, l'usuari ha de ser conscient que vol gestionar les sèries
+temporals amb multiresolució; en certa manera un sistema no pot
+decidir autònomament d'utilitzar la multiresolució com a equivalent a
+la sèrie temporal original sense avisar l'usuari.
+%
+Com en els \gls{SGST}, en el cas dels \gls{SGSTM} l'usuari també ha
+d'interpretar la validesa dels resultats. En aquest cas, però, la
+multiresolució produeix l'efecte de compressió amb pèrdua que
+estudiarem amb més detall en
+\textref{sec:multiresolucio:teoriainformacio}.
+
+
+
+El model que presentem d'\gls{SGSTM} defineix els termes i conceptes
+de la multiresolució i els operadors genèrics que hi treballen. En els
+capítols posteriors al model d'\gls{SGSTM}, comentarem aplicacions i variacions interessants dels \gls{SGSTM}.
 
 
 
 
 
-El concepte de multiresolució prové d'estudis anteriors
-\parencite{llusa12:ptd}, el qual es va formalitzar com a abstracció
-d'una característica essencial de l'SGBD
-RRDtool \parencite{rrdtool}. Aquesta abstracció es va realitzar a
-partir d'una anàlisi profunda dels conceptes de RRDtool duta a terme
-en una tesi de màster \parencite{llusa11:tfm}.
+
+\subsubsection{Característiques de la multiresolució}
 
 
 
 
+\todo{revisar}
 
 
+Un \gls{SGSTM} és un \gls{SGST} amb capacitats de multiresolució.  A
+continuació resumim les característiques que els \gls{SGSTM} milloren
+respecte als \gls{SGST}.
 
-\todo{potser parlar de wavelets també?} i de multianalisi de Fourier  , com a comparació d'una tècnica de multiresolució que s'utilitza en senyal digital?
- En el mateix sentit com s'ha descrit pels senyals digitals i les sèries temporals, també hi ha coses semblants a la multriesolució en altres àmbits, bla bla bla  també com en les sèries temporals, proposem la multiresolció des d'un punt de vista més genèric.
+\begin{itemize}
 
+\item Gran volum de dades. Els sistemes de monitoratge adquireixen una
+  gran quantitat de dades dels sensors. Aquestes dades contenen
+  informació que ha de ser observada, tant en línia amb l'adquisició
+  com en diferit, i per tal de poder processar-la cal reduir el volum
+  de dades. Una de les característiques de la multiresolució és la
+  selecció i l'emmagatzematge dels segments més interessants de les
+  dades. Aquests segments són el conjunt de resolucions per a cada
+  sèrie temporal que l'usuari pot configurar com extreure i resumir
+  mitjançant diversos períodes de temps i funcions.
+
+\item Visualització. La multiresolució també és útil quan es
+  visualitzen gràficament les sèries temporals ja que permet a
+  l'usuari seleccionar el millor rang temporal i la resolució que
+  s'adeqüen a la pantalla. No cal processar amb més quantitat de dades que
+  la que realment es pot mostrar.
+
+
+\item Validació de dades. Els sistemes de monitoratge adquireixen
+  dades però poden ocórrer alguns problemes que tenen efecte en el
+  procés posterior d'anàlisi de les sèries temporals. Un dels
+  principals problemes ocorre quan els monitors no poden adquirir una
+  dada, cosa que es coneix com a forats, o bé quan adquireixen una
+  dada erròniament, com per exemple les dades atípiques o
+  aberrants \parencite{quevedo10}.  Les funcions d'agregació
+  d'atributs de la multiresolució poden cooperar en la validació, el
+  filtratge i la reconstrucció d'aquestes dades desconegudes per tal
+  de conservar històrics consistents.
+
+\item Regularització dels instants de temps. Un altre efecte secundari
+  del monitoratge ocorre quan el període de mostreig no és constant,
+  és a dir quan les dades resultants no estant equiespaiades en el
+  temps. Aquestes no regularitats poden provenir de fluctuacions en el rellotge de mostrejos periòdics o bé de mostrejos no periòdics basats en esdeveniments 
+  \parencite{kopetz11:realtime}. Un dels objectius de la
+  multiresolució és regularitzar els intervals de temps de la sèrie
+  temporal, és a dir que les resolucions que en resulten són regulars
+  en el temps. Aquest procés de regularització és útil per a aplicar
+  posteriorment algoritmes d'anàlisi de sèries temporals que
+  assumeixen que les sèries temporals són regulars, però també per a
+  calcular altres resolucions de la sèrie temporal com per exemple
+  observar dades periòdiques amb intervals de mes o d'any.
+
+
+\item Resum de la informació. 
 
 
 
 \todo{}
-Caldria dir que establir un esquema de multiresolució per a una sèrie temporal és una decisió consensuada. És a dir, emmagatzemar una sèrie temporal multiresolució no és totalment equivalent a emmagatzemar una sèrie temporal, a més cal pensar adequadament els paràmetres de l'esquema multiresolució. Per tant, hom pren la decisió d'emmagatzemar multiresolució i aquestes són les dades que vol gestionar: en el nivell d'usuari haurà de ser conscient d'aquest fet.
 
-Com en els \gls{SGST}, en el cas dels \gls{SGSTM} també s'han
-d'interpretar la validesa dels resultats. En aquest cas, però, la
-multiresolució produeix un efecte especial que estudiarem en més
-detall en \textref{sec:multiresolucio:teoriainformacio}.
-
-
-
-
-
-\todo{?}
-s'hauria de dir que un cop proposat el model de \gls{SGSTM} farem tot un seguit de capítols dedicats a comentar-ne variacions/aplicacions/casos interessants
+\item Information summaries. Time series analysis typically focuses on
+  reconstructing the original signal. However, the user objective in a
+  database system is to consult some information. The multiresolution
+  approach allows a lossy compression storage solution for data. Therefore
+  it can be regarded as to extracting the interesting information and
+  then storing it. The selected information must be determined a
+  priori assuming the context where the future queries will be done.
+\end{itemize}
 
 
+However sometimes it may also be useful to complement \acro{MTSMS}
+with other \acro{DBMS}. Not only to store the original values as a
+long-term deposit consulted offline, but also to store related
+information to time series such as units of values, sensor
+localisation, classification tags, last measured value, etc.
+Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
 
+
+
+
+A TSMS is a special purpose DBMS aimed at storing and managing time
+series and MTSMS is a TSMS with multiresolution capabilities. Next we
+describe the main requirements that a TSMS must achieve, specifically
+remarking the improvements where the MTSMS can contribute.
+
+
+
+
+
+* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
+
+
+
+
+
+
+* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
+
+
+* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+
+* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. [bonnet01?]
+
+* S'ha de poder calcular incrementalment, citar data streams
+
+* Necessitem les fórmules (els interpoladors) a trossos, en el domini dels conjunts?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se? per exemple calcular l'àrea de S(t): amb integral o definida amb conjunts?
+A més els interpoladors han de poder existir per a dades no númeriques com per exemple els strings.
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{?}
 
 
 
@@ -456,70 +593,52 @@ Tres possibles camps d'aplicació de la multiresolució: comptadors (conservar e
 
 
 
-
-\subsubsection{features}
-
-A TSMS is a special purpose DBMS aimed at storing and managing time
-series and MTSMS is a TSMS with multiresolution capabilities. Next we
-describe the main requirements that a TSMS must achieve, specifically
-remarking the improvements where the MTSMS can contribute.
-
-
-
-* Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
-
-
-* Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
-
-* Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
-
-* Visualització adequada de les sèries temporals: no cal emmagatzemar resolucions i informacions sinó es volen mostrar
-
-
-* Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS [schmidt i dreyer] 
-
-
-
-* Cal censurar les dades.
-
-* Cal regularitzar les sèries temporals, o saber operar amb elles quan no són regulars. La no regularitat en el temps de mostreig pot provenir per exemple de jitter en mostrejos periòdics (problemes estudiats en el control) o d'un event-based sampling/control.
-
-
-* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
-
-* Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
-
-
-
-* Calendari, passa a segon terme, (en contraposició a Dreyer). Es necessiten time scales estàndards (http://support.ntp.org/bin/view/Support/TimeScales): El temps es defineix com universal i constant (semblant a Unix Time Epoch, el qual representa UTC sense tenir en compte els leap seconds, tot i que potser millor seria usar TAI ja que és una representació lineal del temps). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
-
-* El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
-
-
-
-
-* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
-
-
-* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
-
-* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. [bonnet01?]
-
-* S'ha de poder calcular incrementalment, citar data streams
-
-* Necessitem les fórmules (els interpoladors) a trossos, en el domini dels conjunts?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se? per exemple calcular l'àrea de S(t): amb integral o definida amb conjunts?
-A més els interpoladors han de poder existir per a dades no númeriques com per exemple els strings.
-
-
-
-
-
-
 \subsection{Multiresolution motivation}
 
 \todo{}
 Posar el dibuix i l'exemple de motivació de la multiresolució
 
+
+%Figure~\ref{fig:mtsms:sequence} shows an example of a multiresolution
+summary for a time series. It shows a snapshot in time, suppose
+between time 9 and 10. At the top of the figure there is a plot of a
+time series with time axis in general units of time (u.t.) and with
+value axis in undetermined units. The 'now' point shows when the
+snapshot has been taken, so the time before is the past and the time
+after is the future, which is grey coloured. The \emph{init} point
+shows when the database system has started sampling, so data in time
+before is unknown; the starting point is indicated as zero u.t.\ and
+the earlier unknown time points have negative units.
+
+
+% \begin{figure}
+%   \centering
+%   %\tikzsetnextfilename{fig_mtsms_sequence}
+%   %\input{imatges/mtsms_sequence.tex}
+%   \includegraphics{fig_mtsms_sequence.pdf}
+%   \caption{Multiresolution snapshot diagram with regular sampling}
+%   \label{fig:mtsms:sequence}
+% \end{figure}
+
+
+
+%At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
+showing the multiresolution action. The first row shows the numerical
+time series' values corresponding to the above plot; the time series
+is sampled every one unit of time. The second and the third row show a
+particular schema of a multiresolution database consisting in two time
+resolutions for the time series: one computes the mean of the sampled
+values every three u.t.\ and the other computes the mean every five
+u.t. In this example, computing the mean acts as selecting information
+by aggregate statistics. All data stored before zero time is unknown
+(\emph{u}) as has not been acquired. For the future values it is also
+marked as \emph{u} until time advances.
+
+The arrows of the figure show that every three sampled values a mean
+is stored and, independently, every five values another mean is
+stored. For the future values, dashed arrows show that if time
+advances one u.t.\ then value 10 is sampled and the mean for time 10
+can be computed resulting 8 but not yet the mean for time 12.
 
 
 
@@ -532,7 +651,7 @@ Posar el dibuix i l'exemple de motivació de la multiresolució
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-% LocalWords: buffer buffers
+% LocalWords: buffer buffers multiresolució SGSTM SGST
 
 
 

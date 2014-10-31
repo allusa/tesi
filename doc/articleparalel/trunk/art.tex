@@ -2,6 +2,50 @@
 
 
 
+OpenTSDB utilitza Hadoop per a l'emmagatzematge i recuperació massiva de dades. Seria molt interessant afegir-hi una etapa de processament para\l.lel d'operacions de consulta, per exemple la multiresolució.
+
+dou14 proposa una altra mena de processament per part del hardware.
+
+
+
+
+OpenTSDB \parencite{opentsdb} és un sistema
+  d'emmagatzematge distribuït de sèries temporals. Basa
+  l'emmagatzematge en Apache Hadoop i HBase, els quals permeten
+  distribuir les dades ens diferents nodes. Gràcies a aquests
+  sistemes, pot emmagatzemar totes les dades originals ja que és una
+  estructura en què és ràpid d'escriure-hi i localitzar les dades, cal
+  destacar que HBase crea uns índex potents de les dades i això
+  s'aprofita per a indexar l'atribut de temps de les sèries temporals.
+  Per a consultar les dades defineixen el concepte d'agregadors, tot i
+  que només per a interpolacions lineals, i les operacions d'agregació
+  es processen en el mateix moment d'executar la consulta.  Així
+  doncs, si bé pot recuperar les dades de forma molt ràpida,
+  restringeix les consultes a intervals temporals petits per tal que
+  les execucions siguin ràpides. Per tant, és un sistema útil sobretot
+  per a visualitzar i comparar intervals temporals petits de diferents
+  sèries temporals.
+
+
+
+
+
+
+ \textcite{dou14:historic_queries_flash_storage} se centren en
+  l'àmbit de l'emmagatzematge de sèries temporals en memòries de tipus
+  Flash, de les quals noten que tenen propietats diferents a
+  l'emmagatzematge tradicional en discs.  Proposen emmagatzemar
+  informació de cada sèrie temporal per a poder resoldre tres tipus de
+  consultes: agregacions temporals, històrics basats en mostrejos
+  aleatoris i cerca de patrons similars.  La tècnica d'agregacions
+  temporals que utilitzen és molt semblant a la de RRDtool, és a dir
+  agregar i emmagatzemar les dades amb diferents resolucions, tot i
+  que implementada i particularitzada per a les memòries Flash, amb
+  registre i punters. Per a la cerca de patrons similars indexen les
+  sèries temporals de manera similar als algoritmes de iSAX.
+
+
+
 
 
 
