@@ -18,16 +18,19 @@ twoside,fontsize=11pt,BCOR12mm,
 %------------- capçalera ----------------------
 \input{capçalera}
 \bibliography{bibliografia}
-\ExecuteBibliographyOptions{annotation=true,backref=true}
+\ExecuteBibliographyOptions{backref=true}
 %backref=true, urldate=long, abbreviate=false,%%format web 
+%annotation=true %per veure comentaris
 %---------- Mode esborrany --------------------
-\includeonly
+%\includeonly
 %{intro}
 %{art,seriestemporals,sgbd,sistemessimilars}
-{model}
+%{model}
 %{sgst,sgst-operacions,sgst-naturalesa}
 %{sgstm,sgstm-operacions,sgstm-interpoladors}
 %{multiresolucio}
+%{implementacio,python,mapreduce,relacional,vhdl}
+%{conclusions}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
 \usepackage{scrpage2}\pagestyle{scrheadings}\chead[--- esborrany \today\ ---]{\color{gray}{\today}}   
 %\usepackage[showframe,a4paper]{geometry}%page margins %\geometry{layoutheight=230mm,layoutwidth=160mm,layoutvoffset=30mm,showcrop}
@@ -112,6 +115,7 @@ twoside,fontsize=11pt,BCOR12mm,
 %glossaris
 %\usepackage{supertabular}
 \usepackage[
+          nomain,% Remember if you don't want to use the main glossary.
           acronym,
           %%nonumberlist,
           toc,
@@ -253,7 +257,7 @@ twoside,fontsize=11pt,BCOR12mm,
 %\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
 %\pdfbookmark{\glossaryname}{bookmark:glossari}
 \chapter{Abreviacions i nomenclatura}
-\glsaddall[counter=section]
+\glsaddall[counter=subsection]
 %\printglossary
 
 \printglossary[type=abreviatura]
