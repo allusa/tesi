@@ -419,13 +419,7 @@ capítols posteriors al model d'\gls{SGSTM}, comentarem aplicacions i variacions
 
 
 
-\subsubsection{Característiques de la multiresolució}
-
-
-
-
-\todo{revisar}
-
+\subsection{Característiques de la multiresolució}
 
 Un \gls{SGSTM} és un \gls{SGST} amb capacitats de multiresolució.  A
 continuació resumim les característiques que els \gls{SGSTM} milloren
@@ -461,141 +455,94 @@ respecte als \gls{SGST}.
   filtratge i la reconstrucció d'aquestes dades desconegudes per tal
   de conservar històrics consistents.
 
-\item Regularització dels instants de temps. Un altre efecte secundari
-  del monitoratge ocorre quan el període de mostreig no és constant,
-  és a dir quan les dades resultants no estant equiespaiades en el
-  temps. Aquestes no regularitats poden provenir de fluctuacions en el rellotge de mostrejos periòdics o bé de mostrejos no periòdics basats en esdeveniments 
-  \parencite{kopetz11:realtime}. Un dels objectius de la
-  multiresolució és regularitzar els intervals de temps de la sèrie
-  temporal, és a dir que les resolucions que en resulten són regulars
-  en el temps. Aquest procés de regularització és útil per a aplicar
-  posteriorment algoritmes d'anàlisi de sèries temporals que
-  assumeixen que les sèries temporals són regulars, però també per a
-  calcular altres resolucions de la sèrie temporal com per exemple
-  observar dades periòdiques amb intervals de mes o d'any.
+\item Regularització de les sèries temporals. Un altre efecte
+  secundari del monitoratge ocorre quan el període de mostreig no és
+  constant, és a dir quan les dades resultants no estant equiespaiades
+  en el temps. Aquestes no regularitats poden provenir de fluctuacions
+  en el rellotge de mostrejos periòdics o bé de mostrejos no periòdics
+  basats en esdeveniments \parencite{kopetz11:realtime}. Un dels
+  objectius de la multiresolució és regularitzar els intervals de
+  temps de la sèrie temporal, és a dir que les resolucions que en
+  resulten són regulars en el temps. Aquest procés de regularització
+  és útil per a aplicar posteriorment algoritmes d'anàlisi de sèries
+  temporals que assumeixen que les sèries temporals són regulars, però
+  també per a calcular altres resolucions de la sèrie temporal com per
+  exemple observar dades periòdiques amb intervals de mes o d'any.
 
 
-\item Resum de la informació. 
+\item Resum de la informació.  La multiresolució extreu i selecciona
+  les característiques desitjades de les dades mitjançant diverses
+  funcions d'agregació d'atributs. Per tant, emmagatzema resumida la
+  informació que l'usuari posteriorment pot consultar. Això no
+  obstant, aquesta selecció de la informació s'ha de determinar a
+  priori considerant el context en què les consultes futures s'hauran
+  de realitzar.
 
 
+\item Computació en flux. Els resums d'informació que
+  resulten de la multiresolució són cars de computar, sobretot si es
+  té en gran volum de les sèries temporals i que en monitoratges
+  periòdics constantment arriben més dades noves. El
+  model de \gls{SGSTM} permet calcular la multiresolució en flux amb
+  l'adquisició de dades, és a dir al mateix temps que arriben noves
+  mesures de la sèrie temporal computa incrementalment el nou resultat
+  de multiresolució. D'aquesta manera el temps de còmput es pot
+  repartir des del moment d'adquisició fins al moment de la consulta.
 
-\todo{}
+\item Computació distribuïda i para\l.lela. En el cas que es vulgui
+  computar la multiresolució en temps diferit del procés d'adquisició
+  de dades, és a dir que es vulgui emmagatzemar tota la sèrie temporal
+  i després computar amb totes les dades, cal una computació
+  intensiva. A tal efecte, la multiresolució també es pot computar
+  distribuïdament i para\l.elament en diversos nodes de computació.
 
-\item Information summaries. Time series analysis typically focuses on
-  reconstructing the original signal. However, the user objective in a
-  database system is to consult some information. The multiresolution
-  approach allows a lossy compression storage solution for data. Therefore
-  it can be regarded as to extracting the interesting information and
-  then storing it. The selected information must be determined a
-  priori assuming the context where the future queries will be done.
+ 
 \end{itemize}
 
 
-However sometimes it may also be useful to complement \acro{MTSMS}
-with other \acro{DBMS}. Not only to store the original values as a
-long-term deposit consulted offline, but also to store related
-information to time series such as units of values, sensor
-localisation, classification tags, last measured value, etc.
-Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.) [dreyer]
+Tot i així, també pot ser útil de complementar els \gls{SGSTM} amb les
+capacitats d'altres \gls{SGBD}. Per una banda, es poden usar per a
+emmagatzemar els valors originals en qualitat de dipòsit a llarg
+termini en cas que calgui realitzar alguna consulta imprevista en
+temps diferit.  Par altra banda, s'hi pot emmagatzemar
+informació relacionada amb les sèries temporals com per exemple les
+unitats dels valors, la localització del sensor, etiquetes de
+classificació, darrer valor mesurat, etc.
 
 
+% Però el model de SGSTM també es pot fer servir per altres aplicacions:
+
+% * Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
+
+% * Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
+
+% * Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
 
 
-A TSMS is a special purpose DBMS aimed at storing and managing time
-series and MTSMS is a TSMS with multiresolution capabilities. Next we
-describe the main requirements that a TSMS must achieve, specifically
-remarking the improvements where the MTSMS can contribute.
-
-
-
-
-
-* Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
-
-
-
-
-
-
-* Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
-
-
-* Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
-
-* Xarxa de sensors, tsms distribuïda. Sensor dades recents, màquina grossa històrics. Quan es llança una consulta, es llança distribuïdament: si es té prou resolució es respon sinó s'envia la consulta al sensor. [bonnet01?]
-
-* S'ha de poder calcular incrementalment, citar data streams
-
-* Necessitem les fórmules (els interpoladors) a trossos, en el domini dels conjunts?: sí perquè la fórmula contínua necessita mètodes númerics per calcular-se? per exemple calcular l'àrea de S(t): amb integral o definida amb conjunts?
-A més els interpoladors han de poder existir per a dades no númeriques com per exemple els strings.
+% Tres possibles camps d'aplicació de la multiresolució: comptadors (conservar els totals), soroll d'un senyal (conservar la mitjana), temperatura (aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes).
 
 
 
 
 
+\subsection{Motivació per a la multiresolució}
+
+
+A continuació mostrem la motivació per a la multiresolució mitjançant
+dos exemples: \textref{fig:model:multiresolucio-motivacio} i
+\textref{fig:model:multiresolucio-motivacio-irregular}. Les figures
+mostren el càlcul de la multiresolució per a una sèrie temporal
+regular i una d'irregular, respectivament.  Suposeu que les figures
+mostren una instantània entre els instants de temps 9 i 10.
+
+
+
+\todo{revisar}
 
 
 
 
 
-
-\subsubsection{?}
-
-
-
-
-En el model de SGST s'observen algunes patologies que poden presentar les sèries temporals. El model de SGSTM soluciona algunes d'aquestes patologies:
-
-\begin{itemize}
-\item Regularitza les sèries temporals
-\item Tracta i validar les sèries temporals: gestiona els casos de dades errònies o desconegudes i marca quan hi ha valors erronis.
-\item És una solució de compressió per a quantitats enormes de dades
-\end{itemize}
-
-
-Però el model de SGSTM també es pot fer servir per altres aplicacions:
-
-* Regularitzar en línia (temps real) una sèrie temporal en diferents períodes de mostreig
-
-* Tenir unes vistes (consultes) a punt (ja processades) amb diferents resolucions d'una sèrie temporal
-
-* Comprimir per decimació (downsampling) o bé farcir forats (reconstrucció del senyal)
-
-
-Tres possibles camps d'aplicació de la multiresolució: comptadors (conservar els totals), soroll d'un senyal (conservar la mitjana), temperatura (aplicar a priori la DFT i determinar deltes bons per a després poder interpolar mitjanes).
-
-
-
-
-% * Temporal databases. Basades en esdeveniments. Data mining basat en sèries temporals definides per parelles temps-valor; calen TSMS
-
-% * Alta dimensió sèries temporals, cal reduir-la. Es conserven els segments de temps més interessants; multiresolució
-
-% * Multiresolució, diferents resolucions, es pot treballar amb més o menys dades segons convingui
-
-% *Cal saber canviar de resolució, exemple transformar dades periòdiques d'un mes a un any.
-
-% * Aggregates, una sèrie temporal pot estar mostrant diferent informació. ex: mitjana, màxim, valor al final del període, ...
-
-% * Les sèries temmporals tenen una metainformació que cal guardar en una base de dades relacional (localització, etiquetes de classificació, últim valor mesurat, unitats, etc.)
-
-% * Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
-
-% * Calendari, passa a segon terme. El temps es defineix com universal i constant (semblant a Unix Time Epoch). Aquests temps es pot convertir a calendari. Cal definir la interacció usuari/calendari amb temps universal.
-
-% * El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
-
-
-% * Representació: Entre dos punts de mesura, quin valor pren la sèrie temporal?.
-
-% Si el volum de dades és gran no hi ha cap altre manera d'abordar-les directament que amb computació intensiva paral·lela [tenim alguna citació d'això?]. Per altra banda es pot intentar estudiar el problema per tal de veure si es pot trencar en trossos, mirar-lo des d'una altra perspectiva, etc. que en simplifiqui els càlculs. Això és el que fem amb el model SGSTM, dir que les sèries temporals en podem seleccionar prèviament informació.
-
-
-
-
-\subsection{Multiresolution motivation}
-
-\todo{}
 Posar el dibuix i l'exemple de motivació de la multiresolució
 
 
@@ -611,14 +558,27 @@ before is unknown; the starting point is indicated as zero u.t.\ and
 the earlier unknown time points have negative units.
 
 
-% \begin{figure}
-%   \centering
-%   %\tikzsetnextfilename{fig_mtsms_sequence}
-%   %\input{imatges/mtsms_sequence.tex}
-%   \includegraphics{fig_mtsms_sequence.pdf}
-%   \caption{Multiresolution snapshot diagram with regular sampling}
-%   \label{fig:mtsms:sequence}
-% \end{figure}
+\todo{traduir les imatges}
+
+\begin{figure}
+  \centering
+  \input{imatges/model/sgstm-motivacio.tex}
+  \caption{Diagrama d'una instantània en la multiresolució d'una sèrie temporal amb mostreig regular}
+  \label{fig:model:multiresolucio-motivacio}
+\end{figure}
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/model/sgstm-motivacio-irregular.tex}
+  \caption{Diagrama d'una instantània en la multiresolució d'una sèrie temporal amb mostreig irregular}
+  \label{fig:model:multiresolucio-motivacio-irregular}
+\end{figure}
+
+
+
+
+
 
 
 
@@ -639,6 +599,25 @@ is stored and, independently, every five values another mean is
 stored. For the future values, dashed arrows show that if time
 advances one u.t.\ then value 10 is sampled and the mean for time 10
 can be computed resulting 8 but not yet the mean for time 12.
+
+
+
+
+% Fig.~\ref{fig:mtsms:sequence-irregular} is essentially the same but
+% showing two possible monitoring irregularities: a gap and a time
+% disruption. In other words, we want to sample the time series every 2
+% u.t.\ but first for some reason it can not be done in time 4 and
+% second the sampling clock is disrupted and samples are done in time 7
+% and 9 instead of 8. The resulting stored time schema is the same: on
+% time resolution every 3 u.t.\ and the other every 5 u.t.; that is,
+% without time disruptions. The resulting stored values are computed
+% from the known sampled values, some coincide with
+% fig.~\ref{fig:mtsms:sequence} whereas some differ specially in the
+% gap. A better function than mean would solve this, we extend this
+% further in section~\ref{sec:model:interpolador}.
+
+
+
 
 
 
