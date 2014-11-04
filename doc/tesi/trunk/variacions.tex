@@ -56,11 +56,69 @@ Per altra banda a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls
 
 
 
-\section{Estructures interessants}
+\section{Variacions de l'estructura dels SGSTM}
+
+
+\todo{intro}
+
+Expliquem dues variacions/precisions/reflexions de l'estructura del
+model de \gls{SGSTM}.  Són reflexions pensant en la implementació dels
+models, és a dir per al nivell físic on no es gaudeixen dels
+avantatges abstractes matemàtics del nivell lògic.
+
+\begin{itemize}
+\item Les resolucions estan encadenades
+
+\item La funció d'agregació d'atributs treballa amb orientació a flux
+
+\end{itemize}
 
 
 
-\subsubsection{Discos enllaçats}
+
+
+
+
+\subsection{Resolucions encadenades}
+
+
+Una sèrie temporal multiresolució amb estructura de resolucions
+encadenades té la mateixa estructura que la presentada en el model
+(\seeref{sec:model:sgstm}) llevat que hi ha buffers que
+reben les mesures d'altres discs en comptes de l'entrada comuna de
+mesures.  És a dir, que una subsèrie resolució depèn dels valors
+consolidats a una altra subsèrie resolució, cosa que anomenen
+resolucions encadenades.
+
+
+La \autoref{fig:sgstm:encadenats} mostra l'arquitectura d'una base de
+dades multiresolució ja presentada a la \autoref{fig:model:bdstm} però
+ara modificada amb les resolucions encadenades.  En aquest cas, les
+mesures del disc de $R_0$ s'utilitzen en altres buffers i les mesures
+del buffer de $R_d$ provenen d'un altre disc. En un cas simple de
+resolucions encadenades, podem considerar que el buffer d'una
+resolució és exactament el disc de l'altra. En un cas més elaborat,
+podem considerar que quan el disc d'una resolució descarta una mesura,
+s'afegeix al buffer de l'altra.
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/multiresolucio/sgstm-encadenada.tex}
+  \caption{Arquitectura encadenada d'una base de dades multiresolució}
+  \label{fig:sgstm:encadenats}
+\end{figure}
+
+
+
+L'estructura de resolucions encadenades pot ser útil per a aplicacions
+que necessitin distribuir l'emmagatzematge de les sèries temporals
+multiresolució.  En l'estructura genèrica del model, cada mesura que
+s'insereix a una base de dades ha d'inserir-se a totes les subsèries
+resolució, és a dir que en cas d'un emmagatzematge distribuït tota la
+sèrie temporal original s'ha de distribuir a cada subsèrie.  En canvi
+en l'estructura de resolucions encadenades, la sèrie temporal original primer es resumeix en una subsèrie resolució i és només aquest resum el que es distribueix a la següent subsèrie resolució.
+\todo{}
 
 
 Aquesta pot ser útil per al filó distribuït. 
@@ -68,6 +126,26 @@ Aquesta pot ser útil per al filó distribuït.
 * Si quan s'entra una mesura aquesta ha d'anar a totes les subsèries resolució, aleshores el filó distribuït no té sentit perquè igualment han d'arribar les mesures noves al node central.
 
 * Però si hi ha discos enllaçats aleshores només cal anar transferint la subsèrie consolidada cap amunt i llavors un cop es llança una consulta aquesta decideix si té prou resolució al node on és o ha d'anar a buscar-ne d'un altre. Aquesta decissió de la consulta pot fer-se a mà, consultes amb SerieDisc()  indiquen quin disc s'ha d'anar a buscar, per tant l'usuari tria quin vol i sap si s'haurà d'anar a buscar a fora. 
+
+
+
+Respecte a l'estructura general, l'estructura encadenada restringeix
+els passos de consolidació dels buffers. Els buffers que depenen d'una
+altra resolució han de tenir un pas de consolidació múltiple de
+l'altra resolució.  A més les resolucions encadenades també han de ser
+coherents en la funció d'agregació d'atributs, pot ser que hagi de ser
+la mateixa funció. Les resolucions encadenades requereixen un estudi
+més profund que l'estructura general i no es pot aplicar sempre. \todo{algun exemple?}
+
+
+
+
+
+
+\subsubsection{Estructura}
+
+
+
 
 
 \paragraph{Exemple 2}
@@ -114,13 +192,13 @@ definir una $M^{in}_2$.
 
 
 
-Respecte a l'estructura general, l'estructura enllaçada restringeix
-els períodes de consolidació de les sèries temporals: aquests són
-múltiples dels discs anteriors.
 
 
 
-\subsubsection{Data stream}
+
+
+
+\subsection{Agregacions amb orientació a flux}
 
 
 
@@ -194,6 +272,11 @@ Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
 
 Tenir un buffer únic per a totes les subsèries i que no s'esborrin mesures.
 
+
+
+
+
+
 \subsubsection{Lapses de buffer o no lapses}
 
 Podem tenir esquemes de multiresolució a on les diferents subsèries
@@ -238,6 +321,9 @@ Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
 
 
 
+EL rellotge de consolidació també pot anar en funció de la quantitat de mesures emmagatzemades al buffer.  Per exemple, en el cas de resolucions encadenades, la consolidació pot dependre de tantes mesures consolidades a un altre disc.
+
+
 
 \todo{}
 * orientat a esdeveniments (event triggered)
@@ -245,6 +331,15 @@ Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
 
 * en cas de comptadors digitals, aquests cada cop que incrementen el valor poden fer un push a la base de dades. En comptadors analògics no ho poden fer perquè van incrementant contínuament i no discretament.
 
+
+
+
+
+
+\subsubsection{RRDtool}
+
+\todo{rrdtool?}
+Dibuixar l'esquema bàsic de RRDtool i comentar-lo aquí?
 
 
 
