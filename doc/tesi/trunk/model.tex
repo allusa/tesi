@@ -8,7 +8,7 @@ dades i els operadors que s'hi poden aplicar.
 La definició del model s'estructura en dos capítols:
 
 \begin{itemize}
-\item Un model pels \gls{SGST}  que defineix mesura i sèrie temporals.
+\item Un model pels \gls{SGST}  que defineix mesura i sèrie temporal.
 \item Un model pels \gls{SGSTM} que defineix buffer, disc, subsèrie
   resolució, sèrie temporal multiresolució i esquema de
   multiresolució. Aquest model es defineix a partir del model de \gls{SGST}.
@@ -371,20 +371,17 @@ objectius principals són la formalització d'un model abstracte de
 genèrics per tal de descriure els \gls{SGSTM} contextualitzats en els
 \gls{SGST}.
 
-En el mateix sentit que hem comparat les sèries temporals i els
-senyals digitals, en altres àmbits també s'utilitzen tècniques amb
-propòsits semblants als de la multiresolució.  Per exemple en el
-processament del senyal digital s'utilitzen anàlisis temps-freqüència
-mitjançant Fourier o \emph{wavelets} per tal d'identificar atributs en
-els senyals. També com en el cas per les sèries temporals, aquestes
-anàlisis del senyal tenen un fort component freqüencial i en canvi
-proposem la multiresolció des d'un punt de vista més genèric.  Això no
-treu, però, que fóra interessant estudiar en els \gls{SGSTM}
-agregacions en el domini freqüencial.
+% En el mateix sentit que hem comparat les sèries temporals i els
+% senyals digitals, en altres àmbits també s'utilitzen tècniques amb
+% propòsits semblants als de la multiresolució.  Per exemple en el
+% processament del senyal digital s'utilitzen anàlisis temps-freqüència
+% mitjançant Fourier o \emph{wavelets} per tal d'identificar atributs en
+% els senyals. També com en el cas per les sèries temporals, aquestes
+% anàlisis del senyal tenen un fort component freqüencial i en canvi
+% proposem la multiresolció des d'un punt de vista més genèric.  Això no
+% treu, però, que fóra interessant estudiar en els \gls{SGSTM}
+% agregacions en el domini freqüencial.
 
-
-% També hi ha l'anàlisi de les sèries temporals amb wavelet analysis. Aquest es basa en anàlisis de la freqüència dels senyals. 
-% A multiresolution analysis (MRA) or multiscale approximation (MSA) is the design method of most of the practically relevant discrete wavelet transforms (DWT) and the justification for the algorithm of the fast wavelet transform (FWT). It was introduced in this context in 1988/89 by Stephane Mallat and Yves Meyer and has predecessors in the microlocal analysis in the theory of differential equations (the ironing method) and the pyramid methods of image processing as introduced in 1981/83 by Peter J. Burt, Edward H. Adelson and James Crowley.
 
 
 
@@ -435,7 +432,11 @@ respecte als \gls{SGST}.
   selecció i l'emmagatzematge dels segments més interessants de les
   dades. Aquests segments són el conjunt de resolucions per a cada
   sèrie temporal que l'usuari pot configurar com extreure i resumir
-  mitjançant diversos períodes de temps i funcions.
+  mitjançant diversos períodes de temps i funcions. En la
+  multiresolució la mida de les sèries temporals queda afitada, cosa
+  que és útil per a sistemes d'emmagatzematge que necessiten
+  controlar-ne l'espai.
+
 
 \item Visualització. La multiresolució també és útil quan es
   visualitzen gràficament les sèries temporals ja que permet a
@@ -533,34 +534,22 @@ dos exemples: \textref{fig:model:multiresolucio-motivacio} i
 \textref{fig:model:multiresolucio-motivacio-irregular}. Les figures
 mostren el càlcul de la multiresolució per a una sèrie temporal
 regular i una d'irregular, respectivament.  Suposeu que les figures
-mostren una instantània entre els instants de temps 9 i 10.
+mostren una instantània entre els instants de temps nou i deu.
 
 
-
-\todo{revisar}
-
-
-
-
-
-Posar el dibuix i l'exemple de motivació de la multiresolució
-
-
-%Figure~\ref{fig:mtsms:sequence} shows an example of a multiresolution
-summary for a time series. It shows a snapshot in time, suppose
-between time 9 and 10. At the top of the figure there is a plot of a
-time series with time axis in general units of time (u.t.) and with
-value axis in undetermined units. The 'now' point shows when the
-snapshot has been taken, so the time before is the past and the time
-after is the future, which is grey coloured. The \emph{init} point
-shows when the database system has started sampling, so data in time
-before is unknown; the starting point is indicated as zero u.t.\ and
-the earlier unknown time points have negative units.
+A la part superior de les figures hi ha el gràfic d'una sèrie temporal
+en què l'eix de temps té qualssevol unitats de temps
+(\gls{unitatstemps}) i l'eix de valors qualssevol unitats. És una
+sèrie temporal senzilla que val 1 en l'instant -1, 0 en el 0, 1 en
+l'1, 2 en el 2, etc.  L'eix vertical \emph{ara} indica l'instant en
+què s'ha pres la instantània, així que el temps anterior és el passat
+i el temps posterior és el futur, els esdeveniments del qual estan
+pintats en gris. L'eix \emph{inici} indica l'instant zero u.t. en què
+el sistema ha començat a adquirir dades, així les dades anteriors són
+desconegudes.
 
 
-\todo{traduir les imatges}
-
-\begin{figure}
+\begin{figure}[tp]
   \centering
   \input{imatges/model/sgstm-motivacio.tex}
   \caption{Diagrama d'una instantània en la multiresolució d'una sèrie temporal amb mostreig regular}
@@ -578,47 +567,53 @@ the earlier unknown time points have negative units.
 
 
 
+A la part inferior de les figures hi ha un diagrama que mostra l'acció
+de la multiresolució.  La primera línia mostra enquadrades els valors
+numèrics adquirits de la sèrie temporal. La segona i la tercera línia
+mostren encerclades les dades que s'emmagatzemaran a la base de dades
+segons un esquema de multiresolució particular que consisteix en
+calcular dues resolucions de la sèrie temporal: una calcula la mitjana
+dels valors cada tres \gls{unitatstemps}\ i l'altra calcula la mitjana
+cada cinc \gls{unitatstemps} En aquest cas, la mitjana és la funció
+que actua com a selector d'informació de la sèrie temporal mitjançant
+estadístics d'agregació.  Totes les dades emmagatzemades abans de
+l'instant zero són desconegudes (\emph{u}) i totes les dades futures
+també són marcades com a desconegudes fins que el temps avanci, tot i
+que en alguns casos en gris mostrem els valors que prendran.
+
+
+A \textref{fig:model:multiresolucio-motivacio} la sèrie temporal s'ha
+adquirit cada una \gls{unitatstemps}\ de forma regular, és a dir que
+hi ha valors per a cada adquisició. Les fletxes mostren com es
+resumeixen les dades adquirides per tal d'emmagatzemar-les: així de
+cada tres mostres se n'emmagatzema la mitjana i, independentment, cada
+cinc mostres se n'emmagatzema una altra mitjana.  Per als valors
+futurs, quan el temps avanci una \gls{unitatstemps}\ aleshores
+s'adquirirà el valor 10 i es podrà calcular la mitjana de cada 5
+\gls{unitatstemps}\ per a l'instant 10, la qual resultarà en el valor
+8, però no es podrà calcular la mitjana de cada 3 \gls{unitatstemps}\
+fins a l'instant 12.
 
 
 
-
-%At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
-showing the multiresolution action. The first row shows the numerical
-time series' values corresponding to the above plot; the time series
-is sampled every one unit of time. The second and the third row show a
-particular schema of a multiresolution database consisting in two time
-resolutions for the time series: one computes the mean of the sampled
-values every three u.t.\ and the other computes the mean every five
-u.t. In this example, computing the mean acts as selecting information
-by aggregate statistics. All data stored before zero time is unknown
-(\emph{u}) as has not been acquired. For the future values it is also
-marked as \emph{u} until time advances.
-
-The arrows of the figure show that every three sampled values a mean
-is stored and, independently, every five values another mean is
-stored. For the future values, dashed arrows show that if time
-advances one u.t.\ then value 10 is sampled and the mean for time 10
-can be computed resulting 8 but not yet the mean for time 12.
-
-
-
-
-% Fig.~\ref{fig:mtsms:sequence-irregular} is essentially the same but
-% showing two possible monitoring irregularities: a gap and a time
-% disruption. In other words, we want to sample the time series every 2
-% u.t.\ but first for some reason it can not be done in time 4 and
-% second the sampling clock is disrupted and samples are done in time 7
-% and 9 instead of 8. The resulting stored time schema is the same: on
-% time resolution every 3 u.t.\ and the other every 5 u.t.; that is,
-% without time disruptions. The resulting stored values are computed
-% from the known sampled values, some coincide with
-% fig.~\ref{fig:mtsms:sequence} whereas some differ specially in the
-% gap. A better function than mean would solve this, we extend this
-% further in section~\ref{sec:model:interpolador}.
-
-
-
-
+A \textref{fig:model:multiresolucio-motivacio} la sèrie temporal s'ha
+adquirit cada dues \gls{unitatstemps}\ de forma irregular, és a dir
+que manquen valors en alguna adquisició, cosa que es marca com un
+forat i un valors adquirit desconegut, o bé l'adquisició no s'ha fet
+exactament cada dues \gls{unitatstemps}, cosa que es marca com una
+ruptura. Aquests són dos exemples de possibles problemes en el
+monitoratge, és a dir que es volia mostrejar cada dues
+\gls{unitatstemps}\ però per alguna raó no s'ha pogut fer en l'instant
+4 i al voltant de l'instant 8 hi ha hagut una ruptura en el rellotge
+que ha adquirit en els instants 7 i 9.  L'esquema de multiresolució
+emmagatzemat té la mateixa forma que en el cas regular, és a dir sense
+que hi afectin les irregularitats. Aquí, les fletxes mostren com es
+calcula la mitjana a partir dels valors adquirits, és a dir que ara no
+hi ha ni tres ni cinc valors disponibles per a fer la mitjana de cada
+resolució. Alguns valors emmagatzemats coincideixen però altres
+difereixen, especialment quan la mitjana opera amb valors desconeguts
+dels quals en aquest exemple operem sense tenir-los en compte; en els
+models detallarem més bé aquests casos.
 
 
 
