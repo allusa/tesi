@@ -1,19 +1,23 @@
 \chapter{Introducció a consideracions sobre el model}
 
 
+Què fem en aquesta part?\todo{intro}
+
+Ara que hem definit els models de \gls{SGST} i \gls{SGSTM}, podem fer algunes consideracions i reflexions:
 
 
 \todo{estructura?}
 
 Potser estructurar aquesta part amb:
 
-1. SGSTM per a dispositius on l'emmagatzematge reduït i afitat és important
-2. SGSTM per a emmagatzematges massius on calen consultes i visualitzacions ràpides
-3. Qualitat dels SGSTM, teoria de la informació
+1. Exposem SGSTM per a dispositius on l'emmagatzematge reduït i afitat és important, aquest és bàsicament el model que hem presentat però ara farem algunes consideracions
+2. Exposem SGSTM per a emmagatzematges massius on calen consultes i visualitzacions ràpides
+3. Formulem el problema de la qualitat dels SGSTM, teoria de la informació
 
 
 
 Per a 2. i 3. ens farà falta raonar sobre un funció de multiresolució que presentem al capítol tal.
+ a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls{SGSTM} es poden definir com una funció sobre una sèrie temporal. Aquests casos ja operaran directament sobre un \gls{SGST} amb tota la sèrie temporal emmagatzemada i per tant els buffers no emmagatzemaran temporalment sinó que treballaran sobre mesures ja emmagatzemades. 
 
 
 
@@ -21,68 +25,57 @@ Per a 2. i 3. ens farà falta raonar sobre un funció de multiresolució que pre
 
 
 
-\todo{falta raonar sobre variacions importants}
 
 
-El model de \gls{SGSTM} que hem definit té l'objectiu de ser genèric i senzill, és a dir sense entrar en detalls particulars o en aspectes que potser són útils a la pràctica però que compliquen l'estructura del model.
 
 
-Particularment, hi ha una generalització en els buffers que a l'hora d'implementar-se pot resultar estranya. És el fet que de forma genèrica hem definit que en els buffers s'acumula tota la sèrie temporal original independentment en cadascun dels buffers. Això és útil en el model perquè permet definir-ho de forma molt abstracta i abastar diferents possibles variacions, però és bo d'explorar aquestes possibles variacions que podrà tenir en les implementacions.
 
+
+\section{Variacions en l'estructura dels SGSTM}
+
+
+En el model de \gls{SGSTM} hem definit l'estructura al més genèrica i
+senzilla possible per a encabir-hi diferents supòsits de
+multiresolució. 
+Particularment, en el model hem generalitzat els buffers de manera que
+s'acumula tota la sèrie temporal original independentment en cadascun
+dels buffers. Aquesta estructura és útil en el model perquè permet
+definir de forma molt abstracta el comportament dels \gls{SGSTM} i
+abastar-ne diferents possibles variacions.  Però en algunes
+implementacions del model pot ser útil utilitzar altres aproximacions,
+és a dir algunes variacions podrien resultar útils en el nivell físic
+on no es gaudeixen dels avantatges abstractes matemàtics del nivell
+lògic.
+
+
+
+\todo{revisar paràgraf}
+
+De forma senzilla podem pensar en implementacions que comparteixin els
+buffers, per exemple les diferents $f$ amb mateix $\delta$ poden
+compartir buffer. De forma més elaborada podem exposar implementacions
+del model en què s'emmagatzemi tota la sèrie temporal original en un
+\gls{SGST} i el \gls{SGSTM} treballi sobre aquestes mesures, és a dir
+que realment els buffers no les emmagatzemen sinó que seleccionen les
+que necessiten a cada moment. En aquest cas pensem en \gls{SGST}
+d'emmagatzematge massiu com els descrits a l'\autoref{art:massius} i
+dels quals a la~\autoref{sec:multiresolucio:dual} n'explorarem
+aplicacions mitjançant sistemes \gls{SGST} i \gls{SGSTM} conjunts.
+
+
+
+En aquesta secció considerem algunes petites variacions que poden
+conduir cap a altres aplicacions.  Presentem tres variacions de
+l'estructura:
 \begin{itemize}
-\item La funció d'agregació d'atributs treballa amb orientació a flux
+\item Resolucions encadenades
 
-\item Les resolucions estan encadenades
+\item Funcions d'agregació d'atributs orientades a flux
 
-\item S'emmagatzema tota la sèrie temporal original en un \gls{SGST} i el
-\gls{SGSTM} treballa sobre aquestes mesures, és a dir que realment els
-buffers no les emmagatzemen sinó que seleccionen les que necessiten a
-cada moment. En aquest cas pensem en \gls{SGST} d'emmagatzematge
-massiu com els descrits a l'\autoref{art:massius}. A
-la~\autoref{sec:multiresolucio:dual} explorarem l'estructura i les
-aplicacions de sistemes \gls{SGST} i \gls{SGSTM} conjunts.
-
+\item El rellotge de consolidació
 \end{itemize}
 
-Per altra banda a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls{SGSTM} es poden definir com una funció sobre una sèrie temporal. Aquests casos ja operaran directament sobre un \gls{SGST} amb tota la sèrie temporal emmagatzemada i per tant els buffers no emmagatzemaran temporalment sinó que treballaran sobre mesures ja emmagatzemades. 
 
-
-
-
-\subsubsection{Compartició de buffers}
-
-\todo{on podríem fer aquest comentari?}
-Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Variacions de l'estructura dels SGSTM}
-
-
-\todo{intro}
-
-Expliquem dues variacions/precisions/reflexions de l'estructura del
-model de \gls{SGSTM}.  Són reflexions pensant en la implementació dels
-models, és a dir per al nivell físic on no es gaudeixen dels
-avantatges abstractes matemàtics del nivell lògic.
-
-\begin{itemize}
-\item Les resolucions estan encadenades
-
-\item La funció d'agregació d'atributs treballa amb orientació a flux
-
-\item i també reflexions sobre el rellotge?
-
-\end{itemize}
 
 
 
@@ -361,50 +354,70 @@ no té sentit parlar de l'eliminació de mesures antigues en el buffer.
 
 
 
-\subsubsection{Push i pull}
 
-Estudiar Push o pull aplicada als SGSTM i quines implicacions pot tenir.
-
-
-\subsubsection{Rellotge}
+\subsection{Rellotge de consolidació}
 
 
-\todo{atenció que no s'ha parlat enlloc del rellotge en els SGBDM? s'hauria de dir que en principi no es diu res sobre el rellotge i que si segueix l'esquema de consolidació proposat les mateixes mesures van entrant ordenades i van marcant el pas del temps}
+En el model de \gls{SGSTM} no hi ha definit el concepte de rellotge,
+és a dir no s'explicita quan s'ha de computar l'operació de
+consolidar, si bé s'ha definit quan les sèries temporals
+multiresolució esdevenen consolidables.  Les mesures tenen l'atribut
+de temps i, si s'insereixen ordenades, ja marquen el pas del temps.
+Tot i així, segons com sigui el rellotge i quan es computi l'operació
+de consolidació hi pot haver els escenaris següents:
+
+\begin{itemize}
+\item Extern. Ho anomenem rellotge extern o \emph{push} perquè les
+  mesures són les que controlen el procés de consolidació, de fet el
+  controla un sistema de monitoratge extern.  El \gls{SGSTM} no té
+  rellotge sinó que s'utilitza l'atribut de temps de les mesures per
+  conèixer l'instant actual.  És el cas que hem definit en el model,
+  en què una sèrie temporal multiresolució esdevé consolidable segons
+  els instants de temps de les mesures adquirides i llavors ja pot ser
+  consolidada. Per saber quan esdevé consolidable es pot consultar
+  periòdicament o en base a esdeveniments, per exemple cada cop que
+  s'insereixi una nova mesura.  Ja que el temps observat pel
+  \gls{SGSTM} només canvia quan té mesures noves, això pot causar un
+  cert decalatge de la consolidació de l'esquema amb un rellotge real,
+  sobretot quan hi hagi inframostreig. 
+  % es poden omplir els buffers?
+
+\item Intern. Ho anomenem rellotge intern o \emph{pull} perquè el
+  \gls{SGSTM} té un rellotge que controla el procés de consolidació.
+  En aquests cas, la consolidació actua al marge del temps que
+  indiquin les mesures i es computa quan ho marca el rellotge.  Això
+  causa que la consolidació de l'esquema estigui totalment
+  sincronitzada amb el rellotge real. En aquest cas s'hi poden
+  incloure \gls{SGSTM} que controlin el procés d'adquisició, és a dir
+  que ordenin quan s'han d'adquirir noves mesures. També es pot pensar
+  en \gls{SGSTM} i istemes de monitoratge que no tinguin una bona
+  mesura del temps actual, per exemple sense sincronització de
+  rellotge, i en què l'objectiu dels \gls{SGSTM} sigui informar de
+  l'evolució de les variables situant-les relativament a partir de
+  l'instant en què es fa la consulta.
 
 
-\todo{alerta! el model sgstm s'ha fet pensant en els instants de consolidació periòdics. Què passa quan no ho són? }
-per exemple event trigerred (només emmatgatzemem informació quan creiem que és interessant). Aleshores potser són casos molt especials i no es pot dibuixar l'esquema? Potser posar tot això com a comentari a la secció d'Altres Estructures: En el model de \gls{SGSTM} s'ha considerat que la consolidació es feia periòdicament però es podria fer quan es cregués oportú, aleshores no es pot preveure quin esquema de multiresolució hi haurà; són casos que requereixen un estudi més profund. Etc. \todo{potser cap a treball futur?}
 
 
-Parlar de com ha de ser el rellotge en un SGSTM. Pot ser:
+\end{itemize}
 
-* intern (pull): el SGSTM té un rellotge que li va marcant cada quan consolidar; per tant és ell que va decidint quines mesures s'agafaven i quines no i com. En diem de tipus pull perquè d'alguna forma és el SGSTM qui tiba les mesures; en aquest cas fins i tot es podrien contemplar escenaris a on el SGSTM reclamés mesures quan li semblés que no disposa de prou informació.
-
-* extern (push): el SGSTM no té rellotge sinó que les mesures que entren ja tenen un temps i s'assumeix que entren ordenades en el temps; aleshores d'aquesta entrada de mesures s'extreu el rellotge; és a dir que es van sabent els instants de consolidació a partir de les mesures. Això pot provocar un cert decalatge del temps del SGSTM amb el del rellotge real; ja que el primer només canvia quan té mesures noves. En diem de tipus push perquè les mesures són les que controlen el procés (bé el sistema de monitoratge extern). 
-
-* discret: tipus la cpu marca el rellotge; en aquest cas no hi ha un rellotge real sinó que es compten esdeveniments i el rellotge es crea relativament a aquest comptatge. Per exemple és el cas de sistemes encapsulats a on no hi ha RTC i el clock diu cada quan s'ha de consolidar (en aquest moment es consoliden les mesures de què es disposi, les quals potser tampoc tenen temps i per tant el rellotge del SGSTM serà relatiu) o bé un altre exemple és quan la consolidació d'una subsèrie resolució depèn d'una altra subsèrie (p.ex. es consolida cada cop que l'altre ha expulsat quatre mesures).
+En el cas de les resolucions encadenades, com que depenen de la
+consolidació d'un altre disc aquest aquest pot servir per a marcar el
+rellotge. 
 
 
-
-EL rellotge de consolidació també pot anar en funció de la quantitat de mesures emmagatzemades al buffer.  Per exemple, en el cas de resolucions encadenades, la consolidació pot dependre de tantes mesures consolidades a un altre disc.
-
-
-
-\todo{}
-* orientat a esdeveniments (event triggered)
-* amb rellotge (time triggered)
-
-* en cas de comptadors digitals, aquests cada cop que incrementen el valor poden fer un push a la base de dades. En comptadors analògics no ho poden fer perquè van incrementant contínuament i no discretament.
+% * en cas de comptadors digitals, aquests cada cop que incrementen el valor poden fer un push a la base de dades. En comptadors analògics no ho poden fer perquè van incrementant contínuament i no discretament.
 
 
 
 
 
 
-\subsubsection{RRDtool}
 
-\todo{rrdtool?}
-Dibuixar l'esquema bàsic de RRDtool i comentar-lo aquí?
+% \subsubsection{RRDtool}
+
+% \todo{rrdtool?}
+% Dibuixar l'esquema bàsic de RRDtool i comentar-lo aquí?
 
 
 
