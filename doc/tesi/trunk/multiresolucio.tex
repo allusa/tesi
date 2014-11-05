@@ -473,7 +473,7 @@ nivells, que anomenen arquitectura \emph{Lambda}:
 
 
 Les consultes precomputades d'aquests sistemes semblen una bona
-solució per a la computació de les vistes dels \gls{SGBDR}.  Una vista
+solució per a la computació de les vistes dels \gls{SGBDR} \todo{ref a art sgbd}.  Una vista
 és un àlies per a una expressió relacional, és a dir una consulta, que
 s'utilitza en altres consultes. Per tant, una vista $v$ és una
 operació $\text{op1}$ sobre unes $\text{dades}$,
@@ -544,7 +544,10 @@ maneres:
   és més senzilla quan només hi ha possibilitat d'operacions d'afegir
   noves dades però no de modificar-les: és el que es proposa en el
   nivell \emph{speed} de l'arquitectura \emph{Lambda} i el que admet
-  el model de \gls{SGSTM} que proposem. \todo{s'ha d'estudiar la
+  el model de \gls{SGSTM} que proposem. \textcite{jagadish95} també proposen
+  una solució semblant de mantenir vistes incrementalment segons
+  arriben les dades amb un estudi proper al \emph{data stream}.
+\todo{s'ha d'estudiar la
     relació d'això amb els data stream}
 % When data comes as an ordered sequence of instances it is called
 % data stream, then specific \acro{DBMS} are designed to manage data
@@ -876,7 +879,7 @@ El problema genèric de la informació en la multiresolució és el següent.
 Cal aclarir que es podria avaluar $d(S,S')$, però aquest no és el
 problema que intenten resoldre els \gls{SGSTM}. Aquest seria un
 problema d'aproximació al senyal original, el qual altres models poden
-resoldre més bé (per exemple last01?)\todo{ref?}. En canvi els \gls{SGSTM} resolen un
+resoldre més bé (per exemple last01 o ogras06?)\todo{ref?}. En canvi els \gls{SGSTM} resolen un
 problema de compressió amb pèrdua per a seleccionar una determinada
 informació.
 
