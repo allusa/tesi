@@ -1,4 +1,4 @@
-\chapter{Introducció a variacions del model}
+\chapter{Introducció a consideracions sobre el model}
 
 
 
@@ -49,6 +49,15 @@ Per altra banda a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls
 
 
 
+\subsubsection{Compartició de buffers}
+
+\todo{on podríem fer aquest comentari?}
+Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
+
+
+
+
+
 
 
 
@@ -71,6 +80,8 @@ avantatges abstractes matemàtics del nivell lògic.
 
 \item La funció d'agregació d'atributs treballa amb orientació a flux
 
+\item i també reflexions sobre el rellotge?
+
 \end{itemize}
 
 
@@ -84,7 +95,7 @@ avantatges abstractes matemàtics del nivell lògic.
 
 Una sèrie temporal multiresolució amb estructura de resolucions
 encadenades té la mateixa estructura que la presentada en el model
-(\seeref{sec:model:sgstm}) llevat que hi ha buffers que
+(\seeref{cap:model:sgstm}) llevat que hi ha buffers que
 reben les mesures d'altres discs en comptes de l'entrada comuna de
 mesures.  És a dir, que una subsèrie resolució depèn dels valors
 consolidats a una altra subsèrie resolució, cosa que anomenen
@@ -110,6 +121,19 @@ s'afegeix al buffer de l'altra.
 \end{figure}
 
 
+Respecte a l'estructura general, l'estructura encadenada restringeix
+els passos de consolidació dels buffers i els cardinals màxims dels
+discs. Els buffers que depenen d'una altra resolució han de tenir un
+pas de consolidació múltiple de l'altra resolució i han de tenir un
+període de buffer que estigui inclòs en el lapse de l'altra resolució.
+A més les resolucions encadenades també han de ser coherents en la
+funció d'agregació d'atributs, la qual pot ser que hagi de ser la
+mateixa funció. Les resolucions encadenades requereixen un estudi més
+profund que l'estructura general i poden encadenar pèrdues successives
+significatives, com per exemple és el cas de calcular la mitjana
+successivament que, per no ser associativa, no és el mateix que
+calcular-la en dos buffers independents.
+
 
 L'estructura de resolucions encadenades pot ser útil per a aplicacions
 que necessitin distribuir l'emmagatzematge de les sèries temporals
@@ -117,176 +141,217 @@ multiresolució.  En l'estructura genèrica del model, cada mesura que
 s'insereix a una base de dades ha d'inserir-se a totes les subsèries
 resolució, és a dir que en cas d'un emmagatzematge distribuït tota la
 sèrie temporal original s'ha de distribuir a cada subsèrie.  En canvi
-en l'estructura de resolucions encadenades, la sèrie temporal original primer es resumeix en una subsèrie resolució i és només aquest resum el que es distribueix a la següent subsèrie resolució.
-\todo{}
+en l'estructura de resolucions encadenades, la sèrie temporal original
+primer es resumeix en una subsèrie resolució i és només aquest resum
+el que es distribueix a la següent subsèrie resolució.  D'aquesta
+manera l'emmagatzematge de les resolucions queda distribuït en
+diferents nodes i a l'hora de respondre a una consulta només cal
+recollir les resolucions ja resumides que es necessitin.
+\textcite{deligiannakis07} proposen una estratègia similar de
+disseminació de la informació per a xarxes de sensors.
+
+
+
+%\subsubsection{Estructura d'exemple}
+
+
+A continuació mostrem, mitjançant un exemple, la variació que comporten
+les resolucions encadenades en el model de \gls{SGSTM}.
+
+
+\begin{example} [Sèrie temporal multiresolució amb resolucions encadenades]
+  \label{ex:multiresolucio:encadenada}
 
+  Per a definir una sèrie temporal multiresolució amb resolucions
+  encadenades és útil reprendre l'\autoref{ex:model:bdm-vistes} en què
+  s'exemplifica una sèrie temporal multiresolució organitzada en
+  vistes.
 
-Aquesta pot ser útil per al filó distribuït. 
+  En aquest cas la relació de sèries temporals i noms
+  $M_2^{\text{series}}$ segueix sent la mateixa $M_2^{\text{series}}=
+  ((S':\text{nom},S:\text{sèrie temporal}),\{
+  (S_{B1},\{(26,0),(29,0)\}), (S_{D1},\{(10,0), (15,0), (20,0),
+  (25,0)\}), (S_{D2},\{(10,0), (20,0)\} )\})$ llevat que no hi ha
+  $S_{B2}$, i la sèrie temporal multiresolució amb noms com a domini
+  dels atributs de sèries temporals $M_2^{\text{noms}}$ també és la
+  mateixa $M_2^{\text{noms}}= ((S'_B:\text{nom},S'_D:\text{nom},
+  \tau:\glssymbol{not:Rb}, \delta:\glssymbol{not:Rb},
+  k:\glssymbol{not:N}, f:\text{funció} ),\{ (S_{B1},S_{D1},25 ,5 ,4
+  ,\text{mitjana} ), ( \mathbf{S_{D1}},S_{D2},20 , 10 ,3 ,
+  \text{mitjana} ) \})$ excepte que el buffer de la segona resolució
+  és el disc de la primera $S_{D1}$, el qual el destaquem en negreta.
+  Mostrem $M_2^{\text{series}}$ i $M_2^{\text{noms}}$ en forma de
+  taula a la \autoref{fig:multiresolucio:exencadenat}.
 
-* Si quan s'entra una mesura aquesta ha d'anar a totes les subsèries resolució, aleshores el filó distribuït no té sentit perquè igualment han d'arribar les mesures noves al node central.
+  \begin{figure}[tp]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+      \multicolumn{2}{c}{$M_2^{\text{noms}}$} \\ \hline
+      $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+      $S_{B1}$ & $S_{D1}$ & 25 & 5  & 4 & mitjana  \\
+      $\mathbf{S_{D1}}$ & $S_{D2}$ & 20 & 10 & 3 & mitjana  \\ \hline
+    \end{tabular}\qquad
+    \begin{tabular}{|c|c|c|}
+      \multicolumn{3}{c}{$M_2^{\text{series}}$} \\ \hline
+      \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
+      & $t$      & $v$  \\ \hline
+      \multirow{2}{*}{$S_{B1}$} 
+      & 26 & 0 \\ 
+      & 29 & 0 \\ \hline
+      \multirow{4}{*}{$S_{D1}$} 
+      & 10 & 0 \\ 
+      & 15 & 0 \\ 
+      & 20 & 0 \\ 
+      & 25 & 0 \\ \hline
+      \multirow{2}{*}{$S_{D2}$} 
+      & 10 & 0 \\ 
+      & 20 & 0 \\ \hline
+    \end{tabular}
+    \caption{Taula d'una sèrie temporal multiresolució amb resolucions encadenades}
+    \label{fig:multiresolucio:exencadenat}
+  \end{figure}
 
-* Però si hi ha discos enllaçats aleshores només cal anar transferint la subsèrie consolidada cap amunt i llavors un cop es llança una consulta aquesta decideix si té prou resolució al node on és o ha d'anar a buscar-ne d'un altre. Aquesta decissió de la consulta pot fer-se a mà, consultes amb SerieDisc()  indiquen quin disc s'ha d'anar a buscar, per tant l'usuari tria quin vol i sap si s'haurà d'anar a buscar a fora. 
 
 
 
-Respecte a l'estructura general, l'estructura encadenada restringeix
-els passos de consolidació dels buffers. Els buffers que depenen d'una
-altra resolució han de tenir un pas de consolidació múltiple de
-l'altra resolució.  A més les resolucions encadenades també han de ser
-coherents en la funció d'agregació d'atributs, pot ser que hagi de ser
-la mateixa funció. Les resolucions encadenades requereixen un estudi
-més profund que l'estructura general i no es pot aplicar sempre. \todo{algun exemple?}
+  \begin{figure}[tp]
+    \centering
+    \input{imatges/multiresolucio/sgstm-exemple-encadenada.tex}
+    \caption{Arquitectura de la base de dades multiresolució
+      particular per l'\autoref{ex:multiresolucio:encadenada}}
+    \label{fig:multiresolucio:ex-arqu-encadenada}
+  \end{figure}
 
 
 
+  Se segueix aplicant la mateixa operació de $\text{vista } M_2$ que a
+  l'\autoref{ex:model:bdm-vistes} per a obtenir la sèrie temporal
+  multiresolució. A la \autoref{fig:multiresolucio:ex-arqu-encadenada}
+  particularitzem l'arquitectura de la \autoref{fig:sgstm:encadenats}
+  per a la base de dades d'aquest exemple. Cal, però, tenir dues
+  consideracions en les operacions estructurals dels \gls{SGSTM} per a
+  les resolucions encadenades: 
 
+  \begin{itemize}
+  \item L'operació d'inserció de mesures, $\glssymbol{addM}(M,m)$, no
+    pot inserir la mesura a tots els buffers de les subsèries
+    resolució sinó només a aquells que no estiguin encadenats. En el
+    cas de l'exemple només al buffer $B_1$.  Aquests buffers, als
+    quals podem anomenar buffers d'entrada, es poden expressar amb
+    l'operació $ \glssymbol{not:sgst:project}_{\{S'_B\}}(
+    M_2^{\text{noms}} ) -
+    \glssymbol{not:sgst:rename}_{S'_D/S'_B}\left(
+      \glssymbol{not:sgst:project}_{\{S'_D\}}( M_2^{\text{noms}}
+      )\right)$.
 
 
-\subsubsection{Estructura}
+  \item Només es poden eliminar les mesures dels buffers que no siguin
+    encadenats, és a dir dels buffers d'entrada. Les resolucions
+    encadenades només poden llegir les dades dels altres discs però
+    no hi tenen control.
 
+  \end{itemize}
 
 
 
 
-\paragraph{Exemple 2}
 
-Les taules es poden veure a la \autoref{fig:model:mtsdb:cadena} a on la base de dades multiresolució és la vista-relació 
-\begin{verbatim}
-M_2 = ( ((M_2' RENAME S'_B AS S') JOIN (M^{series}_2 RENAME S AS S_B)) RENAME S'_D AS S') JOIN (M^{series}_2 RENAME S AS S_D)
-\end{verbatim}
 
 
+\end{example}
 
-\begin{figure}[tp]
-  \centering
-  \begin{tabular}{|c|c|c|c|c|c|}
-    \multicolumn{2}{c}{$M'_2$} \\ \hline
-    $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
-    $S_{B1}$ & $S_{D1}$ & 45 & 5  & 2 & mitjana  \\
-    $S_{D1}$ & $S_{D2}$ & 40 & 10 & 4 & mitjana  \\ \hline
-  \end{tabular}\qquad
-  \begin{tabular}{|c|c|c|}
-    \multicolumn{3}{c}{$M^{series}_{2}$} \\ \hline
-    \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
-    & $t$      & $v$  \\ \hline
-    \multirow{3}{*}{$S_{B1}$} & 46 & 0 \\ 
-    & 48 & 0 \\ 
-    & 49 & 0 \\ \hline
-    \multirow{2}{*}{$S_{D1}$} & 40 & 0 \\ 
-    & 45 & 0 \\ \hline
-    \multirow{4}{*}{$S_{D2}$} & 10 & 0 \\ 
-    & 20 & 0 \\ 
-    & 30 & 0 \\ 
-    & 40 & 0 \\ \hline
-  \end{tabular}
-  \caption{Taula d'una mtsdb en cadena}
-  \label{fig:model:mtsdb:cadena}
-\end{figure}
 
-\todo{per a fer l'exemple falta conèixer els operadors estructurals}
 
-\todo{falta definir qui són els buffer d'entrada de mesures}
-definir una $M^{in}_2$.
 
 
 
 
 
 
+\subsection{Funcions d'agregació amb orientació a flux}
 
 
+Les funcions d'agregació d'atributs definides a
+\textref{sec:model:agregador} operen sobre un interval de la sèrie
+temporal i retornen una mesura que en resumeix un atribut. Aquesta
+definició genèrica implica que els buffers han d'emmagatzemar
+temporalment un conjunt de mesures de la sèrie temporal original i un
+cop resumides les poden eliminar.
 
+Això no obstant, es poden utilitzar els algoritmes d'orientació a
+flux, com els que proposen \textcite{cormode08:pods}, per tal d'afitar
+els cardinals dels buffers. Tot i així no totes les funcions
+d'agregació d'atributs es poden implementar amb orientació a flux.
 
 
-\subsection{Agregacions amb orientació a flux}
 
 
+Definim una funció d'agregació amb orientació a flux, $f^\text{flux}$,
+com aquella que implementa el comportament equivalent a una funció
+d'agregació d'atributs $f$. A diferència de les $f$, treballen sobre
+dues mesures $m'=f^\text{flux}(m_f,m,i)$ per a retornar la mesura
+resultant $m'$, on $m$ és la nova mesura que s'ha d'incorporar al
+flux, $m_f$ és el flux anterior ja processat i $i=[t_a,t_b]$ és
+l'interval de consolidació de $f$.  Per exemple, redefinim les
+funcions d'agregació \gls{dd} màxim i mitjana per tal que tinguin
+orientació a flux:
 
-Base de dades multiresolució a on les sèries temporals dels buffers
-només tenen una mesura; és a dir tenen cardinal afitat a 1.
+\begin{itemize}
+\item $\glssymbol{not:sgstm:maxdd}^\text{flux}: m_f \times m \times i \mapsto
+  m'$ on $V(m')=\max(V(m_f),V(m))$ i $T(m')=\frac{t_b+t_a}{2}$. 
 
 
-Per a orientar a streams els buffers s'han de canviar els operadors
-d'afegir i consolidar:
+\item $\glssymbol{not:sgstm:mitjanadd}^\text{flux}: m_f \times m
+  \times i \mapsto m'$ on $V(m') = V(m_f) + \frac{V(m)}{t_b-t_a}$ i
+  $T(m')=\frac{t_b+t_a}{2}$.
 
-Es canvia l'operador d'afegir per tal que incorpori el càlcul orientat
-a stream cada cop:
-\[
-\text{addB}^{\text{stream}}: B \times m \longrightarrow B' =
-(streamB(S,m),\tau,\delta,f)
-\]
+\end{itemize}
 
-Es canvia l'operador de consolidar per tal que reconegui la sèrie
-temporal del buffer com a consolidada amb stream.
 
-  \[
-  \text{consolidaB}^{\text{stream}}: B \longrightarrow B' \times m'
-  \]
-  \[
-  B'= (S',\tau+\delta,\delta,f)
-  \]
-  \[
-  S' = S(\tau+\delta,\infty)
-  \]
-  \[
-  m' \in S(\tau,\tau+\delta] 
-  \]
+Així, sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal i $i=[t_a,t_b]$
+un interval de dos instants de temps, calcular en flux $m'_0 =
+\glssymbol{not:sgstm:mitjanadd}^\text{flux}((0,0),m_0,i), m'_1 =
+\glssymbol{not:sgstm:mitjanadd}^\text{flux}(m'_0,m_1,i), \dotsc, m'_k
+= \glssymbol{not:sgstm:mitjanadd}^\text{flux}(m'_{k-1},m_k,i)$ és
+equivalent a $m_k'=\glssymbol{not:sgstm:mitjanadd}(S,i)$, on $(0,0)$
+és una mesura inicial per al flux.
 
 
-Per a orientar a streams els buffers es defineix un nou operador
-\[
-\text{streamB}: S \times m \longrightarrow S' = \{f^{\text{stream}}(m_o,m)\}
-\]
-\[
-m_o \in S
-\]
-\[
-f^{\text{stream}} \text{ és un agregador d'atributs orientat a streams}
-\]
- 
 
-Aleshores els agregadors d'atributs funcionen orientats a stream;
-nota: no tots els agregadors d'atributs es poden definir com a
-streams.
 
+Per a utilitzar en els \gls{SGSTM} les funcions d'agregació d'atributs
+amb orientació a flux s'han de canviar els operadors d'afegir i de
+consolidar dels buffers:
 
-Per exemple l'interpolador mitjana orientat a stream:
 
-\[
-\text{mitjana}^{\text{stream}}: m_o \times m_n \longrightarrow m' = (T(m_n),v')
-\]
-\[
-\text{a on } v' = (V(m_0) + V^1(m_n), V^2(m_n) + 1 )
-\]
 
+\begin{itemize}
+\item Sigui la \autoref{def:sgstm:addB}, se'n modifica el comportament
+  perquè $B=(m_B,\tau,\delta,f)$ sigui un buffer que emmagatzema una
+  mesura $m_B$ en comptes d'una sèrie temporal i l'operació d'afegir
+  sigui $\glssymbol{addB}(B,m)= (m'_B,\tau,\delta,f)$ on $m'_B =
+  f^\text{flux}(m_B,m,[\tau,\tau+\delta])$ i $f^\text{flux}$ és una
+  funció d'agregació d'atributs orientada a flux.
 
 
+\item Sigui la \autoref{def:model:consolidacio-buffer}, se'n modifica
+  el comportament perquè essent el buffer modificat
+  $B=(m_B,\tau,\delta,f)$ l'operació de consolidar sigui
+  $\glssymbol{consolidaB}(B) = (B',m_B)$ on
+  $B'=(m'_B,\tau+\delta,\delta,f)$ i $m'_B$ ha de ser l'element
+  d'identitat de $f^\text{flux}$. Per exemple $m'_B=(0,0)$ per a l'atribut
+  de mitjana i $m'_B=(0,\min(\glssymbol{not:valor-domini}))$ per a
+  l'atribut de màxim on $\glssymbol{not:valor-domini}$ és el domini
+  dels valors. 
 
+\end{itemize}
 
-
-\subsubsection{Compartició de buffers}
-
-
-Les diferents $f$ amb mateix $\delta$ poden compartir buffer.
-
-
-Tenir un buffer únic per a totes les subsèries i que no s'esborrin mesures.
-
-
-
-
-
-
-\subsubsection{Lapses de buffer o no lapses}
-
-Podem tenir esquemes de multiresolució a on les diferents subsèries
-resolució coincideixin en els temps recents o a on no coincideixin:
-les subsèries més velles acabin on comencen les noves de manera
-semblant a l'estructura de buffers enllaçats.
-
-La primera opció pot servir per quan hi ha moltes dades tenir diferents resums preparats per a ser visualitzats, així permet triar ràpidament entre diferents zooms de les dades.
-
-La segona opció serveix per aprofitar al màxim la resolució i l'espai d'emmagatzematge, sense que cap subsèrie desi informació per al mateix interval de temps. Així permet conservar una sèrie temporal al llarg del seu temps amb diferents resolucions. També pot servir per usar la informació d'altres buffers i no haver de repetir emmagatzematge de buffers.
+Així doncs, en l'orientació a flux de les funcions d'agregació
+d'atributs, la mesura resultant es computa durant l'operació d'afegir
+noves mesures al buffer i quan s'ha de consolidar el buffer el
+resultat ja està disponible, només cal determinar l'element que actua
+com a identitat per a la funció d'agregació amb flux.  En aquest cas,
+no té sentit parlar de l'eliminació de mesures antigues en el buffer.
 
 
 
