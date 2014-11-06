@@ -1,72 +1,81 @@
-\chapter{Introducció a consideracions sobre el model}
+\chapter{Introducció a consideracions sobre els models}
+
+Un cop definits els models de \gls{SGST} i de \gls{SGSTM}, podem
+fer algunes consideracions i reflexions sobre aquests models.
+Principalment, considerem els temes següents:
+
+\begin{itemize}
+\item Exposem \gls{SGSTM} per a dispositius on l'emmagatzematge reduït
+  i afitat és important. Aquest és bàsicament el model que hem
+  presentat però en farem algunes consideracions més.
+
+\item Formulem una funció de multiresolució que permet expressar
+  l'acció dels \gls{SGSTM} com una funció sobre una sèrie temporal que
+  retorna una nova sèrie temporal o un conjunt de sèries temporals.
+
+\item Exposem \gls{SGST} amb emmagatzematges massius on calen
+  consultes i visualitzacions ràpides computades mitjançant
+  \gls{SGSTM}.
+
+\item Formulem el problema de la qualitat en els \gls{SGSTM},
+  introduïm el problema d'avaluar la informació que comprimeixen els
+  \gls{SGSTM}.
+
+\end{itemize}
 
 
-Què fem en aquesta part?\todo{intro}
+El primer tema correspon a petites variacions sobre el model
+definit. Ho presentem en una secció a continuació.
 
-Ara que hem definit els models de \gls{SGST} i \gls{SGSTM}, podem fer algunes consideracions i reflexions:
-
-
-\todo{estructura?}
-
-Potser estructurar aquesta part amb:
-
-1. Exposem SGSTM per a dispositius on l'emmagatzematge reduït i afitat és important, aquest és bàsicament el model que hem presentat però ara farem algunes consideracions
-2. Exposem SGSTM per a emmagatzematges massius on calen consultes i visualitzacions ràpides
-3. Formulem el problema de la qualitat dels SGSTM, teoria de la informació
-
-
-
-Per a 2. i 3. ens farà falta raonar sobre un funció de multiresolució que presentem al capítol tal.
- a la~\autoref{sec:multiresolucio:funcio} observarem com els \gls{SGSTM} es poden definir com una funció sobre una sèrie temporal. Aquests casos ja operaran directament sobre un \gls{SGST} amb tota la sèrie temporal emmagatzemada i per tant els buffers no emmagatzemaran temporalment sinó que treballaran sobre mesures ja emmagatzemades. 
+Els altres temes són consideracions i reflexions que usen el model
+definit com a referència. Les presentem cadascuna en un capítol
+diferent. Per als dos darrers també usem la formulació presentada en
+el segon tema.
 
 
 
 
 
 
-
-
-
-
-
-
-
-\section{Variacions en l'estructura dels SGSTM}
+\section{Algunes variacions dels SGSTM}
 
 
 En el model de \gls{SGSTM} hem definit l'estructura al més genèrica i
 senzilla possible per a encabir-hi diferents supòsits de
-multiresolució. 
+multiresolució. Així doncs, es poden formular variacions dels
+\gls{SGSTM} que en canviïn algun aspecte del comportament.
+
+
 Particularment, en el model hem generalitzat els buffers de manera que
 s'acumula tota la sèrie temporal original independentment en cadascun
 dels buffers. Aquesta estructura és útil en el model perquè permet
 definir de forma molt abstracta el comportament dels \gls{SGSTM} i
 abastar-ne diferents possibles variacions.  Però en algunes
 implementacions del model pot ser útil utilitzar altres aproximacions,
-és a dir algunes variacions podrien resultar útils en el nivell físic
-on no es gaudeixen dels avantatges abstractes matemàtics del nivell
+és a dir estudiar algunes variacions podria resultar útils en el nivell físic
+on no es gaudeixen els avantatges abstractes matemàtics del nivell
 lògic.
 
 
 
-\todo{revisar paràgraf}
 
-De forma senzilla podem pensar en implementacions que comparteixin els
-buffers, per exemple les diferents $f$ amb mateix $\delta$ poden
+De forma senzilla, podem pensar en implementacions que utilitzin els
+buffers d'una mateixa sèrie temporal de manera compartida, per exemple
+les diferents resolucions amb el mateix pas de consolidació poden
 compartir buffer. De forma més elaborada podem exposar implementacions
 del model en què s'emmagatzemi tota la sèrie temporal original en un
 \gls{SGST} i el \gls{SGSTM} treballi sobre aquestes mesures, és a dir
-que realment els buffers no les emmagatzemen sinó que seleccionen les
-que necessiten a cada moment. En aquest cas pensem en \gls{SGST}
-d'emmagatzematge massiu com els descrits a l'\autoref{art:massius} i
-dels quals a la~\autoref{sec:multiresolucio:dual} n'explorarem
-aplicacions mitjançant sistemes \gls{SGST} i \gls{SGSTM} conjunts.
+que realment els buffers no les emmagatzemin sinó que seleccionin les
+mesures que necessiten a cada moment. En aquest cas pensem en
+\gls{SGST} d'emmagatzematge massiu, com els descrits a
+l'\autoref{art:massius}, i dels quals a
+la~\autoref{sec:multiresolucio:dual} n'explorarem aplicacions
+mitjançant sistemes \gls{SGST} i \gls{SGSTM} conjunts.
 
 
-
-En aquesta secció considerem algunes petites variacions que poden
-conduir cap a altres aplicacions.  Presentem tres variacions de
-l'estructura:
+En aquesta secció considerem algunes petites variacions en els buffers
+i la consolidació que poden conduir cap a altres aplicacions.
+Presentem tres variacions de l'estructura:
 \begin{itemize}
 \item Resolucions encadenades
 
@@ -433,3 +442,5 @@ rellotge.
 
 
 
+
+%  LocalWords:  multiresolució
