@@ -23,14 +23,15 @@ twoside,fontsize=11pt,BCOR12mm,
 %backref=true, urldate=long, abbreviate=false,%%format web 
 %annotation=true %per veure comentaris
 %---------- Mode esborrany --------------------
-%\includeonly
+\includeonly
 %{intro}
 %{art,seriestemporals,sgbd,sistemessimilars}
 %{model}
 %{sgst,sgst-operacions,sgst-naturalesa}
 %{sgstm,sgstm-operacions,sgstm-interpoladors}
 %{variacions}
-%{multiresolucio}
+{multiresolucio}
+%{informacio}
 %{implementacio,python,mapreduce,relacional,vhdl}
 %{conclusions}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
@@ -64,14 +65,17 @@ twoside,fontsize=11pt,BCOR12mm,
 \providecommand{\seeref}
 {%
 \def\figureautorefname{fig.}%
+\def\definitionautorefname{def.}%
 \def\chapterautorefname{\gls{capitol}}%
 \def\sectionautorefname{\gls{seccio}\ignorespaces}%
+\def\subsectionautorefname{\gls{seccio}\ignorespaces}% 
 \gls{vegeu}~\orgautoref%
 }
 %per: a la figura 3 !Problemes en les contraccions amb noms masculins! evitar a i de davant de capítol!
 \providecommand{\textref}
 {%
 \def\figureautorefname{la figura}%
+\def\definitionautorefname{la definició}%
 \def\chapterautorefname{el capítol}% al/del capítol???
 \def\sectionautorefname{la secció}%
 \def\subsectionautorefname{l'apartat}% 
@@ -84,8 +88,8 @@ twoside,fontsize=11pt,BCOR12mm,
 \def\tableautorefname{taula}%ús: \autoref{}
 \def\definitionautorefname{definició}%ús: \autoref{}
 \def\exampleautorefname{exemple}%ús: \autoref{}
-\def\sectionautorefname{secció}%ús: \autoref{}
 \def\chapterautorefname{capítol}%ús: \autoref{}
+\def\sectionautorefname{secció}%ús: \autoref{}
 \def\subsectionautorefname{apartat}%ús: \autoref{}
 \orgautoref%
 }
@@ -215,9 +219,8 @@ twoside,fontsize=11pt,BCOR12mm,
 %-- POST-MODELS --
 
 \include{variacions}
-
 \include{multiresolucio}
-
+\include{informacio}
 
 
 \part{Experimentació}
@@ -261,7 +264,7 @@ twoside,fontsize=11pt,BCOR12mm,
 %\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
 %\pdfbookmark{\glossaryname}{bookmark:glossari}
 \chapter{Abreviacions i nomenclatura}
-%\glsaddall[counter=subsection]
+\glsaddall[counter=subsection]
 %\printglossary
 
 \printglossary[type=abreviatura,nonumberlist]
