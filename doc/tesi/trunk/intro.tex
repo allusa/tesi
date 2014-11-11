@@ -2,38 +2,65 @@
 
 \chapter{Introducció}
 
+En els darrers anys, el cost dels sensors de monitoratge i dels
+aparells de mesura s'ha reduït considerablement i com a conseqüència
+cada cop n'hi ha més al nostre voltant.  Per exemple, recentment ha
+aparegut el concepte de ciutat inte\l.ligent (\emph{smart city}) --una
+ciutat plena de sensors i per tant amb una gran potència de
+monitoratge-- o bé el concepte de comptador inte\l.ligent (\emph{smart
+  meter}) --un sensor amb capacitat d'enregistrar dades,
+d'analitzar-les i amb sistemes de comunicació integrats.  
+
+Però, cal emmagatzemar totes les dades que aquests sistemes de
+monitoratge són capaços de recollir?, cal emmagatzemar-les
+indefinidament en el temps? O bé es pot emmagatzemar només la
+informació que es desitgi monitorar o controlar i rebutjar la resta?,
+de manera que no calgui gestionar un volum de dades massiu que
+realment no s'utilitzarà? En aquesta tesi dissertem sobre un mètode
+capaç de seleccionar i emmagatzemar una determinada informació de les
+dades, com gestionar aquesta informació i fins a quin límit això es pot
+aplicar. L'anomenem multiresolució.
+
+
+Contextualitzem la multiresolució en dos àmbits: les sèries temporals
+i els \glspl{SGBD}. En aquesta tesi unim conceptes d'aquest dos àmbits
+i proposem solucions per alguns dels problemes que en resulten.
 
 
 
-% This paper focuses on Data Base Management Systems (DBMS) that store
-% and treat data as time series. Traditional DBMS, as is ones derived
-% from relational model, are not adequate for these cases as they do not
-% have enough facilities to manage and retrieve time series
-% information.
+\paragraph{Les sèries temporals}
 
 
-% This paper focuses on Data Base Management Systems (DBMS) that store
-% and treat data as time series.   Other DBMS are not adequate for these cases as they do not have enough facilities to manage and retrieve time series
-% information \parencite{schmidt95}.
-
-% DBMS are based from formal models that define the objects and
-% operations of the abstract machine to which users interact, such is
-% the relational model \parencite{date}. TSMS lack a consolidated formal
-% model, although special properties and requirements for a TSMS
-% have been proposed \parencite{dreyer94}.
+% * In the context of statistics, econometrics, quantitative finance, seismology, meteorology, and geophysics the primary goal of time series analysis is forecasting. In the context of signal processing, control engineering and communication engineering it is used for signal detection and estimation, while in the context of data mining, pattern recognition and machine learning time series analysis can be used for clustering, classification, query by content, anomaly detection as well as forecasting.
 
 
+* Hi ha molts mètodes per a tractar les sèries temporals. Nosaltres les tractarem de forma molt genèrica. Altres mètodes són més particulars, per exemple un senyal d'àudio es pot entendre com una sèrie temporal, car és una variable adquirida al llarg del temps; això no obstant hi ha mètodes més particulars per a tractar amb els senyals d'àudio que els genèrics de sèries temporals atès que aquests senyals solen ser regulars, el timestamps no és important, etc.
 
-% In time series analysis there are some common generic operations.
-% Most of these operations deal with the time given the nature of data.
-% Usual operations include querying time intervals, finding time
-% correlations, or calculating distances between two time series. In
-% all these operations \acro{TSMS} must consider the temporal coherence
-% of the time series.  In the context of statistics, aggregation of time
-% series is also a common operation. Aggregate means to summarise a time
-% series subset by a smaller set of measures. Statistic indicators like
-% the mean, the maximum, or the mode, for instance, summarise time
-% series into one only measure.
+* Nosaltres ens ocuparem de les sèries temporals des de la visió més
+  genèrica possible; és a dir una sèrie temporal com a conjunt de
+  dades que s'han adquirit en uns certs instants de temps.  En aquest
+  sentit, les sèries temporals poden representar dades molt variades i
+  que pertanyen a àmbits molt diferents. Alguns d'aquests àmbits tenen
+  estudis més particulars, focalitzant i simplificant l'estudi en les
+  propietats específiques de les dades. Per exemple la teoria del
+  senyal es focalitza en dades adquirides regularment i amb components
+  de periodicitat o, més particularment encara, l'estudi del so es
+  focalitza en una seqüència de valors que han de complir una relació.
+  Així doncs, l'estudi genèric de les sèries temporals no pretén
+  substituir aquests estudis propis de cada àmbit sinó que pretén
+  oferir una visió més àmplia i comuna a totes aquestes dades i oferir
+  un estudi per a aquelles dades que no tenen un comportament
+  clarament definit. Aquest és el cas, per exemple, de les dades
+  adquirides en un monitoratge en entorns no controlats d'una variable
+  física: aquestes variables són aleatòries, el temps d'adquisició pot
+  ser irregular i per tant cal estudiar-les genèricament com a sèries
+  temporals.  Cal dir, que a vegades les sèries temporals es redueixen
+  a seqüències temporals; és a dir a estudis de dades on només importa
+  l'ordre en què s'han adquirit i el període d'adquisició es
+  constant. Nosaltres no fem aquesta reducció sinó que tractem les
+  sèries temporals des del punt de vista més genèric on cal saber
+  també la posició de temps absoluta que ocupen i la distància de
+  temps entre els valors.
 
 % In the discrete context, a time series is defined as a set of value
 % and time pairs. Furthermore, a time series has a continuous nature as
@@ -43,6 +70,23 @@
 
 
 
+
+\paragraph{Els \gls{SGBD}}
+
+* Dir que plantegem els SGBD per a tractar dades genèriques i una d'aquestes dades poden ser sèries temporals. En el treball plantegem específicament la part que tracta amb les sèries temporals: ho plantegem com un SGBD específic per a sèries temporals. Les metadades de les sèries temporals s'han d'emmagatzemar en un SGBD genèric. Fer un dibuix on és vegi un SGBD i a dins metadades de sèries temporals i un SGST que gestiona les sèries temporals.
+
+En els SGBDR les bitemporal data han tingut molts anys de recerca i ara tenen un estatus ben consolidat. No és així per altres tipus de dades, com per exemple les sèries temporals. Per tant volem elevar les sèries temporals a una consolidació similar.
+
+% This paper focuses on Data Base Management Systems (DBMS) that store
+% and treat data as time series.   Other DBMS are not adequate for these cases as they do not have enough facilities to manage and retrieve time series
+% information \parencite{schmidt95}.
+
+
+% DBMS are based from formal models that define the objects and
+% operations of the abstract machine to which users interact, such is
+% the relational model \parencite{date}. TSMS lack a consolidated formal
+% model, although special properties and requirements for a TSMS
+% have been proposed \parencite{dreyer94}.
 
 % A \acro{TSMS} is a special purpose \acro{DBMS} devoted to store and
 % manage time series.  The main objective of \acro{TSMS} is to gather
@@ -54,22 +98,23 @@
 % \cite{date:introduction}.
 
 
-% A \acro{MTSMS} proposes a \acro{TSMS} with multiresolution
-% capabilities.  A \acro{MTSMS} schema represents a time series using a
-% set of different resolutions.  The multiresolution concept comes from
-% thoroughly analysis of \emph{RRDtool} \cite{rrdtool}. Our objectives
-% have been to formalise the main concepts into an abstract model and to
-% include more genericity in order to describe \acro{MTSMS} as fully
-% \acro{TSMS}.
+
+\paragraph{Problemes actuals}
 
 
+Rendiment i eficiència
 
-% * Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+L'eficiència i el rendiment ja no és només calcular en poc temps, sinó que en al
+guns contextos pot ser un consum baix d'energia, ocupar poc espai, etc.
+
+És a dir, que hi ha contextos i en cadascun el rendiment vol dir una cosa o una 
+altra.
 
 
+A més, hi ha la computació en flux. Aquesta ens permet anar calcular a mesura que van arribant les dades en comptes d'acumular-ho tot i fer-ho de cop. Si potdem utilitzar un esquema de flux aleshores els càlculs quedem repartits en el temps per la mateixa naturalesa del flux. (per altra banda també estudiaderem càlculs en temps diferent i oferirem una solució amb computació para\l.lela).
 
 
-% \subsubsection{Intro de l'estat actual}
+També hi ha l'emmagatzematge limitat per a sistemes petits.
 
 
 
@@ -77,7 +122,7 @@
 % Els SGST actuals bàsicament resolen alguns problemes d'anàlisis de sèries temporals.
 % Però no solen atendre la relació entre la base de dades i el sistema de monitoratge, és a dir la manera com s'adquireixen les dades. En aquest pas intermig hi ha un sèrie de problemes, com per exemple forats, dades falses o irregularitat en els temps de mostreig, que cal gestionar correctament. Concretament un dels problemes que no s'atén és el de mostreig irregular ja que es considera que les mostres estan a intervals regulars (equi-espaiades) encara que els sistemes de monitoratge informàtics sovint no són capaços de complir-ho amb exactitud sinó que presenten una certa variació en els temps de mesura. 
 
-% RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
+% RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant axiò, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
 
 % També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
 
@@ -107,22 +152,273 @@
 
 
 
-% \section{Context derivat d'aquesta tesi}
+
+
+\paragraph{La multiresolució}
+
+
+
+% A \acro{MTSMS} proposes a \acro{TSMS} with multiresolution
+% capabilities.  A \acro{MTSMS} schema represents a time series using a
+% set of different resolutions.  The multiresolution concept comes from
+% thoroughly analysis of \emph{RRDtool} \cite{rrdtool}. Our objectives
+% have been to formalise the main concepts into an abstract model and to
+% include more genericity in order to describe \acro{MTSMS} as fully
+% \acro{TSMS}.
+
+
+% In time series analysis there are some common generic operations.
+% Most of these operations deal with the time given the nature of data.
+% Usual operations include querying time intervals, finding time
+% correlations, or calculating distances between two time series. In
+% all these operations \acro{TSMS} must consider the temporal coherence
+% of the time series.  In the context of statistics, aggregation of time
+% series is also a common operation. Aggregate means to summarise a time
+% series subset by a smaller set of measures. Statistic indicators like
+% the mean, the maximum, or the mode, for instance, summarise time
+% series into one only measure.
+
+
+
+* La multiresolució implica una pèrdua d'informació i per tant l'usuari n'ha d'estar al cas, és a dir que no pot ser que un sistema autònomament decideixi emmagatzemar una sèrie temporal amb multiresolució sense avisar a l'usuari. És més, l'usuari és el responsable de decidir un esquema de multiresolució adequat al context en què el vulgui aplicar.  Aquest és el motiu principal per a dissenyar un model dels sistemes de multiresolució: perquè tenen un comportament diferent a altres sistemes d'emmagatzematge i per tal d'explicar bé a un usuari com els ha de fer funcionar.
+
+
+* Bàsicament hi ha dues aproximacions per a fer la multiresolució: Processar cad
+a resolució independentment i en para\l.lel (tal com fa RRDtool) o bé processar 
+les resolucions encadenades, és a dir a mesura que les dades es fan velles salte
+n de resolució. El model que presentem és genèric per a tots dos casos.
+
+
+
+
+
+
+
+
+\paragraph{RRDtool}
+
+
+
+Hi ha RRDtool, que és un SGBD específic dissenyat per a dades monitorades. Les c
+auses del seu disseny són:
+
+* Tobias Oetiker dissenyava un monitor de paràmetres de xarxes de comunicacions i en aquest monitor una part era la d'emmagatzematge de les dades. Per raons pràctiques i d'utilitat dissenya aquesta part amb un esquema inovadós. Finalment acaba separant aquesta part i la converteix independentment en RRDtool.
+
+* RRDtool té aquest model pràctic i a la pràctica és molt útil per a ser usat com a SGBD dels sistemes de monitoratge, sobretot en l'àmbit dels comptadors de xarxa on és l'estàndard de facto. 
+
+Això no obstant, no hi ha cap raonament teòric sobre el model de RRDtool ja que s'ha dissenyat per raons pràctiques. Per tant, entendre el funcionament de RRDtool és complicat, hi ha un nivell molt elevat per començar a fer-lo funcionar i molts conceptes no s'entenen perquè no estan ben definits. 
+
+Per això ens proposem de compendre i formalitzar el model de RRDtool, que acabarem anomenar model de multiresolució, en la teoria dels sitemes d'informació. A més RRDtool és molt específic pel camp de comptadors de xarxa i volem oferir un model genèric per a altres àmbits.  
+
+
+
+% * Disseny del model de TSMS, aleshores veurem si una TSMS pot ser implementada com a camp d'una altra DBMS o si els DBMS no són capaços de manipular TS adequadament i cal implementar TSMS específics.
+
+
+
+
+% \subsubsection{Intro de l'estat actual}
+
+
+
+
+
+
+\section{Objectius}
+
+
+\todo{revisar}
+
+Aquesta recerca té per objectiu l'estudi de les necessitats
+específiques que comporta l'emmagatzematge i gestió de dades amb
+naturalesa de sèrie temporal i la proposta d'un model de SGBD que
+satisfaci aquestes necessitats. Aquest objectiu es divideix en els
+següents subobjectius més concrets:
+
+\begin{itemize}
+
+\item Estudi de les aplicacions en que les dades són sèries temporals
+  amb la finalitat de determinar quines són les propietats i problemes
+  comuns que planteja la seva gestió i emmagatzematge.
+
+\item Estudi dels models de SGBD existents. Segons es desprèn de la
+  formalització de Date%\textcite{date:introduction}
+  el model principal és el model relacional, el qual es fonamenta en
+  dos conceptes: relacions i tipus de dades.
+
+\item Una àrea de treball important en els SGBD és la incorporació de
+  nous tipus de dades complexos. És important estudiar com es modifica
+  el model de dades d'un SGBD quan s'afegeix un nou tipus de dades
+  complex.  Les sèries temporals es poden d'entendre com a tipus
+  complex ja que presenten diferents propietats característiques i
+  necessiten operadors addicionals.  
+
+\item Disseny d'un model de SGBD per a les sèries temporals. D'aquesta
+  manera els SGBD podran tractar dades amb instants de temps que
+  mostrin l'evolució de variables en funció del temps. El model
+  consisteix en la definició de l'estructura de les sèries temporals i
+  les operacions bàsiques que necessiten.
+
+  L'assoliment d'aquest objectiu té tres parts:
+
+  \begin{enumerate}
+  \item Disseny d'un model per a la gestió bàsica de les sèries
+    temporals, el qual anomenem model de SGBD per a sèries temporals
+    (SGST).  L'estructura d'aquest model és similar a l'utilitzat en
+    els intervals
+    temporals. %\parencite{date02:_tempor_data_relat_model}.
+    Prenent com a base el model de SGST, el qual és un model general
+    per a les sèries temporals, s'hi poden incloure altres models per
+    a propietats més específiques de les sèries temporals.
+
+  \item Disseny d'un model específic en base del model de
+    SGST. Concretament es dissenya un model pels SGST multiresolució
+    (SGSTM).  En el model de SGSTM s'hi poden incloure propietats de
+    les sèries temporals relacionades amb la resolució que s'han
+    observat en les aplicacions pràctiques de les sèries temporals:
+    regularització, canvis de resolució mitjançant agregacions,
+    reconstrucció de forats, etc.
+
+
+
+ \item Avaluació dels esquemes de multiresolució.  El model de SGSTM
+    proposat està preparat per a rebre contínuament dades en flux
+    (\emph{data stream}). Això no obstant, la multiresolució també es
+    pot aplicar en temps diferit (\emph{offline}) per a dades
+    emmagatzemades. Cal una funció que permeti determinar com d'una
+    sèrie temporal s'obté una nova sèrie temporal resultant d'haver
+    aplicat un esquema de multiresolució. A més, cal determinar quina
+    selecció i quina pèrdua d'informació té un esquema de
+    multiresolució en particular.
+
+  \end{enumerate}
+
+\item Implementació de referència dels models de SGST i SGSTM. Per una
+  banda, aquesta implementació, a nivell acadèmic, ha de servir com a
+  exemple per a futurs desenvolupaments de sistemes de gestió,
+  acadèmics o productius. Per altra banda, ha de servir per a
+  exemplificar-ne els seu funcionament amb unes dades de prova.
+
+\item Implementació específica del model per a una determinada
+  aplicació de sèries temporals. Exemplificació de com una estructura
+  de SGSTM pot ser implementada per a aconseguir una aplicació
+  concreta. Aquesta implementació treballa amb conceptes de
+  para\l.lelisme.
+
+\end{itemize} 
+
+
+% item[Tasca 5.b] Recerca en els esquemes de multiresolució.  A partir
+%   de la multiresolució expressada com una funció simplificada, que
+%   calcula en temps diferit, convé explorar noves recerques. En primer
+%   lloc, cal avaluar formalment aquesta funció de multiresolució
+%   respecte a tot el model proposat de SGSTM. En segon lloc, en aquest
+%   càlcul en temps diferit apareix la possibilitat de computar
+%   para\l.lelament. En tercer lloc, a partir d'aquesta funció pot ésser
+%   més senzill estudiar la selecció o pèrdua d'informació que implica
+%   usar un model de multiresolució.
+
+
+% \item[Tasca 6.b] S'ha començat a dissenya una nova implementació de la
+%   multiresolució en Hadoop basada en conceptes de computació
+%   para\l.lela en els SGBD. Un cop ben establert el model d'aquest
+%   esquema de multiresolució cal acabar d'implementar-lo i provar-lo
+%   amb les mateixes dades experimentals que s'usen per a la
+%   implementació de referència.
+
+% \item[Tasca 7.] Experimentació amb dades. Es disposa d'unes dades
+%   noves amb irregularitats interessants per a aplicar-hi el model de
+%   multiresolució. Són unes dades de sensors reals en un sistema de
+%   dipòsits d'aigües. Aquestes dades pertanyen a sensors
+%   interrelacionats, cosa que les fa més interessants per analitzar-hi
+%   l'efecte que hi un SGSTM i com pot ajudar a emmagatzemar-les de
+%   forma compacta.
+
+
+% \item[Tasca 9.] La nova tasca 5.b plantejada ofereix un nou tema en
+%   l'àmbit de la multiresolució que, si l'experimentació que hem
+%   plantejat és satisfactòria, pot conduir a la redacció d'un nou
+%   article. Aquesta redacció, però, s'allargaria més enllà de l'entrega
+%   de la tesi.
+
+
+
+
+\subsection{Contribució d'aquesta tesi}
+
+
+
+
+Publicacions realitzades:
+
+\begin{itemize}
+
+\item Report de recerca \parencite{llusa12:report} conjuntament amb
+  la Teresa Escobet-Canal i el Sebastià Vila-Marta, publicat el 17 de
+  desembre de 2012 al departament de Disseny i Programació de
+  Sistemes Electrònics de la Universitat Politècnica de Catalunya.
+ informe de
+  recerca a on constés les mancances que observem que tenen els SGBD
+  per a les sèries temporals, les propietats i requisits que han de
+  complir i la idea bàsica de la nostra proposta d'un nou model
+  multiresolució per a sèries temporals. 
+
+\item Ponència a congrés \parencite{llusa13:aiked} conjuntament amb la
+  Teresa Escobet-Canal i el Sebastià Vila-Marta, realitzada al
+  ``International Conference on Artificial Intelligence, Knowledge
+  Engineering and Data Bases'' (AIKED '13) a Cambridge (UK) els dies
+  20--22 de febrer de 2013.
+ donar a conèixer de
+  forma resumida el model multiresolució que volem dissenyar.
+
+\end{itemize}
+
 
 
 % * report12
 % * aiked13
 % * if14 en revisió
+Redacció d'articles i informes. Un cop s'ha completat
+  el disseny del model de SGBD per a sèries temporals, s'ha escrit
+  compactament en format article per a l'àmbit de les bases de dades.
+  En aquest article també s'ha inclòs el disseny de la implementació
+  de referència dels model.  Aquesta tasca s'ha allargat més del
+  previst: ha calgut fer una tasca intensa de recerca de revistes i
+  congressos que siguin afins a l'àmbit on treballem, cosa que també
+  ha causat una gran feina de motivació i de recerca de treballs
+  relacionats en l'actualitat de la temàtica seleccionada.  L'article
+  s'ha escrit conjuntament amb la Teresa Escobet Canal i el Sebastià
+  Vila Marta i està pendent per presentar-lo a la revista
+  \emph{Information Systems}.
+
 
 % * beca FPU-UPC
-% * participació projecte NAPS
+% * participació projecte NAPSAprovada la concessió del projecte d'investigació
+%   TEC2012-35571 ''Nuevas aplicaciones del principio superregenerativo
+%   a comunicaciones por radiofrecuencia (NASP)'' per als pròxims 3 anys
+%   en finalitzar l'anterior projecte AVIC. Investigador principal Pere
+%   Palà Schönwälder.
+
 % * Dades iSENSE
 
 
 
 
+% S'ha estat subscrit a les llistes de debat de:
 
-% \section{Estructura del document}
+% * RRDtool
+% * thirdmanifesto
+
+% que és on aquesta gent discuteix els seus problemes
+
+
+
+% S'ha desenvolupat amb control de versions a
+
+% S'ha desenvolupat programari lliure, disponible a , amb manuals de documentació disponibles a
+
+
+\section{Estructura del document}
 
 % El model de dades per a sèries temporals es dissenya en el
 % capítol~\ref{cap:model:sgst}. El disseny d'aquest model és necessari
@@ -130,6 +426,15 @@
 % dades multiresolució es dissenya en el capítol~\ref{cap:model:sgstm}.
 
 
+
+
+
+
+%\subsection{Formats i qüestions lingüístiques}
+
+%Algun format en especial? els codis python, els fitxers?
+
+%Algunes qüestions lingüístiques remarcables?
 
 
 
