@@ -50,129 +50,152 @@ conseqüència del fet que són dades voluminoses i per tant són
 complicades d'emmagatzemar i de tractar \cite{fu11,keogh08:isax}.
 Aquest problema és especialment crític en el disseny de sistemes
 integrats petits \cite{yaogehrke02}, els recursos dels quals són
-limitats: capacitat, energia, processament i comunicacions.  Una altre
-problema ocorre quan les dades no han estat adquirides equi-espaiades
-en el temps, ja que molts algoritmes d'anàlisi de sèries temporals ho
+limitats: capacitat d'emmagatzematge, consum d'energia, temps de
+processament i capacitat de les comunicacions.  Una altre problema
+ocorre quan les dades no han estat adquirides equi-espaiades en el
+temps, ja que alguns algoritmes d'anàlisi de sèries temporals ho
 requereixen.
 
-  Another problem is that the procedure of
-processing and synthesising information becomes difficult if data is
-not equi-time spaced.
 
-
-
-
-* Hi ha molts mètodes per a tractar les sèries temporals. Nosaltres les tractarem de forma molt genèrica. Altres mètodes són més particulars, per exemple un senyal d'àudio es pot entendre com una sèrie temporal, car és una variable adquirida al llarg del temps; això no obstant hi ha mètodes més particulars per a tractar amb els senyals d'àudio que els genèrics de sèries temporals atès que aquests senyals solen ser regulars, el timestamps no és important, etc.
-
-* Nosaltres ens ocuparem de les sèries temporals des de la visió més
-  genèrica possible; és a dir una sèrie temporal com a conjunt de
-  dades que s'han adquirit en uns certs instants de temps.  En aquest
-  sentit, les sèries temporals poden representar dades molt variades i
-  que pertanyen a àmbits molt diferents. Alguns d'aquests àmbits tenen
-  estudis més particulars, focalitzant i simplificant l'estudi en les
-  propietats específiques de les dades. Per exemple la teoria del
-  senyal es focalitza en dades adquirides regularment i amb components
-  de periodicitat o, més particularment encara, l'estudi del so es
-  focalitza en una seqüència de valors que han de complir una relació.
-  Així doncs, l'estudi genèric de les sèries temporals no pretén
-  substituir aquests estudis propis de cada àmbit sinó que pretén
-  oferir una visió més àmplia i comuna a totes aquestes dades i oferir
-  un estudi per a aquelles dades que no tenen un comportament
-  clarament definit. Aquest és el cas, per exemple, de les dades
-  adquirides en un monitoratge en entorns no controlats d'una variable
-  física: aquestes variables són aleatòries, el temps d'adquisició pot
-  ser irregular i per tant cal estudiar-les genèricament com a sèries
-  temporals.  Cal dir, que a vegades les sèries temporals es redueixen
-  a seqüències temporals; és a dir a estudis de dades on només importa
-  l'ordre en què s'han adquirit i el període d'adquisició es
-  constant. Nosaltres no fem aquesta reducció sinó que tractem les
-  sèries temporals des del punt de vista més genèric on cal saber
-  també la posició de temps absoluta que ocupen i la distància de
-  temps entre els valors.
+\todo{revisar}
+Nosaltres ens ocuparem de les sèries temporals des de la visió més
+genèrica possible; és a dir una sèrie temporal com a conjunt de dades
+que s'han adquirit en uns certs instants de temps.  En aquest sentit,
+les sèries temporals poden representar dades molt variades i que
+pertanyen a àmbits molt diferents. Alguns d'aquests àmbits tenen
+estudis més particulars, focalitzant i simplificant l'estudi en les
+propietats específiques de les dades. Per exemple la teoria del senyal
+es focalitza en dades adquirides regularment i amb components de
+periodicitat o bé a vegades les sèries temporals es redueixen a
+seqüències temporals en què només importa l'ordre en què s'han
+adquirit i el període d'adquisició es constant.  Així doncs, l'estudi
+genèric de les sèries temporals no pretén substituir aquests estudis
+propis de cada àmbit sinó que pretén oferir una visió més àmplia i
+comuna a totes aquestes dades i oferir un estudi per a aquelles dades
+que no tenen un comportament clarament definit. Aquest és el cas, per
+exemple, de les dades adquirides en un monitoratge en entorns no
+controlats d'una variable física: aquestes variables són aleatòries,
+el temps d'adquisició pot ser irregular, etc. Per tant cal
+estudiar-les genèricament com a sèries temporals des del punt de vista
+en què cal saber la posició de temps absoluta que ocupen i la
+distància de temps entre els valors.
 
 
 
 
 
-\paragraph{Els \gls{SGBD}}
-
-* Dir que plantegem els SGBD per a tractar dades genèriques i una d'aquestes dades poden ser sèries temporals. En el treball plantegem específicament la part que tracta amb les sèries temporals: ho plantegem com un SGBD específic per a sèries temporals. Les metadades de les sèries temporals s'han d'emmagatzemar en un SGBD genèric. Fer un dibuix on és vegi un SGBD i a dins metadades de sèries temporals i un SGST que gestiona les sèries temporals.
-
-En els SGBDR les bitemporal data han tingut molts anys de recerca i ara tenen un estatus ben consolidat. No és així per altres tipus de dades, com per exemple les sèries temporals. Per tant volem elevar les sèries temporals a una consolidació similar.
-
-% This paper focuses on Data Base Management Systems (DBMS) that store
-% and treat data as time series.   Other DBMS are not adequate for these cases as they do not have enough facilities to manage and retrieve time series
-% information \parencite{schmidt95}.
+\paragraph{Els SGBD}
+Els \gls{SGBD} són els sistemes informàtics encarregats d'emmagatzemar
+i gestionar dades de forma genèrica. Els conceptes dels \gls{SGBD} es
+basen en models matemàtics formals que defineixen l'estructura dels
+objectes i les operacions que els usuaris perceben de forma
+abstracta. El model formal de referència dels \gls{SGBD} és el model
+relacional \parencite{date04:introduction8}.
 
 
-% DBMS are based from formal models that define the objects and
-% operations of the abstract machine to which users interact, such is
-% the relational model \parencite{date}. TSMS lack a consolidated formal
-% model, although special properties and requirements for a TSMS
-% have been proposed \parencite{dreyer94}.
+Els \gls{SGBD} habituals fins a l'actualitat han estat els que
+disposen d'un llenguatge de consultes anomenat \gls{SQL}, tot i que en
+els darrers anys han aparegut altres sistemes, anomenats \emph{NoSQL}
+i \emph{NewSQL}, per tal de millorar el rendiment i la flexibilitat
+dels
+\gls{SQL} \parencite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}. Alguns
+autors \parencite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}
+noten els aspectes en què cal millorar els \gls{SGBD} per tal de
+tractar les sèries temporals i fan èmfasi en el fet que és necessari
+un model que enllaci el coneixement dels \gls{SGBD} amb el de
+l'anàlisi de sèries temporals. Sobretot, l'adquisició contínua de nous valors és
+el un repte a l'hora d'emmagatzemar i analitzar les sèries
+temporals \parencite{keogh97}.
 
-% A \acro{TSMS} is a special purpose \acro{DBMS} devoted to store and
-% manage time series.  The main objective of \acro{TSMS} is to gather
-% two areas of study: time series analysis and \acro{DBMS}.  Time series
-% analysis formalises a great amount of algorithms and methodologies
-% that apply to time series, with a main focus on improving
-% efficiency. \acro{DBMS} theory formalises systems that store and
-% operate with data, currently the relational model is the referent
-% \cite{date:introduction}.
-
-En els SGBD es contempla l'estudi formal dels seus conceptes
-mitjançant models basats en teories matemàtiques, del qual n'és una
-referència el model relacional \parencite{date:introduction}.  Dins
-del model relacional hi ha hagut un estudi profund relacionat amb els
-intervals temporals, considerats com a dades
-temporals \parencite{date02:_tempor_data_relat_model}, que resol el
-problema dels històrics temporals en els SGBD. Les sèries temporals
-necessiten un estudi similar ja que no poden ser tractades com a
-intervals temporals per pertànyer a una categoria diferent de dades
-temporals \parencite{assfalg08:thesis,schmidt95}.
+% Dels
+% treballs publicats en els que es mostra la necessitar d'estudiar
+% conceptes de model es destaquen el treball de \textcite{dreyer94}, en
+% el qual presenten l'estructura bàsica que han de tenir els SGST; els
+% estudis de \textcite{bonnet01} per a xarxes de sensors; i els exemples
+% de consultes de \textcite{zhang11} per algunes de les propietats de
+% les sèries temporals.
 
 
 
-\paragraph{Problemes actuals}
-
-Recentment s'ha observat que hi ha necessitat de coneixement entre els
-SGBD i les aplicacions de les sèries
-temporals \parencite{stonebraker09:scidb,zhang11}.  Hi alguns sistemes
-que es poden considerar com a SGST, com per exemple
-\emph{RRDtool} \parencite{rrdtool} o \emph{Cougar} \parencite{cougar},
-però en ells no s'ha definit clarament un model de SGST.  Dels
-treballs publicats en els que es mostra la necessitar d'estudiar
-conceptes de model es destaquen el treball de \textcite{dreyer94}, en
-el qual presenten l'estructura bàsica que han de tenir els SGST; els
-estudis de \textcite{bonnet01} per a xarxes de sensors; i els exemples
-de consultes de \textcite{zhang11} per algunes de les propietats de
-les sèries temporals.
+En els \gls{SGBD} també es gestionen històrics temporals, és a dir
+l'evolució de les dades al llarg del temps. Aquest és un problema
+similar a les sèries temporals pel que fa a que tots dos treballen amb
+atributs temporals, tot i així pertanyen a dues categories diferents
+de dades i no poden ser tractats de la mateixa
+manera \parencite{assfalg08:thesis,schmidt95}.  Ara bé, els històrics
+temporals han estat llargament estudiats en els \gls{SGBD} i finalment
+s'han formalitzat com a intervals temporals dins del model
+relacional \parencite{date02:_tempor_data_relat_model}.  Les sèries
+temporals necessiten consolidar un model similar en què se n'estudiïn
+les propietats i els requisits
+específics \parencite{dreyer94,segev87:sigmod}.
 
 
 
-Rendiment i eficiència
 
-L'eficiència i el rendiment ja no és només calcular en poc temps, sinó que en al
-guns contextos pot ser un consum baix d'energia, ocupar poc espai, etc.
-
-És a dir, que hi ha contextos i en cadascun el rendiment vol dir una cosa o una 
-altra.
-
-
-A més, hi ha la computació en flux. Aquesta ens permet anar calcular a mesura que van arribant les dades en comptes d'acumular-ho tot i fer-ho de cop. Si potdem utilitzar un esquema de flux aleshores els càlculs quedem repartits en el temps per la mateixa naturalesa del flux. (per altra banda també estudiaderem càlculs en temps diferent i oferirem una solució amb computació para\l.lela).
+\todo{revisar} En aquest treball estudiem els \gls{SGBD} que treballen
+específicament amb sèries temporals, aleshores els anomenem
+\glspl{SGST}. De la mateixa manera, dissenyem \gls{SGST} amb
+capacitats de multiresolució, els quals anomenem
+\glspl{SGSTM}. Formulem el model dels \glspl{SGSTM} per la qual cosa
+necessitem també formular el model dels \gls{SGST}.
 
 
-També hi ha l'emmagatzematge limitat per a sistemes petits.
 
-Una de les grans mancances en l'àmbit de les sèries temporals és no
-tenir un model que faci d'enllaç entre les diferents aplicacions i les
-diferents implementacions, el que s'anomena com a necessitat de
-coneixement entre els SGBD i les sèries
-temporals \parencite{zhang11,stonebraker09:scidb}. Un model permetria,
-entre d'altres, estudiar les propietats abstractes de les sèries
-temporals i poder comparar diferents sistemes de gestió.
+
+%Les metadades de les sèries temporals s'han d'emmagatzemar en un SGBD genèric. Fer un dibuix on és vegi un SGBD i a dins metadades de sèries temporals i un SGST que gestiona les sèries temporals.
+
+
+
+
+\paragraph{La multiresolució}
+La multiresolució resumeix la informació d'una sèrie temporal
+mitjançant un conjunt de resolucions. Cada resolució correspon a un
+atribut i a un període de temps de la sèrie temporal.  El concepte de
+multiresolució prové d'un estudi profund d'un sistema anomenat
+RRDtool \parencite{rrdtool}. El nostre objectiu és descriure els
+conceptes principals de la multiresolució de manera abstracta per a
+obtenir un model formal pels \gls{SGSTM}.
+
+La multiresolució implica una selecció d'informació i, per tant,
+alhora implica una pèrdua d'informació. Com a conseqüència, l'usuari
+ha de determinar un esquema de multiresolució per a cada sèrie
+temporal que vulgui gestionar amb un \gls{SGSTM}. A partir del model
+dels \gls{SGSTM} reflexionarem sobre com gestionen la informació i
+sobre quins efectes tenen diferents esquemes de multiresolució.
+%l'usuari n'ha d'estar al cas, és a dir que no pot ser que un sistema autònomament decideixi emmagatzemar una sèrie temporal amb multiresolució sense avisar a l'usuari. 
+
+
+El model de \gls{SGSTM} es dissenya de forma genèrica per a permetre'n
+implementacions vàries. Així, hi ha vàries aproximacions possibles per
+a computar la multiresolució: que tinguin en compte l'emmagatzematge
+limitat dels sistemes petits, que precomputin el resultat per a
+disposar-ne visualitzacions immediates, que reparteixin el temps de
+computació durant el mateix procés d'adquisició, que acumulin totes
+les dades i processin en temps diferit aprofitant computació
+para\l.lela, etc.  \todo{també pensar en la implementació vhdl}
+Explorarem aquestes possibilitats dels \gls{SGSTM}.
+
+
+
+
+
+
+
+% In time series analysis there are some common generic operations.
+% Most of these operations deal with the time given the nature of data.
+% Usual operations include querying time intervals, finding time
+% correlations, or calculating distances between two time series. In
+% all these operations \acro{TSMS} must consider the temporal coherence
+% of the time series.  In the context of statistics, aggregation of time
+% series is also a common operation. Aggregate means to summarise a time
+% series subset by a smaller set of measures. Statistic indicators like
+% the mean, the maximum, or the mode, for instance, summarise time
+% series into one only measure.
+
+
+
 L'estudi d'un model de SGBD per a sèries temporals té dues vessants.
-
 Per una banda, després d'una mirada general a algunes aplicacions de
 les sèries temporals, s'observa que hi ha molts algoritmes específics
 i dissenyats a mida per al seu tractament. A més, s'observa que en el
@@ -183,15 +206,8 @@ específicament per a tractar-hi, com per exemple
 \emph{RRDtool} \parencite{rrdtool} o \emph{Cougar} \parencite{fung02},
 no s'ha identificat un model general per tractar aquests problemes.
 
-Per altra banda, en el model relacional de SGBD es troba una
-formalització per a tractar qualsevol tipus de dades. Disposar d'un
-model matemàtic consolidat, com és el cas del relacional, ha estat una
-fita important en l'àmbit dels SGBD.  No obstant, el model relacional
-només presenta els conceptes bàsics dels SGBD, quedant per resoldre la
-formalització dels tipus de dades. Concretament dins d'aquest àmbit
-destaca la publicació del model per a intervals
-temporals \parencite{date02:_tempor_data_relat_model}, el qual
-s'utilitza per a formalitzar els històrics en els SGBD.
+
+
 
 En l'àmbit dels SGBD també s'hi inclou l'estudi d'implementacions que
 permetin obtenir un bon rendiment. Un cop s'ha formalitzat el model es
@@ -200,18 +216,6 @@ aplicació. Per exemple en el cas de les sèries temporals es pot
 aplicar la gestió mitjançant \emph{data
   streams} \parencite{babcock02}.
 
-
-
-Time series can be stored and managed by Structured Query Language
-(\acro{SQL}) relational database management systems. However, some
-authors \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11} notice
-that the use of \acro{SQL} systems as a time series backend suffers
-some drawbacks.  On the one hand, \emph{NoSQL} or \emph{NewSQL}
-products are being developed in order to increase the performance and
-flexibility of \acro{SQL} systems
-\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
-however the continue acquisition nature of time series is an issue for
-storing and analysing offline all the data \cite{keogh97}.
 
 
 On the other hand, compression techniques for time series are
@@ -228,12 +232,14 @@ aggregated in different resolutions in order to compact data and to do
 faster visualisations. However, \emph{RRDtool} is very specific and
 has limited aggregation operations to applications of network
 counters.
+També citar \cite{dou14:historic_queries_flash_storage}
 
 
 
 
 % Els SGST actuals bàsicament resolen alguns problemes d'anàlisis de sèries temporals.
 % Però no solen atendre la relació entre la base de dades i el sistema de monitoratge, és a dir la manera com s'adquireixen les dades. En aquest pas intermig hi ha un sèrie de problemes, com per exemple forats, dades falses o irregularitat en els temps de mostreig, que cal gestionar correctament. Concretament un dels problemes que no s'atén és el de mostreig irregular ja que es considera que les mostres estan a intervals regulars (equi-espaiades) encara que els sistemes de monitoratge informàtics sovint no són capaços de complir-ho amb exactitud sinó que presenten una certa variació en els temps de mesura. 
+
 
 % RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant axiò, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
 
@@ -244,68 +250,6 @@ counters.
 
 % \todo{comentar també}
 % \cite{dou14:historic_queries_flash_storage}
-
-
-% On the other hand, compression techniques for time series are
-% considered in the form of approximation to the original signal in
-% order to compute analysis such as similarity or pattern search
-% \cite{fu11,keogh01,last01} or in the form of compression and
-% aggregation approaches for massive data streams
-% \cite{cormode08:pods,bonnet01}. However, treating time series as data
-% streams does not consider adequately the time dimension nor computes
-% the evolution of aggregated parameters along time, which is
-% interesting for monitoring purposes.  On a similar approach,
-% \emph{RRDtool} \cite{rrdtool} is a system that stores time series
-% aggregated in different resolutions in order to compact data and to do
-% faster visualisations. However, \emph{RRDtool} is very specific and
-% has limited aggregation operations to applications of network
-% counters.
-
-
-
-
-
-
-
-\paragraph{La multiresolució}
-
-
-
-% A \acro{MTSMS} proposes a \acro{TSMS} with multiresolution
-% capabilities.  A \acro{MTSMS} schema represents a time series using a
-% set of different resolutions.  The multiresolution concept comes from
-% thoroughly analysis of \emph{RRDtool} \cite{rrdtool}. Our objectives
-% have been to formalise the main concepts into an abstract model and to
-% include more genericity in order to describe \acro{MTSMS} as fully
-% \acro{TSMS}.
-
-
-% In time series analysis there are some common generic operations.
-% Most of these operations deal with the time given the nature of data.
-% Usual operations include querying time intervals, finding time
-% correlations, or calculating distances between two time series. In
-% all these operations \acro{TSMS} must consider the temporal coherence
-% of the time series.  In the context of statistics, aggregation of time
-% series is also a common operation. Aggregate means to summarise a time
-% series subset by a smaller set of measures. Statistic indicators like
-% the mean, the maximum, or the mode, for instance, summarise time
-% series into one only measure.
-
-
-
-* La multiresolució implica una pèrdua d'informació i per tant l'usuari n'ha d'estar al cas, és a dir que no pot ser que un sistema autònomament decideixi emmagatzemar una sèrie temporal amb multiresolució sense avisar a l'usuari. És més, l'usuari és el responsable de decidir un esquema de multiresolució adequat al context en què el vulgui aplicar.  Aquest és el motiu principal per a dissenyar un model dels sistemes de multiresolució: perquè tenen un comportament diferent a altres sistemes d'emmagatzematge i per tal d'explicar bé a un usuari com els ha de fer funcionar.
-
-
-* Bàsicament hi ha dues aproximacions per a fer la multiresolució: Processar cad
-a resolució independentment i en para\l.lel (tal com fa RRDtool) o bé processar 
-les resolucions encadenades, és a dir a mesura que les dades es fan velles salte
-n de resolució. El model que presentem és genèric per a tots dos casos.
-
-
-
-
-
-
 
 
 \paragraph{RRDtool}
@@ -555,3 +499,5 @@ Redacció d'articles i informes. Un cop s'ha completat
 %%% mode: latex
 %%% TeX-master: "main"
 %%% End: 
+
+%  LocalWords:  multiresolució
