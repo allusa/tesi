@@ -240,11 +240,8 @@ A continuació resumim les principals contribucions d'aquesta tesi:
 
 \item Es tenen en compte les diverses possibilitats de computació de
   la multiresolució i es desenvolupen diverses implementacions del
-  model. Les implementacions són de programari lliure i es poden
-  trobar a
-  \url{http://escriny.epsem.upc.edu/projects/rrb/repository/show/src}. Tot
-  i que són experimentals i tenen nivell acadèmic, mostren el
-  funcionament correcte del model.
+  model. Es desenvolupa una implementació de referència, una per a
+  computació para\l.lela i una amb llenguatge acadèmic relacional.
 
 
 \item S'introdueix el problema d'avaluar la qualitat de la
@@ -266,31 +263,35 @@ Aquesta tesi ha derivat en altres publicacions, que detallem a continuació:
 \begin{itemize}
 
 \item Report de recerca \parencite{llusa12:report} conjuntament amb la
-  Dra.\ Teresa Escobet-Canal i el Dr.\ Sebastià Vila-Marta, publicat el 17 de
-  desembre de 2012 al departament de Disseny i Programació de Sistemes
-  Electrònics de la Universitat Politècnica de Catalunya. És un report
-  on consten les mancances que tenen els \gls{SGBD} per a les sèries
-  temporals, les propietats i requisits que haurien de complir i la
-  idea bàsica de la proposta d'un nou model multiresolució per a
-  sèries temporals.
+  doctora Teresa Escobet Canal i el doctor Sebastià Vila Marta,
+  publicat el 17 de desembre de 2012 al departament de Disseny i
+  Programació de Sistemes Electrònics de la Universitat Politècnica de
+  Catalunya. És un report on consten les mancances que tenen els
+  \gls{SGBD} per a les sèries temporals, les propietats i requisits
+  que haurien de complir i la idea bàsica de la proposta d'un nou
+  model multiresolució per a sèries temporals.
 
 \item Ponència a congrés \parencite{llusa13:aiked} conjuntament amb la
-  Dra.\ Teresa Escobet-Canal i el Dr.\ Sebastià Vila-Marta, realitzada
-  al ``International Conference on Artificial Intelligence, Knowledge
-  Engineering and Data Bases'' (AIKED '13) a Cambridge, UK, els dies
+  doctora Teresa Escobet Canal i el doctor Sebastià Vila Marta, realitzada
+  a l'\emph{International Conference on Artificial Intelligence, Knowledge
+  Engineering and Data Bases} (AIKED '13) a Cambridge, UK, els dies
   20--22 de febrer de 2013.  Es dóna a conèixer de forma resumida el
   model multiresolució que dissenyem.
 
 
-\item Article pendent d'acceptació presentat conjuntament amb la Dra.\
-  Teresa Escobet-Canal i el Dr.\ Sebastià Vila-Marta. Un cop s'ha
-  completat el disseny del model de \gls{SGSTM}, s'ha escrit
+\item Article pendent d'acceptació presentat conjuntament amb la
+  doctora Teresa Escobet Canal i el doctor Sebastià Vila Marta. Un cop
+  s'ha completat el disseny del model de \gls{SGSTM}, s'ha escrit
   compactament en format article per a l'àmbit de les bases de dades.
   En aquest article també s'ha inclòs el disseny de la implementació
   de referència dels model i la motivació del treball comparada amb
   recerques similars.
   % està pendent a la revista \emph{Information Systems}.
 
+\item Les implementacions són de programari lliure i es poden trobar a
+  \url{http://escriny.epsem.upc.edu/projects/rrb/repository/show/src}. Tot
+  i que són experimentals i tenen nivell acadèmic, mostren el
+  funcionament correcte del model.
 
 \end{itemize}
 
@@ -331,49 +332,50 @@ Aquest document és el resultat de la recerca en un
 model de multiresolució per a les sèries temporals. S'estructura en
 cinc parts principals.
 
-En una primera part, que inclou aquest \textref{sec:intro}
+En una primera part, que inclou aquest \autoref{sec:intro}
 d'introducció, es presenta el context i els objectius de la
-recerca. En el \textref{cap:estat} es descriu l'estat actual de la
+recerca. En el \autoref{cap:estat} es descriu l'estat actual de la
 recerca i treballs similars.
 
 En una segona part es dissenya i es formula el model.  En el
-\textref{sec:model} s'introdueixen els conceptes de model de
+\autoref{sec:model} s'introdueixen els conceptes de model de
 \gls{SGBD} i l'abast de les sèries temporals i la multiresolució que
 utilitzem.  El model es dissenya en dues parts: el model dels
-\gls{SGST} en el \textref{cap:model:sgst} i el model dels \gls{SGSTM}
-en el \textref{cap:model:sgstm}.
+\gls{SGST} en el \autoref{cap:model:sgst} i el model dels \gls{SGSTM}
+en el \autoref{cap:model:sgstm}.
 
 
 En una tercera part s'exploren variacions i reflexions sobre el model
-presentat. En el \textref{sec:variacions} s'introdueixen les
+presentat. En el \autoref{sec:variacions} s'introdueixen les
 consideracions que es faran sobre el model i s'exploren petites
 variacions en l'emmagatzematge de les sèries temporals. En el
-\textref{cap:funciomultiresolucio} es formula la multiresolució com
+\autoref{cap:funciomultiresolucio} es formula la multiresolució com
 una funció que a partir d'una sèrie temporal resulta en una nova sèrie
 temporal o conjunts de sèries temporals comprimides. En el
-\textref{sec:multiresolucio:dual} es dissenyen sistemes que utilitzin
+\autoref{sec:multiresolucio:dual} es dissenyen sistemes que utilitzin
 alhora \gls{SGST} i \gls{SGSTM}.  En el
-\textref{sec:multiresolucio:teoriainformacio} es reflexiona sobre el
+\autoref{sec:multiresolucio:teoriainformacio} es reflexiona sobre el
 problema de la qualitat de la multiresolució, és a dir s'avalua quina
 selecció d'informació fa un determinat esquema de multiresolució.
 
 
 
 En una quarta part s'experimenta i es dissenyen les implementacions
-del model. En el \textref{sec:implementacions} s'introdueixen les
+del model. En el \autoref{sec:implementacions} s'introdueixen les
 diferents implementacions i es comenten les particularitats de cada
-una. En el \textref{sec:implementacio:python} es dissenya la
+una. En el \autoref{sec:implementacio:python} es dissenya la
 implementació de referència amb llenguatge Python. En el
-\textref{sec:implementacio:mapreduce} es dissenya una implementació
+\autoref{sec:implementacio:mapreduce} es dissenya una implementació
 amb computació distribuïda i para\l.lela amb la tècnica MapReduce i en
-el sistema Hadoop. En el \textref{sec:implementacio:relacional} es
+el sistema Hadoop. En el \autoref{sec:implementacio:relacional} es
 dissenya una implementació amb el llenguatge acadèmic relacional
-Tutorial~D.
+Tutorial~D. En el \autoref{sec:implementacions:exemple} s'exemplifica
+l'ús de les implementacions amb dades reals.
 
 
 En una cinquena part es conclou el document. Particularment en el
-\textref{sec:conclusions} es resumeix la dissertació i s'expressen les
-conclusions que se'n poden treure, i en el \textref{sec:futur} es
+\autoref{sec:conclusions} es resumeix la dissertació i s'expressen les
+conclusions que se'n poden treure, i en el \autoref{sec:futur} es
 proposen altres investigacions que serien interessants a partir
 d'aquesta recerca.
 
