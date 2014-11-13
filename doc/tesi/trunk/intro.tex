@@ -1,6 +1,7 @@
 
 
 \chapter{Introducció}
+\label{sec:intro}
 
 En els darrers anys, el cost dels sensors de monitoratge s'ha reduït
 considerablement i com a conseqüència cada cop n'hi ha més al nostre
@@ -56,29 +57,19 @@ ocorre quan les dades no han estat adquirides equi-espaiades en el
 temps, ja que alguns algoritmes d'anàlisi de sèries temporals ho
 requereixen.
 
+Contextualitzem el nostre estudi de les sèries temporals en l'àmbit
+del monitoratge en què les variables adquirides són aleatòries, el
+temps d'adquisició pot ser irregular, etc.  En l'anàlisi de sèries
+temporals a vegades reben estudis més particulars, focalitzant i
+simplificant l'estudi en algunes propietats específiques de les
+dades. Per exemple la teoria del senyal es focalitza en dades
+adquirides regularment i amb components de periodicitat o bé a vegades
+les sèries temporals es redueixen a seqüències temporals en què només
+importa l'ordre en què s'han adquirit i el període d'adquisició es
+constant. El nostre estudi tracta les sèries temporals des del punt de
+vista genèric temporal en què, a més, cal saber la posició de temps
+absoluta que ocupa cada dada i la distància de temps entre els valors.
 
-\todo{revisar}
-Nosaltres ens ocuparem de les sèries temporals des de la visió més
-genèrica possible; és a dir una sèrie temporal com a conjunt de dades
-que s'han adquirit en uns certs instants de temps.  En aquest sentit,
-les sèries temporals poden representar dades molt variades i que
-pertanyen a àmbits molt diferents. Alguns d'aquests àmbits tenen
-estudis més particulars, focalitzant i simplificant l'estudi en les
-propietats específiques de les dades. Per exemple la teoria del senyal
-es focalitza en dades adquirides regularment i amb components de
-periodicitat o bé a vegades les sèries temporals es redueixen a
-seqüències temporals en què només importa l'ordre en què s'han
-adquirit i el període d'adquisició es constant.  Així doncs, l'estudi
-genèric de les sèries temporals no pretén substituir aquests estudis
-propis de cada àmbit sinó que pretén oferir una visió més àmplia i
-comuna a totes aquestes dades i oferir un estudi per a aquelles dades
-que no tenen un comportament clarament definit. Aquest és el cas, per
-exemple, de les dades adquirides en un monitoratge en entorns no
-controlats d'una variable física: aquestes variables són aleatòries,
-el temps d'adquisició pot ser irregular, etc. Per tant cal
-estudiar-les genèricament com a sèries temporals des del punt de vista
-en què cal saber la posició de temps absoluta que ocupen i la
-distància de temps entre els valors.
 
 
 
@@ -86,10 +77,11 @@ distància de temps entre els valors.
 
 \paragraph{Els SGBD}
 Els \gls{SGBD} són els sistemes informàtics encarregats d'emmagatzemar
-i gestionar dades de forma genèrica. Els conceptes dels \gls{SGBD} es
-basen en models matemàtics formals que defineixen l'estructura dels
-objectes i les operacions que els usuaris perceben de forma
-abstracta. El model formal de referència dels \gls{SGBD} és el model
+i gestionar dades de forma genèrica, la qual cosa s'inscriu en l'àmbit
+dels sistemes d'informació. Els conceptes dels \gls{SGBD} es basen en
+models matemàtics formals que defineixen l'estructura dels objectes i
+les operacions que els usuaris perceben de forma abstracta. El model
+formal de referència dels \gls{SGBD} és el model
 relacional \parencite{date04:introduction8}.
 
 
@@ -133,7 +125,7 @@ específics \parencite{dreyer94,segev87:sigmod}.
 
 
 
-\todo{revisar} En aquest treball estudiem els \gls{SGBD} que treballen
+En aquest treball estudiem els \gls{SGBD} que treballen
 específicament amb sèries temporals, aleshores els anomenem
 \glspl{SGST}. De la mateixa manera, dissenyem \gls{SGST} amb
 capacitats de multiresolució, els quals anomenem
@@ -177,80 +169,37 @@ document explorarem aquestes possibilitats dels \gls{SGSTM}.
 
 
 
-\todo{refer}
-La multiresolució és una tècnica de compressió amb pèrdua de les
-sèries temporals. Hi altres tècniques de compressió que s'apliquen a
-les sèries temporals. D'una banda hi ha tècniques d'aproximació al
-senyal original per a analitzar similituds entre sèries temporals o
-cercar-hi patrons \parencite{fu11,keogh01,last01}. 
-D'altra banda hi ha
-tècniques per a comprimir i aproximar amb agregacions per a fluxos de
-dades massius \parencite{cormode08:pods,bonnet01}. 
-
-Això no obstant, aquestes tècniques o bé són massa genèriques i no
-consideren adequadament la dimensió temporal, o bé no analitzen
-l'evolució dels paràmetres al llarg del temps , o bé no atenen la
-relació entre els \gls{SGBD} i els sistemes de monitoratge, la qual
-pot causar alguns problemes --irregularitats en el temps de mostreig,
-dades falses, forats sense dades, etc.-- que cal gestionar
-adequadament.
+% \todo{refer} La multiresolució és una tècnica de compressió amb pèrdua
+% de les sèries temporals. Hi altres tècniques de compressió que
+% s'apliquen a les sèries temporals. D'una banda hi ha tècniques
+% d'aproximació al senyal original per a analitzar similituds entre
+% sèries temporals o cercar-hi patrons \parencite{fu11,keogh01,last01}.
+% D'altra banda hi ha tècniques per a comprimir i aproximar amb
+% agregacions per a fluxos de dades
+% massius \parencite{cormode08:pods,bonnet01}.  També hi ha tècniques
+% d'emmagatzematge massiu
+% \parencite{opentsdb,zhang11,stonebraker09:scidb} en què les sèries
+% temporal en què s'aprofiten altres tècniques de \gls{SGBD} per a grans
+% volums de dades. %OpenTSDB SciQL SciDB
 
 
+% Això no obstant, aquestes tècniques o bé són massa genèriques i no
+% consideren adequadament la dimensió temporal, o bé no analitzen
+% l'evolució dels paràmetres al llarg del temps, o bé no atenen la
+% relació entre els \gls{SGBD} i els sistemes de monitoratge, la qual
+% pot causar alguns problemes --irregularitats en el temps de mostreig,
+% dades falses, forats sense dades, etc.-- que cal gestionar
+% adequadament.
+
+% Alguns sí que ho tenen en compte com Cougar \parencite{fung02} 
+% % També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
+% però molt particularitzat per les xarxes de sensors, o \textcite{dou14:historic_queries_flash_storage} però molt particularitzat per a l'emmagatzematge en memòries flash, o bé RRDtool que
+% és una implementació de la multiresolució però molt específica i
+% limitada a l'àmbit dels comptadors de xarxa. De fet, un dels objectius
+% del model de multiresolució que formulem és oferir agregadors genèrics
+% i resums per a qualsevol sèrie temporal.
 
 
-
-On the other hand, compression techniques for time series are
-considered in the form of approximation to the original signal in
-order to compute analysis such as similarity or pattern search
-\cite{fu11,keogh01,last01} or in the form of compression and
-aggregation approaches for massive data streams
-\cite{cormode08:pods,bonnet01}. However, treating time series as data
-streams does not consider adequately the time dimension nor computes
-the evolution of aggregated parameters along time, which is
-interesting for monitoring purposes.  
-
-On a similar approach,
-\emph{RRDtool} \cite{rrdtool} is a system that stores time series
-aggregated in different resolutions in order to compact data and to do
-faster visualisations. However, \emph{RRDtool} is very specific and
-has limited aggregation operations to applications of network
-counters.
-També citar \cite{dou14:historic_queries_flash_storage}
-
-
-RRDtool n'és una excepció ja que, per ser un sistema productiu, el processament de dades i emmagatzematge és més proper als sistemes de monitoratge. No obstant axiò, està centrat en un tipus de dades particulars, les magnituds i els comptadors, i no té tantes operacions generals per les sèries temporals com els altres SGST.
-
-RRDtool és molt específic pel camp de comptadors de xarxa i volem oferir un model genèric per a altres àmbits.  
-
-
-
-L'estudi d'un model de SGBD per a sèries temporals té dues vessants.
-Per una banda, després d'una mirada general a algunes aplicacions de
-les sèries temporals, s'observa que hi ha molts algoritmes específics
-i dissenyats a mida per al seu tractament. A més, s'observa que en el
-tractament de les sèries temporals es duen a terme un conjunt de
-tasques comunes: canvis de resolució, reconstrucció de forats,
-reducció del volum de dades, etc.  Tot i que hi ha sistemes dissenyats
-específicament per a tractar-hi, com per exemple
-\emph{RRDtool} \parencite{rrdtool} o \emph{Cougar} \parencite{fung02},
-no s'ha identificat un model general per tractar aquests problemes.
-
-
-En l'àmbit dels SGBD també s'hi inclou l'estudi d'implementacions que
-permetin obtenir un bon rendiment. Un cop s'ha formalitzat el model es
-poden avaluar les implementacions més adequades per a cada
-aplicació. Per exemple en el cas de les sèries temporals es pot
-aplicar la gestió mitjançant \emph{data
-  streams} \parencite{babcock02}.
-
-
-% També Cougar i TinyDB que exploren l'encaix dels SGBD en entorns distribuïts de xarxes de sensors. Proposen noves estratègies de comunicació amb l'objectiu d'ajustar el consum d'energia. 
-
-
-% SciQL, un model recent per SGBD  basat en matrius, és el que més es pot considerar com a SGST, ja que s'està desenvolupant per complir-ne algunes propietats.
-
-% \todo{comentar també}
-% \cite{dou14:historic_queries_flash_storage}
 
 
 
@@ -263,40 +212,47 @@ aplicar la gestió mitjançant \emph{data
 \section{Contribució d'aquesta tesi}
 
 
-
-Highlights del nostre treball
-
-
-Potser la gran diferència que marca el model de multiresoució respecte altres treballs és:
+A continuació resumim les principals contribucions d'aquesta tesi:
 
 \begin{itemize}
 
-\item 
-* Si bé els streams agreguen estadístics de les dades, la multiresolució té en compte l'evolució d'aquests estadístics al llarg del temps, cosa que lliga més amb l'àmbit del monitoratge. És a dir, tenim en compte el temps, altres projectes només avaluen el moment present.  However, as a lossy storage solution, the
-  multiresolution schema has to be decided for each application
-  planning what approximate queries will be needed to resolve.
+\item Un \gls{SGSTM} emmagatzema les sèries temporals de forma
+  comprimida. És un resum de l'evolució dels atributs de la sèrie
+  temporal al llarg del temps i amb diferents períodes temporals. És
+  una solució de compressió amb pèrdua i per tant l'esquema de
+  multiresolució s'ha de decidir prèviament per a cada context.
 
-* Si bé l'orientació a agregadors amb stream és molt interessant, el model es manté genèric per a poder calcular amb qualsevol funció d'agregació.
+\item Per a resumir cada atribut de la sèrie temporal s'utilitzen
+  funcions d'agregació i funcions de representació, els quals es
+  formalitzen com a objectes independents en el model. D'aquesta
+  manera, els usuaris poden definir diferents operadors considerant la
+  semàntica de les sèries temporals en cada context diferent.  Per
+  exemple, els atributs es poden calcular mitjançant funcions
+  d'agregació d'estadístics com la mitjana o el màxim.
 
-* Es tenen en compte les irregularitats de mostreig de les series temporals
+\item El model opera coherentment amb la dimensió temporal de les
+  sèries temporals. A més, té en compte les irregularitats del
+  mostreig, el tractament i validació de dades i diverses
+  interpretacions de les sèries temporals
 
-* Es modelitza fortament el concepte de funció de representació de les sèries temporals i així es pot tenir en compte la semàntica de cada sèrie temporal, ja que en cada agregació té molta afectació, per exemple quan les dades monitorades tenen naturalesa de comptadors als quals RRDtool s'hi ha especialitzat.
- We formalise the representation function concept of time series
-  in order the user can define different operators considering the
-  semantics of time series in different contexts; especially they
-  behave differently in aggregation operations, i.e. RRDtool specific counter
-  time series aggregations. Furthermore, we formalise representation
-  as an independent object of the main model.
+\item El model es basa fermament en l'àlgebra de conjunts i la del
+  model relacional com a teoria formal dels sistemes d'informació.
 
-* Els altres treballs se centren en el problema de recuperar el senyal original, ho demostra el fet que avaluin el resultat amb SSE (per mínims quadrats). Nosaltres enfoquem el problema en un domini més genèric de les consultes aproximades on volem avaluar el resultat per si respon correctament a les consultes, encara que el senyal recuperat no s'assembli gens a l'original.
+\item Es tenen en compte les diverses possibilitats de computació de
+  la multiresolució i es desenvolupen diverses implementacions del
+  model. Les implementacions són de programari lliure i es poden
+  trobar a
+  \url{http://escriny.epsem.upc.edu/projects/rrb/repository/show/src}. Tot
+  i que són experimentals i tenen nivell acadèmic, mostren el
+  funcionament correcte del model.
 
 
-\item Our model considers the time irregularities sampling of time
-  series. Moreover, it operates coherently with the time dimension of
-  time series.
+\item S'introdueix el problema d'avaluar la qualitat de la
+  multiresolució. És a dir el problema de determinar quina selecció i
+  quina pèrdua d'informació hi ha quan s'aplica la multiresolució a
+  una sèrie temporal i com realitzar consultes aproximades a la
+  informació original.
 
-\item We describe the model firmly rooted on relational algebra as a formal
-  theory for information systems.
 
 \end{itemize}
 
@@ -305,49 +261,39 @@ Potser la gran diferència que marca el model de multiresoució respecte altres 
 
 
 
-
-
-Publicacions realitzades:
+Aquesta tesi ha derivat en altres publicacions, que detallem a continuació:
 
 \begin{itemize}
 
-\item Report de recerca \parencite{llusa12:report} conjuntament amb
-  la Teresa Escobet-Canal i el Sebastià Vila-Marta, publicat el 17 de
-  desembre de 2012 al departament de Disseny i Programació de
-  Sistemes Electrònics de la Universitat Politècnica de Catalunya.
- informe de
-  recerca a on constés les mancances que observem que tenen els SGBD
-  per a les sèries temporals, les propietats i requisits que han de
-  complir i la idea bàsica de la nostra proposta d'un nou model
-  multiresolució per a sèries temporals. 
+\item Report de recerca \parencite{llusa12:report} conjuntament amb la
+  Dra.\ Teresa Escobet-Canal i el Dr.\ Sebastià Vila-Marta, publicat el 17 de
+  desembre de 2012 al departament de Disseny i Programació de Sistemes
+  Electrònics de la Universitat Politècnica de Catalunya. És un report
+  on consten les mancances que tenen els \gls{SGBD} per a les sèries
+  temporals, les propietats i requisits que haurien de complir i la
+  idea bàsica de la proposta d'un nou model multiresolució per a
+  sèries temporals.
 
 \item Ponència a congrés \parencite{llusa13:aiked} conjuntament amb la
-  Teresa Escobet-Canal i el Sebastià Vila-Marta, realitzada al
-  ``International Conference on Artificial Intelligence, Knowledge
-  Engineering and Data Bases'' (AIKED '13) a Cambridge (UK) els dies
-  20--22 de febrer de 2013.
- donar a conèixer de
-  forma resumida el model multiresolució que volem dissenyar.
+  Dra.\ Teresa Escobet-Canal i el Dr.\ Sebastià Vila-Marta, realitzada
+  al ``International Conference on Artificial Intelligence, Knowledge
+  Engineering and Data Bases'' (AIKED '13) a Cambridge, UK, els dies
+  20--22 de febrer de 2013.  Es dóna a conèixer de forma resumida el
+  model multiresolució que dissenyem.
 
 
-\item Redacció d'articles i informes. Un cop s'ha completat
-  el disseny del model de SGBD per a sèries temporals, s'ha escrit
+\item Article pendent d'acceptació presentat conjuntament amb la Dra.\
+  Teresa Escobet-Canal i el Dr.\ Sebastià Vila-Marta. Un cop s'ha
+  completat el disseny del model de \gls{SGSTM}, s'ha escrit
   compactament en format article per a l'àmbit de les bases de dades.
   En aquest article també s'ha inclòs el disseny de la implementació
-  de referència dels model.  Aquesta tasca s'ha allargat més del
-  previst: ha calgut fer una tasca intensa de recerca de revistes i
-  congressos que siguin afins a l'àmbit on treballem, cosa que també
-  ha causat una gran feina de motivació i de recerca de treballs
-  relacionats en l'actualitat de la temàtica seleccionada.  L'article
-  s'ha escrit conjuntament amb la Teresa Escobet Canal i el Sebastià
-  Vila Marta i està pendent per presentar-lo a la revista
-  \emph{Information Systems}.
+  de referència dels model i la motivació del treball comparada amb
+  recerques similars.
+  % està pendent a la revista \emph{Information Systems}.
 
 
 \end{itemize}
 
-
-També cal dir que en aquesta tesi es desenvolupen implementacions dels models que, tot i que són a nivell acadèmic, es poden utilitzar. Són programari lliure  \todo{}
 
 
 
@@ -380,118 +326,67 @@ També cal dir que en aquesta tesi es desenvolupen implementacions dels models q
 
 \section{Estructura del document}
 
-% El model de dades per a sèries temporals es dissenya en el
-% capítol~\ref{cap:model:sgst}. El disseny d'aquest model és necessari
-% per a comprendre i construir el model multiresolució.  El model de
-% dades multiresolució es dissenya en el capítol~\ref{cap:model:sgstm}.
+
+Aquest document és el resultat de la recerca en un
+model de multiresolució per a les sèries temporals. S'estructura en
+cinc parts principals.
+
+En una primera part, que inclou aquest \textref{sec:intro}
+d'introducció, es presenta el context i els objectius de la
+recerca. En el \textref{cap:estat} es descriu l'estat actual de la
+recerca i treballs similars.
+
+En una segona part es dissenya i es formula el model.  En el
+\textref{sec:model} s'introdueixen els conceptes de model de
+\gls{SGBD} i l'abast de les sèries temporals i la multiresolució que
+utilitzem.  El model es dissenya en dues parts: el model dels
+\gls{SGST} en el \textref{cap:model:sgst} i el model dels \gls{SGSTM}
+en el \textref{cap:model:sgstm}.
 
 
-\todo{revisar}
-
-Aquesta recerca té per objectiu l'estudi de les necessitats
-específiques que comporta l'emmagatzematge i gestió de dades amb
-naturalesa de sèrie temporal i la proposta d'un model de SGBD que
-satisfaci aquestes necessitats. Aquest objectiu es divideix en els
-següents subobjectius més concrets:
-
-\begin{itemize}
-
-\item Estudi de les aplicacions en que les dades són sèries temporals
-  amb la finalitat de determinar quines són les propietats i problemes
-  comuns que planteja la seva gestió i emmagatzematge.
-
-\item Estudi dels models de SGBD existents. Segons es desprèn de la
-  formalització de Date%\textcite{date:introduction}
-  el model principal és el model relacional, el qual es fonamenta en
-  dos conceptes: relacions i tipus de dades.
-
-\item Una àrea de treball important en els SGBD és la incorporació de
-  nous tipus de dades complexos. És important estudiar com es modifica
-  el model de dades d'un SGBD quan s'afegeix un nou tipus de dades
-  complex.  Les sèries temporals es poden d'entendre com a tipus
-  complex ja que presenten diferents propietats característiques i
-  necessiten operadors addicionals.  
-
-\item Disseny d'un model de SGBD per a les sèries temporals. D'aquesta
-  manera els SGBD podran tractar dades amb instants de temps que
-  mostrin l'evolució de variables en funció del temps. El model
-  consisteix en la definició de l'estructura de les sèries temporals i
-  les operacions bàsiques que necessiten.
-
-  L'assoliment d'aquest objectiu té dues parts:
-
-  \begin{enumerate}
-  \item Disseny d'un model per a la gestió bàsica de les sèries
-    temporals, el qual anomenem model de SGBD per a sèries temporals
-    (SGST).  L'estructura d'aquest model és similar a l'utilitzat en
-    els intervals
-    temporals. %\parencite{date02:_tempor_data_relat_model}.
-    Prenent com a base el model de SGST, el qual és un model general
-    per a les sèries temporals, s'hi poden incloure altres models per
-    a propietats més específiques de les sèries temporals.
-
-  \item Disseny d'un model específic en base del model de
-    SGST. Concretament es dissenya un model pels SGST multiresolució
-    (SGSTM).  En el model de SGSTM s'hi poden incloure propietats de
-    les sèries temporals relacionades amb la resolució que s'han
-    observat en les aplicacions pràctiques de les sèries temporals:
-    regularització, canvis de resolució mitjançant agregacions,
-    reconstrucció de forats, etc.
-
-  \end{enumerate}
-
-
-\item Variacions del model. Petites variacions que condueixen a altres aplicacions. El model de SGSTM
-    proposat està preparat per a rebre contínuament dades en flux
-    (\emph{data stream}). Això no obstant, la multiresolució també es
-    pot aplicar en temps diferit (\emph{offline}) per a dades
-    emmagatzemades. Cal una funció que permeti determinar com d'una
-    sèrie temporal s'obté una nova sèrie temporal resultant d'haver
-    aplicat un esquema de multiresolució. En aquest
-  càlcul en temps diferit apareix la possibilitat de computar
-  para\l.lelament.
-
-\item Reflexió sobre la informació en la multiresolució.  A partir
-  de la multiresolució expressada com una funció simplificada, que
-  calcula en temps diferit, convé explorar noves recerques. En primer
-  lloc, cal avaluar formalment aquesta funció de multiresolució
-  respecte a tot el model proposat de SGSTM.  A partir d'aquesta funció pot ésser
-  més senzill estudiar la selecció o pèrdua d'informació que implica
-  usar un model de multiresolució.
-
-\item Implementació de referència dels models de SGST i SGSTM. Per una
-  banda, aquesta implementació, a nivell acadèmic, ha de servir com a
-  exemple per a futurs desenvolupaments de sistemes de gestió,
-  acadèmics o productius. Per altra banda, ha de servir per a
-  exemplificar-ne els seu funcionament amb unes dades de prova.
-
-\item Implementació específica del model per a una determinada
-  aplicació de sèries temporals. Exemplificació de com una estructura
-  de SGSTM pot ser implementada per a aconseguir una aplicació
-  concreta. Aquesta implementació treballa amb conceptes de
-  para\l.lelisme. S'ha començat a dissenya una nova implementació de la
-  multiresolució en Hadoop basada en conceptes de computació
-  para\l.lela en els SGBD. Un cop ben establert el model d'aquest
-  esquema de multiresolució cal acabar d'implementar-lo i provar-lo
-  amb les mateixes dades experimentals que s'usen per a la
-  implementació de referència.
+En una tercera part s'exploren variacions i reflexions sobre el model
+presentat. En el \textref{sec:variacions} s'introdueixen les
+consideracions que es faran sobre el model i s'exploren petites
+variacions en l'emmagatzematge de les sèries temporals. En el
+\textref{cap:funciomultiresolucio} es formula la multiresolució com
+una funció que a partir d'una sèrie temporal resulta en una nova sèrie
+temporal o conjunts de sèries temporals comprimides. En el
+\textref{sec:multiresolucio:dual} es dissenyen sistemes que utilitzin
+alhora \gls{SGST} i \gls{SGSTM}.  En el
+\textref{sec:multiresolucio:teoriainformacio} es reflexiona sobre el
+problema de la qualitat de la multiresolució, és a dir s'avalua quina
+selecció d'informació fa un determinat esquema de multiresolució.
 
 
 
-\item Experimentació amb dades. Es disposa d'unes dades
-  noves amb irregularitats interessants per a aplicar-hi el model de
-  multiresolució. Són unes dades de sensors reals en un sistema de
-  dipòsits d'aigües. Aquestes dades pertanyen a sensors
-  interrelacionats, cosa que les fa més interessants per analitzar-hi
-  l'efecte que hi un SGSTM i com pot ajudar a emmagatzemar-les de
-  forma compacta.
+En una quarta part s'experimenta i es dissenyen les implementacions
+del model. En el \textref{sec:implementacions} s'introdueixen les
+diferents implementacions i es comenten les particularitats de cada
+una. En el \textref{sec:implementacio:python} es dissenya la
+implementació de referència amb llenguatge Python. En el
+\textref{sec:implementacio:mapreduce} es dissenya una implementació
+amb computació distribuïda i para\l.lela amb la tècnica MapReduce i en
+el sistema Hadoop. En el \textref{sec:implementacio:relacional} es
+dissenya una implementació amb el llenguatge acadèmic relacional
+Tutorial~D.
 
 
-\end{itemize} 
+En una cinquena part es conclou el document. Particularment en el
+\textref{sec:conclusions} es resumeix la dissertació i s'expressen les
+conclusions que se'n poden treure, i en el \textref{sec:futur} es
+proposen altres investigacions que serien interessants a partir
+d'aquesta recerca.
 
 
 
 
+Finalment, es recull la bibliografia citada, les abreviacions i
+nomenclatura utilitzades i s'ofereixen índexs per a les entitats
+remarcables: figures, taules, llistats, definicions i exemples.
+
+
+
+% \todo{hi ha algun annex?}
 
 
 %\subsection{Formats i qüestions lingüístiques}
@@ -499,6 +394,118 @@ següents subobjectius més concrets:
 %Algun format en especial? els codis python, els fitxers?
 
 %Algunes qüestions lingüístiques remarcables?
+
+
+
+
+
+
+
+
+
+% \section{Objectius}
+
+% Aquesta recerca té per objectiu l'estudi de les necessitats
+% específiques que comporta l'emmagatzematge i gestió de dades amb
+% naturalesa de sèrie temporal i la proposta d'un model de SGBD que
+% satisfaci aquestes necessitats. Aquest objectiu es divideix en els
+% següents subobjectius més concrets:
+
+% \begin{itemize}
+
+% \item Estudi de les aplicacions en que les dades són sèries temporals
+%   amb la finalitat de determinar quines són les propietats i problemes
+%   comuns que planteja la seva gestió i emmagatzematge.
+
+% \item Estudi dels models de SGBD existents. Segons es desprèn de la
+%   formalització de Date%\textcite{date:introduction}
+%   el model principal és el model relacional, el qual es fonamenta en
+%   dos conceptes: relacions i tipus de dades.
+
+% \item Una àrea de treball important en els SGBD és la incorporació de
+%   nous tipus de dades complexos. És important estudiar com es modifica
+%   el model de dades d'un SGBD quan s'afegeix un nou tipus de dades
+%   complex.  Les sèries temporals es poden d'entendre com a tipus
+%   complex ja que presenten diferents propietats característiques i
+%   necessiten operadors addicionals.  
+
+% \item Disseny d'un model de SGBD per a les sèries temporals. D'aquesta
+%   manera els SGBD podran tractar dades amb instants de temps que
+%   mostrin l'evolució de variables en funció del temps. El model
+%   consisteix en la definició de l'estructura de les sèries temporals i
+%   les operacions bàsiques que necessiten.
+
+%   L'assoliment d'aquest objectiu té dues parts:
+
+%   \begin{enumerate}
+%   \item Disseny d'un model per a la gestió bàsica de les sèries
+%     temporals, el qual anomenem model de SGBD per a sèries temporals
+%     (SGST).  L'estructura d'aquest model és similar a l'utilitzat en
+%     els intervals
+%     temporals. %\parencite{date02:_tempor_data_relat_model}.
+%     Prenent com a base el model de SGST, el qual és un model general
+%     per a les sèries temporals, s'hi poden incloure altres models per
+%     a propietats més específiques de les sèries temporals.
+
+%   \item Disseny d'un model específic en base del model de
+%     SGST. Concretament es dissenya un model pels SGST multiresolució
+%     (SGSTM).  En el model de SGSTM s'hi poden incloure propietats de
+%     les sèries temporals relacionades amb la resolució que s'han
+%     observat en les aplicacions pràctiques de les sèries temporals:
+%     regularització, canvis de resolució mitjançant agregacions,
+%     reconstrucció de forats, etc.
+
+%   \end{enumerate}
+
+
+% \item Variacions del model. Petites variacions que condueixen a altres aplicacions. El model de SGSTM
+%     proposat està preparat per a rebre contínuament dades en flux
+%     (\emph{data stream}). Això no obstant, la multiresolució també es
+%     pot aplicar en temps diferit (\emph{offline}) per a dades
+%     emmagatzemades. Cal una funció que permeti determinar com d'una
+%     sèrie temporal s'obté una nova sèrie temporal resultant d'haver
+%     aplicat un esquema de multiresolució. En aquest
+%   càlcul en temps diferit apareix la possibilitat de computar
+%   para\l.lelament.
+
+% \item Reflexió sobre la informació en la multiresolució.  A partir
+%   de la multiresolució expressada com una funció simplificada, que
+%   calcula en temps diferit, convé explorar noves recerques. En primer
+%   lloc, cal avaluar formalment aquesta funció de multiresolució
+%   respecte a tot el model proposat de SGSTM.  A partir d'aquesta funció pot ésser
+%   més senzill estudiar la selecció o pèrdua d'informació que implica
+%   usar un model de multiresolució.
+
+% \item Implementació de referència dels models de SGST i SGSTM. Per una
+%   banda, aquesta implementació, a nivell acadèmic, ha de servir com a
+%   exemple per a futurs desenvolupaments de sistemes de gestió,
+%   acadèmics o productius. Per altra banda, ha de servir per a
+%   exemplificar-ne els seu funcionament amb unes dades de prova.
+
+% \item Implementació específica del model per a una determinada
+%   aplicació de sèries temporals. Exemplificació de com una estructura
+%   de SGSTM pot ser implementada per a aconseguir una aplicació
+%   concreta. Aquesta implementació treballa amb conceptes de
+%   para\l.lelisme. S'ha començat a dissenya una nova implementació de la
+%   multiresolució en Hadoop basada en conceptes de computació
+%   para\l.lela en els SGBD. Un cop ben establert el model d'aquest
+%   esquema de multiresolució cal acabar d'implementar-lo i provar-lo
+%   amb les mateixes dades experimentals que s'usen per a la
+%   implementació de referència.
+
+
+
+% \item Experimentació amb dades. Es disposa d'unes dades
+%   noves amb irregularitats interessants per a aplicar-hi el model de
+%   multiresolució. Són unes dades de sensors reals en un sistema de
+%   dipòsits d'aigües. Aquestes dades pertanyen a sensors
+%   interrelacionats, cosa que les fa més interessants per analitzar-hi
+%   l'efecte que hi un SGSTM i com pot ajudar a emmagatzemar-les de
+%   forma compacta.
+
+
+% \end{itemize} 
+
 
 
 
