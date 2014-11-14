@@ -1,30 +1,18 @@
-
-
-
-
-
 \chapter{Reflexions sobre la informació en la multiresolució}
 \label{sec:multiresolucio:teoriainformacio}
 
 
-
-\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
-
-
-
-\todo{revisar}
-
-
-
-En aquest capítol reflexionem sobre el problema d'identificar la
-informació que selecciona un esquema de multiresolució i per tant
-també d'observar quina informació no queda emmagatzemada i es perd.
-Així doncs, cal estudiar l'aplicació de la teoria de la informació per
-a l'esquema de multiresolució.  
+En aquest capítol reflexionem sobre el problema de la qualitat en la
+multiresolució de sèries temporals, és a dir sobre el problema
+d'identificar la informació que selecciona un esquema de
+multiresolució i per tant, alhora, d'observar quina informació no
+queda emmagatzemada i es perd.  Contextualitzem aquest problema en
+l'aplicació de la teoria de la informació per a l'esquema de
+multiresolució.
 
 En aquest context, els \gls{SGSTM} són un sistemes que emmagatzemen
-les dades comprimides amb pèrdua d'una certa part de la informació
-original. Aleshores, les consultes que es resolguin a partir d'un
+dades comprimides amb pèrdua d'una certa part de la informació
+original. Aleshores, les consultes que es resolen a partir d'un
 \gls{SGSTM} són consultes aproximades a la informació total original,
 llevat que mitjançant una anàlisi determinem que poden oferir
 consultes exactes. A continuació reflexionem sobre com analitzar
@@ -41,10 +29,9 @@ original:
 
 
 
-\todo{canviar subseccions a seccions}
 
 
-\subsection{Teoria de la informació}
+\section{Quantificació de la informació}
 
 En altres àmbits, la teoria de la informació (\emph{information
   theory}) és el referent per a formalitzar la quantificació de la
@@ -87,9 +74,13 @@ conservin la mateixa percepció que les originals, o fins i tot amb una
 pèrdua de qualitat perceptible mentre compleixi amb els requisits de
 l'aplicació que se li vol donar. Així doncs, la compressió de
 multimèdia sovint requereix valorar la percepció humana, per tal de
-valorar la qualitat de percepció humana s'utilitzen testos
-subjectius com per exemple el test
-ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
+valorar la qualitat de percepció humana s'utilitzen testos subjectius
+en què un humà ha d'intentar distingir entre multimèdia original i
+multimèdia comprimit.
+%  com per exemple el test
+% ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
+%http://web.archive.org/web/20070813001013/http://www.pcabx.com/
+
 
 %  Lossy methods are most often used for compressing sound, images or videos. This is because these types of data are intended for human interpretation where the mind can easily "fill in the blanks" or see past very minor errors or inconsistencies – ideally lossy compression is transparent (imperceptible), which can be verified via an ABX test. http://en.wikipedia.org/wiki/ABX_test
 % Flaws caused by lossy compression that are noticeable to the human eye or ear are known as compression artifacts.
@@ -97,10 +88,10 @@ ABX\todo{ref}.  %http://en.wikipedia.org/wiki/ABX_test
 
 
 
-\todo{information algebra}
-\url{https://en.wikipedia.org/wiki/Information_algebra}
+% \todo{information algebra}
+% \url{https://en.wikipedia.org/wiki/Information_algebra}
 
-algebra of information, describing basic modes of information processing. Such an algebra involves several formalisms of computer science, which seem to be different on the surface: relational databases, multiple systems of formal logic or numerical problems of linear algebra. It 
+% algebra of information, describing basic modes of information processing. Such an algebra involves several formalisms of computer science, which seem to be different on the surface: relational databases, multiple systems of formal logic or numerical problems of linear algebra. It 
 
 
 
@@ -122,7 +113,7 @@ algebra of information, describing basic modes of information processing. Such a
 %http://www.data-compression.com/theory.shtml
 
 
-\subsection{Error en la informació de la multiresolució}
+\section{Error en la informació de la multiresolució}
 
 El model dels \gls{SGSTM} es basa en una compressió amb pèrdua, és a
 dir descartar dades i emmagatzemar només aquella informació que es
@@ -136,36 +127,40 @@ El problema genèric de la informació en la multiresolució és el següent.
   Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
   resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
   temporal multiresolució es pot consultar la sèrie temporal total
-  $S'=\glssymbol{not:sgstm:serietotal}(M)$, o bé de forma equivalent
-  com s'ha vist abans\todo{ara és un capítol}
+  $S'=\glssymbol{not:sgstm:serietotal}(M)$ o bé de forma equivalent,
+  com s'ha descrit en \textref{cap:funciomultiresolucio},
   $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$ on $e$ és l'esquema
-  de $M$.  S'executa una operació de consulta $o$ sobre la sèrie
-  temporal original $r_1=o(S)$ i la mateixa operació sobre la sèrie
-  temporal de la multiresolució $r_2=o(S')$ . Es pot avaluar l'error
+  de $M$.  S'executa una operació de consultam, $o$, sobre la sèrie
+  temporal original, $r_1=o(S)$, i la mateixa operació sobre la sèrie
+  temporal de la multiresolució, $r_2=o(S')$. Es pot avaluar l'error
   de multiresolució $\epsilon=d(r_1,r_2)$ on $d$ és una funció que
-  permet avaluar la distància entre els dos resultats, per exemple
-  mínims quadrats si els resultats són sèries temporals \todo{ref?}.
+  permet avaluar la distància entre els dos resultats.
 \end{definition}
 
 
 Cal aclarir que es podria avaluar $d(S,S')$, però aquest no és el
 problema que intenten resoldre els \gls{SGSTM}. Aquest seria un
 problema d'aproximació al senyal original, el qual altres models poden
-resoldre més bé (per exemple last01 o ogras06?)\todo{ref?}. En canvi els \gls{SGSTM} resolen un
-problema de compressió amb pèrdua per a seleccionar una determinada
-informació.
+resoldre més bé com per exemple \textcite{last01,ogras06}. En canvi
+els \gls{SGSTM} resolen un problema de compressió amb pèrdua per a
+seleccionar una determinada informació. És en aquest context que
+proposem l'error en la informació de la multiresolució en què avaluem
+$d(r_1,r_2)$.
 
 
 
+Per a avaluar la distància $d(r_1,r_2)$, si els resultats d'ambdues
+consultes són sèries temporals, es pot utilitzar per exemple mínims
+quadrats com fa \textcite{last01}.  Ara bé, en la informació de la
+multiresolució cal pensar també amb consultes qualitatives. Per
+exemple una consulta podria ser $o=$`Creix la sèrie temporal?'
+Aleshores no hi hauria error $\epsilon=d(r_1,r_2)$ quan la resposta
+fos la mateixa per als dos casos, $r_1$ i $r_2$, i hi hauria error
+quan les respostes diferissin.
 
-En la informació de la multiresolució cal pensar també amb consultes
-qualitatives. Per exemple una consulta podria ser $o=$`Creix la sèrie
-temporal?' Aleshores no hi hauria error $\epsilon=d(r_1,r_2)$ quan la
-resposta fos la mateixa per als dos casos, $r_1$ i $r_2$.
 
-
-Tot i que hem proposat d'aplicar la mateixa operació $o$ a la
-sèrie temporal original $r_1=o(S)$ i a la sèrie temporal de la
+Tot i que hem proposat d'aplicar la mateixa operació $o$ a la sèrie
+temporal original $r_1=o(S)$ i a la sèrie temporal de la
 multiresolució $r_2=o(S')$, pot ser que l'operació hagi de ser
 diferent per a obtenir el mateix resultat. És a dir $r_1=o(S)$ però
 $r_2=o'(S')$ on $o'$ és l'operació equivalent a $o$ per aplicar
@@ -173,12 +168,11 @@ després de la multiresolució.  Per exemple, una operació $o$ podria
 ser el càlcul de la multiresolució,
 $r_1=\glssymbol{not:sgstm:multiresolucio}(S,e)$, aleshores l'operació
 $o'$ equivalent és la identitat perquè el \gls{SGSTM} ja ha calculat
-la multiresolució, $r_2=S'$ on $o'$ no hi és. Aquest exemple, de fet,
-és el cas de la funció de multiresolució de la
-\autoref{sec:multiresolucio:funcio}, on és equivalent l'operació de
-multiresolució aplicada als \gls{SGST} que la sèrie temporal
-emmagatzemada en un \gls{SGSTM}; per tant l'error
-$\epsilon =d(r_1,r_2)$ seria nul.
+la multiresolució, $r_2=S'$. Aquest exemple, de fet, és el cas que hem
+formulat a la \autoref{sec:multiresolucio:funcio}, on hem descrit que
+és equivalent la sèrie temporal emmagatzemada en un \gls{SGSTM} a
+aplicar la funció \glssymbol{not:sgstm:multiresolucio} a una sèrie
+temporal; per tant l'error $\epsilon =d(r_1,r_2)$ seria nul.
 
 
 
@@ -199,15 +193,16 @@ contextos:
   consulta aplicada a les dades originals que a les dades
   emmagatzemades en el \gls{SGSTM}.
 
-\item Es pot mesurar l'error mitjançant la visualització de les
-  dades. És a dir, de manera semblant a la compressió amb pèrdua de
-  multimèdia, l'usuari valora subjectivament si visualitza la mateixa
-  informació en les dades originals com en les dades comprimides amb
-  multiresolució. Per exemple, un dels criteris que recomana RRDtool
-  per a establir un esquema és tenir en compte l'amplada de la
-  pantalla on es visualitzen els resultats: no cal treballar amb una
-  sèrie temporal amb molta resolució si no és possible observar-la
-  \todo{ref}.
+\item Es pot avaluar subjectivament l'error mitjançant la
+  visualització de les dades. És a dir, de manera semblant a la
+  compressió amb pèrdua de multimèdia, l'usuari valora subjectivament
+  si visualitza la mateixa informació en les dades originals com en
+  les dades comprimides amb multiresolució. Per exemple, un dels
+  criteris que recomana RRDtool per a establir un esquema de
+  multiresolució és tenir en compte l'amplada de la pantalla on es
+  visualitzen els resultats: no cal treballar amb una sèrie temporal
+  amb molta resolució si no és possible observar-la \parencite[Rates,
+  normalizing and consolidating]{vandenbogaerdt} .
   % RRDtool expliquen un criteri que és definir les k dels discs inferior a l'amplada en píxels de la pantalla. Aquest és un criteri basat en una consulta per a fer visualització immediatament. Llavors no té sentit tenir més nombre de dades que les que es poden visualitzar.  Per exemple si capturem dades cada 5 minuts al llarg d'un any obtenim 43800 punts; si no disposem d'un monitor amb aquest nombre de píxels d'amplada no els podrem percebre.
   %Això potser també té relació amb el camp de gràfics 3D, on la multiresolució s'aplica per a no treballar amb objectes que només seran percebuts com un píxel?
 
@@ -218,22 +213,38 @@ contextos:
 
 
 
+\section{Exemples}
+
+
+
+\todo{revisar}
+
+
+
+\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
 
 
 
 
 
-
-
-\subsection{Exemples}
 
 A continuació mostrem alguns exemples per tal de quantificar la
 selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
+Per a simplificar el exemples, proposem esquemes de multiresolució amb
+només una resolució.
 
 
-\begin{example}[Mateixa consulta i funció d'agregació d'atributs per a
-  tota la sèrie temporal]
-  \label{ex:multiresolucio:f=op}
+
+
+\subsection{Mateixa consulta i funció d'agregació d'atributs}
+\label{ex:multiresolucio:f=op}
+
+Reflexionem sobre l'error de multiresolució que hi pot haver quan una
+consulta s'aplica a tota la sèrie temporal i l'operació de consulta és
+la mateixa funció d'agregació d'atributs que s'ha utilitzat en
+l'esquema de multiresolució.
+
+
   Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, on $m_k=(t_k,v_k)$,
   i $e= \{ (\delta_0, f_0, \tau_0, k_0) \}$ un esquema de
   multiresolució amb una sola subsèrie resolució, suposem $k_0=\infty$
@@ -259,7 +270,7 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
   $r_1=o(S)$ i $r_2=o(S')$, que és la mateixa funció d'agregació
   d'atributs de l'esquema multiresolució però aplicat a tots els
   valors de la sèrie temporal,
-  $o(S)=V(f_0(S,[-\infty,\infty]))$. Analitzem els efectes segons dues
+  $o(S)=V(f_0(S,[-\infty,\infty]))$. Analitzem els efectes segons tres
   funcions d'agregació d'atributs:
 
   \begin{itemize}
@@ -339,16 +350,10 @@ selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
 
   \end{itemize}
 
-$\square$
-\end{example}
 
+\subsection{Mitjana d'una sèrie temporal regular}
 
-
-
-
-
-\begin{example}[Mitjana per a una sèrie temporal regular]
-  Seguint l'\autoref{ex:multiresolucio:f=op}, podem estudiar en quins
+  Seguint \textref{ex:multiresolucio:f=op}, podem estudiar en quins
   casos la mitjana aritmètica no té error. Com ja s'ha dit, la mitjana
   no és una funció associativa. Però sí que esdevé associativa quan
   s'associen el mateix nombre d'elements:
@@ -372,16 +377,15 @@ $\square$
 
   Aleshores, en aquest casos, sí que es podria concloure que
   $\epsilon=d(r_1,r_2)=0$ per la multiresolució amb mitjana.
-\end{example}
 
 
 
-
-
-\begin{example}[Consultes per a un interval determinat]
+\subsection{Consulta d'un interval determinat}
 \label{ex:multireoslucio:informacio-subresolucions}
 
-En l'\autoref{ex:multiresolucio:f=op} l'operació de consulta $o$
+
+
+En \textref{ex:multiresolucio:f=op} l'operació de consulta $o$
 s'aplica a tota la sèrie temporal $S[-\infty,\infty]$. Ara plantegem
 d'aplicar-la a un interval concret de la sèrie temporal $S[t_a,t_b]$
 on $t_a$ i $t_b$ són dos instants de temps.  Analitzem quan l'interval
@@ -561,22 +565,13 @@ d'avaluar si és possible afitar-ne error en aquests casos:
 
 
 
-\end{example}
 
 
-
-
-
-
-
-
-
-
-
-\begin{example}[Aplicació de la conservació de la mitjana de la funció
-  en comptadors]
+\subsection{Conservació d'informació en comptadors}
   \label{ex:multiresolucio:comptadors}
 
+Aplicació de la conservació de la mitjana de la funció
+  en comptadors.
   Aquest exemple prové d'una reflexió acurada de per què RRDtool té
   com a referent els comptadors.
 
@@ -823,14 +818,19 @@ mitjana mesurada durant $\Delta t$. %
   exactament energies que no s'han mesurat.
 
 
-\end{example}
+
 
 \todo{potser fer un exemple on es vegi com la multiresolució pot solucionar un problema d'inframostreig en els comptadors}
 
 
 
 
-\begin{example}[Equivalències en l'agregació d'atributs]
+\subsection{Equivalències en l'agregació d'atributs}
+
+
+
+
+Equivalències en l'agregació d'atributs
 
   Hi ha casos en què és el mateix aplicar una funció d'agregació
   d'atributs que aplicar-ne una altra. Per exemple és el cas de la
@@ -868,11 +868,7 @@ mitjana mesurada durant $\Delta t$. %
   d'aplicació d'aquestes equivalències pot ser el de simplificar els
   càlculs en les consultes als \gls{SGSTM}, en els discs dels quals
   les subsèries temporals normalment s'emmagatzemen regulars.
-  
-\end{example}
-
-
-
+ 
 
 
 

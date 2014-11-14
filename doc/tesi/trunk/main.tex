@@ -11,6 +11,7 @@
 twoside,fontsize=11pt,BCOR12mm,
 %oneside,fontsize=11pt, %%format web
 % twoside,openany,fontsize=10pt,DIV = 10,BCOR12mm, %%format en paper
+%,toc=listof, %afegir índexs a l'índex
 ]{scrbook}
 %%%%BCOR12mm  factor de correcció per enquadernació
 %%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
@@ -23,14 +24,14 @@ twoside,fontsize=11pt,BCOR12mm,
 %backref=true, urldate=long, abbreviate=false,%%format web 
 %annotation=true %per veure comentaris
 %---------- Mode esborrany --------------------
-%\includeonly
+\includeonly
 %{intro}
 %{art,seriestemporals,sgbd,sistemessimilars}
 %{model}
 %{sgst,sgst-operacions,sgst-naturalesa}
 %{sgstm,sgstm-operacions,sgstm-interpoladors}
 %{variacions,multiresolucio}
-%{informacio}
+{informacio}
 %{implementacio,python,mapreduce,relacional,vhdl}
 %{conclusions}
 \usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
@@ -65,6 +66,7 @@ twoside,fontsize=11pt,BCOR12mm,
 {%
 \def\figureautorefname{fig.}%
 \def\definitionautorefname{def.}%
+\def\exampleautorefname{ex.}%
 \def\chapterautorefname{\gls{capitol}}%
 \def\sectionautorefname{\gls{seccio}\ignorespaces}%
 \def\subsectionautorefname{\gls{seccio}\ignorespaces}% 
@@ -75,6 +77,7 @@ twoside,fontsize=11pt,BCOR12mm,
 {%
 \def\figureautorefname{la figura}%
 \def\definitionautorefname{la definició}%
+\def\exampleautorefname{l'exemple}%
 \def\chapterautorefname{el capítol}% al/del capítol???
 \def\sectionautorefname{la secció}%
 \def\subsectionautorefname{l'apartat}% 
@@ -100,6 +103,33 @@ twoside,fontsize=11pt,BCOR12mm,
 \renewcommand\lstlistingname{Llistat} %%%PENSAR bé el nom
 \renewcommand\lstlistlistingname{Índex de llistats}
 \def\lstlistingautorefname{llistat} %ús: \autoref{}
+
+
+%%format del listoftherorems
+\makeatletter
+\def\ll@example{%
+  \protect\numberline{\csname the\thmt@envname\endcsname}%
+  \ifx\@empty\thmt@shortoptarg
+    \thmt@thmname
+  \else
+    \thmt@shortoptarg
+  \fi}
+\def\ll@definition{%
+  \protect\numberline{\csname the\thmt@envname\endcsname}%
+  \ifx\@empty\thmt@shortoptarg
+    \thmt@thmname
+  \else
+    \thmt@shortoptarg
+  \fi}
+\makeatother
+
+
+\DefineBibliographyStrings{catalan}{%
+%    andothers = {i altres},
+    backrefpage  = {citat a la p\adddot}, % for single page number
+    backrefpages = {citat a les pp\adddot} % for multiple page numbers
+}
+
 
 
 \usepackage{subcaption}
@@ -237,7 +267,7 @@ twoside,fontsize=11pt,BCOR12mm,
 \part{Conclusions}
 
 \include{conclusions}
-
+\include{futur}
 
 
 %------- Annexos ------
@@ -281,14 +311,17 @@ twoside,fontsize=11pt,BCOR12mm,
 
 %------------- Índexs ------------
 %ATENCIÓ, hi ha problemes quan s'activen molts índexs
-%\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}
-%\cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
-% \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
-% %\cleardoublepage\phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings
+% \cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}\chapter*{Índexs}
+% \begingroup
+% \let\clearpage\relax
+% \phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
+% %%%\cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
+% \phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings
 % \renewcommand\listtheoremname{Índex de definicions}
-% \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={definition}]
-% % \renewcommand\listtheoremname{Índex d'exemples}
-% % \cleardoublepage\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={example}]
+% \phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={definition}]
+% \renewcommand\listtheoremname{Índex d'exemples}
+% \phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={example}]
+% \endgroup
 \listoftodos %%%%mode esborrany
 %----------------------------------------------
 
