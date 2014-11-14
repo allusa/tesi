@@ -1,0 +1,161 @@
+\chapter{Treball futur}
+\label{sec:futur}
+
+
+
+
+
+% * El temps pot ser vist com un valor amb incertesa. Aleshores què passa amb les operacions?
+
+
+
+% * Agregacions en el domini freqüencial
+
+
+
+% * el model sgstm s'ha fet pensant en els instants de consolidació
+% periòdics. Què passa quan no ho són?  per exemple event trigerred
+% (només emmatgatzemem informació quan creiem que és
+% interessant). Aleshores potser són casos molt especials i no es pot
+% dibuixar l'esquema? Potser posar tot això com a comentari a la secció
+% d'Altres Estructures: En el model de \gls{SGSTM} s'ha considerat que
+% la consolidació es feia periòdicament però es podria fer quan es
+% cregués oportú, aleshores no es pot preveure quin esquema de
+% multiresolució hi haurà; són casos que requereixen un estudi més
+% profund. Etc. 
+
+
+% \subsubsection{Operacions habituals en les sèries temporals}
+
+
+% \paragraph{Semblança de dues sèries temporals}
+
+
+% Similarity Measures for Time Series
+
+% Hi ha varis mètodes, [keogh08:vldb] n'avalua uns quants i els generalitza amb:
+
+% Given two
+% time series T1 and T2 , a similarity function Dist calcu-
+% lates the distance between the two time series, denoted by
+% Dist(T1 , T2 ).
+
+% Exemplifiquem amb la distància euclídia, [keogh08:vldb] nota que és
+% competitiva amb les altres.
+
+% Distancia euclídia segons [faloutsous94-sigmod]
+
+
+% \[
+% D(S,Q) = \left( \sum_{i=1}^{l} (S[i]-Q[i])^2  \right)^{1/2}
+% \]
+
+% \begin{gather*}
+%   D: S \times Q \longrightarrow v: \\
+%   S' = map(fusio(S,Q),(t,v_1,v_2)\mapsto(t,(v_1-v_2)^2)), \\
+%   S'' = fold(quad,(0,0),(t^1,v^1,t^2,v^2)\mapsto(t^1,v^1+v^2)), \\
+%   v = \sqrt{V(m)}:m\in S''
+% \end{gather*}
+
+
+% S i Q haurien de ser regulars entre elles, sinó cal aplicar una fusió amb representació/interpretació.
+
+% Amb la multiresolució la fusió es pot fer de forma eficient. Per altra banda, es podria crear un disc resolució amb agregador de semblança.
+
+
+% \paragraph{Semblança de dues sèries temporals amb offset}
+
+% Aquí es descriu la solució general del problema (SequentialScan),
+% [faloutsous94-sigmod] n'estudia implementacions amb certes
+% heurístiques que aconsegueixen més eficiència.
+
+
+
+
+
+% \paragraph{Filtratge senzill per mitjana mòbil}
+
+% Sigui $p$ la mida de la finestra mòbil
+% \begin{gather*}
+%   \text{MitMobil}: S \times \text{p} \longrightarrow S':\\
+%   \text{map}(S,(t,v)\mapsto \text{mitjanaV}(S[t,t+p]))
+% \end{gather*}
+
+
+% Mitjana mòbil sobre la multiresolució
+
+
+
+% \paragraph{Farciment de forats}
+
+% Jo tinc una sèrie temporal i vull que entre dues mesures no hi hagi més d'un cert temps. Si no es compleix dic que té forats. 
+
+% Sigui $S$ una sèrie temporal, aquesta té forats de més durada que $d$
+% si alguna mesura compleix $\text{forats}(S,d) = \text{selecciona}(difT(S),v>d \bigwedge v\neq\infty)$ a on $difT(S) = \text{map}(\text{tpredecessors}(S),(t,v)\mapsto(t,t-v))$.
+
+% Amb la multiresolució el farciment de forats és natural a l'estructura i és controlat per la funció agregadora d'atributs.
+
+
+% * Com farciria els forats manualment a una sèrie temporal?
+
+% 1. Passar-ho per un esquema de multiresolució
+
+% 2. Treballar sobre la sèrie temporal:
+
+% a partir del càlcul de forats anterior $\text{forats}(S,d)$ per
+% exemple apliquem un farciment amb representació
+% zohe. $\text{farciment}(S,d) = \text{unio}(S,S')$ a on fem la selecció
+% de resolució $S' = S[T]^{\text{zohe}}$, $\forall (t,v) \in
+% \text{forats}(S,d): T = \{ \tau = t - dn |
+% \tau\in(t-v,t),n\in\mathbb{N} \}$.
+
+
+
+
+
+
+
+% \subsubsection{Com treure profit de les operacions dels SGSTM}
+
+% Temes que després es poden aprofitar a les implementacions
+
+% * No hi ha updates --> les sèries temporals no s'han de canviar
+
+% * Per exemple, vull calcular la mitjana de  BDSTM(a,b] si tinc un disc resolució amb $\delta=b-a$ i $f=$mitjana aquest seria l'adequat en comptes de calcular mitjana(SerieTotal(M)(a,b])
+
+% %??
+% % No obstant, la base de dades multiresolució conté informació sobre la
+% % resolució de les subsèries i per tant aquesta operació és susceptible
+% % d'implementar-se aprofitant aquesta informació.  A tall d'exemple es
+% % defineix una operació per extreure de la base de dades multiresolució
+% % una sèrie temporal regular amb període $T$:
+
+
+% % \begin{definition}[Selecció de resolució regular]
+% %   \begin{gather*}
+% %     \text{ResolucióRegular}: M^* \times T \times r \longrightarrow S'\\
+% %     \forall (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M : \\
+% %     d_i = T - \delta_i , \\
+% %     0 \geq d_0 > d_1 \dots > d_a, 0 < d_{a+1} < \dots < d_d: \\
+% %     S'' = S_{D0} || S_{D1} || \dotsb || S_{Da}  ||  S_{Da+1} || \dotsb || S_{Dd}, \\
+% %     S' = S''[i]^r: i = {t|0+nT,n\in\mathbb{N}}
+% %   \end{gather*}
+% % \end{definition}
+
+% % Nota: les operacions no són equivalents, l'operació $\text{SerieTotal}(M)[i]^r$ és molt més potent que la $\text{ResolucióRegular}(M,T)$.
+
+
+
+
+% \subsubsection{Semàntica de comportament}
+
+% \todo{?}
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+% LocalWords:  SGSTM
