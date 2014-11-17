@@ -194,7 +194,6 @@ $S'=S[t_a,t_b]$, a continuació es mostren els patrons d'exemple
 interpretats segons aquest criteri.
 
 \begin{definition}[Agregació parcial discreta]
-  \label{def:sgstm:maxpd}
   Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $i=[t_a,t_b]$ un
   interval de temps i $S'=S[t_a,t_b]$ un interval de la sèrie
   temporal, les funcions d'agregació \gls{pd} per als atributs màxim,
@@ -204,16 +203,16 @@ interpretats segons aquest criteri.
   \item $\glssymboldef{not:sgstm:maxpd}: S \times i \mapsto
     m'$ on $V(m') = \max_{\forall m \in S'}(V(m))$ i
     $T(m')=t_b$. Aquest càlcul de $V(m')$ es correspon amb l'operació
-    $\glssymbol{not:sgst:maxv}(S')$ dels \gls{SGST}.
+    $\glssymbol{not:sgst:maxv}(S')$ dels \gls{SGST}.  \label{def:sgstm:maxpd}
 
 \item $\operatorname{darrer}^{\gls{pd}}$: $S \times i \mapsto m'$ on $V(m') =
   V(\max(S'))$ i $T(m')=t_b$.
 
-\item $\operatorname{mitjana}^{\gls{pd}}$: $S \times i \mapsto m'$ on $V(m') =
+\item $\glssymboldef{not:sgstm:mitjanapd}: S \times i \mapsto m'$ on $V(m') =
   \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ i $T(m')=t_b$. Aquest càlcul de
   $V(m')$ es correspon amb l'operació $\glssymbol{not:sgst:mitjanav}(S')$
   dels \gls{SGST}, és a dir amb calcular la mitjana aritmètica dels
-  valors de les mesures.
+  valors de les mesures. \label{def:sgstm:mitjanapd}
 \end{itemize}
 
 \end{definition}

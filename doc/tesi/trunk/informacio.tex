@@ -124,6 +124,7 @@ contenen les dades originals.
 
 El problema genèric de la informació en la multiresolució és el següent.
 \begin{definition}[Error en la informació de la multiresolució]
+  \label{def:informacio:error}
   Sigui una sèrie temporal $S$ i una sèrie temporal multiresolució $M$
   resultant de l'emmagatzematge i consolidació de $S$. De la sèrie
   temporal multiresolució es pot consultar la sèrie temporal total
@@ -213,25 +214,75 @@ contextos:
 
 
 
-\section{Exemples}
+\section{Exemples d'anàlisi de la informació}
 
 
-
-\todo{revisar}
-
-
-
-\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
-
-
+La \autoref{def:informacio:error} defineix el problema d'informació en
+la multiresolució de forma genèrica i abstracta. Així, en cada context
+d'aplicació de la multiresolució cal interpretar-ne el significat i
+particularitzar-ne un mètode d'anàlisi adequat.  A tal efecte, a
+continuació proposem alguns exemples per tal d'analitzar la selecció o
+pèrdua d'informació que hi pot haver en un \gls{SGSTM}.  
 
 
-
-
-A continuació mostrem alguns exemples per tal de quantificar la
-selecció o pèrdua d'informació que hi pot haver en un \gls{SGSTM}.
 Per a simplificar el exemples, proposem esquemes de multiresolució amb
-només una resolució.
+només una resolució i amb funcions d'agregacions d'atributs que
+seleccionen intervals independents de mesures. Per tal de referir-nos
+amb comoditat als càlculs de les funcions d'agregació d'atributs,
+anomenem les mesures i els valors amb els quals operen mitjançant la
+notació següent.
+
+\begin{definition}[Notació de les mesures i els valors amb els quals operen
+  les funcions d'agregació d'atributs]
+  \label{def:informacio:notaciovalors}
+  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèriea temporal, on
+  $m_k=(t_k,v_k)$, i $e= \{ (\delta_0, f_0, \tau_0, k_0) \}$ un
+  esquema de multiresolució amb una sola subsèrie resolució, suposem
+  $k_0=\infty$ per tal de negligir-ne l'efecte i
+  $\tau_0=T(\min(S))$. Obtenim la sèrie temporal resultant d'aplicar
+  la funció de multiresolució
+  $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$
+  (\seeref{def:multiresolucio:plecmu}).  Així, aquesta sèrie temporal
+  resultant contindrà mesures calculades a partir de l'agregació de
+  $S$ en els intervals definits per $\tau_0$ i $\delta_0$ i tindrà la
+  forma
+  \begin{align*}
+    S'=  \{ & f_0(S,[\tau_0,\tau_0+\delta_0]), \\
+    & f_0(S,[\tau_0+\delta_0,\tau_0+2\delta_0]),\\
+    &\dotsc, \\
+    & f_0(S,[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0])\}
+  \end{align*}
+  on $\tau_0+M\delta\geq T(\max(S))$ i $M\in\glssymbol{not:N}$.
+
+  La funció d'agregació d'atributs $f_0$ realitza una operació sobre
+  les mesures corresponents a l'interval de temps definit
+  (\seeref{sec:model:agregador}).  Així per a l'agregació en el primer
+  interval, $f_0(S,[\tau_0,\tau_0+\delta_0])$, escriurem de forma
+  genèrica que utilitza les mesures $m_0,\dotsc,m_{i_1}$ de la sèrie
+  temporal original, $m_0,\dotsc,m_{i_1} \in S$ on $i_1$ pot ser
+  qualsevol índex, i per tant escriurem els valors corresponent a
+  aquestes mesures com $v_0,\dotsc,v_{i_1}$. De la mateixa manera,
+  escriurem $m_{i_1+1},\dotsc,m_{i_2}$ i $v_{i_1+1},\dotsc,v_{i_2}$
+  per a l'agregació en el segon interval,
+  $f_0(S,[\tau_0+\delta_0,\tau_0+2\delta_0])$, i així successivament
+  fins al darrer interval en què notem les mesures amb $m_{i_M},
+  \dotsc, m_k$ i els valors amb $v_{i_M}, \dotsc, v_k$.
+
+
+  Aleshores, a partir de la notació dels valors, podem expressar la
+  sèrie temporal resultant amb la forma
+  \begin{align*}
+    S'=\{& (\tau_0+\delta_0, f'(v_0,\dotsc,v_{i_1})),\\
+    & (\tau_0+2\delta_0, f'(v_{i_1+1},\dotsc,v_{i_2})),\\
+    & \dotsc,\\
+    & ((\tau_0+M\delta_0 ,f'(v_{i_M},\dotsc, v_k)) \}
+  \end{align*}
+  on $f'$ és l'operació corresponent de l'atribut que resumeix
+  $f_0$. En els exemples següents assenyalarem quin $f'$ correspon a
+  cada $f_0$ que utilitzem.
+\end{definition}
+
+
 
 
 
@@ -239,83 +290,85 @@ només una resolució.
 \subsection{Mateixa consulta i funció d'agregació d'atributs}
 \label{ex:multiresolucio:f=op}
 
-Reflexionem sobre l'error de multiresolució que hi pot haver quan una
-consulta s'aplica a tota la sèrie temporal i l'operació de consulta és
-la mateixa funció d'agregació d'atributs que s'ha utilitzat en
-l'esquema de multiresolució.
+
+En aquest apartat es formulen exemples que reflexionen sobre l'error
+de multiresolució que hi pot haver quan una consulta s'aplica a tota
+la sèrie temporal i l'operació de consulta es correspon amb la mateixa
+funció d'agregació d'atributs que s'ha utilitzat en l'esquema de
+multiresolució.
 
 
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, on $m_k=(t_k,v_k)$,
-  i $e= \{ (\delta_0, f_0, \tau_0, k_0) \}$ un esquema de
-  multiresolució amb una sola subsèrie resolució, suposem $k_0=\infty$
-  per tal de negligir-ne l'efecte i $\tau_0=T(\min(S))$. Obtenim la
-  sèrie temporal resultant d'aplicar la funció de multiresolució
-  $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$.  Així, aquesta sèrie
-  temporal resultant contindrà mesures calculades a partir de
-  l'agregació de $S$ en els intervals definits per $\tau_0$ i
-  $\delta_0$ i tindrà la forma $S'=\{ f_0(S,[\tau_0,\tau_0+\delta_0],
-  f_0(S,[\tau_0+\delta_0,\tau_0+2\delta_0]),\dotsc,
-  f_0(S,[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0])\}$ on
-  $\tau_0+M\delta\geq T(\max(S))$ i $M\in\glssymbol{not:N}$. Si
-  escrivim de forma genèrica $v_0,\dotsc,v_{i_1}$ els valors originals
-  usats en l'agregació del primer interval
-  $f_0(S,[\tau_0,\tau_0+\delta_0])$, $v_{i_1+1},\dotsc,v_{i_2}$ els del
-  segon interval, etc. aleshores podem expressar $S'=\{
-  (\tau_0+\delta_0, f'(v_0,\dotsc,v_{i_1})), (\tau_0+2\delta_0,
-  f'(v_{i_1+1},\dotsc,v_{i_2})), \dotsc, ((\tau_0+M\delta_0 ,f'(v_{i_M},
-  \dotsc, v_k)) \}$ on $f'$ és l'aplicació corresponent de l'atribut
-  que resumeix $f_0$.
+% Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, on $m_k=(t_k,v_k)$, i
+% $e= \{ (\delta_0, f_0, \tau_0, k_0) \}$ un esquema de multiresolució
+% amb una sola subsèrie resolució, suposem $k_0=\infty$ per tal de
+% negligir-ne l'efecte i $\tau_0=T(\min(S))$. Obtenim la sèrie temporal
+% resultant d'aplicar la funció de multiresolució
+% $S'=\glssymbol{not:sgstm:multiresolucio}(S,e)$.  Així, aquesta sèrie
+% temporal resultant contindrà mesures calculades a partir de
+% l'agregació de $S$ en els intervals definits per $\tau_0$ i $\delta_0$
+% i tindrà la forma $S'=\{ f_0(S,[\tau_0,\tau_0+\delta_0],
+% f_0(S,[\tau_0+\delta_0,\tau_0+2\delta_0]),\dotsc,
+% f_0(S,[\tau_0+(M-1)\delta_0,\tau_0+M\delta_0])\}$ on
+% $\tau_0+M\delta\geq T(\max(S))$ i $M\in\glssymbol{not:N}$. Si escrivim
+% de forma genèrica $v_0,\dotsc,v_{i_1}$ els valors originals usats en
+% l'agregació del primer interval $f_0(S,[\tau_0,\tau_0+\delta_0])$,
+% $v_{i_1+1},\dotsc,v_{i_2}$ els del segon interval, etc. aleshores
+% podem expressar $S'=\{ (\tau_0+\delta_0, f'(v_0,\dotsc,v_{i_1})),
+% (\tau_0+2\delta_0, f'(v_{i_1+1},\dotsc,v_{i_2})), \dotsc,
+% ((\tau_0+M\delta_0 ,f'(v_{i_M}, \dotsc, v_k)) \}$ on $f'$ és
+% l'aplicació corresponent de l'atribut que resumeix $f_0$.
 
-  Apliquem un operador de consulta $o$ a les dues sèries temporals,
-  $r_1=o(S)$ i $r_2=o(S')$, que és la mateixa funció d'agregació
-  d'atributs de l'esquema multiresolució però aplicat a tots els
-  valors de la sèrie temporal,
-  $o(S)=V(f_0(S,[-\infty,\infty]))$. Analitzem els efectes segons tres
-  funcions d'agregació d'atributs:
+
+El context del problema és el següent. S'aplica un operador de
+consulta, $o$, a les dues sèries temporals, $r_1=o(S)$ i $r_2=o(S')$.
+Aquest operador $o$ és el mateix càlcul que fa la funció d'agregació
+d'atributs $f_0$ però aplicat a totes les mesures de la sèrie temporal
+original, $o(S)=V(f_0(S,[-\infty,\infty]))$. Analitzem l'error de
+multiresolució entre $r_1$ i $r_2$ segons tres funcions d'agregació
+d'atributs:
 
   \begin{itemize}
-  \item Màxim: $f_0=\glssymbol{not:sgstm:maxdd}$, segons definit al
-    model de \gls{SGSTM}, el qual si negligim l'atribut de temps es
-    correspon a aplicar l'agregació $o=\glssymbol{not:sgst:maxv}$,
-    segons definit al model de \gls{SGST}, i per tant a calcular
-    l'atribut $f'=\max$ dels valors.
+  \item Màxim: $f_0=\glssymbol{not:sgstm:maxpd}$, el qual es correspon
+    a aplicar l'operació d'agregació dels \glspl{SGST}
+    $o=\glssymbol{not:sgst:maxv}$ (\seeref{def:sgstm:maxpd}) i per
+    tant a calcular l'atribut $f'=\max$ dels valors (\seeref{def:sgst:maxv}).
 
-    Si $S=\{m_0,\dotsc,m_k\}$ on $m_k=(t_k,v_k)$ aleshores
-    $r_1=o(S)=\max(v_0,\dotsc, v_k)$. En canvi $S'=\{
-    (\tau_0+\delta_0, \max(v_0,\dotsc,v_{i_1})),
+    D'una banda $S=\{m_0,\dotsc,m_k\}$ on $m_k=(t_k,v_k)$ i aleshores
+    $r_1=o(S)=\glssymbol{not:sgst:maxv}(S) = \max(v_0,\dotsc,
+    v_k)$. D'altra banda, aplicant la notació de la
+    \textref{def:informacio:notaciovalors}, $S'=\{ (\tau_0+\delta_0,
+    \max(v_0,\dotsc,v_{i_1})),
     (\tau_0+2\delta_0,\max(v_{i_1+1},\dotsc,v_{i_2})), \dotsc,
     (\tau_0+M\delta_0,\max(v_{i_M}, \dotsc, v_k)) \}$ i aleshores
     $r_2=o(S')= \max\big( \max(v_0,\dotsc,v_{i_1}),
     \max(v_{i_1+1},\dotsc,v_{i_2}), \dotsc, \max(v_{i_M}, \dotsc v_k)
     \big)$.
 
-    Podem concloure que en aquest cas $r_1=r_2$, i per tant
-    $\epsilon=d(r_1,r_2)=0$ , perquè $\max(v_0,\dotsc, v_k) =
-    \max\big( \max(v_0,\dotsc,v_{i_1}),
-    \max(v_{i_1+1},\dotsc,v_{i_2}), \dotsc, \max(v_{i_M}, \dotsc v_k)
-    \big)$ i $\max$ és una funció associativa: $\max(a,b,c,d,e) = \max(
-    \max(a,b), \max(c,d,e))$.
+    Atès que $\max(v_0,\dotsc, v_k) = \max\big(
+    \max(v_0,\dotsc,v_{i_1}), \max(v_{i_1+1},\dotsc,v_{i_2}), \dotsc,
+    \max(v_{i_M}, \dotsc v_k) \big)$ perquè $\max$ és una funció
+    associativa: $\max(a,b,c,d,e) = \max( \max(a,b), \max(c,d,e))$,
+    podem concloure que en aquest cas $r_1=r_2$ i per tant
+    $\epsilon=d(r_1,r_2)=0$.
+
 
     En aquest exemple hem negligit els temps resultants de
     l'agregació. És a dir, $r_1$ és correspon amb una o més d'una
     mesura $m_a\in S: V(m_a)=r_1$ i de la mateixa manera $m_b\in S':
     V(m_b)=r_2$ on hem conclòs que $V(m_a)=V(m_b)$. Això no obstant,
     en general els temps d'aquestes mesures no es correspondran,
-    $T(m_a)\neq T(m_b)$ perquè $f_0=\glssymbol{not:sgstm:maxdd}$
+    $T(m_a)\neq T(m_b)$ perquè $f_0=\glssymbol{not:sgstm:maxpd}$
     resumeix els atributs de temps segons l'interval de consolidació i
     al marge del resum de la informació en els valors.
 
 
 
-\item   Mitjana aritmètica:
-  $f_0=\glssymbol{not:sgstm:mitjanadd}$\todo{NOOOO} la mitjanadd
-  divideix per tf-t0, cal una mitjana que divideixi pel
-  cardinal!!!!!\todo{noo: ha de ser la mitjanaParcial el que de moment
-    es diu mitjana aritmètica$^d$}, segons definit al model de
-  \gls{SGSTM}, el qual si negligim l'atribut de temps es correspon a
-  aplicar l'agregació $o=\glssymbol{not:sgst:mitjanav}$, segons
-  definit al model de \gls{SGST}, i per tant a calcular l'atribut
-  $f'=\operatorname{mitjana}$ (aritmètica) dels valors.
+  \item Mitjana aritmètica: $f_0=\glssymbol{not:sgstm:mitjanapd}$, el
+    qual es correspon a aplicar l'operació d'agregació dels
+    \glspl{SGST} $o=\glssymbol{not:sgst:mitjanav}$
+    (\seeref{def:sgstm:mitjanapd}) i per tant a calcular l'atribut
+    $f'=\operatorname{mitjana}$ (aritmètica) dels valors
+    (\seeref{def:sgst:mitjanav}).
 
     De manera similar al cas anterior, els resultats són
     $r_1=\operatorname{mitjana}(v_0,\dotsc, v_k)$ i
@@ -335,9 +388,9 @@ l'esquema de multiresolució.
     resumeix la sèrie temporal amb la suma dels valors:
     $\operatorname{total}: S \times [t_a,t_b] \mapsto m'$ i $V(m') =
     \sum\limits_{\forall m\in S(t_a,t_b]} V(m)$. Així doncs, es
-    correspon a calcular $o=\glssymbol{not:sgst:sumav}$, segons
-    definit al model de \gls{SGST}, i per tant a calcular l'atribut
-    $f'=\sum$ dels valors.
+    correspon a aplicar l'operació d'agregació dels \glspl{SGST}
+    $o=\glssymbol{not:sgst:sumav}$ i per tant a calcular l'atribut
+    $f'=\sum$ dels valors (\seeref{def:sgst:sumav}).
 
     Aquest cas és similar al del màxim, $r_1=\sum(v_0,\dotsc, v_k)$ i
     $r_2=\sum\big( \sum(v_0,\dotsc,v_{i_1}),
@@ -345,8 +398,6 @@ l'esquema de multiresolució.
     \big)$, i $\epsilon=d(r_1,r_2)=0$ perquè la suma és una funció
     associativa.
     
-
-
 
   \end{itemize}
 
@@ -372,8 +423,8 @@ l'esquema de multiresolució.
   de la regularitat de la sèrie temporal, $\delta_0 = nd$ on
   $n\in\glssymbol{not:N}$, o bé quan la sèrie temporal és de temps
   real amb període $d$ i iniciada a $t_I$ i la multiresolució n'és
-  múltiple: $\delta_0 = nd$ i $\tau_0 = t_I+n\delta$ (v.\ secció de
-  regularitat de la sèrie temporal\todo{ref}).
+  múltiple: $\delta_0 = nd$ i $\tau_0 = t_I+n\delta$
+  (\seeref{sec:sgst:regularitat}).
 
   Aleshores, en aquest casos, sí que es podria concloure que
   $\epsilon=d(r_1,r_2)=0$ per la multiresolució amb mitjana.
@@ -384,14 +435,21 @@ l'esquema de multiresolució.
 \label{ex:multireoslucio:informacio-subresolucions}
 
 
+\todo{revisar}
+\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
+
+
+
+
 
 En \textref{ex:multiresolucio:f=op} l'operació de consulta $o$
-s'aplica a tota la sèrie temporal $S[-\infty,\infty]$. Ara plantegem
+s'aplica a tota la sèrie temporal $S[-\infty,\infty]$. Ara proposem
 d'aplicar-la a un interval concret de la sèrie temporal $S[t_a,t_b]$
-on $t_a$ i $t_b$ són dos instants de temps.  Analitzem quan l'interval
-$[t_a,t_b]$ és múltiple dels intervals de multiresolució consolidats,
-$t_a=\tau_0+n\delta_0$ i $t_b=\tau_0+(n+l)\delta_0$ on
-$n,l\in\glssymbol{not:N}$, i quan no ho és:
+on $t_a$ i $t_b$ són dos instants de temps.  Analitzem l'error de
+multiresolució quan l'interval $[t_a,t_b]$ és múltiple dels intervals
+de multiresolució consolidats, $t_a=\tau_0+n\delta_0$ i
+$t_b=\tau_0+(n+l)\delta_0$ on $n,l\in\glssymbol{not:N}$, i quan no ho
+és:
 
 \begin{itemize}
 \item L'interval és múltiple dels intervals de multiresolució
@@ -417,7 +475,7 @@ $n,l\in\glssymbol{not:N}$, i quan no ho és:
   $r_1=V(f_0(S,[t_a,t_b]))$, $r_2=f_0(S',[t_a,t_b])$ on $S'=
   \{(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ),(\tau_0+2\delta ,
   f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})), \dotsc \}$ on els
-  valors s'anoten com a l'\autoref{ex:multiresolucio:f=op} i $v_b$
+  valors s'anoten com a la \autoref{def:informacio:notaciovalors} i $v_b$
   assenyala una possible mesura en l'instant $t_b$.  A la
   \autoref{fig:multiresolucio:informacio-subresolucions} es mostra els
   instants de temps i els valors d'aquest exemple, l'interval
