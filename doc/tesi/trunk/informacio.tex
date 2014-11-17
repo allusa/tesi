@@ -225,7 +225,7 @@ continuació proposem alguns exemples per tal d'analitzar la selecció o
 pèrdua d'informació que hi pot haver en un \gls{SGSTM}.  
 
 
-Per a simplificar el exemples, proposem esquemes de multiresolució amb
+Per a simplificar els exemples, proposem esquemes de multiresolució amb
 només una resolució i amb funcions d'agregacions d'atributs que
 seleccionen intervals independents de mesures. Per tal de referir-nos
 amb comoditat als càlculs de les funcions d'agregació d'atributs,
@@ -267,7 +267,7 @@ notació següent.
   $f_0(S,[\tau_0+\delta_0,\tau_0+2\delta_0])$, i així successivament
   fins al darrer interval en què notem les mesures amb $m_{i_M},
   \dotsc, m_k$ i els valors amb $v_{i_M}, \dotsc, v_k$.
-
+%és a dir s'utilitzen les mesures de forma independent a cada interval, segons les opcions descrites a les famílies d'agregacions aquí simplifiquem i no introduïm els casos en què una mesura s'utilitza en més d'un interval, per exemple en el ZOHE hauríem de formular com s'escampa la informació en més d'un interval
 
   Aleshores, a partir de la notació dels valors, podem expressar la
   sèrie temporal resultant amb la forma
@@ -434,14 +434,6 @@ d'atributs:
 \subsection{Consulta d'un interval determinat}
 \label{ex:multireoslucio:informacio-subresolucions}
 
-
-\todo{revisar}
-\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
-
-
-
-
-
 En \textref{ex:multiresolucio:f=op} l'operació de consulta $o$
 s'aplica a tota la sèrie temporal $S[-\infty,\infty]$. Ara proposem
 d'aplicar-la a un interval concret de la sèrie temporal $S[t_a,t_b]$
@@ -449,36 +441,38 @@ on $t_a$ i $t_b$ són dos instants de temps.  Analitzem l'error de
 multiresolució quan l'interval $[t_a,t_b]$ és múltiple dels intervals
 de multiresolució consolidats, $t_a=\tau_0+n\delta_0$ i
 $t_b=\tau_0+(n+l)\delta_0$ on $n,l\in\glssymbol{not:N}$, i quan no ho
-és:
+és.
 
-\begin{itemize}
-\item L'interval és múltiple dels intervals de multiresolució
-  consolidats. Aleshores $r_1=V(f_0(S,[t_a,t_b]))$,
-  $r_2=f_0(S',[t_a,t_b])$ on $S'= \{ \dotsc, (t_a,
-  f'(v_{i_a},\dotsc,v_{i_a+1}) ), \dotsc, (t_b,
-  f'(v_{i_b-1},\dotsc,v_{i_b})), \dotsc \}$ i
-  $v_{i_a},\dotsc,v_{i_a+1}$ són els valors de les mesures en
-  $S[t_a,t_a+\delta_0]$ i $v_{i_b-1},\dotsc,v_{i_b}$ en
-  $S[t_b-\delta_0,t_b]$.
 
-  Per tant, per a estudiar $d(r_1,r_2)$ se segueix analitzant el
+\paragraph{L'interval és múltiple dels intervals de multiresolució
+  consolidats.} Aleshores $r_1=V(f_0(S,[t_a,t_b]))$ i
+$r_2=f_0(S',[t_a,t_b])$ on $S'= \{ \dotsc, (t_a+\delta_0,
+f'(v_{i_a},\dotsc,v_{i_a+1}) ), \dotsc, (t_b,
+f'(v_{i_b-1},\dotsc,v_{i_b})), \dotsc \}$. En aquest darrer cas, només
+assenyalem els valors que se seleccionen, $S'[t_a,t_b]$, els quals
+notem amb $v_{i_a},\dotsc,v_{i_a+1}$ pels valors de les mesures en
+$S[t_a,t_a+\delta_0]$ i amb $v_{i_b-1},\dotsc,v_{i_b}$ pels valor en
+$S[t_b-\delta_0,t_b]$.
+
+  Per tant, per a estudiar $d(r_1,r_2)$ es pot analitzar el
   comportament de la funció de resum de l'atribut per als dos casos
   $r_1=f'(v_{i_a},\dotsc,v_{i_a+1},\dotsc, v_{i_a+1},\dotsc,v_{i_b})$
   i $r_2=f'(f'(v_{i_a},\dotsc,v_{i_a+1}),\dotsc,
-  f'(v_{i_a+1},\dotsc,v_{i_b}))$ de la mateixa manera que a 
-  l'\autoref{ex:multiresolucio:f=op}.
+  f'(v_{i_a+1},\dotsc,v_{i_b}))$, cosa que és una situació similar a
+  la de l'\autoref{ex:multiresolucio:f=op}.
 
 
-\item L'interval no és múltiple dels intervals de multiresolució
-  consolidats.  Per a simplificar la notació, suposem $t_a=\tau_0$ i
-  $\tau_0+\delta < t_b \leq \tau_0+2\delta_0$.  Aleshores
-  $r_1=V(f_0(S,[t_a,t_b]))$, $r_2=f_0(S',[t_a,t_b])$ on $S'=
-  \{(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ),(\tau_0+2\delta ,
-  f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})), \dotsc \}$ on els
-  valors s'anoten com a la \autoref{def:informacio:notaciovalors} i $v_b$
-  assenyala una possible mesura en l'instant $t_b$.  A la
-  \autoref{fig:multiresolucio:informacio-subresolucions} es mostra els
-  instants de temps i els valors d'aquest exemple, l'interval
+  \paragraph{L'interval no és múltiple dels intervals de
+    multiresolució consolidats.}  Per a simplificar la notació,
+  suposem $t_a=\tau_0$ i $\tau_0+\delta < t_b \leq \tau_0+2\delta_0$.
+  Aleshores $r_1=V(f_0(S,[t_a,t_b]))$ i $r_2=f_0(S',[t_a,t_b])$ on
+  $S'= \{(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}) ),(\tau_0+2\delta
+  , f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})), \dotsc \}$.  Els
+  valors s'anoten com a la \autoref{def:informacio:notaciovalors} però
+  s'afegeix el valor $v_b$ que assenyala una possible mesura en
+  l'instant $t_b$.  A la
+  \autoref{fig:multiresolucio:informacio-subresolucions} es mostren
+  els instants de temps i els valors d'aquest exemple, l'interval
   temporal $[t_a,t_b]$ de la consulta i l'interval temporal
   $[t_b,\tau_0+2\delta_0]$ que mostra l'error en la consulta a partir
   de la informació emmagatzemada a la multiresolució.
@@ -541,28 +535,30 @@ $t_b=\tau_0+(n+l)\delta_0$ on $n,l\in\glssymbol{not:N}$, i quan no ho
 
 
 
+En aquest cas, cal tenir en compte que per a calcular
+$f_0(S',[t_a,t_b])$ s'ha de resoldre la selecció de $S'$ en l'interval $[t_a,t_b]$, cosa que es pot realitzar:
 
-  Cal tenir en compte que $f_0(S',[t_a,t_b])$ ha de resoldre la
-  selecció en l'interval: 
   \begin{enumerate}
-  \item amb una selecció d'interval $S'[t_a,t_b]=\{ (\tau_0+\delta,
+  \item amb una selecció d'interval,  $S'[t_a,t_b]=\{ (\tau_0+\delta,
     f'(v_{i_0},\dotsc,v_{i_1}) ) \}$,
 
-  \item amb una selecció d'interval temporal
+  \item amb una selecció d'interval temporal,
     $S'[t_a,t_b]^r=(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}), (t_b,
     f^r(f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2}))) ) $ on $f^r$ és
     la interpolació realitzada per la funció de representació $r$
 
-  \item o amb altres casos, podem pensar per exemple
-    $S'[t_a,t_b]^r=(\tau_0+\delta, f'(v_{i_0},\dotsc,v_{i_1}), (t_b,
-    f'(v_{i_1+1},\dotsc,v_{b} ,\dotsc,v_{i_2})) )$.
+  \item o amb altres casos, podem pensar per exemple amb una funció de
+    representació que directament utilitzi el valor de tot el segon
+    interval com a vàlid per a $t_b$, $S'[t_a,t_b]^r=(\tau_0+\delta,
+    f'(v_{i_0},\dotsc,v_{i_1}), (t_b, f'(v_{i_1+1},\dotsc,v_{b}
+    ,\dotsc,v_{i_2})) )$ on $f^r$ seria la funció identitat.
    \end{enumerate}
 
 
 
-  Així, per a estudiar $\epsilon=d(r_1,r_2)$ s'ha d'analitzar
-  $r_1=f'(v_{i_0},\dotsc,v_{i_1},\dotsc, v_{i_1+1},\dotsc,v_{b})$ i,
-  depenent de la selecció,
+   Així, per a estudiar $\epsilon=d(r_1,r_2)$ s'ha d'analitzar d'una
+   banda $r_1=f'(v_{i_0},\dotsc,v_{i_1},v_{i_1+1},\dotsc,v_{b})$ i de l'altra, depenent de quina de les
+   tres seleccions s'utilitzi,
    \begin{enumerate}
    \item $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}))$, 
 
@@ -571,24 +567,32 @@ $t_b=\tau_0+(n+l)\delta_0$ on $n,l\in\glssymbol{not:N}$, i quan no ho
      \item o $r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}),f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$.
 \end{enumerate}
 
-  És a dir, en la multiresolució consolidada no hi ha disponible la
-  informació $f'(v_{i_1+1},\dotsc,v_{b})$ que es voldria consultar.
-  Per tant hem de concloure que generalment $\epsilon=d(r_1,r_2)\geq
-  0$ quan l'interval consultat no és múltiple de la resolució
-  emmagatzemada, tret que coneguéssim exactament el comportament de la
-  sèrie temporal i poguéssim determinar la funció de representació que complís 
-  $ f'(v_{i_1+1},\dotsc,v_{b}) = f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$.
-\end{itemize}
+És a dir, en la multiresolució consolidada no hi ha disponible la
+informació $f'(v_{i_1+1},\dotsc,v_{b})$ que és la que es voldria
+consultar.  Per tant hem de concloure que en aquest cas generalment
+$\epsilon=d(r_1,r_2)\geq 0$. Tot i així, en la segona selecció
+proposada es pot observar que si es coneix exactament el comportament
+de la sèrie temporal, per exemple s'estudia mitjançant la teoria del
+senyal, aleshores pot ser possible de determinar una funció de
+representació que compleixi $ f'(v_{i_1+1},\dotsc,v_{b}) =
+f^r(f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2}))$ i per tant aconseguir
+$r_2=f'(f'(v_{i_0},\dotsc,v_{i_1}), f'(v_{i_1+1},\dotsc,v_{b}) )$;
+cosa que ja és una situació similar a la de
+l'\autoref{ex:multiresolucio:f=op}..
 
 
-Així doncs, hi haurà un cert error en el cas que els intervals
-consultats no siguin múltiples de la multiresolució emmagatzemada:
-seguint l'exemple, caldria calcular $f'(v_{i_1+1},\dotsc,v_{b})$ però
-la informació que hi ha emmagatzemada per a aquest interval és
-$f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$. Estudiem dos dels
-atributs descrits a l'\autoref{ex:multiresolucio:f=op} per tal
-d'avaluar si és possible afitar-ne error en aquests casos:
 
+
+
+
+
+Retornant, però, al cas que hi ha error $\epsilon=d(r_1,r_2)\geq 0$,
+estudiem dos dels atributs descrits a
+l'\autoref{ex:multiresolucio:f=op} per tal d'avaluar si és possible
+afitar-ne l'error en aquests casos. Així, formulem el cas que caldria
+calcular $f'(v_{i_1+1},\dotsc,v_{b})$ però la informació que hi ha
+emmagatzemada per a aquest interval és
+$f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$:
 \begin{itemize}
 
 \item Màxim. Cal calcular $\max(v_{i_1+1},\dotsc,v_{b})$ però hi ha
@@ -598,8 +602,10 @@ d'avaluar si és possible afitar-ne error en aquests casos:
   el màxim es troba a $[t_a+\delta_0,t_b]$ l'error és nul però si hi
   ha un màxim a $[t_b,t_a+2\delta_0]$ aleshores l'error és
   $\epsilon=d(\max(v_{i_1+1},\dotsc,v_{b}),\max(v_{b},\dotsc,v_{i_2}))$,
-  el qual no és fitable.
-  
+  el qual no és fitable perquè generalment no podem trobar cap relació
+  entre $\max(v_{i_1+1},\dotsc,v_{b})$ i $\max(v_{b},\dotsc,v_{i_2})$.
+
+
 \item Total: Cal calcular $\sum(v_{i_1+1},\dotsc,v_{b})$ però hi ha
   emmagatzemat $\sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$. Per tant
   l'error en la consulta és $\epsilon=d(r_1,r_2)=d(
@@ -607,11 +613,11 @@ d'avaluar si és possible afitar-ne error en aquests casos:
   = \sum(v_{b+1},\dotsc,v_{i_2})$. Però $\sum(v_{b+1},\dotsc,v_{i_2})$
   no és un valor emmagatzemat a la multiresolució i per tant no es pot
   saber l'error. Això no obstant, en el cas del total té sentit
-  plantejar el cas que la variable mesurada és monòtona creixent
-  (v.~\autoref{ex:multiresolucio:comptadors}): aleshores es compleix
-  que $\sum(v_{i_1+1},\dotsc,v_{b}) \leq
+  plantejar el cas que la variable mesurada és monòtona creixent (v. a
+  continuació l'\autoref{ex:multiresolucio:comptadors}): aleshores es
+  compleix que $\sum(v_{i_1+1},\dotsc,v_{b}) \leq
   \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$ i per tant es pot fitar
-  l'error $\epsilon=d(r_1,r_2) = \sum(v_{b+1},\dotsc,v_{i_2}) \leq  
+  l'error $\epsilon=d(r_1,r_2) = \sum(v_{b+1},\dotsc,v_{i_2}) \leq
   \sum(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$; és a dir com a màxim
   es cometria un error del valor consolidat a $\tau_0+2\delta$ que
   significaria que en els pitjors del casos tota la mesura hauria
@@ -627,6 +633,16 @@ d'avaluar si és possible afitar-ne error en aquests casos:
 
 \subsection{Conservació d'informació en comptadors}
   \label{ex:multiresolucio:comptadors}
+
+
+
+
+\todo{revisar}
+\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
+
+
+
+
 
 Aplicació de la conservació de la mitjana de la funció
   en comptadors.
