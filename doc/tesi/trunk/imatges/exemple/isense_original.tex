@@ -1,9 +1,10 @@
 \begin{tikzpicture}
     \begin{axis}[
-        timeseries,
-        date coordinates in=x,
+        timeseriesdate,
+        width=\textwidth,
         xticklabel={\pgfcalendarmonthshortname{\month} \year},
-        xlabel={Time (UTC)},
+        xlabel={Temps (\acrshort{UTC})},
+        ylabel={Temperatura (K)},
         ymax = 320,
         clip=false,
         y filter/.code = { \pgfmathparse{(#1>320)*322+(#1<320)*#1}},
