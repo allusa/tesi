@@ -2,3 +2,131 @@
 \label{sec:implementacions:exemple}
 
 Un exemple amb dades massives.
+
+
+
+
+ext we show a real example database for a time series data. Actual
+data comes from a temperature distributed sensor monitoring system
+\cite{alippi10}, we focus on one sensor data. We use Pytsms and
+RoundRobinson implementations in order to create a \acro{MTSDB} and
+to query it.
+
+\emph{Data}. The Figure~\ref{fig:exemple:original} shows the original
+data for one year and a half. The plot interpolates linearly the
+measures. In this plot we can see that there is missing data and some
+outlying observations. There are $146\,709$ stored values.
+
+
+
+\begin{figure}[tp]
+  \centering
+  %\tikzset{every picture/.style={scale=0.8}}
+  \input{imatges/exemple/isense_original.tex}
+  \caption{Example of a temperature time series data}
+  \label{fig:exemple:original}
+\end{figure}
+
+
+
+\emph{Schema}. We design a \acro{MTSDB} that stores a multiresolution
+time series with high resolution at recent times and with low
+resolution at older times. The schema is illustrated in the
+Figure~\ref{fig:exemple:window}. At the top there are four discs with
+different number of measures and at the bottom there is a timeline
+showing the resolution subseries along time. Going from most to least
+granularity, disks are configured as follows: (i) a measure every 5 h
+in the fourth disc which has a capacity of 24 measures and thus it
+spans 5 days; (ii) a measure every 2 days in the third disc, with a
+capacity of 20 thus spanning 40 days; (iii) a measure every 15 days in
+the second disc, with a capacity of 12 thus spanning 180 days and;
+(iv) a measure every 50 days in the first disc that, with a capacity
+of 12 results in a span of 600 days.
+
+
+\begin{figure}[tp]
+  \centering
+  \setlength{\unitlength}{1.3mm}
+  \input{imatges/exemple/mtsdb-time_window.tex}
+  \caption{Schema of multiresolution}
+  \label{fig:exemple:window}
+\end{figure}
+
+% \emph{Attribute aggregate functions}.  In order to illustrate this
+% example we consolidate all the resolution subseries using the
+% meanzohe aggregate function and the two highest resolution
+% subseries using the maximum$^\zohe{}$ aggregate function. 
+
+
+% \emph{Consolidation}. The time subseries after consolidating the
+% \acro{MTSDB} are shown in the Figure~\ref{fig:exemple:4mrd}, where
+% each graphic corresponds to the possible $\seriedisc$ queries, that is
+% every resolution disc time series from the \acro{MTSDB}. Each title
+% shows the resolution subseries and its cardinal, and each attribute
+% aggregate function has different colour.  Each time series is plotted
+% with \zohe{} representation function $S(t)^\zohe{}$. Time axis has
+% \acro{UTC} units rounded to nearest time points and temperature axis
+% has Kelvin units. Outlayers are marked as discontinuities, for
+% instance see fourth plot's 2938 K maximum.
+
+\begin{figure}[tp]
+  \centering
+  % \tikzset{
+  %   every picture/.style={scale=0.7},
+  % }
+  \input{imatges/exemple/isense_4mrdb.tex}
+  \caption{Resolution subseries in the MTSDB}
+  \label{fig:exemple:4mrd}
+\end{figure}
+
+
+
+
+% In all the four plots, we can see that mean aggregate function has
+% filled missing data and filtered outlayer observations. This is due
+% to the aggregate function coming from a \zohe{} interpretation.
+
+% Figure~\ref{fig:exemple:4mrdtot} shows the $\totalseries$
+% queries for the mean$^{\zohe}$ aggregate function resolution and for
+% the maximum$^{\zohe}$ resolution.  Each resulting time series is
+% plotted interpolating linearly its measures, note that this linearly
+% visualisation seems right time displaced as time series comes from a
+% \zohe{} aggregation.  Comparing this figure with the original series
+% in Figure~\ref{fig:exemple:original}, we observe that it resembles an
+% incremental low-pass filter because we applied mean aggregation while
+% the maximum aggregation resembles an envelope function.
+
+
+
+\begin{figure}[tp]
+  \centering
+  %\tikzset{every picture/.style={scale=0.8}}
+  \input{imatges/exemple/isense_mrdb-all.tex}
+  \caption{totalseries for the meanzohe and maximumzohe
+    resolutions}
+  \label{fig:exemple:4mrdtot}
+\end{figure}
+
+
+% In conclusion, this \acro{MTSDB} example schema does not store the
+% complete original data but a compression of the original function
+% which contains more information for recent times.  Each of the
+% $\seriedisc$ time series is regular with $\delta$. Although
+% $\totalseries$ is not a regular time series, it has piece-wise
+% regularity as a concatenation of every disc's $\delta$.  The purpose
+% of this example is to show how the multiresolution is computed for a
+% time series, it has been computed offline as the original data had
+% already been acquired. However, a \acro{MTSMS} is designed to
+% consolidate while the original data is being acquired so that the
+% multiresolution computation spreads along the acquisition and the
+% computing time becomes less critical.
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
