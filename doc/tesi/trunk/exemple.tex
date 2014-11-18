@@ -1,16 +1,35 @@
 \chapter{Exemple}
 \label{sec:implementacions:exemple}
 
-Un exemple amb dades massives.
+En aquest capítol mostrem un exemple de base de dades multiresolució
+aplicada a una sèrie temporal real amb dades massives.  
 
-
-
-
-ext we show a real example database for a time series data. Actual
-data comes from a temperature distributed sensor monitoring system
-\cite{alippi10}, we focus on one sensor data. We use Pytsms and
+\todo{}
+We use Pytsms and
 RoundRobinson implementations in order to create a \acro{MTSDB} and
 to query it.
+
+També fem servir roundrobindoop i reltsms?
+
+
+
+
+\section{Dades}
+
+
+
+Les dades provenen d'un sistema de monitoratge de temperatura en una
+xarxa de sensors distribuïts \parencite{alippi10}, en aquest cas ens
+centrem en les dades d'un sensor.
+
+
+Original data is shown in figure~\ref{fig:exemple:original} for a
+period of one year and a half, from 29th April 2010 to 18th October
+2011.  The time series is plotted interpolating linearly its measures.
+In this plot we can see that there is missing data and some outlying
+observations, and there are 146709 stored values.
+
+
 
 \emph{Data}. The Figure~\ref{fig:exemple:original} shows the original
 data for one year and a half. The plot interpolates linearly the
@@ -21,12 +40,16 @@ outlying observations. There are $146\,709$ stored values.
 
 \begin{figure}[tp]
   \centering
-  %\tikzset{every picture/.style={scale=0.8}}
   \input{imatges/exemple/isense_original.tex}
-  \caption{Example of a temperature time series data}
+  \caption{Sèrie temporal d'un sensor de temperatura}
   \label{fig:exemple:original}
 \end{figure}
 
+
+
+
+
+\section{Esquema de multiresolució}
 
 
 \emph{Schema}. We design a \acro{MTSDB} that stores a multiresolution
@@ -120,6 +143,22 @@ of 12 results in a span of 600 days.
 % consolidate while the original data is being acquired so that the
 % multiresolution computation spreads along the acquisition and the
 % computing time becomes less critical.
+
+
+
+\section{Resum/comparació}
+
+
+En RoundRobinson hi ha moltes capacitats complementàries: emmagatzemar en fitxers, fer gràfics, etc,. A més és molt genèric, molt proper al model, i permet implementar qualsevol esquema de multiresolució.
+
+
+A RounRobindoop va bé per experimentar amb aquest exemple, perquè tenim totes les dades emmagatzemades, de fet són de fa uns anys, i per tant podem computar-ne la multiresolució de forma ràpida.
+Cal dir que comparat amb executar-ho en bash
+
+
+
+
+
 
 
 
