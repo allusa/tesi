@@ -221,8 +221,9 @@ La \autoref{def:informacio:error} defineix el problema d'informació en
 la multiresolució de forma genèrica i abstracta. Així, en cada context
 d'aplicació de la multiresolució cal interpretar-ne el significat i
 particularitzar-ne un mètode d'anàlisi adequat.  A tal efecte, a
-continuació proposem alguns exemples per tal d'analitzar la selecció o
-pèrdua d'informació que hi pot haver en un \gls{SGSTM}.  
+continuació proposem alguns exemples que mostren casos particulars
+d'anàlisi de la selecció o pèrdua d'informació que hi ha en un
+\gls{SGSTM}.
 
 
 Per a simplificar els exemples, proposem esquemes de multiresolució amb
@@ -284,6 +285,13 @@ notació següent.
 
 
 
+L'anàlisi que formulem és una introducció a la reflexió sobre l'error
+en la informació de la multiresolució. Així, de forma simple,
+analitzem si hi ha error o si no n'hi ha, sense pretendre avaluar
+quantificacions més complicades. A més, ho analitzem en base a
+l'esquema de multiresolució que s'utilitzi, particularment de quines
+funcions d'agregació d'atributs s'utilitzin i de com siguin les
+consultes posteriors.
 
 
 
@@ -636,49 +644,41 @@ $f'(v_{i_1+1},\dotsc,v_{b},\dotsc,v_{i_2})$:
 
 
 
-
-\todo{revisar}
-\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
-
-
-
-
-
-Aplicació de la conservació de la mitjana de la funció
-  en comptadors.
-  Aquest exemple prové d'una reflexió acurada de per què RRDtool té
-  com a referent els comptadors.
+Els comptadors són un dels trets semàntics que poden tenir les sèries
+temporals (\seeref{sec:sgst:tretssemantics}) i se'n pot conservar la
+informació aprofitant aquests trets. En aquest cas explorem com
+conservar la mitjana de la funció dels comptadors.  Aquest exemple
+prové d'una reflexió acurada de per què RRDtool té com a referent els
+comptadors.
 
 
 
 %\todo{parlar de comptadors monòtons creixents?? o de comptadors en general}
 
-  Un comptador monòton creixent és un aparell que mesura l'energia en
-  un determinat interval de temps. Entre dues lectures successives del
-  comptador la mesura de l'energia és exacta a diferència d'un aparell
-  que mesuri potència instantània, de la qual només es pot deduir
-  l'energia exacta si es considera que el senyal es pot reconstruir:
-  per exemple compleix Nyquist\todo{ref} tot i que a la pràctica és
-  complicat conèixer la freqüència de les variables mesurades atès que
-  solen ser aleatòries o canvien bruscament. A la inversa també ocorre
-  el mateix, a partir de la mesura de l'energia només es pot deduir la
-  potència instantània exacta si es considera que el senyal es pot
-  reconstruir.  Els conceptes d'energia i potència solen anar
-  associats a un determinat tipus de variables físiques contínues; en
-  altres comptadors els conceptes equivalents són el quantitat,
-  comptatge total o increments per a l'energia i el flux o la
-  velocitat per a la potència.
+Un comptador monòton creixent és un aparell que mesura l'energia en un
+determinat interval de temps. Entre dues lectures successives del
+comptador la mesura de l'energia és exacta a diferència d'un aparell
+que mesuri potència instantània. D'aquesta només es pot deduir
+l'energia exacta si es considera que el senyal es pot reconstruir, per
+exemple compleix la freqüència del teorema de Nyquist–Shannon tot i
+que a la pràctica és complicat conèixer la freqüència de les variables
+mesurades atès que solen ser aleatòries o canvien bruscament. A la
+inversa també ocorre el mateix, a partir de la mesura de l'energia
+només es pot deduir la potència instantània exacta si es considera que
+el senyal es pot reconstruir.  
 
+
+Els conceptes d'energia i potència solen anar associats a un
+determinat tipus de variables físiques contínues; en altres comptadors
+els conceptes equivalents són quantitat, comptatge total o increments
+per a l'energia i el flux o la velocitat per a la potència.  No totes
+les variables físiques són susceptibles de ser mesurades amb un
+comptador. Els comptadors es poden aplicar per exemple per a mesurar
+energia elèctrica (\seeref{ex:sgst:comptador-electricitat}),
+aforaments de trànsit en una carretera, consum d'aigua, etc.
 
 % ha d'aparèixer potència mitjana (que és la línia) i energia (que és l'àrea sota la línia). els aparells tant poden mesurar en un interval energia com potència mitjana i és el mateix, si la mesura mitjana és real i no a partir de la mitjana de diverses instantànies. 
 
-  No totes les variables físiques són susceptibles de ser mesurades
-  amb un comptador. Els comptadors es poden aplicar per exemple per a
-  mesurar energia elèctrica, aforaments de trànsit en una carretera, consum
-  d'aigua, etc.
-  
-  \todo{dir que} a l'exemple 2.19 %\autoref{ex:sgst:comptador-electricitat}
- del model sgst hi ha un exemple de sèrie temporal per a la mesura de potència i energia elèctrica 
 
 
   En resum, l'aparell condiciona la informació que es podrà extreure
@@ -737,54 +737,53 @@ Aplicació de la conservació de la mitjana de la funció
 
 Així doncs, la definició del problema és la següent.  Sigui $E(t)$
 l'energia d'un senyal i $P(t)$ la potència instantània del senyal, es
-compleix la relació $E(t)=\int P(t) dt$, que es mostra a la
-\autoref{fig:multiresolucio:energia-potencia}; que és la mateixa
-relació $Q(t)=\int v(t) dt$ per a un comptador on $Q$ és la quantitat
-comptada i $v$ és la velocitat instantània, o la mateixa per a un cas
-discret $\Delta Q = \bar{v} \Delta t$ on $\bar{v}$ és la velocitat
-mitjana mesurada durant $\Delta t$. %
+compleix la relació $E(t)=\int P(t) dt$, la qual es mostra a la
+\autoref{fig:multiresolucio:energia-potencia}. Aquesta és la mateixa
+relació $Q(t)=\int v(t) dt$ en altres termes de comptador on $Q$ és la
+quantitat comptada i $v$ és la velocitat instantània, o la mateixa per
+a un cas discret $\Delta Q = \bar{v} \Delta t$ on $\bar{v}$ és la
+velocitat mitjana mesurada durant $\Delta t$. %
   %Potser el cas discret hauria de ser $\Delta Q = \sum \bar{v}_k \Delta t_k$
-  Siguin
-  $[t_a,t_b]$ i $[t_b,t_c]$ dos intervals de temps de mesura, un
-  comptador mesura exactament el valor de $\int_{t_a}^{t_b} P(t)$ i de
-  $\int_{t_b}^{t_c} P(t)$. En canvi, un aparell de mesura de potència
-  instantània es capaç de mesurar exactament $P(t_a)$, $P(t_b)$ i
-  $P(t_c)$. Ara bé, a partir del comptador no es poden deduir
-  exactament $P(t_a)$, $P(t_b)$ ni $P(t_c)$ i a partir de la mesura de
-  la potència instantània no es poden deduir exactament
-  $\int_{t_a}^{t_b} P(t)$ ni $\int_{t_b}^{t_c} P(t)$. Tampoc a partir
-  del comptador es poden deduir exactament energies que no s'han
-  mesurat, per exemple ni $\int_{(t_a+t_b)/2}^{t_b} P(t)$ ni
-  $\int_{(t_a+t_b)/2}^{t_c} P(t)$; ara bé sí que serà exacte el càlcul
-  $\int_{t_a}^{t_b} P(t)+\int_{t_b}^{t_c} P(t)$.
+Siguin $[t_a,t_b]$ i $[t_b,t_c]$ dos intervals de temps de mesura, un
+comptador mesura exactament el valor de $E_{t_a}^{t_b} =
+\int_{t_a}^{t_b} P(t) dt$ i de $E_{t_b}^{t_c} =\int_{t_b}^{t_c} P(t) dt$. En canvi,
+un aparell de mesura de potència instantània es capaç de mesurar
+exactament $P(t_a)$, $P(t_b)$ i $P(t_c)$. Ara bé, a partir del
+comptador no es poden deduir exactament $P(t_a)$, $P(t_b)$ ni $P(t_c)$
+i a partir de la mesura de la potència instantània no es poden deduir
+exactament $\int_{t_a}^{t_b} P(t)$ ni $\int_{t_b}^{t_c} P(t)$. Tampoc
+a partir del comptador es poden deduir exactament energies que no
+s'han mesurat, per exemple ni $\int_{(t_a+t_b)/2}^{t_b} P(t)$ ni
+$\int_{(t_a+t_b)/2}^{t_c} P(t)$; ara bé sí que serà exacte el càlcul
+$\int_{t_a}^{t_b} P(t)+\int_{t_b}^{t_c} P(t)$.
   
 
-  La multiresolució és capaç de conservar aquesta exactitud del
-  comptatge total.  El comptatge total es pot conservar amb una
-  multiresolució amb funcions d'agregació per atributs de suma de
-  totals o bé per atributs de mitjana de la funció. Aquests darrers
-  són els que permeten a més expressar la sèrie temporal resultant de
-  la multiresolució de forma més coherent amb l'original (vegeu secció
-  de naturalesa de comptadors \todo{ref}). Reprenent
-  l'\autoref{ex:multiresolucio:f=op}, avaluem els atributs de mitjana
-  de la funció, els quals són semblants als atributs de total però
-  considerant la sèrie temporal en la representació contínua:
+La multiresolució és capaç de conservar aquesta exactitud del
+comptatge total.  El comptatge total es pot conservar en un esquema de
+multiresolució amb funcions d'agregació per atributs de suma de totals
+o bé per atributs de mitjana de la funció. Aquests darrers són els que
+permeten, a més, expressar la sèrie temporal resultant de la
+multiresolució de forma més coherent amb l'original
+(\seeref{sec:sgst:tretssemantics}). Reprenent
+l'\autoref{ex:multiresolucio:f=op}, avaluem els atributs de mitjana de
+la funció, els quals són semblants als atributs de total però
+considerant la sèrie temporal en la representació contínua:
   
   \begin{itemize}
 
-  \item Mitjana de la funció:
-    $f_0=\operatorname{mitjana}^c$\todo{operador no declarat a la
-      taula}, segons definit al model de \gls{SGSTM}, el qual si
-    negligim l'atribut de temps es correspon a calcular la mitjana
-    de la funció de representació de la sèrie temporal $\frac{1}{b-a}
-    \int_{a}^{b} S(t)dt$ en l'interval tancat $[a,b]$.
 
-    Sigui $t_M=T(\max(S)$ i $t_m=T(\min(S))$ i $S'= \{
+  \item Mitjana de la funció: $f_0=\operatorname{mitjana}$, segons el
+    patró general de mitjana de la funció mostrat a
+    \textref{sec:sgstm:mitjanafuncio}, el qual es correspon a calcular
+    la mitjana de la funció de representació de la sèrie temporal
+    $\frac{1}{b-a} \int_{a}^{b} S(t)dt$ en l'interval tancat $[a,b]$.
+
+    Sigui $t_M=T(\max(S))$ i $t_m=T(\min(S))$ i $S'= \{
     (\tau_0+\delta_0, \frac{1}{\delta_0}
     \int_{\tau_0}^{\tau_0+\delta_0} S(t) dt), (\tau_0+2\delta_0,
-    \int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S(t) dt), \dotsc,
+     \frac{1}{\delta_0}\int_{\tau_0+\delta_0}^{\tau_0+2\delta_0} S(t) dt), \dotsc,
     (\tau_0+M\delta_0, \frac{1}{\delta_0}
-    \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0} S(t) dt \}$, on
+    \int_{\tau_0+(M-1)\delta_0}^{\tau_0+M\delta_0} S(t) dt )\}$, on
     s'ha aplicat $\delta_0= (\tau_0+\delta_0)-(\tau_0)=\dotsb=
     (\tau_0+M\delta_0)-(\tau_0+(M-1)\delta_0)$.  Els resultats que cal
     calcular són $r_1=\frac{1}{t_M-t_m} \int_{t_m}^{t_M} S(t)dt$ i
@@ -807,12 +806,25 @@ mitjana mesurada durant $\Delta t$. %
 
 
     A la \autoref{fig:multiresolucio:comptador} es mostra un exemple
-    amb valors concrets on $S=\{ (1,4),(2,2),(3,6),(4,4)\}$, l'esquema
-    de multiresolució és
-    $e=\{\{(\delta,2),(f,\glssymbol{not:sgstm:meanzohe}),(\tau,0),(k,\infty)\}
-    \}$,així la sèrie resultant de la consulta multiresolució
-    és $S'=\{ (2,3),(4,5)\}$, i les sèries temporals es representen amb
-    representació \gls{zohe}.
+    amb valors concrets on $S=\{ (1,4),(2,2),(3,6),(4,4)\}$ i
+    l'esquema de multiresolució és
+    $e=\{(\delta_0=2,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0,k_0=\infty)\}$,
+    segons la $\glssymbol{not:sgstm:meanzohe}$ de la
+    \textref{def:sgstm:meanzohe}. La sèrie resultant de la
+    consolidació de la multiresolució és $S'=\{ (2,3),(4,5)\}$. A la
+    figura, les sèries temporals es representen amb representació
+    \gls{zohe}, la superfície pintada en blau correspon a l'àrea de
+    sota la corba de la sèrie temporal i els nombres interiors
+    indiquen el valor d'aquesta àrea; en la sèrie temporal $S$ les
+    àrees es corresponen amb els valors de la sèrie temporal perquè
+    els intervals són d'una unitat de temps. Així doncs es pot
+    observar a $S'$ com aquest esquema de multiresolució conserva el
+    comptatge total en la nova resolució, és a dir $6=4+2$ en el
+    primer interval consolidat i $10=6+4$ en el segon, i en una
+    consulta del comptatge total per a tot l'interval $[0,4]$ s'obté
+    $16$ tant en $S$ com a $S'$. Aquesta és la idea bàsica de
+    conservació d'informació en els comptadors.
+
 
 
 \begin{figure}[tp]
@@ -878,70 +890,70 @@ mitjana mesurada durant $\Delta t$. %
   
 
 
+La multiresolució, però, no pot conservar la resolució del comptatge,
+així en l'exemple un cop s'ha consolidat $6=4+2$ no es pot tornar a
+obtenir $4$ i $2$ llevat que es pogués reconstruir el senyal.  Com
+s'ha exposat a
+l'\autoref{ex:multireoslucio:informacio-subresolucions}, en consultes
+en què l'interval no es correspongui amb les resolucions
+emmagatzemades, els totals no seran els correctes que s'obtindrien de
+calcular amb les dades originals.  De fet, és el mateix problema que
+hem exposat que a partir d'un comptador no es poden deduir exactament
+energies que no s'han mesurat.
 
 
 
 
-  La multiresolució, però, no pot conservar la resolució del
-  comptatge.  Com s'ha exposat a
-  l'\autoref{ex:multireoslucio:informacio-subresolucions}, en
-  consultes en què l'interval no es correspongui amb les resolucions
-  emmagatzemades, els totals no seran els correctes que s'obtindrien
-  de calcular amb les dades originals.  De fet, és el mateix problema
-  que hem exposat que a partir d'un comptador no es poden deduir
-  exactament energies que no s'han mesurat.
-
-
-
-
-\todo{potser fer un exemple on es vegi com la multiresolució pot solucionar un problema d'inframostreig en els comptadors}
+% \todo{potser fer un exemple on es vegi com la multiresolució pot solucionar un problema d'inframostreig en els comptadors}
 
 
 
 
 \subsection{Equivalències en l'agregació d'atributs}
 
+Hi ha casos en què és el mateix aplicar una funció d'agregació
+d'atributs que aplicar-ne una altra. En aquest apartat particularment
+estudiem el cas de la $\glssymbol{not:sgstm:mitjanapd}$
+(\seeref{def:sgstm:mitjanapd}) i el de la
+$\glssymbol{not:sgstm:meanzohe}$ (\seeref{def:sgstm:meanzohe})
+per a sèries temporals regulars.
+
+Sigui $S=\{m_0,\dotsc,m_k\}$, on $m_k=(t_k,v_k)$, una sèrie temporal
+regular de període $d$ (\seeref{def:st:regular}) i sigui $[t_a,t_b]$
+un interval de temps on $t_a=T(\min(S))-d=t_0-d$ i
+$t_b=T(\max(S))=t_k$.  Demostrem que
+$\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b]) =
+\glssymbol{not:sgstm:mitjanapd}(S,[t_a,t_b])$ pel que fa al valor
+resultant calculat negligint el temps resultant. És a dir en realitat demostrem
+$V(\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])) =
+V(\glssymbol{not:sgstm:mitjanapd}(S,[t_a,t_b]))$ però no escrivim la
+projecció de l'atribut de valor, $V()$, per a no complicar la notació.
+
+La mitjana aritmètica de la sèrie temporal és
+$\glssymbol{not:sgstm:mitjanapd}(S,[t_a,t_b])=\frac{v_0+\dotsb+v_k}{|S|}$.
+%
+La mitjana amb representació \gls{zohe} és
+$\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])= \frac{1}{t_b-t_a} (
+v_0(t_0-t_a)+v_1(t_1-t_0)+\dotsb+ v_k(t_k-t_{k-1}) )$.
+
+Per ser regular, $t_1-t_0 = \dotsb = t_k-t_{k-1} = d$. A més
+$t_a=t_0-d$ i per tant $t_0-t_a = d$. També per ser regular, $t_k-t_0=
+t_k +(- t_{k-1} + t_{k-1}) + \dotsb + (- t_1 + t_1) - t_0 = (|S|-1)d$
+i per tant $t_b-t_a=t_k - (t_0 - d) = (|S|-1)d +d = |S|d$.
+
+Reescrivint, $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])=
+\frac{1}{|S|d} ( v_0d+v_1d+\dotsb+ v_kd ) = \frac{1}{|S|} (
+v_0+v_1+\dotsb+ v_k ) = \glssymbol{not:sgstm:mitjanapd}(S,[t_a,t_b])$.
 
 
 
-Equivalències en l'agregació d'atributs
-
-  Hi ha casos en què és el mateix aplicar una funció d'agregació
-  d'atributs que aplicar-ne una altra. Per exemple és el cas de la
-  $\operatorname{mitjana}$\todo{falta definir a la taula} i el de la
-  $\glssymbol{not:sgstm:meanzohe}$ per a sèries temporals regulars. 
-
-  Sigui $S=\{m_0,\dotsc,m_k\}$, on $m_k=(t_k,v_k)$, una sèrie temporal
-  regular de període $d$ i sigui $[t_a,t_b]$ un interval de temps on
-  $t_a=T(\min(S))-d=t_0-d$ i $t_b=T(\max(S))=t_k$.  Demostrem que
-  $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b]) =
-  \operatorname{mitjana}(S,[t_a,t_b])$.
-
-  La mitjana aritmètica de la sèrie temporal és
-  $\operatorname{mitjana}(S,[t_a,t_b])=\frac{v_0+\dotsb+v_k}{|S|}$
-  
-  La mitjana amb representació \gls{zohe} és
-  $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])= \frac{1}{t_b-t_a} (
-  v_0(t_0-t_a)+v_1(t_1-t_0)+\dotsb+ v_k(t_k-t_{k-1}) )$.
-
-  Per ser regular, $t_1-t_0 = \dotsb = t_k-t_{k-1} = d$. A més
-  $t_a=t_0-d$ i per tant $t_0-t_a = d$. També per ser regular,
-  $t_k-t_0= t_k +(- t_{k-1} + t_{k-1}) + \dotsb + (- t_1 + t_1) - t_0
-  = (|S|-1)d$ i per tant $t_b-t_a=t_k - (t_0 - d) = (|S|-1)d +d = |S|d$.
-
-  Reescrivint, $\glssymbol{not:sgstm:meanzohe}(S,[t_a,t_b])=
-  \frac{1}{|S|d} ( v_0d+v_1d+\dotsb+ v_kd ) = \frac{1}{|S|} (
-  v_0+v_1+\dotsb+ v_k ) = \operatorname{mitjana}(S,[t_a,t_b])$.
-
-
-
-  Així doncs, en una sèrie temporal regular es pot aplicar la
-  $\operatorname{mitjana}$ com a equivalent a la
-  $\glssymbol{not:sgstm:meanzohe}$; la
-  \autoref{fig:multiresolucio:comptador} n'és un exemple. Un àmbit
-  d'aplicació d'aquestes equivalències pot ser el de simplificar els
-  càlculs en les consultes als \gls{SGSTM}, en els discs dels quals
-  les subsèries temporals normalment s'emmagatzemen regulars.
+Així doncs, en una sèrie temporal regular es pot aplicar la
+$\glssymbol{not:sgstm:mitjanapd}$ com a equivalent a la
+$\glssymbol{not:sgstm:meanzohe}$; de fet la
+\autoref{fig:multiresolucio:comptador} n'és un exemple. Un àmbit
+d'aplicació d'aquestes equivalències pot ser el de simplificar els
+càlculs en les consultes als \gls{SGSTM}, en els discs dels quals les
+subsèries temporals normalment s'emmagatzemen regulars.
  
 
 
@@ -955,3 +967,5 @@ Equivalències en l'agregació d'atributs
 %%% TeX-master: "main"
 %%% End:
 
+
+%  LocalWords:  multiresolució
