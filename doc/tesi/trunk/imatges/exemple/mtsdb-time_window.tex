@@ -2,231 +2,133 @@
 %mrd.afegeix_disc(d2,20,mitjana,zero)
 %mrd.afegeix_disc(d15,12,mitjana,zero)
 %mrd.afegeix_disc(d50,12,mitjana,zero)
-\tiny
-\begin{center}
-%\begin{multicols}{4} 
+
+\begin{tikzpicture}
+
+  %R0
+  \node[circle,draw,minimum width=2 cm] (R0d) {};
+  \draw [->] (R0d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R0d.center,anchor=north] {\color{cyan}5 hores};
+  \node[below=0mm of R0d.east,anchor=south west] {\color{cyan}24)};
+
+  \node[circle,draw] [left=0mm of R0d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.west,anchor=center] {};
+ 
+  \draw [dotted] (R0d.center)++(1.1:1.1cm) arc(0:360:1.1cm);
 
 
-    \begin{picture}(14,12)(-7,-6)
-    \put(0,-1){\makebox(0,0)[c]{{\color{blue}50 days}}}
-      \put(0,0){\circle{10}}
-      \put(5,0){\circle{0.8}}
-      \put(4.33,2.5){\circle{0.8}}
-      \put(2.5,4.33){\circle{0.8}}
-      \put(0,5){\circle{0.8}}
-      \put(-2.5,4.33){\circle{0.8}}   
-      \put(-4.33,2.5){\circle{0.8}}
-      \put(-5,0){\circle{0.8}}
-      \put(-4.33,-2.5){\circle{0.8}}
-      \put(-2.5,-4.33){\circle{0.8}} 
-      \put(0,-5){\circle{0.8}}
-      \put(2.5,-4.33){\circle{0.8}} 
-      \put(4.33,-2.5){\circle{0.8}}
-      \put(0,0){\vector(0,1){5}}
-      \put(0,0){\oval(5,5)[t]}
-      \put(-2.5,0){\makebox(0,0)[c]{$\vee$}}
-    \end{picture}
-%
-    \begin{picture}(14,12)(-7,-6)
-    \put(0,-1){\makebox(0,0)[c]{{\color{brown}15 days}}}
-      \put(0,0){\circle{10}}
-      \put(5,0){\circle{0.8}}
-      \put(4.33,2.5){\circle{0.8}}
-      \put(2.5,4.33){\circle{0.8}}
-      \put(0,5){\circle{0.8}}
-      \put(-2.5,4.33){\circle{0.8}}   
-      \put(-4.33,2.5){\circle{0.8}}
-      \put(-5,0){\circle{0.8}}
-      \put(-4.33,-2.5){\circle{0.8}}
-      \put(-2.5,-4.33){\circle{0.8}} 
-      \put(0,-5){\circle{0.8}}
-      \put(2.5,-4.33){\circle{0.8}} 
-      \put(4.33,-2.5){\circle{0.8}}
-      \put(0,0){\vector(0,1){5}}
-      \put(0,0){\oval(5,5)[t]}
-      \put(-2.5,0){\makebox(0,0)[c]{$\vee$}}
-    \end{picture}
-%
-    \begin{picture}(14,12)(-7,-6)
-    \put(0,-1){\makebox(0,0)[c]{{\color{red}2 days}}}
-      \put(0,0){\circle{10}}
-      %\put(5,0){\circle{0.8}}
-      \put(4.82,1.29){\circle{0.8}}
-      \put(4.33,2.5){\circle{0.8}}
-     \put(3.5,3.5){\circle{0.8}}
-      \put(2.5,4.33){\circle{0.8}}
-      \put(1.29,4.82){\circle{0.8}}
-      %\put(0,5){\circle{0.8}}
-      \put(-1.29,4.82){\circle{0.8}}
-      \put(-2.5,4.33){\circle{0.8}}
-       \put(-3.5,3.5){\circle{0.8}} 
-      \put(-4.33,2.5){\circle{0.8}}
-    \put(-4.82,1.29){\circle{0.8}}
-      %\put(-5,0){\circle{0.8}}
-    \put(-4.82,-1.29){\circle{0.8}}
-      \put(-4.33,-2.5){\circle{0.8}}
-      \put(-3.5,-3.5){\circle{0.8}} 
-      \put(-2.5,-4.33){\circle{0.8 } } 
-      \put(-1.29,-4.82){\circle{0.8 }}
-      % \put(0,-5){\circle{0.8 }}
-     \put(1.29,-4.82){\circle{0.8 }}
-      \put(2.5,-4.33){\circle{0.8}}
-      \put(3.5,-3.5){\circle{0.8}} 
-      \put(4.33,-2.5){\circle{0.8}}
-  \put(4.82,-1.29){\circle{0.8}}
-      \put(0,0){\vector(0,1){5}}
-      \put(0,0){\oval(5,5)[t]}
-      \put(-2.5,0){\makebox(0,0)[c]{$\vee$}}
-    \end{picture}
-%
-    \begin{picture}(14,12)(-7,-6)
-    \put(0,-1){\makebox(0,0)[c]{{\color{cyan}5 hours}}}
-      \put(0,0){\circle{10}}
-      \put(5,0){\circle{0.8}}
-      \put(4.82,1.29){\circle{0.8}}
-      \put(4.33,2.5){\circle{0.8}}
-     \put(3.5,3.5){\circle{0.8}}
-      \put(2.5,4.33){\circle{0.8}}
-      \put(1.29,4.82){\circle{0.8}}
-      \put(0,5){\circle{0.8}}
-      \put(-1.29,4.82){\circle{0.8}}
-      \put(-2.5,4.33){\circle{0.8}}
-       \put(-3.5,3.5){\circle{0.8}} 
-      \put(-4.33,2.5){\circle{0.8}}
-    \put(-4.82,1.29){\circle{0.8}}
-      \put(-5,0){\circle{0.8}}
-    \put(-4.82,-1.29){\circle{0.8}}
-      \put(-4.33,-2.5){\circle{0.8}}
-      \put(-3.5,-3.5){\circle{0.8}} 
-      \put(-2.5,-4.33){\circle{0.8 } } 
-      \put(-1.29,-4.82){\circle{0.8 }}
-\put(0,-5){\circle{0.8 }}
-     \put(1.29,-4.82){\circle{0.8 }}
-      \put(2.5,-4.33){\circle{0.8}}
-      \put(3.5,-3.5){\circle{0.8}} 
-      \put(4.33,-2.5){\circle{0.8}}
-  \put(4.82,-1.29){\circle{0.8}}
-      \put(0,0){\vector(0,1){5}}
-      \put(0,0){\oval(5,5)[t]}
-      \put(-2.5,0){\makebox(0,0)[c]{$\vee$}}
-    \end{picture}
+  %R1
+  \node[circle,draw,minimum width=2 cm] (R1d) [right=of R0d] {};
+  \draw [->] (R1d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R1d.center,anchor=north] {\color{red}2 dies};
+  \node[below=0mm of R1d.east,anchor=south west] {\color{red}20)};
+
+  \node[circle,draw] [left=0mm of R1d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.west,anchor=center] {};
+ 
+  \draw [dotted] (R1d.center)++(1.1:1.1cm) arc(0:360:1.1cm);
+
+  %R2
+  \node[circle,draw,minimum width=2 cm] (R2d) [right=of R1d] {};
+  \draw [->] (R2d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R2d.center,anchor=north] {\color{orange}15 dies};
+  \node[below=0mm of R2d.east,anchor=south west] {\color{orange}12)};
+
+  \node[circle,draw] [left=0mm of R2d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.west,anchor=center] {};
+
+  \node[circle,draw] [left=0mm of R2d.30,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.60,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.120,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.150,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.210,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.240,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.300,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.330,anchor=center] {};
+
+  %R3
+  \node[circle,draw,minimum width=2 cm] (R3d) [right=of R2d] {};
+  \draw [->] (R3d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R3d.center,anchor=north] {\color{blue}50 dies};
+  \node[below=0mm of R3d.east,anchor=south west] {\color{blue}12)};
+
+  \node[circle,draw] [left=0mm of R3d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.west,anchor=center] {};
+
+  \node[circle,draw] [left=0mm of R3d.30,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.60,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.120,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.150,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.210,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.240,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.300,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.330,anchor=center] {};
+
+\end{tikzpicture}
+\begin{tikzpicture}
+
+  %referencia
+  \def\ut{1.5}
+  \node (ref) {};
+
+  \node[align=center] (-7) [right=0cm of ref.center,anchor=center] {};
+
+  \foreach \x in {-6,...,0}
+  {
+    \pgfmathparse{int(\x-1)}
+    \let\antx=\pgfmathresult
+    \pgfmathparse{int(100*\x)}
+    \let\nomx=\pgfmathresult
+
+    \node[align=center] (\x) [right=\ut cm of \antx.center,anchor=center] {
+    %  \x
+    \nomx  %noms de les x      
+    };
+    \node [above=2mm of \x.center] {\tiny$\vert$};
+  }
 
 
-%\end{multicols}
+  %eixos
+  \node (et0) [above=2mm of 0.center] {};
+  \node (eti) [above=2mm of ref.center] {};%[left=8.5cm of et0] {};
+  \node (etf) [right=0.5cm of et0.center] {};
+  \draw[->] (eti) to (etf);
+  \node [below=5mm of -7,anchor=west] {Temps (dies)};
 
-\vspace{-10pt}
+  \node (ara) [above=3cm of et0] {};
+  \node (ara2) [below=5mm of et0] {};
+  \draw[-] (ara) to (ara2);
+  \node (ara3) [below=-2mm of ara2] {};
 
-\setlength{\unitlength}{900sp}
-\begin{picture}(14460,5066)(7322,-7148)
-\thinlines
-{\color[rgb]{0,0,0}\put(7300,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(7782,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(8263,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(8745,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(9227,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(9709,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(10191,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(10673,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(11155,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(11637,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(12119,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(12600,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(13082,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(13564,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(14046,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(14528,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(15010,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(15492,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(15974,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(16456,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(16938,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(17419,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(17901,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(18383,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(18865,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(19347,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(19829,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(20311,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(20793,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(21275,-6271){\line( 0,-1){386}}
-}%
-{\color[rgb]{0,0,0}\put(7300,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(9709,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(12119,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(14528,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(16938,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(19347,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(21756,-6271){\line( 0,-1){1157}}
-}%
-{\color[rgb]{0,0,0}\put(7300,-6271){\line( 1, 0){14456}}
-}%
+  
 
-\put(7322,-6271){\line( 0,1){3000}}
-\put(21756,-7783){\makebox(0,0)[b]{now}}%
-\put(7322,-7783){\makebox(0,0)[l]{600 days back}}%
+ %R3
+  \node (R3) [above=1cm of 0] {};
+  \node[rectangle,draw,minimum width=6*\ut cm] (R3d) [left=0 cm of R3.center, anchor=east] {\color{blue}600 dies};
 
-\color{blue}
-\put(21782,-5928){\line( -1,0){14460}}
-\put(21782,-5928){\line( 0,1){779}}
-\put(21782,-5149){\line( -1,0){14460}}
-\put(7322,-5928){\line( 0,1){779}}
-\put(14530,-5450){\makebox(0,0)[c]{600 days}}
+  %R2
+  \node (R2) [above=0.5cm of R3.center] {};
+  \node[rectangle,draw,minimum width=1.8*\ut cm] (R2d) [left=0 cm of R2.center, anchor=east] {\color{orange}180 dies};
 
-\color{brown}
-\put(21782,-5149){\line( 0,1){779}}
-\put(21782,-4370){\line( -1,0){4438}}
-\put(17344,-5149){\line( 0,1){779}}
-\put(19563,-4800){\makebox(0,0)[c]{180 days}}
+  %R1
+  \node (R1) [above=0.5cm of R2.center] {};
+  \node[rectangle,draw,minimum width=0.4*\ut cm,minimum height=3ex] (R1d) [left=0 cm of R1.center, anchor=east] {};
+  \node[left=-0.11 cm of R1.center, anchor=east] {\color{red}40d};
 
-\color{red}
-\put(21782,-4370){\line( 0,1){779}}
-\put(21782,-3591){\line( -1,0){964}}
-\put(20818,-4370){\line( 0,1){779}}
-\put(21300,-3950){\makebox(0,0)[c]{40d}}
-
-\color{cyan}
-\put(21782,-3591){\line( 0,1){779}}
-\put(21782,-2812){\line( -1,0){120}}
-\put(21661,-3591){\line( 0,1){779}}
-\put(21300,-3201){\makebox(0,0)[c]{5d}}
-\end{picture}%
-
-
-\normalsize
-
-\end{center}
+  %R0 
+  \node (R0) [above=0.5cm of R1.center] {};
+  \node[rectangle,draw,minimum width=0.05*\ut cm,minimum height=3ex] (R0d) [left=0 cm of R0.center] {};
+  \node[left=0.2 cm of R0.center, anchor=east] {\color{cyan}5d};
+\end{tikzpicture}

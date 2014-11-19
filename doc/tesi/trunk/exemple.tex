@@ -12,30 +12,47 @@ to query it.
 També fem servir roundrobindoop i reltsms?
 
 
+Passos:
+
+\begin{enumerate}
+\item Descrivim la sèrie temporal original.
+\item Proposem un esquema de multiresolució.
+\item Computem la consolidació de la sèrie temporal amb l'esquema proposat. \todo{amb diferents implementacions}
+\item Avaluem els resultats.
+\item Comparem les diferents implementacions.
+\end{enumerate}
+
+
+En les computacions hem utilitzat els reals estesos,
+$\glssymbol{not:Rb}$, com a domini del temps segons l'estàndard d'Hora
+Unix (\seeref{sec:sgst:temps}). Això no obstant, per a facilitar-ne la
+comprensió, en els exemples mostrem el domini del temps amb el format
+de calendari d'\gls{UTC}.
+
+
 
 
 \section{Dades}
-
 
 
 Les dades provenen d'un sistema de monitoratge de temperatura en una
 xarxa de sensors distribuïts \parencite{alippi10}, en aquest cas ens
 centrem en les dades d'un sensor.
 
-
-Original data is shown in figure~\ref{fig:exemple:original} for a
-period of one year and a half, from 29th April 2010 to 18th October
-2011.  The time series is plotted interpolating linearly its measures.
-In this plot we can see that there is missing data and some outlying
-observations, and there are 146709 stored values.
-
-
-
-\emph{Data}. The Figure~\ref{fig:exemple:original} shows the original
-data for one year and a half. The plot interpolates linearly the
-measures. In this plot we can see that there is missing data and some
-outlying observations. There are $146\,709$ stored values.
-
+Les dades es mostren a la \autoref{fig:exemple:original}.  És una
+sèrie temporal adquirida durant un període d'un any i mig, des del 29
+d'abril del 2010 fins al 18 d'octubre del 2011. En aquest gràfic, la
+sèrie temporal es mostra interpolant linealment les mesures, és a dir
+amb el mètode de representació \gls{foh}.  
+%
+En total hi ha $146.709$
+mesures emmagatzemades de la temperatura que va adquirir el sensor, en
+graus Kelvin (K), cada 2 minuts tot i que de forma irregular.  Tot i
+així en el gràfic només mostrem 466 punts, escollits mitjançant una
+delmació amb una resolució d'un dia, ja que de totes maneres una
+resolució superior és imperceptible.  En el gràfic d'aquesta sèrie
+temporal destaquen alguns períodes en què hi manquen dades i alguns en
+què hi ha observacions aberrants.
 
 
 \begin{figure}[tp]
@@ -51,46 +68,128 @@ outlying observations. There are $146\,709$ stored values.
 
 \section{Esquema de multiresolució}
 
+Dissenyem un esquema de multiresolució per a la sèrie temporal.
+Aquest esquema resumeix la sèrie temporal amb més resolució per als
+temps recents i amb menys resolució per als temps antics.
 
-\emph{Schema}. We design a \acro{MTSDB} that stores a multiresolution
-time series with high resolution at recent times and with low
-resolution at older times. The schema is illustrated in the
-Figure~\ref{fig:exemple:window}. At the top there are four discs with
-different number of measures and at the bottom there is a timeline
-showing the resolution subseries along time. Going from most to least
-granularity, disks are configured as follows: (i) a measure every 5 h
-in the fourth disc which has a capacity of 24 measures and thus it
-spans 5 days; (ii) a measure every 2 days in the third disc, with a
-capacity of 20 thus spanning 40 days; (iii) a measure every 15 days in
-the second disc, with a capacity of 12 thus spanning 180 days and;
-(iv) a measure every 50 days in the first disc that, with a capacity
-of 12 results in a span of 600 days.
+
+
+El cronograma de l'esquema de multiresolució es mostra a la
+\autoref{fig:exemple:cronograma}, en què cada resolució té un color
+diferent. Té la mateixa estructura que el cronograma periòdic definit
+a la \autoref{fig:model:cronograma-simplificat} però amb els valors
+particularitzats per a aquest exemple.  De més a menys resolució,
+l'esquema és el següent:
+
 
 
 \begin{figure}[tp]
   \centering
-  \setlength{\unitlength}{1.3mm}
   \input{imatges/exemple/mtsdb-time_window.tex}
-  \caption{Schema of multiresolution}
-  \label{fig:exemple:window}
+  \caption{Cronograma de l'esquema de multiresolució}
+  \label{fig:exemple:cronograma}
 \end{figure}
 
-% \emph{Attribute aggregate functions}.  In order to illustrate this
-% example we consolidate all the resolution subseries using the
-% meanzohe aggregate function and the two highest resolution
-% subseries using the maximum$^\zohe{}$ aggregate function. 
+\begin{enumerate}
+\item Es consolida una mesura cada 5 hores en un disc amb capacitat de
+  24 mesures. Per tant, en total aquesta resolució emmagatzema
+  informació durant 5 dies.
+
+\item Es consolida una mesura cada 2 dies en un disc amb capacitat de
+  20 mesures. Per tant, s'emmagatzema durant 40 dies.
+
+\item Es consolida una mesura cada 15 dies en un disc amb capacitat de
+  12 mesures.  Per tant, s'emmagatzema durant 180 dies.
+
+\item Es consolida una mesura cada 50 dies en un disc amb capacitat de
+  12 mesures.  Per tant, s'emmagatzema durant 600 dies.
+
+\end{enumerate}
 
 
-% \emph{Consolidation}. The time subseries after consolidating the
-% \acro{MTSDB} are shown in the Figure~\ref{fig:exemple:4mrd}, where
-% each graphic corresponds to the possible $\seriedisc$ queries, that is
-% every resolution disc time series from the \acro{MTSDB}. Each title
-% shows the resolution subseries and its cardinal, and each attribute
-% aggregate function has different colour.  Each time series is plotted
-% with \zohe{} representation function $S(t)^\zohe{}$. Time axis has
-% \acro{UTC} units rounded to nearest time points and temperature axis
-% has Kelvin units. Outlayers are marked as discontinuities, for
-% instance see fourth plot's 2938 K maximum.
+
+Aquest esquema està dissenyat per mostrar diferents paràmetres de la
+multiresolució. Així el criteri escollit és el de visualitzar algunes
+resolucions de la sèrie temporal original, la qual té un període de
+mostreig irregular de 2 minuts, des de la resolució cada 5 hores fins
+a la resolució cada 50 dies. També s'ha escollit per a mantenir uns
+lapses de temps repartits, des del lapse de 600 dies que emmagatzema
+tota la sèrie temporal original fins al de 5 dies que només conté una
+informació molt recent.
+
+
+Com a funció d'agregació d'atributs utilitzem la mitjana de la família
+\gls{zohe} (\seeref{def:sgstm:agregadorszohe}) per a totes les
+resolucions. A més, per a mostrar diferents maneres d'usar els
+agregadors, utilitzem el màxim de la família \gls{zohe} però només per
+a les darreres resolucions.
+
+
+De manera simplificada, iniciem la consolidació de totes les
+resolucions al mateix instant de temps, que notem amb $\tau_0$. Com ja
+hem dit, les dades originals s'inicien el 29 d'abril del 2010, per
+tant un $\tau_0=$ 1 de gener de 2010 és raonable.
+
+
+Així doncs, l'expressió de l'esquema de multiresolució en termes de la \autoref{def:sgstm:esquema}, i enumerant cada resolució,  és
+\begin{align*}
+e = \{ &\\ 
+&(\delta_1=5 \text{ h},f_1=\glssymbol{not:sgstm:meanzohe},k_1=24,\tau_1=\tau_0),\\
+&(\delta_2=2 \text{ d},f_2=\glssymbol{not:sgstm:meanzohe},k_2=20,\tau_2=\tau_0),\\
+&(\delta_3=15 \text{ d},f_3=\glssymbol{not:sgstm:meanzohe},k_3=12,\tau_3=\tau_0),\\
+&(\delta_4=50 \text{ d},f_4=\glssymbol{not:sgstm:meanzohe},k_4=12,\tau_4=\tau_0),\\
+&(\delta_{3b}=15 \text{ d},f_{3b}=\glssymbol{not:sgstm:maxzohe},k_{3b}=12,\tau_{3b}=\tau_0),\\
+&(\delta_{4b}=50 \text{ d},f_{4b}=\glssymbol{not:sgstm:maxzohe},k_{4b}=12,\tau_{4b}=\tau_0),\\
+\}&
+\end{align*}
+
+% \begin{align*}
+% e = ( & (\delta,f,k,\tau), \{  \\ 
+% &(5 \text{ h},\glssymbol{not:sgstm:meanzohe},24,\tau_0),\\
+% &(2 \text{ d},\glssymbol{not:sgstm:meanzohe},20,\tau_0),\\
+% &(15 \text{ d},\glssymbol{not:sgstm:meanzohe},12,\tau_0),\\
+% &(50 \text{ d},\glssymbol{not:sgstm:meanzohe},12,\tau_0),\\
+% &(15 \text{ d},\glssymbol{not:sgstm:maxzohe},12,\tau_0),\\
+% &(50 \text{ d},\glssymbol{not:sgstm:maxzohe},12,\tau_0),\\
+% \})&
+% \end{align*}
+
+Com que els atributs de mitjana i màxim comparteixen les dues darreres
+resolucions, les anomenem amb el mateix número però marcant amb una
+$b$ les de màxim.  En total, sumant les capacitats de cada disc,
+s'emmagatzemen $24+20+12+12+12+12=92$ mesures.
+
+
+
+
+
+
+
+\section{Resultats de la consolidació}
+
+En un \gls{SGSTM}, consolidem la sèrie temporal original amb l'esquema
+de multiresolució proposat. Del resultat, podem fer-ne les dues consultes bàsiques (\seeref{sec:sgstm:consultes}):
+
+\begin{enumerate}
+\item Les consultes \glssymbol{not:sgstm:seriedisc} per a obtenir les
+  subsèries temporals que han quedat consolidades a cada subsèrie
+  resolució.
+\item Les consultes \glssymbol{not:sgstm:serietotal} per a obtenir la sèrie
+  temporal total per a cada atribut.
+\end{enumerate}
+
+
+En primer lloc, a la \autoref{fig:exemple:4mrd} es mostren totes les
+subsèries resolució consolidades. Cada gràfic correspon a una consulta
+possible de \glssymbol{not:sgstm:seriedisc}, tot i que les resolucions
+que només difereixen en l'atribut es mostren en el mateix gràfic.
+Aquest és el cas de les dues darreres resolucions que comparteixen els
+mateixos paràmetres llevat de la funció d'agregació d'atributs: en
+blau es mostra l'atribut de \glssymbol{not:sgstm:meanzohe} i en
+taronja el de \glssymbol{not:sgstm:maxzohe}.  El títol de cada gràfic
+indica la subsèrie resolució i els paràmetres de pas de consolidació i
+de cardinal màxim.
+
 
 \begin{figure}[tp]
   \centering
@@ -98,16 +197,28 @@ of 12 results in a span of 600 days.
   %   every picture/.style={scale=0.7},
   % }
   \input{imatges/exemple/isense_4mrdb.tex}
-  \caption{Resolution subseries in the MTSDB}
+  \caption{Subsèries resolució emmagatzemades a la base de dades}
   \label{fig:exemple:4mrd}
 \end{figure}
 
+Cada sèrie temporals totals es
+mostra amb el mètode de representació \gls{zohe}, car s'han
+consolidat amb funcions d'agregació basades en aquest mètode.
+\todo{revisar}
 
-
+  Each time series is plotted
+% with \zohe{} representation function $S(t)^\zohe{}$. Time axis has
+% \acro{UTC} units rounded to nearest time points and temperature axis
+% has Kelvin units. Outlayers are marked as discontinuities, for
+% instance see fourth plot's 2938 K maximum.
 
 % In all the four plots, we can see that mean aggregate function has
 % filled missing data and filtered outlayer observations. This is due
 % to the aggregate function coming from a \zohe{} interpretation.
+
+
+
+En segon lloc,
 
 % Figure~\ref{fig:exemple:4mrdtot} shows the $\totalseries$
 % queries for the mean$^{\zohe}$ aggregate function resolution and for
@@ -120,15 +231,59 @@ of 12 results in a span of 600 days.
 % the maximum aggregation resembles an envelope function.
 
 
+En gris es mostra la sèrie temporal original amb el mètode de
+representació \gls{foh}. En canvi, les sèries temporals totals es
+mostren amb el mètode de representació \gls{zohe}.
 
 \begin{figure}[tp]
   \centering
   %\tikzset{every picture/.style={scale=0.8}}
   \input{imatges/exemple/isense_mrdb-all.tex}
-  \caption{totalseries for the meanzohe and maximumzohe
-    resolutions}
+  \caption{Comparació de la sèrie temporal original amb la sèrie temporal total de la multiresolució per als atributs de mitjana i màxim \gls{zohe}}
   \label{fig:exemple:4mrdtot}
 \end{figure}
+
+\todo{alerta! s'ha d'utilitzar la concatenació temporal ZOHE, sinó el màxim queda malament en el punt de concatenació}
+
+
+
+
+
+\begin{figure}[tp]
+  \centering
+  %\tikzset{every picture/.style={scale=0.8}}
+  \input{imatges/exemple/isense_mrdb-all-foh.tex}
+  \caption{Sèries temporals amb mètode de representació \gls{foh}}
+  \label{fig:exemple:4mrdtot-foh}
+\end{figure}
+
+Com diu keogh, potser sí que amb interpolacions lineals agraden més a l'ull humà
+\todo{?}
+
+
+\section{Computació}
+
+\todo{potser primer mostrar els resultats} Com que els resultats són
+els mateixos per a totes les computacions, primer mostrem els
+resultats i després parlem de com s'han computat?
+
+En aquests cas, ja hi ha totes les dades originals emmagatzemades, per
+tant la computació és en temps diferit. 
+
+Així doncs tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM}
+i consolidar-lo com calcular la funció de multiresolució de la sèrie
+temporal.
+
+
+Els resultats són els mateixos per a totes les computacions. 
+
+
+
+
+
+\section{Resum/comparació}
+
+
 
 
 % In conclusion, this \acro{MTSDB} example schema does not store the
@@ -146,10 +301,11 @@ of 12 results in a span of 600 days.
 
 
 
-\section{Resum/comparació}
 
 
 En RoundRobinson hi ha moltes capacitats complementàries: emmagatzemar en fitxers, fer gràfics, etc,. A més és molt genèric, molt proper al model, i permet implementar qualsevol esquema de multiresolució.
+A més aquí computem en temps diferit, i roundrobinson no ajusta els tau incials i per tant computar consolidacions que després són eliminades.
+Si la computació s'hagués realitzat en línia tal com s'anaven adquirint les dades, roundrobinson hagués sigut més apropiat.
 
 
 A RounRobindoop va bé per experimentar amb aquest exemple, perquè tenim totes les dades emmagatzemades, de fet són de fa uns anys, i per tant podem computar-ne la multiresolució de forma ràpida.
@@ -157,6 +313,14 @@ Cal dir que comparat amb executar-ho en bash
 
 
 
+
+
+
+\todo{podem proposar una altre esquema?}
+* un que dupliqui la capacitat
+* un que utilitzi les agregacions DD, aleshores aquest té retard de buffer
+
+dir-ho com a millores d'aquest esquema: 1. podríem ampliar la capacitat, del de 600 no perquè ja ho abasta tot però sí dels altres, per exemple per tenir 10 dies de resolució de cada 5 hores. 2. podem dibuixar els totals amb interpolació FOH però com que hem computat amb zohe quedaran desplaçats: hauríem d'utilitzar per exemple les DD.
 
 
 
@@ -169,3 +333,5 @@ Cal dir que comparat amb executar-ho en bash
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
+
+%  LocalWords:  multiresolució
