@@ -222,12 +222,16 @@ class Zohe(Representation):
         True
         >>> s.interval_temporal(6,10) == TimeSeries([Measure(10,None)])
         True
+        >>> s.interval_temporal(1,None) == TimeSeries([Measure(5,3),Measure(2,2)])
+        True
         """       
         s = self.get_ts()
         r = s.interval_open_left(l,g)
-        v = s[g::'c'].inf().v
-        m = s.mtype()(g,v)
-        r.add(m)
+        if g is not None:
+            v = s[g::'c'].inf().v
+            m = s.mtype()(g,v)
+            r.add(m)
+        
         return r
 
 
