@@ -45,6 +45,25 @@ def default_parser(l):
 
 
 
+def datetimetotimestamp(t):  
+    return int(time.mktime(t.timetuple()))
+
+def calendar2timestamp(t):
+    t1 = datetime.datetime.strptime(t,'%Y-%m-%d %H:%M:%S')#CAL fer generic
+    return datetimetotimestamp(t1)
+
+
+def calendar_parser(l):
+    if ',' in l:
+        l = l.split(',')
+    else:
+        l = l.split()
+
+    return (calendar2timestamp(l[0]),float(l[1]))
+
+
+
+
 def buff_class(t,delta,tau):
     """Resolves Natural `n` in the equation `tau+(n-1)*delta t <= tau+n*delta` and returns `tau+(n)*delta`.
 
@@ -284,16 +303,16 @@ def reduce(f,sch=None):
     >>> f = "10/mean-10\\t2 10.0\\n10/mean-10\\t6 20.0\\n5/mean-5\\t2 10.0\\n5/mean-10\\t6 20.0\\n"
     >>> fsimu = f.split('\\n')
     >>> reduce(fsimu) # doctest: +NORMALIZE_WHITESPACE
-    10/mean\t10 15.0
-    5/mean\t5 10.0
-    5/mean\t10 20.0
+    10 mean\t10 15.0
+    5 mean\t5 10.0
+    5 mean\t10 20.0
     >>>
     >>> f = "10/mean-10\\t2 10.0 15.0 20.0\\n10/mean-10\\t6 20.0 25.0 30.0\\n5/mean-5\\t2 10.0 15.0 20.0\\n5/mean-10\\t6 20.0 25.0 30.0\\n"
     >>> fsimu = f.split('\\n')
     >>> reduce(fsimu) # doctest: +NORMALIZE_WHITESPACE
-    10/mean\t10 15.0 20.0 25.0
-    5/mean\t5 10.0 15.0 20.0
-    5/mean\t10 20.0 25.0 30.0
+    10 mean\t10 15.0 20.0 25.0
+    5 mean\t5 10.0 15.0 20.0
+    5 mean\t10 20.0 25.0 30.0
     """
     previous = None
     ts = []
@@ -313,22 +332,21 @@ def reduce(f,sch=None):
                 if previous is not None:
                     pd,pf,pn = previous 
                     agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(pn)-float(pd),float(pn)])
-                    print '{delta}/{f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
+                    print '{delta} {f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
                 ts = [(t,v)]
                 previous = (delta,f,n)
 
     #last
     if ts:
         agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(n)-float(delta),float(n)])
-        print '{delta}/{f}\t{t} {v}'.format(delta=delta,f=f,t=n,v=agg)
+        print '{delta} {f}\t{t} {v}'.format(delta=delta,f=f,t=n,v=agg)
 
 
 
 
 
 
-def datetimetotimestamp(t):  
-    return int(time.mktime(t.timetuple()))
+
 
 
 def mrd_schema():
@@ -412,19 +430,14 @@ def schema_load_pickle(fname):
 
 if __name__ == '__main__':
 
-    tnow = datetimetotimestamp(datetime.datetime(2011,10,18))
-    #sch = mrd_schema() #no te en compte k dels discs
-    sch = mrd_schema_at_time_point(tnow) #te en compte k dels discs
+    sch = mrd_schema() #no te en compte k dels discs
+    #tnow = datetimetotimestamp(datetime.datetime(2011,10,18))
+    #sch = mrd_schema_at_time_point(tnow) #te en compte k dels discs
 
 
-    def pl(l):
-        t,v = l.split(',')
-
-        t = datetime.datetime.strptime(t,'%Y-%m-%d %H:%M:%S')
-        return (int(t.strftime('%s')),float(v))
 
 
-    #rrdoop -map|-reduce [-schema e] [-mapl I] [-mapg I]
+    #rrdoop -map|-reduce [-schema e] [-mapl I] [-mapg I] [-calendar]
 
     if len(sys.argv) > 1:
 
@@ -442,19 +455,30 @@ if __name__ == '__main__':
                 pos = sys.argv.index('-mapg')
                 lg[1] = int(sys.argv[pos+1])
 
-            buffer_ts(sys.stdin,sch,lg=lg)
+            parser = None
+            if '-calendar' in sys.argv:
+                parser = calendar_parser
+                
+            buffer_ts(sys.stdin,sch,parser_line=parser,lg=lg)
 
+
+
+            
         elif '-reduce' in sys.argv:
             reduce(sys.stdin,sch)
-        elif '-mapdatetime' in sys.argv:
-            buffer_ts(sys.stdin,sch,pl)
 
 
 
 
-###Falta definir aggregates generics
+
+#test: cat original.csv | rrdoop.py -map -schema e.pickle -mapg 1 | sort -k1,1 | rrdoop.py -reduce -schema e.pickle
 
 
-#test: cat p.csv | ./rrdoop.py -map | sort -k1,1 | ./rrdoop.py -reduce
+#execute a hadoop
+#requires roundrobinson disponible, eg: cp -r ~/pfc_svn/src/roundrobinson/trunk/ /usr/local/lib/python2.7/dist-packages/roundrobinson
 
-#cat roundrobindoop-ts-1393851630.csv | ./rrdoop.py -mapdefault -schema roundrobindoop-ts-1393851630.pickle | sort -k1,1 | ./rrdoop.py -reduce -schema roundrobindoop-ts-1393851630.pickle
+#[first] hadoop dfs -copyFromLocal original.csv /user/aleix/original.csv
+#[others] hadoop dfs -rmr /user/aleix/final
+#hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -file e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1' -reducer 'rrdoop.py -reduce -schema e.pickle' -input /user/aleix/original.csv -output /user/aleix/final
+#hadoop dfs -cat /user/aleix/final/part-00000
+#hadoop dfs -copyToLocal /user/aleix/final/part-00000 final.csv
