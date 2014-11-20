@@ -6,7 +6,8 @@
         xticklabel={\day--\hour:\minute},
         clip=false,
         ]
-       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R18000mean_zohe.csv};
+%       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R18000mean_zohe.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R18000mean_zohe.csv};
      \node[left] at (axis cs:2011-10-19,277) {\footnotesize oct.~2011};
   \end{axis}
 \end{tikzpicture}
@@ -18,7 +19,8 @@
         xticklabel={\day~\pgfcalendarmonthshortname{\month}},
         clip=false,
         ]
-       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R172800mean_zohe.csv};
+%       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R172800mean_zohe.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R172800mean_zohe.csv};
      \node[left] at (axis cs:2011-10-21,279) {\footnotesize 2011};
   \end{axis}
 \end{tikzpicture}
@@ -32,17 +34,16 @@
         ymax = 320,
         clip=false,
         ]
-       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R1296000mean_zohe.csv};
 
-      \addplot[const plot mark right, orange] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R1296000maximum_zohe.csv};
+       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R1296000mean_zohe.csv};
 
-      \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
-       \node (break) at (axis cs:2011-09-18,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
+      \addplot[const plot mark right, orange] table[col sep=comma] {imatges/exemple/dades-matriu0/R1296000maximum_zohe.csv};
+
+      \node[right] at (axis cs:2011-10-07,330) {\footnotesize(2938)};
+       \node (break) at (axis cs:2011-09-23,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
-       \node (break2) at (axis cs:2011-10-3,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
-    \draw [fill=red,color=orange] (break2.north east) -- (break2.north west) (break2.south west) -- (break2.south east);
 
-     \node[left] at (axis cs:2011-11-05,280) {\footnotesize 2011};
+     \node[left] at (axis cs:2011-10-27,273) {\footnotesize 2011};
 
   \end{axis}
 \end{tikzpicture}
@@ -59,14 +60,15 @@
 %v1.6     restrict y to domain=0:320,
         y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
         ]
-       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R4320000mean_zohe.csv};
+
+       \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R4320000mean_zohe.csv};
        \addlegendentry{mitjana};
 
-       \addplot[const plot mark right, orange] table[col sep=comma] {imatges/exemple/mrdzohe-matriu0/R4320000maximum_zohe.csv};
+       \addplot[const plot mark right, orange] table[col sep=comma] {imatges/exemple/dades-matriu0/R4320000maximum_zohe.csv};
        \addlegendentry{màxim};
 
        \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
-       \node (break) at (axis cs:2011-08-29,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
+       \node (break) at (axis cs:2011-08-27,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
   \end{axis}
