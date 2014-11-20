@@ -46,7 +46,7 @@ import pickle, marshal, types
 import csv
 
 
-from pytsms.storage import SavePickle, LoadPickle, Storage, SaveCsv as TSSaveCsv
+from pytsms.storage import SavePickle, LoadPickle, Storage, SaveCsv as TSSaveCsv, LoadCsv as TSLoadCsv
 
 
 
@@ -104,8 +104,8 @@ class SaveCsv(Storage):
 
     >>> 
     """
-    def __call__(self,on):    
-        with open(fname,'w') as f:
+    def __call__(self,ob):    
+        with open(self.fname,'w') as f:
             for r in sorted(ob):
                 for m in r.sd():
                     s = '{delta} {fn} {t} {v}\n'.format(delta=r.delta(),fn=r.fname(),t=m.t,v=m.v)
@@ -113,7 +113,39 @@ class SaveCsv(Storage):
             f.close()
 
 
+            
+class LoadCsv(TSLoadCsv):
+    """
+    Recupera tot d'un fitxer amb el format::
 
+     #delta f t v
+     10 mean 10 20.0
+     5 mean 10 40.0
+     5 mean 5 10.0
+
+    >>> m = _doctest_mrd()
+    >>> f = _doctest_file()
+    >>> m.accept(SaveCsv(f))
+    >>> M = m.accept(LoadCsv(f,int,float))
+    >>> m == M
+    True
+    >>>
+    >>> _doctest_file_rm(f)
+    True
+    """
+    def __call__(self,ob):
+        M = ob.empty()
+        with open(self.fname,'r') as fi:
+            for l in fi:
+                delta,f,t,v = l.split()
+                m = self._parser_row([t,v])
+                M.getResolution(int(delta),f).D.s.add(m)
+            fi.close()
+        return M
+
+
+
+            
 
 class MultiresolutionStorage(object):
     """
@@ -318,3 +350,5 @@ def _doctest_mrd():
     M.add(m1); M.add(m2); M.add(m3)
     M.consolidateTotal()
     return M
+
+

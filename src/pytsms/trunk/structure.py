@@ -45,6 +45,8 @@ class TimeSeriesStructure(set):
     True
     >>> s ==  TimeSeriesStructure([Measure(1,10),Measure(2,20)])
     False
+    >>> s ==  TimeSeriesStructure([Measure(2,10),Measure(1,10)])
+    True
     >>> min(s)
     m(1,10)
     >>> max(s)

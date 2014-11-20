@@ -117,7 +117,7 @@ class MultiresolutionSeries(VisitableMixin,set):
         Get resolution by delta, f
         """
         for r in self:
-            if r.delta() == delta and r.f() == f:
+            if r.delta() == delta and (r.f() == f or r.fname() == f ):
                 return r
 
     def add(self,m):

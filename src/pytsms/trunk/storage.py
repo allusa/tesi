@@ -134,24 +134,27 @@ class LoadCsv(Storage):
         self.vtype = vtype
         self.mtype = mtype
 
+    def _parser_row(self,row):
+        if len(row) == 2:
+            t,v = row
+        else:
+            t = row[0]
+            v = row[1:]
+
+        if self.ttype is not None:
+            t = self.ttype(t)
+        if self.vtype is not None:
+            v = self.vtype(v)
+
+        return self.mtype(t,v)
+        
     def __call__(self,ob):
         ts = ob.empty()
         with open(self.fname,'r') as f:
             csvreader = csv.reader(f)
 
             for row in csvreader:
-                if len(row) == 2:
-                    t,v = row
-                else:
-                    t = row[0]
-                    v = row[1:]
-                    
-                if self.ttype is not None:
-                    t = self.ttype(t)
-                if self.vtype is not None:
-                    v = self.vtype(v)
-                ts.add(self.mtype(t,v))     
-               
+                ts.add(self._parser_row(row))
 
             f.close()
 
