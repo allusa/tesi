@@ -91,7 +91,7 @@ for t,v in zip(temps,valors):
     print m.t
     M.add(Measure(t,v))
 
-    M.consolidateTotal(debug=True)
+    M.consolidateTotal(debug=False)
     
 print "S'ha farcit i consolidat la base de dades"
 
