@@ -224,10 +224,14 @@ class Zohe(Representation):
         True
         >>> s.interval_temporal(1,None) == TimeSeries([Measure(5,3),Measure(2,2)])
         True
-        """       
+        >>> s.interval_temporal(float('+inf'),float('-inf')) == TimeSeries([])
+        True
+        >>> s.interval_temporal(float('-inf'),float('+inf')) == s
+        True
+        """
         s = self.get_ts()
         r = s.interval_open_left(l,g)
-        if g is not None:
+        if g is not None and g != float('+inf') and l <= g:
             v = s[g::'c'].inf().v
             m = s.mtype()(g,v)
             r.add(m)

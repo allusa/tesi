@@ -59,7 +59,11 @@ M.addResolution(delta=d15,k=12,f=mean_zohe,tau=tau0)
 M.addResolution(delta=d50,k=12,f=mean_zohe,tau=tau0)
 M.addResolution(delta=d15,k=12,f=maximum_zohe,tau=tau0)
 M.addResolution(delta=d50,k=12,f=maximum_zohe,tau=tau0)
+#Ajustament dels taus
+tmax = '2011-10-18 13:27:59' #darrer temps de la sèrie temporal T(max(S))
+M.set_tau_tnow(calendar2timestamp(tmax))
 
+#Emmagatzematge de l'esquema
 M.accept(SavePickle(os.path.join(directori,'e.pickle')))
 
 
@@ -68,13 +72,13 @@ M.accept(SavePickle(os.path.join(directori,'e.pickle')))
 
 
 
-#Un cop s'ha executat
+
+
+#Càlcul dels totals, un cop s'ha executat la computació
 res = os.path.join(directori,resultat)
 if not os.path.exists(res):
     print "Els resultats encara no s'han calculat"
     exit()
-
-
 
 def floatwithnones(s):
     if s == 'None':
