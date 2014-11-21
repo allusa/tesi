@@ -4,13 +4,154 @@
 
 \todo{fer}
 
+En aquest capítol es resumeix l'exposat en el cos principal del
+document i s'extreuen conclusions del model dissenyat i de les
+implementacions.
 
 
-% \subsubsection{Resum del model de multiresolució}
-% El model de dades multiresolució s'estructura a partir de \emph{sèries temporals multiresolució} com a conjunt de \emph{subsèries resolució}, les quals  acumulen temporalment les mesures en un \emph{buffer} per tal de tractar-les abans d'emmagatzemar-les  a un \emph{disc}. El tractament principal consisteix en canviar els intervals de temps entre mesures amb l'objectiu de compactar la informació de la sèrie temporal.
-% Així doncs, la sèrie temporal queda emmagatzemada com una sèrie temporal multiresolució en intervals de temps diferents, repartits en les subsèries resolució. 
+1. Resumim els models formalitzats i la tècnica de multiresolució
 
-% Pel que fa a les operacions, és indispensable que el model multiresolució pugui fer aquests canvis d'intervals de temps, els quals s'aconsegueixen amb les operacions d'\emph{agregació} i \emph{consolidació}. En el model de dades multiresolució es defineixen els operadors específics per a aquestes tasques anomenats \emph{agregadors d'atributs}
+2. Resumim les variacions fetes a partir dels models
+
+3. Implementacions
+
+
+
+
+\section{Resum dels models}
+%Resum del model de multiresolució
+
+
+El principal objectiu de la multiresolució és l'emmagatzematge
+comprimit de sèries temporals. Així, la multiresolució es
+contextualitza en l'àmbit dels \gls{SGBD}, per la qual cosa hem
+formalitzat el model de dades dels \gls{SGSTM}, els sistemes que
+gestionen sèries temporals amb la tècnica de multiresolució. Els
+\gls{SGSTM} basen el tractament de les sèries temporals en els
+\gls{SGST}, per la qual cosa també hem descrit el model d'aquests
+sistemes. El principal objectiu dels \gls{SGST} és gestionar les
+sèries temporals de manera coherent a la dimensió temporal.
+
+
+
+
+La multiresolució emmagatzema una sèrie temporal mitjançant diversos
+resums d'atributs i resolucions.  Breument, el model de \gls{SGSTM}
+s'estructura a partir de \emph{sèries temporals multiresolució} com a
+conjunt de \emph{subsèries resolució}, les quals acumulen temporalment
+les mesures en un \emph{buffer} per tal de tractar-les abans
+d'emmagatzemar-les a un \emph{disc}. El tractament principal
+consisteix a canviar els intervals de temps entre mesures i a
+agregar-ne atributs, amb l'objectiu de compactar la informació de la
+sèrie temporal.  Així, cada sèrie temporal multiresolució té diferents
+paràmetres per a configurar de quina manera s'ha de resumir la
+informació i calcular les resolucions. És el que anomenem
+\emph{esquema de multiresolució} i consisteix en definir la quantitat
+de subsèries resolució i quatre paràmetres per a cadascuna: el pas de
+consolidació, l'instant de temps d'inici de la consolidació, la funció
+d'agregació d'atributs i la capacitat d'emmagatzematge.
+
+
+
+El model de \gls{SGSTM} també inclou les operacions que formalitzen el
+comportament d'aquests sistemes. En primer lloc, per a emmagatzemar
+una sèrie temporals multiresolució és indispensable que hi hagi
+operacions per a afegir mesures i per a consolidar-les. En segon lloc,
+hi ha operacions per a manipular l'esquema de multiresolució i per a
+observar-ne propietats. En tercer lloc, per a consultar les dades emmagatzemades  hi ha dues operacions bàsiques: obtenir 
+
+
+També les manipulacions d'esquema (sobretot com observar les dades d'un esquema) i les consultes: dues de bàsiques
+
+
+
+Un apartat específic
+En el model de dades multiresolució es defineixen els operadors específics per a aquestes tasques anomenats \emph{agregadors d'atributs}
+com interpretar les agregacions, hem introduït el problema de cooperar amb la validació de dades.
+
+% We have showed some aggregation functions examples with simple
+% aggregation statistics, mean and maximum, and simple representation
+% methods, Delta and \zohe{}. More attribute aggregation functions could
+% be designed based on methods from other fields such as data streaming
+% or time series data mining, especially it would be interesting aggregations with uncertain data.
+
+
+Pel que fa als \gls{SGST}
+
+We have gone a bit further and proposed \acro{TSMS} including
+ set, sequence and temporal function behaviour.
+
+Hem observat propietats problemàtiques, naturalesa
+la multiresolució ha de cooperar en els propietats problemàtiques dels \gls{SGST}: regularitat, gran volum de dades, etc.
+
+
+
+
+\section{Consideracions}
+
+* La multiresolució és una selecció de la informació de la sèrie temporal. Per tant és un emmagatzematge amb pèrdua. Això vol dir que l'usuari ha d'escollir un esquema de multiresolució adequat al context en què vulgui treballar.
+
+
+ These configuration parameters
+% are degrees of freedom for each application. Giving different values a
+% multiresolution database is capable to keep the desired information
+% from a time series. %
+
+
+
+% The queries over \acro{MTSMS} obtain time series from stored
+% multiresolution time series. In this way \acro{TSMS} operators can be
+% applied if needed. The $\seriedisc$ time series being regular
+% facilitates these operations. However, the lossy storage implies that
+% some operations will give approximate queries and that not every
+% \acro{TSMS} operation will be semantically correct for a
+% multiresolution time series. Therefore the correct planning of the
+% multiresolution schema is needed.
+
+
+% Compared to other \acro{TSMS} we propose a compression solution that
+% stores only the information we will require by latter queries or by
+% human visualisation, instead of trying to reconstruct the original
+% signal.  Moreover, our multiresolution solution copes well with
+% typical problematic properties of time series: regularity, data
+% validation and data volume.  The decompression time is minimal as data
+% in discs get stored directly as a time series. As a consequence, the
+% queries or visualisation computing time is only due to the computation
+% itself. Moreover, if the query is an aggregation or resolution already
+% computed in \acro{MTSMS} consolidation, then the visualisation is
+% immediate.
+
+
+% \acro{MTSMS} imply a data information selection and so the information
+% not considered important is discarded. 
+% % When this is not possible, we
+% % have showed a dual structure of \acro{TSMS} and \acro{MTSMS}. Then a
+% % \acro{TSMS} stores losslessly and a \acro{MTSMS} takes advantages of
+% % manipulating data in time order in order to achieve pre-computed
+% % queries in a stream-like orientation. 
+% In future work, information
+% theory has to be evaluated for multiresolution schemes. As multimedia
+% lossy compression techniques are well founded on information theory,
+% similar approaches could be taken for multiresolution time series,
+% e.g. evaluating whether a human can visualise original qualities in
+% the multiresoluted time series or evaluating
+% whether given a query it has the same validity for a multiresoluted
+% one as it has for the original.
+
+
+
+
+% A \acro{MTSMS} could be implemented as a SQL \acro{DBMS} system or as
+% a NoSQL one. As a referent implementation we have developed a
+% \emph{Python} package centred on the basic algebra, that is without
+% extended \acro{DBMS} capabilities. Regarding other implementations,
+% \emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
+% a NoSQL system, although Oetiker \cite{rrdtool} has not commented
+% it. However, regardless of the implementation backend, we have shown
+% how a generic model for \acro{MTSMS} can be defined firmly rooted on
+% \acro{DBMS} algebra theory.
+
+
 
 
 
@@ -161,4 +302,4 @@
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-% LocalWords:  SGSTM
+% LocalWords:  SGSTM multiresolució subsèries
