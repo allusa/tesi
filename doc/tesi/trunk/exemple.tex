@@ -4,7 +4,7 @@
 En aquest capítol mostrem un exemple de base de dades multiresolució
 aplicada a una sèrie temporal real amb dades massives.  
 
-\todo{}
+\todo{fer intro}
 We use Pytsms and
 RoundRobinson implementations in order to create a \acro{MTSDB} and
 to query it.
@@ -20,9 +20,9 @@ Passos:
 \begin{enumerate}
 \item Descrivim la sèrie temporal original.
 \item Proposem un esquema de multiresolució.
-\item Computem la consolidació de la sèrie temporal amb l'esquema proposat. \todo{amb diferents implementacions}
-\item Avaluem els resultats.
-\item Comparem les diferents implementacions.
+\item Avaluem els resultats de la consolidació de la sèrie temporal
+  amb l'esquema proposat.
+\item Comparem les diferents implementacions per a computar l'exemple.
 \end{enumerate}
 
 
@@ -30,7 +30,7 @@ En les computacions hem utilitzat els reals estesos,
 $\glssymbol{not:Rb}$, com a domini del temps segons l'estàndard d'Hora
 Unix (\seeref{sec:sgst:temps}). Això no obstant, per a facilitar-ne la
 comprensió, en els exemples mostrem el domini del temps amb el format
-de calendari d'\gls{UTC}.
+de calendari \gls{UTC}.
 
 
 
@@ -165,6 +165,12 @@ s'emmagatzemen $24+20+12+12+12+12=92$ mesures.
 
 
 
+% \todo{podem proposar una altre esquema?}
+% * un que dupliqui la capacitat: podríem ampliar la capacitat, del de 600 no perquè ja ho abasta tot però sí dels altres, per exemple per tenir 10 dies de resolució de cada 5 hores. 
+
+% * un que utilitzi les agregacions DD, aleshores aquest té retard de buffer
+
+
 
 
 
@@ -204,7 +210,7 @@ de cardinal màxim.
   \label{fig:exemple:4mrd}
 \end{figure}
 
-Cada sèrie temporals totals es mostra amb el mètode de representació
+Cada sèrie temporals es mostra amb el mètode de representació
 \gls{zohe}, car s'han consolidat amb funcions d'agregació basades en
 aquest mètode.  Els eixos de temps marquen els instants de temps però
 arrodonits en la forma de calendari, per exemple en el primer gràfic
@@ -220,13 +226,33 @@ s'hauria de limitar la durada que un valor es pot considerar vàlid per
 a mantenir-lo o bé s'hauria d'incloure una tècnica de reconstrucció
 del senyal en les funcions d'agregació d'atributs.
 
+També es pot mostrar totes les subsèries resolució consolidades en un
+mateix gràfic, com a la \autoref{fig:exemple:4mtot} en què cada
+resolució té el mateix color que a la
+\autoref{fig:exemple:cronograma}. En aquest gràfic es pot observar
+clarament quin tros de la sèrie temporal original (en gris) resumeix
+cada resolució. Això no obstant, a la \autoref{fig:exemple:4mrd} es
+visualitza més bé la informació de cada resolució, sobretot en el cas
+de la primera resolució de 5 hores que a la
+\autoref{fig:exemple:4mtot} no se'n distingeixen les mesures.
+
+\begin{figure}[tp]
+  \centering
+  %\tikzset{every picture/.style={scale=0.8}}
+  \input{imatges/exemple/isense_4m-all.tex}
+  \caption{Comparació de la sèrie temporal original en gris amb les subsèries resolució en els mateixos colors que a la \autoref{fig:exemple:cronograma}}
+  \label{fig:exemple:4mtot}
+\end{figure}
+
+
 
 
 En segon lloc, a la \autoref{fig:exemple:4mrdtot} es mostra la
 consulta de la sèrie temporal total per a l'atribut de
 \glssymbol{not:sgstm:meanzohe} (en blau) i per a l'atribut de
-\glssymbol{not:sgstm:maxzohe} (en taronja), ambdues amb el mètode de
-representació \gls{zohe}. En gris es mostra la sèrie temporal original
+\glssymbol{not:sgstm:maxzohe} (en taronja). Ambdues consultes de
+$\glssymbol{not:sgstm:serietotal}$ s'han calculat amb concatenació
+temporal \gls{zohe} i es representen gràficament  amb el mètode \gls{zohe}. En gris es mostra la sèrie temporal original
 amb el mètode de representació \gls{foh}.  Comparant les sèries
 temporals consolidades amb l'original, podem observar que la mitjana
 s'assembla a un filtre passabaix i el màxim s'assembla a l'envolupant,
@@ -235,7 +261,7 @@ l'esquema de multiresolució. Així, es pot observar que els atributs
 tenen una resolució incremental, és a dir menys resolució en els temps
 antics i més en els temps recents, i que la mitjana acaba tenint més
 resolució que el màxim.
-\todo{alerta! s'ha d'utilitzar la concatenació temporal ZOHE, sinó el màxim queda malament en el punt de concatenació}
+
 
 \begin{figure}[tp]
   \centering
@@ -244,6 +270,7 @@ resolució que el màxim.
   \caption{Comparació de la sèrie temporal original amb la sèrie temporal total de la multiresolució per als atributs de mitjana i màxim \gls{zohe}}
   \label{fig:exemple:4mrdtot}
 \end{figure}
+
 
 
 
@@ -274,10 +301,15 @@ temps de les mesures resultants fos el temps en què ocorre el màxim.
 
 
 
-
-
-
-
+En conclusió, aquests resultats exemplifiquen com un \gls{SGSTM}
+emmagatzema una compressió de les dades originals que conté una certa
+informació dels atributs originals. En efecte, les $146.709$ mesures
+emmagatzemades originalment es redueixen a $92$ mesures. Aquestes
+mesures es reparteixen en diferents resolucions de manera que hi ha
+més informació per als temps recents i que cada subsèrie temporal és
+regular de període $\delta$. La sèrie temporal total no és regular,
+però sí que se'n pot observar una regularitat a trossos ja que és una
+concatenació de les subsèries regulars.
 
 
 
@@ -287,19 +319,21 @@ temps de les mesures resultants fos el temps en què ocorre el màxim.
 
 \todo{revisar} 
 
-En aquests exemple, ja es disposa de totes les dades originals
+En aquests exemple ja es disposa de totes les dades originals
 emmagatzemades, per tant la computació és en temps diferit.  Així
-doncs tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM} i
+doncs, tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM} i
 consolidar-lo com calcular la funció de multiresolució de la sèrie
 temporal. 
+
 
 Els resultats són aproximadament els mateixos per a totes les
 computacions. Hi ha petites diferències degudes a les diferències
 entre les implementacions. Per exemple, a RounRobindoop s'ha hagut
 d'aproximar els intervals de consolidació que en el cas \gls{zohe}
-s'amplien un interval. En aquest exemple, però, hi ha dades mancants
-de més d'un interval i per tant en cal més d'un per a farcir els
-forats: RoundRobindoop no els té en canvi RoundRobinson sí.
+s'amplien un interval (\seeref{ex:mapreduce:fzohe}). En aquest
+exemple, però, hi ha dades mancants de més d'un interval de durada i
+per tant cal utilitzar més d'un interval per a farcir els forats:
+RoundRobindoop no té aquesta possibilitat, en canvi RoundRobinson sí.
 
 
 
@@ -308,11 +342,15 @@ Hem computat la consolidació amb les tres implementacions de
 \emph{mtsms.multiresolution} de Reltsms.
 
 
+
+
+
+
 En aquest cas a RoundRobinson podem compartir el buffer físic per a totes les resolucions, perquè treballem en temps diferit (ref a variacions de buffer on es diu la compartició)
 
 
 En RoundRobinson hi ha moltes capacitats complementàries: emmagatzemar en fitxers, fer gràfics, etc,. A més és molt genèric, molt proper al model, i permet implementar qualsevol esquema de multiresolució.
-A més aquí computem en temps diferit, i roundrobinson no ajusta els tau incials i per tant computar consolidacions que després són eliminades.
+A més aquí computem en temps diferit, i roundrobinson no ajusta els tau incials (sí! també ho podem fer, potser s'hauria de posar a l'exemple de roundrobinson?) i per tant computar consolidacions que després són eliminades.
 Si la computació s'hagués realitzat en línia tal com s'anaven adquirint les dades, roundrobinson hagués sigut més apropiat.
 
 
@@ -321,44 +359,24 @@ Cal dir que comparat amb executar-ho en bash
 
 
 
-Temps RoundRobinson
-
-1. 75 minuts
-
-
-
-
-
-
-
-\todo{podem proposar una altre esquema?}
-* un que dupliqui la capacitat
-* un que utilitzi les agregacions DD, aleshores aquest té retard de buffer
-
-dir-ho com a millores d'aquest esquema: 1. podríem ampliar la capacitat, del de 600 no perquè ja ho abasta tot però sí dels altres, per exemple per tenir 10 dies de resolució de cada 5 hores. 2. podem dibuixar els totals amb interpolació FOH però com que hem computat amb zohe quedaran desplaçats: hauríem d'utilitzar per exemple les DD.
-
-
-
-
-
-
-\section{Resum/comparació}
-
-
-\todo{fer una conclusió}
-
-In conclusion, this \acro{MTSDB} example schema does not store the
-complete original data but a compression of the original function
-which contains more information for recent times.  Each of the
-seriedisc time series is regular with $\delta$. Although
-totalseries is not a regular time series, it has piece-wise
-regularity as a concatenation of every disc's $\delta$.  The purpose
+  The purpose
 of this example is to show how the multiresolution is computed for a
 time series, it has been computed offline as the original data had
 already been acquired. However, a \acro{MTSMS} is designed to
 consolidate while the original data is being acquired so that the
 multiresolution computation spreads along the acquisition and the
 computing time becomes less critical.
+
+
+
+Temps orientatius, computats en una màquina de sobretaula. 
+
+Temps RoundRobinson
+
+1. 75 minuts
+
+
+
 
 
 
@@ -372,4 +390,4 @@ computing time becomes less critical.
 %%% TeX-master: "main"
 %%% End:
 
-%  LocalWords:  multiresolució
+%  LocalWords:  multiresolució subsèrie subsèries

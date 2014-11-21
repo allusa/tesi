@@ -76,7 +76,9 @@ M.addResolution(delta=d15,k=12,f=mean_zohe,tau=tau0)
 M.addResolution(delta=d50,k=12,f=mean_zohe,tau=tau0)
 M.addResolution(delta=d15,k=12,f=maximum_zohe,tau=tau0)
 M.addResolution(delta=d50,k=12,f=maximum_zohe,tau=tau0)
-
+#Ajustament dels taus
+tmax = '2011-10-18 13:27:59' #darrer temps de la sèrie temporal T(max(S))
+#M.set_tau_tnow(calendar2timestamp(tmax)) ?????????????????
 
 #Dades originals
 temps,valors = llegeix_dades(original)

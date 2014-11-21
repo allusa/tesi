@@ -199,7 +199,7 @@ class FuncOpMixin():
         >>> s2.set_rpr(Zohe)
         >>> s1.concatenate_temporal(s2) == TimeSeries([Measure(5,1),Measure(1,2),Measure(2,1),Measure(0,2),Measure(6,2)])
         True
-        >>> s2.concatenate_temporal(s1) == s2
+        >>> s2.concatenate_temporal(s1) == TimeSeries([Measure(4,2),Measure(1,2),Measure(6,2),Measure(0,1)])
         True
         """
         t1 = self.inf().t
