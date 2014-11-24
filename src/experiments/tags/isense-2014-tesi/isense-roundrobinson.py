@@ -62,7 +62,7 @@ os.mkdir(directori)
 #Multiresolució
 M = MultiresolutionSeriesSharedBuffer()#MultiresolutionSeries()
 #Temps en segons, Hora Unix
-tau0 = datetimetotimestamp(datetime.datetime(2010,1,1))
+tau0 = calendar2timestamp('2010-01-01 00:00:00')
 h1 = 3600 
 h5 = 5 * h1
 d1 = 24 * h1
@@ -78,7 +78,7 @@ M.addResolution(delta=d15,k=12,f=maximum_zohe,tau=tau0)
 M.addResolution(delta=d50,k=12,f=maximum_zohe,tau=tau0)
 #Ajustament dels taus
 tmax = '2011-10-18 13:27:59' #darrer temps de la sèrie temporal T(max(S))
-#M.set_tau_tnow(calendar2timestamp(tmax)) ?????????????????
+M.set_tau_tnow(calendar2timestamp(tmax))
 
 #Dades originals
 temps,valors = llegeix_dades(original)

@@ -45,7 +45,7 @@ if not os.path.exists(directori):
 #Multiresolució
 M = MultiresolutionSeries()
 #Temps en segons, Hora Unix
-tau0 = datetimetotimestamp(datetime.datetime(2010,1,1))
+tau0 = calendar2timestamp('2010-01-01 00:00:00')
 h1 = 3600 
 h5 = 5 * h1
 d1 = 24 * h1
@@ -70,8 +70,10 @@ M.accept(SavePickle(os.path.join(directori,'e.pickle')))
 #Execució a la shell
 #cat dades/matriu0.csv | roundrobindoop/rrdoop.py -map -schema resultats-idoop/e.pickle -mapg 1 -calendar | sort -k1,1 | roundrobindoop/rrdoop.py -reduce -schema resultats-idoop/e.pickle  > resultats-idoop/final.csv
 
-
-
+#Execució a Hadoop
+#hadoop dfs -copyFromLocal dades/matriu0.csv /user/aleix/matriu0.csv
+#hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -D mapred.reduce.tasks=3 -file roundrobindoop/rrdoop.py -file resultats-idoop/e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1 -calendar' -reducer 'rrdoop.py -reduce -schema e.pickle' -input /user/aleix/matriu0.csv -output /user/aleix/final
+#hadoop dfs -rmr /user/aleix/final
 
 
 #Càlcul dels totals, un cop s'ha executat la computació
