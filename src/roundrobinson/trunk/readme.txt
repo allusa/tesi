@@ -5,7 +5,7 @@ RoundRobinson
 :Author: Aleix Llusà Serra
 :Contact: aleix (a) dipse.upc.edu
 :Version: 0.4-dev
-:Date: 	2014-07-15
+:Date: 	2014-11-20
 :Abstract: Python implementation for a Multiresolution Time Series DBMS (MTSMS).
 :Copyright: GPLv3
 :Depends: pytsms0.2-dev, python2.7

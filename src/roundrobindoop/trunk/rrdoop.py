@@ -9,6 +9,7 @@ import sys
 import datetime
 import time
 import pickle, marshal, types
+from roundrobinson import TimeSeries, Measure
 
 
 
@@ -266,7 +267,6 @@ def _mean(s):
 
 
 def _convert_to_timeseries(l):
-    from roundrobinson import TimeSeries, Measure
 
     s = TimeSeries()
     for m in l:
@@ -278,7 +278,7 @@ def aggregate(s,f=None,i=None):
     if f is None or isinstance(f,str):
         return _mean(s)
 
-    s = _convert_to_timeseries(s)
+    #s = _convert_to_timeseries(s)
     return f(s,i).v
 
 
@@ -315,7 +315,7 @@ def reduce(f,sch=None):
     5 mean\t10 20.0 25.0 30.0
     """
     previous = None
-    ts = []
+    ts = TimeSeries()     
 
 
     aggs = extract_aggregators(sch)
@@ -323,17 +323,19 @@ def reduce(f,sch=None):
 
     for line in f:
         line = line.rstrip()
+        #show_progress('reduceLine')
         if line:
             delta,f,n,t,v = reduce_line(line)
             
             if (delta,f,n) == previous:
-                ts.append((t,v))
+                ts.add(Measure(t,v))
             else:
                 if previous is not None:
-                    pd,pf,pn = previous 
+                    pd,pf,pn = previous
+                    show_progress('aggregating {delta} {f}\t{t}'.format(delta=pd,f=pf,t=pn))
                     agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(pn)-float(pd),float(pn)])
                     print '{delta} {f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
-                ts = [(t,v)]
+                ts = TimeSeries([Measure(t,v)])
                 previous = (delta,f,n)
 
     #last
@@ -347,53 +349,6 @@ def reduce(f,sch=None):
 
 
 
-
-
-def mrd_schema():
-
-    tzero = datetimetotimestamp(datetime.datetime(2010,1,1))
-
-    #temps segons Unix Time Epoch (segons)
-    zero = tzero
-    h1 = 3600
-    h5 = 5 * h1
-    d1 = 24 * h1
-    d2 = 2 * d1
-    d15 = 15 * d1
-    d50 = 50 * d1
-
-    #conf multiresolution data base
-    r1 = (h5,zero,'mean',24)
-    r2 = (d2,zero,'mean',20)
-    r3 = (d15,zero,'mean',12)
-    r4 = (d50,zero,'mean',12)
-
-    return [r1,r2,r3,r4]
-
-
-
-def mrd_schema_at_time_point(t):
-
-    def tau_zero(tnow,delta,k):
-        return tnow - k*delta - delta
-
-
-    #temps segons Unix Time Epoch (segons)
-    tnow = t
-    h1 = 3600
-    h5 = 5 * h1
-    d1 = 24 * h1
-    d2 = 2 * d1
-    d15 = 15 * d1
-    d50 = 50 * d1
-
-    #conf multiresolution data base
-    r1 = (h5,tau_zero(tnow,h5,24),'mean',24)
-    r2 = (d2,tau_zero(tnow,d2,20),'mean',20)
-    r3 = (d15,tau_zero(tnow,d15,12),'mean',12)
-    r4 = (d50,tau_zero(tnow,d50,12),'mean',12)
-
-    return [r1,r2,r3,r4]
 
 
 
@@ -427,10 +382,23 @@ def schema_load_pickle(fname):
     return mts
 
 
+def show_progress(p=None):
+    status = "reporter:status:{0}"
+    #reporter:counter:<group>,<name>,<increment>
+    #datetime.datetime.now()
+    
+    if p is None:
+        p = 'OK'
+    sys.stderr.write(status.format(p))
+    sys.stderr.flush()
 
+
+
+
+    
 if __name__ == '__main__':
 
-    sch = mrd_schema() #no te en compte k dels discs
+    #sch = mrd_schema() #no te en compte k dels discs
     #tnow = datetimetotimestamp(datetime.datetime(2011,10,18))
     #sch = mrd_schema_at_time_point(tnow) #te en compte k dels discs
 

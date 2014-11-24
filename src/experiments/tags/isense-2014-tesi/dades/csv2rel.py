@@ -32,10 +32,17 @@ END;
     """
 
     fr.write(inici)
-    
-    row = 'TUPLE {{ t {0}, v {1} }},\n' #AL DARRER NO HI pot anar coma
+
+    #primer
+    rowprimer = 'TUPLE {{ t {0}, v {1} }}'
+    t,v = f.next()
+    fr.write(rowprimer.format(calendar2timestamp(t),v))
+
+    #altres
+    row = ',\nTUPLE {{ t {0}, v {1} }}' #AL DARRER NO HI pot anar coma 
     for t,v in f:      
         fr.write(row.format(calendar2timestamp(t),v))
+
 
     fr.write(final)
     fr.close()

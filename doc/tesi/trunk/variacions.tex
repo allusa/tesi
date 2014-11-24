@@ -154,6 +154,10 @@ recollir les resolucions ja resumides que es necessitin.
 disseminació de la informació per a xarxes de sensors.
 
 
+% per exemple un buffer d'entrada de mesures comú que regularitzi la sèrie temporal des d'un principi i simplifiqui els interpoladors que són complicats quan es fa el pas de sèrie temporal no regular a regular.
+
+
+
 
 %\subsubsection{Estructura d'exemple}
 
@@ -399,21 +403,26 @@ de consolidació hi pot haver els escenaris següents:
   causa que la consolidació de l'esquema estigui totalment
   sincronitzada amb el rellotge real. En aquest cas s'hi poden
   incloure \gls{SGSTM} que controlin el procés d'adquisició, és a dir
-  que ordenin quan s'han d'adquirir noves mesures. També es pot pensar
-  en \gls{SGSTM} i istemes de monitoratge que no tinguin una bona
-  mesura del temps actual, per exemple sense sincronització de
-  rellotge, i en què l'objectiu dels \gls{SGSTM} sigui informar de
-  l'evolució de les variables situant-les relativament a partir de
-  l'instant en què es fa la consulta.
+  que ordenin quan s'han d'adquirir noves mesures. 
+
+
+\item Relatiu.  Ho anomenem rellotge relatiu perquè el temps depèn
+  d'altres esdeveniments. Per exemple que la consolidació es computi
+  cada quatre mesures inserides. En aquest cas, es pot pensar en
+  \gls{SGSTM} i sistemes de monitoratge que no tinguin una bona mesura
+  del temps actual, per exemple sense sincronització de rellotge, i en
+  què l'objectiu dels \gls{SGSTM} sigui informar de l'evolució de les
+  variables situant-les relativament a partir de l'instant en què es
+  fa la consulta. També pot ser el cas de les resolucions encadenades;
+  com que depenen de la consolidació d'un altre disc aquest pot servir
+  per a marcar el rellotge de consolidació dels buffers encadenats.
 
 
 
 
 \end{itemize}
 
-En el cas de les resolucions encadenades, com que depenen de la
-consolidació d'un altre disc aquest aquest pot servir per a marcar el
-rellotge. 
+
 
 
 % * en cas de comptadors digitals, aquests cada cop que incrementen el valor poden fer un push a la base de dades. En comptadors analògics no ho poden fer perquè van incrementant contínuament i no discretament.
