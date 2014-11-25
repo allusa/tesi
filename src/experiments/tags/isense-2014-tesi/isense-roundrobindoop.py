@@ -12,7 +12,7 @@ Experiment amb les dades d'isense usant RoundRobindoop.
 
 
 import os
-import time, datetime
+import datetime
 
 from roundrobinson import Measure, TimeSeries, MultiresolutionSeries
 from roundrobinson.storage import SavePickle, LoadCsv
@@ -22,12 +22,13 @@ from roundrobinson.pytsms.representation import Zohe
 from roundrobinson.pytsms.storage import SaveCsv as TSSaveCsv, LoadCsv as TSLoadCsv 
 
 
-def datetimetotimestamp(t):  
-    return int(time.mktime(t.timetuple()))
+os.environ['TZ'] = 'UTC' #sinó la conversio strftime es fa amb localtime
+CALENDARFORMAT = '%Y-%m-%d %H:%M:%S'
+DELIMITER = None
 
 def calendar2timestamp(t):
-    t1 = datetime.datetime.strptime(t,'%Y-%m-%d %H:%M:%S')
-    return datetimetotimestamp(t1)
+    t1 = datetime.datetime.strptime(t,CALENDARFORMAT)
+    return int(t1.strftime('%s'))
 
 
 #Directori de dades
@@ -72,7 +73,11 @@ M.accept(SavePickle(os.path.join(directori,'e.pickle')))
 
 #Execució a Hadoop
 #hadoop dfs -copyFromLocal dades/matriu0.csv /user/aleix/matriu0.csv
-#hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -D mapred.reduce.tasks=3 -file roundrobindoop/rrdoop.py -file resultats-idoop/e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1 -calendar' -reducer 'rrdoop.py -reduce -schema e.pickle' -input /user/aleix/matriu0.csv -output /user/aleix/final
+# time hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar  -D mapred.reduce.tasks=3 -file roundrobindoop/rrdoop.py -file resultats-idoop/e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1 -calendar' -reducer 'rrdoop.py -reduce -schema e.pickle' -input /user/aleix/matriu0.csv -output /user/aleix/final
+#hadoop dfs -copyToLocal /user/aleix/final/part-00000 resultats-idoop/final0.csv
+#hadoop dfs -copyToLocal /user/aleix/final/part-00001 resultats-idoop/final1.csv
+#hadoop dfs -copyToLocal /user/aleix/final/part-00002 resultats-idoop/final2.csv
+#cat resultats-idoop/final{0,1,2}.csv > resultats-idoop/final.csv
 #hadoop dfs -rmr /user/aleix/final
 
 

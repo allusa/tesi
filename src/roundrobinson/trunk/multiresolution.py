@@ -313,7 +313,7 @@ class MultiresolutionSeries(VisitableMixin,set):
         >>> M.total() == TimeSeries([Measure(20,10),Measure(15,50),Measure(10,40)])
         True
         >>> from pytsms.representation import Zohe
-        >>> M.total(rpr=Zohe) == TimeSeries([Measure(20,10),Measure(15,50),Measure(10,40)])
+        >>> M.total(rpr=Zohe) == TimeSeries([Measure(20,10),Measure(15,10),Measure(10,40)])
         True
         >>> M.total(ff=[maxim]) == TimeSeries([Measure(20,10),Measure(15,50),Measure(10,40)])
         True

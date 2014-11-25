@@ -11,7 +11,7 @@ Experiment amb les dades d'isense usant RoundRobinson v0.4dev.
 """
 
 import os
-import time, datetime
+import datetime
 import csv
 
 from roundrobinson import Measure, TimeSeries, MultiresolutionSeries, MultiresolutionSeriesSharedBuffer
@@ -22,27 +22,15 @@ from roundrobinson.pytsms.representation import Zohe
 from roundrobinson.pytsms.storage import SaveCsv as TSSaveCsv, LoadCsv as TSLoadCsv
 
 
-def datetimetotimestamp(t):  
-    return int(time.mktime(t.timetuple()))
+os.environ['TZ'] = 'UTC' #sinó la conversio strftime es fa amb localtime
+CALENDARFORMAT = '%Y-%m-%d %H:%M:%S'
+DELIMITER = None
 
 def calendar2timestamp(t):
-    t1 = datetime.datetime.strptime(t,'%Y-%m-%d %H:%M:%S')
-    return datetimetotimestamp(t1)
+    t1 = datetime.datetime.strptime(t,CALENDARFORMAT)
+    return int(t1.strftime('%s'))
 
 
-def llegeix_dades(fitxer):
-
-    f = csv.reader(open(fitxer))#,delimiter=' '
-
-
-    temps = []
-    valors = []
-
-    for t,v in f:
-        temps.append(calendar2timestamp(t))
-        valors.append(float(v))
-
-    return temps,valors
 
 
 #Directori de dades
@@ -79,22 +67,18 @@ M.addResolution(delta=d50,k=12,f=maximum_zohe,tau=tau0)
 #Ajustament dels taus
 tmax = '2011-10-18 13:27:59' #darrer temps de la sèrie temporal T(max(S))
 M.set_tau_tnow(calendar2timestamp(tmax))
-
-#Dades originals
-temps,valors = llegeix_dades(original)
-#S = TimeSeries().accept(TSLoadCsv(original,calendar2timestamp,float))
-print "S'ha llegit el fitxer de dades"
-
-#Afegeix i consolida
 print M.str_taus() #Mostra el temps d'inici
 
-for t,v in zip(temps,valors):
-    m = Measure(t,v)
-    print m.t
-    M.add(Measure(t,v))
 
-    M.consolidateTotal(debug=False)
-    
+#Afegeix
+#S = TimeSeries().accept(TSLoadCsv(original,calendar2timestamp,float))
+f = csv.reader(open(fitxer))#,delimiter=' '
+for t,v in f:
+    M.add(Measure(calendar2timestamp(t),float(v)))
+print "S'ha llegit el fitxer de dades"    
+
+#Consolida
+M.consolidateTotal(debug=False)
 print "S'ha farcit i consolidat la base de dades"
 
 
