@@ -119,11 +119,11 @@ En resum, proposem una solució de compressió que només emmagatzemi la
 informació prevista que es requerirà en futures consultes o bé en
 visualitzacions gràfiques.  En comparació, generalment, altres
 sistemes per sèries temporals comprimeixen i reconstrueixen el senyal
-original o bé emmagatzemen massivament les dades. A més, la solució de
+original o bé emmagatzemen massivament les dades.  Com a tècnica de
+compressió, en els \gls{SGSTM} el procés de descompressió és nul quan
+es consulta exactament una resolució de les emmagatzemades.  A més, la
 multiresolució coopera amb propietats problemàtiques típiques de les
 sèries temporals i s'adequa a l'àmbit de monitoratge.
-
-
 
 
 \section{Consideracions}
@@ -167,22 +167,17 @@ resolucions.
 
 
 
-\todo{fer}
 
-
-
-
-Pel que fa a la inserció i la consolidació, el model de \gls{SGSTM}
-permet tant una computació en temps diferit com en línia . És a dir,
-tant permet tenir una sèrie temporal ja capturada i processar-la en un
-\gls{SGSTM} com processar-la al mateix temps que es va adquirint i per
-tant seguint el flux d'entrada de dades.  Aquesta possibilitat de
-processar el flux permet fer menys crítica la computació ja que la
-reparteix durant el temps d'adquisició i a més permet disposar en línia
- les resolucions computades i de visualitzacions de les dades immediates.
-A més, comparat amb altres tècniques de compressió, en els \gls{SGSTM} el procés de descompressió és nul si es vol exactament una resolució de les emmagatzemades.
-
-
+Pel que fa a la inserció de mesures i el procés posterior de
+consolidació, el model de \gls{SGSTM} permet tant una computació en
+temps diferit com en línia. És a dir, tant permet tenir una sèrie
+temporal ja capturada i processar-la en un \gls{SGSTM} com
+processar-la al mateix temps que es va adquirint i per tant seguint el
+flux d'entrada de dades.  Aquesta possibilitat de processar en línia
+permet fer menys crítica la computació ja que la reparteix durant
+l'adquisició de la sèrie temporal. A més permet disposar en línia de
+la multiresolució computada i per tant visualitzar-la al mateix temps
+en què es va adquirint.
 
 
 
@@ -191,6 +186,8 @@ A més, comparat amb altres tècniques de compressió, en els \gls{SGSTM} el pro
 
 \subsection{Funcions de multiresolució i sistemes duals}
 
+
+\todo{fer}
 
 
 
@@ -349,7 +346,13 @@ However, the lossy storage implies that
 \section{Experimentació}
 
 
+
+
+
 %per altra banda es poden dissenyar sistemes de gestió de bases de dades assegurant que implementen el model i per tant que tenen el funcionament desitjat.
+
+El model d'operacions, definit, descriu perfectament l'API de les
+implementacions.
 
 
 %  utilitzant el llenguatge de programació Python es dissenya, a nivell acadèmic, un sistema de gestió de bases de dades que implementa el model de dades tal com s'ha definit en aquest capítol.

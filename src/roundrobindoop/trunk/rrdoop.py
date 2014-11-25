@@ -5,15 +5,20 @@ Hadoop map-reduce functions for MTSMS
 """
 
 
-import sys
+import os, sys
 import datetime
-import time
 import pickle, marshal, types
 from roundrobinson import TimeSeries, Measure
 
 
 
 #map
+
+
+os.environ['TZ'] = 'UTC' #sinó la conversio strftime es fa amb localtime
+CALENDARFORMAT = '%Y-%m-%d %H:%M:%S' #CAL fer generic
+DELIMITER = None
+
 
 
 def default_parser(l):
@@ -46,12 +51,9 @@ def default_parser(l):
 
 
 
-def datetimetotimestamp(t):  
-    return int(time.mktime(t.timetuple()))
-
 def calendar2timestamp(t):
-    t1 = datetime.datetime.strptime(t,'%Y-%m-%d %H:%M:%S')#CAL fer generic
-    return datetimetotimestamp(t1)
+    t1 = datetime.datetime.strptime(t,CALENDARFORMAT)
+    return int(t1.strftime('%s'))
 
 
 def calendar_parser(l):
@@ -397,13 +399,6 @@ def show_progress(p=None):
 
     
 if __name__ == '__main__':
-
-    #sch = mrd_schema() #no te en compte k dels discs
-    #tnow = datetimetotimestamp(datetime.datetime(2011,10,18))
-    #sch = mrd_schema_at_time_point(tnow) #te en compte k dels discs
-
-
-
 
     #rrdoop -map|-reduce [-schema e] [-mapl I] [-mapg I] [-calendar]
 
