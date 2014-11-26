@@ -80,6 +80,8 @@ M.accept(SavePickle(os.path.join(directori,'e.pickle')))
 #cat resultats-idoop/final{0,1,2}.csv > resultats-idoop/final.csv
 #hadoop dfs -rmr /user/aleix/final
 
+#-D mapred.task.timeout=1000000 (in milliseconds, default 600000)
+
 
 #Càlcul dels totals, un cop s'ha executat la computació
 res = os.path.join(directori,resultat)
