@@ -15,7 +15,7 @@ from roundrobinson import TimeSeries, Measure
 #map
 
 
-os.environ['TZ'] = 'UTC' #sinó la conversio strftime es fa amb localtime
+os.environ['TZ'] = 'UTC' #sino la conversio strftime es fa amb localtime
 CALENDARFORMAT = '%Y-%m-%d %H:%M:%S' #CAL fer generic
 DELIMITER = None
 
