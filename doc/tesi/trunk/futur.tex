@@ -8,6 +8,36 @@ En aquest capítol es proposen treballs futurs a partir del que s'ha  dissertat 
 
 
 
+En les implementacions només hem tingut en compte el nivell acadèmic,
+no incorporem cap mena d'optimització del rendiment. de fet, aleshores
+s'allunyarien del model, i nosaltres volem mantenir una
+correspondència molt forta entre la forma de la implementació i del
+model.  A RoundRobinson, la implementació més completa, hem tingut
+problemes a l'hora de definir mesures genèriques: hem hagut
+d'introduir mesures de diferents tipus, que indiquen el rang del
+domini de valors per a calcular-ne el màxim i el mínim, etc. En el
+model abstracte matemàtic és senzill de descriure uns valors genèrics,
+en canvi a les implementacions això complica l'estructura: cal
+repensar una forma més senzilla d'implementar aquesta genericitat. En
+altres casos de genericitat en el model inicialment també teníem
+problemes per a implementar-ho però ho hem pogut solucionar: per
+exemple la multitud d'operacions de les sèries temporals implementades
+amb Mixins, qualsevol mètode de representació implementat com ?? o les
+funcionalitat complementàries com fer gràfics implementades amb patró
+Visitor.  Una mostra que es pot millorar molt el codi és que canviant
+mètode add de les TimeSeries amb MeasureTotalEquality hem aconseguit
+una millora espectacular de temps de computació: en la inserció cal
+cercar que no hi hagin temps repetits i ara s'aprofita la cerca dels
+sets de Python mitjançant hash.
+
+
+* No ens hem entrat profundament en Hadoop, només l'utilitzem com a intèrpret de la tècnica MapReduce. Futur: determinar un bon ús de la computació para\l.lela a Hadoop: quantitat de maps, de reduces, etc. Només hem provat amb un node de computació, possibilitat de més nodes.
+
+
+
+* Experimentació amb dades: només demostrem el correcte funcionament de la multiresolució. No avaluem rendiment dels recursos, per exemple no avaluem temps de computació només n'hem mostrat un a tall de referència orientativa.  Cal provar amb més diversitat: dades de diferent mida, de diversa naturalesa, diferents esquemes de multiresolució, dades de referència utilitzades en altres recerques (per exemple keogh?)
+
+
 
 % We have showed some aggregation functions examples with simple
 % aggregation statistics, mean and maximum, and simple representation

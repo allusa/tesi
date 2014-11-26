@@ -7,20 +7,21 @@
 
 
 
-Information collection processes are growing in quantity as a
+Data collection processes are growing in quantity as a
 consequence of the emergence of embedded systems and sensor networks.
 Nowadays it is possible to collect large amounts of data to monitor
-and control complex systems.  This information must be analysed and
+and control complex systems.  These data must be analysed and
 prepared by information systems in order to detect eventual sensor
 failures or malfunctions and, if it is possible, to reconstruct the
-incorrect signals. Acquired data instance are bound to a timestamp,
+incorrect signals. Acquired data instances are bound to a timestamp,
 therefore correctness criteria must include both data value and its
 timestamp. The sequences of data values collected at specific
 timestamps are formalised as time series.
 
 
 Time series are defined as a collection of observations made
-chronologically.  In general, time series come from a continuous
+chronologically.  In general, time series come from a continuously 
+\todo{clarificar}
 nature in which they are recorded at regular intervals, such as hourly
 or daily, or at irregular intervals, such as recording when a pump is
 open or closed.  One problem when dealing with time series data
@@ -43,7 +44,7 @@ some drawbacks.  On the one hand, \emph{NoSQL} or \emph{NewSQL}
 products are being developed in order to increase the performance and
 flexibility of \acro{SQL} systems
 \cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
-however the continue acquisition nature of time series is an issue for
+however the continues acquisition nature of time series is an issue for
 storing and analysing offline all the data \cite{keogh97}.
 
 On the other hand, compression techniques for time series are
@@ -89,8 +90,8 @@ series.
 
 
 Multiresolution is proposed as a lossy storage solution that selects
-only the needed information. The concept is similar to multimedia
-lossy compression methods, where information can be discarded in
+only the needed data. The concept is similar to multimedia
+lossy compression methods, where data can be discarded in
 favour of size, but applied to time series.  Multiresolution is an
 aggregation of data that stores the evolution of the parameters along
 time, which is more related to the needs of monitoring. However, as a
@@ -125,7 +126,6 @@ Section~\ref{sec:implementation} there is a implementation
 for the \acro{TSMS}+\acro{MTSMS} model.  Section~\ref{sec:example} is
 devoted to a real data multiresolution database example.  Finally,
 Section~\ref{sec:concl-future-work} offers some conclusions.
-\ref{sec:notation} shows main notation symbols.
 
 
 
@@ -293,7 +293,7 @@ Time series as data streams are also considered when aggregating
 statistically data in order to do fast approximate queries with
 compressed data. Cormode et al.\ \cite{cormode08:pods} develop
 aggregation techniques that consider giving more weight to recent
-information.  Our \acro{MTSMS} model applies a similar approach of
+data.  Our \acro{MTSMS} model applies a similar approach of
 weighting more recent data but specifically to time series, with
 multiple aggregations and considering time irregularities.  Dou et
 al.\ \cite{dou14:historic_queries_flash_storage} create index
@@ -353,8 +353,8 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
 \begin{itemize}
 
 \item Voluminous data. Monitoring systems capture a huge amount of
-  data from sensors. In order to be able to process this information,
-  data volume must be reduced. One of the features of the
+  data from sensors. In order to be able to process these data,
+  their volume must be reduced. One of the features of the
   multiresolution approach is to select and store only the most
   interesting segments of data. This segments are seen as different
   resolutions for the same time series and the user can configure how
@@ -386,21 +386,21 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   for a time series, such as changing periodic data from a month to a
   year step.
 
-\item Information summaries. Time series analysis typically focuses on
+\item Data summaries. Time series analysis typically focuses on
   reconstructing the original signal. However, the user objective in a
   database system is to consult some information. The multiresolution
   approach allows a lossy compression storage solution for data. Therefore
-  it can be regarded as to extracting the interesting information and
-  then storing it. The selected information must be determined a
+  it can be regarded as to extracting the interesting data and
+  then storing them. The selected data must be determined a
   priori assuming the context where the future queries will be done.
 \end{itemize}
 
 
 However sometimes it may also be useful to complement \acro{MTSMS}
 with other \acro{DBMS}. Not only to store the original values as a
-long-term deposit consulted offline, but also to store related
-information to time series such as units of values, sensor
-localisation, classification tags, last measured value, etc.
+long-term deposit consulted offline, but also to store time series'
+metadata such as units of values, sensor localisation, classification
+tags, last measured value, etc.
 
 
 
@@ -436,7 +436,7 @@ is sampled every one unit of time. The second and the third row show a
 particular schema of a multiresolution database consisting in two time
 resolutions for the time series: one computes the mean of the sampled
 values every three u.t.\ and the other computes the mean every five
-u.t. In this example, computing the mean acts as selecting information
+u.t. In this example, computing the mean acts as selecting data
 by aggregate statistics. All data stored before zero time is unknown
 (\emph{u}) as has not been acquired. For the future values it is also
 marked as \emph{u} until time advances.

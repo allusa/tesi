@@ -11,7 +11,7 @@ Model estructural de sèries temporals
 Implementació del model estructural de Sèrie Temporal.
 """
 
-from measure import Measure
+from measure import Measure, MeasureTotalEquality
 
 
 
@@ -22,7 +22,9 @@ class TimeSeriesStructure(set):
     És una subclasse de set. De la definició de set a Python:
 
      A set is an unordered collection with no duplicate elements.
+     A set object is an unordered collection of distinct hashable objects.
      Basic uses include membership testing and eliminating duplicate entries. Set objects also support mathematical operations like union, intersection, difference, and symmetric difference.
+
 
     Un `set` és un conjunt d'elements no repetits però sense ordre. Els tipus amb ordre a Python s'anomenen `sequence` però no són conjunts.  Oficialment a Python (v2.7) no hi ha un `OrderedSet`.
 
@@ -131,7 +133,10 @@ class TimeSeriesStructure(set):
         >>> s
         TimeSeriesStructure([m(1,10), m(2,10)])
         """
-        if m.t in self.t():
+        # if m.t in self.t():
+        #     return
+        #mes efficient a python?
+        if MeasureTotalEquality(m.t,None) in self:
             return
         set.add(self,m)
 

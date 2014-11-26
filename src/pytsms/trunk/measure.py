@@ -103,7 +103,7 @@ class Measure(object):
         Relació d'ordre igualtat parcial induïda pel temps.
         """
         return self.eqp(other)
-
+        #return self.eqt(other)
 
     def __ne__(self,other):
         """
@@ -310,6 +310,29 @@ class Measure(object):
             raise ValueError('Incorrect value for parameter un={0}'.format(un))
 
 
+        
+class MeasureTotalEquality(Measure):
+    """
+    Mesura en què la igualtat és total
+
+    >>> m1 = Measure(1,1)
+    >>> m2 = Measure(1,2)
+    >>> m1 == m2
+    False
+    >>> m1bis = MeasureTotalEquality(1,1)
+    >>> m1bis == m2
+    True
+    """
+    
+    def __eq__(self,other):        
+        """
+        Relació d'ordre igualtat total induïda pel temps.
+        """
+        return self.eqt(other)
+
+
+    
+        
 
 class MeasureIterable(object):
     def __init__(self,m):

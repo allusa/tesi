@@ -11,7 +11,7 @@ Experiment amb les dades d'isense usant RoundRobinson v0.4dev.
 """
 
 import os
-import datetime
+import datetime, time
 import csv
 
 from roundrobinson import Measure, TimeSeries, MultiresolutionSeries, MultiresolutionSeriesSharedBuffer
@@ -70,17 +70,19 @@ M.set_tau_tnow(calendar2timestamp(tmax))
 print M.str_taus() #Mostra el temps d'inici
 
 
+#Inicia cronometre
+cronometre = time.time()
 #Afegeix
 #S = TimeSeries().accept(TSLoadCsv(original,calendar2timestamp,float))
-f = csv.reader(open(fitxer))#,delimiter=' '
+f = csv.reader(open(original))#,delimiter=' '
 for t,v in f:
     M.add(Measure(calendar2timestamp(t),float(v)))
-print "S'ha llegit el fitxer de dades"    
+print "S'ha farcit la base de dades en {0}s".format(time.time()-cronometre)
+cronometre = time.time()   
 
 #Consolida
 M.consolidateTotal(debug=False)
-print "S'ha farcit i consolidat la base de dades"
-
+print "S'ha consolidat la base de dades en {0}s".format(time.time()-cronometre)
 
 
 #Emmagatzematge
@@ -88,14 +90,15 @@ print 'Emmagatzemant dades a {0}/'.format(directori)
 M.accept(SaveCsvDir(directori))
 M.accept(SaveCsv(os.path.join(directori,'tot.csv')))
 
-#fins aqui per a mesurar el temps!!
-exit()
-
 print 'Emmagatzemant total a {0}/'.format(directori)
 S1 = M.total(ff=[mean_zohe],rpr=Zohe)
 S2 = M.total(ff=[maximum_zohe],rpr=Zohe)
 S1.accept(TSSaveCsv(os.path.join(directori,'totalmean.csv')))
 S2.accept(TSSaveCsv(os.path.join(directori,'totalmax.csv')))
+
+
+#fins aqui per a mesurar el temps!!
+exit()
 
 
 #Visualització

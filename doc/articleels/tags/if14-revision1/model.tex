@@ -595,7 +595,7 @@ the range.  A regularised $S$ is obtained with $S[i]^r$ where $i =
 
 
 The \acro{MTSMS} are \acro{TSMS} that store time series with a lossy
-compression approach, that is some information is selected and spread
+compression approach, that is some data are selected and spread
 in different time resolutions. The \acro{MTSMS} model is based on the
 concepts of measures and time series as defined in
 Section~\ref{sec:model:TSMS} and we call multiresolution time series
@@ -607,9 +607,9 @@ The architecture of \acro{MTSMS} model for one multiresolution time series is
 shown in Figure~\ref{fig:model:mtsdb} depicted with its main
 components.  A multiresolution time series is a collection of
 resolution subseries which temporarily accumulate measures in a buffer
-in order to select some information and finally store it in a
-disc. The information selection process changes the time intervals
-between measures to compact information by aggregating the time series
+in order to select some data and finally store them in a
+disc. The data selection process changes the time intervals
+between measures to compact data by aggregating the time series
 attributes.
 
 %\tikzsetnextfilename{fig_model_mtsdb}
@@ -779,7 +779,7 @@ external clock.
 
 There are two basic time series queries for a \acro{MTSMS}: (i) extract a
 time subseries from a resolution subseries' disc or (ii) query for a
-total time series from all consolidated information.
+total time series from all consolidated data.
 
 The first is a selection of a disc over a multiresolution time series,
 being $(\delta,f)$ the key attributes: $\seriedisc: M=\{R_0, \dots,
@@ -814,12 +814,12 @@ can compute the sum of both with $\totalseries(M_1) +
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-Attribute aggregate functions are a specific case of \acro{TSMS} aggregate
-operation which summarise time series information when consolidating a
-buffer. Let $S$ be a time series and $t_0$ and $t_f$ two time
-instants, an attribute aggregate function $f$ calculates a measure
-that summarises the measures of $S$ included in the time interval
-$i=[t_0,t_f]$:
+Attribute aggregate functions are a specific case of \acro{TSMS}
+aggregate operations for summarising time series data when
+consolidating a buffer. Let $S$ be a time series and $t_0$ and $t_f$
+two time instants, an attribute aggregate function $f$ calculates a
+measure that summarises the measures of $S$ included in the time
+interval $i=[t_0,t_f]$:
 \[
 f : S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \mapsto m'
 \]
@@ -921,7 +921,7 @@ interval:
 \end{itemize}
 
 A similar aggregation function to mean$^\zohe{}$ is used by \emph{RRDtool}
-\cite{rrdtool} in order to summarise information for velocity coun\-ter
+\cite{rrdtool} in order to summarise velocity coun\-ter
 data by keeping the total counting information, as mean aggregation
 can be seen as one keeping the area below the original signal.
 
@@ -939,7 +939,7 @@ the general integral definition.
 
 \begin{example}\label{ex:model:smultiresolution} 
   We define a multiresolution schema for a time series, we consolidate
-  the database and we query its information.  Let $S = \{
+  the database and we query its data.  Let $S = \{
   (1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
   (14,1),\allowbreak (19,6),\allowbreak (22,11),\allowbreak
   (26,6),(29,0) \}$ be a time series and $M_\emptyset=\{R_0,R_1\}$ a

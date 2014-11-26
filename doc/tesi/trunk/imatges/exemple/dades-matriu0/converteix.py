@@ -3,6 +3,9 @@ import csv
 import datetime
 
 
+os.environ['TZ'] = 'UTC' #sino la conversio strftime es fa amb localtime
+
+
 
 def todatetime(fname):
     
@@ -20,6 +23,10 @@ def modifica(fname,dates):
 
     with open(fname,'w') as f:
         r = csv.writer(f)
+
+        r.writerow(('#first data not shown in pgfplots',))
+        r.writerow(('2010-01-01 00:00:00','0.0'))
+
         for row in sorted(dates):
             r.writerow( (row,dates[row]) ) 
 
