@@ -1,0 +1,180 @@
+\documentclass[
+%  prepint,
+  review,
+  twocolumn,
+  5p,
+  sort&compress,
+]{elsarticle}
+
+\journal{Information Systems}
+
+
+\usepackage{amsmath,amssymb}
+\usepackage[pdfborder={0 0 0}]{hyperref}
+
+
+\usepackage{listings}
+\lstdefinestyle{py}{
+  language=python,
+  escapechar=æ,
+  breaklines=true,
+  %basicstyle=\ttfamily,
+  showspaces=false,
+  keepspaces=true,
+}
+
+
+\usepackage{supertabular}
+
+
+
+
+
+\newcommand{\acro}[1]{\textsc{\lowercase{#1}}}
+\newcommand{\R}{\mathbb{R}} % the set of real numbers
+\newcommand{\Rb}{\bar\R} % the set of bar real numbers
+\newcommand{\N}{\mathbb{N}} % the set of natural
+\newcommand{\zohe}{\acro{zohe}}
+\newcommand{\dd}{\acro{DD}}
+
+\DeclareMathOperator*{\inst}{\in^t}
+\DeclareMathOperator*{\notinst}{\notin^t}
+\DeclareMathOperator*{\subseteqt}{\subseteq^t}
+\DeclareMathOperator*{\cupt}{\cup^t}
+\DeclareMathOperator*{\dift}{-^t}
+\DeclareMathOperator*{\join}{join}
+\DeclareMathOperator*{\map}{map}
+\DeclareMathOperator*{\fold}{fold}
+\DeclareMathOperator*{\agg}{aggregate}
+\DeclareMathOperator*{\orderfold}{ofold}
+\DeclareMathOperator*{\nex}{next}
+\DeclareMathOperator*{\prev}{prev}
+\DeclareMathOperator*{\graph}{graph}
+
+\DeclareMathOperator{\addB}{addB}
+\DeclareMathOperator{\consB}{consB}
+\DeclareMathOperator{\addD}{addD}
+\DeclareMathOperator{\addR}{addR}
+\DeclareMathOperator{\consR}{consR}
+\DeclareMathOperator{\addM}{addM}
+\DeclareMathOperator{\consM}{consM}
+\DeclareMathOperator{\seriedisc}{SerieDisc}
+\DeclareMathOperator{\totalseries}{TotalSeries}
+
+\DeclareMathOperator{\dmap}{Dmap}
+\DeclareMathOperator{\multiresolution}{multiresolution}
+
+\DeclareMathOperator{\meanz}{mean^\zohe}
+\DeclareMathOperator{\maxz}{maximum^\zohe}
+
+
+
+\bibliographystyle{elsarticle-num}
+
+
+
+
+\begin{document}
+
+
+
+%%PARAMETRES
+\newdefinition{definition}{Definition}
+\newdefinition{example}{Example}
+
+
+\begin{frontmatter}
+
+  \title{A new Multiresolution Time Series \\ Database Formal Model}
+
+
+  \author
+  [dipse]
+  {Aleix Llus\`{a} Serra\corref{mycorrespondingauthor}
+  }
+  \cortext[mycorrespondingauthor]{Corresponding author. Tel: +34 938777317}
+  \ead{aleix@dipse.upc.edu}
+
+  \author
+  [dipse]
+  {Sebasti\`{a} Vila-Marta
+  }
+  \ead{sebas@dipse.upc.edu}
+
+  \author
+  [dipse]
+  {Teresa Escobet Canal
+  }
+  \ead{teresa.escobet@upc.edu}
+
+
+
+  \address
+  [dipse]
+  {Department of Electronic System Design and Programming\\ Universitat Polit\`{e}cnica de Catalunya\\ Av.~Bases de Manresa 61--73, 08242 Manresa, ES-CT}
+
+
+
+  \begin{abstract}
+    In this paper we define a model for multiresolution time series
+    database management systems. These systems store each time series
+    lossy compressed by extracting different resolutions and attribute
+    aggregations. Then time series are stored compactly, with finite
+    capacity and with its temporal attribute managed consistently.
+
+    For many applications it is of primary relevance that database
+    systems support time series.  We root our theory firmly on set and
+    relational algebra together with some time series analysis
+    specific properties that can be problematic when manipulating
+    them.  Furthermore, we use the time-order acquisition
+    characteristic of time series to simplify its treatment by
+    stream-like computations in order to achieve fast pre-computed
+    queries and visualisations.
+  \end{abstract}
+
+
+  \begin{keyword}
+    Time series \sep database systems \sep multiresolution \sep lossy
+    compression \sep approximate queries
+  \end{keyword}
+
+\end{frontmatter}
+
+
+\input{intro}
+
+\input{model}
+
+\input{implementation}
+
+\input{example}
+
+\input{conclusions}
+
+
+\section*{Acknowledgements}
+
+The research presented in this paper has been supported by Spanish
+research projects \textsc{tec2012-35571} and \textsc{dpi2011-26243},
+the UE project i-Sense (\textsc{fp7-ict-270428}), and Universitat
+Polit\`{e}cnica de Catalunya predoctoral grant.
+
+
+
+\section*{References}
+\bibliography{bibelsarticle}
+
+
+\appendix
+\input{notation}
+
+
+\end{document}
+
+
+
+
+
+%%% Local Variables: 
+%%% ispell-local-dictionary: "british"
+%%% End: 
