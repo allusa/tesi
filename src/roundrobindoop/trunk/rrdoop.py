@@ -246,9 +246,31 @@ def reduce_line(l):
 
 
 def _mean(s):
+
+
     if len(s) == 0:
         return 0
 
+
+    m0 = s.pop()
+    s.add(m0)
+    if isinstance(m0.v,list):
+        grau = len(m0.v)
+    else:
+        grau = 1
+
+    sumv = [0] * grau
+    for m in s:
+        if grau == 1:
+            sumv[0] += m.v
+        else:
+            for i in range(grau):
+                sumv[i] += m.v[i]
+
+    return ' '.join( str(v/float(len(s))) for v in sumv )
+            
+  
+    
     if isinstance(s[0][1],list):
         grau = len(s[0][1]) 
     else:
@@ -268,19 +290,10 @@ def _mean(s):
 
 
 
-def _convert_to_timeseries(l):
-
-    s = TimeSeries()
-    for m in l:
-        t,v = m
-        s.add(Measure(t,v))
-    return s
-
 def aggregate(s,f=None,i=None):
     if f is None or isinstance(f,str):
         return _mean(s)
 
-    #s = _convert_to_timeseries(s)
     return f(s,i).v
 
 
@@ -334,7 +347,7 @@ def reduce(f,sch=None):
             else:
                 if previous is not None:
                     pd,pf,pn = previous
-                    show_progress('aggregating {delta} {f}\t{t}'.format(delta=pd,f=pf,t=pn))
+                    show_progress('aggregating:{delta}/{f}/{t}'.format(delta=pd,f=pf,t=pn))
                     agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(pn)-float(pd),float(pn)])
                     print '{delta} {f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
                 ts = TimeSeries([Measure(t,v)])
@@ -385,15 +398,18 @@ def schema_load_pickle(fname):
 
 
 def show_progress(p=None):
-    status = "reporter:status:{0}"
+    status = "reporter:status:{0}\n"
     #reporter:counter:<group>,<name>,<increment>
     #datetime.datetime.now()
     
     if p is None:
         p = 'OK'
-    sys.stderr.write(status.format(p))
-    sys.stderr.flush()
 
+    print >> sys.stderr, status.format('OK')
+    sys.stderr.write(status.format(p))
+    sys.stderr.write('reporter:counter:my_job,my_counter,1\n')
+    sys.stderr.flush()
+    #os.fsync(sys.stderr.fileno())
 
 
 
