@@ -20,8 +20,15 @@
     {\ifnum\x=10 \color{gray} \fi \ifnum\x<11 $\bullet$ \fi};    
 
     %values
+    % \node[rectangle,draw] (s\x) [below=of \x] 
+    % {\ifnum\x<10 \pgfmathprintnumber{\absx} \else \phantom{9} \fi};
+    \ifnum\x<10
     \node[rectangle,draw] (s\x) [below=of \x] 
-    {\ifnum\x<10 \pgfmathprintnumber{\absx} \else \phantom{9} \fi};
+    {\pgfmathprintnumber{\absx}};
+    \else
+    \node[rectangle,dotted,draw] (s\x) [below=of \x] 
+    {\phantom{9}};
+    \fi
   }
 
   \node [below=of 10] {\color{gray}10}; 
@@ -32,7 +39,7 @@
   \node [circle,draw] (rd5-5) [below=3cm of s-5] {u};
   \node [circle,draw] (rd50) [below=3cm of s0] {u};
   \node [circle,draw] (rd55) [below=3cm of s5] {3};
-  \node [circle,draw] (rd510) [below=3cm of s10] {u};
+  \node [circle,dotted,draw] (rd510) [below=3cm of s10] {\color{gray}u};
   \node [below=3.3cm of s10] {\color{gray}8};
  
   \draw[->,bend right] (s5) to (rd55);
@@ -51,10 +58,10 @@
   %rd: 3s |inf| mean
   \node [circle,draw] (rd3-3) [below=of s-3] {u};
   \node [circle,draw] (rd30) [below=of s0] {u};
-  \node [circle,draw,fill=white] (rd33) [below=of s3] {3};
+  \node [circle,draw,fill=white] (rd33) [below=of s3] {2};
   \node [circle,draw,fill=white] (rd36) [below=of s6] {5};
   \node [circle,draw,fill=white] (rd39) [below=of s9] {8};
-  \node [circle,draw] (rd312) [below=of s12] {u};
+  \node [circle,dotted,draw] (rd312) [below=of s12] {\color{gray}u};
 
   \draw[->] (s3) to (rd33);
   \draw[->] (s2) to (rd33);

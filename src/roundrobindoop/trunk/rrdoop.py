@@ -15,12 +15,6 @@ from roundrobinson import TimeSeries, Measure
 #map
 
 
-os.environ['TZ'] = 'UTC' #sino la conversio strftime es fa amb localtime
-CALENDARFORMAT = '%Y-%m-%d %H:%M:%S' #CAL fer generic
-DELIMITER = None
-
-
-
 def default_parser(l):
     """
     Parses a line of the file in the table format t v and returns a tuple(t,v) where `t` are int and `v` are float or list of floats.
@@ -418,6 +412,10 @@ if __name__ == '__main__':
 
     #rrdoop -map|-reduce [-schema e] [-mapl I] [-mapg I] [-calendar]
 
+    os.environ['TZ'] = 'UTC' #sino la conversio strftime es fa amb localtime
+    CALENDARFORMAT = '%Y-%m-%d %H:%M:%S' #CAL fer generic
+    DELIMITER = None
+    
     if len(sys.argv) > 1:
 
         if '-schema' in sys.argv:

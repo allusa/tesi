@@ -341,10 +341,10 @@ methods of interpolation or approximation.
 A \acro{MTSMS} proposes a \acro{TSMS} with multiresolution
 capabilities.  A \acro{MTSMS} schema represents a time series using a
 set of different resolutions.  The multiresolution concept comes from
-thoroughly analysis of \emph{RRDtool} \cite{rrdtool}. Our objectives
-have been to formalise the main concepts into an abstract model and to
-include more genericity in order to describe \acro{MTSMS} as fully
-\acro{TSMS}.
+thoroughly analysis of \emph{RRDtool} \cite{rrdtool}.  Our objective
+is to formalise the main features into an abstract model and to
+incorporate adequate generality in order to describe \acro{MTSMS} as
+fully as a \acro{TSMS}.
 
 
 
@@ -364,26 +364,27 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   more quantity of data than the one that can be
   shown.
 
-\item Data validation. Monitoring systems capture data but can occur
+\item Data validation. Monitoring systems capture data but can cause
   some drawbacks that will affect later the process of time series
   analysis. Main problems are found when monitors can not capture
   data, known as gaps, or capture data erroneously, such as outlayers
   \cite{quevedo10}.  The multiresolution attribute functions is
   designed to cope well with validating, filtering and reconstructing
   with this unknown data in order to keep a consistent
-  historic.
+  history.
 
 \item Data time regularising. Another monitoring side effect happens
   when the sampling rate is not constant, that is when the resulting
-  data is not equi-time spaced. This no regularities can come from
-  sampling jitters in periodic sampling or from no periodic
+  data is not equi-time spaced. This irregularities can come from
+  sampling jitters in periodic sampling or from non-periodic
   event-based sampling \cite{kopetz11:realtime}. One multiresolution
   consolidation objective is to regularise the time interval when
   processing a time series, therefore each resulting time series
-  segment has a regular time resolution. This regularising approach
-  could also be used when the user wants to consult another resolution
-  for a time series, such as changing periodic data from a month to a
-  year step.
+  segment has a regular time resolution. Besides obtaining regular
+  time series, this feature can also be used in order to consult other
+  resolutions from a time series, such as changing a daily acquired
+  time series to a yearly step summary.
+
 
 \item Data summaries. Time series analysis typically focuses on
   reconstructing the original signal. However, the user objective in a
@@ -406,15 +407,16 @@ tags, last measured value, etc.
 \subsection{Motivation example}
 
 Figure~\ref{fig:mtsms:sequence} shows an example of a multiresolution
-summary for a time series. It shows a snapshot in time, suppose
-between time 9 and 10. At the top of the figure there is a plot of a
-time series with time axis in general units of time (u.t.) and with
-value axis in undetermined units. The 'now' point shows when the
-snapshot has been taken, so the time before is the past and the time
-after is the future, which is grey coloured. The \emph{init} point
-shows when the database system has started sampling, so data in time
-before is unknown; the starting point is indicated as zero u.t.\ and
-the earlier unknown time points have negative units.
+summary for a time series.  It shows a snapshot in time spanning from
+time 0 to 9 and supposing that the temporal point `now' is between 9
+and 10. At the top of the figure there is a plot of a time series with
+time axis in general units of time (u.t.) and with value axis in
+undetermined units. The `now' point shows when the snapshot has been
+taken, so the time before is the past and the time after is the
+future, whose elements are plotted in discontinuous marks. The
+\emph{init} point shows when the database system has started sampling,
+so data in time before is unknown; the starting point is indicated as
+zero u.t.\ and the previous unknown time points have negative units.
 
 
 \begin{figure}
@@ -425,14 +427,13 @@ the earlier unknown time points have negative units.
   \caption{Multiresolution snapshot diagram with regular sampling}
   \label{fig:mtsms:sequence}
 \end{figure}
-%CANVIAR 3 per 2 a la primera mesura de la resolucio 3/mean
 
 
 At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
 showing the multiresolution action. The first row shows the numerical
 time series' values corresponding to the above plot; the time series
 is sampled every one unit of time. The second and the third row show a
-particular schema of a multiresolution database consisting in two time
+particular schema of a multiresolution database consisting of two time
 resolutions for the time series: one computes the mean of the sampled
 values every three u.t.\ and the other computes the mean every five
 u.t. In this example, computing the mean acts as selecting data
@@ -444,7 +445,8 @@ The arrows of the figure show that every three sampled values a mean
 is stored and, independently, every five values another mean is
 stored. For the future values, dashed arrows show that if time
 advances one u.t.\ then value 10 is sampled and the mean for time 10
-can be computed resulting 8 but not yet the mean for time 12.
+can be computed resulting 8. However the mean every three values can not
+be computed yet, so in this snapshot it keeps unknown value.
 
 
 
