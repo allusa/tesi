@@ -63,6 +63,7 @@ M.addResolution(delta=d50,k=12,f=maximum_zohe,tau=tau0)
 #Ajustament dels taus
 tmax = '2011-10-18 13:27:59' #darrer temps de la sèrie temporal T(max(S))
 M.set_tau_tnow(calendar2timestamp(tmax))
+print M.str_taus() #Mostra el temps d'inici
 
 #Emmagatzematge de l'esquema
 M.accept(SavePickle(os.path.join(directori,'e.pickle')))
