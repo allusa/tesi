@@ -53,36 +53,32 @@ purposes.
 
 \begin{definition}(Time)
   \label{def:model:temps}
+  Let $T$ be the domain for time. We define a \emph{time instant} $i$
+  as an element of the set $T$, $i \in T$. Following with the
+  definition of a coordinate system and real numbers as time domain,
+  let $t^{R}$ be a \emph{reference time instant}, then we define
+  \emph{time instants} as a value $t^i \in\Rb$ that measures signed
+  time distance from the \emph{reference time instant} $t^i=
+  d(t^{R},i)$, where $d$ is the metric of the set $T$.
+
   Let $t^i_i$ and $t^i_j$ be two \emph{time instants} with same $t^R$
-  as \emph{reference time}, we define the \emph{quantity} or
-  \emph{duration of time} $t^d$ as a value $t^d \in\Rb$ which measures
-  the distance in time units between two time instants $t^d =
-  d(t^i_i,t^i_j)$ where $d$ is the metric of the set $T$. When time
+  as \emph{reference time}. We define the \emph{duration of time}
+  $t^d$ as a value $t^d \in\Rb$ which measures the distance in time
+  units between two time instants $t^d = d(t^i_i,t^i_j)$. When time
   instants are also real numbers $t^i_i , t^i_j \in \Rb$, then $t^d =
   t^i_i - t^i_j$.
-
-  Let $T$ be the domain for time, we define a \emph{time instant} $i$
-  as an element of the set $T$, $i \in T$. Following with the definition of
-  a coordinate system and real numbers as time domain, let $t^{R}$ be
-  a \emph{reference time instant}, then we define \emph{time instants}
-  as a value $t^i \in\Rb$ that measures signed time distance from the
-  \emph{reference time instant} $t^i= d(t^{R},i)$. $\square$
 \end{definition}
 
 Summarising, time instants position and order events, and between two
 time instants there is a duration.  There are several time standards
 \cite{allen:timescales} which specify how time duration must be
-measured and how time instants positions must be noted.
-
-Time standards deal with a similar concept of time coordinate system
-which has been illustrated with real numbers. There is also a calendar
-approach which define the time domain with names for the points in the
-time line and with rules for time durations. Usually the aim of
-calendars is to give a relation between time and Earth
-rotation. Sometimes calendars are seen as essential parts of \acro{TSMS}
-\cite{dreyer94}, however maps can be established between a time
-coordinate system and a calendar system.
-
+measured and how time domains must be defined.  Time standards deal
+with a similar concept of time coordinate system which has been
+illustrated with real numbers. There is also a calendar approach which
+defines the time domain with names for the points in the time line and
+with rules for time durations.
+% however maps can be established between a time
+% coordinate system and a calendar system.
 
 
 \subsubsection{Value}
@@ -96,9 +92,9 @@ even other time series.
 
 %For simplicity
 In accordance to the time examples, for the value domain the
-projectively extended real numbers $\R* = \R \cup \{\infty\}$ can be
+projectively extended real numbers $\Rp = \R \cup \{\infty\}$ can be
 used.  This example is for scalar values but can be extended to the
-concept of multivalues $\R*^n$, which represent a collection of values
+concept of multivalues $(\Rp)^n$, which represent a collection of values
 measured at the same time instant \cite{assfalg08:thesis}.
 
 
@@ -161,11 +157,9 @@ same phenomena, the type of $S$ values is homogeneous.
 
 A time series can record more than one phenomena if they share the
 time instants of acquisition. Then it is a \emph{multivalued time
-series}, which can be expressed by two forms. Let $S = \{m_0, \ldots,
-m_k\}$ be a time series, in one form we write measures as
-$m=(t,(v_1,v_2,\ldots,v_n))$, that is the value has domain $\R*^n$; in
-the other form we write measures directly as
-$m=(t,v_1,v_2,\ldots,v_n)$.
+  series}. Let $S = \{m_0, \ldots, m_k\}$ be a multivalued time
+series. We write its measures as $m=(t,v_1,v_2,\ldots,v_n)$, that is
+the value has domain $(\Rp)^n$.
 
 
 
@@ -182,14 +176,14 @@ representation for a continuous function. Next a brief description of
 most important ones is given.
 
 
-These time series manipulations are defined abstractly for any time
-series having the structure of Definition \ref{def:model:timeseries}.
-In the same way as the relational model for operations, definitions
-evaluate algebra and logic concepts for data but do not evaluate the
-semantics of manipulations. That is, when given a particular context
-for a time series manipulation it has to be decided whether the
-algebra is meaningful or cannot be applied, for example an addition of
-values in two different units could be semantically erroneous.
+% These time series manipulations are defined abstractly for any time
+% series having the structure of Definition \ref{def:model:timeseries}.
+% In the same way as the relational model for operations, definitions
+% evaluate algebra and logic concepts for data but do not evaluate the
+% semantics of manipulations. That is, when given a particular context
+% for a time series manipulation it has to be decided whether the
+% algebra is meaningful or cannot be applied, for example an addition of
+% values in two different units could be semantically erroneous.
 
 
 \subsubsection{Set operations}
@@ -201,7 +195,7 @@ set algebra \cite{date:introduction}.
 
 In a time series the measures have a total order.  As a time series is
 a finite set, if it is not empty it has a maximum and a minimum.  Let
-$S$ be a time series and $n\in S$ be a measure, the time series'
+$S$ be a time series and $n\in S$ be a measure. The time series'
 \emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
 m $.  We extend the maximum definition with a supremum one as for
 extended real numbers the supremum is defined even when a set is
@@ -213,31 +207,31 @@ indefinite value.  Dually, we can define \emph{minimum} $\min(S)$ and
 \emph{infimum} $\inf(S)$.
 
 
-In time series binary set operations, the measures can have the
-two possible order relations: total and partial. Consequently, this two
-possible order relations of measures induces two operation definitions
-for some set operators.  Mainly it induces two membership operations
-and so to all operations based on it. 
+In time series binary set operations, the measures can have the two
+possible order relations: total and partial. Consequently, these two
+possible order relations of measures impose two operation definitions
+for some set operators.  Mainly they impose two membership operations
+and so to all operations based on it.
 
 
 The \emph{membership} defines when one measure belongs to a time
 series. Considering the partial order of measures, the set
 membership operation applies. Let $S$ be a time series and $m$ a
-measure, the \emph{membership} is denoted $m \in S$. Considering the
-temporal order of measures, we define the \emph{temporal membership}
+measure. The \emph{membership} is denoted $m \in S$. Considering the
+total order of measures, we define the \emph{temporal membership}
 as $m \inst S$ when $\exists m_a \in S : T(m) = T(m_a)$.  Let $S_1$
-and $S_2$ be two time series, from membership operations we could
+and $S_2$ be two time series. From membership operations we could
 define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
   inclusion} $S_1\subseteqt S_2$.
 
 
 The \emph{union} of two sets is a set containing elements from both
-sets. Plain set union operation can not be applied directly as the
-resulting time series could have repeated time values.  So we define a
-non commutative operation and a commutative temporal operation. The
-union requires both time series to have the same structure and type as
-happens with union operation in relational \acro{DBMS}
-\cite{date:introduction}. %
+sets. Plain set union operations on time series can not be applied
+directly as the resulting time series could have repeated time values.
+So we define a non commutative operation and a commutative temporal
+operation. The union requires both time series to have the same
+structure and type as happens with union operation in relational
+\acro{DBMS} \cite{date:introduction}. %
 Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
 time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
 repeated at $S_2$: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 |
@@ -251,6 +245,7 @@ m^2 \notinst S_1 \}$.
   \centering
   %\input{imatges/sgst-union-venn.tex}
   \includegraphics{fig_model_venn.pdf}
+  \includegraphics{fig_model_venn_reverse.pdf}
   \includegraphics{fig_model_venn2.pdf}
   \caption{Venn diagrams examples for set and temporal set union
     operation of \acro{TSMS}}
@@ -261,11 +256,13 @@ m^2 \notinst S_1 \}$.
 \begin{example}\label{ex:model:s1s2}
   Let $S_1=\{(1,1),(3,1),(4,0),(5,1)\}$ and $S_2 = \allowbreak
   \{\allowbreak (2,\allowbreak 2),\allowbreak (3,2),(4,0),(6,2)\}$ be
-  two time series. The union from first and second results $S_1 \cup
-  S_2 = \{(1,1),\allowbreak (2,2),\allowbreak (3,1),\allowbreak (4,
-  0),\allowbreak (5,1),\allowbreak (6,2)\}$. The temporal union from
-  both results $S_1 \cupt S_2 = S_2 \cupt S_1 =
-  \{(1,1),(2,2),(4,0),(5,1),\allowbreak (6,2)\}$. %
+  two time series. The union results $S_1 \cup S_2 =
+  \{(1,1),\allowbreak (2,2),\allowbreak (3,1),\allowbreak (4,
+  0),\allowbreak (5,1),\allowbreak (6,2)\}$ or $S_2 \cup S_1 =
+  \{(1,1),\allowbreak (2,2),\allowbreak (3,2),\allowbreak (4,
+  0),\allowbreak (5,1),\allowbreak (6,2)\}$. The temporal union
+  results $S_1 \cupt S_2 = S_2 \cupt S_1 =
+  \{(1,1),\allowbreak (2,2),\allowbreak (4,0),(5,1),\allowbreak (6,2)\}$. %
   Venn diagrams for both cases are shown in
   Figure~\ref{fig:model:venn}, where the coloured area is the
   resulting time series. For each, the central intersecting area
@@ -282,7 +279,7 @@ m^2 \notinst S_1 \}$.
 The \emph{difference} of two sets is a set containing all elements
 from first not contained in second. Like union, the difference
 requires both time series to have the same structure. %
-Let $S_1$ and $S_2$ be two time series, the \emph{difference} of first
+Let $S_1$ and $S_2$ be two time series. The \emph{difference} of first
 and second is a time series $S_1 - S_2$ with all measures of $S_1$ not
 belonging to $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin S_2
 \}$. The \emph{temporal difference} of first and second is a time
@@ -296,15 +293,15 @@ S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$ operations as well as its
 temporal dual operations.
 
 
-Relational DBMS extend these set operators with specific ones like
+Relational \acro{DBMS} extend these set operators with specific ones like
 projection, selection, rename, product and join. These operators can
 be also used for time series. As example the definition of join
 operation is given.
 
 
 The \emph{join} of two time series is the grouping of pairs that share
-the same time attribute in both.  Let $S_1$ i $S_2$ be two time series,
-the \emph{join} of both time series $S_1 \join S_2$ is a multivalued
+the same time attribute in both.  Let $S_1$ and $S_2$ be two time series.
+The \emph{join} of both time series $S_1 \join S_2$ is a multivalued
 time series $S_1 \join S_2 = \{ (t,v_1,v_2) | (t_1,v_1) \in S_1 \wedge
 (t_2,v_2) \in S_2 \wedge t=t_1=t_2 \}$.
 
@@ -318,13 +315,13 @@ equivalent computational operators map and fold.
 
 Map applies a function to each measure of a time series.  Let $S$ be a
 time series and $f^m$ a function over a measure where $f^m:m_a\mapsto
-m_r$, the \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
+m_r$. The \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
 \{\forall m_i\in S : f^m(m_i) \}$.
 
 Fold recursively combines every measures of a time series.  Let
 $S=\{m_0, \dotsc, m_k\}$ and $S_i$ be two time series, and $f^f$ a
 function over a time series $S_a$ and a measure $m_b$ resulting in a
-time series $S_r$, $f^f: S_a \times m_b \mapsto S_r$. The \emph{fold}
+time series $S_r$ $f^f: S_a \times m_b \mapsto S_r$. The \emph{fold}
 of $S$ by $f^f$ with initial value $S_i$ is a time series
 $\fold(S,S_i,f^f) = f^f(\dots( f^f(f^f(f^f(S_i,m_0),\allowbreak
 m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
@@ -362,7 +359,7 @@ and \emph{op} be a binary operation on the value domain, that is for
 two values $v_1$ and $v_2$ it computes a new value $\operatorname{op}:
 v_1 + v_2 \mapsto v'$. The operator \emph{op} can be applied to both
 time series as: $\operatorname{op}: S_1 \times S_2 \mapsto S'$ where
-$S' = \map(S_1 \join S_2, (t,v_1,v_1)\mapsto(t,v_1 \operatorname{op}
+$S' = \map(S_1 \join S_2, (t,v_1,v_2)\mapsto(t,v_1 \operatorname{op}
 v_2))$.
 
 For example, we can apply real numbers binary operations such as sum,
@@ -408,8 +405,8 @@ S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
 followed in time order by the measures of the second. It is similar to
 union for sets but considering the sequence interval. The
 concatenation requires both time series to have the same structure as
-seen with union operation.  Let $S_1$ and $S_2$ be two time series,
-the concatenation of both $S_1 || S_2$ is a time series $S$ containing
+seen with union operation.  Let $S_1$ and $S_2$ be two time series.
+ The concatenation of both $S_1 || S_2$ is a time series $S$ containing
 all measures of $S_1$ and those of $S_2$ that not intersect in the
 time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2]
 )$ where $t_1=T(\inf S_1)$ and $t_2=T(\sup S_1)$.
@@ -427,7 +424,7 @@ temporal function nature can be defined.
 The \emph{graph of a function} allows to obtain and interpret the
 continuous nature of a time series, when the domain of time and value
 attributes can be plotted then the graph is equivalent to a graphical
-representation.  Let $S$ be a time series and $T$ the time domain, the
+representation.  Let $S$ be a time series and $T$ the time domain. The
 \emph{graph} of the time series is a set of ordered pairs $\graph S =
 \{ (t,S(t)) | t\in T \}$ where $S(t)$ is a temporal representation
 function for the time series.
@@ -446,7 +443,7 @@ constant piecewise functions.
 \begin{definition}
   \emph{Dirac delta} (\dd) is a method of representation based on the
   Dirac delta function. It is an impulse train function that is zero
-  everywhere except at zero.  Let $S$ be a time series we define
+  everywhere except at zero.  Let $S$ be a time series. We define
   $S(t)^\dd$ as the \emph{\dd{} representation function}
 \[
     \forall m \in S: S(t)^\dd
@@ -461,7 +458,7 @@ constant piecewise functions.
   \emph{Zero-order hold everted} (\zohe{}) is a method of
   representation based on the \emph{zero-order hold} signal
   reconstruction methods. It is a piecewise constant function that has
-  left-continuous step functions.  Let $S$ be a time series we define
+  left-continuous step functions.  Let $S$ be a time series. We define
   $S(t)^\zohe$ as the \emph{\zohe{} representation function}, $\forall
   m \in S:$
 \[
@@ -492,11 +489,11 @@ $. This is a general definition difficult to implement, so for every
 representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
-\item Let $S(t)^\dd$ be the \dd{} representation for $S$, the
+\item Let $S(t)^\dd$ be the \dd{} representation for $S$. The
   \emph{\dd{} temporal interval} is $S[t_i,t_f]^\delta = S[t_i,t_f]
   \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_i,0)$ and $m_f=(t_f,0)$.
 
-\item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$, the
+\item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$. The
   \emph{\zohe{} temporal interval} is $S[t_i,t_f]^\zohe{} = S(t_i,t_f]
   \cup \{m\}$ where $m=(t_f,v)$ and $v= V(\inf( S[t_f,+\infty] ))$.
 \end{itemize}
@@ -567,7 +564,7 @@ series.
 
 A time series is regular when its measures are equi-spaced in time,
 according to \cite{last:hetland}. Let $S$ be a time series, $t_I$
-be a time instant and $d$ be a time duration, then the time
+be a time instant and $d$ be a time duration. Then the time
 series' measures can be located in the time interval $i_0=[t_I,
 t_I+d]$ and its multiples $i_j=[t_I+jd, t_I+(j+1)d]$
 for $j=0,1,2,\ldots$. When time series' measures are equally spaced we
@@ -681,7 +678,7 @@ successive application of the operator. This requires measures to be
 added by time order and to consolidate the buffer when the time of
 some measure is bigger than the buffer's next consolidation time.  Let
 $B=(S_B,\tau,\delta,f)$ be a buffer and $m=\sup(S_B)$ the maximum
-measure, $B$ is consolidable if and only if $T(m) \geq
+measure. $B$ is consolidable if and only if $T(m) \geq
 \tau+\delta$.
 
 
@@ -817,7 +814,7 @@ can compute the sum of both with $\totalseries(M_1) +
 Attribute aggregate functions are a specific case of \acro{TSMS}
 aggregate operations for summarising time series data when
 consolidating a buffer. Let $S$ be a time series and $t_0$ and $t_f$
-two time instants, an attribute aggregate function $f$ calculates a
+two time instants. An attribute aggregate function $f$ calculates a
 measure that summarises the measures of $S$ included in the time
 interval $i=[t_0,t_f]$:
 \[
@@ -965,7 +962,7 @@ the general integral definition.
 
   In this particular example
   $ \totalseries(M_{29}) = \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has
-  double resolution than $R_1$. $\square$
+  double resolution than $R_1$. 
 \end{example}
 
 
