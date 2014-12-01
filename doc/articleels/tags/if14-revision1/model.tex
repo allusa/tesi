@@ -336,20 +336,54 @@ defined as: $\agg(S,m_i,f^a) \equiv \fold(S,\{m_i\},f')$ where $f':
 \{m_i\} \times m \mapsto \{f^a(m_i,m)\}$.
 
 %A more generic version of fold is a fold considering order. 
-In the previous fold the measures are computed in random order,
-however in some computational operations it is necessary to define the
-order, especially when $f^f$ is not commutative. We define a
-\emph{fold with order}, $\orderfold$, as an extension of fold with a
-function $o$ that selects measures in order where $o: S_a \mapsto m_r$
-\[
- \orderfold(S,S_i,f^f,o) =
-  \begin{cases}
-    S_i  \text{ if } |S|=0, \\
-    \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ otrw.}
-  \end{cases}
-\]
-where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
+In the previous fold, the measures are computed in random order.
+However in some computational operations it is necessary to define the
+order, especially when $f^f$ is not commutative.  Then, it is possible
+to define a \emph{fold with order} as an extension of fold where
+measures are computed in a predetermined order.
 
+% We define a
+% \emph{fold with order}, $\orderfold$, as an extension of fold with a
+% function $o$ that selects measures in order where $o: S_a \mapsto m_r$
+% \[
+%  \orderfold(S,S_i,f^f,o) =
+%   \begin{cases}
+%     S_i  \text{ if } |S|=0, \\
+%     \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ else}
+%   \end{cases}
+% \]
+% where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
+
+
+
+\begin{example}
+\label{ex:computational-operators}
+Let $S=\{(1,1),(2,3),(4,1)\}$ be a time series.  Map operator allows
+computing a new time series whose values result from time multiplied
+by value.  We define the map function $f^m: (t,v)\mapsto (t,t\times
+v)$. Then $\map(S,f^m)=\{(1,1),(2,6),(4,4)\}$.
+
+
+Aggregate operator allows computing a measure that results from the
+sum of all values.  We define the aggregate function $f^a: (t_a,v_a)
+\times (t_b,v_b) \mapsto (0,v_a+v_b)$. Then $\agg(S,(0,0),f^a) =
+(0,5)$, where the resulting time is 0 as it does not concern this
+computation.
+
+
+Fold operator allows computing a selection of measures where value
+equals one.  We define the fold function $f^f: S_a \times (t_b,v_b)
+\mapsto S_a \cup S_b$ where $S_b=\{(t_b,v_b)\}$ if $v_b=1$ or
+$S_b=\{\}$ otherwise. Then $\fold(S,\{\},f^f)=\{(1,1),(4,1)\}$.
+
+
+% Fold operator allows computing a time series that shows the
+% immediately preceding time instant for a measure.
+% Defining the fold function $f^f: S_r\times (t,v) \mapsto \{(t,v,t_p)\}
+% \cup S_r$ where $t_p=T(\sup( S_r[-\infty,t)))$, then
+% $\fold(S,S,f^f)=\{(1,1,-\infty),(2,3,1),(4,1,2)\}$.
+% S_r[-\infty,t) NOT yet defined
+\end{example}
 
 Finally, we describe how \emph{binary computational} operations can be
 defined for two time series in order to operate with their value
@@ -479,13 +513,12 @@ sequence operators as temporal operators.
 %Consequently, the result of each one will depend on a representation method, which is indicated as a parameter.
 
 
-We define a temporal interval operation to introduce this
-concept.
+We define a temporal interval operation to introduce this concept.
 Let $S$ be a time series, $[t_i,t_f]$ a interval of two time instants
 and $r$ a representation function. The \emph{temporal interval} noted
 as $S[t_i,t_f]^r$ is a time series with measures in the interval
-temporal range: $S[t_i,t_f]^r= \forall t \in [t_i,t_f] : S' = S(t)^r
-$. This is a general definition difficult to implement, so for every
+temporal range, $S[t_i,t_f]^r\equiv S(t)^r$ for all $t \in [t_i,t_f]$. This
+is a general definition difficult to implement, so for every
 representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
@@ -642,7 +675,7 @@ operations could be defined but we focus on structure and data query .
 
 \subsection{Structure}
 
-A \emph{buffer} is a container for a regular or a no-regular time
+A \emph{buffer} is a container for a regular or a irregular time
 series. The buffer objective is to regularise the time series using a
 predetermined step and an attribute function. We name
 \emph{consolidation} to this action.
@@ -897,10 +930,19 @@ attribute, let $S'=S[t_0,t_f]^\dd$ be the selection of measures by
 Dirac delta temporal interval:
 \begin{itemize}
 \item maximum$^\dd$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
-\item last$^\dd$: $v' = \max(S')$.
+\item last$^\dd$: $v' = V(\max(S'))$.
 \item mean$^\dd$: $v' = \frac{1}{t_f-t_0} \sum\limits_{\forall m
     \in S'} V(m)$, as Dirac delta function has property $\int\dd(t)dt=1$.
 \end{itemize}
+
+With reference to \acro{TSMS} aggregation, $\max(S')$ is an operator
+defined in Section~\ref{sec:model:operations} and the remaining
+operations could be implemented with aggregation functions. As
+instance, $\sum\limits_{\forall m \in S'} V(m)$ is a sum of values
+that could be implemented as $\agg(S',(0,0),f^a)$ where $f^a:
+(t_a,v_a) \times (t_b,v_b) \mapsto (0,v_a+v_b)$ as showed in
+Example~\ref{ex:computational-operators}.
+
 
 
 \zohe{} attribute aggregation functions $f^\zohe{}$ have a general
@@ -911,7 +953,7 @@ $S'=S[t_0,t_f]^\zohe{}$ be the selection of measures by \zohe{} temporal
 interval:
 \begin{itemize}
 \item maximum$^\zohe{}$: $v' = \max_{\forall m \in S'}(V(m))$. 
-\item last$^\zohe{}$: $v' = \max(S')$.
+\item last$^\zohe{}$: $v' = V(\max(S'))$.
 \item mean$^\zohe{}$: $v' = \frac{1}{t_f-t_0} \big[ (T(o)-t_0)V(o) +
   \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S
   m) )V(m) \big]$ where $o=\min(S')$ and $S''= S' - \{o\}$.
