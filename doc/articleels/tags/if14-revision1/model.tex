@@ -57,16 +57,16 @@ purposes.
   as an element of the set $T$, $i \in T$. Following with the
   definition of a coordinate system and real numbers as time domain,
   let $t^{R}$ be a \emph{reference time instant}, then we define
-  \emph{time instants} as a value $t^i \in\Rb$ that measures signed
-  time distance from the \emph{reference time instant} $t^i=
+  \emph{time instants} as a value $t \in\Rb$ that measures signed
+  time distance from the \emph{reference time instant} $t =
   d(t^{R},i)$, where $d$ is the metric of the set $T$.
 
-  Let $t^i_i$ and $t^i_j$ be two \emph{time instants} with same $t^R$
+  Let $t_i$ and $t_j$ be two \emph{time instants} with same $t^R$
   as \emph{reference time}. We define the \emph{duration of time}
-  $t^d$ as a value $t^d \in\Rb$ which measures the distance in time
-  units between two time instants $t^d = d(t^i_i,t^i_j)$. When time
-  instants are also real numbers $t^i_i , t^i_j \in \Rb$, then $t^d =
-  t^i_i - t^i_j$.
+  $t$ as a value $t \in\Rb$ which measures the distance in time
+  units between two time instants $t = d(t_i,t_j)$. When time
+  instants are also real numbers $t_i , t_j \in \Rb$, then $t =
+  t_i - t_j$.
 \end{definition}
 
 Summarising, time instants position and order events, and between two
@@ -119,13 +119,13 @@ written as $T(m)$.
 The time attribute defines the canonical order relation between
 measures. There are two possible order relations, attending the case
 when exists two measures with the same time but different value. Let
-$m = (t_m, v_m)$ and $n = (t_n, v_n)$ be two measures.  (i) A
+$m_i = (t_i, v_i)$ and $m_j = (t_j, v_j)$ be two measures.  (i) A
 \emph{partial order} is obtained when both measures are equal as a
-whole, $m \geq n$ if and only if $t_m > t_n$ or $(t_m, v_m) = (t_n,
-v_n)$, as then two measures are not ordered when only $t_m =
-t_n$. (ii) A \emph{total order} is obtained when both measures are
-equal only considering the time attribute, $m\geq n$ if and only if
-$t_m\geq t_n$, as then measures are always ordered.  We also call
+whole, $m_i \geq m_j$ if and only if $t_i > t_j$ or $(t_i, v_i) = (t_j,
+v_j)$, as then two measures are not ordered when only $t_i =
+t_j$. (ii) A \emph{total order} is obtained when both measures are
+equal only considering the time attribute, $m_i\geq m_j$ if and only if
+$t_i\geq t_j$, as then measures are always ordered.  We also call
 \emph{temporal order} to the total order.
 
 
@@ -219,7 +219,7 @@ series. Considering the partial order of measures, the set
 membership operation applies. Let $S$ be a time series and $m$ a
 measure. The \emph{membership} is denoted $m \in S$. Considering the
 total order of measures, we define the \emph{temporal membership}
-as $m \inst S$ when $\exists m_a \in S : T(m) = T(m_a)$.  Let $S_1$
+as $m \inst S$ when $\exists m_i \in S : T(m) = T(m_i)$.  Let $S_1$
 and $S_2$ be two time series. From membership operations we could
 define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
   inclusion} $S_1\subseteqt S_2$.
@@ -234,12 +234,12 @@ structure and type as happens with union operation in relational
 \acro{DBMS} \cite{date:introduction}. %
 Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
 time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
-repeated at $S_2$: $S_1 \cup S_2 = \{m^1 \in S_1 \vee m^2 \in S_2 |
-m^2 \notinst S_1 \}$. The \emph{temporal union} of both is a time
+repeated at $S_2$: $S_1 \cup S_2 = \{m_1 \in S_1 \vee m_2 \in S_2 |
+m_2 \notinst S_1 \}$. The \emph{temporal union} of both is a time
 series $S_1 \cupt S_2$ with all measures from $S_1$ and $S_2$
 excluding those that only share the time attribute: $S_1 \cupt S_2 =
-\{ m^1 \in S_1 \vee m^2 \in S_2 | m^1 \notinst S_2 \vee m^1 \in S_2,
-m^2 \notinst S_1 \}$.
+\{ m_1 \in S_1 \vee m_2 \in S_2 | m_1 \notinst S_2 \vee m_1 \in S_2,
+m_2 \notinst S_1 \}$.
 
 \begin{figure}
   \centering
@@ -314,31 +314,35 @@ equivalent computational operators map and fold.
 
 
 Map applies a function to each measure of a time series.  Let $S$ be a
-time series and $f^m$ a function over a measure where $f^m:m_a\mapsto
-m_r$. The \emph{map} of $f^m$ to $S$ is a time series $\map(S,f^m) =
-\{\forall m_i\in S : f^m(m_i) \}$.
+time series and $\fmap$ a function over a measure where $\fmap: m \mapsto
+m'$. The \emph{map} of $\fmap$ to $S$ is a time series $\map(S,\fmap) =
+\{\forall m_i \in S : \fmap(m_i) \}$.
 
 Fold recursively combines every measures of a time series.  Let
-$S=\{m_0, \dotsc, m_k\}$ and $S_i$ be two time series, and $f^f$ a
-function over a time series $S_a$ and a measure $m_b$ resulting in a
-time series $S_r$ $f^f: S_a \times m_b \mapsto S_r$. The \emph{fold}
-of $S$ by $f^f$ with initial value $S_i$ is a time series
-$\fold(S,S_i,f^f) = f^f(\dots( f^f(f^f(f^f(S_i,m_0),\allowbreak
+$S_1=\{m_0, \dotsc, m_k\}$ and $S_2$ be two time series, and $\ffold$ a
+function over a time series $S$ and a measure $m$ resulting in a
+time series $S'$, $\ffold: S \times m \mapsto S'$. The \emph{fold}
+of $S_1$ by $\ffold$ with initial value $S_2$ is a time series
+$\fold(S_1,S_2,\ffold) = \ffold(\dots( \ffold(\ffold(\ffold(S_2,m_0),\allowbreak
 m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
 
 
 A simplified fold operation is \emph{aggregate} which is used for
 combining a time series into one measure, normally it is used to
-compute aggregate statistics.  Let $S$ be a time series, $m_i$ a
-measure, and $f^a$ a function over two measures where $f^a: m_a \times
-m_b \mapsto m_r$.  Based on fold operation \emph{aggregate} can be
-defined as: $\agg(S,m_i,f^a) \equiv \fold(S,\{m_i\},f')$ where $f':
-\{m_i\} \times m \mapsto \{f^a(m_i,m)\}$.
+compute aggregate statistics.  Let $S=\{m_0, \dotsc, m_k\}$ be a time
+series, $m$ a measure, and $\fagg$ a function over two measures where
+$\fagg: m_i \times m_j \mapsto m'$. The \emph{aggregate} of $S$ by
+$\fagg$ with initial value $m$ is a time series $\agg(S,m,\fagg) =
+\fagg(\dots( \fagg(\fagg(\fagg(m,m_0),\allowbreak m_1),\allowbreak
+m_2 )\dots),\allowbreak m_k)$.
+% Based on fold operation \emph{aggregate} can be
+% defined as: $\agg(S,m,\fagg) \equiv \fold(S,\{m\},f')$ where $f':
+% \{m_i\} \times m_j \mapsto \{\ffagg(m_i,m_j)\}$.
 
 %A more generic version of fold is a fold considering order. 
 In the previous fold, the measures are computed in random order.
 However in some computational operations it is necessary to define the
-order, especially when $f^f$ is not commutative.  Then, it is possible
+order, especially when $\ffold$ is not commutative.  Then, it is possible
 to define a \emph{fold with order} as an extension of fold where
 measures are computed in a predetermined order.
 
@@ -360,21 +364,21 @@ measures are computed in a predetermined order.
 \label{ex:computational-operators}
 Let $S=\{(1,1),(2,3),(4,1)\}$ be a time series.  Map operator allows
 computing a new time series whose values result from time multiplied
-by value.  We define the map function $f^m: (t,v)\mapsto (t,t\times
-v)$. Then $\map(S,f^m)=\{(1,1),(2,6),(4,4)\}$.
+by value.  We define the map function $\fmap: (t,v)\mapsto (t,t\times
+v)$. Then $\map(S,\fmap)=\{(1,1),(2,6),(4,4)\}$.
 
 
 Aggregate operator allows computing a measure that results from the
-sum of all values.  We define the aggregate function $f^a: (t_a,v_a)
-\times (t_b,v_b) \mapsto (0,v_a+v_b)$. Then $\agg(S,(0,0),f^a) =
+sum of all values.  We define the aggregate function $\fagg: (t_i,v_i)
+\times (t_j,v_j) \mapsto (0,v_i+v_j)$. Then $\agg(S,(0,0),\fagg) =
 (0,5)$, where the resulting time is 0 as it does not concern this
 computation.
 
 
 Fold operator allows computing a selection of measures where value
-equals one.  We define the fold function $f^f: S_a \times (t_b,v_b)
-\mapsto S_a \cup S_b$ where $S_b=\{(t_b,v_b)\}$ if $v_b=1$ or
-$S_b=\{\}$ otherwise. Then $\fold(S,\{\},f^f)=\{(1,1),(4,1)\}$.
+equals one.  We define the fold function $\ffold: S_i \times (t,v)
+\mapsto S_i \cup S'$ where $S'=\{(t,v)\}$ if $v=1$ or
+$S'=\{\}$ otherwise. Then $\fold(S,\{\},\ffold)=\{(1,1),(4,1)\}$.
 
 
 % Fold operator allows computing a time series that shows the
@@ -414,21 +418,21 @@ being totally ordered. Then three basic operations can be defined:
 interval, successor and concatenation.
 
 
-The \emph{interval} $(t_i,t_f)$, where $t_i$ and $t_f$ are two time
+The \emph{interval} $(t_i,t_j)$, where $t_i$ and $t_j$ are two time
 instants, over a time series $S$ is a time subseries between the two
-time instants $S(t_i,t_f) \subseteq S$. A similar interval concept
+time instants $S(t_i,t_j) \subseteq S$. A similar interval concept
 is used by \cite{last:hetland}. The open interval is defined as
-$S(t_i,t_f)=\{m\in S | t_i<T(m)<t_f\}$. Other intervals can be
-defined: closed $S[t_i,t_f]$, left-open $S(t_i,t_f]$, and right-open
-$S[t_i,t_f)$.
+$S(t_i,t_j)=\{m\in S | t_i<T(m)<t_j\}$. Other intervals can be
+defined: closed $S[t_i,t_j]$, left-open $S(t_i,t_j]$, and right-open
+$S[t_i,t_j)$.
 
 The time order in time series also implies the sequence concept of
 \emph{successor} and \emph{predecessor}.  Let $S=\{m_0, \ldots, m_k\}$
-be a time series and $m_S\in S$ and $m_a$ be two measures. We say
-$m_S=\nex_S(m_a)$ is the \emph{next} measure to $m_a$ in $S$ if and
-only if $m_S=\inf(S(T(m_a),+\infty])$.  We say $m_S=\prev_S(m_a)$ is
-the \emph{previous} measure to $m_a$ in $S$ if and only if
-$m_S=\sup(S[-\infty,T(m_a)))$. %
+be a time series, $m_i\in S$ a measure and $m$ another measure. We
+say $m_i=\nex_S(m)$ is the \emph{next} measure to $m$ in $S$ if
+and only if $m_i=\inf(S(T(m),+\infty])$.  We say $m_i=\prev_S(m)$
+is the \emph{previous} measure to $m$ in $S$ if and only if
+$m_i=\sup(S[-\infty,T(m)))$. %
 Infinite measures are obtained when next and previous are applied to
 supremum and infimum measure respectively: $\nex_S(\sup
 S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
@@ -514,21 +518,21 @@ sequence operators as temporal operators.
 
 
 We define a temporal interval operation to introduce this concept.
-Let $S$ be a time series, $[t_i,t_f]$ a interval of two time instants
+Let $S$ be a time series, $[t_i,t_j]$ a interval of two time instants
 and $r$ a representation function. The \emph{temporal interval} noted
-as $S[t_i,t_f]^r$ is a time series with measures in the interval
-temporal range, $S[t_i,t_f]^r\equiv S(t)^r$ for all $t \in [t_i,t_f]$. This
+as $S[t_i,t_j]^r$ is a time series with measures in the interval
+temporal range, $S[t_i,t_j]^r\equiv S(t)^r$ for all $t \in [t_i,t_j]$. This
 is a general definition difficult to implement, so for every
 representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
 \item Let $S(t)^\dd$ be the \dd{} representation for $S$. The
-  \emph{\dd{} temporal interval} is $S[t_i,t_f]^\delta = S[t_i,t_f]
-  \cup \{m_0\} \cup \{m_f\}$ where $m_0=(t_i,0)$ and $m_f=(t_f,0)$.
+  \emph{\dd{} temporal interval} is $S[t_i,t_j]^\delta = S[t_i,t_j]
+  \cup \{m_i\} \cup \{m_j\}$ where $m_i=(t_i,0)$ and $m_j=(t_j,0)$.
 
 \item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$. The
-  \emph{\zohe{} temporal interval} is $S[t_i,t_f]^\zohe{} = S(t_i,t_f]
-  \cup \{m\}$ where $m=(t_f,v)$ and $v= V(\inf( S[t_f,+\infty] ))$.
+  \emph{\zohe{} temporal interval} is $S[t_i,t_j]^\zohe{} = S(t_i,t_j]
+  \cup \{m_j\}$ where $m_j=(t_j,v)$ and $v= V(\inf( S[t_j,+\infty] ))$.
 \end{itemize}
 
 
@@ -540,15 +544,15 @@ definition of temporal interval operation is given.
 
 The temporal selection over a time series allows to change the
 resolution in the context of a representation function.  Let $S$ be a
-time series, $i=\{t_0,t_1,\dotsc,t_n\}$ a set of time instants, and
+time series, $T=\{t_0,t_1,\dotsc,t_n\}$ a set of time instants, and
 $r$ a representation function. The \emph{temporal selection} noted as
-$S[i]^r$ is a time series with measures in $i$ times computed in
-coherence with the representation function $r$: $S[i]^r = S[t_0,t_0]^r
-\cup S[t_1,t_1]^r \cup \dotsb \cup S[t_n,t_n]^r$. Let $t_a$ be a time
+$S[T]^r$ is a time series with measures in $T$ times computed in
+coherence with the representation function $r$: $S[T]^r = S[t_0,t_0]^r
+\cup S[t_1,t_1]^r \cup \dotsb \cup S[t_n,t_n]^r$. Let $t_i$ be a time
 instant, note that temporal selection depends on the temporal interval
-operation $S[t_a,t_a]^r$, which is equivalent to the notion of
-temporal representation function over an argument as $S[t_a,t_a]^r
-\equiv \{ (t_a, S(t_a)^r) \}$.
+operation $S[t_i,t_i]^r$, which is equivalent to the notion of
+temporal representation function over an argument as $S[t_i,t_i]^r
+\equiv \{ (t_i, S(t_i)^r) \}$.
 
 
 
@@ -596,11 +600,11 @@ series.
 
 
 A time series is regular when its measures are equi-spaced in time,
-according to \cite{last:hetland}. Let $S$ be a time series, $t_I$
+according to \cite{last:hetland}. Let $S$ be a time series, $i$
 be a time instant and $d$ be a time duration. Then the time
-series' measures can be located in the time interval $i_0=[t_I,
-t_I+d]$ and its multiples $i_j=[t_I+jd, t_I+(j+1)d]$
-for $j=0,1,2,\ldots$. When time series' measures are equally spaced we
+series' measures can be located in the time interval $I_0=[i,
+i+d]$ and its multiples $I_n=[i+nd, i+(n+1)d]$
+for $n=0,1,2,\ldots$. When time series' measures are equally spaced we
 say it to be regular.
 
 \begin{definition}
@@ -611,10 +615,10 @@ say it to be regular.
 
 
 If a time series is not regular, it can be regularised by the temporal
-selection operation. Let $S$ be a time series, $t_I$ and $d$ the
+selection operation. Let $S$ be a time series, $i$ and $d$ the
 desired regularity parameters, and $k\in\N$ a limit for the scope of
-the range.  A regularised $S$ is obtained with $S[i]^r$ where $i =
-\{t_I+jd | d\in\N, d\leq k \}$ is a set of time instants equi-spaced.
+the range.  A regularised $S$ is obtained with $S[T]^r$ where $T =
+\{i+nd | n\in\N, n\leq k \}$ is a set of time instants equi-spaced.
 
 
 
@@ -695,7 +699,7 @@ $\addB: B = (S_B,\tau,\delta,f) \times m \mapsto
 (S'_B,\tau,\delta,f)$ where $S'_B = S \cup \{m\} $.
 
 From the $B_{\emptyset}$ all the consolidation time instants can be
-calculated as $t_0+i\delta, i\in\N$. The consolidation of $B$ in a
+calculated as $t_0+n\delta, n\in\N$. The consolidation of $B$ in a
 time interval $i=[\tau,\tau+\delta]$ results in a measure
 $m'=f(S_B,i)$ where $f$ is an attribute aggregate function
 $f$. Operator \emph{consolidateBuffer} consolidates a set of measures
