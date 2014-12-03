@@ -26,7 +26,7 @@ i proposem solucions per alguns dels problemes que en resulten.''
 
 
 Destacar que no només volem calcular ràpid sinó també tenir en compte altres recursos: capacitat, energia, comunicacions, etc.
-
+També l'emmagatzematge de metades, es  pot fer perfectament amb els SGBDR.
 
 \todo{}
 * La multiresolució és un càlcul de diferents agregacions i resolucions d'una sèrie temporal. És a dir, el que podria ser una consulta de multiresolució que voldríem fer a unes dades per exemple veure'n la mitjana de cada mes al llarg d'un any i veure la mitjana del darrer dia cada 5 minuts. Això és costós de calcular però nosaltres plantegem alternatives a aquest càlcul. En el model, però, es tracta de definir el problema mitjançant l'àlgebra, de fer una bona definició senzilla i compacta del sistema; l'àlgebra en el nivell lògic dels models de SGBD no coneix els problemes de rendiment ni de recursos limitats, per això no hi apareixen específicament aquestes qüestions, de fet és un avantatge ja que permet definir el model de totalment genèrica i molt potent.
@@ -370,38 +370,47 @@ implementacions de naturalesa diferent.
 
 
 
-\todo{fer}
+En primer lloc, Pytsms i RoundRobinson implementats amb llenguatge
+Python.  Aprofita el paradigma d'orientació a objectes per a obtenir
+una bona correspondència entre implementació i model. A més Python té
+unes biblioteques extensa que permet afegir complements com per
+exemple gràfics o gestionar l'emmagatzematge en fitxers.  Aquesta és
+la implementació de referència, és a dir la que considerem que mostra
+com es pot implementar el model de multiresolució definit.  Tant admet
+la computació en línia com en diferit.
 
+En segon lloc, RoundRobindoop implementat amb MapReduce i
+Hadoop. Utilitza MapReduce com a tècnica de programació para\l.lela i
+distribuïda i usa Hadoop com a sistema de computació d'aquesta
+tècnica. Està basat en les funcions de multiresolució i per tant és
+una computació en diferit. Hi ha, però, algunes simplificacions del
+model de multiresolució per a poder-se ajustar a MapReduce.
 
-En primer lloc, 
-Python, orientació a objectes va bé per a tenir una bona correspondència entre implementació i model. A més té una llibreria extensa que ens permet afegir complements com fer gràfics i gestionar l'emmagatzematge en fitxers
-Tant admet la computació en línia com en diferit.
-%  utilitzant el llenguatge de programació Python es dissenya, a nivell acadèmic, un sistema de gestió de bases de dades que implementa el model de dades tal com s'ha definit en aquest capítol.
-
-
-En segon lloc, MapReduce i Hadoop. Tècniques de computació para\l.lela i distribuïda. Basat en les funcions de multiresolució i per tant en la computació en diferit. Aquí, però, hem de fer simplificacions del model, perquè aquestes tècniques no s'hi ajusten. 
-
-
-En tercer lloc, Tutorial~D, i Rel com a intèrpret. En aquest cas el
-llenguatge acadèmic dels \gls{SGBDR} i un intèrpret en
-experimentació. Per tant, és la implementació més experimental però
-que permet enfocar els \gls{SGST} en una altra línia de treball,
-d'alguna manera assenyala els avantatges i els límits del model
-relacional per a tipus complexos com són les sèries temporals i la
-multiresolució. En aquest cas també podríem haver fet un estudi
-similar pels \gls{SGSTM} però només hem implementat les funcions de
-multiresolució. Aquesta implementació és la més acadèmica per tant
-també està limitada per a provar amb dades reals.
-
+En tercer lloc, Reltsms implementat amb Tutorial~D, el llenguatge
+acadèmic dels \gls{SGBDR}, i Rel com a intèrpret.  Aquesta és la
+implementació més experimental, de fet Rel està en desenvolupament.
+Permet situar els \gls{SGST} en els \gls{SGBDR} i alhora avaluar
+l'adequació del model relacional per a tipus complexos com són les
+sèries temporals i la multiresolució.  Pel que fa a la multiresolució,
+s'han implementat les funcions de multiresolució. Aquesta
+implementació, però, és la més acadèmica i és limitada a l'hora de
+provar amb dades reals.
 
 
 
 Finalment, posem a prova les implementacions amb dades reals massives.
-Aquest exemple conclou el funcionament de la multiresolució,
-principalment s'assenyala el cronograma de multiresolució sobre unes
-dades originals i mostra les característiques dels mètodes de
-representació i diferents funcions d'agregació d'atributs,
-particularment del màxim i la mitjana de la família \gls{zohe}.
+Aquestes proves demostren el bon funcionament de la multiresolució en
+un context determinat. A més, permeten exemplificar la cobertura del
+cronograma de multiresolució sobre unes dades originals i mostrar les
+característiques dels diferents mètodes de representació i funcions
+d'agregació d'atributs, particularment del màxim i la mitjana de la
+família \gls{zohe}.
+
+
+
+
+\todo{fer}
+
 
 
 És difícil comparar les implementacions perquè no tenen res a veure. A més l'exemple es basa en computació diferida. 
@@ -419,14 +428,6 @@ També hi ha l'emmagatzematge limitat per a sistemes petits.
 
 
 
-* Quan les dades són grans són grans i no s'hi pot fer res més. Si es
-vol calcular amb elles doncs té un cost elevat en temps. Nosaltres hem
-definit unes operacions de multiresolució sobre els SGST que triguen
-una estona a calcular-se perquè s'han de fer moltes operacions o s'han
-de fer moltes vegades. Això no obstant, aquest és l'únic punt crític
-en recursos de les sèries temporals; la resta (afegir una nova dada,
-emmagatzemar amb redundància, posar etiquetes a les sèries temporals,
-...) es pot fer perfectament amb els SGBDR, de fet són la millor eina.
 Com es resol el problema de múltiples càlculs? proposem dues
 implementacions dels SGSTM: una on hi ha execució paral·lela i una
 altra on hi ha execució en flux.  L'execució paral·lela permet
