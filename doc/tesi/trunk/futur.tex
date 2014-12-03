@@ -42,6 +42,24 @@ sets de Python mitjançant hash.
 %HEm fet servir estadístics senzills (mitjana, màxim, darrer) perquè el nostre objectiu és la multiresolució i no cap funció d'agregació d'atributs en concret. En l'anàlisi de sèries temporals hi ha multitud d'algoritmes, d'allà es poden treure altres funcions d'agregació: que extreguin patrons, que cerquin periodicitats, que ajustin l'evolució en el temps de dues sèries temporals diferents, etc.
 
 
+\subsection{Reflexions de la qualitat}
+% En el cas que es conegui més bé el context i el comportament de la
+% sèrie temporal a què s'aplica la multiresolució, es pot detallar més
+% bé la quantificació de l'error: és a dir en termes de la teoria de
+% la informació aleshores tenim més coneixement sobre la predicció del
+% comportament de les dades i podem utilitzar-ho per a avaluar
+% característiques més concretes.
+
+% Cal notar que no avaluem la idoneïtat d'aplicar un estadístic o un
+% altre a unes dades ni quin és el que més bé va per a obtenir una
+% informació, només plantegem el cas que algú vol aplicar una consulta
+% amb una agregació determinada a una sèrie temporal i quin error
+% tindria si en comptes de a les dades originals ho aplica a les dades
+% multiresolucionades.
+
+
+
+
 
 % We have showed some aggregation functions examples with simple
 % aggregation statistics, mean and maximum, and simple representation
@@ -195,6 +213,69 @@ sets de Python mitjançant hash.
 
 % \todo{?}
 
+
+
+% \subsubsection{Lapses de buffer o no lapses}
+
+% Podem tenir esquemes de multiresolució a on les diferents subsèries
+% resolució coincideixin en els temps recents o a on no coincideixin:
+% les subsèries més velles acabin on comencen les noves de manera
+% semblant a l'estructura de buffers enllaçats.
+
+% La primera opció pot servir per quan hi ha moltes dades tenir diferents resums preparats per a ser visualitzats, així permet triar ràpidament entre diferents zooms de les dades.
+
+% La segona opció serveix per aprofitar al màxim la resolució i l'espai d'emmagatzematge, sense que cap subsèrie desi informació per al mateix interval de temps. Així permet conservar una sèrie temporal al llarg del seu temps amb diferents resolucions. També pot servir per usar la informació d'altres buffers i no haver de repetir emmagatzematge de buffers.
+
+
+
+
+
+
+
+\subsubsection{Arquitectura RRDtool}
+
+
+% RRDtool té una estructura multiresolució amb un buffer únic d'entrada
+% i buffers orientats a stream; segons havíem avaluat anteriorment \parencite{llusa11:tfm}.
+
+
+% S'ha d'estudiar com es fan les consultes a RRDtool
+
+% \url{http://en.wikipedia.org/wiki/RRD_Editor}
+
+
+
+% Podem considerar que:
+
+% 1. RRDtool és un SGBD NoSQL?
+% 2. Nosaltres n'hem formalitzat un model lògic?
+% 3. És el primer model lògic per a un producte NoSQL?
+% 4. Aquest model lògic es pot implementar tant en productes relacionals com amb NoSQL? i per tant es demostra que els models lògics són extremadament potents i necessaris?
+% 5. La implementació que fa RRDtool és molt eficient per a un determinat camp d'aplicació?
+% 6. La implementació relacional seria molt genèrica i propera al model però no tan eficient? més aviat subjecte a l'eficiència genèrica dels SGBDR?
+% 7. Els SGST són uns SGBD més simples? no tenen tantes actualitzacions de valors, no hi ha tantes relationships en l'esquema... Els SGST només es preocupen de sèries temporals i per tant només d'un tipus de dades en concret, això no obstant tal com s'ha dissenyat el model aquest tipus de dades es pot implementar en SGBD més complexos. 
+
+Hi ha RRDtool, que és un SGBD específic dissenyat per a dades monitorades. Les causes del seu disseny són:
+
+* Tobias Oetiker dissenyava un monitor de paràmetres de xarxes de comunicacions i en aquest monitor una part era la d'emmagatzematge de les dades. Per raons pràctiques i d'utilitat dissenya aquesta part amb un esquema inovadós. Finalment acaba separant aquesta part i la converteix independentment en RRDtool.
+
+* RRDtool té aquest model pràctic i a la pràctica és molt útil per a ser usat com a SGBD dels sistemes de monitoratge, sobretot en l'àmbit dels comptadors de xarxa on és l'estàndard de facto. 
+
+Això no obstant, no hi ha cap raonament teòric sobre el model de RRDtool ja que s'ha dissenyat per raons pràctiques. Per tant, entendre el funcionament de RRDtool és complicat, hi ha un nivell molt elevat per començar a fer-lo funcionar i molts conceptes no s'entenen perquè no estan ben definits. 
+
+Per això ens proposem de compendre i formalitzar el model de RRDtool, que acabarem anomenar model de multiresolució, en la teoria dels sitemes d'informació. A més RRDtool és molt específic pel camp de comptadors de xarxa i volem oferir un model genèric per a altres àmbits.  
+
+
+
+
+
+
+Regarding other implementations,
+% \emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
+% a NoSQL system, although Oetiker \cite{rrdtool} has not commented
+% it. However, regardless of the implementation backend, we have shown
+% how a generic model for \acro{MTSMS} can be defined firmly rooted on
+% \acro{DBMS} algebra theory.
 
 
 
