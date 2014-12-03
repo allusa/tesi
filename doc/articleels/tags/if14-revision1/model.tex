@@ -527,7 +527,7 @@ representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
 \item Let $S(t)^\dd$ be the \dd{} representation for $S$. The
-  \emph{\dd{} temporal interval} is $S[t_i,t_j]^\delta = S[t_i,t_j]
+  \emph{\dd{} temporal interval} is $S[t_i,t_j]^\dd = S[t_i,t_j]
   \cup \{m_i\} \cup \{m_j\}$ where $m_i=(t_i,0)$ and $m_j=(t_j,0)$.
 
 \item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$. The
@@ -700,8 +700,8 @@ $\addB: B = (S_B,\tau,\delta,f) \times m \mapsto
 
 From the $B_{\emptyset}$ all the consolidation time instants can be
 calculated as $t_0+n\delta, n\in\N$. The consolidation of $B$ in a
-time interval $i=[\tau,\tau+\delta]$ results in a measure
-$m'=f(S_B,i)$ where $f$ is an attribute aggregate function
+time interval $I=[\tau,\tau+\delta]$ results in a measure
+$m'=f(S_B,I)$ where $f$ is an attribute aggregate function
 $f$. Operator \emph{consolidateBuffer} consolidates a set of measures
 and removes the consolidated part of the time series from the buffer:
 $\consB : B=(S_B,\tau,\delta,f) \mapsto B' \times m'$ where $ B'=
@@ -850,18 +850,19 @@ can compute the sum of both with $\totalseries(M_1) +
 
 Attribute aggregate functions are a specific case of \acro{TSMS}
 aggregate operations for summarising time series data when
-consolidating a buffer. Let $S$ be a time series and $t_0$ and $t_f$
+consolidating a buffer. Let $S$ be a time series and $t_i$ and $t_j$
 two time instants. An attribute aggregate function $f$ calculates a
 measure that summarises the measures of $S$ included in the time
-interval $i=[t_0,t_f]$:
+interval $I=[t_i,t_j]$:
 \[
-f : S=\{m_0,\ldots,m_k\} \times i=[t_0,t_f] \mapsto m'
+f : S=\{m_0,\ldots,m_k\} \times I=[t_i,t_j] \mapsto m'
 \]
 where, generally, $m'$ results from two operations on the time series:
 (i) a time subseries selection $S'$ depending on the consolidating
-interval, for example $S' = S[t_0,t_f]$, and (ii) a \acro{TSMS} aggregation
-over this time subseries such as $m' = \agg(S',m_i, f^a)$ where $f^a$
-is a function over two measures.
+interval, for example $S' = S[t_i,t_j]$, and (ii) a \acro{TSMS}
+aggregation over this time subseries such as $m' = \agg(S',m, \fagg)$
+where $\fagg$ is a function over two measures and $m$ an initial
+measure.
 
 
 Many different attribute aggregate functions can be used in order to
@@ -884,16 +885,16 @@ designed for allowing users to define aggregate functions.
 
 
 Regarding the resulting consolidation time, normally it will be
-$T(m')=t_f$ to be consistent with the consolidation operation of a
-buffer where $\tau' = \tau + \delta \equiv t_f$. However $T(m')$ can
+$T(m')=t_j$ to be consistent with the consolidation operation of a
+buffer where $\tau' = \tau + \delta \equiv t_j$. However $T(m')$ can
 have a time offset with the buffer consolidating times, as instance
 the resulting measure can be aggregated from a time subseries $S'$
-with open interval $S'=S(t_0,t_f)$, closed interval $S'=S[t_0,t_f]$,
-or other combinations like $S'=S(t_0-d,t_f-d]$ where $d$ is a time
+with open interval $S'=S(t_i,t_j)$, closed interval $S'=S[t_i,t_j]$,
+or other combinations like $S'=S(t_0-d,t_j-d]$ where $d$ is a time
 duration.  The time offset can also be variable, as for example an
 aggregate function that returns the first measure of the interval
-$S[t_0,t_f)$, $m'=\min(S[t_0,t_f))$, then the resulting time can be
-between $t_0 \leq T(m') < t_f$.
+$S[t_i,t_j)$, $m'=\min(S[t_i,t_j))$, then the resulting time can be
+between $t_i \leq T(m') < t_j$.
 
 
 Attribute general patterns can be defined that explain how the
@@ -907,14 +908,14 @@ functions leave $T(m')$ undefined as well as the representation $r$ of
 the time series. Let the time be continuous on all the time domain
 $t\in T$:
 \begin{itemize}
-\item maximum$^r$: $S \times i \mapsto m'$ where $V(m') =
-  \max\limits_{\forall t \in i}(S(t)^r)$. It summarises $S$ with the maximum
-  of the measure values in the interval $i$.
-\item last$^r$: $S \times i \mapsto m'$ where $V(m') = S(t_f)^r$. It
-  summarises $S$ with the value at $t_f$ time instant.
-\item mean$^r$: $S \times i \mapsto m'$ where $V(m') =
-  \frac{1}{t_f-t_0} \int\limits_{t_0}^{t_f} S(t)^r dt$. It summarises $S$
-  with the mean of the function in the interval $i$.
+\item maximum$^r$: $S \times I \mapsto m'$ where $V(m') =
+  \max\limits_{\forall t \in I}(S(t)^r)$. It summarises $S$ with the maximum
+  of the measure values in the interval $I$.
+\item last$^r$: $S \times I \mapsto m'$ where $V(m') = S(t_j)^r$. It
+  summarises $S$ with the value at $t_j$ time instant.
+\item mean$^r$: $S \times I \mapsto m'$ where $V(m') =
+  \frac{1}{t_j-t_i} \int\limits_{t_i}^{t_j} S(t)^r dt$. It summarises $S$
+  with the mean of the function in the interval $I$.
 \end{itemize}
 
 
@@ -927,38 +928,38 @@ and \zohe{}.
 
 
 Dirac delta attribute aggregation functions $f^\dd$ have a general
-form $f^\dd : S \times [t_0,t_f]\mapsto m'$ where $m'=(t',v')$, the
+form $f^\dd : S \times [t_i,t_j]\mapsto m'$ where $m'=(t',v')$, the
 resulting time is interpreted as centred on the interval
-$t'=\frac{t_f+t_0}{2}$ and the resulting value depends on the
-attribute, let $S'=S[t_0,t_f]^\dd$ be the selection of measures by
+$t'=\frac{t_j+t_i}{2}$ and the resulting value depends on the
+attribute, let $S'=S[t_i,t_j]^\dd$ be the selection of measures by
 Dirac delta temporal interval:
 \begin{itemize}
 \item maximum$^\dd$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
 \item last$^\dd$: $v' = V(\max(S'))$.
-\item mean$^\dd$: $v' = \frac{1}{t_f-t_0} \sum\limits_{\forall m
+\item mean$^\dd$: $v' = \frac{1}{t_j-t_i} \sum\limits_{\forall m
     \in S'} V(m)$, as Dirac delta function has property $\int\dd(t)dt=1$.
 \end{itemize}
 
 With reference to \acro{TSMS} aggregation, $\max(S')$ is an operator
-defined in Section~\ref{sec:model:operations} and the remaining
-operations could be implemented with aggregation functions. As
+defined in Section~\ref{sec:model:operations}. The remaining
+operations could be implemented with aggregation operations. As
 instance, $\sum\limits_{\forall m \in S'} V(m)$ is a sum of values
-that could be implemented as $\agg(S',(0,0),f^a)$ where $f^a:
+that could be implemented as $\agg(S',(0,0),\fagg)$ where $\fagg:
 (t_a,v_a) \times (t_b,v_b) \mapsto (0,v_a+v_b)$ as showed in
 Example~\ref{ex:computational-operators}.
 
 
 
 \zohe{} attribute aggregation functions $f^\zohe{}$ have a general
-form $f^\zohe{} : S \times [t_0,t_f]\mapsto m'$ where $m'=(t',v')$,
+form $f^\zohe{} : S \times [t_i,t_j]\mapsto m'$ where $m'=(t',v')$,
 the resulting time is interpreted as right limit of the interval
-$t'=t_f$ and the resulting value depends on the attribute, let
-$S'=S[t_0,t_f]^\zohe{}$ be the selection of measures by \zohe{} temporal
+$t'=t_j$ and the resulting value depends on the attribute, let
+$S'=S[t_i,t_j]^\zohe{}$ be the selection of measures by \zohe{} temporal
 interval:
 \begin{itemize}
 \item maximum$^\zohe{}$: $v' = \max_{\forall m \in S'}(V(m))$. 
 \item last$^\zohe{}$: $v' = V(\max(S'))$.
-\item mean$^\zohe{}$: $v' = \frac{1}{t_f-t_0} \big[ (T(o)-t_0)V(o) +
+\item mean$^\zohe{}$: $v' = \frac{1}{t_j-t_i} \big[ (T(o)-t_0)V(o) +
   \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S
   m) )V(m) \big]$ where $o=\min(S')$ and $S''= S' - \{o\}$.
 \end{itemize}

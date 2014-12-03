@@ -262,25 +262,64 @@ def _mean(s):
                 sumv[i] += m.v[i]
 
     return ' '.join( str(v/float(len(s))) for v in sumv )
-            
-  
+
+
+
+
+def _meanzohe(s,i):
+
+    if len(s) == 0:
+        return 0
+
+    ta,tb = i
     
-    if isinstance(s[0][1],list):
-        grau = len(s[0][1]) 
-    else:
-        grau = 1
+    mean = 0
+    tnext = float('+inf')
+    vnext = 0
+    
+    for m in s:
+        if ta < m.t < tb:
+            tprev = s[:m.t:'or'].sup().t
+            if tprev > ta:
+                mean += (m.t - tprev)*m.v
+            else:
+                mean += (m.t - ta)*m.v
 
-    sumv = [0] * grau
 
-    for t,v in s:
-        if grau == 1:
-            sumv[0] += v
-        else:
-            for i in range(grau):
-                sumv[i] += v[i]
-        
-        
-    return ' '.join( str(v/float(len(s))) for v in sumv )
+        elif tb <= m.t < tnext:
+            tnext = m.t
+            vnext = m.v
+
+
+    tprevnext = s[:tnext:'or'].sup().t
+    meannext = (tb-tprevnext)*vnext
+    
+    return (mean + meannext)/(tb-ta)
+
+
+
+def _maxzohe(s,i):
+
+    if len(s) == 0:
+        return 0
+
+    ta,tb = i
+    
+    maximum = None
+    tnextmaximum = float('+inf')
+    nextmaximum = None
+    
+    for m in s:
+        if ta < m.t < tb:
+            maximum = max(maximum,m.v)
+        elif tb <= m.t < tnextmaximum:
+            tnextmaximum = m.t
+            nextmaximum = m.v
+    
+    return max(maximum, nextmaximum)
+
+
+
 
 
 
@@ -288,6 +327,12 @@ def aggregate(s,f=None,i=None):
     if f is None or isinstance(f,str):
         return _mean(s)
 
+    if ZOHEDEFAULT:
+        if 'mean' in f.__name__:
+            return _mean(s)        
+        if 'max' in f.__name__:
+            return _maxzohe(s,i)     
+    
     return f(s,i).v
 
 
@@ -442,6 +487,10 @@ if __name__ == '__main__':
 
             
         elif '-reduce' in sys.argv:
+            ZOHEDEFAULT = False
+            if '-zohedefault' in sys.argv:
+                ZOHEDEFAULT = True
+
             reduce(sys.stdin,sch)
 
 
