@@ -37,10 +37,15 @@ sets de Python mitjançant hash.
 
 * Experimentació amb dades: només demostrem el correcte funcionament de la multiresolució. No avaluem rendiment dels recursos, per exemple no avaluem temps de computació només n'hem mostrat un a tall de referència orientativa.  Cal provar amb més diversitat: dades de diferent mida, de diversa naturalesa, diferents esquemes de multiresolució, dades de referència utilitzades en altres recerques (per exemple keogh?)
 
+* Implentació RoundRobinson: ha quedat de forma semblant a Dee, és a dir que és una API en Python que té orientació de \gls{SGBD}. És a dir, l'usuari quan treballa amb RoundRobinson pot tenir perfectament una estructura mental de com si treballés amb una base de dades.
 
 
 %HEm fet servir estadístics senzills (mitjana, màxim, darrer) perquè el nostre objectiu és la multiresolució i no cap funció d'agregació d'atributs en concret. En l'anàlisi de sèries temporals hi ha multitud d'algoritmes, d'allà es poden treure altres funcions d'agregació: que extreguin patrons, que cerquin periodicitats, que ajustin l'evolució en el temps de dues sèries temporals diferents, etc.
 
+També l'emmagatzematge de metades, es  pot fer perfectament amb els SGBDR.
+
+Això no obstant, el rendiment ja no és només calcular en poc temps, sinó que en alguns contextos pot ser un consum baix d'energia, ocupar poc espai, etc.
+És a dir, que hi ha contextos i en cadascun el rendiment vol dir una cosa o una altra. Dir això per a introduir la implementació Hard
 
 \subsection{Reflexions de la qualitat}
 % En el cas que es conegui més bé el context i el comportament de la
