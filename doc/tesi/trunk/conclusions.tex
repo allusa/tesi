@@ -2,75 +2,58 @@
 \label{sec:conclusions}
 
 
-\todo{fer}
-
 En aquest capítol es resumeix l'exposat en el cos principal del
 document i s'extreuen conclusions del model dissenyat i de les
 implementacions.
 
 
-\todo{hauríem de contestar a les preguntes de la intro}
-``Però, cal emmagatzemar totes les dades que aquests sistemes de
-monitoratge són capaços de recollir?, cal emmagatzemar-les
-indefinidament en el temps? O bé es pot emmagatzemar només la
-informació que es desitgi monitorar o controlar i rebutjar la resta?,
-de manera que no calgui gestionar un volum de dades massiu que
-realment no s'utilitzarà? En aquesta tesi dissertem sobre un mètode
-capaç de seleccionar i emmagatzemar una determinada informació de les
-dades, com gestionar aquesta informació i fins a quin límit això es pot
-aplicar. L'anomenem multiresolució.''
-
-``Contextualitzem la multiresolució en dos àmbits: les sèries temporals
-i els \glspl{SGBD}. En aquesta tesi unim conceptes d'aquest dos àmbits
-i proposem solucions per alguns dels problemes que en resulten.''
+Hem formalitzat la multiresolució per a les sèries temporals com un
+model de \gls{SGBD}. La multiresolució permet seleccionar una
+determinada informació d'una sèrie temporal i només emmagatzemar-ne
+una quantitat de dades afitada. Això no obstant és una solució de
+compressió amb pèrdua i cal avaluar i adequar els paràmetres de la
+multiresolució a cada context.
 
 
-Destacar que no només volem calcular ràpid sinó també tenir en compte altres recursos: capacitat, energia, comunicacions, etc.
-També l'emmagatzematge de metades, es  pot fer perfectament amb els SGBDR.
-
-\todo{}
-* La multiresolució és un càlcul de diferents agregacions i resolucions d'una sèrie temporal. És a dir, el que podria ser una consulta de multiresolució que voldríem fer a unes dades per exemple veure'n la mitjana de cada mes al llarg d'un any i veure la mitjana del darrer dia cada 5 minuts. Això és costós de calcular però nosaltres plantegem alternatives a aquest càlcul. En el model, però, es tracta de definir el problema mitjançant l'àlgebra, de fer una bona definició senzilla i compacta del sistema; l'àlgebra en el nivell lògic dels models de SGBD no coneix els problemes de rendiment ni de recursos limitats, per això no hi apareixen específicament aquestes qüestions, de fet és un avantatge ja que permet definir el model de totalment genèrica i molt potent.
-
-* Tenen problemes les sèries temporals? Sí, ja hem analitzat algunes de les seves propietats problemàtiques, sobretot el gran volum que tenen i al qual s'ocupa de trobar algoritmes per a solucionar-ho el data mining. Ara bé, això no treu que se segueixin gestionant amb SGBD, nosaltres proposem diferents implementacions que intenten gestionar les propietats problemàtiques.
-
-
-1. Resumim els models formalitzats i la tècnica de multiresolució
-
-2. Resumim les consideracions i variacions fetes a partir dels models
-
-3. Implementacions
+El model defineix els sistemes de multiresolució de forma senzilla i
+compacta, la formalització permet definir un model totalment genèric i
+molt potent. Les implementacions de sistemes multiresolució exploren
+diverses maneres de computar la multiresolució, el model de
+multiresolució està pensat per a tenir en compte el context dels
+recursos: capacitat d'emmagatzematge limitada, processament en temps
+diferit o en línia amb el flux de dades, distribució de les dades,
+transmissió de resums de la informació, etc.
 
 
 
-
-% Compared to other \acro{TSMS} we propose a compression solution that
-% stores only the information we will require by latter queries or by
-% human visualisation, instead of trying to reconstruct the original
-% signal.  Moreover, our multiresolution solution copes well with
-% typical problematic properties of time series: regularity, data
-% validation and data volume.  The decompression time is minimal as data
-% in discs get stored directly as a time series. As a consequence, the
-% queries or visualisation computing time is only due to the computation
-% itself. Moreover, if the query is an aggregation or resolution already
-% computed in \acro{MTSMS} consolidation, then the visualisation is
-% immediate.
-
-
+En comparació a altres sistemes que gestionen sèries temporals, la
+multiresolució és una solució de compressió que només emmagatzema les
+dades que es requeriran en consultes posteriors o per a
+visualitzacions gràfiques. El procés de descompressió és mínim ja que
+les dades s'emmagatzemen directament com a subsèries temporals. A més,
+la multiresolució co\l.labora a solucionar les propietats
+problemàtiques de les sèries temporals: la regularitat, les dades
+desconegudes o un volum massiu de dades.  Les sèries temporals es
+defineixen genèriques més enllà de considerar-les simples seqüències:
+els instants de temps poden marcar alhora ordre i posició absoluta
+temporal, la distància entre les mesures pot ser irregular i
+consideren el seu àmbit d'adquisició en sistemes de monitoratge.
 
 
 
-% \subsubsection{Comparació de SGST i SGSTM amb altres models del mercat}
+A continuació, més particularment:
 
+\begin{itemize}
+\item Es resumeixen els models formalitzats i la tècnica de
+  multiresolució
 
-% SGST:
+\item Es reflexiona sobre algunes consideracions i variacions dels models
 
-% * Respecte dels models de seqüència: 
+\item Es resumeix l'experimentació en el disseny d'implementacions per
+  als models
 
-%   - una seqüència es defineix com una funció el domini de la qual és un conjunt comptable i totalment ordenat. La definició genèrica que fem del temps no és un conjunt comptable i per tant creiem que un model genèric de sèries temporals no es pot descriure amb comoditat des de les seqüències. 
+\end{itemize}
 
-%   - generalment s'assumeix que la distància entre els elements d'una seqüència és regular
-
-%   - els instants de temps en una sèrie temporal no es poden canviar, en canvi en una seqüencia els índexs només marquen l'ordre i no significat de posicionament en un marc de referència.
 
 
 
@@ -412,20 +395,13 @@ família \gls{zohe}.
 \todo{fer}
 
 
-
 És difícil comparar les implementacions perquè no tenen res a veure. A més l'exemple es basa en computació diferida. 
 
 També cal dir que en la programació de les implementacions no hem tingut en compte eficiència, de fet hem preferit conservar les operacions algebraiques i lògiques fetes en les definicions del models.
 
-Això no obstant, el rendiment ja no és només calcular en poc temps, sinó que en alguns contextos pot ser un consum baix d'energia, ocupar poc espai, etc.
-És a dir, que hi ha contextos i en cadascun el rendiment vol dir una cosa o una altra.
 A més, hi ha la computació en flux. Aquesta ens permet anar calcular a mesura que van arribant les dades en comptes d'acumular-ho tot i fer-ho de cop. Si potdem utilitzar un esquema de flux aleshores els càlculs quedem repartits en el temps per la mateixa naturalesa del flux. (per altra banda també estudiaderem càlculs en temps diferent i oferirem una solució amb computació para\l.lela).
-També hi ha l'emmagatzematge limitat per a sistemes petits.
-
-
 
 * Sobre la multiresolució calculada en flux en un SGSTM o amb computació paral·lela: la primera és computació distribuïda al llarg del temps i la segona és computació distribuïda en l'espai (o en els recursos físics)
-
 
 
 Com es resol el problema de múltiples càlculs? proposem dues
