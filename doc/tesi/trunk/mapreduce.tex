@@ -2,17 +2,12 @@
 \label{sec:implementacio:mapreduce}
 
 
-\todo{alerta que s'han canviar els noms de mapa i plec de multiresolució}
-\todo{alerta en el canvi de rrdoop al reduce: ara retorna delta f tab t v} 
-\todo{ara es pot fer servir el LoadCsv del roundrobinson per a jugar amb el resultat: documentar-ho i també documentar el LoadCsv a roundrobinson}
-\todo{ potser seria millor explicar-ho allà: No ocorre perquè ja es crea el conjunt TI inicialment, però potser es podria comentar en el context de computació diferida}
 
-
-En el capítol \todo{ref al capítol} hem definit la funció de
+En el \autoref{cap:funciomultiresolucio} hem definit la funció de
 multiresolució com una funció sobre una sèrie temporal. Aquesta funció
-té bàsicament dues parts: un plec sobre un esquema de multiresolució i
-mapes sobre la sèrie temporal. Ara implementem
-aquesta funció mitjançant computació para\l.lela.
+té bàsicament dues parts: un mapa sobre uns paràmetres de
+multiresolució i un plec sobre un esquema de multiresolució. Ara
+implementem aquestes funcions mitjançant computació para\l.lela.
 
 
 Una tècnica de computació para\l.lela és
@@ -139,16 +134,19 @@ executar RoundRobindoop: amb Hadoop i la shell del sistema.
 \subsection{Multiresolució amb MapReduce}
 
 L'algoritme que implementem amb MapReduce és el de la funció de
-multiresolució definida a la secció \todo{ref sec: multiresolucio: funcio}. Aquesta funció principalment té dues
-parts, una de mapa i una de plec, que com ja s'ha dit no es poden
-correspondre exactament amb les operacions de map i de reduce. 
- Així
-doncs, dissenyem les operacions de map i de reduce que tenen el mateix
-efecte que calcular la funció de multiresolució, en què el resultat
-final no és la sèrie temporal total sinó el resultat de totes les
-funcions $\glssymbol{not:sgstm:dmap}$, és a dir el resultat final són
-les sèries temporals dels discs del model de \gls{SGSTM} la
-concatenació dels quals resulta en la sèrie temporal total.
+multiresolució. Aquesta funció principalment té dues parts segons les
+definicions realitzades: el mapa de multiresolució
+($\glssymbol{not:sgstm:dmap}$, \seeref{def:multiresolucio:mapmu}) i el
+plec de multiresolució ($\glssymbol{not:sgstm:multiresolucio}$,
+\seeref{def:multiresolucio:plecmu}). Com ja s'ha dit, aquestes
+definicions no es poden correspondre exactament amb les operacions de
+map i de reduce.  Així doncs, dissenyem les operacions de map i de
+reduce que tenen el mateix efecte que calcular les funcions de
+multiresolució, en què el resultat final no és la sèrie temporal total
+sinó el resultat de totes les funcions $\glssymbol{not:sgstm:dmap}$,
+és a dir el resultat final són les sèries temporals dels discs del
+model de \gls{SGSTM} la concatenació dels quals resulta en el
+$\glssymbol{not:sgstm:multiresolucio}$.
 
 
 
@@ -427,21 +425,9 @@ hem definit:
   problema de les $f$.
 
 \item No es tenen en compte els cardinals màxims. Si es volen tenir en
-  compte, cal adequar bé els $\tau$ inicials. Així sigui $e$ l'esquema
-  de multiresolució original, per a tenir en compte els cardinals
-  màxims s'haurà d'usar un nou esquema $e'$ en què cada $\tau$
-  original sigui canviat a un altre temps de consolidació múltiple
-  $\tau'= \tau+n\delta$ (1) on $n\in\glssymbol{not:Z}$.  \emph{Càlcul
-    de $n$:} es coneix $t_k=T(\max(S))$ i per a tenir en compte els
-  cardinals s'ha de complir que $\tau'+k\delta \leq t_k$ (2), és a dir
-  que les mesures entre $[\tau'+k\delta,t_k]$ encara no es poden
-  consolidar.  Substituint la (1) a la (2) $\tau+n\delta+k\delta \leq
-  t_k$, operant $\tau+(n+k)\delta \leq t_k$ i $n \leq
-  \frac{t_k-\tau}{\delta}-k$ d'on es conclou que $n = \left\lfloor
-    \frac{t_k-\tau}{\delta}-k \right\rfloor$ .  A més a més, si no es
-  considera vàlid $\tau'<\tau$, és a dir que no es volen mesures abans
-  del temps d'inici original, aleshores $n$ com a mínim pot valdre
-  zero. \label{def:mapreduce:ajustamentdetaus} \todo{s'hauria de dir que hem introduït aquesta funcionalitat a RoundRobinson}
+  compte, cal ajustar els $\tau$ inicials. A continuació d'aquest
+  apartat descrivim com es poden ajustar els temps d'inici de la
+  consolidació.
 
 \end{itemize}
 
@@ -457,14 +443,6 @@ hem definit:
   $\tau_0+(n-1)\delta_0 < 25 \leq \tau_0+n\delta_0,
   n\in\glssymbol{not:Z}$ i $t_{b0}=\tau_0+n\delta_0 = 26$, i de manera
   semblant $t_{b1}= 25$.
-
-  Ara es volen tenir en compte els cardinals màxims, sigui
-  $t_k=T(\max(S))=35$ el temps de la mesura màxima de la sèrie
-  temporal original. Aleshores cal canviar l'esquema de multiresolució
-  $e'=\{(\delta_0=2,f_0,\tau'_0,k_0=4),(\delta_1=5,f_1,\tau'_1,k_1=3)\}$
-  on $\tau'_0=26$ i $\tau'_1=20$. La classificació esdevé
-  $\operatorname{classifica}(m,e')=\{ (5,f_1,25,25,1) \}$ on no hi ha
-  la resolució $\delta_0,f_0$ perquè $25< \tau'_0$.
 \end{example}
 
 
@@ -497,7 +475,7 @@ contextualitzem aquest problema de les $f$.
 
 En conclusió, el map i el reduce no es corresponen exactament
 amb les definicions de les funcions de $\glssymbol{not:sgstm:dmap}$ i
-$\glssymbol{not:sgstm:multiresolucio}$ \todo{ref a la secció?}, sinó
+$\glssymbol{not:sgstm:multiresolucio}$, sinó
 que el map classifica les mesures de la sèrie temporal segons el
 buffer que els correspon i el reduce calcula les mesures consolidades
 per un disc. És a dir, que un map i un reduce equivalen a la
@@ -512,9 +490,10 @@ sèrie temporal total.
 \label{sec:mapreduce:f}
 
 Al model de \gls{SGSTM} hem definit de forma genèrica les funcions
-d'agregació d'atributs com a $m=f(S,i)$ (v. def.\todo{ref}). Aquestes funcions
+d'agregació d'atributs com a $m=f(S,i)$ en què $i=[t_a,t_b]$ és un
+interval de temps (\seeref{sec:model:agregador}). Aquestes funcions
 principalment realitzen dues operacions: una selecció sobre la sèrie
-temporal i una agregació de les mesures seleccionades. 
+temporal i una agregació de les mesures seleccionades.
 
 A RoundRobindoop, l'operació de selecció es duu a terme a l'etapa de
 map i en canvi l'agregació, a l'etapa de reduce.  En l'algoritme de
@@ -529,18 +508,18 @@ operacions d'agregació per als reduce.
 Així doncs, caldria afegir en els paràmetres de RoundRobindoop
 l'operació de selecció d'interval per a cada $f$ que s'utilitzi. Però
 això complica la resolució de l'algoritme de MapReduce. Per exemple,
-resoldre l'interval temporal \gls{zohe}
---$S[t_0,t_f]^{\glssymbol{not:zohe}} = S(t_0,t_f] \cup \{
-(t_f,V(\inf(S[t_f,+\infty))) \}$ (v.~def.\todo{ref a la def})--
-implica conèixer la mesura següent a un $t_f$ i per tant treballar
-sobre tota la sèrie temporal original, cosa que no és possible perquè
-en les etapes map només es treballa sobre un subconjunt de la sèrie
-temporal original. Això no obstant, per al RoundRobindoop definit, si
-considerem que la sèrie temporal no té inframostreig aleshores en l'etapa
-map podem fer la selecció prèvia per l'interval
+resoldre l'interval temporal \gls{zohe},
+$S[t_0,t_f]^{\glssymbol{not:zohe}} = S(t_0,t_f] \cup \{
+(t_f,V(\inf(S[t_f,+\infty))) \}$ (\seeref{def:model:zohe}), implica
+conèixer la mesura següent a un $t_f$ i per tant treballar sobre tota
+la sèrie temporal original, cosa que no és possible perquè en les
+etapes map només es treballa sobre un subconjunt de la sèrie temporal
+original. Això no obstant, per al RoundRobindoop definit, si
+considerem que la sèrie temporal no té inframostreig aleshores en
+l'etapa map podem fer la selecció prèvia per l'interval
 $S(t_b-\delta,t_b+\delta]$, és a dir assumim que hi ha mesura a
 $[t_b,t_b+\delta]$, i a l'etapa reduce ja es calcularà correctament
-$f(S,[t_b-\delta,t_b])$. 
+$f(S,[t_b-\delta,t_b])$.
 
 
 Recordem que en l'algoritme de RoundRobindoop definit hem assumit que
@@ -603,6 +582,122 @@ En resum, el model de programació MapReduce limita les capacitats dels
 \gls{SGSTM}, sobretot pel que fa a les funcions d'agregació
 d'atributs. 
 
+
+
+\subsubsection{Quant a l'ajustament de l'inici de la consolidació}
+
+L'algoritme de MapReduce definit no té en compte els cardinals màxims.
+És a dir, en l'etapa map es classifiquen les mesures en l'interval de
+consolidació que correspon segons $\tau+n\delta$.  Aleshores, un cop
+computat el resultat, el cardinal màxim $k$ decidiria quins intervals
+de consolidació s'han d'eliminar.  Però com que és una computació en
+diferit, no cal calcular els intervals de consolidació que hauran de
+ser eliminats posteriorment.  Aquest problema es pot solucionar
+fàcilment ajustant els $\tau$ inicials de l'esquema multiresolució.
+
+
+Així, en la computació en diferit, sigui $S$ la sèrie temporal de la
+qual es vol calcular la multiresolució, el temps de la darrera mesura
+$t_k=T(\max(S))$ indueix els intervals de consolidació quan es tenen en
+compte els cardinals màxims. Sigui $e$ l'esquema de multiresolució
+original, per a tenir en compte els cardinals màxims s'haurà d'usar un
+nou esquema $e'$ en què cada $\tau$ original sigui canviat a un altre
+temps de consolidació múltiple $\tau'= \tau+n\delta$, on
+$n\in\glssymbol{not:Z}$, que tingui en compte $t_k$.
+
+
+
+\begin{definition}[Ajustament del temps d'inici segons el darrer temps
+  de la sèrie temporal]
+  \label{def:mapreduce:ajustamentdetaus}
+
+  Sigui $(\delta,f,\tau,k)$ un dels paràmetres de multiresolució i
+  sigui $S$ una sèrie temporal de la qual es coneix $t_k=T(\max(S))$.
+  Es calcula un nou temps d'inici $\tau'= \tau+n\delta$ (1), on
+  $n\in\glssymbol{not:Z}$, que tingui en compte el cardinal màxim per
+  a $t_k$. És a dir que compleixi $\tau'+k\delta \leq t_k$ (2) i
+  alhora $\tau'+(k+1)\delta \leq t_k$ (3).  Això significa
+  que les mesures entre $[\tau',\tau'+k\delta]$ són les pendents de
+  consolidar, les mesures entre $[\tau'+k\delta,t_k]$ encara no es
+  poden consolidar i les anteriors a $\tau'$ ja es poden
+  eliminar. \emph{Nota:} sense tenir en compte retards de buffer.
+
+
+  \emph{Càlcul de $n$:} Substituint la (1) a la (2) s'obté
+  $\tau+n\delta+k\delta \leq t_k$, operant s'obté $\tau+(n+k)\delta
+  \leq t_k$ i $n \leq \frac{t_k-\tau}{\delta}-k$ d'on amb (3) es
+  conclou que $n = \left\lfloor \frac{t_k-\tau}{\delta}-k
+  \right\rfloor$ .  A més a més, si no es considera vàlid
+  $\tau'<\tau$, és a dir que no es volen mesures abans del temps
+  d'inici original, aleshores $n$ com a mínim pot valdre zero.
+
+\end{definition}
+
+
+
+\begin{example}[Classificació d'una mesura en les resolucions amb
+  ajustament dels temps d'inici]
+  \label{ex:mapreduce:classifica-ajustament}
+  Reprenent \textref{ex:mapreduce:classifica-ajustament} per a
+  classificar la mesura $m=(25,1)$ a
+  $e=\{(\delta_0=2,f_0,\tau_0=0,k_0=4),(\delta_1=5,f_1,\tau_1=10,k_1=3)\}$,
+  ara es volen tenir en compte els cardinals màxims.
+    
+  Sigui $t_k=T(\max(S))=35$ el temps de la mesura màxima de la sèrie
+  temporal original. Aleshores cal canviar l'esquema de multiresolució
+  a
+  $e'=\{(\delta_0=2,f_0,\tau'_0,k_0=4),(\delta_1=5,f_1,\tau'_1,k_1=3)\}$
+  on $\tau'_0=26$ i $\tau'_1=20$ aplicant la
+  \autoref{def:mapreduce:ajustamentdetaus}. La classificació esdevé
+  $\operatorname{classifica}(m,e')=\{ (5,f_1,25,25,1) \}$ on no hi ha
+  la resolució $\delta_0,f_0$ perquè $25< \tau'_0$.
+\end{example}
+
+
+
+Com que l'ajustament dels temps d'inici es pot aplicar per a qualsevol
+computació en diferit de la multiresolució, implementem un nou mètode
+a RoundRobinson que aplica aquest càlcul. L'anomenem
+\lstinline[style=py]+set_tau_tnow+. És a dir, a partir d'un temps
+\emph{tnow}, que indica el temps actual en què es troba la sèrie
+temporal, \lstinline[style=py]+M.set_tau_tnow(tnow)+ ajusta tots els
+temps d'inici de $M$ per tal que quan s'executi la consolidació
+s'ignorin els intervals que serien immediatament eliminats a causa del
+cardinal màxim del disc.  Al
+\autoref{lst:roundrobinson:ajustamenttaus} reprenem l'exemple del
+\autoref{lst:roundrobinson:ex1} per a i\l.lustrar-ho.
+
+\begin{lstlisting}[style=py,caption=Exemple d'ajustament dels temps
+    d'inici amb RoundRobinson,label=lst:roundrobinson:ajustamenttaus]
+#Importació dels objectes necessaris
+>>> from pytsms import TimeSeries, Measure as m
+>>> from roundrobinson import MultiresolutionSeries
+>>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+
+#Definició de la sèrie temporal d'exemple
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),m(14,1),m(19,6),m(22,11),m(26,6),m(29,0)])
+
+#Definició de la sèrie temporal multiresolució
+>>> M = MultiresolutionSeries()
+#Definició de l'esquema multiresolució
+>>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
+>>> M.addResolution(delta=10,k=3,f=maximum_zohe,tau=0)
+
+#Ajustament dels temps d'inici segons tnow=29
+>>> M.set_tau_tnow(29)
+#Consulta dels nous temps d'inici
+>>> M.str_taus()
+'5/mean_zohe:5 | 10/maximum_zohe:-10'
+\end{lstlisting}
+
+
+Ara es podria aplicar la consolidació com al
+\autoref{lst:roundrobinson:ex1} però aquesta es duria a terme
+directament en els instants $10, 15, 20, 25$ per a la resolució
+$\delta=5$, és a dir sense calcular l'instant $5$ i posteriorment
+eliminar-lo, i en $0, 10, 20$ per a $\delta=10$. En aquest darrer cas,
+no es té en compte cap limitació i per tant es permet un $\tau'=-10$
+inferior a $\tau=0$.
 
 
 
@@ -687,7 +782,7 @@ qual serà el que s'utilitzi. En aquest cas, @e.pickle@ es correspon
 amb el fitxer @mrd.pickle@ del~\autoref{lst:roundrobinson:storage} i
 per tant amb l'esquema de multiresolució
 del~\autoref{lst:roundrobinson:ex1}:
-$e=\{(\delta_0=5,k_0=4,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0),(\delta_1=10,k_1=2,f_1=\glssymbol{not:sgstm:maxzohe},\tau_1=0)\}$.
+$e=\{(\delta_0=5,k_0=4,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0),(\delta_1=10,k_1=3,f_1=\glssymbol{not:sgstm:maxzohe},\tau_1=0)\}$.
 
 
 En aquest exemple d'esquema de multiresolució s'usen funcions
@@ -799,20 +894,20 @@ dades del~\autoref{lst:rrdoop:sortidasort} i retorna les dades finals
 per l'stdout que està redirigit al fitxer @final.csv@, el contingut
 del qual es mostra al~\autoref{lst:rrdoop:sortidashell}.  Hadoop
 emmagatzemaria aquestes dades en un fitxer o fitxers de dades.
-Aquestes dades tenen el format $\delta$/$f$ $t_b$ $v$ on $(t_b,v)$ és
+Aquestes dades tenen el format $\delta$ $f$ $t_b$ $v$ on $(t_b,v)$ és
 la mesura consolidada per a la resolució identificada per
 $(\delta,f)$.
 
 \begin{lstlisting}[style=file,caption=Dades de sortida final.csv,label=lst:rrdoop:sortidashell]
-10/maximum_zohe	10 6.0
-10/maximum_zohe	20 11.0
-10/maximum_zohe	30 None
-5/mean_zohe	10 3.0
-5/mean_zohe	15 2.0
-5/mean_zohe	20 7.0
-5/mean_zohe	25 8.0
-5/mean_zohe	30 None
-5/mean_zohe	5 2.8
+10 maximum_zohe	10 6.0
+10 maximum_zohe	20 11.0
+10 maximum_zohe	30 None
+5 mean_zohe	10 3.0
+5 mean_zohe	15 2.0
+5 mean_zohe	20 7.0
+5 mean_zohe	25 8.0
+5 mean_zohe	30 None
+5 mean_zohe	5 2.8
 \end{lstlisting}
 
 Així aquest resultat és el mateix que el de les consultes $\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$ i $\glssymbol{not:sgstm:seriedisc}(M,10,\glssymbol{not:sgstm:maxzohe})$ del~\autoref{lst:roundrobinson:ex1} però amb les particularitats següents:
@@ -834,6 +929,13 @@ Així aquest resultat és el mateix que el de les consultes $\glssymbol{not:sgst
 \end{itemize}
 
 
+El fitxer del \autoref{lst:rrdoop:sortidashell} té el format \gls{CSV}
+de RoundRobinson. Per tant, es poden recuperar aquestes dades amb les
+operacions de \verb+LoadCsv+, com s'ha descrit al
+\autoref{lst:roundrobinson:storage}, i aplicar-hi les operacions de
+consulta convenients: obtenir la sèrie temporal total, obtenir les
+subsèries, fer-ne gràfics, etc.
+
 
 
 \subsubsection{Execució a Hadoop}
@@ -846,18 +948,17 @@ recupera el resultat de \gls{HDFS}.  Hadoop streaming és l'eina que
 permet l'execució a Hadoop de qualsevol programa, en qualsevol
 llenguatge, que tingui el model de MapReduce.
 Per a més detall sobre les ordres
-i els processos vegeu la documentació de Hadoop~\parencite{hadoop}.
+i els processos vegeu la documentació de Hadoop~\parencite{hadoop}, en aquest exemple hem simplificat amb [...] algunes adreces.
 %http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/HadoopStreaming.html
 
-\todo{simplificar alguns path, no cal tant detall aquí}
 
 \begin{lstlisting}[style=sh,caption=Execució a Hadoop de
   rrdoop.py,label=lst:rrdoop:hadoop]
-hadoop dfs -copyFromLocal original.csv /user/aleix/original.csv
+hadoop dfs -copyFromLocal original.csv [...]original.csv
 
-hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -file e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1' -reducer 'rrdoop.py -reduce -schema e.pickle' -input /user/aleix/original.csv -output /user/aleix/final
+hadoop jar [...]hadoop-streaming*.jar -file rrdoop.py -file e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1' -reducer 'rrdoop.py -reduce -schema e.pickle' -input [...]original.csv -output [...]final
 
-hadoop dfs -copyToLocal /user/aleix/final/part-00000 final.csv
+hadoop dfs -copyToLocal [...]final/part-00000 final.csv
 \end{lstlisting}
 %per esborrar: hadoop dfs -rmr /user/aleix/final
 %requisit, tenir disponible roundrobinson, p.ex. cp -r ~/pfc_svn/src/roundrobinson/trunk/ /usr/local/lib/python2.7/dist-packages/roundrobinson
@@ -934,3 +1035,5 @@ s'executa a la shell, on només hi ha un procés map i un de reduce.
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
+
+%  LocalWords:  multiresolució
