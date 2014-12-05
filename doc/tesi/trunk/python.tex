@@ -458,7 +458,7 @@ Gràfic de la sèrie temporal æ$s_2$æ amb representació æ\gls{zohe}æ
 
 
 
-Al~\autoref{lst:pytsms:ex1} s'ha mostrat l'ús de funcionalitats
+Al~\autoref{lst:pytsms:ex1} es mostra l'ús de funcionalitats
 complementàries de Pytsms, el qual s'ha dissenyat extensible per a
 poder incorporar noves operacions, per a la regularitat.  En
 el~\autoref{lst:pytsms:storage} cas es mostra l'ús d'operacions
@@ -492,29 +492,35 @@ TimeSeries([m(2,2), m(3,2), m(4,0), m(6,2)])
 
 
 
-\todo{aquest exemple s'ha fet abans?}
-
 El \autoref{lst:roundrobinson:ex1} és un exemple d'ús de RoundRobinson
 on definim una sèrie temporal multiresolució $M$, hi afegim una sèrie
 temporal $s$, hi apliquem la consolidació fins que no sigui
-consolidable i consultem el resultat.
+consolidable. Finalment, consultem el resultat amb les dues consultes
+bàsiques --$\glssymbol{not:sgstm:seriedisc}$ i
+$\glssymbol{not:sgstm:serietotal}$-- i ho dibuixem gràficament.  Les
+dades són les mateixes que a \textref{ex:model:bdm1} i també la
+consolidació resultant, tot i que ara les sèries temporals tenen
+valors diferents de zero per a poder observar els resultats de les
+funcions d'agregació d'atributs.
+
+
 
 \begin{lstlisting}[style=py,caption=Exemple d'operacions amb RoundRobinson,label=lst:roundrobinson:ex1]
 #Importació dels objectes necessaris
 >>> from pytsms import TimeSeries, Measure as m
 >>> from roundrobinson import MultiresolutionSeries
 >>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
->>> from roundrobinson import Plot
+>>> from roundrobinson.plot import Plot
 >>> from pytsms.representation import Zohe
 
-#Definició de sèries temporal d'exemple
->>> s = TimeSeries([Measure(1,6),Measure(5,2),Measure(8,5),Measure(10,0),Measure(14,1),Measure(19,6),Measure(22,11),Measure(26,6),Measure(29,0)])
+#Definició de la sèrie temporal d'exemple
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),m(14,1),m(19,6),m(22,11),m(26,6),m(29,0)])
 
 #Definició de la sèrie temporal multiresolució
 >>> M = MultiresolutionSeries()
 #Definició de l'esquema multiresolució
 >>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
->>> M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
+>>> M.addResolution(delta=10,k=3,f=maximum_zohe,tau=0)
 
 #Addició de totes les mesures de la sèrie temporal
 >>> for m in s: M.add(m)
@@ -522,8 +528,7 @@ consolidable i consultem el resultat.
 >>> M.consolidable()
 True
 #Consolidació fins que no sigui consolidable
->>> while M.consolidable(): 
-...    M.consolidate()
+>>> while M.consolidable(): M.consolidate()
 
 #Consulta æ$\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$æ
 >>> M.discSeries(5,mean_zohe)
@@ -566,7 +571,7 @@ TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
   \begin{tikzpicture}
     \begin{axis}[
         multiresolucio,
-        title={R: 10/maximum\_zohe $|2|$},
+        title={R: 10/maximum\_zohe $|3|$},
         ylabel={},
         xlabel={},
         ]
@@ -602,7 +607,7 @@ TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 
 
 
-Al~\autoref{lst:roundrobinson:storage} s'ha mostrat l'ús de
+Al~\autoref{lst:roundrobinson:storage} es mostra l'ús de
 funcionalitats complementàries de RoundRobinson, el qual s'ha
 dissenyat extensible per a poder incorporar noves operacions, per als
 gràfics.  En el~\autoref{lst:roundrobinson:storage} es mostra l'ús
@@ -610,19 +615,46 @@ d'operacions d'emmagatzematge en fitxers, del mòdul @storage@. Primer
 s'emmagatzema la @M@ del~\autoref{lst:roundrobinson:storage} en un
 fitxer amb format Pickle, que és un format d'emmagatzematge de
 Python \parencite{python:doc2}, i després es recupera del fitxer la
-sèrie temporal multiresolució emmagatzemada. 
+sèrie temporal multiresolució emmagatzemada.  Segon s'emmagatzema la
+@M@ del~\autoref{lst:roundrobinson:storage} en un fitxer amb format
+\gls{CSV} i després es recupera del fitxer la sèrie temporal
+multiresolució emmagatzemada.  Les dades emmagatzemades al fitxer \gls{CSV} es
+mostren al~\autoref{lst:roundrobinson:csv}.
+
 \begin{lstlisting}[style=py,caption=Operacions complementàries de RoundRobinson per a l'emmagatzematge,label=lst:roundrobinson:storage]
 #Importació dels objectes necessaris
->>> from roundrobinson.storage import SavePickle, LoadPickle
+>>> from roundrobinson.storage import SavePickle, LoadPickle, SaveCsv, LoadCsv
 
-#Emmagatzematge en format Pickle de nom mrd.csv
+#Emmagatzematge en format Pickle de nom mrd.pickle
 >>> M.accept(SavePickle('mrd.pickle'))
 #Recuperació a partir de format Pickle
 >>> Mr = MultiresolutionSeries([])
 >>> Mr = Mr.accept(LoadPickle('mrd.pickle'))
 >>> Mr == M
 True
+
+#Emmagatzematge en format æ\gls{CSV}æ de nom mrd.csv
+>>> M.accept(SaveCsv('mrd.csv'))
+#Recuperació a partir de format æ\gls{CSV}æ
+>>> Mr = M.accept(LoadCsv('mrd.csv'))
 \end{lstlisting}
+
+
+\begin{lstlisting}[style=file,caption=Dades del fitxer mrd.csv,label=lst:roundrobinson:csv]
+5 mean_zohe 25 8
+5 mean_zohe 10 3
+5 mean_zohe 20 7
+5 mean_zohe 15 2
+10 maximum_zohe 10 6
+10 maximum_zohe 20 11
+\end{lstlisting}
+
+
+Cal notar que en el cas de l'emmagatzematge en \gls{CSV} no es tenen
+en compte els buffers, per tant la recuperació no és estrictament el
+mateix que la sèrie temporal multiresolució original.
+
+
 
 
 % \todo{}
