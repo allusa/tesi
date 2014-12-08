@@ -107,26 +107,25 @@ time instant.  In a general form, a definition for single values is
 given and it can be extended to n-dimensional values.
 
 \begin{definition}
-  A \emph{measure} $m$ is defined as a tuple $m=(t,v)$ where $v$ is the
-  value of the measure and $t$ is the time instant when the measure
-  has been acquired.
+  Let $v$ be a value and let $t$ the time instant when the value has
+  been acquired. A \emph{measure} $m$ is defined as the tuple
+  $m=(t,v)$.
 \end{definition}
 
-Let $m = (t,v)$ be a measure, $v$ is written as $V(m)$ and $t$ is
-written as $T(m)$.
+Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
+value $v$ and $T(m)$ denotes the time $t$.
 
+Given two measures we define two distinct order relations.
 
-The time attribute defines the canonical order relation between
-measures. There are two possible order relations, attending the case
-when exists two measures with the same time but different value. Let
-$m_i = (t_i, v_i)$ and $m_j = (t_j, v_j)$ be two measures.  (i) A
-\emph{partial order} is obtained when both measures are equal as a
-whole, $m_i \geq m_j$ if and only if $t_i > t_j$ or $(t_i, v_i) = (t_j,
-v_j)$, as then two measures are not ordered when only $t_i =
-t_j$. (ii) A \emph{total order} is obtained when both measures are
-equal only considering the time attribute, $m_i\geq m_j$ if and only if
-$t_i\geq t_j$, as then measures are always ordered.  We also call
-\emph{temporal order} to the total order.
+Let $m$ and $n$ be two measures. The \textbf{XXXXX} between $m$ and $n$ is
+the binary relation noted $m\leq n$ and defined as $m\leq n\iff
+(T(m)<T(n) \vee m = n)$. It could be proved that this is a partial
+order.
+
+Let $m$ and $n$ be two measures The \emph{temporal order} between $m$
+and $n$ is the binary relation written $m \leq^t n$ and defined as $m
+\leq^t n \iff T(m) \leq T(n)$. Note that this is a total order.
+
 
 
 
@@ -310,13 +309,14 @@ time series $S_1 \join S_2 = \{ (t,v_1,v_2) | (t_1,v_1) \in S_1 \wedge
 the elements contained in time series. In relational \acro{DBMS} these
 operators are extend, aggregate and summarise
 \cite{date:introduction}. For time series, we define a more general
-equivalent computational operators map and fold.
+equivalent computational operators $\map$ and $\fold$.
 
 
-Map applies a function to each measure of a time series.  Let $S$ be a
-time series and $\fmap$ a function over a measure where $\fmap: m \mapsto
-m'$. The \emph{map} of $\fmap$ to $S$ is a time series $\map(S,\fmap) =
-\{\forall m_i \in S : \fmap(m_i) \}$.
+The operator $\map$ transforms a time series by applying a function to
+every measure.  Let $S$ be a time series and let $f:m \mapsto m'$ a
+function over a measure returning a measure. The \emph{map} of $f$
+over $S$ is a new time series defined as $\map(S,f) = \{ f(m) | m \in
+S\}$.
 
 Fold recursively combines every measures of a time series.  Let
 $S_1=\{m_0, \dotsc, m_k\}$ and $S_2$ be two time series, and $\ffold$ a
