@@ -107,8 +107,8 @@ time instant.  In a general form, a definition for single values is
 given and it can be extended to n-dimensional values.
 
 \begin{definition}
-  Let $v$ be a value and let $t$ the time instant when the value has
-  been acquired. A \emph{measure} $m$ is defined as the tuple
+  Let $v$ be a value and let $t$ be the time instant when the value
+  has been acquired. A \emph{measure} $m$ is defined as the tuple
   $m=(t,v)$.
 \end{definition}
 
@@ -117,10 +117,10 @@ value $v$ and $T(m)$ denotes the time $t$.
 
 Given two measures we define two distinct order relations.
 
-Let $m$ and $n$ be two measures. The \textbf{XXXXX} between $m$ and $n$ is
-the binary relation noted $m\leq n$ and defined as $m\leq n\iff
-(T(m)<T(n) \vee m = n)$. It could be proved that this is a partial
-order.
+Let $m_i$ and $n$ be two measures. The \textbf{XXXXX} \todo{tuple
+  order?} between $m$ and $n$ is the binary relation written $m\leq n$
+and defined as $m\leq n\iff (T(m)<T(n) \vee m = n)$. It could be
+proved that this is a partial order.
 
 Let $m$ and $n$ be two measures The \emph{temporal order} between $m$
 and $n$ is the binary relation written $m \leq^t n$ and defined as $m
@@ -192,7 +192,7 @@ rely on how the relational model of DBMS describes operations based on
 set algebra \cite{date:introduction}.
 
 
-In a time series the measures have a total order.  As a time series is
+In a time series the measures have the temporal order.  As a time series is
 a finite set, if it is not empty it has a maximum and a minimum.  Let
 $S$ be a time series and $n\in S$ be a measure. The time series'
 \emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
@@ -207,17 +207,17 @@ indefinite value.  Dually, we can define \emph{minimum} $\min(S)$ and
 
 
 In time series binary set operations, the measures can have the two
-possible order relations: total and partial. Consequently, these two
-possible order relations of measures impose two operation definitions
-for some set operators.  Mainly they impose two membership operations
-and so to all operations based on it.
+possible order relations: temporal and partial\todo{canvi de
+  nom}. Consequently, these two possible order relations of measures
+impose two operation definitions for some set operators.  Mainly they
+impose two membership operations and so to all operations based on it.
 
 
 The \emph{membership} defines when one measure belongs to a time
-series. Considering the partial order of measures, the set
+series. Considering the partial\todo{nom} order of measures, the set
 membership operation applies. Let $S$ be a time series and $m$ a
 measure. The \emph{membership} is denoted $m \in S$. Considering the
-total order of measures, we define the \emph{temporal membership}
+temporal order of measures, we define the \emph{temporal membership}
 as $m \inst S$ when $\exists m_i \in S : T(m) = T(m_i)$.  Let $S_1$
 and $S_2$ be two time series. From membership operations we could
 define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
@@ -233,12 +233,12 @@ structure and type as happens with union operation in relational
 \acro{DBMS} \cite{date:introduction}. %
 Let $S_1$ and $S_2$ be two time series. The \emph{union} of both is a
 time series $S_1 \cup S_2$ with all measures of $S_1$ and those not
-repeated at $S_2$: $S_1 \cup S_2 = \{m_1 \in S_1 \vee m_2 \in S_2 |
-m_2 \notinst S_1 \}$. The \emph{temporal union} of both is a time
-series $S_1 \cupt S_2$ with all measures from $S_1$ and $S_2$
+repeated at $S_2$: $S_1 \cup S_2 = \{ m | m\in S_1 \vee (m\in S_2
+\wedge m \notinst S_1) \}$. The \emph{temporal union} of both is a
+time series $S_1 \cupt S_2$ with all measures from $S_1$ and $S_2$
 excluding those that only share the time attribute: $S_1 \cupt S_2 =
-\{ m_1 \in S_1 \vee m_2 \in S_2 | m_1 \notinst S_2 \vee m_1 \in S_2,
-m_2 \notinst S_1 \}$.
+\{ m | (m \in S_1 \wedge m \in S_2) \vee (m \in S_1 \wedge m \notinst
+S_2) \vee (m \in S_2 \wedge m \notinst S_1) \}$.
 
 \begin{figure}
   \centering
@@ -257,11 +257,12 @@ m_2 \notinst S_1 \}$.
   \{\allowbreak (2,\allowbreak 2),\allowbreak (3,2),(4,0),(6,2)\}$ be
   two time series. The union results $S_1 \cup S_2 =
   \{(1,1),\allowbreak (2,2),\allowbreak (3,1),\allowbreak (4,
-  0),\allowbreak (5,1),\allowbreak (6,2)\}$ or $S_2 \cup S_1 =
-  \{(1,1),\allowbreak (2,2),\allowbreak (3,2),\allowbreak (4,
-  0),\allowbreak (5,1),\allowbreak (6,2)\}$. The temporal union
-  results $S_1 \cupt S_2 = S_2 \cupt S_1 =
-  \{(1,1),\allowbreak (2,2),\allowbreak (4,0),(5,1),\allowbreak (6,2)\}$. %
+  0),\allowbreak (5,1),\allowbreak (6,2)\}$ or, as union is not
+  symmetric, $S_2 \cup S_1 = \{(1,1),\allowbreak (2,2),\allowbreak
+  (3,2),\allowbreak (4, 0),\allowbreak (5,1),\allowbreak (6,2)\}$. The
+  temporal union results $S_1 \cupt S_2 = S_2 \cupt S_1 =
+  \{(1,1),\allowbreak (2,2),\allowbreak (4,0),(5,1),\allowbreak
+  (6,2)\}$. %
   Venn diagrams for both cases are shown in
   Figure~\ref{fig:model:venn}, where the coloured area is the
   resulting time series. For each, the central intersecting area
@@ -280,10 +281,9 @@ from first not contained in second. Like union, the difference
 requires both time series to have the same structure. %
 Let $S_1$ and $S_2$ be two time series. The \emph{difference} of first
 and second is a time series $S_1 - S_2$ with all measures of $S_1$ not
-belonging to $S_2$: $S_1 - S_2 = \{ m \in S_1 | m \notin S_2
-\}$. The \emph{temporal difference} of first and second is a time
+belonging to $S_2$: $S_1 - S_2 = \{ m | m\in S_1 \wedge m \notin S_2 \}$. The \emph{temporal difference} of first and second is a time
 series $S_1 - S_2$ with all measures of $S_1$ not temporal belonging
-to $S_2$: $S_1 -^t S_2 = \{ m \in S_1 | m \notinst S_2 \}$.
+to $S_2$: $S_1 -^t S_2 = \{ m | m \in S_1 \wedge m \notinst S_2 \}$.
 
 
 Based on union and difference we can define \emph{intersection} $S_1\cap
@@ -313,7 +313,7 @@ equivalent computational operators $\map$ and $\fold$.
 
 
 The operator $\map$ transforms a time series by applying a function to
-every measure.  Let $S$ be a time series and let $f:m \mapsto m'$ a
+every measure.  Let $S$ be a time series and let $f:m \mapsto m'$ be a
 function over a measure returning a measure. The \emph{map} of $f$
 over $S$ is a new time series defined as $\map(S,f) = \{ f(m) | m \in
 S\}$.
@@ -325,7 +325,7 @@ time series $S'$, $\ffold: S \times m \mapsto S'$. The \emph{fold}
 of $S_1$ by $\ffold$ with initial value $S_2$ is a time series
 $\fold(S_1,S_2,\ffold) = \ffold(\dots( \ffold(\ffold(\ffold(S_2,m_0),\allowbreak
 m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
-
+\todo{redactar com map}
 
 A simplified fold operation is \emph{aggregate} which is used for
 combining a time series into one measure, normally it is used to
@@ -571,11 +571,11 @@ series. Precision and accuracy is very important in timestamps.  In
 solving methods, especially clock synchronisation methods.
 
 
-Second, unknown data can corrupt the database. Unknown data appears
-when data has not been captured or when it has been acquired
+Second, unknown data can corrupt the database. Unknown data appear
+when data have not been captured or when they have been acquired
 erroneously. Then data validation must be performed, which can result
 in rejecting new values if they are not correct or in reconstructing
-this erroneous data.  Data validation process has to consider when
+these erroneous data.  Data validation process has to consider when
 values are outside the possible range domain, when there has not been
 possible to acquire a sample, when the time of acquisition between
 measures is not considered freshness, etc. \acro{MTSMS} is designed to
@@ -584,14 +584,14 @@ representation functions such as \zohe{}.
 
 
 Third, enormous quantity of data difficults computations.  Time series
-come from data recollected at monitoring systems and so its size gets
+come from data recollected at monitoring systems and so their size gets
 very big as continuously new measures are added.  \acro{MTSMS} is
 designed to be an storage solution with data size reduction by using
 time series aggregate operations.
 
 
 Forth, sample period irregularities difficult later time series
-analysis. That is when data has not been acquired uniformly at time it
+analysis. That is when data have not been acquired uniformly at time it
 is harder to apply join operations between time series and it do not
 allow to apply time series analysis algorithms defined for sequences
 approaches.  \acro{MTSMS} tries to storage regular time series in the
