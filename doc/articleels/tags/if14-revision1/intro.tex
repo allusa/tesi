@@ -30,7 +30,7 @@ and accessing them can be complex. Moreover, this is specially
 critical when developing small embedded systems, whose resources
 (capacity, energy, processing and communications) suffer restrictions
 \cite{yaogehrke02}.  Another problem is that the procedure of
-processing and synthesising information becomes difficult if data is
+processing and synthesising information becomes difficult if data are
 not equi-time spaced.
 
 
@@ -43,7 +43,7 @@ some drawbacks.  On the one hand, \emph{NoSQL} or \emph{NewSQL}
 products are being developed in order to increase the performance and
 flexibility of \acro{SQL} systems
 \cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
-however the continues acquisition nature of time series is an issue for
+however the continuous acquisition nature of time series is an issue for
 storing and analysing offline all the data \cite{keogh97}.
 
 On the other hand, compression techniques for time series are
@@ -68,14 +68,16 @@ counters.
 
 %TSMS
 
-This paper provides formalism in terms of Data Base Management Systems
-(\acro{DBMS}) that store and treat data as time series, usually known
-as Time Series Data Base Management Systems (\acro{TSMS}),
-\cite{dreyer94,last01}.  We introduce a new data model named
-multiresolution \acro{TSMS} (\acro{MTSMS}). This model organises data
-in an aggregated way and allows to store time series using different
-time resolutions. It is designed to cope well with bounded storage
-computers such as sensor systems.
+This paper provides a data model named multiresolution. This model
+organises data in an aggregated way and allows to store time series
+using different time resolutions. It is designed to cope well with
+bounded storage computers such as sensor systems.  This model is
+formalised in terms of Data Base Management Systems (\acro{DBMS}) that
+store and treat data as time series, usually known as Time Series Data
+Base Management Systems (\acro{TSMS}), \cite{dreyer94,last01}.  Hence,
+our data model is a formalisation for Multiresolution Time Series Data
+Base Management Systems (\acro{MTSMS}).
+
 
 We describe the model in two separated submodels, one \acro{TSMS}
 model mainly for describing time series basic concepts and operations
@@ -224,14 +226,15 @@ different time series. They propose a caching system on top of
 free software community so it inspired us to develop a model from its
 main characteristics, that is now what we call multiresolution. A
 similar approach is done by \cite{weigel10} in a system called
-\emph{TSDS} that caches queries by aggregate parameters.  They state
-that other systems only show subsets of data, however it is also
-necessary to show data in their complete time span.  They develop the
-software package \emph{TSDS} where time series are stored fully and
-then requested by date ranges or by applying different filters and
-operations to the time series data.  Our \acro{MTSMS} model is a
-generic approach to the multiresolution features, we define it open so
-that users can define any attribute aggregate functions.
+\emph{TSDS} that caches queries by aggregate parameters.  In this
+paper, the authors state that other systems only show subsets of data,
+however it is also necessary to show data in their complete time span.
+They develop the software package \emph{TSDS} where time series are
+stored fully and then requested by date ranges or by applying
+different filters and operations to the time series data.  Our
+\acro{MTSMS} model is a generic approach to the multiresolution
+features, we define it open so that users can define any attribute
+aggregate functions.
 
 
 Deri et al.\ \cite{deri12:tsdb_compressed_database} present
@@ -241,7 +244,7 @@ time series are stored grouped by the time of acquisition instead of
 each time series isolated.  They compare \emph{Tsdb} with
 \emph{RRDtool} and with a relational product. As a consequence of
 \emph{Tsdb} structure, they achieve a better measure addition time but
-a worse global retrieval time as data has to be contiguously
+a worse global retrieval time as data have to be contiguously
 regrouped. However, when the measurements have same time this is seen
 as the same time series in a \acro{MTSMS}, so it would be interesting
 to use this implementation architecture of shared time arrays in
@@ -284,7 +287,7 @@ database system that has two main structures: one for sensor
 properties stored into relational tables and another for time series
 stored into data sequences from sensors. Time series have specific
 operations and can combine relations and sequences. \emph{Cougar}
-target field is sensor networks, where data is stored distributed in
+target field is sensor networks, where data are stored distributed in
 different locations. Queries are resolved combining sensor data in a
 data stream abstraction that improves processing performance.
 
@@ -370,12 +373,12 @@ As a summary, \acro{MTSMS} improve \acro{TSMS} features in various aspects:
   data, known as gaps, or capture data erroneously, such as outlayers
   \cite{quevedo10}.  The multiresolution attribute functions is
   designed to cope well with validating, filtering and reconstructing
-  with this unknown data in order to keep a consistent
+  with these unknown data in order to keep a consistent
   history.
 
 \item Data time regularising. Another monitoring side effect happens
   when the sampling rate is not constant, that is when the resulting
-  data is not equi-time spaced. This irregularities can come from
+  data are not equi-time spaced. This irregularities can come from
   sampling jitters in periodic sampling or from non-periodic
   event-based sampling \cite{kopetz11:realtime}. One multiresolution
   consolidation objective is to regularise the time interval when
@@ -415,7 +418,7 @@ undetermined units. The `now' point shows when the snapshot has been
 taken, so the time before is the past and the time after is the
 future, whose elements are plotted in discontinuous marks. The
 \emph{init} point shows when the database system has started sampling,
-so data in time before is unknown; the starting point is indicated as
+so data in time before are unknown; the starting point is indicated as
 zero u.t.\ and the previous unknown time points have negative units.
 
 
@@ -437,8 +440,8 @@ particular schema of a multiresolution database consisting of two time
 resolutions for the time series: one computes the mean of the sampled
 values every three u.t.\ and the other computes the mean every five
 u.t. In this example, computing the mean acts as selecting data
-by aggregate statistics. All data stored before zero time is unknown
-(\emph{u}) as has not been acquired. For the future values it is also
+by aggregate statistics. All data stored before zero time are unknown
+(\emph{u}) as has not been acquired. For the future values they are also
 marked as \emph{u} until time advances.
 
 The arrows of the figure show that every three sampled values a mean
