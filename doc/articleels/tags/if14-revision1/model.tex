@@ -117,7 +117,7 @@ value $v$ and $T(m)$ denotes the time $t$.
 
 Given two measures we define two distinct order relations.
 
-Let $m_i$ and $n$ be two measures. The \textbf{XXXXX} \todo{tuple
+Let $m_i$ and $n$ be two measures. The \textbf{XXXXX} \todo{semitemporal
   order?} between $m$ and $n$ is the binary relation written $m\leq n$
 and defined as $m\leq n\iff (T(m)<T(n) \vee m = n)$. It could be
 proved that this is a partial order.
@@ -313,28 +313,29 @@ equivalent computational operators $\map$ and $\fold$.
 
 
 The operator $\map$ transforms a time series by applying a function to
-every measure.  Let $S$ be a time series and let $f:m \mapsto m'$ be a
+every measure.  Let $S$ be a time series and let $\fmap :m \mapsto m'$ be a
 function over a measure returning a measure. The \emph{map} of $f$
-over $S$ is a new time series defined as $\map(S,f) = \{ f(m) | m \in
+over $S$ is a new time series defined as $\map(S,\fmap) = \{ \fmap(m) | m \in
 S\}$.
 
-Fold recursively combines every measures of a time series.  Let
-$S_1=\{m_0, \dotsc, m_k\}$ and $S_2$ be two time series, and $\ffold$ a
-function over a time series $S$ and a measure $m$ resulting in a
-time series $S'$, $\ffold: S \times m \mapsto S'$. The \emph{fold}
-of $S_1$ by $\ffold$ with initial value $S_2$ is a time series
-$\fold(S_1,S_2,\ffold) = \ffold(\dots( \ffold(\ffold(\ffold(S_2,m_0),\allowbreak
-m_1),\allowbreak m_2 )\dots),\allowbreak m_k)$.
-\todo{redactar com map}
+The operator $\fold$ recursively combines every measures of a time
+series.  Let $S_1=\{m_0, \dotsc, m_k\}$ and $S_2$ be two time series
+and let $\ffold: S \times m \mapsto S'$ be a function over a time
+series and a measure returning a time series. The \emph{fold} of $S_1$
+by $\ffold$ with initial value $S_2$ is a new time series defined as
+$\fold(S_1,S_2,\ffold) = \ffold(\dots(
+\ffold(\ffold(\ffold(S_2,m_0),\allowbreak m_1),\allowbreak m_2
+)\dots),\allowbreak m_k)$. 
 
-A simplified fold operation is \emph{aggregate} which is used for
-combining a time series into one measure, normally it is used to
-compute aggregate statistics.  Let $S=\{m_0, \dotsc, m_k\}$ be a time
-series, $m$ a measure, and $\fagg$ a function over two measures where
-$\fagg: m_i \times m_j \mapsto m'$. The \emph{aggregate} of $S$ by
-$\fagg$ with initial value $m$ is a time series $\agg(S,m,\fagg) =
-\fagg(\dots( \fagg(\fagg(\fagg(m,m_0),\allowbreak m_1),\allowbreak
-m_2 )\dots),\allowbreak m_k)$.
+A simplified fold operation is the $\agg$ operation which is used for
+combining a time series into one measure. A frequent use is to compute
+aggregate statistics.  Let $S=\{m_0, \dotsc, m_k\}$ be a time series,
+let $m$ be a measure and let $\fagg: m_i \times m_j \mapsto m'$ be a
+function over two measures returning a measure. The \emph{aggregate}
+of $S$ by $\fagg$ with initial value $m$ is a new time series defined
+as $\agg(S,m,\fagg) = \fagg(\dots(
+\fagg(\fagg(\fagg(m,m_0),\allowbreak m_1),\allowbreak m_2
+)\dots),\allowbreak m_k)$.
 % Based on fold operation \emph{aggregate} can be
 % defined as: $\agg(S,m,\fagg) \equiv \fold(S,\{m\},f')$ where $f':
 % \{m_i\} \times m_j \mapsto \{\ffagg(m_i,m_j)\}$.
