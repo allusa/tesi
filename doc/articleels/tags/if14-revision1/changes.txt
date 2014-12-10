@@ -17,7 +17,7 @@ Revision notes
 
 
 * Report explicitly there is not similar work
--->Not similar with respect to formalism in DBMS terms, perhaps similar implementation is RRDtool
+-->Not similar with respect to formalism in DBMS terms
 -->Title: remove new to clarify there are not other such systems
 
 
@@ -108,6 +108,18 @@ manage time series.)
 p21c2: Sure? This sentence is in conflict with the material in the paper, even with the Abstract.
 
 
+Abstract: has been rewritten to include
+
+- generic model of multiresolution features
+- formalised in terms of database systems
+- special purpose database system
+- implementation of RoundRobinson
+- we have eliminated the comment on set and relational algebra as it was confusing
+
+
+
+
+
 
 
 
@@ -127,7 +139,7 @@ expression: Let m1, m2 "symbol belongs ro" S ...
 
 - we use generally i j as subscripts: t_i,t_j  m_i,m_j
 - for binary operations in time series we use S_1,S_2 and related m_1 belons S_1,m_2 belongs S_2
-- Functions for map, fold and aggregate are named without superscripts P,F,A
+- Functions for map, fold and aggregate are named without superscripts f,g
 - we use n belongs Naturals as general iterator
 - we use k belongs Naturals when related to cardinality in time series
 
@@ -136,6 +148,25 @@ expression: Let m1, m2 "symbol belongs ro" S ...
 
 * operation names: as commented p9c1 Write is (either in italics) or as (JOIN in italics) or (simply JOIN). Follow this rule in all subsequent operator definitions.
 -> We have written all infix operators in capital letters. This is only the case for JOIN as others are written with symbols.
+
+
+
+
+* mathematical errors
+
+
+
+p7c2,c5--7,c9: relevant to the existence of two measures with the same time but with different values??? 
+p7c5--7: As they have been written, these definitions are not clear.
+-> Rewritted definitions of order and clarified the use of names.
+
+
+
+
+p8c10--11: Please note that this set definition and almost all the others does not follow the rules of a mathematical set definition. It should be something
+like -->
+     corrected the builder set notation.
+Also: State clearly that this operation is not symmetric, i.e. S1 UNION S2 <> S2 UNION S1. -> clarified in example
 
 
 
@@ -311,25 +342,6 @@ p7c11-12: Should it rather be a list and not a set? -> We define time series as 
 p8c14:  n=(-inf,inf) shows a measure where t=-inf, following [28],  and v=inf as an indefinite value
 
 
-
-
-
-repassar amb S
-==============
-
-
-
-p7c2,c5--7,c9: relevant to the existence of two measures with the same time but with different values??? 
-p7c5--7: As they have been written, these definitions are not clear.
--> Rewritted definitions of order and clarified the use of names.
-
-
-
-
-p8c10--11: Please note that this set definition and almost all the others does not follow the rules of a mathematical set definition. It should be something
-like -->
-     corrected the builder set notation.
-Also: State clearly that this operation is not symmetric, i.e. S1 UNION S2 <> S2 UNION S1. -> clarified in example
 
 
 
