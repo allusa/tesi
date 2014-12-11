@@ -2,19 +2,15 @@
 \label{sec:futur}
 
 
-\todo{fer intro}
+En aquest capítol es proposen treballs futurs a partir del que s'ha
+dissertat en aquest document. El treball presentat obre la
+possibilitat a nous temes de recerca, alguns dels quals creiem que són
+reptes interessants. 
 
-En aquest capítol es proposen treballs futurs a partir del que s'ha  dissertat en aquest document.
 
-També algunes manies que hem tingut, pex la de la forta correspondència model-implementació, i la motivació que tenen pensant en el futur.
-
-
-* Models
-
-* Implementacions
-
-* Reflexions de la qualitat
-
+Proposem nous treballs futurs al voltant de tres temes: els models,
+les implementacions i reflexions sobre la qualitat de la
+multiresolució.
 
 
 \section{Models}
@@ -282,8 +278,9 @@ de computació: en la inserció cal cercar que no hi hagin temps
 repetits i ara s'aprofita la cerca dels sets de Python mitjançant
 hash.
 
+* Sobre de Pytsms es podria implementar també la funció de multiresolució
 
-
+*de fet falta demostrar l'equivalència entre el model de SGSTM i les funcions de multiresolució
 
 
 
@@ -373,58 +370,58 @@ Algunes aplicacions dels sistemes integrats de multiresolució podrien ser:
 
 
 
-\subsection{RRDtool}
+% \subsection{RRDtool}
 
-\todo{fer}
-
-
-Ara hauríem de reprendre RRDtool i avaluar fins a quin punt compleix el nostre model. 
-Segur que hi ha punts en què no compleix... 
-
-Podem dir que RRDtool és la implementació productiva que actualment més s'apropa al concepte de multiresolució que hem formalitzat.
+% \todo{fer}
 
 
-Regarding other implementations,
-% \emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
-% a NoSQL system, although Oetiker \cite{rrdtool} has not commented
-% it. However, regardless of the implementation backend, we have shown
-% how a generic model for \acro{MTSMS} can be defined firmly rooted on
-% \acro{DBMS} algebra theory.
+% Ara hauríem de reprendre RRDtool i avaluar fins a quin punt compleix el nostre model. 
+% Segur que hi ha punts en què no compleix... 
+
+% Podem dir que RRDtool és la implementació productiva que actualment més s'apropa al concepte de multiresolució que hem formalitzat.
 
 
+% Regarding other implementations,
+% % \emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
+% % a NoSQL system, although Oetiker \cite{rrdtool} has not commented
+% % it. However, regardless of the implementation backend, we have shown
+% % how a generic model for \acro{MTSMS} can be defined firmly rooted on
+% % \acro{DBMS} algebra theory.
 
 
 
 
-% RRDtool té una estructura multiresolució amb un buffer únic d'entrada
-% i buffers orientats a stream; segons havíem avaluat anteriorment \parencite{llusa11:tfm}.
 
 
-% S'ha d'estudiar com es fan les consultes a RRDtool
-
-% \url{http://en.wikipedia.org/wiki/RRD_Editor}
-
+% % RRDtool té una estructura multiresolució amb un buffer únic d'entrada
+% % i buffers orientats a stream; segons havíem avaluat anteriorment \parencite{llusa11:tfm}.
 
 
-% Podem considerar que:
+% % S'ha d'estudiar com es fan les consultes a RRDtool
 
-% 1. RRDtool és un SGBD NoSQL?
-% 2. Nosaltres n'hem formalitzat un model lògic?
-% 3. És el primer model lògic per a un producte NoSQL?
-% 4. Aquest model lògic es pot implementar tant en productes relacionals com amb NoSQL? i per tant es demostra que els models lògics són extremadament potents i necessaris?
-% 5. La implementació que fa RRDtool és molt eficient per a un determinat camp d'aplicació?
-% 6. La implementació relacional seria molt genèrica i propera al model però no tan eficient? més aviat subjecte a l'eficiència genèrica dels SGBDR?
-% 7. Els SGST són uns SGBD més simples? no tenen tantes actualitzacions de valors, no hi ha tantes relationships en l'esquema... Els SGST només es preocupen de sèries temporals i per tant només d'un tipus de dades en concret, això no obstant tal com s'ha dissenyat el model aquest tipus de dades es pot implementar en SGBD més complexos. 
+% % \url{http://en.wikipedia.org/wiki/RRD_Editor}
 
-Hi ha RRDtool, que és un SGBD específic dissenyat per a dades monitorades. Les causes del seu disseny són:
 
-* Tobias Oetiker dissenyava un monitor de paràmetres de xarxes de comunicacions i en aquest monitor una part era la d'emmagatzematge de les dades. Per raons pràctiques i d'utilitat dissenya aquesta part amb un esquema inovadós. Finalment acaba separant aquesta part i la converteix independentment en RRDtool.
 
-* RRDtool té aquest model pràctic i a la pràctica és molt útil per a ser usat com a SGBD dels sistemes de monitoratge, sobretot en l'àmbit dels comptadors de xarxa on és l'estàndard de facto. 
+% % Podem considerar que:
 
-Això no obstant, no hi ha cap raonament teòric sobre el model de RRDtool ja que s'ha dissenyat per raons pràctiques. Per tant, entendre el funcionament de RRDtool és complicat, hi ha un nivell molt elevat per començar a fer-lo funcionar i molts conceptes no s'entenen perquè no estan ben definits. 
+% % 1. RRDtool és un SGBD NoSQL?
+% % 2. Nosaltres n'hem formalitzat un model lògic?
+% % 3. És el primer model lògic per a un producte NoSQL?
+% % 4. Aquest model lògic es pot implementar tant en productes relacionals com amb NoSQL? i per tant es demostra que els models lògics són extremadament potents i necessaris?
+% % 5. La implementació que fa RRDtool és molt eficient per a un determinat camp d'aplicació?
+% % 6. La implementació relacional seria molt genèrica i propera al model però no tan eficient? més aviat subjecte a l'eficiència genèrica dels SGBDR?
+% % 7. Els SGST són uns SGBD més simples? no tenen tantes actualitzacions de valors, no hi ha tantes relationships en l'esquema... Els SGST només es preocupen de sèries temporals i per tant només d'un tipus de dades en concret, això no obstant tal com s'ha dissenyat el model aquest tipus de dades es pot implementar en SGBD més complexos. 
 
-Per això ens proposem de compendre i formalitzar el model de RRDtool, que acabarem anomenar model de multiresolució, en la teoria dels sitemes d'informació. A més RRDtool és molt específic pel camp de comptadors de xarxa i volem oferir un model genèric per a altres àmbits.  
+% Hi ha RRDtool, que és un SGBD específic dissenyat per a dades monitorades. Les causes del seu disseny són:
+
+% * Tobias Oetiker dissenyava un monitor de paràmetres de xarxes de comunicacions i en aquest monitor una part era la d'emmagatzematge de les dades. Per raons pràctiques i d'utilitat dissenya aquesta part amb un esquema inovadós. Finalment acaba separant aquesta part i la converteix independentment en RRDtool.
+
+% * RRDtool té aquest model pràctic i a la pràctica és molt útil per a ser usat com a SGBD dels sistemes de monitoratge, sobretot en l'àmbit dels comptadors de xarxa on és l'estàndard de facto. 
+
+% Això no obstant, no hi ha cap raonament teòric sobre el model de RRDtool ja que s'ha dissenyat per raons pràctiques. Per tant, entendre el funcionament de RRDtool és complicat, hi ha un nivell molt elevat per començar a fer-lo funcionar i molts conceptes no s'entenen perquè no estan ben definits. 
+
+% Per això ens proposem de compendre i formalitzar el model de RRDtool, que acabarem anomenar model de multiresolució, en la teoria dels sitemes d'informació. A més RRDtool és molt específic pel camp de comptadors de xarxa i volem oferir un model genèric per a altres àmbits.  
 
 
 

@@ -222,9 +222,9 @@ def reduce_line(l):
     Parses a line of the file in the table format B t v and returns a tuple (delta,f,n,t,v).
 
     >>> reduce_line("10/mean-0\\t6 10.0")
-    ('10', 'mean', 0, 6, 10.0)
+    (10, 'mean', 0, 6, 10.0)
     >>> reduce_line("10/mean-0\\t6 10.0 15.0 20.0")
-    ('10', 'mean', 0, 6, [10.0, 15.0, 20.0])
+    (10, 'mean', 0, 6, [10.0, 15.0, 20.0])
     """
     disc,m = l.split('\t')
     delta,fn = disc.split('/')
@@ -233,7 +233,7 @@ def reduce_line(l):
     t,v = default_parser(m)
 
 
-    return (delta,f,int(n),t,v)
+    return (int(delta),f,int(n),int(t),v)
 
 
 
@@ -266,74 +266,13 @@ def _mean(s):
 
 
 
-def _meanzohe(s,i):
 
-    if len(s) == 0:
-        return 0
-
-    ta,tb = i
-    
-    mean = 0
-    tnext = float('+inf')
-    vnext = 0
-    
-    for m in s:
-        if ta < m.t < tb:
-            tprev = s[:m.t:'or'].sup().t
-            if tprev > ta:
-                mean += (m.t - tprev)*m.v
-            else:
-                mean += (m.t - ta)*m.v
-
-
-        elif tb <= m.t < tnext:
-            tnext = m.t
-            vnext = m.v
-
-
-    tprevnext = s[:tnext:'or'].sup().t
-    meannext = (tb-tprevnext)*vnext
-    
-    return (mean + meannext)/(tb-ta)
-
-
-
-def _maxzohe(s,i):
-
-    if len(s) == 0:
-        return 0
-
-    ta,tb = i
-    
-    maximum = None
-    tnextmaximum = float('+inf')
-    nextmaximum = None
-    
-    for m in s:
-        if ta < m.t < tb:
-            maximum = max(maximum,m.v)
-        elif tb <= m.t < tnextmaximum:
-            tnextmaximum = m.t
-            nextmaximum = m.v
-    
-    return max(maximum, nextmaximum)
-
-
-
-
-
-
-def aggregate(s,f=None,i=None):
+def aggregate(s,f=None,i=[None,None]):
     if f is None or isinstance(f,str):
-        return _mean(s)
-
-    if ZOHEDEFAULT:
-        if 'mean' in f.__name__:
-            return _mean(s)        
-        if 'max' in f.__name__:
-            return _maxzohe(s,i)     
-    
-    return f(s,i).v
+        ta,tb = i
+        return Measure(tb,_mean(s))
+   
+    return f(s,i)
 
 
 def extract_aggregators(schema):
@@ -387,15 +326,19 @@ def reduce(f,sch=None):
                 if previous is not None:
                     pd,pf,pn = previous
                     show_progress('aggregating:{delta}/{f}/{t}'.format(delta=pd,f=pf,t=pn))
-                    agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(pn)-float(pd),float(pn)])
-                    print '{delta} {f}\t{t} {v}'.format(delta=pd,f=pf,t=pn,v=agg)
+                    agg = aggregate(ts,f=select_agregator(f,aggs),i=[pn-pd,pn])
+                    tagg = agg.t
+                    vagg = agg.v
+                    print '{delta} {f}\t{t} {v}'.format(delta=pd,f=pf,t=tagg,v=vagg)
                 ts = TimeSeries([Measure(t,v)])
                 previous = (delta,f,n)
 
     #last
     if ts:
-        agg = aggregate(ts,f=select_agregator(f,aggs),i=[float(n)-float(delta),float(n)])
-        print '{delta} {f}\t{t} {v}'.format(delta=delta,f=f,t=n,v=agg)
+        agg = aggregate(ts,f=select_agregator(f,aggs),i=[n-delta,n])
+        tagg = agg.t
+        vagg = agg.v        
+        print '{delta} {f}\t{t} {v}'.format(delta=delta,f=f,t=tagg,v=vagg)
 
 
 
@@ -487,10 +430,6 @@ if __name__ == '__main__':
 
             
         elif '-reduce' in sys.argv:
-            ZOHEDEFAULT = False
-            if '-zohedefault' in sys.argv:
-                ZOHEDEFAULT = True
-
             reduce(sys.stdin,sch)
 
 

@@ -420,7 +420,10 @@ ts.concatenation.t(s1,s2,'zohe')
 
 Tutorial~D permet definir nous tipus de dades, que poden ser usats amb
 la mateixa funcionalitat que els tipus predefinits --\emph{char},
-\emph{rational}, etc.  
+\emph{rational}, etc.  A l'hora de definir nous tipus, Tutorial~D usa
+el concepte de possibles representacions (\emph{possrep}) del model
+relacional. Les possibles representacions són les diverses maneres
+d'instanciar el valor d'un tipus.
 
 Així doncs, en comptes de definir una variable \emph{timeseries} com
 hem fet en el Reltsms seria millor definir un tipus \emph{timeseries}
@@ -464,12 +467,16 @@ THE_ts(s)
 Però actualment, la definició de les sèries temporals com a tipus a
 Tutorial~D és incòmode principalment per dos motius:
 \begin{itemize}
-\item Emmascara el concepte de tipus relació. \todo{dir que per als propòsits acadèmics de Reltsms} %i no permet heretar del tipus relació
+\item Emmascara el concepte de tipus relació per als propòsits
+  acadèmics que tenim. Principalment, Tutorial~D no permet definir
+  objectes que siguin ciutadans del mateix ordre que les relacions.
+
 
 \item La definició estàtica de tipus en les operacions i la rigidesa
   en les capçaleres de les relacions. Aquest, de fet, és també un
   inconvenient que ens trobem en la definició dels operadors de
-  Reltsms. \todo{en realitat després parlem de possreps} %ens impedeix definir sèries temporals multivaluades i sèries amb atributs de qualssevol tipus.
+  Reltsms. Impedeix definir sèries temporals multivaluades i sèries
+  amb atributs de qualssevol tipus.
 \end{itemize}
 
 
@@ -480,7 +487,7 @@ Tutorial~D és incòmode principalment per dos motius:
 
 Els valors relació en l'àlgebra relacional sempre són d'un tipus i
 aquest tipus es correspon amb la seva capçalera. Però les relacions de
-Tutorial~D no són un tipus del mateix ordre que els altres tipus, tant
+Tutorial~D són uns ciutadans de més ordre que la resta de tipus, tant
 els predefinits com els d'usuari, ja que tenen un tractament molt
 diferenciat i no es poden declarar nous tipus amb la mateixa
 funcionalitat que les relacions.  Per exemple no es pot heretar del
@@ -550,7 +557,6 @@ dificulta el propòsit acadèmic d'aquesta implementació.
 
 \subsubsection{Sèries temporals multivaluades i de qualssevol tipus}
 
-\todo{falta explicar el concepte de POSSREP}
 
 
 Els operadors de Reltsms definits treballen amb la sèrie temporal en
