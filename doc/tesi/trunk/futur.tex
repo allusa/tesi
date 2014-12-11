@@ -20,69 +20,123 @@ També algunes manies que hem tingut, pex la de la forta correspondència model-
 \section{Models}
 
 
+
+En el model de \gls{SGST} s'ha definit un seguit d'operacions que són
+les que considerem més bàsiques per a poder manipular les sèries
+temporals. Algunes operacions són conseqüència directa d'altres
+conceptes; per exemple la diferència a partir de la pertinença o la
+intersecció a partir de la diferència. D'altres operacions són
+conseqüència però cal prendre una decisió sobre el raonament; per
+exemple en la unió i la unió temporal cal decidir quina prové de
+l'ordre total i quina de l'ordre parcial.  I d'altres operacions són
+passos previs per a altres operacions; per exemple la concatenació
+temporal s'utilitza en els \gls{SGSTM} per a calcular la sèrie
+temporal total en el context d'un mètode de representació.  Així
+doncs, caldria establir clarament la motivació de cada operació i
+cercar en cada cas el raonament sobre el qual es pot basar cada
+operador. També, de forma breu, hem notat les propietats d'alguns
+operadors com la commutativitat, però caldria explorar més
+profundament les propietats de tots els operadors.
+
+
+En les funcions d'agregació d'atributs dels \gls{SGSTM}, n'hem
+proposat alguns exemples sobretot raonats a partir dels mètodes de
+representació. Tot i així, hem proposat estadístics senzills
+--mitjana, màxim i darrer-- atès que l'objectiu és mostrar el
+comportament que tenen en la multiresolució.  En els treballs
+d'anàlisi de sèries temporals es presenten multitud de mètodes i
+d'algoritmes: per a extreure patrons de les sèries temporals, per a
+cercar periodicitats, per a comparar dues sèries temporals,
+agregacions en el domini freqüencial, per a fer prediccions, per a
+validació de dades, etc. Per tant, es poden dissenyar més funcions
+d'agregació d'atributs basant-se en qualsevol d'aquests algoritmes o
+mètodes; només cal adaptar el problema per tal de retornar una mesura
+que resumeixi la informació d'un interval de la sèrie temporal.
+
+
+
+De les funcions d'agregació d'atributs n'hem notat la possibilitat
+d'orientar-les a flux. El model de \gls{SGSTM} és adequat per a
+computar-se en flux llevat de les funcions d'agregació d'atributs que
+es defineixen genèriques. Creiem, doncs, que també és interessant
+aplicar orientació a flux en aquestes funcions i caldria aprofundir en
+aquests algoritmes, com per exemple els que proposa
+\textcite{cormode08:pods}.
+
+
+
 En la teoria de la mesura, la incertesa sol acompanyar les mesures. La
 incertesa reflecteix probabilísticament els límits del que es coneix
 sobre la quantitat mesurada.  Així doncs, seria interessant poder
 incorporar la incertesa en els models.  Principalment la incertesa
 hauria d'acompanyar els atributs de temps i de valor de les sèries
 temporals, és a dir haurien de reflectir la incertesa que hi ha en
-cada mesura a l'hora d'adquirir un valor un instant de temps.
-Aleshores, caldria estudiar com aquesta incertesa afecta les
+cada mesura a l'hora d'adquirir un valor un instant de
+temps. Aleshores, caldria estudiar com aquesta incertesa afecta les
 operacions, és a dir com es propaga la incertesa quan s'uneixen dues
-sèries temporals, quan es representen, etc.
-
-
-\todo{fer}
-
-
-HEm fet servir estadístics senzills (mitjana, màxim, darrer) perquè el nostre objectiu és la multiresolució i no cap funció d'agregació d'atributs en concret. En l'anàlisi de sèries temporals hi ha multitud d'algoritmes, d'allà es poden treure altres funcions d'agregació: que extreguin patrons, que cerquin periodicitats, que ajustin l'evolució en el temps de dues sèries temporals diferents, etc.
-
-% We have showed some aggregation functions examples with simple
-% aggregation statistics, mean and maximum, and simple representation
-% methods, Delta and \zohe{}. More attribute aggregation functions could
-% be designed based on methods from other fields such as data streaming
-% or time series data mining, especially it would be interesting aggregations with uncertain data.
-
-% * Agregacions en el domini freqüencial
-
-
-No hem aprofundit en l'estudi de les f que treballen en flux, estaria bé mirar Cormode i veure com es pot aprofitar.
-
-
-També l'emmagatzematge de metades, es  pot fer perfectament amb els SGBDR.
-
-
-
-* el model sgstm s'ha fet pensant en els instants de consolidació
-periòdics. Què passa quan no ho són?  per exemple event trigerred
-(només emmatgatzemem informació quan creiem que és
-interessant). Aleshores potser són casos molt especials i no es pot
-dibuixar l'esquema? Potser posar tot això com a comentari a la secció
-d'Altres Estructures: En el model de \gls{SGSTM} s'ha considerat que
-la consolidació es feia periòdicament però es podria fer quan es
-cregués oportú, aleshores no es pot preveure quin esquema de
-multiresolució hi haurà; són casos que requereixen un estudi més
-profund. Etc. 
+sèries temporals, quan es representen, en les funcions d'agregació
+d'atributs, etc.
 
 
 
 
-* Aclariment sobre les operacions: algunes són perfectament conseqüència de conceptes (per exemple la diferència té un raonament a partir de la pertinença, la intersecció a partir de la diferència) altres hi ha conseqüència però s'ha de prendre una decisió (per exemple en el cas de la unió i la unió temporal s'ha de decidir quina és quina) i altres les hem definit com a passos intermedis per a altres oepracions (per exemple la concatenació temporal). En aquest darrers casos cal, doncs, cercar-ne si hi ha algun raonament o teoria sobre el qual es poden basar.
+Pel que fa a la consolidació de la multiresolució, aquesta s'ha pensat
+sobretot periòdica per tal d'obtenir sèries temporals regulars.
+Aleshores s'obtenen els esquemes de multiresolució periòdics que hem
+analitzat. Això no obstant, altres escenaris de consolidació són
+possibles; per exemple sistemes de monitoratge que adquireixen dades
+només quan ho creuen interessant en base a esdeveniments.  En el model
+de \gls{SGSTM} no estan previstos aquests casos i requereixen un
+estudi més profund. Per exemple, en un cert moment es podria
+considerar que una subsèrie resolució és molt significativa i que
+s'han de mantenir aquestes dades, per tant en l'esquema de
+multiresolució hi hauria una subsèrie fixada a un interval de temps en
+el passat.
 
 
 
 
 
-% \subsubsection{Lapses de buffer o no lapses}
+En els esquemes de multiresolució, s'ha notat la propietat de
+desfasament d'una subsèrie resolució. Aquest desfasament és induït per
+la funció d'agregació d'atributs. D'una banda, aquest desfasament pot
+ser requerit per la naturalesa de la funció; per exemple en el cas
+d'agregacions \gls{dd} o \gls{zoh} introdueixen un desfasament perquè
+interpolen cap endavant, de fet el resultat de consolidació entre la
+\gls{zoh} i la \gls{zohe} és similar però aquesta darrera per
+naturalesa interpola cap enrere i no necessita desfasament.  D'altra
+banda, aquest desfasament podria ser afegit intencionalment per a
+controlar els solapament entre les subsèries resolució.  Aquest
+solapament significa que en l'esquema de multiresolució les diverses
+subsèries resolució coincideixen a emmagatzemar informació pels
+mateixos instants de temps. Proposem dos escenaris de solapament:
+\begin{itemize}
 
-% Podem tenir esquemes de multiresolució a on les diferents subsèries
-% resolució coincideixin en els temps recents o a on no coincideixin:
-% les subsèries més velles acabin on comencen les noves de manera
-% semblant a l'estructura de buffers enllaçats.
+\item Les subsèries resolució se solapen totalment. Això pot servir
+  per a disposar de diferents resums de la sèrie temporal preparats
+  per a ser visualitzats immediatament. És a dir, el \gls{SGSTM}
+  permet escollir ràpidament entre diferents \emph{zooms} de les
+  dades.
 
-% La primera opció pot servir per quan hi ha moltes dades tenir diferents resums preparats per a ser visualitzats, així permet triar ràpidament entre diferents zooms de les dades.
+\item Les subsèries resolució no se solapen, és a dir les subsèries
+  amb menys resolució acaben allà on comencen les de més
+  resolució. Això pot servir per a aprofitar al màxim la resolució i
+  l'espai d'emmagatzematge, sense que cap subsèrie desi informació per
+  al mateix interval de temps. A part d'introduir desfasament, per tal
+  que no se solapin també es pot dissenyar un esquema de
+  multiresolució on el pas de consolidació de cada subsèrie sigui
+  exactament $\delta_j = k_i\delta_i$ on $\delta_i<\delta_j$. És a dir
+  la subsèrie amb menys resolució ($j$) té un pas de consolidació
+  exactament múltiple del pas de consolidació i el cardinal de la
+  subsèrie superior en resolució ($i$). Aquestes restriccions es
+  podrien considerar també en el cas de l'estructura de resolucions
+  encadenades.
+\end{itemize}
 
-% La segona opció serveix per aprofitar al màxim la resolució i l'espai d'emmagatzematge, sense que cap subsèrie desi informació per al mateix interval de temps. Així permet conservar una sèrie temporal al llarg del seu temps amb diferents resolucions. També pot servir per usar la informació d'altres buffers i no haver de repetir emmagatzematge de buffers.
+
+%També l'emmagatzematge de metades, es  pot fer perfectament amb els SGBDR.
+
+
 
 
 
@@ -128,8 +182,9 @@ multitud d'operacions de les sèries temporals implementades amb
 Mixins, el de les representacions com a objectes independents
 associats a les sèries temporals, o bé els de les funcionalitats
 complementàries com l'emmagatzematge i els gràfics implementades amb
-el patró Visitor. 
-
+el patró Visitor. Tanmateix, algunes parts encara no han estat prou
+generalitzades; per exemple els gràfics de RoundRobinson sempre
+utilitzen la representació \gls{zohe}.
 
 
 
@@ -190,20 +245,26 @@ derivats dels primitius.
 
 
 
-
-\todo{fer}
-
-
-en un sentit relacional, també s'ha d'estudiar Dee. sobretot per veure si RoundRobinson podria aprofitar-lo com a base.
-
-* Implentació RoundRobinson: ha quedat de forma semblant a Dee, és a dir que és una API en Python que té orientació de \gls{SGBD}. És a dir, l'usuari quan treballa amb RoundRobinson pot tenir perfectament una estructura mental de com si treballés amb una base de dades.
-
-
+En un sentit relacional, també cal comparar Pytsms i RoundRobinson amb
+Dee. Dee \parencite{dee} és la implementació amb Python d'un
+llenguatge de bases de dades relacionals que compleixi amb les normes
+D del Third Manifesto. A Pytsms i RoundRobinson hem utilitzat els
+conjunts de Python com a objectes bàsics però es podrien utilitzar els
+conjunts relacionals de Dee, els quals ja incorporen propietats i
+mètodes de \gls{SGBD}. Si més no, el raonament que fa Dee com a gestor
+de bases de dades també podria ser aplicat a Pytsms i
+RoundRobinson.
+  
 
 
 
 %Experiment amb dades
 
+
+\todo{fer} 
+
+
+Amb l'experimentació amb dades reals hem pogut demostrar el correcte funcionament de la multiresolució. 
 
 * Experimentació amb dades: només demostrem el correcte funcionament de la multiresolució. No avaluem rendiment dels recursos, per exemple no avaluem temps de computació només n'hem mostrat un a tall de referència orientativa.  Cal provar amb més diversitat: dades de diferent mida, de diversa naturalesa, diferents esquemes de multiresolució, dades de referència utilitzades en altres recerques (per exemple keogh?)
 
@@ -229,16 +290,84 @@ hash.
 
 
 
-\subsection{Hard}
+\subsection{Sistemes de multiresolució  integrats en maquinari}
+
+Es poden realitzar altres implementacions dels \gls{SGSTM} que siguin
+molt específiques. Una bona implementació ja no és només aquella que
+calcula en poc temps sinó que en alguns contextos també pot ser un
+consum baix d'energia, ocupar poc espai, etc.  En aquest sentit,
+pensem en sistemes específics integrats en xarxes de sensor. Així, es
+podria implementar un \gls{SGSTM} integrat en el maquinari d'un sensor.
+
+Aquesta implementació integrada es podria realitzar tant en un
+microcontrolador que gestionés una memòria seguint l'esquema de
+multiresolució o bé com a circuit digital, aprofitant que l'esquema de
+multiresolució té una mida finita i és implementable en maquinari.
 
 
-\todo{fer}
+En la implementació en maquinari, es podria seguir l'esquema de la
+\autoref{fig:vhdl:resolucio}. Aquest esquema és per a una subsèrie
+resolució, per tant una sèrie temporal multiresolució seria un conjunt
+d'aquests esquemes. Així, aquest esquema és la integració de l'esquema
+de les subsèries resolució de la \autoref{fig:sgstm:bdsubserie}.  En
+el buffer es van afegint les mesures --temps i valor-- i calcula la
+mesura resultant --l'atribut agregat. Aquest atribut agregat
+s'emmagatzema al disc a cada pas de consolidació --marcat per
+l'esdeveniment consolida-- i el disc gestiona l'emmagatzematge afitat
+--les dades consolidades $D_0,D_1,\dotsc,D_k$. Caldria afegir un mòdul
+de temps que a partir del rellotge -- per exemple un real-time clock
+(RTC)-- marqués els passos de consolidació i indiqués el darrer temps
+de consolidació. 
 
 
-Això no obstant, el rendiment ja no és només calcular en poc temps, sinó que en alguns contextos pot ser un consum baix d'energia, ocupar poc espai, etc.
-És a dir, que hi ha contextos i en cadascun el rendiment vol dir una cosa o una altra. Dir això per a introduir la implementació Hard
 
 
+
+\begin{figure}[htp]
+\centering
+\input{imatges/implementacio/sgstm_blocs_hard}
+\caption{Esquema d'integració d'una subsèrie resolució}
+\label{fig:vhdl:resolucio}
+\end{figure}
+
+En aquesta implementació només fem referència a la part
+d'emmagatzematge.  Caldria implementar un protocol per tal de
+consultar les dades emmagatzemades, si bé forma senzilla es podria
+implementar com si els discs fossin un perifèric de memòria.  
+
+% Podrien ser emmagatzematges volàtils depenent de la criticitat de les dades
+
+
+
+Algunes aplicacions dels sistemes integrats de multiresolució podrien ser:
+
+\begin{itemize}
+\item Emmagatzematge de la multiresolució en perifèrics la informació
+  dels quals no és essencial però pot ajudar a monitorar-ne el seu
+  funcionament. Per exemple comptadors d'aparells de xarxa,
+  temperatures dels components, etc.
+
+\item Aparells integrats molt petits, en els quals hi ha molt poc
+  espai per a l'emmagatzematge. %en materials molt prims i doblegables.
+
+\item Com un complement més de sensors inte\l.ligents, que actualment
+  ja integren diverses tasques: filtratge del senyal, busos de
+  comunicacions, llindars d'alarma, etc.
+
+
+\item Per a computar funcions d'agregació d'atributs complexes. En
+  aquest cas els buffers podrien treballar directament amb components
+  del maquinari. Per exemple per a agregacions de sèries temporals en
+  què els valors fossin imatges.
+
+\item Implementació de la multiresolució en Field Programmable Gate
+  Arrays, és a dir en dispositius de maquinari configurables. Això
+  permetria flexibilitat a l'hora de canviar els esquemes de
+  multiresolució integrats.
+
+
+
+\end{itemize}
 
 
 
@@ -305,35 +434,72 @@ Per això ens proposem de compendre i formalitzar el model de RRDtool, que acaba
 
 
 
-\section{Reflexions de la qualitat}
+\section{Reflexions sobre la qualitat}
 
 
-\todo{fer}
-
-
+El capítol d'aplicació de la teoria de la informació és només una
+introducció al problema de la qualitat de la multiresolució.  La
+teoria de la informació formalitza anàlisis més profundes per a la
+compressió de dades que es podrien aplicar també a la multiresolució.
 En el cas que es conegui més bé el context i el comportament de la
-sèrie temporal a què s'aplica la multiresolució, es pot detallar més
-bé la quantificació de l'error: és a dir en termes de la teoria de
-la informació aleshores tenim més coneixement sobre la predicció del
-comportament de les dades i podem utilitzar-ho per a avaluar
-característiques més concretes.
+sèrie temporal a la qual s'aplica la multiresolució, es pot detallar
+més bé la quantificació de l'error. És a dir, en termes de la teoria
+de la informació aleshores hi ha més coneixement sobre la predicció
+del comportament de les dades cosa que es pot utilitzar per a avaluar
+característiques més concretes. Per exemple, una variable real
+adquirida té limitat el rang de valors que pot prendre i fins i tot
+pot tenir un comportament probabilístic determinat.
+
+
 
 Cal notar que no avaluem la idoneïtat d'aplicar un estadístic o un
 altre a unes dades ni quin és el que més bé va per a obtenir una
-informació, només plantegem el cas que algú vol aplicar una consulta
-amb una agregació determinada a una sèrie temporal i quin error
-tindria si en comptes de a les dades originals ho aplica a les dades
-multiresolucionades.
+informació. Només expressem el cas que es vol aplicar una consulta amb
+una agregació determinada a una sèrie temporal i avaluem l'error que
+hi ha comparant l'aplicació de la consulta a les dades originals amb
+les dades multiresolucionades. 
+
+Per a determinar un esquema de multiresolució --la quantitat de
+resolucions, els passos de consolidació de cadascuna, els cardinals,
+\dots-- caldria analitzar cada problema particular en el seu context i
+utilitzar els coneixements adequats. Per exemple, per a treballar amb
+problemes de so la teoria del senyal formalitza tot de raonaments que
+no es poden obviar a l'hora de definir-ne un esquema de
+multiresolució.  O bé, també en la teoria del senyal, es poden trobar
+anàlisis per a determinar bons passos de consolidació per a una
+variable, per exemple de temperatura. Així i tot, en el cas dels
+comptadors se'n pot fer un raonament a banda per a conservar la seva
+informació genuïna de comptatge lligada a com l'adquireixen.
 
 
-* Tampoc hem avaluat com xoca la informació de diversos discs d'una mateixa sèrie temporal multiresolució. Què passa quan hi ha més d'una resolució? quan és del mateix agregador, quan és de diferent?   En cas que es perdi un disc es podria reconstruir a partir dels altres? o bé en cas que es vulgui ampliar la mida d'un disc, es podria farcir amb dades dels altres? Per exemple avaluar les resolucions encadenades: afegeixen més restriccions a la compressió d'informació.
+A partir de les reflexions fetes sobre la qualitat de la
+multiresolució s'obren un seguit de qüestions més, cadascuna de les
+quals és un repte futur:
+\begin{itemize}
+\item Quina redundància d'emmagatzematge hi ha entre diverses
+  subsèries s'una mateixa sèrie temporal multiresolució.? Què ocorre
+  quan hi ha més d'una resolució i són de diferents funcions
+  d'agregació d'atributs?
 
-* En cas que s'hagi de canviar alguna cosa ja emmagatzemada a la
-  multiresolució, a banda dels sistemes duals descrits, també es
-  podria utilitzar informació emmagatzemada en altres discs. Ara bé
-  això requereix una anàlisi més complicada de la informació de
-  multiresolució, semblant a analitzar la informació en resolucions
-  encadenades.
+\item En cas que es perdi una resolució, es podria reconstruir a
+  partir de les altres? O bé en cas que es vulgui ampliar la mida d'un
+  disc, es podria completar amb les dades d'altres resolucions?
+
+\item Les resolucions encadenades són interessant perquè aprofiten les
+  dades emmagatzemades però afegeixen més restriccions a la compressió
+  d'informació. Com es poden barrejar diferents passos de consolidació
+  i diferents funcions d'agregació d'atributs?
+
+
+\item Gràcies a un esquema de multiresolució es pot emmagatzemar dades
+  d'una sèrie temporals durant un llarg temps de forma
+  comprimida. Aquesta durada de temps és llarga però finita, tot i que
+  quan s'esgoti dinàmicament es pot afegir una nova subsèrie amb
+  inferior resolució però amb més lapse. Inicialment aquesta subsèrie
+  serà buida, però es podria utilitzar les dades ja emmagatzemades per
+  a iniciar-la?
+
+\end{itemize}
 
 
 
@@ -491,4 +657,4 @@ multiresolucionades.
 %%% Local Variables:
 %%% TeX-master: "main"
 %%% End:
-% LocalWords:  SGSTM
+% LocalWords:  SGSTM multiresolució

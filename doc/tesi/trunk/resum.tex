@@ -1,4 +1,64 @@
+\chapter*{Resum}
 
+
+Les xarxes de sensors capturen dades de l'entorn, les quals s'han
+d'emmagatzemar en bases de dades per a poder-les tractar
+posteriorment. Hi ha models que descriuen com han de ser aquestes
+bases de dades per a sèries temporals i esquemes que solucionen alguns
+dels seus problemes. 
+
+
+Una sèrie temporal és un conjunt de parelles de temps i valor que
+provenen de l'evolució d'una variable al llarg del temps. 
+
+A causa d'aquesta naturalesa de variable capturada al llarg del temps,
+en l'adquisició i tractament de les sèries temporals apareixen
+propietats problemàtiques que anomenem patologies.
+Algunes d'aquestes patologies són:
+\begin{itemize}
+\item La sincronització dels rellotges en els diferents sistemes
+  d'adquisició.
+\item L'aparició de dades desconegudes perquè no s'han pogut adquirir
+  o perquè són errònies.
+\item La gestió d'una quantitat enorme de dades i que a més segueix
+  creixent al llarg del temps.
+\item L'operació amb dades que no s'han recollit de manera uniforme en
+  el temps.
+\end{itemize}
+
+
+Els sistemes informàtics que saben emmagatzemar i tractar les sèries
+temporals s'anomenen sistemes de gestió de bases de dades per a sèries
+temporals (SGST). Els SGST han de saber gestionar les patologies de
+les sèries temporals. 
+
+Una solució per a aquestes patologies es pot aconseguir afegint
+esquemes de multiresolució per a les sèries temporals. Aleshores
+s'obtenen SGST específics anomenats SGST multiresolució (SGSTM).  La
+multiresolució és un sistema d'emmagatzematge que selecciona la
+informació prèviament a ser guardada i en descarta la que no es
+considera important.
+
+
+
+
+Un SGSTM és una solució d'emmagatzematge per a sèries temporals a on,
+resumint, la informació es distribueix mitjançant diferents
+resolucions temporals.  Una sèrie temporal amb multiresolució és una
+co\l.lecció de subsèries resolució, les quals acumulen temporalment
+mesures en un buffer on són processades i finalment emmagatzemades
+en un disc. El processament de les dades té per objectiu canviar els
+intervals de temps entre les mesures per tal de compactar la
+informació de les sèries temporals. D'aquesta manera, les sèries
+temporals queden emmagatzemades en diferents resolucions temporals
+distribuïdes en els discs.  L'arquitectura d'aquests sistemes es pot
+veure a la figura~\ref{fig:vhdl:bdstm}.
+
+Els discs tenen la mida limitada i només poden contenir un nombre
+fixat de mesures. Quan un disc no té més capacitat ha d'eliminar una
+mesura. Com a conseqüència en un SGSTM la mida és fixada i les sèries
+temporals hi queden emmagatzemades a trossos; és a dir com a subsèries
+temporals.
 
 
 
