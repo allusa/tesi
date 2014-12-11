@@ -244,3 +244,116 @@ def zohe_u(fzohe,s,i):
 
     return fzohe(sp,i)
 
+
+
+
+
+
+
+
+
+
+def quick_maximum_zohe(s,i):
+    """
+    Agregador màxim ZOHE simplificat
+
+    >>> m1 = Measure(1,10); m2 = Measure(2,40); m3 = Measure(5,20)
+    >>> s = TimeSeries([m1,m2,m3])
+    >>> quick_maximum_zohe(s,(1,5)) == maximum_zohe(s,(1,5)) #Measure(5,40)
+    True
+    >>> quick_maximum_zohe(s,(2,5)) == maximum_zohe(s,(2,5)) #Measure(5,20)
+    True
+    >>> quick_maximum_zohe(s,(-1,1)) == maximum_zohe(s,(-1,1))#Measure(1,10)
+    True
+    >>> quick_maximum_zohe(s,(1,6)) == maximum_zohe(s,(1,6))#Measure(6,40)
+    True
+    >>> from pytsms.measure import MeasureInf
+    >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,40); m3 = MeasureInf(5,20)
+    >>> s2 = TimeSeries([m1,m2,m3])
+    >>> quick_maximum_zohe(s2,(1,6)) == maximum_zohe(s2,(1,6))
+    False
+    >>> quick_maximum_zohe(s2,(1,6)) == Measure(6,40)
+    True
+    """
+    if len(s) == 0:
+        return 0
+
+    ta,tb = i
+    
+    maximum = None
+    tnextmaximum = float('+inf')
+    nextmaximum = None
+    
+    for m in s:
+        if ta < m.t < tb:
+            maximum = max(maximum,m.v)
+        elif tb <= m.t < tnextmaximum:
+            tnextmaximum = m.t
+            nextmaximum = m.v
+    
+    return s.mtype()(tb,max(maximum, nextmaximum))
+
+
+
+def quick_mean_zohe(s,i):
+    """
+    Agregador mitjana ZOHE simplificat
+
+    >>> m1 = Measure(1,10); m2 = Measure(2,10); m3 = Measure(5,40)
+    >>> s = TimeSeries([m1,m2,m3])
+    >>> 
+    >>> quick_mean_zohe(s,(1,5.0)) == mean_zohe(s,(1,5.0)) #Measure(5,32.5)
+    True
+    >>> quick_mean_zohe(s,(0,5)) == mean_zohe(s,(0,5)) #Measure(5,28)
+    True
+    >>> quick_mean_zohe(s,(-1,5)) == mean_zohe(s,(-1,5)) #Measure(5,25)
+    True
+    >>> quick_mean_zohe(s,(0.5,3.5)) == mean_zohe(s,(0.5,3.5)) #Measure(3.5,25)
+    True
+    >>> quick_mean_zohe(s,(0,1)) == mean_zohe(s,(0,1)) #Measure(1,10)
+    True
+    >>> quick_mean_zohe(s,(0,6)) == mean_zohe(s,(0,6)) #Measure(6,None)#no es pot calcular
+    False
+    >>> quick_mean_zohe(s,(0,6)) == Measure(6,23)
+    True
+    >>> from pytsms.measure import MeasureInf
+    >>> m1 = MeasureInf(1,10); m2 = MeasureInf(2,10); m3 = MeasureInf(5,40)
+    >>> s2 = TimeSeries([m1,m2,m3])
+    >>> quick_mean_zohe(s2,(0,6)) == mean_zohe(s2,(0,6)) #MeasureInf(6)
+    False
+    >>> quick_mean_zohe(s2,(0,6)) == Measure(6,23)
+    True
+    """
+  
+    if len(s) == 0:
+        return 0
+
+    ta,tb = i
+    
+    mean = 0
+    tnext = float('+inf')
+    vnext = 0
+    
+    for m in s:
+        if ta < m.t < tb:
+            tprev = s[:m.t:'or'].sup().t
+            if tprev > ta:
+                mean += (m.t - tprev)*m.v
+            else:
+                mean += (m.t - ta)*m.v
+
+
+        elif tb <= m.t < tnext:
+            tnext = m.t
+            vnext = m.v
+
+
+    #calcul del (tb,V(inf(S(tb,+inf))))
+    sprev =  s[:tnext:'or']
+    if len(sprev) == 0:
+        tprevnext = ta
+    else:
+        tprevnext = sprev.sup().t
+    meannext = (tb-tprevnext)*vnext
+    
+    return  s.mtype()(tb,(mean + meannext)/(tb-ta))

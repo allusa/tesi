@@ -54,12 +54,14 @@ d2 = 2 * d1
 d15 = 15 * d1
 d50 = 50 * d1
 #Esquema de multiresolució
-M.addResolution(delta=h5,k=24,f=mean_zohe,tau=tau0)
-M.addResolution(delta=d2,k=20,f=mean_zohe,tau=tau0)
-M.addResolution(delta=d15,k=12,f=mean_zohe,tau=tau0)
-M.addResolution(delta=d50,k=12,f=mean_zohe,tau=tau0)
-M.addResolution(delta=d15,k=12,f=maximum_zohe,tau=tau0)
-M.addResolution(delta=d50,k=12,f=maximum_zohe,tau=tau0)
+fmean = mean_zohe
+fmax = maximum_zohe
+M.addResolution(delta=h5,k=24,f=fmean,tau=tau0)
+M.addResolution(delta=d2,k=20,f=fmean,tau=tau0)
+M.addResolution(delta=d15,k=12,f=fmean,tau=tau0)
+M.addResolution(delta=d50,k=12,f=fmean,tau=tau0)
+M.addResolution(delta=d15,k=12,f=fmax,tau=tau0)
+M.addResolution(delta=d50,k=12,f=fmax,tau=tau0)
 #Ajustament dels taus
 tmax = '2011-10-18 13:27:59' #darrer temps de la sèrie temporal T(max(S))
 M.set_tau_tnow(calendar2timestamp(tmax))
@@ -98,8 +100,8 @@ def floatwithnones(s):
 Mres = M.accept(LoadCsv(res,int,floatwithnones))
 
 print 'Emmagatzemant total a {0}/'.format(directori)
-S1 = Mres.total(ff=[mean_zohe],rpr=Zohe)
-S2 = Mres.total(ff=[maximum_zohe],rpr=Zohe)
+S1 = Mres.total(ff=[fmean],rpr=Zohe)
+S2 = Mres.total(ff=[fmax],rpr=Zohe)
 S1.accept(TSSaveCsv(os.path.join(directori,'totalmean.csv')))
 S2.accept(TSSaveCsv(os.path.join(directori,'totalmax.csv')))
 

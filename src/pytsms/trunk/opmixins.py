@@ -183,8 +183,8 @@ class SeqOpMixin():
             #step marca obert, tancat, semiobert dret i semiobert esquerre
             stepvocab = { 0: ['open','o'],
                           1: ['closed','c'],
-                          2: ['semiopen-left','l'],
-                          3: ['semiopen-right','r']
+                          2: ['semiopen-left','l','open-left','ol','closed-right','cr'],
+                          3: ['semiopen-right','r','open-right','or','closed-left','cl']
                           }
             if p is None:
                 p = 0

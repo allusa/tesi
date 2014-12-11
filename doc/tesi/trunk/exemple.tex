@@ -2,20 +2,16 @@
 \label{sec:implementacions:exemple}
 
 En aquest capítol mostrem un exemple de base de dades multiresolució
-aplicada a una sèrie temporal real amb dades massives.  
+aplicada a una sèrie temporal real amb dades massives.  Utilitzem
+RoundRobinson i RoundRobindoop per a consolidar la multiresolució
+d'aquestes dades. En aquest cas no fem servir l'operador
+\emph{mtsms.multiresolution} de Reltsms perquè Rel no abasta aquestes
+dades massives.
 
-\todo{fer intro}
-We use Pytsms and
-RoundRobinson implementations in order to create a \acro{MTSDB} and
-to query it.
-
-També fem servir roundrobindoop i reltsms?
-
-Com que els resultats són
-els mateixos per a totes les computacions, primer mostrem els
-resultats i després parlem de com s'han computat?
-
-Passos:
+Com que els resultats són els mateixos per a totes les computacions,
+primer mostrem i discutim els resultats i finalment comparem la
+resposta de les dues implementacions. Així doncs, seguim els passos
+següents:
 
 \begin{enumerate}
 \item Descrivim la sèrie temporal original.
@@ -31,8 +27,6 @@ $\glssymbol{not:Rb}$, com a domini del temps segons l'estàndard d'Hora
 Unix (\seeref{sec:sgst:temps}). Això no obstant, per a facilitar-ne la
 comprensió, en els exemples mostrem el domini del temps amb el format
 de calendari \gls{UTC}.
-
-\todo{ALERTA!ALERTA! s'ha de comprovar que exactament es pintin les dates en UTC, que les conversions de datetime no afegeixen la zona horària!}
 
 
 
@@ -318,29 +312,34 @@ concatenació de les subsèries regulars.
 \section{Computació}
 
 
-\todo{revisar} 
+
+Hem computat la consolidació amb dues de les implementacions de
+\gls{SGSTM} dissenyades: RoundRobinson i RoundRobindoop. A més, en el
+cas de RoundRobindoop l'hem executat tant a la shell com a Hadoop.
+
+
 
 En aquests exemple ja es disposa de totes les dades originals
 emmagatzemades, per tant la computació és en temps diferit.  Així
-doncs, tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM} i
-consolidar-lo com calcular la funció de multiresolució de la sèrie
-temporal. 
+doncs, tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM} com
+RoundRobinson i aplicar al consolidació, com calcular la funció de
+multiresolució de la sèrie temporal en un \gls{SGSTM} com
+RoundRobindoop.
 
 
 Els resultats són aproximadament els mateixos per a totes les
-computacions. Hi ha petites diferències degudes a les diferències
-entre les implementacions. Per exemple, a RounRobindoop s'ha hagut
-d'aproximar els intervals de consolidació que en el cas \gls{zohe}
-s'amplien un interval (\seeref{ex:mapreduce:fzohe}). En aquest
-exemple, però, hi ha dades mancants de més d'un interval de durada i
-per tant cal utilitzar més d'un interval per a farcir els forats:
-RoundRobindoop no té aquesta possibilitat, en canvi RoundRobinson sí.
+computacions. Hi ha, però, petites diferències degudes a les
+diferències entre les implementacions. Per exemple, a RounRobindoop
+s'ha hagut d'aproximar els intervals de consolidació, que en el cas
+\gls{zohe} s'amplien un interval (\seeref{ex:mapreduce:fzohe}). En
+aquest exemple hi ha dades mancants de més d'un interval de
+durada i per tant cal utilitzar més d'un interval per a farcir els
+forats: RoundRobindoop no té aquesta possibilitat, en canvi
+RoundRobinson sí.
 
 
 
-Hem computat la consolidació amb les tres implementacions de
-\gls{SGSTM} dissenyades: RoundRobinson, RoundRobindoop i l'operador
-\emph{mtsms.multiresolution} de Reltsms.
+\todo{revisar} 
 
 
 
@@ -387,6 +386,15 @@ Temps RoundRobinson
 sobre el mean i el max directe: les funcions de RoundRobinson són calcades a les del model en el fet que es construeixen a partir dels mètodes de representació, amb l'interval temporal, etc.  Si obviem això els agregadors processen més ràpid.
 
 
+Temps RoundRobinson (funció de multiresolució)
+\todo{això no ho hem dit al capítol de python, potser posar a treballs futurs que a Pytsms també podem implementar la funció de multiresolució}
+
+
+
+
+
+
+
 Temps RoundRobindoop bash
 1. 69 minuts
 2. 70 minuts
@@ -408,9 +416,14 @@ Temps RoundRobindoop Hadoop
 7. 58 minuts (2 map i 1 reduce, 15m timeout)
 8. 37 minuts (2 map i 1 reduce)
 9. 44 minuts (2 map i 3 reduce)
+10. 39 minuts (2 map i 1 reduce)
+11. 41 minuts (2 map i 1 reduce)
 
 
-\todo{dir que a escriny poden consultar l'exemple?}
+Per a més detall, a
+\url{http://escriny.epsem.upc.edu/svn/rrb/src/experiments/tags/isense-2014-tesi/}
+podeu trobar les dades i els resultats d'aquest exemple.  \todo{dir
+  que a escriny poden consultar l'exemple?}
 
 
 
