@@ -2,12 +2,10 @@
 \label{sec:futur}
 
 
-En aquest capítol es proposen treballs futurs a partir del que s'ha
-dissertat en aquest document. El treball presentat obre la
-possibilitat a nous temes de recerca, alguns dels quals creiem que són
-reptes interessants. 
-
-
+El treball presentat obre la possibilitat a nous temes de recerca,
+alguns dels quals creiem que són reptes interessants.  En aquest
+capítol es reflexiona sobre possibles treballs de recerca futurs.
+%
 Proposem nous treballs futurs al voltant de tres temes: els models,
 les implementacions i reflexions sobre la qualitat de la
 multiresolució.
@@ -21,13 +19,13 @@ En el model de \gls{SGST} s'ha definit un seguit d'operacions que són
 les que considerem més bàsiques per a poder manipular les sèries
 temporals. Algunes operacions són conseqüència directa d'altres
 conceptes; per exemple la diferència a partir de la pertinença o la
-intersecció a partir de la diferència. D'altres operacions són
-conseqüència però cal prendre una decisió sobre el raonament; per
-exemple en la unió i la unió temporal cal decidir quina prové de
-l'ordre total i quina de l'ordre parcial.  I d'altres operacions són
-passos previs per a altres operacions; per exemple la concatenació
-temporal s'utilitza en els \gls{SGSTM} per a calcular la sèrie
-temporal total en el context d'un mètode de representació.  Així
+intersecció a partir de la diferència. D'altres operacions també en
+són conseqüència però cal prendre una determinada decisió sobre el
+raonament; per exemple en la unió i la unió temporal cal decidir quina
+prové de l'ordre total i quina de l'ordre parcial.  I d'altres,
+funcionen com a passos previs per a altres operacions; per exemple la
+concatenació temporal s'utilitza en els \gls{SGSTM} per a calcular la
+sèrie temporal total en el context d'un mètode de representació.  Així
 doncs, caldria establir clarament la motivació de cada operació i
 cercar en cada cas el raonament sobre el qual es pot basar cada
 operador. També, de forma breu, hem notat les propietats d'alguns
@@ -38,7 +36,7 @@ profundament les propietats de tots els operadors.
 En les funcions d'agregació d'atributs dels \gls{SGSTM}, n'hem
 proposat alguns exemples sobretot raonats a partir dels mètodes de
 representació. Tot i així, hem proposat estadístics senzills
---mitjana, màxim i darrer-- atès que l'objectiu és mostrar el
+--mitjana, màxim i darrer valor-- atès que l'objectiu és mostrar el
 comportament que tenen en la multiresolució.  En els treballs
 d'anàlisi de sèries temporals es presenten multitud de mètodes i
 d'algoritmes: per a extreure patrons de les sèries temporals, per a
@@ -144,11 +142,11 @@ mateixos instants de temps. Proposem dos escenaris de solapament:
 
 
 En les implementacions hem treballat a nivell acadèmic, és a dir sense
-objectius d'optimització del rendiment. De fet, aleshores les
+objectius d'optimització del rendiment. De fet, aleshores, les
 implementacions s'allunyarien del model i per tant del nostre objectiu
 de mantenir una forta correspondència entre la forma de la
 implementació i del model. Aquesta correspondència és útil per a
-manteniments futurs: qualsevol millorar en el model pot ser
+manteniments futurs: qualsevol millora en el model pot ser
 traslladada immediatament a les implementacions o bé, a la inversa,
 qualsevol error trobat en les implementacions pot ser localitzat
 fàcilment i estudiat en el model.
@@ -158,10 +156,10 @@ fàcilment i estudiat en el model.
 %RoundRobinson
 
 
-Tot i així, aquesta correspondència model-implementació no sempre és
+Ara bé, aquesta correspondència model-implementació no sempre és
 senzilla de mantenir. A Pytsms i RoundRobinson, les implementacions
 més completes que hem realitzat dels models, s'hauria de simplificar
-la la definició de les mesures genèriques.  En el model abstracte
+la definició de les mesures genèriques.  En el model abstracte
 matemàtic és senzill de descriure uns valors genèrics, en canvi a les
 implementacions això complica l'estructura. Així, s'ha hagut de
 dissenyar mesures de diferents tipus que contenen el rang del domini
@@ -172,8 +170,8 @@ són homogènies i en les implementacions és difícil gestionar el
 concepte de nova sèrie temporal amb el mateix tipus de mesures que les
 originals.
 
-En altres casos, però, s'ha trobar una solució adequada per a
-implementar la genericitat del model.  Per exemple, és el cas de la
+En altres casos, però, s'ha trobat una solució adequada per a
+implementar la genericitat del model.  És el cas de la
 multitud d'operacions de les sèries temporals implementades amb
 Mixins, el de les representacions com a objectes independents
 associats a les sèries temporals, o bé els de les funcionalitats
@@ -186,9 +184,9 @@ utilitzen la representació \gls{zohe}.
 
 
 
-En les altres implementacions, l'objectiu s'ha centrat en observar
-altres paradigmes d'implementació dels models. Així, ens hem pres la
-llibertat de no implementar tota la genericitat del model sinó casos
+En les altres implementacions d'\gls{SGSTM}, l'objectiu s'ha centrat
+en observar altres paradigmes d'implementació dels models. Així, s'ha
+optat per no implementar tota la genericitat del model sinó casos
 simplificats. Caldria avaluar fins a quin límit aquestes
 implementacions es podrien apropar més al model, per exemple a
 RoundRobindoop hem notat algunes limitacions a l'hora d'usar les
@@ -202,13 +200,14 @@ programació para\l.lela MapReduce. L'execució d'aquesta tècnica
 implica un compromís a l'hora d'escollir el nombre de processos en
 para\l.lel ja que cada un té un cost mínim de crear-se i a més cal
 comptar el cost de distribuir les dades. Es podria experimentar més
-amb Hadoop en aquest sentit, és a dir amb diferents quantitats de maps
-i de reduces. De fet només hem provat amb un node de computació, però
-Hadoop té la possibilitat de distribuir a més nodes.
+amb Hadoop en aquest sentit, és a dir amb diferents quantitats de
+\emph{maps} i de \emph{reduces}. De fet només hem provat amb un node
+de computació, però Hadoop té la possibilitat de distribuir a més
+nodes.
 
 
 Hi ha altres projectes que també utilitzen Hadoop com a sistema
-d'emmagatzematge distribuït de sèries temporals. Aquest és el cas
+d'emmagatzematge distribuït de sèries temporals. És el cas
 d'OpenTSDB \parencite{opentsdb}, que utilitza Hadoop per a
 emmagatzemar i recuperar ràpidament sèries temporals.  Aquest, però,
 només no té en compte l'aplicació de consultes a les dades sinó només
@@ -243,42 +242,73 @@ derivats dels primitius.
 
 En un sentit relacional, també cal comparar Pytsms i RoundRobinson amb
 Dee. Dee \parencite{dee} és la implementació amb Python d'un
-llenguatge de bases de dades relacionals que compleixi amb les normes
-D del Third Manifesto. A Pytsms i RoundRobinson hem utilitzat els
+llenguatge de bases de dades relacionals que compleix amb les normes D
+del Third Manifesto. A Pytsms i RoundRobinson hem utilitzat els
 conjunts de Python com a objectes bàsics però es podrien utilitzar els
 conjunts relacionals de Dee, els quals ja incorporen propietats i
 mètodes de \gls{SGBD}. Si més no, el raonament que fa Dee com a gestor
 de bases de dades també podria ser aplicat a Pytsms i
-RoundRobinson.
+RoundRobinson. Tot i així, actualment Dee sembla un projecte abandonat
+però es poden trobar projectes recents amb raonaments similars com per exemple
+Alf \parencite{alf}.
   
 
 
 
 %Experiment amb dades
 
+Amb l'experimentació amb dades reals hem pogut demostrar el correcte
+funcionament de la multiresolució.  Hem provat les implementacions amb
+un exemple de dades reals massives però caldria experimentar amb més
+diversitat de dades: dades de diferent mida, de diversa naturalesa,
+diferents esquemes de multiresolució, etc. També cal tenir present que
+en l'àmbit d'anàlisi de sèries temporals hi ha dades de
+referència \parencite{keogh02} per a ser utilitzades en altres
+recerques juntament amb el problema concret que cal resoldre-hi, per
+exemple cerques de similituds.
+
+
+Amb més diversitat de dades també es podria avaluar el rendiment dels
+recursos durant la computació de la multiresolució. Com ja hem
+comentat, el nostre objectiu se centra en propòsits acadèmics i deixa
+de banda qüestions més productives. Ara bé, durant la programació de
+les implementacions hem pogut constatar alguns efectes que caldria
+estudiar amb més detall.  En el casos de Python, la implementació ens
+ha resultat més eficient com més bé hem pogut traslladar les
+definicions a recursos d'alt nivell de Python. Aquest és el cas
+d'implementar les operacions de mapa i plec en les funcions de Python
+equivalents \emph{map} i \emph{reduce}. També hem notat una gran
+millora canviant la inserció de les \emph{Measure} a les
+\emph{TimeSeries} per tal que en la cerca que no hi hagi temps
+repetits s'aprofiti la cerca en els sets de Python mitjançant
+hash. %MeasureTotalEquality
+En el cas de MapReduce, hem seguit utilitzant RoundRobinson per als
+disseny de les funcions d'agregació d'atributs. D'aquesta manera,
+mantenim la possibilitat de funcions genèriques, tot i que caldria
+avaluar si Hadoop obtindria més profit d'altres implementacions. Per
+exemple, algoritmes de resolució de funcions d'agregació d'atributs
+que aprofitessin el flux de les operacions d'ordenació o bé que en
+l'etapa de map ja realitzessin una part dels càlculs.
+
+
 
 \todo{fer} 
 
+Pel que fa a les variacions dels \gls{SGSTM} estudiades, n'hem
+implementat algunes a RoundRobinson: l'ajustament dels temps d'inici i
+la compartició d'un mateix buffer per a emmagatzemar la sèrie temporal
+original. Les altres variacions, com les resolucions encadenades o
+l'orientació a flux de les funcions d'agregació d'atributs, també
+podrien ser implementades. Aleshores, seria interessant, avaluar la
+computació de la multiresolució per a aquests diferents casos;
+realitzar diferents proves i amb dades de diferent naturalesa. 
 
-Amb l'experimentació amb dades reals hem pogut demostrar el correcte funcionament de la multiresolució. 
+També el cas de la funció de multiresolució, només l'hem implementat a Reltsms i a RoundRobindoop però es podria implementar a Pytsms.
 
-* Experimentació amb dades: només demostrem el correcte funcionament de la multiresolució. No avaluem rendiment dels recursos, per exemple no avaluem temps de computació només n'hem mostrat un a tall de referència orientativa.  Cal provar amb més diversitat: dades de diferent mida, de diversa naturalesa, diferents esquemes de multiresolució, dades de referència utilitzades en altres recerques (per exemple keogh?)
-
-
-
-
-
-* Implementar variacions dels \gls{SGSTM}
-
-
-  Una mostra que es pot millorar molt
-el codi és que canviant mètode add de les TimeSeries amb
-MeasureTotalEquality hem aconseguit una millora espectacular de temps
-de computació: en la inserció cal cercar que no hi hagin temps
-repetits i ara s'aprofita la cerca dels sets de Python mitjançant
-hash.
 
 * Sobre de Pytsms es podria implementar també la funció de multiresolució
+Temps RoundRobinson (funció de multiresolució)
+\todo{això no ho hem dit al capítol de python, potser posar a treballs futurs que a Pytsms també podem implementar la funció de multiresolució}
 
 *de fet falta demostrar l'equivalència entre el model de SGSTM i les funcions de multiresolució
 
@@ -292,14 +322,20 @@ hash.
 Es poden realitzar altres implementacions dels \gls{SGSTM} que siguin
 molt específiques. Una bona implementació ja no és només aquella que
 calcula en poc temps sinó que en alguns contextos també pot ser un
-consum baix d'energia, ocupar poc espai, etc.  En aquest sentit,
-pensem en sistemes específics integrats en xarxes de sensor. Així, es
-podria implementar un \gls{SGSTM} integrat en el maquinari d'un sensor.
+consum baix d'energia, ocupar poc espai, etc.  Més concretament,
+ens referim a sistemes específics integrats en xarxes de sensor. 
 
-Aquesta implementació integrada es podria realitzar tant en un
-microcontrolador que gestionés una memòria seguint l'esquema de
-multiresolució o bé com a circuit digital, aprofitant que l'esquema de
-multiresolució té una mida finita i és implementable en maquinari.
+En aquest sentit, es podria implementar un \gls{SGSTM} integrat en el
+maquinari d'un sensor.  Aquesta implementació integrada es podria
+realitzar en un microcontrolador que gestionés una memòria seguint
+l'esquema de multiresolució. O bé, es podria aprofitar que l'esquema
+de multiresolució té una mida finita i és implementable en maquinari,
+per a dissenyar-la com a circuit digital.
+
+
+
+
+
 
 
 En la implementació en maquinari, es podria seguir l'esquema de la
@@ -340,7 +376,7 @@ Algunes aplicacions dels sistemes integrats de multiresolució podrien ser:
 
 \begin{itemize}
 \item Emmagatzematge de la multiresolució en perifèrics la informació
-  dels quals no és essencial però pot ajudar a monitorar-ne el seu
+  dels quals, tot i no ser essencial,  pot ajudar a monitorar-ne el seu
   funcionament. Per exemple comptadors d'aparells de xarxa,
   temperatures dels components, etc.
 
@@ -359,7 +395,7 @@ Algunes aplicacions dels sistemes integrats de multiresolució podrien ser:
 
 \item Implementació de la multiresolució en Field Programmable Gate
   Arrays, és a dir en dispositius de maquinari configurables. Això
-  permetria flexibilitat a l'hora de canviar els esquemes de
+  permetria major flexibilitat a l'hora de canviar els esquemes de
   multiresolució integrats.
 
 
@@ -434,14 +470,14 @@ Algunes aplicacions dels sistemes integrats de multiresolució podrien ser:
 \section{Reflexions sobre la qualitat}
 
 
-El capítol d'aplicació de la teoria de la informació és només una
+El capítol d'aplicació de la teoria de la informació és una
 introducció al problema de la qualitat de la multiresolució.  La
 teoria de la informació formalitza anàlisis més profundes per a la
 compressió de dades que es podrien aplicar també a la multiresolució.
 En el cas que es conegui més bé el context i el comportament de la
 sèrie temporal a la qual s'aplica la multiresolució, es pot detallar
-més bé la quantificació de l'error. És a dir, en termes de la teoria
-de la informació aleshores hi ha més coneixement sobre la predicció
+més bé la quantificació de l'error. Aleshores, en termes de la teoria
+de la informació, hi ha més coneixement sobre la predicció
 del comportament de les dades cosa que es pot utilitzar per a avaluar
 característiques més concretes. Per exemple, una variable real
 adquirida té limitat el rang de valors que pot prendre i fins i tot
@@ -450,12 +486,8 @@ pot tenir un comportament probabilístic determinat.
 
 
 Cal notar que no avaluem la idoneïtat d'aplicar un estadístic o un
-altre a unes dades ni quin és el que més bé va per a obtenir una
-informació. Només expressem el cas que es vol aplicar una consulta amb
-una agregació determinada a una sèrie temporal i avaluem l'error que
-hi ha comparant l'aplicació de la consulta a les dades originals amb
-les dades multiresolucionades. 
-
+altre a unes dades. Altrament, ja partim del cas que es vol aplicar
+una consulta amb una agregació determinada a una sèrie temporal.
 Per a determinar un esquema de multiresolució --la quantitat de
 resolucions, els passos de consolidació de cadascuna, els cardinals,
 \dots-- caldria analitzar cada problema particular en el seu context i
@@ -474,7 +506,7 @@ multiresolució s'obren un seguit de qüestions més, cadascuna de les
 quals és un repte futur:
 \begin{itemize}
 \item Quina redundància d'emmagatzematge hi ha entre diverses
-  subsèries s'una mateixa sèrie temporal multiresolució.? Què ocorre
+  subsèries d'una mateixa sèrie temporal multiresolució? Què ocorre
   quan hi ha més d'una resolució i són de diferents funcions
   d'agregació d'atributs?
 

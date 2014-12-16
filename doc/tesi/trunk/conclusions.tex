@@ -339,11 +339,11 @@ poden implementar. D'aquesta manera, el model descriu exactament el
 comportament de les implementacions i es pot assegurar que aquestes
 tenen el funcionament desitjat.  De fet, el model definit descriu
 essencialment les operacions, entrades, sortides i tipus de dades
-bàsics amb els quals han de treballar les implementacions. Això es
-coneix com a interfície de programació d'aplicacions, tot i que
-habitualment s'especifiquen i representen amb llenguatges informàtics,
-en comptes de models formals matemàtics, i incorporen detalls de la
-implementació en qüestió.
+bàsics amb els quals han de treballar les implementacions. Això és
+conegut com a interfície de programació d'aplicacions, tot i que
+habitualment s'especifiquen i es representen amb llenguatges
+informàtics, en comptes de models formals matemàtics, i incorporen
+detalls de la implementació en qüestió.
 
 
 L'objectiu de les implementacions és principalment acadèmic per a
@@ -392,32 +392,36 @@ família \gls{zohe}.
 
 
 
-\todo{fer}
+En una comparació entre les diverses implementacions de la
+multiresolució, s'ha observat que computen de manera similar per a un
+mateix cas. A excepció de Reltsms que no admet casos reals massius,
+car es basa en un \gls{SGBDR} totalment acadèmic i encara
+desenvolupament.  Si bé cal notar que en la programació de les
+implementacions no hem tingut en compte l'eficiència, de fet hem
+preferit conservar certa similitud amb les operacions algebraiques i
+lògiques fetes en les definicions del models.    Així
+doncs, basar-se en el model relacional ha resultat adequat per a
+aquests objectius abstractes d'implementació. A més, ha permès
+implementacions de diversa natura, com són Pytsms i Reltsms.
+RoundRobindoop és la implementació més específica de totes, la podem
+qualificar com a sistema de càlcul de la multiresolució. En canvi,
+RoundRobinson i Pytsms són les més genèriques, car les hem dissenyat
+com a referència dels models. Però també gràcies que Python disposa de
+biblioteques extenses, les quals són útils a l'hora d'implementar
+funcionalitats complementàries.
 
 
-És difícil comparar les implementacions perquè no tenen res a veure. A més l'exemple es basa en computació diferida. 
 
-També cal dir que en la programació de les implementacions no hem tingut en compte eficiència, de fet hem preferit conservar les operacions algebraiques i lògiques fetes en les definicions del models.
-
-A més, hi ha la computació en flux. Aquesta ens permet anar calcular a mesura que van arribant les dades en comptes d'acumular-ho tot i fer-ho de cop. Si potdem utilitzar un esquema de flux aleshores els càlculs quedem repartits en el temps per la mateixa naturalesa del flux. (per altra banda també estudiaderem càlculs en temps diferent i oferirem una solució amb computació para\l.lela).
-
-* Sobre la multiresolució calculada en flux en un SGSTM o amb computació paral·lela: la primera és computació distribuïda al llarg del temps i la segona és computació distribuïda en l'espai (o en els recursos físics)
-
-
-Com es resol el problema de múltiples càlculs? proposem dues
-implementacions dels SGSTM: una on hi ha execució paral·lela i una
-altra on hi ha execució en flux.  L'execució paral·lela permet
-aprofitar quan es poden fer operacions en paral·lel, que és el cas de
-la multiresolució. L'execució en flux permet repartir al llarg del
-temps els càlculs quan és possible, en la multiresolució podem anar
-fent els càlculs cada cop que entra una dada nova així sempre hi ha a
-punt els càlculs fets i els podem visualitzar instantàniament i hem
-pogut anar repartint el temps d'execució i no ens cal fer-ho tot de
-cop (això sí: requereix planificació dels càlculs que voldrem
-consultar o visualitzar); per tant ja no tenim problemes de recursos,
-hem reconvertit el problema de dades grans, l'hem simplificat.
-Aquesta nova estructura de SGSTM en flux es pot implementar en qualsevol lloc, pròpia, SGBDR, etc, ja que no hi ha tanta criticitat en els recursos. 
-
+Pel que fa a la computació de la multiresolució, s'ha vist que pot ser
+costosa a causa dels múltiples càlculs que s'han de computar. Hem
+estudiat dues estratègies remarcables.  D'una banda, la computació
+para\l.lela i distribuïda, que distribueix el còmput en els recursos
+físics disponibles i per tant permet processar ràpidament.  D'altra
+banda, la computació en línia amb el flux de dades, que distribueix el
+còmput al llarg del temps d'adquisició i per tant el fa menys crític.
+En aquest cas, la multiresolució és precomputada i sempre està
+disponible per a consultar-la o visualitzar-la immediatament. Ara bé,
+requereix planificar prèviament l'esquema de multiresolució.
 
 
 

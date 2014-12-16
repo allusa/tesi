@@ -319,14 +319,6 @@ cas de RoundRobindoop l'hem executat tant a la shell com a Hadoop.
 
 
 
-En aquests exemple ja es disposa de totes les dades originals
-emmagatzemades, per tant la computació és en temps diferit.  Així
-doncs, tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM} com
-RoundRobinson i aplicar al consolidació, com calcular la funció de
-multiresolució de la sèrie temporal en un \gls{SGSTM} com
-RoundRobindoop.
-
-
 Els resultats són aproximadament els mateixos per a totes les
 computacions. Hi ha, però, petites diferències degudes a les
 diferències entre les implementacions. Per exemple, a RounRobindoop
@@ -339,91 +331,151 @@ RoundRobinson sí.
 
 
 
-\todo{revisar} 
+En aquest exemple ja es disposa de totes les dades originals
+emmagatzemades, per tant la computació és en temps diferit.  Així
+doncs, tant podem emmagatzemar la sèrie temporal en un \gls{SGSTM} com
+RoundRobinson i aplicar la consolidació, com calcular la funció de
+multiresolució de la sèrie temporal en un \gls{SGSTM} com
+RoundRobindoop.  Apliquem algunes variacions a les implementacions per
+tal d'adequar-les a la computació en diferit:
+
+\begin{itemize}
+\item Ajustament dels temps d'inici de la consolidació
+  (\seeref{def:mapreduce:ajustamentdetaus}. Un cop definit l'esquema
+  de multiresolució, com que ja es coneix tota la sèrie temporal es
+  poden canviar els temps d'inici de la consolidació. D'aquesta manera
+  no es computen dades que immediatament seran descartades. A més a
+  RoundRobindoop cal adequar-los per tenir en compte els cardinals
+  màxims. Així si originalment tots els temps inicials eren $\tau_0=$
+  1 de gener de 2010, ara cadascun canvia segons els paràmetres de
+  multiresolució i segons el darrer temps de la sèrie temporal que és
+  18 d'octubre de 2011 a les 13:27:59. Per exemple, per a la resolució
+  de pas $\delta_1=5 \text{ h}$ el nou temps inicial és de $\tau_1=$
+  13 d'octubre de 2011 a les 10:00, el qual intuïtivament es pot veure
+  que defineix un lapse de 5 dies segons el pas $\delta_1=5 \text{ h}$
+  i $k_1=24$ mesures consolidades.
 
 
-
-Ajustem els taus (v. a \autoref{def:mapreduce:ajustamentdetaus}
-No es tenen en compte els cardinals màxims. Si es volen tenir en
-  compte, cal adequar bé els $\tau$ inicials.  \autoref{ex:mapreduce:classifica}) s'hauria de dir que hem introduït aquesta funcionalitat a RoundRobinson.
+\item A RoundRobindoop, com ja hem comentat, cal fer l'aproximació
+  dels intervals de consolidació per al cas \gls{zohe}.
 
 
+\item A RoundRobinson les subsèries resolució poden compartir el
+  mateix buffer per a la sèrie temporal, com hem notat breument en
+  \textref{sec:multiresolucion:variacionsbuffer}. Com que l'exemple és
+  en temps diferit, inicialment s'emmagatzema tota la sèrie temporal
+  en un mateix buffer. Posteriorment, en la consolidació, les
+  subsèries resolució seleccionen d'aquest buffer les mesures
+  adequades per a cada agregació. En aquest cas de temps diferit, es
+  podria prescindir de l'eliminació de mesures antigues del
+  buffer. Això no obstant, el tenim en compte de manera que el pas de
+  consolidació més gran, el de 50 dies, és el que marca quan les
+  mesures són antigues. A tals efectes, a RoundRobinson hem dissenyat
+  un objecte \lstinline[style=py]+MultiresolutionSeriesSharedBuffer+,
+  el qual és una petita variació de l'objecte
+  \lstinline[style=py]+MultiresolutionSeries+ que implementa la
+  compartició de buffers.
 
-En aquest cas a RoundRobinson podem compartir el buffer físic per a totes les resolucions, perquè treballem en temps diferit (ref a variacions de buffer on es diu la compartició)
-
-
-En RoundRobinson hi ha moltes capacitats complementàries: emmagatzemar en fitxers, fer gràfics, etc,. A més és molt genèric, molt proper al model, i permet implementar qualsevol esquema de multiresolució.
-A més aquí computem en temps diferit, i roundrobinson no ajusta els tau incials (sí! també ho podem fer, potser s'hauria de posar a l'exemple de roundrobinson?) i per tant computar consolidacions que després són eliminades.
-Si la computació s'hagués realitzat en línia tal com s'anaven adquirint les dades, roundrobinson hagués sigut més apropiat.
-
-
-A RounRobindoop va bé per experimentar amb aquest exemple, perquè tenim totes les dades emmagatzemades, de fet són de fa uns anys, i per tant podem computar-ne la multiresolució de forma ràpida.
-Cal dir que comparat amb executar-ho en bash
-
-
-
-  The purpose
-of this example is to show how the multiresolution is computed for a
-time series, it has been computed offline as the original data had
-already been acquired. However, a \acro{MTSMS} is designed to
-consolidate while the original data is being acquired so that the
-multiresolution computation spreads along the acquisition and the
-computing time becomes less critical.
-
-
-
-Temps orientatius, computats en una màquina de sobretaula. 
-
-Temps RoundRobinson
-
-1. 75 minuts (sense ajustar taus)
-2. 72 minuts (ajustant taus)
-3. 74 minuts (ajustant taus, consolidate a fora, canviant addicio)
-4. 51 minuts (canviant mètode add de les TimeSeries amb MeasureTotalEquality)
-5. 34 minuts (??)
-6. 36 minuts
-
-sobre el mean i el max directe: les funcions de RoundRobinson són calcades a les del model en el fet que es construeixen a partir dels mètodes de representació, amb l'interval temporal, etc.  Si obviem això els agregadors processen més ràpid.
-
-
-Temps RoundRobinson (funció de multiresolució)
-\todo{això no ho hem dit al capítol de python, potser posar a treballs futurs que a Pytsms també podem implementar la funció de multiresolució}
-
+\end{itemize}
 
 
 
 
-
-
-Temps RoundRobindoop bash
-1. 69 minuts
-2. 70 minuts
-3. 73 minuts
-4. 60 minuts (quick mean i max)
-5. 57 minuts (-zohedefault)
-6. 38 minuts 
-7. 37 minuts
-8. 38 minuts
-
-
-Temps RoundRobindoop Hadoop
-1. 63 minuts  (2 map i 3 reduce)
-2. 58 minuts  (2 map i 3 reduce, 15m timeout)
-3. 74 minuts (2 map i 6 reduce, 15m timeout)
-4. 65 minuts (2 map i 10 reduce, 15m timeout)
-5. 76 minuts (2 map i 5 reduce, 15m timeout)
-6. 58 minuts  (2 map i 3 reduce, 15m timeout)
-7. 58 minuts (2 map i 1 reduce, 15m timeout)
-8. 37 minuts (2 map i 1 reduce)
-9. 44 minuts (2 map i 3 reduce)
-10. 39 minuts (2 map i 1 reduce)
-11. 41 minuts (2 map i 1 reduce)
-
-
+Així doncs, hem computat el mateix problema de tres maneres diferents:
+amb RoundRobinson (RRson), amb RoundRobindoop executat a la shell
+(RRdoop shell) i amb RoundRobindoop executat a Hadoop (RRdoop
+Hadoop). A tall orientatiu, hem mesurat els temps de còmput. Per a cada
+cas n'hem fet cinc proves en una màquina de sobretaula, les
+quals es resumeixen a la \autoref{tab:exemple:temps}. 
+%
 Per a més detall, a
 \url{http://escriny.epsem.upc.edu/svn/rrb/src/experiments/tags/isense-2014-tesi/}
-podeu trobar les dades i els resultats d'aquest exemple.  \todo{dir
-  que a escriny poden consultar l'exemple?}
+podeu trobar les dades i els resultats d'aquest exemple.
+
+
+\todo{acabar experiments}
+
+\begin{table}[tp]
+  \centering
+  \begin{tabular}[tp]{c|ccc}
+    Prova & RRson & RRdoop shell & RRdoop Hadoop \\\hline
+    1 & 34 & 38 & 37 \\
+    2 & 36 & 37 & 39 \\
+    3 & 33 & 38 & 41 \\
+    4 & 35 & 38 &    \\
+    5 & 34 & 37 &    \\\hline
+    $\bar{x}$ &    &    &    
+  \end{tabular}
+
+  \caption{Proves del temps de còmput, expressat en minuts}
+  \label{tab:exemple:temps}
+\end{table}
+
+
+
+
+
+
+En conclusió, no hi ha gaires diferències entre les diferents
+computacions. De fet, és una computació en diferit i per tant els
+sistemes resolen un cas similar. En una altra estratègia,
+RoundRobinson permet la computació en línia en la qual el temps de
+còmput de la multiresolució es repartiria al llarg del temps en què
+s'adquireix la sèrie temporal.  Pel que fa a RoundRobindoop, en el cas
+de l'execució a Hadoop només s'utilitza un node de computació i la
+quantitat de processos que escull Hadoop: 2 maps i 1 reduce. Així
+doncs, és una execució similar a la de la shell i la diferència pot
+ser vista com el cost que introdueix la gestió de Hadoop.
+
+
+
+
+En una comparació més pràctica entre RoundRobinson i RoundRobindoop,
+aquest darrer només és un sistema de càlcul de la multiresolució. En
+canvi, RoundRobinson és un sistema més complet de base de dades i
+permet més manipulació de les sèries temporals gràcies a basar-se en
+Pytsms. De fet, hem dissenyat RoundRobinson i Pytsms com a les
+implementacions de referència dels models i conseqüentment són més
+genèriques i contenen més conceptes i complements que les altres.  De
+fet, utilitzem RoundRobinson per a crear l'esquema de multiresolució,
+emmagatzemar-lo en un fitxer i passar-lo com a paràmetre a
+RoundRobindoop. I un cop calculada la multiresolució a RoundRobindoop,
+tornem a utilitzar RoundRobinson per a recuperar la sèrie
+multiresolució consolidada resultant.
+
+
+
+
+
+
+
+% Temps orientatius, computats en una màquina de sobretaula. 
+
+% Temps RoundRobinson
+
+% 1. 75 minuts (sense ajustar taus)
+% 2. 72 minuts (ajustant taus)
+% 3. 74 minuts (ajustant taus, consolidate a fora, canviant addicio)
+% 4. 51 minuts (canviant mètode add de les TimeSeries amb MeasureTotalEquality)
+
+
+% Temps RoundRobindoop bash
+% 1. 69 minuts
+% 2. 70 minuts
+% 3. 73 minuts
+% 4. 60 minuts (quick mean i max)
+% 5. 57 minuts (-zohedefault)
+
+
+% Temps RoundRobindoop Hadoop
+% 1. 63 minuts  (2 map i 3 reduce)
+% 2. 58 minuts  (2 map i 3 reduce, 15m timeout)
+% 3. 74 minuts (2 map i 6 reduce, 15m timeout)
+% 4. 65 minuts (2 map i 10 reduce, 15m timeout)
+% 5. 76 minuts (2 map i 5 reduce, 15m timeout)
+% 6. 58 minuts  (2 map i 3 reduce, 15m timeout)
+% 7. 58 minuts (2 map i 1 reduce, 15m timeout)
+% 9. 44 minuts (2 map i 3 reduce)
 
 
 
@@ -431,4 +483,5 @@ podeu trobar les dades i els resultats d'aquest exemple.  \todo{dir
 %%% TeX-master: "main"
 %%% End:
 
-%  LocalWords:  multiresolució subsèrie subsèries
+%  LocalWords:  multiresolució subsèrie subsèries RoundRobinson
+%  LocalWords:  RoundRobindoop
