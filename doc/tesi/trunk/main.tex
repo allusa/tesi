@@ -155,8 +155,8 @@ twoside,fontsize=11pt,BCOR12mm,
 % NNN\or DDD\fi}}
 
 
-\usepackage{arydshln} %hdashline a les taules
-
+%%%\usepackage{arydshln} %hdashline a les taules --> conflicte amb supertabular 
+\usepackage{tabu}
 
 \usepackage{bookmark}%per netejar l'ordre de \part{}
 
@@ -305,12 +305,13 @@ twoside,fontsize=11pt,BCOR12mm,
 %\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
 %\pdfbookmark{\glossaryname}{bookmark:glossari}
 \chapter{Abreviacions i nomenclatura}
+
 \glsaddall[counter=subsection,types={abreviatura,\acronymtype}]
-%\printglossary
 
 \printglossary[type=abreviatura,nonumberlist]
 
 \printglossary[type=\acronymtype,title=Sigles,nonumberlist]
+
 
 \renewcommand{\glossarypreamble}{Índex de notació segons nom, símbol i
   referència --pàgina o en negreta lloc on es defineix el concepte:
@@ -321,19 +322,22 @@ twoside,fontsize=11pt,BCOR12mm,
 \printglossary[type=notation,style=estil-notation]
 
 
+
 %------------- Índexs ------------
 %ATENCIÓ, hi ha problemes quan s'activen molts índexs
-% \cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}\chapter*{Índexs}
-% \begingroup
-% \let\clearpage\relax
-% \phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
-% \phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
-% \phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings
-% \renewcommand\listtheoremname{Índex de definicions}
-% \phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={definition}]
-% \renewcommand\listtheoremname{Índex d'exemples}
-% \phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={example}]
-% \endgroup
+\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}
+\chapter*{Índexs}
+\begingroup
+\let\clearpage\relax
+\let\cleardoublepage\relax
+\phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
+\phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
+\phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings %
+\renewcommand\listtheoremname{Índex de definicions}
+\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={definition}]
+\renewcommand\listtheoremname{Índex d'exemples}
+\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={example}]
+\endgroup
 %\listoftodos %%%%mode esborrany
 %----------------------------------------------
 
