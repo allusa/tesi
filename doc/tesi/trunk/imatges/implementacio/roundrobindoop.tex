@@ -1,0 +1,118 @@
+\begin{tikzpicture}
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+ \node[mynode,verd] (m1) {map 1};
+ \node (ml1) [below=of m1] {};
+ \node[mynode,verd] (m2) [below=of ml1] {map 2};
+ \node (ml2) [below=of m2] {};
+ \node[mynode,verd,dotted] (mn) [below=of ml2] {map M};
+
+
+ \node[mynode] (d1) [right=0.5cm of m1] {
+   \begin{tabu}{|c|cc|}\hline
+     \multirow{2}{*}{$i$} & \multicolumn{2}{c|}{valor} \\\cline{2-3}
+       & \multicolumn{1}{c|}{t} & v \\\hline
+      & & \\
+      & & \\\tabucline[1pt on 3pt]\\%\hdashline
+      & & \\
+      & &\\\hline
+   \end{tabu}
+ };
+
+ \node[mynode] (d2) [right=0.5cm of m2] {
+   \begin{tabu}{|c|cc|}\hline
+     \multirow{2}{*}{$i$} & \multicolumn{2}{c|}{valor} \\\cline{2-3}
+       & \multicolumn{1}{c|}{t} & v \\\hline
+      & & \\\tabucline[1pt on 3pt]\\%\hdashline
+      & &\\\hline
+   \end{tabu}
+ };
+
+ \node[mynode,dotted] (dn) [right=1.5cm of mn] {};
+
+
+
+ \node[mynode,verd] (r1) [right=0.5cm of d1] {\parbox{1cm}{reduce $\delta_0,f_0$}};
+ \node[mynode,verd] (r2) [below=2cm of r1] {\parbox{1cm}{reduce $\delta_1,f_1$}};
+ \node[mynode,verd,dotted] (rn) [right=1cm of dn] {\parbox{1cm}{reduce $\delta_d,f_d$}};
+
+
+
+
+ \node[mynode] (o) [above left=1.5cm and 0.5cm of m1, anchor=north east] {
+   \begin{tabular}{|c|}\hline
+     t v \\\hline
+       \\
+       \\
+     \parbox[c][7cm][s]{0cm}{\vfill} \\
+       \\
+       \\\hline
+   \end{tabular}
+ };
+ \node [above=0cm of o] {$O$};
+ \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {
+   \begin{tabular}{|c|}\hline
+    $\delta\, f$ t v \\\hline
+       \\
+        \\
+     \parbox[c][7cm][s]{0cm}{\vfill}  \\
+        \\
+        \\\hline
+   \end{tabular}
+};
+ \node [above=0cm of f] {$F$};
+ \node [above=0cm of d1] {$E$};
+
+
+
+
+ \draw[dashed] (ml1) -- (ml1-|o.west);
+ \draw[dashed] (ml2) -- (ml2-|o.west);
+
+ \draw[myarrow] (o.center|-m1) -- (m1)  node[sloped,above,near end] {$S'_1$};
+ \draw[myarrow] (o.center|-m2) -- (m2) node[sloped,above,near end] {$S'_2$};
+ \draw[myarrow,dotted] (o.center|-mn) -- (mn) node[sloped,above,near end] {$S'_M$};
+
+
+ \draw[myarrow] (m1) -- (d1) node[sloped,above,near start] {$E'_1$};
+ \draw[myarrow] (m2) -- (d2) node[sloped,above,near start] {$E'_2$};
+ \draw[myarrow,dotted] (mn) -- (dn)  node[sloped,above,near start] {$E'_M$};
+
+ \draw[myarrow] (d1.center) -- (r1) node[sloped,above,near end] {$E_{1}^0$};
+ \node (d1b) [above=3ex of d1.280] {}; 
+ \draw[myarrow] (d1b.center) -- (r2) ;
+
+ \draw[myarrow] (d2.center) -- (r1) node[sloped,above,near end] {$E_{2}^0$};
+ \node (d2b) [above=3ex of d2.280] {}; 
+ \draw[myarrow] (d2b.center) -- (r2) ;
+
+ \draw[myarrow,dotted] (dn) -- (r1) node[sloped,above,near end] {$E_{1}^1$};
+ \draw[myarrow,dotted] (dn) -- (r2);
+ \draw[myarrow,dotted] (dn) -- (rn) node[sloped,above,near end] {$E_{d}^d$};
+
+
+ \node (r1l) [below=of r1] {};
+ \draw[dashed] (r1l) -- (r1l-|f.east);
+ \node (r2l) [below=of r2] {};
+ \draw[dashed] (r2l) -- (r2l-|f.east);
+
+
+ \draw[myarrow] (r1) -- (r1-|f.center)  node[sloped,above,near start] {$F'_0$};
+ \draw[myarrow] (r2) -- (r2-|f.center)  node[sloped,above,near start] {$F'_1$};
+ \draw[myarrow,dotted] (rn) -- (rn-|f.center)  node[sloped,above,near start] {$F'_d$};
+
+
+  \end{tikzpicture}
