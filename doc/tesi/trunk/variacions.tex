@@ -293,22 +293,21 @@ d'agregació d'atributs es poden implementar amb orientació a flux.
 
 
 
-Definim una funció d'agregació amb orientació a flux, $f^\text{flux}$,
-com aquella que implementa el comportament equivalent a una funció
-d'agregació d'atributs $f$. A diferència de les $f$, treballen sobre
-dues mesures $m'=f^\text{flux}(m_f,m,i)$ per a retornar la mesura
-resultant $m'$, on $m$ és la nova mesura que s'ha d'incorporar al
-flux, $m_f$ és el flux anterior ja processat i $i=[t_a,t_b]$ és
-l'interval de consolidació de $f$.  Per exemple, redefinim les
-funcions d'agregació \gls{dd} màxim i mitjana per tal que tinguin
-orientació a flux:
+Definim una funció d'agregació amb orientació a flux com aquella que
+implementa el comportament equivalent a una funció d'agregació
+d'atributs, $f$. A diferència de les $f$, treballen sobre dues mesures
+$m'=\text{flux}(m_f,m,i)$ per a retornar la mesura resultant $m'$, on
+$m$ és la nova mesura que s'ha d'incorporar al flux, $m_f$ és el flux
+anterior ja processat i $i=[t_a,t_b]$ és l'interval de consolidació de
+$f$.  Per exemple, redefinim les funcions d'agregació \gls{dd} màxim i
+mitjana per tal que tinguin orientació a flux:
 
 \begin{itemize}
-\item $\glssymbol{not:sgstm:maxdd}^\text{flux}: m_f \times m \times i \mapsto
+\item $\text{flux-\glssymbol{not:sgstm:maxdd}}: m_f \times m \times i \mapsto
   m'$ on $V(m')=\max(V(m_f),V(m))$ i $T(m')=\frac{t_b+t_a}{2}$. 
 
 
-\item $\glssymbol{not:sgstm:mitjanadd}^\text{flux}: m_f \times m
+\item $\text{flux-\glssymbol{not:sgstm:mitjanadd}}: m_f \times m
   \times i \mapsto m'$ on $V(m') = V(m_f) + \frac{V(m)}{t_b-t_a}$ i
   $T(m')=\frac{t_b+t_a}{2}$.
 
@@ -317,9 +316,9 @@ orientació a flux:
 
 Així, sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal i $i=[t_a,t_b]$
 un interval de dos instants de temps, calcular en flux $m'_0 =
-\glssymbol{not:sgstm:mitjanadd}^\text{flux}((0,0),m_0,i), m'_1 =
-\glssymbol{not:sgstm:mitjanadd}^\text{flux}(m'_0,m_1,i), \dotsc, m'_k
-= \glssymbol{not:sgstm:mitjanadd}^\text{flux}(m'_{k-1},m_k,i)$ és
+\text{flux-\glssymbol{not:sgstm:mitjanadd}}((0,0),m_0,i), m'_1 =
+\text{flux-\glssymbol{not:sgstm:mitjanadd}}(m'_0,m_1,i), \dotsc, m'_k
+= \text{flux-\glssymbol{not:sgstm:mitjanadd}}(m'_{k-1},m_k,i)$ és
 equivalent a $m_k'=\glssymbol{not:sgstm:mitjanadd}(S,i)$, on $(0,0)$
 és una mesura inicial per al flux.
 
@@ -337,7 +336,7 @@ consolidar dels buffers:
   perquè $B=(m_B,\tau,\delta,f)$ sigui un buffer que emmagatzema una
   mesura $m_B$ en comptes d'una sèrie temporal i l'operació d'afegir
   sigui $\glssymbol{addB}(B,m)= (m'_B,\tau,\delta,f)$ on $m'_B =
-  f^\text{flux}(m_B,m,[\tau,\tau+\delta])$ i $f^\text{flux}$ és una
+  \text{flux}(m_B,m,[\tau,\tau+\delta])$ i $\text{flux}$ és una
   funció d'agregació d'atributs orientada a flux.
 
 
@@ -346,7 +345,7 @@ consolidar dels buffers:
   $B=(m_B,\tau,\delta,f)$ l'operació de consolidar sigui
   $\glssymbol{consolidaB}(B) = (B',m_B)$ on
   $B'=(m'_B,\tau+\delta,\delta,f)$ i $m'_B$ ha de ser l'element
-  d'identitat de $f^\text{flux}$. Per exemple $m'_B=(0,0)$ per a l'atribut
+  d'identitat de $\text{flux}$. Per exemple $m'_B=(0,0)$ per a l'atribut
   de mitjana i $m'_B=(0,\min(\glssymbol{not:valor-domini}))$ per a
   l'atribut de màxim on $\glssymbol{not:valor-domini}$ és el domini
   dels valors. 

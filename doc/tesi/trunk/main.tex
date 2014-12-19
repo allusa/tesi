@@ -13,17 +13,14 @@ twoside,fontsize=11pt,BCOR12mm,
 % twoside,openany,fontsize=10pt,DIV = 10,BCOR12mm, %%format en paper
 %,toc=listof, %afegir índexs a l'índex
 ]{scrbook}
-%%%%BCOR12mm  factor de correcció per enquadernació
+%%%%BCOR12mm  factor de correcció per enquadernació en rústica
 %%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
-%\usepackage[T1]{fontenc}
-\usepackage{lmodern}
 %------------- capçalera ----------------------
 \input{capçalera}
-\bibliography{bibliografia}
 \ExecuteBibliographyOptions{backref=true}
 %backref=true, urldate=long, abbreviate=false,%%format web 
 %annotation=true %per veure comentaris
-%---------- Mode esborrany --------------------
+%---------- Esborrany --------------------
 %\includeonly
 %{resum}
 %{intro}
@@ -39,159 +36,13 @@ twoside,fontsize=11pt,BCOR12mm,
 \usepackage{scrpage2}\pagestyle{scrheadings}\chead[--- esborrany \today\ ---]{\color{gray}{\today}}   
 %\usepackage[showframe,a4paper]{geometry}%page margins %\geometry{layoutheight=230mm,layoutwidth=160mm,layoutvoffset=30mm,showcrop}
 %\usepackage[cam,a3,center]{crop} %frame
-%----------------------------------------------
-%\usetikzlibrary{shapes,arrows,positioning}
-%\usetikzlibrary{calc}
-%------------- format -------------------------
-%%ús coma decimal sense espais:  2{,}5
-%per tal que trenqui la coma en math inline mode 
-%http://tex.stackexchange.com/questions/19094/allowing-line-break-at-in-inline-math-mode-breaks-citations/
-\AtBeginDocument{%
-  \mathchardef\mathcomma\mathcode`\,
-  \mathcode`\,="8000 
-}
-{\catcode`,=\active
-  \gdef,{\mathcomma\discretionary{}{}{}}
-}
-%teoremes
-\theoremstyle{plain}
-\newtheorem{definition}{Definició}
-%\declaretheorem{definition}
-\theoremstyle{definition}
-\newtheorem{example}{Exemple}
-%\declaretheorem{example}
-%modificar autoref per babel catala
-\let\orgautoref\autoref
-%per: (v. fig. 3)
-\providecommand{\seeref}
-{%
-\def\figureautorefname{fig.}%
-\def\definitionautorefname{def.}%
-\def\exampleautorefname{ex.}%
-\def\chapterautorefname{\gls{capitol}}%
-\def\sectionautorefname{\gls{seccio}\ignorespaces}%
-\def\subsectionautorefname{\gls{seccio}\ignorespaces}% 
-\gls{vegeu}~\orgautoref%
-}
-%per: a la figura 3 !Problemes en les contraccions amb noms masculins! evitar a i de davant de capítol!
-\providecommand{\textref}
-{%
-\def\figureautorefname{la figura}%
-\def\definitionautorefname{la definició}%
-\def\exampleautorefname{l'exemple}%
-\def\chapterautorefname{el capítol}% al/del capítol???
-\def\sectionautorefname{la secció}%
-\def\subsectionautorefname{l'apartat}% 
-\orgautoref%
-}
-%per defecte
-\renewcommand{\autoref}
-{%
-\def\figureautorefname{figura}%ús: \autoref{}
-\def\tableautorefname{taula}%ús: \autoref{}
-\def\definitionautorefname{definició}%ús: \autoref{}
-\def\exampleautorefname{exemple}%ús: \autoref{}
-\def\chapterautorefname{capítol}%ús: \autoref{}
-\def\sectionautorefname{secció}%ús: \autoref{}
-\def\subsectionautorefname{apartat}%ús: \autoref{}
-\orgautoref%
-}
-%numeracions d'equacions, definicions, etc.
-\numberwithin{equation}{chapter}
-\numberwithin{definition}{chapter}
-\numberwithin{example}{chapter}
-
-\renewcommand\lstlistingname{Llistat} %%%PENSAR bé el nom
-\renewcommand\lstlistlistingname{Índex de llistats}
-\def\lstlistingautorefname{llistat} %ús: \autoref{}
-
-
-%%format del listoftherorems
-\makeatletter
-\def\ll@example{%
-  \protect\numberline{\csname the\thmt@envname\endcsname}%
-  \ifx\@empty\thmt@shortoptarg
-    \thmt@thmname
-  \else
-    \thmt@shortoptarg
-  \fi}
-\def\ll@definition{%
-  \protect\numberline{\csname the\thmt@envname\endcsname}%
-  \ifx\@empty\thmt@shortoptarg
-    \thmt@thmname
-  \else
-    \thmt@shortoptarg
-  \fi}
-\makeatother
-
-
-\DefineBibliographyStrings{catalan}{%
-%    andothers = {i altres},
-    backrefpage  = {citat a la p\adddot}, % for single page number
-    backrefpages = {citat a les pp\adddot} % for multiple page numbers
-}
-
-
-
-
-\usepackage{subcaption}
-\usepackage{multirow}
-\usepackage{pgfplots}
-\usetikzlibrary{dateplot}
-\usetikzlibrary{shapes,arrows,positioning}
-\usetikzlibrary{patterns}
+%------------- Format -------------------------
 \usepackage{imatges/tikz-uml}
-
 \input{imatges/estils_pgf}
-
-\def\pgfcalendarmonthshortname#1{%
-%\translate{
-\ifcase#1\or gen.\or febr.\or març\or abr.\or maig\or juny\or jul.\or ag.\or set.\or oct.\or nov.\or des.\fi}
-%}
-
-% \def\pgfcalendarmonthname#1{%
-% \translate{\ifcase#1\or JJJ\or FFF\or MMM\or AAA\or
-% MAY\or JJU\or JJY\or AAU\or SSS\or OOO\or
-% NNN\or DDD\fi}}
-
-
-%%%\usepackage{arydshln} %hdashline a les taules --> conflicte amb supertabular 
-\usepackage{tabu}
-
-\usepackage{bookmark}%per netejar l'ordre de \part{}
-
-
-%glossaris
-%\usepackage{supertabular}
-\usepackage[
-          nomain,% Remember if you don't want to use the main glossary.
-          acronym,
-          %%nonumberlist,
-          toc,
-          section,
-          numberedsection=false,%numberedsection=autolabel,
-          sanitize=none, %pels accents en el vegeu
-          ]{glossaries}
-%\renewcommand*{\glspostdescription}{}%anul·la el punt final
-\renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
-%Índex d'abreviacions?? si conté abreviatures o símbols
-% \short<type>name,
-\input{vocabulari/glossari.tex}
+%---------- Bibliografia i glossaris ------------
+\bibliography{bibliografia}
 \loadglsentries{vocabulari/abreviacions.tex}
 \loadglsentries[notation]{vocabulari/notacio.tex}
-\newcommand{\glssymboldef}{\glssymbol[format=hyperbf,counter=definition]}
-\newcommand{\glsdispdef}{\glsdisp[format=hyperbf,counter=definition]}
-\newcommand{\hyperbfsec}[1]{\textbf{\S\hypersf{#1}}}
-\newcommand{\hyperbfex}[1]{\textbf{ex.\hypersf{#1}}}
-\newcommand{\glsaddsec}{\glsadd[format=hyperbfsec,counter=subsection]}
-\newcommand{\glsaddchap}{\glsadd[format=hyperbfsec,counter=chapter]}
-\newcommand{\glsaddsection}{\glsadd[format=hyperbfsec,counter=section]}
-\newcommand{\glsdispsec}{\glsdisp[format=hyperbfsec,counter=subsection]}
-\newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
-\newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
-
-
-
 %-------------- dades --------------------------
 \hypersetup{
     pdftitle={Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals},

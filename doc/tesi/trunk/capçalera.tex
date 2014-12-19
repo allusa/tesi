@@ -3,23 +3,76 @@
 %--------------------
 \usepackage[utf8]{inputenc}
 \usepackage[catalan]{babel}
+\usepackage{lmodern}
 %\usepackage[T1]{fontenc} 
 %\usepackage{parskip}
 %---------- Gràfics ------------------------
 %\usepackage[final]{graphicx}
 %\usepackage{epstopdf}
 %\usepackage{tikz}
-%\usepackage{pgfplots}
-%\usetikzlibrary{dateplot}
-%\usetikzlibrary{shapes,arrows,positioning}
 %\usepackage{epic,xcolor,multicol}
-%---------- Símbols ------------------------
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\usetikzlibrary{dateplot}
+\def\pgfcalendarmonthshortname#1{%
+%\translate{
+\ifcase#1\or gen.\or febr.\or març\or abr.\or maig\or juny\or jul.\or ag.\or set.\or oct.\or nov.\or des.\fi}%}
+% \def\pgfcalendarmonthname#1{%
+% \translate{\ifcase#1\or JJJ\or FFF\or MMM\or AAA\or
+% MAY\or JJU\or JJY\or AAU\or SSS\or OOO\or
+% NNN\or DDD\fi}}
+\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{patterns}
+%%%\usepackage{arydshln} %hdashline a les taules --> conflicte amb supertabular 
+%----------- Format -------------------------
 \usepackage{cclicenses} %\usepackage{ccicons}
+%---------- Símbols ------------------------
 \usepackage{url} %\url i \path
 \usepackage{eurosym}
 \usepackage[cmex10]{amsmath}
-\usepackage{amssymb,amsthm}
+\usepackage{amssymb}
+%%ús coma decimal sense espais:  2{,}5
+%per tal que trenqui la coma en math inline mode 
+%http://tex.stackexchange.com/questions/19094/allowing-line-break-at-in-inline-math-mode-breaks-citations/
+\AtBeginDocument{%
+  \mathchardef\mathcomma\mathcode`\,
+  \mathcode`\,="8000 
+}
+{\catcode`,=\active
+  \gdef,{\mathcomma\discretionary{}{}{}}
+}
+%---------- Teoremes ------------------------
+\usepackage{amsthm}
 \usepackage{thmtools} %listoftheorems??
+%teoremes
+\theoremstyle{plain}
+\newtheorem{definition}{Definició}
+%\declaretheorem{definition}
+\theoremstyle{definition}
+\newtheorem{example}{Exemple}
+%\declaretheorem{example}
+%numeracions d'equacions, definicions, etc.
+\numberwithin{equation}{chapter}
+\numberwithin{definition}{chapter}
+\numberwithin{example}{chapter}
+%%format del listoftherorems
+\makeatletter
+\def\ll@example{%
+  \protect\numberline{\csname the\thmt@envname\endcsname}%
+  \ifx\@empty\thmt@shortoptarg
+    \thmt@thmname
+  \else
+    \thmt@shortoptarg
+  \fi}
+\def\ll@definition{%
+  \protect\numberline{\csname the\thmt@envname\endcsname}%
+  \ifx\@empty\thmt@shortoptarg
+    \thmt@thmname
+  \else
+    \thmt@shortoptarg
+  \fi}
+\makeatother
 %---------- Bibliografia -------------------
 %ús: \cite{} \textcite{} \parencite{} \citeauthor{}
 \usepackage[
@@ -27,10 +80,15 @@ style=numeric-comp,%style=authoryear
 sortcites=true,
 %backref=true,
  ]{biblatex}
-
 %\ExecuteBibliographyOptions{annotation=true,backref=true,}
 %backref=true, urldate=long, abbreviate=false,%%format web 
 % isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true %%format en paper
+
+\DefineBibliographyStrings{catalan}{%
+%    andothers = {i altres},
+    backrefpage  = {citat a la p\adddot}, % for single page number
+    backrefpages = {citat a les pp\adddot} % for multiple page numbers
+}
 
 \newcommand{\bibendash}{--}
 %\bibparsep 0.2cm
@@ -111,14 +169,13 @@ sortcites=true,
 % \makeatother
 %---------- Codi ---------------------------
 %% ús del lstlisting
-%%\begin{lstlisting}[language=C,caption=Plantilla de NagiosGrapher pels missatges,label=NGmis,numbers=left]
+%%\begin{lstlisting}[language=C,caption=Titol del llistat,label=lst:etiqueta,numbers=left]
 %%\lstinline[style=sh]!for i:integer;!
 
-%\usepackage{longtable}
 \usepackage{upquote} %perquè en verbatim surtin les cometes `
 \usepackage{listings}
 \lstloadlanguages{bash,C,HTML,Python,XML}
-\lstset{escapechar=@,numberstyle=\tiny,frame=single,frameround=tttt,
+\lstset{numberstyle=\tiny,frame=single,frameround=tttt,
         breaklines=true,breakindent=0pt,
 %        prebreak=\mbox{{\color{blue}\tiny$\searrow$}},
 %        postbreak=\mbox{{\color{blue}\tiny$\hookrightarrow$}},
@@ -135,7 +192,7 @@ sortcites=true,
         }
 
 \lstdefinestyle{py}{
-  style=pynocolor
+  style=pycolor
 }
 
 \lstdefinestyle{pynocolor}{
@@ -145,10 +202,11 @@ sortcites=true,
   backgroundcolor=\color[gray]{0.95},
 }
 
+
 \lstdefinestyle{pycolor}{
-  style=py,
+        style=pynocolor,
         basicstyle=\sffamily\footnotesize,
-        stringstyle=\color{green},
+        stringstyle=\color{brown},
         showstringspaces=false,
         alsoletter={1234567890},
         otherkeywords={\ , \}, \{},
@@ -180,9 +238,9 @@ sortcites=true,
           vars,xrange,zip},
         emphstyle=[4]\color{purple}\bfseries,
         morecomment=[s][\color{lightgreen}]{"""}{"""},
-        commentstyle=\color{red}\slshape,
+        commentstyle=\color{gray}\slshape,
         literate=
-          {>>>}{\textbf{\textcolor{red}{$>$\kern-.5ex$>$\kern-.5ex$>$}~}}3%
+          {>>>}{\textbf{\textcolor{blue}{$>$\kern-.5ex$>$\kern-.5ex$>$}~}}3%
           {...}{{\textcolor{gray}{...}}}3%
           {à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1%
           {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1%
@@ -265,7 +323,113 @@ sortcites=true,
 
 %---------- hyperref ------------------------
 \usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle]{hyperref}
+\usepackage{bookmark}%per netejar l'ordre de \part{}
+
+%modificar autoref per babel catala
+\let\orgautoref\autoref
+%per: (v. fig. 3)
+\providecommand{\seeref}
+{%
+\def\figureautorefname{fig.}%
+\def\definitionautorefname{def.}%
+\def\exampleautorefname{ex.}%
+\def\chapterautorefname{\gls{capitol}}%
+\def\sectionautorefname{\gls{seccio}\ignorespaces}%
+\def\subsectionautorefname{\gls{seccio}\ignorespaces}% 
+\gls{vegeu}~\orgautoref%
+}
+%per: a la figura 3 !Problemes en les contraccions amb noms masculins! evitar a i de davant de capítol!
+\providecommand{\textref}
+{%
+\def\figureautorefname{la figura}%
+\def\definitionautorefname{la definició}%
+\def\exampleautorefname{l'exemple}%
+\def\chapterautorefname{el capítol}% al/del capítol???
+\def\sectionautorefname{la secció}%
+\def\subsectionautorefname{l'apartat}% 
+\orgautoref%
+}
+%per defecte
+\renewcommand{\autoref}
+{%
+\def\figureautorefname{figura}%ús: \autoref{}
+\def\tableautorefname{taula}%ús: \autoref{}
+\def\definitionautorefname{definició}%ús: \autoref{}
+\def\exampleautorefname{exemple}%ús: \autoref{}
+\def\chapterautorefname{capítol}%ús: \autoref{}
+\def\sectionautorefname{secció}%ús: \autoref{}
+\def\subsectionautorefname{apartat}%ús: \autoref{}
+\orgautoref%
+}
+
+
+\renewcommand\lstlistingname{Llistat} %%%PENSAR bé el nom
+\renewcommand\lstlistlistingname{Índex de llistats}
+\def\lstlistingautorefname{llistat} %ús: \autoref{}
+%---------- Glossaris -------------------
+\usepackage{tabu}
+%\usepackage{longtable}
+%\usepackage{supertabular}
+\usepackage[
+          nomain,% Remember if you don't want to use the main glossary.
+          acronym,
+          %%nonumberlist,
+          toc,
+          section,
+          numberedsection=false,%numberedsection=autolabel,
+          sanitize=none, %pels accents en el vegeu
+          ]{glossaries}
+%\renewcommand{\glossarypreamble}{Text com a préambul}
+%\renewcommand*{\glspostdescription}{}%anul·la el punt final
+\renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
+%Índex d'abreviacions?? si conté abreviatures o símbols
+\renewcommand{\seename}{vegeu}
+\renewcommand{\entryname}{Notació}
+\renewcommand{\descriptionname}{Descripció}
+% \short<type>name,
+%Nous usos de símbols
+\newcommand{\glssymboldef}{\glssymbol[format=hyperbf,counter=definition]}
+\newcommand{\glsdispdef}{\glsdisp[format=hyperbf,counter=definition]}
+\newcommand{\hyperbfsec}[1]{\textbf{\S\hypersf{#1}}}
+\newcommand{\hyperbfex}[1]{\textbf{ex.\hypersf{#1}}}
+\newcommand{\glsaddsec}{\glsadd[format=hyperbfsec,counter=subsection]}
+\newcommand{\glsaddchap}{\glsadd[format=hyperbfsec,counter=chapter]}
+\newcommand{\glsaddsection}{\glsadd[format=hyperbfsec,counter=section]}
+\newcommand{\glsdispsec}{\glsdisp[format=hyperbfsec,counter=subsection]}
+\newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
+\newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
+%Nous glossaris
+\newglossary{abreviatura}{abr}{brv}{Abreviatures}
+\newglossary{notation}{not}{ntn}{Símbols i notació}
+\newglossarystyle{estil-notation}{%
+%  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
+%  \renewcommand*{\glossaryheader}{}
+% {\begin{longtable*}{llp{10em}}}{\end{longtable*}}
+  \renewenvironment{theglossary}
+  {\begin{center}\begin{supertabular*}{\textwidth}{llp{10em}}}{\end{supertabular*}\end{center}} %
+  \renewcommand*{\glossarysubentryfield}[6]{%
+    \ifglshaschildren{##2} %
+    {\glstarget{##2}{\textbf{\Glsentryname{##2}}}} %hi ha subentrades
+    {\space \glstarget{##2}{\Glsentryname{##2}}} % the entry name
+    %& (##5) % the symbol in brackets
+    & ##4 % the description
+    & ##6 % the number list 
+%    & \parbox[t]{\hsize}{hola\\ ei} 
+    % ##1 entry level
+    \\
+  }%
+  \renewcommand*{\glossaryentryfield}[5]{%   
+    %\glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
+    \\    
+    \glstarget{##1}{\textbf{\Glsentryname{##1}}}  & ##3 & ##5 \\\hline
+  }
+}
+
+%Executa els glossaris
+\makeglossaries
 %--------------------------------------------
+
+
 
 
 %%% Local Variables: 
