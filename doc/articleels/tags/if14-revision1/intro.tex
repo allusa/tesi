@@ -1,104 +1,107 @@
 \section{Introduction}
 
-Data collection processes are growing in quantity as a consequence of
-the emergence of embedded systems and sensor networks.  Nowadays it is
-possible to collect large amounts of data to monitor and control
-complex systems.  These data must be analysed and processed by
-information systems to detect eventual sensor failures or malfunctions
-and, if it is possible, to reconstruct the faulty signals. The
-acquired data instances are bound to a timestamp, therefore
-correctness criteria must include both data value and its
-timestamps. The sequences of data values collected at specific
-timestamps are formalised as time series.
-
+Data collection processes proliferate due to the emergence of embedded
+systems and sensor networks.  This provides opportunity to collect
+large amounts of data. To be useful these data should be analysed and
+processed by information systems. A typical processing, for instance,
+is to detect eventual sensor failures or malfunctions and, if it is
+possible, to reconstruct the faulty data. The acquired data instances
+are bound to a timestamp, therefore correctness criteria must include
+both data value and its timestamps. The sequences of data values
+collected at specific timestamps are formalised as time series.
 
 Time series are defined as a collection of observations made
 chronologically.  In general, time series are acquired continuously
-from a phenomena monitoring. The observations are recorded at regular
-intervals, such as hourly or daily, or at irregular intervals, such as
-recording when a pump is open or closed. Time series data are often
-voluminous \cite{fu11,keogh08:isax}, as a result, efficiently storing
-and accessing them can be complex. Moreover, this is specially
+from a phenomena monitoring. The observations can be recorded at
+regular intervals, such as hourly or daily, resulting in equi-time
+spaced data; or at irregular intervals, such as recording when a pump
+is open or closed, resulting in non equi-time spaced data. Time series
+data are often voluminous \cite{fu11,keogh08:isax}, thus efficiently
+storing and accessing them can be complex. Moreover, this is specially
 critical when developing small embedded systems, whose resources
 (capacity, energy or processing power) are constrained
 \cite{yaogehrke02}.  Additionaly, non equi-time spaced data increases
 the difficulty of processing.
 
-
-
-Time series can be stored and managed by Structured Query Language
-(\acro{SQL}) relational database management systems. 
+Time series can be stored and managed by relational database
+management systems that are usually queried using Structured Query
+Language (\acro{SQL}) .
 %
 However, some authors
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11} notice that the
-use of \acro{SQL} systems as a time series backend suffers some
+use of \acro{SQL} system as a time series backend suffers from some
 drawbacks.
 
-\emph{NoSQL} or \emph{NewSQL} products are being developed in order to
+\acro{NoSQL} or \acro{NewSQL} products are being developed in order to
 increase the performance and flexibility of \acro{SQL} systems
-\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11},
+\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}.
 %
-even so the continuous acquisition nature of time series is an issue
-for storing and analysing offline all the data \cite{keogh97}.
+Even so, the continuous acquisition nature of the time series poses an
+issue when trying to store and analyse all the data \cite{keogh97}.
 
-Compression techniques for time series are considered in the form of
-approximation to the original signal in order to compute analysis such
-as similarity or pattern search \cite{fu11,keogh01,last01} or in the
-form of compression and aggregation approaches for massive data
-streams \cite{cormode08:pods,bonnet01}. 
+Compression techniques for time series are applied in two distinct
+ways. First, to get an approximation to the original signal in order
+to compute similarity or pattern search analysis
+\cite{fu11,keogh01,last01}. Second, as a compression and aggregation
+approach to store massive data streams \cite{cormode08:pods,bonnet01}.
 %
-Nonetheless, treating time series as data streams neither considers
+% Aixo no s'enten gaire que vol dir
+Nonetheless, handling time series like data streams neither considers
 adequately the time dimension nor computes the evolution of aggregated
 parameters along time, which is interesting for monitoring purposes.
 
 \emph{RRDtool} \cite{rrdtool} is a system that stores time series
-aggregated in different resolutions in order to compact data and to do
-faster visualisations.
+aggregated in different resolutions. This allows to compact the data
+and facilitates faster visualisations.
 %
-Even though, \emph{RRDtool} is very specific and aggregation
-operations are limited to applications of network counters.
+Even though, \emph{RRDtool} is a very specific application and
+aggregation operations are limited to network monitoring.
 
 
 
-\subsection{Contribution}
 
+\subsection{Contributions}
 
 %TSMS
 
-This paper introduces a model that organises data in an aggregated way
-and allows to store time series using different time resolutions. This
-is known as a multiresolution model. It is designed to cope well with
-bounded storage computers such as sensor systems.
+This paper introduces a model for a Data Base Management System
+(\acro{DBMS}) that stores and manages time series data. These systems
+are usually known as Time Series Data Base Management Systems
+(\acro{TSMS}), \cite{dreyer94,last01}.
 %
-This model is formalised as a Data Base Management System
-(\acro{DBMS}) that stores and treats data as time series. These
-systems are usually known as Time Series Data Base Management Systems
-(\acro{TSMS}), \cite{dreyer94,last01}.  Hence, our data model is a
-formalisation for Multiresolution Time Series Data Base Management
-Systems (\acro{MTSMS}).
+The model introduced organises the data in an aggregated way and
+allows to store time series using different time resolutions. This
+characteristic is known as multiresolution. It is designed to satisfy
+the requirements of bounded storage computers such as sensor systems.
+%
+Hence, our data model stands for a Multiresolution Time Series Data
+Base Management System (\acro{MTSMS}).
 
-The model is described in two steps. First, we introduce a \acro{TSMS}
-model that is devoted to describe time series basic concepts and
-operations. Second, we introduce a \acro{MTSMS} model that adds
-multiresolution capabilities to the first one. The model is mainly
-formalised using set algebra and, particularly, relational algebra.
-It also considers the time sampling irregularities of time series,
-moreover it operates coherently with the time dimension of time
-series.
+The model is described in two steps. 
+%
+First, we introduce a \acro{TSMS} model that is devoted to time series
+basic elements and operations.
+%
+Second, we introduce a \acro{MTSMS} model that adds multiresolution
+capabilities to the first one. 
+%
+The model is mainly formalised using set algebra and, particularly,
+relational algebra.  It also considers the time sampling
+irregularities of time series. Moreover, it operates coherently with
+the time dimension of time series.
 
 %%% Aquest paragraf no s'enten ...
-Multiresolution is proposed as a lossy storage solution that selects
-only the relevant data. The concept is similar to multimedia lossy
-compression methods, where data can be discarded in favour of size,
-but applied to time series.  Multiresolution is an aggregation of data
-that stores the evolution of the values of parameters along time,
-which is more related to the needs of monitoring. However, as a lossy
-storage solution, it has to be decided, for each application, what
-approximate queries will be required.  We formalise aggregation
-functions as an independent object of the main model. Therefore, users
-can define new operations and other aggregation methods from other
-fields such as data streaming or time series data mining.
-
+In our model, multiresolution is the base for a lossy storage solution
+that selects only the relevant data. This is similar to multimedia
+lossy compression methods where meaningless data is discarded in
+favour of size.
+%
+Multiresolution requires to aggregate several data instances into a
+single one. This requires an aggregation function that is tied to the
+specific semantics of the actual data. Because of this, aggregation
+functions are set as an independent object of the main model.  Users
+can define new operations and other aggregation methods which are
+better suited for specific fields.
 
 We also introduce the concept of time series representation function.
 This allows users to define different operators considering the
