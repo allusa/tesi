@@ -1,76 +1,90 @@
 \chapter*{Resum}
 
 
-Les xarxes de sensors capturen dades de l'entorn, les quals s'han
-d'emmagatzemar en bases de dades per a poder-les tractar
-posteriorment. Hi ha models que descriuen com han de ser aquestes
-bases de dades per a sèries temporals i esquemes que solucionen alguns
-dels seus problemes. 
+Actualment és possible d'adquirir una gran quantitat de dades,
+principalment gràcies a la facilitat de disposar de sistemes de
+monitoratge amb grans xarxes de sensors. Això no obstant, no és tan
+senzill de gestionar posteriorment totes aquestes dades.  A més, també
+cal tenir en compte com s'emmagatzemen aquestes dades.
 
 
-Una sèrie temporal és un conjunt de parelles de temps i valor que
-provenen de l'evolució d'una variable al llarg del temps. 
+D'una banda, l'adquisició de valors d'una variable al llarg del temps
+es formalitza com a sèrie temporal. Així, hi ha multitud d'algoritmes
+i metodologies d'anàlisi de sèries temporals que descriuen com
+extreure informació de les dades. D'altra banda, l'emmagatzematge i la
+gestió de les dades es formalitza com a \glspl{SGBD}. Així, hi ha
+sistemes informàtics dedicats a inferir la informació que un usuari
+vol consultar. Aquests sistemes són descrits per models lògics
+formals, entre els quals el model relacional n'és la referència
+principal.
 
-A causa d'aquesta naturalesa de variable capturada al llarg del temps,
-en l'adquisició i tractament de les sèries temporals apareixen
-propietats problemàtiques que anomenem patologies.
-Algunes d'aquestes patologies són:
+
+En aquesta tesi dissertem sobre el fet d'emmagatzemar només aquella
+part de les dades originals que conté una certa informació
+seleccionada. Aquesta selecció de la informació es duu a terme
+mitjançant el resum de diferents resolucions de les dades, cadascuna
+de les quals bàsicament són agregacions de les dades a intervals de
+temps periòdics. A aquesta tècnica l'anomenem multiresolució.
+
+
+
+La multiresolució s'aplica a les sèries temporals. Com a resultat,
+s'obtenen subsèries temporals de mida finita i amb la informació
+resumida. Per tal de gestionar les sèries temporals, s'utilitzen
+\gls{SGBD} específics anomenats \glspl{SGST}. Així doncs, proposem
+\gls{SGST} amb capacitats de multiresolució i els anomenem
+\glspl{SGSTM}. De la mateixa manera que en els \gls{SGBD}, formalitzem
+un model pels \gls{SGST} i pels \gls{SGSTM}.
+
+
+
+A causa de la naturalesa de variable capturada al llarg del temps, en
+l'adquisició de les sèries temporals apareixen propietats
+problemàtiques. Els \gls{SGSTM} tenen en compte algunes d'aquestes
+propietats com:
 \begin{itemize}
 \item La sincronització dels rellotges en els diferents sistemes
   d'adquisició.
 \item L'aparició de dades desconegudes perquè no s'han pogut adquirir
   o perquè són errònies.
-\item La gestió d'una quantitat enorme de dades i que a més segueix
+\item La gestió d'una quantitat enorme de dades, i que a més segueix
   creixent al llarg del temps.
-\item L'operació amb dades que no s'han recollit de manera uniforme en
-  el temps.
+\item Les consultes amb dades que no s'han recollit de manera uniforme
+  en el temps.
 \end{itemize}
 
 
-Els sistemes informàtics que saben emmagatzemar i tractar les sèries
-temporals s'anomenen sistemes de gestió de bases de dades per a sèries
-temporals (SGST). Els SGST han de saber gestionar les patologies de
-les sèries temporals. 
-
-Una solució per a aquestes patologies es pot aconseguir afegint
-esquemes de multiresolució per a les sèries temporals. Aleshores
-s'obtenen SGST específics anomenats SGST multiresolució (SGSTM).  La
-multiresolució és un sistema d'emmagatzematge que selecciona la
-informació prèviament a ser guardada i en descarta la que no es
-considera important.
-
+Ara bé, els \gls{SGSTM} són uns sistemes que emmagatzemen unes dades
+segons una selecció d'informació i descarten les que no es consideren
+importants. Per tant, prèviament a l'emmagatzematge, cal decidir els
+paràmetres de selecció de la informació. Per tal d'avaluar la qualitat
+d'aquests sistemes, depenent dels paràmetres que s'escullin, es pot
+utilitzar la teoria de la informació. En aquest sentit, la
+multiresolució es pot considerar com una tècnica de compressió amb
+pèrdua. Així doncs, introduïm una reflexió sobre com avaluar l'error
+que es comet amb la multiresolució en comparació amb disposar de totes
+les dades originals.
 
 
-
-Un SGSTM és una solució d'emmagatzematge per a sèries temporals a on,
-resumint, la informació es distribueix mitjançant diferents
-resolucions temporals.  Una sèrie temporal amb multiresolució és una
-co\l.lecció de subsèries resolució, les quals acumulen temporalment
-mesures en un buffer on són processades i finalment emmagatzemades
-en un disc. El processament de les dades té per objectiu canviar els
-intervals de temps entre les mesures per tal de compactar la
-informació de les sèries temporals. D'aquesta manera, les sèries
-temporals queden emmagatzemades en diferents resolucions temporals
-distribuïdes en els discs.  L'arquitectura d'aquests sistemes es pot
-veure a la figura~\ref{fig:vhdl:bdstm}.
-
-Els discs tenen la mida limitada i només poden contenir un nombre
-fixat de mesures. Quan un disc no té més capacitat ha d'eliminar una
-mesura. Com a conseqüència en un SGSTM la mida és fixada i les sèries
-temporals hi queden emmagatzemades a trossos; és a dir com a subsèries
-temporals.
+Com es diu actualment en l'àmbit dels \gls{SGBD}, un mateix sistema no
+pot ser adequat per a tots els contextos. A més, els sistemes han de
+tenir en compte un bon rendiment en altres recursos a part del temps
+de computació, com per exemple la capacitat finita, el consum
+d'energia o la transmissió per la xarxa. Així doncs, dissenyem
+diverses implementacions del model dels \gls{SGSTM}. Aquestes
+implementacions exploren diverses tècniques de computació: computació
+para\l.lela i computació en línia amb el flux de dades.
 
 
+En resum, en aquesta tesi dissenyem els \gls{SGSTM} i en formalitzem
+un model.  Els \gls{SGSTM} són útils per a emmagatzemar sèries
+temporals en sistemes amb capacitat finita i per a precomputar la
+multiresolució. D'aquesta manera, permeten disposar de consultes i
+visualitzacions immediates de les sèries temporals de forma
+resumida. Això no obstant, impliquen una selecció de la informació que
+cal decidir prèviament. En aquesta tesi proposem consideracions i
+reflexions sobre els límits de la multiresolució.
 
-
-
-* Ja no només importa el temps de computació, també tenir en compte altres recursos limitats --capacitat, transmissió per la xarxa, etc. Sobretot en xarxes de sensor i sistemes integrats petits
-
-
-* Com es diu actualment en el món dels SGBD, un sistema no pot anar bé per tots els casos.(Com que com diu Stonebraker, one size does not fit all), dissenyem
-diverses implementacions del nostre model de SGBD per explorar diverses naturaleses d'implementacions. Explorem altres
-tècniques de computació: computació para\l.lela, computació de fluxos
-de dades.
 
 
 
@@ -82,8 +96,14 @@ de dades.
 
 
 
+\glsreset{SGBD}
+\glsreset{SGST}
+\glsreset{SGSTM}
+
 
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "main"
 %%% End: 
+
+%  LocalWords:  multiresolució
