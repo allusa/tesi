@@ -131,6 +131,13 @@ The model allows to favor more recent data over older one. This is in
 common with some approaches like that of Cormode et
 al.~\cite{cormode08:pods}.
 
+It should be remarked that the only goal of the model introduced here
+is to manage time series data. In practical applications it would be
+usual to complement this model with a standard database system to
+manage all the remaining data if needed. For instance, time series'
+metadata such as units of values, sensor localisation or
+classification tags would be stored in a standard \acro{DBMS}.
+
 
 \subsection{Outline}
 
@@ -350,7 +357,7 @@ this approach.
 Figure~\ref{fig:mtsms:sequence} shows an example of the
 multiresolution approach. 
 %
-In the upper part there is a representations of a signal being
+In the upper part there is a representation of a signal being
 monitored. The signal values range from $0$ to $10$ along the
 time. There are two specific time instants marked in the figure:
 \begin{enumerate}
@@ -377,7 +384,7 @@ At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
 that shows how multiresolution works.
 %
 The first row shows the signal sample's values corresponding to the
-above plot. The time series is sampled at every unit of time. 
+above plot. The sampling frequency is of one time unit.
 %
 The second and the third row show an actual schema of a
 multiresolution database. It consists of two summaries for the time
@@ -440,14 +447,6 @@ aspects:
   determined a priori assuming the context where the future queries
   will be done.
 \end{itemize}
-
-
-However sometimes it may also be useful to complement \acro{MTSMS}
-with other \acro{DBMS}. Not only to store the original values as a
-long-term deposit consulted offline, but also to store time series'
-metadata such as units of values, sensor localisation, classification
-tags, last measured value, etc.
-
 
 
 
