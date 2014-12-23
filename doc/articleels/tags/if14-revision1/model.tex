@@ -63,7 +63,7 @@ purposes.
 
   Let $t_i$ and $t_j$ be two \emph{time instants} with same $t^R$
   as \emph{reference time}. We define the \emph{duration of time}
-  $t$ as a value $t \in\Rb$ which measures the distance in time
+  $t$ as a value $t \in \Rb$ which measures the distance in time
   units between two time instants $t = d(t_i,t_j)$. When time
   instants are also real numbers $t_i , t_j \in \Rb$, then $t =
   t_i - t_j$.
@@ -188,8 +188,8 @@ most important ones is given.
 \subsubsection{Set operations}
 
 We describe how common set operators can be applied to time series. We
-rely on how the relational model of DBMS describes operations based on
-set algebra \cite{date:introduction}.
+rely on how the relational model of \acro{DBMS} describes operations
+based on set algebra \cite{date:introduction}.
 
 
 In a time series the measures have the temporal order.  As a time series is
@@ -423,7 +423,7 @@ The \emph{interval} $(t_i,t_j)$, where $t_i$ and $t_j$ are two time
 instants, over a time series $S$ is a time subseries between the two
 time instants $S(t_i,t_j) \subseteq S$. A similar interval concept
 is used by \cite{last:hetland}. The open interval is defined as
-$S(t_i,t_j)=\{m\in S | t_i<T(m)<t_j\}$. Other intervals can be
+$S(t_i,t_j)=\{m | (m\in S) \wedge (t_i<T(m)<t_j)\}$. Other intervals can be
 defined: closed $S[t_i,t_j]$, left-open $S(t_i,t_j]$, and right-open
 $S[t_i,t_j)$.
 
@@ -447,8 +447,8 @@ concatenation requires both time series to have the same structure as
 seen with union operation.  Let $S_1$ and $S_2$ be two time series.
  The concatenation of both $S_1 || S_2$ is a time series $S$ containing
 all measures of $S_1$ and those of $S_2$ that not intersect in the
-time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_1,t_2]
-)$ where $t_1=T(\inf S_1)$ and $t_2=T(\sup S_1)$.
+time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_i,t_j]
+)$ where $t_i=T(\inf S_1)$ and $t_j=T(\sup S_1)$.
 
 
 
@@ -619,7 +619,7 @@ If a time series is not regular, it can be regularised by the temporal
 selection operation. Let $S$ be a time series, $i$ and $d$ the
 desired regularity parameters, and $k\in\N$ a limit for the scope of
 the range.  A regularised $S$ is obtained with $S[T]^r$ where $T =
-\{i+nd | n\in\N, n\leq k \}$ is a set of time instants equi-spaced.
+\{i+nd | n\in\N \wedge n\leq k \}$ is a set of time instants equi-spaced.
 
 
 
@@ -695,20 +695,20 @@ predetermined step and an attribute function. We name
   predetermined $\delta$ and $f$.
 \end{definition}
 
-Operator \emph{addBuffer} adds a measure to its time series:
-$\addB: B = (S_B,\tau,\delta,f) \times m \mapsto
-(S'_B,\tau,\delta,f)$ where $S'_B = S \cup \{m\} $.
+Operator \emph{addBuffer} adds a measure to its time series. Let $B=
+(S_B,\tau,\delta,f)$ be a buffer and $m$ be a measure. $\addB: B
+\times m \mapsto (S'_B,\tau,\delta,f)$ where $S'_B = S_B \cup \{m\} $.
 
 From the $B_{\emptyset}$ all the consolidation time instants can be
 calculated as $t_0+n\delta, n\in\N$. The consolidation of $B$ in a
 time interval $I=[\tau,\tau+\delta]$ results in a measure
 $m'=f(S_B,I)$ where $f$ is an attribute aggregate function
 $f$. Operator \emph{consolidateBuffer} consolidates a set of measures
-and removes the consolidated part of the time series from the buffer:
-$\consB : B=(S_B,\tau,\delta,f) \mapsto B' \times m'$ where $ B'=
-(S'_B,\tau+\delta,\delta,f)$, $m' = f(S,[\tau,\tau+\delta])$, and
-$S'_B$ is the discarding of historic data not needed anymore, for example
-$S'_B = S[\tau+\delta,+\infty]$.
+and removes the consolidated part of the time series from the
+buffer. Let $B=(S_B,\tau,\delta,f)$ be a buffer. $\consB : B \mapsto
+B' \times m'$ where $ B'= (S'_B,\tau+\delta,\delta,f)$, $m' =
+f(S,[\tau,\tau+\delta])$, and $S'_B$ is the discarding of historic
+data not needed anymore, for example $S'_B = S[\tau+\delta,+\infty]$.
 
 On a simplified way, the \emph{consolidateBuffer} is only applied to the present
 consolidation interval and the total consolidation is obtained by
@@ -732,7 +732,7 @@ discarded.
 \end{definition}
 
 The cardinal of the times series is kept under control by the add
-operator, $\addD : D=(S_D,k)\times m\mapsto (S'_D,k)$ where %
+operator. Let $D=(S_D,k)$ be a disc and $m$ be a measure. $\addD : D\times m\mapsto (S'_D,k)$ where %
 $
  S_D' = \begin{cases}
   S_D\cup\{m\}                 & \text{if } |S_D|<k  \\
@@ -753,11 +753,12 @@ the regularised time series.
 \end{definition}
  
 The operators of a resolution subseries extend the buffer and disc
-ones: (i) The addition of a measure to the buffer of the resolution
-subseries: $\addR : R=(B,D) \times m \mapsto R'$ where $R'= (B',D)$,
-and $B'= \addB(B,m)$; (ii) The consolidation of the resolution
-subseries by consolidating its buffer and adding the consolidation
-measure to its disc: $\consR : R=(B,D) \mapsto R'$ where $R'=
+ones. Let $R=(B,D)$ be a resolution subseries and $m$ be a measure.
+(i) The addition of the measure to the buffer of the resolution
+subseries: $\addR : R \times m \mapsto R'$ where $R'= (B',D)$,
+and $B'= \addB(B,m)$. (ii) The consolidation of the resolution
+subseries by consolidating its buffer and adding the consolidated
+measure to its disc: $\consR : R \mapsto R'$ where $R'=
 (B',D')$, $(B',m') = \consB(B)$, and $D'= \addD(D,m')$.  A resolution
 subseries is consolidable only when its buffer is consolidable.
 
@@ -784,14 +785,14 @@ $(\delta,\tau,f,k)$ configuration parameters of each.
 
 
 The operators of a multiresolution time series apply to every
-resolution subseries contained: (i) The addition of a measure to every
-resolution subseries: $\addM : M=\{R_0,\allowbreak \dots,\allowbreak
-R_d\} \times m \mapsto \{R'_0, \dots,\allowbreak R'_d\}$ where
-$R'_i=\addR(R_i,m)$; (ii) The consolidation of all resolution
-subseries: $\consM : M=\{R_0,\allowbreak \dots,\allowbreak R_d\}
-\mapsto \{R'_0,\allowbreak \dots,\allowbreak R'_d\}$ where $R'_i =
-\consR(R_i)$ if $R_i$ $\text{ consolidable}$ and $R'_i=R_i$
-$\text{otherwise}$.
+resolution subseries contained. Let $M=\{R_0,\allowbreak
+\dots,\allowbreak R_d\}$ be a multiresolution time series.  (i) The
+addition of a measure to every resolution subseries: $\addM : M \times
+m \mapsto \{R'_0, \dots,\allowbreak R'_d\}$ where
+$R'_i=\addR(R_i,m)$. (ii) The consolidation of all resolution
+subseries: $\consM : M \mapsto \{R'_0,\allowbreak \dots,\allowbreak
+R'_d\}$ where $R'_i = \consR(R_i)$ if $R_i$ $\text{ consolidable}$ and
+$R'_i=R_i$ $\text{otherwise}$.
 
 
 The multiresolution consolidation operation should be applied
@@ -816,21 +817,21 @@ There are two basic time series queries for a \acro{MTSMS}: (i) extract a
 time subseries from a resolution subseries' disc or (ii) query for a
 total time series from all consolidated data.
 
-The first is a selection of a disc over a multiresolution time series,
-being $(\delta,f)$ the key attributes: $\seriedisc: M=\{R_0, \dots,
-R_d\} \times \delta \times f \mapsto S'_D \in D' | (B',D') \in R',R' \in
-M$.
+Let $M=\{R_0, \dots, R_d\}$ be a multiresolution time series and
+$(\delta,f)$ be the key attributes. The first query selects a disc
+from a multiresolution time series, $\seriedisc: M\times \delta \times
+f \mapsto S'_D$ where $S'_D \in D' | (B',D') \in R',R' \in M$.
 
-The second is a concatenation of all discs' time subseries trying to
-obtain the most resolution as possible, which is to say by $\delta$
-order: $\totalseries: M*=\{R_0, \dots, R_d\} \mapsto S'$ where $S' =
-S_{D0} || S_{D1} || \cdots || S_{Dd}$ and $\delta_0 < \delta_1 <
-\cdots < \delta_d$. This states that $M*$ is a multiresolution time
-subseries where $R_i$ have a total order by its attribute
-$\delta_i$. Being $(\delta,f)$ the key attributes, the $M*$ can
-be obtained from $M$ by selecting resolution subseries with same $f$. If we
-operated a $\totalseries$ to a general $M$ then it could be ambiguous
-as it could contain repeated $\delta_i$.
+Let $M*=\{R_0, \dots, R_d\}$ be a multiresolution time series where
+$R_i$ have a total order by their attribute $\delta_i$.  The second
+query concatenates all discs' time subseries, $\totalseries: M*
+\mapsto S'$ where $S' = S_{D0} || S_{D1} || \cdots || S_{Dd}$ and
+$\delta_0 < \delta_1 < \cdots < \delta_d$. This query tries to obtain
+the most resolution as possible, which is to say by $\delta$ order.
+Being $(\delta,f)$ the key attributes, the $M*$ can be obtained from
+$M$ by selecting resolution subseries with same $f$. If we operated a
+$\totalseries$ to a general $M$ then it could be ambiguous as it could
+contain repeated $\delta_i$.
 
 
 From these two basic time series queries, more elaborated queries can
