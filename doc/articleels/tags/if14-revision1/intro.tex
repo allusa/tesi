@@ -26,8 +26,8 @@ the difficulty of processing.
 The literature describes several attempts to build systems devoted to
 manage and store time series data. These systems are generically known
 as Time Series Data Base Management Systems (\acro{TSMS}),
-\cite{dreyer94,last01}. However, most of them exhibit some drawbacks
-when try to solve this challenging issue.
+\cite{dreyer94,last01}. However, as shown below, most of them exhibit
+some drawbacks when trying to solve this challenging issue.
 
 Time series can be stored and managed by relational database
 management systems that are usually queried using Structured Query
@@ -332,10 +332,6 @@ multiresolution storage in \emph{RRDtool}~\cite{lisa98:oetiker}.
 % \acro{TSMS} operations may deal with this time series nature by
 % methods of interpolation or approximation.
 
-An important characteristic of the model introduced in this paper is
-multiresolution. In this section we motivate the advantages of this
-approach.
-
 % A \acro{MTSMS} adds multiresolutio ch a \acro{TSMS} with multiresolution
 % capabilities.  A \acro{MTSMS} schema represents a time series using a
 % set of different resolutions.  The multiresolution concept comes from
@@ -344,7 +340,63 @@ approach.
 % incorporate adequate generality in order to describe \acro{MTSMS} as
 % fully as a \acro{TSMS}.
 
-Multiresolution enhances \acro{TSMS} features in several aspects:
+
+An important characteristic of the model introduced in this paper is
+multiresolution. In this section we motivate the advantages of
+this approach. First, we introduce the concept of multiresolution
+through a example. Then, we discuss the advantatges of this approach.
+
+Figure~\ref{fig:mtsms:sequence} shows an example of the
+multiresolution approach. 
+%
+In the upper part there is a representations of a signal being
+monitored. The signal values range from $0$ to $10$ along the
+time. There are two specific time instants marked in the figure:
+\begin{enumerate}
+\item The first is marked with the word \emph{init} and refers to the
+  instant in which the database started to receive signal samplings.
+\item The second is marked with the word \emph{now} ans refers to the
+  instant in which the process snapshot was made.
+\end{enumerate}
+Note that time coordinates are assumed to be positive for the times
+after \emph{init} and negative otherwise. The time before \emph{now}
+corresponds to the past and the time after to the future.
+The data before \emph{init} are unknown to the database.
+
+\begin{figure}
+  \centering
+  %\tikzsetnextfilename{fig_mtsms_sequence}
+  %\input{imatges/mtsms_sequence.tex}
+  \includegraphics{fig_mtsms_sequence.pdf}
+  \caption{Multiresolution snapshot diagram with regular sampling}
+  \label{fig:mtsms:sequence}
+\end{figure}
+
+At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
+that shows how multiresolution works.
+%
+The first row shows the signal sample' values corresponding to the
+above plot. The time series is sampled at every unit of time. 
+%
+The second and the third row show an actual schema of a
+multiresolution database. It consists of two summaries for the time
+series resolutions. Every summary has a distinct resolution.
+%
+The first computes the mean of the sampled values every three units.
+The second computes the mean every five units.
+%
+In this example, aggregations function corresponds to a statistical
+mean. The before \emph{init} are not acquired and it is marked as
+unknown (\emph{u}). Future values are also marked as unknown \emph{u}
+until time advances. Therefore, the first summary at \emph{now} time
+for the original signal corresponds to values $\{u,u,2,5,8,u\}$.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The multiresolution approach enhances \acro{TSMS} features in several
+aspects:
 
 \begin{itemize}
 \item Voluminous data. Monitoring systems capture a huge amount of
@@ -397,50 +449,6 @@ metadata such as units of values, sensor localisation, classification
 tags, last measured value, etc.
 
 
-
-\subsection{Motivation example}
-
-Figure~\ref{fig:mtsms:sequence} shows an example of a multiresolution
-summary for a time series.  It shows a snapshot in time spanning from
-time 0 to 9 and supposing that the temporal point `now' is between 9
-and 10. At the top of the figure there is a plot of a time series with
-time axis in general units of time (u.t.) and with value axis in
-undetermined units. The `now' point shows when the snapshot has been
-taken, so the time before is the past and the time after is the
-future, whose elements are plotted in discontinuous marks. The
-\emph{init} point shows when the database system has started sampling,
-so data in time before are unknown; the starting point is indicated as
-zero u.t.\ and the previous unknown time points have negative units.
-
-
-\begin{figure}
-  \centering
-  %\tikzsetnextfilename{fig_mtsms_sequence}
-  %\input{imatges/mtsms_sequence.tex}
-  \includegraphics{fig_mtsms_sequence.pdf}
-  \caption{Multiresolution snapshot diagram with regular sampling}
-  \label{fig:mtsms:sequence}
-\end{figure}
-
-
-At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
-showing the multiresolution action. The first row shows the numerical
-time series' values corresponding to the above plot; the time series
-is sampled every one unit of time. The second and the third row show a
-particular schema of a multiresolution database consisting of two time
-resolutions for the time series: one computes the mean of the sampled
-values every three u.t.\ and the other computes the mean every five
-u.t. In this example, computing the mean acts as selecting data
-by aggregate statistics. All data stored before zero time are unknown
-(\emph{u}) as has not been acquired. For the future values they are also
-marked as \emph{u} until time advances.
-
-The arrows of the figure show that every three sampled values a mean
-is stored and, independently, every five values another mean is
-stored. For the future values, dashed arrows show that if time
-advances one u.t.\ then value 10 is sampled and the mean for time 10
-can be computed resulting 8. However the mean every three values can not
-be computed yet, so in this snapshot it keeps unknown value.
 
 
 
