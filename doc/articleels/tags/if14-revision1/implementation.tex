@@ -87,20 +87,22 @@ we use the Python \emph{Matplotlib} library.
   temporal interval, \zohe{} temporal selection, and the test of
   regular property. Note that \emph{Measure} is abbreviated to
   \emph{m}.
-\begin{lstlisting}[style=py]
-#Importing the required objects
+{\small
+\begin{verbatim}
+# Import the required objects
 >>> from pytsms import TimeSeries, Measure as m
 >>> from pytsms.representation import Zohe
 >>> from pytsms.properties import isRegular
 
-#Defining the two time series
+# Define the two time series
 >>> s1 = TimeSeries([m(1,1),m(3,1),m(4,0),m(5,1)])
 >>> s2 = TimeSeries([m(2,2),m(3,2),m(4,0),m(6,2)])
 
-#Manipulating the two time series
+# Manipulate the two time series
 # æ$s1 \cup s2$æ
 >>> s1.union(s2)
-TimeSeries([m(1,1), m(2,2), m(3,1), m(4,0), m(5,1), m(6,2)])
+TimeSeries([m(1,1), m(2,2), m(3,1), 
+            m(4,0), m(5,1), m(6,2)])
 # æ$s1 \cupt s2$æ
 >>> s1.union_temporal(s2)
 TimeSeries([m(1,1), m(2,2), m(4,0), m(5,1), m(6,2)])
@@ -114,7 +116,7 @@ TimeSeries([m(2,2), m(3,2), m(4,0)])
 >>> s2.interval_temporal(2,5,Zohe)
 TimeSeries([m(3,2), m(4,0), m(5,2)])
 
-#Checking the regularity
+# Check for regularity
 # æ$s2$æ is not regular
 >>> s2.accept(isRegular())
 False
@@ -124,7 +126,8 @@ False
 TimeSeries([m(0,2), m(2,2), m(4,0)])
 >>> r2.accept(isRegular())
 True
-\end{lstlisting}
+\end{verbatim}
+}
 \end{example}
 
 
