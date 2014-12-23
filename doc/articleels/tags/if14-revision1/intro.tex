@@ -358,37 +358,35 @@ Multiresolution enhances \acro{TSMS} features in several aspects:
   range and time step that fits into the screen: there is no need to
   render more data if cannot be appreciated in the screen.
 
-\item Data validation. Monitoring systems capture data but are the
-  origins of some drawbacks that will affect later the process of time
-  series. The main problems arise when monitors cannot capture data,
-  producing errors known as gaps, or capture data erroneously,
-  producing outlayers~\cite{quevedo10}.  The multiresolution
-  attribute functions are designed to cope well with validating,
-  filtering and reconstructing with these unknown data in order to
-  keep a consistent history.
+\item Data validation. The use of monitoring systems to capture data
+  is a current practice. However, the nature of these systems has some
+  drawbacks that will impact on the obtained data. Quevedo et
+  al.~\cite{quevedo10} note that the main problems arise when monitors
+  cannot capture data, producing errors known as gaps, or monitors
+  capture data erroneously, producing outlayers.  The multiresolution
+  attribute functions are designed to cope well with validation,
+  filtering and reconstruction of these unknown data in order to keep
+  a consistent history.
 
-%%%%%%%%%%%%%%%%%%%%%%% Finsaqui
+\item Data time regularisation. To monitor with a non constant
+  sampling rate has a side effect that induces irregularities in data.
+  According to Kopetz~\cite{kopetz11:realtime} there are two main
+  reasons for sampling rate variation: the sampling jitters in
+  periodic sampling or the non-periodic event-based sampling.
+  Multiresolution regularises the time interval while processing a
+  time series. As a consequence, every obtained time series segment
+  has a regular time resolution. This feature can also be used to
+  query the time series using other resolution. For instance, a daily
+  acquired time series can be queried using yearly step.
 
-
-\item Data time regularising. Another monitoring side effect happens
-  when the sampling rate is not constant, that is when the resulting
-  data are not equi-time spaced. These irregularities can come from
-  sampling jitters in periodic sampling or from non-periodic
-  event-based sampling \cite{kopetz11:realtime}. One multiresolution
-  consolidation objective is to regularise the time interval when
-  processing a time series, therefore each resulting time series
-  segment has a regular time resolution. Besides obtaining regular
-  time series, this feature can also be used in order to consult other
-  resolutions from a time series, such as changing a daily acquired
-  time series to a yearly step summary.
-
-\item Data summaries. Time series analysis typically focuses on
-  reconstructing the original signal. However, the user objective in a
-  database system is to consult some information. The multiresolution
-  approach allows a lossy compression storage solution for data. Therefore
-  it can be regarded as to extracting the interesting data and
-  then storing them. The selected data must be determined a
-  priori assuming the context where the future queries will be done.
+\item Data summaries. The target of a database system is to answer the
+  user queries about the stored information. The multiresolution
+  approach allows a lossy compression storage solution. This can be
+  thought as a online way to compute and store a number of data
+  summaries i.e. the interesting data. These stored data summaries
+  allow faster queries of voluminous data. However, they should be
+  determined a priori assuming the context where the future queries
+  will be done.
 \end{itemize}
 
 
