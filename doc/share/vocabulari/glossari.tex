@@ -1,39 +1,4 @@
 
-\newglossary{abreviatura}{abr}{brv}{Abreviatures}
-\newglossary{notation}{not}{ntn}{Símbols i notació}
-\newglossarystyle{estil-notation}{%
-%  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
-%  \renewcommand*{\glossaryheader}{aaa}
-  \renewenvironment{theglossary}
-  {\begin{center}\begin{supertabular*}{\textwidth}{llp{10em}}}{\end{supertabular*}\end{center}}
-  %{\begin{longtable*}{llp{10em}}}{\end{longtable*}}
-  \renewcommand*{\glossarysubentryfield}[6]{%
-    \ifglshaschildren{##2}
-    {\glstarget{##2}{\textbf{\Glsentryname{##2}}}} %hi ha subentrades
-    {\space \glstarget{##2}{\Glsentryname{##2}}} % the entry name
-    %& (##5) % the symbol in brackets
-    & ##4 % the description
-    & ##6 % the number list 
-    %##1 entry level
-    \\                          
-  }%
-  \renewcommand*{\glossaryentryfield}[5]{%   
-    %\glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
-    \\    
-    \glstarget{##1}{\textbf{\Glsentryname{##1}}}  & ##3 & ##5 \\\hline
-  }
-}
-
-
-
-\renewcommand{\seename}{vegeu}
-\renewcommand{\entryname}{Notació}
-\renewcommand{\descriptionname}{Descripció}
-
-\makeglossaries
-
-
-%\renewcommand{\glossarypreamble}{Text com a préambul}
 
 
 %Temes lingüístics
