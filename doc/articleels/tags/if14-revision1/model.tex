@@ -147,39 +147,46 @@ most important ones is given.
 
 We describe how common set operators can be applied to time series. We
 rely on how the relational model of \acro{DBMS} describes operations
-based on set algebra \cite{date:introduction}.
+based on set algebra~\cite{date:introduction}.
 
 
-In a time series the measures have the temporal order.  As a time series is
-a finite set, if it is not empty it has a maximum and a minimum.  Let
-$S$ be a time series and $n\in S$ be a measure. The time series'
-\emph{maximum} is $n=\max(S)$ if and only if $\forall m \in S: n \geq
-m $.  We extend the maximum definition with a supremum one as for
-extended real numbers the supremum is defined even when a set is
-empty, $\sup(\emptyset)=-\infty$ \cite{cantrell:extendedreal}. So
-applying this property we can say $n=\sup(S)$ is the \emph{supremum}
-of the time series where $n=\max(S)$ when defined and
-$n=(-\infty,\infty)$ otherwise; note that $V(n)=\infty$ is an
-indefinite value.  Dually, we can define \emph{minimum} $\min(S)$ and
-\emph{infimum} $\inf(S)$.
+Consider a time series $S$. $S$ is a finite ordered set (by the
+temporal order). Then, if $S$ nonempty, $S$ has a maximum and a
+minimum.  
+%
+Let $S$ be a time series and $n\in S$ be a measure. The \emph{maximum}
+of $S$, noted as $\max(S)$ is an element of $S$ such that $\forall m
+\in S:\max(S)\geq^t m $.  
+%
+Note that $\max(S)$ is not defined when $S=\emptyset$. However, the
+time series has a supremum even when empty. In fact, according to~
+\cite{cantrell:extendedreal}, $\sup(\emptyset)=-\infty$.
+%
+Using this fact we define the \emph{supremum} os $S$, noted as
+$\sup(S)$, as $\sup(S)=\max(S)$ when $S$ non empty or
+$\sup(S)=-\infty$ otherwise.
+%
+Dually, we can define the \emph{minimum} of $S$, noted as $\min(S)$,
+and the \emph{infimum} of $S$, noted as $\inf(S)$.
 
-
+%%%%%%%%% Paragra per repassar en segona volta
 In time series binary set operations, the measures can have the two
 possible order relations: temporal and semitemporal. Consequently,
 these two possible order relations of measures impose two operation
 definitions for some set operators.  Mainly they impose two membership
 operations and so to all operations based on it.
-
+%%%%%%%%%
 
 The \emph{membership} defines when one measure belongs to a time
 series. Considering the semitemporal order of measures, the set
-membership operation applies. Let $S$ be a time series and $m$ a
-measure. The \emph{membership} is denoted $m \in S$. Considering the
-temporal order of measures, we define the \emph{temporal membership}
-as $m \inst S$ when $\exists m_i \in S : T(m) = T(m_i)$.  Let $S_1$
-and $S_2$ be two time series. From membership operations we could
-define \emph{inclusion} $S_1\subseteq S_2$ and \emph{temporal
-  inclusion} $S_1\subseteqt S_2$.
+membership operation applies. 
+%
+Let $S$ be a time series and $m$ be a measure. The \emph{membership}
+is denoted $m \in S$. Considering the temporal order of measures, we
+define the \emph{temporal membership} as $m \inst S$ when $\exists m_i
+\in S : T(m) = T(m_i)$.  Let $S_1$ and $S_2$ be two time series. From
+membership operations we could define \emph{inclusion} $S_1\subseteq
+S_2$ and \emph{temporal inclusion} $S_1\subseteqt S_2$.
 
 
 The \emph{union} of two sets is a set containing elements from both
