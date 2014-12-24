@@ -1,115 +1,68 @@
 
-
-
 \section{Time series model}
 \label{sec:model:TSMS}
 
-
-% In this section we introduce some background concepts and the
-% nomenclature which we will use later concerning TSMS. 
-
-Measures and time series are the main objects of \acro{TSMS} and their
-main characteristic is that they have a time attribute that requires a
-coherent treatment. We describe the \acro{TSMS} nomenclature in three
+Following current database models, a \acro{TSMS} model consists of two
+components: a data model and a set of operations. Measures and time
+series are the main objects of our \acro{TSMS} model. In both objects
+time plays an important role and requires a coherent treatment.
+%
+We describe the \acro{TSMS} nomenclature in three
 parts: the data structure model, time series manipulation and
 operation, and time series specific properties.
 
 
+\subsection{Data model}
 
-\subsection{Structure}
+Roughly speaking a \emph{time series} is a set of observations
+collected at specific time instants. An observation may consist of a
+single attribute or multiple attributes collected at the same time
+instant.  Each pair of time and observed values is refered as a
+\emph{measure}. Then, a time series is a correspondence between times
+and values. A time series can be described by a set of measures.
 
+We name \emph{time domain} the set $T$ of all the possible time
+values. $T$ can be either a finite or an infinite set and usually it
+is a closed set. 
 
-A \emph{time series} is a set of observations collected at specific
-time instants. An observation may consist of a single attribute or of
-multiple attributes collected at the same time instant.  Each pair of
-time and observed values is called \emph{measure}. Then, a time series
-is a relation of times with values described as a set of measures .
+In this paper we will assume that the domain $T$ is the set of
+affinely extended real numbers $\Rb = \R \cup
+\{+\infty,-\infty\}$. Because $\Rb$ is a metric space, we can
+differentiate between time instants (the elements of the set) and
+durations (the metric). Next, we define the main time related concepts
+using this naive approximation that avoids complex details while being
+powerful enough for our purposes.
 
-
-
-% Firstly we address time and value concepts and secondly we define formally
-% measures and time series.
-
-
-\subsubsection{Time}
-
-Time, $t$, is an attribute that indicates order between measures. We define
-$T$ as the \emph{time domain}. $T$ can be either a finite or an infinite set
-and normally it will be a closed set. As an example for the time
-domain $T$ we use the affinely extended real numbers $\Rb = \R \cup
-\{+\infty,-\infty\}$ \cite{cantrell:extendedreal}.
-
-The real numbers set is a metric space as it has a distance function
-also called metric. Consequently, we can differentiate between time
-instants (the elements of the set) and durations (the metric). In this
-way, time can be defined as a coordinate system
-\cite{iep:time-supplement,kopetz11:realtime} by noting time instants
-as points in the real line, durations as segments of the real line,
-and specifying a time instant as a reference time. Next, a time
-definition is provided that allows to order events, measure events
-duration, and position when events happen. This naive approximation
-that avoids complex details of the time concept is enough for our
-purposes.
-
-\begin{definition}(Time)
+\begin{definition}(Time concepts)
   \label{def:model:temps}
-  Let $T$ be the domain for time. We define a \emph{time instant} $i$
-  as an element of the set $T$, $i \in T$. Following with the
-  definition of a coordinate system and real numbers as time domain,
-  let $t^{R}$ be a \emph{reference time instant}, then we define
-  \emph{time instants} as a value $t \in\Rb$ that measures signed
-  time distance from the \emph{reference time instant} $t =
-  d(t^{R},i)$, where $d$ is the metric of the set $T$.
-
-  Let $t_i$ and $t_j$ be two \emph{time instants} with same $t^R$
-  as \emph{reference time}. We define the \emph{duration of time}
-  $t$ as a value $t \in \Rb$ which measures the distance in time
-  units between two time instants $t = d(t_i,t_j)$. When time
-  instants are also real numbers $t_i , t_j \in \Rb$, then $t =
-  t_i - t_j$.
+  Let $T=\Rb$ be the domain for time.
+  %
+  We define a \emph{time instant} as an element $i$ of $\Rb$.
+  %
+  Let $t_i,t_j\in\Rb$ be two time instants.  We define the
+  \emph{duration of time} between $t_i$ and $t_j$ as the value $t \in
+  \Rb$ which measures the distance in time units between two time
+  instants $t = t_i - t_j$.
 \end{definition}
 
-Summarising, time instants position and order events, and between two
-time instants there is a duration.  There are several time standards
-\cite{allen:timescales} which specify how time duration must be
-measured and how time domains must be defined.  Time standards deal
-with a similar concept of time coordinate system which has been
-illustrated with real numbers. There is also a calendar approach which
-defines the time domain with names for the points in the time line and
-with rules for time durations.
-% however maps can be established between a time
-% coordinate system and a calendar system.
+A value is an attribute that indicates the magnitude of measures. The
+domain for values can be any data type. Valid examples for values are
+integers, real numbers, strings, and more elaborated data structures
+such as arrays, lists, or even other time series. Without loss of
+generality in this paper we will assume that values belong to the
+projectively extended real numbers $\Rp = \R \cup \{\infty\}$. 
+%
+Note that although we defined values as scalars it is easy to extend
+the concept to multivalues $(\Rp)^n$, which represent a collection of
+values measured at the same time instant~\cite{assfalg08:thesis}.
 
 
-\subsubsection{Value}
-
-Value, $v$, is an attribute that indicates the magnitude of measures. The
-domain for values can be any data type, that is an object that belongs
-to a determined set of values and that has operations associated.
-This way valid examples for values are integers, real numbers,
-strings, and more elaborated data structures such as arrays, lists, or
-even other time series.
-
-%For simplicity
-In accordance to the time examples, for the value domain the
-projectively extended real numbers $\Rp = \R \cup \{\infty\}$ can be
-used.  This example is for scalar values but can be extended to the
-concept of multivalues $(\Rp)^n$, which represent a collection of values
-measured at the same time instant \cite{assfalg08:thesis}.
-
-
-
-
-\subsubsection{Measure}
-
-A measure associates the concepts of value measured in a particular
-time instant.  In a general form, a definition for single values is
-given and it can be extended to n-dimensional values.
+A measure represents an actual value measured in a particular time
+instant.
 
 \begin{definition}
   Let $v$ be a value and let $t$ be the time instant when the value
-  has been acquired. A \emph{measure} $m$ is defined as the tuple
-  $m=(t,v)$.
+  was acquired. We define a \emph{measure} $m$ as the tuple $m=(t,v)$.
 \end{definition}
 
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
@@ -117,30 +70,24 @@ value $v$ and $T(m)$ denotes the time $t$.
 
 Given two measures we define two distinct order relations.
 
-Let $m_i$ and $n$ be two measures. The \emph{semitemporal order}
+Let $m$ and $n$ be two measures. The \emph{semitemporal order}
 between $m$ and $n$ is the binary relation written $m\leq n$ and
 defined as $m\leq n\iff (T(m)<T(n) \vee m = n)$. It could be proved
-that this is a partial order.
+that the \emph{semitemporal order} is a partial order.
 
-Let $m$ and $n$ be two measures The \emph{temporal order} between $m$
+Let $m$ and $n$ be two measures. The \emph{temporal order} between $m$
 and $n$ is the binary relation written $m \leq^t n$ and defined as $m
-\leq^t n \iff T(m) \leq T(n)$. Note that this is a total order.
+\leq^t n \iff T(m) \leq T(n)$. Note that the \emph{temporal order} is
+a total order.
 
-
-
-
-\subsubsection{Time series}
-
-Time series are sets of measures of the same phenomena that are
-ordered in time.  Sometimes they are also called time sequences
-\cite{last:hetland}.
-
+Time series are sets of time ordered measures of the same phenomena.
+Sometimes they are also called time sequences \cite{last:hetland}.
 
 \begin{definition}
   \label{def:model:timeseries}
-  A \emph{time series} $S$ is a set of measures $S = \{m_0, \ldots,
-  m_k\}$ without repeated time values $\forall i,j:i\neq j: T(m_i)\neq
-  T(m_j)$.
+  Let $S = \{m_0,\ldots,m_k\}$ be a set of measures. Then $S$ is
+  \emph{time series} iff $\forall i,j: i,j\in[0,k] \wedge i\neq j:
+  T(m_i)\neq T(m_j)$.
 \end{definition}
 
 As there are no repeated time values, measures in a time series have a
