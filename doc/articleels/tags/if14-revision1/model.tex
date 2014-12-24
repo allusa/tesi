@@ -45,21 +45,23 @@ powerful enough for our purposes.
   instants $t = t_i - t_j$.
 \end{definition}
 
-A value is an attribute that indicates the magnitude of measures. The
-domain for values can be any data type. Valid examples for values are
-integers, real numbers, strings, and more elaborated data structures
-such as arrays, lists, or even other time series. Without loss of
-generality in this paper we will assume that values belong to the
-projectively extended real numbers $\Rp = \R \cup \{\infty\}$. 
+A value is an attribute that indicates the magnitude of a measure. The
+domain for the values can be any data type. Valid domains for values
+include integers, real numbers, strings, and more elaborated data
+structures such as arrays, lists, or even other time series. Without
+loss of generality in this paper we will assume that the domain of
+values is the set of projectively extended reals $\Rp = \R \cup
+\{\infty\}$.
+%
+\todo{Per que aqui es $\Rp$ i en el temps $\Rb$?}
 %
 Note that although we defined values as scalars it is easy to extend
-the concept to multivalues $(\Rp)^n$, which represent a collection of
-values measured at the same time instant~\cite{assfalg08:thesis}.
+the concept to multivalues which represent a collection of values
+measured at the same time instant~\cite{assfalg08:thesis}.
 
 
 A measure represents an actual value measured in a particular time
-instant.
-
+instant. We define it below.
 \begin{definition}
   Let $v$ be a value and let $t$ be the time instant when the value
   was acquired. We define a \emph{measure} $m$ as the tuple $m=(t,v)$.
@@ -68,41 +70,50 @@ instant.
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
 value $v$ and $T(m)$ denotes the time $t$.
 
-Given two measures we define two distinct order relations.
+Order between mesures plays an important role. Given two measures we
+define two distinct order relations.
+%
+\todo{Te sentit l'ordre entre mesures de fenomens diferents? L'ordre
+  nomes s'ha d'aplicar a les mesures d'un mateix time series?}
 
-Let $m$ and $n$ be two measures. The \emph{semitemporal order}
-between $m$ and $n$ is the binary relation written $m\leq n$ and
-defined as $m\leq n\iff (T(m)<T(n) \vee m = n)$. It could be proved
-that the \emph{semitemporal order} is a partial order.
-
-Let $m$ and $n$ be two measures. The \emph{temporal order} between $m$
-and $n$ is the binary relation written $m \leq^t n$ and defined as $m
-\leq^t n \iff T(m) \leq T(n)$. Note that the \emph{temporal order} is
-a total order.
-
-Time series are sets of time ordered measures of the same phenomena.
-Sometimes they are also called time sequences \cite{last:hetland}.
-
-\begin{definition}
-  \label{def:model:timeseries}
-  Let $S = \{m_0,\ldots,m_k\}$ be a set of measures. Then $S$ is
-  \emph{time series} iff $\forall i,j: i,j\in[0,k] \wedge i\neq j:
-  T(m_i)\neq T(m_j)$.
+\begin{definition}[Semitemporal order]
+  Let $m$ and $n$ be two measures. We name \emph{semitemporal order}
+  the binary relation written $m\leq n$ and defined as $m\leq n\iff
+  (T(m)<T(n) \vee m=n)$.
 \end{definition}
 
+\begin{definition}[Temporal order] Let $m$ and $n$ be two measures. We
+    name \emph{temporal order} the binary relation written $m \leq^t
+    n$ and defined as $m \leq^t n \iff T(m) \leq T(n)$.
+\end{definition}
+
+Note that the semitemporal order is a partial order while the temporal
+order is a total order.
+
+Intuitively speaking a time series is set of measures of the same
+phenomena.  Sometimes they are also called time
+sequences~\cite{last:hetland}. We define it as follows.
+
+\begin{definition}[Time series]
+  \label{def:model:timeseries}
+  Let $S = \{m_0,\ldots,m_k\}$ be a set of measures of the same
+  type. Then, $S$ is a \emph{time series} iff $\forall i,j:
+  i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$.
+\end{definition}
+
+Observe that although measures in $S$ are expected to be of the same
+phenomena, from a formal standpoint we only require the type of all
+values to be the same.
+%% Per revisar aquest detall. Que vol dir que tenen un ordre total?
 As there are no repeated time values, measures in a time series have a
 total order.
 
-Given a time series $S$, its cardinality is noted as $|S|=k+1$.  A
-time series without measures is the empty time series,
-$S_\emptyset=\emptyset=\{\}$, and has zero cardinality,
-$|S_\emptyset|=0$.  Observe that, because measures in $S$ are of the
-same phenomena, the type of $S$ values is homogeneous.
-
-
+The cardinality of a time series $S=\{m_0,\dots,m_k\}$, noted as
+$|S|$, is the number of measures that contains.  A empty time series is
+noted as $\emptyset$. Needless to say, $|\emptyset|=0$.
 
 A time series can record more than one phenomena if they share the
-time instants of acquisition. Then it is a \emph{multivalued time
+same time instants of acquisition. Then it is a \emph{multivalued time
   series}. Let $S = \{m_0, \ldots, m_k\}$ be a multivalued time
 series. We write its measures as $m=(t,v_1,v_2,\ldots,v_n)$, that is
 the value has domain $(\Rp)^n$.
