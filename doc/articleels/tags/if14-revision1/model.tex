@@ -209,7 +209,9 @@ XXXX
 
 The union requires both time series to have the same structure and
 type as happens with union operation in relational \acro{DBMS}
-\cite{date:introduction}.\todo{I la resta d'operacions no?}
+\cite{date:introduction}.\todo{I la resta d'operacions no?. Aquest
+  concepte s'escapa una mica per que es semantic. En un moment de
+  l'article es dir que s'assumeix que els valors son sempre reals.}
 %
 Let $R$ and $S$ be two time series. 
 %
@@ -231,8 +233,8 @@ operation while temproal union is a commutative one.
   \includegraphics{fig_model_venn.pdf}
   \includegraphics{fig_model_venn_reverse.pdf}
   \includegraphics{fig_model_venn2.pdf}
-  \caption{Venn diagrams examples for set and temporal set union
-    operation of \acro{TSMS}}
+  \caption{Venn diagrams for set and temporal set union operations of
+    \acro{TSMS}}
   \label{fig:model:venn}
 \end{figure}
 
@@ -259,36 +261,35 @@ operation while temproal union is a commutative one.
 
 
 
-The \emph{difference} of two sets is a set containing all elements
-from the first one not contained in the second. Like union, the
-difference requires both time series to have the same structure. 
+Time series \emph{difference} can also be defined. Like union, the
+difference requires both time series to have the same structure.
 %
-Let $S_1$ and $S_2$ be two time series. The \emph{difference} of
-first and second is a time series $S_1 - S_2$ with all measures of
-$S_1$ not belonging to $S_2$: $S_1 - S_2 = \{ m | m\in S_1 \wedge m
-\notin S_2 \}$. The \emph{temporal difference} of first and second is
-a time series $S_1 - S_2$ with all measures of $S_1$ not temporal
-belonging to $S_2$: $S_1 -^t S_2 = \{ m | m \in S_1 \wedge m \notinst
-S_2 \}$.
+Let $R$ and $S$ be two time series.
+%
+The \emph{difference} between $R$ and $S$, written $R-S$, is a time
+series $R-S=\{m|m\in R\wedge m\notin S\}$.
+%
+The \emph{temporal difference} between $R$ and $S$, denoted $R-^t S$, 
+is a time series $R-^tS=\{m|m\in R\wedge m \notinst S\}$.
 
 
-Based on union and difference we can define \emph{intersection} $S_1\cap
-S_2 \equiv S_1 - (S_1 - S_2)$ and \emph{symmetric difference} $S_1 \ominus
-S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$ operations as well as its
-temporal dual operations.
+Based on union and difference we can define \emph{intersection} as
+$S_1\cap S_2 \equiv S_1 - (S_1 - S_2)$ and \emph{symmetric difference}
+as $S_1 \ominus S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$. The
+corresponding temporal operations can also be defined.
 
 
-Relational \acro{DBMS} extend these set operators with specific ones like
-projection, selection, rename, product and join. These operators can
-be also used for time series. As example the definition of join
-operation is given.
 
+Relational \acro{DBMS} extend these set operators with specific ones
+like projection, selection, rename, product or join. These operators
+can also make sense for time series. To illustrate this possibility
+we define the join operator.
 
-The \emph{join} of two time series is the grouping of pairs that share
-the same time attribute in both.  Let $S_1$ and $S_2$ be two time series.
-The \emph{join} of both time series $S_1 \join S_2$ is a multivalued
-time series $S_1 \join S_2 = \{ (t,v_1,v_2) | (t_1,v_1) \in S_1 \wedge
-(t_2,v_2) \in S_2 \wedge t=t_1=t_2 \}$.
+Roughly speaking, the join of two time series is the grouping of
+measures sharing the same time attribute.  Let $R$ and $S$ be two time
+series.  The \emph{join} of $R$ and $S$, denoted $R \join S$, is a
+multivalued time series $R \join S = \{ (t,v_1,v_2) | (t_1,v_1)
+\in R\wedge (t_2,v_2) \in S \wedge t=t_1=t_2 \}$.
 
 
 \acro{DBMS} need computational operations to be able to compute with
