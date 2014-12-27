@@ -177,16 +177,30 @@ definitions for some set operators.  Mainly they impose two membership
 operations and so to all operations based on it.
 %%%%%%%%%
 
-The \emph{membership} defines when one measure belongs to a time
-series. Considering the semitemporal order of measures, the set
-membership operation applies. 
+The membership operation defines when a measure belongs to a time
+series. We define two distinct membership operations. This induces two
+different ways to consider time series and its operations.
+
 %
-Let $S$ be a time series and $m$ be a measure. The \emph{membership}
-is denoted $m \in S$. Considering the temporal order of measures, we
-define the \emph{temporal membership} as $m \inst S$ when $\exists m_i
-\in S : T(m) = T(m_i)$.  Let $S_1$ and $S_2$ be two time series. From
-membership operations we could define \emph{inclusion} $S_1\subseteq
-S_2$ and \emph{temporal inclusion} $S_1\subseteqt S_2$.
+Let $S$ be a time series and $m$ be a measure. 
+%
+We say that $m$ belongs to $S$ (plain \emph{membership}), denoted as
+$m \in S$, when $\exists x\in S: x=m$.
+%
+We also say that $m$ belongs temporally to $S$ (\emph{temporal
+  membership}), noted  $m \inst S$, when $\exists x\in S :
+T(m)=T(x)$.
+%
+
+The two distinct membership criteria induce two meanings for
+inclusion. Let $R$ and $S$ be two time series. 
+%
+We say that $R$ is \emph{included} in $S$, written $R\subseteq S$,
+when all the elements of $R$ belong to $S$.
+%
+Analogously, we say that $R$ is \emph{included temporally} in $S$,
+noted $R\subseteqt S$, when all the elements of $R$ belong temporally
+to $S$.
 
 
 The \emph{union} of two sets is a set containing elements from both
