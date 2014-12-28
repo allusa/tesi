@@ -375,23 +375,28 @@ $\fold(S,\emptyset,f)=\{(1,1),(4,1)\}$.
 
 %%%%%%% BINARY COMPUTATIONAL OPERATORS
 
-Finally, we describe how \emph{binary computational} operations can be
-defined for two time series in order to operate with their value
-attributes.  First it is required to join the two time series and then
-apply computational operations. Let $S_1$ and $S_2$ be two time series
-and \emph{op} be a binary operation on the value domain, that is for
-two values $v_1$ and $v_2$ it computes a new value $\operatorname{op}:
-v_1 + v_2 \mapsto v'$. The operator \emph{op} can be applied to both
-time series as: $\operatorname{op}: S_1 \times S_2 \mapsto S'$ where
-$S' = \map(S_1 \join S_2, (t,v_1,v_2)\mapsto(t,v_1 \operatorname{op}
-v_2))$.
+Finally we describe how, using the operators defined before, we can
+implement \emph{binary computational} operators between two time
+series. This illustrates the power of the operators defined so far.
+%
 
-For example, we can apply real numbers binary operations such as sum,
-$S_1 + S_2$, or division, $S_1 / S_2$. It must be noted that join
-requires both time series to have exactly the same time
-attribute. When time series diverge too much then temporal function
-operations can be applied to fit the time instants to what is
-required.
+The strategy requires first to join the two time series and then
+apply the computational operations. 
+%
+Let $S$ and $R$ be two time series and $\odot$ be a binary operator on
+the value domain. The operator $\odot$ can be extended to the time
+series as:
+%
+$S\odot R=\map(S\join R, f)$ being $f$ the funcion
+$f(t,v,w)=(t,v\odot w))$.
+%
+This allows to extend real binary operations such as sum or division
+to time series.  \todo{Epsss aixo del join cal explicar-ho quan es
+  parla del join!!!! es important}
+It must be noted that join requires both time series
+to have exactly the same time attribute. When time series diverge too
+much then temporal function operations can be applied to fit the time
+instants to what is required.
 
 
 
