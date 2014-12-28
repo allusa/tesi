@@ -99,28 +99,22 @@ we use the Python \emph{Matplotlib} library.
 >>> s2 = TimeSeries([m(2,2),m(3,2),m(4,0),m(6,2)])
 
 # Manipulate the two time series
-# æ$s1 \cup s2$æ
 >>> s1.union(s2)
 TimeSeries([m(1,1), m(2,2), m(3,1), 
             m(4,0), m(5,1), m(6,2)])
-# æ$s1 \cupt s2$æ
 >>> s1.union_temporal(s2)
 TimeSeries([m(1,1), m(2,2), m(4,0), m(5,1), m(6,2)])
-# æ$s1 || s2$æ
 >>> s1.concatenate(s2) 
 TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
-# æ$s2[2,5]$æ
 >>> s2.interval_closed(2,5)
 TimeSeries([m(2,2), m(3,2), m(4,0)])
-# æ$s2[2,5]^\zohe$æ
 >>> s2.interval_temporal(2,5,Zohe)
 TimeSeries([m(3,2), m(4,0), m(5,2)])
 
 # Check for regularity
-# æ$s2$æ is not regular
 >>> s2.accept(isRegular())
 False
-# æ$s2$æ can be regularised by æ$s2[{0,2,4}]^\zohe$æ
+# regularise to {0,2,4} by Zohe method
 >>> r2 = s2.selection_temporal(range(0,6,2),Zohe)
 >>> r2
 TimeSeries([m(0,2), m(2,2), m(4,0)])
@@ -234,13 +228,12 @@ True
 >>> while M.consolidable():
 ...    M.consolidate()
 
-#Query æ$\seriedisc(M,5,\text{mean}^\zohe)$æ
+#Query the consolidated discs 
 >>> M.seriedisc(5,mean_zohe)
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
-#Query æ$\seriedisc(M,10,\text{maximum}^\zohe)$æ
 >>> M.seriedisc(10,maximum_zohe)
 TimeSeries([m(10,6), m(20,11)])
-#Query æ$\totalseries(M)$æ
+#Query the total time series
 >>> M.totalseries()
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 \end{verbatim}
