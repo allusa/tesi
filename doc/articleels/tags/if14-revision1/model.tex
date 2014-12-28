@@ -279,58 +279,63 @@ as $S_1 \ominus S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$. The
 corresponding temporal operations can also be defined.
 
 
-
-Relational \acro{DBMS} extend these set operators with specific ones
-like projection, selection, rename, product or join. These operators
-can also make sense for time series. To illustrate this possibility
-we define the join operator.
+Relational \acro{DBMS} extend set operators with specific ones like
+projection, selection, rename, product or join. This kind of operators
+also make sense for time series. To illustrate this possibility we
+define the join operator.
 
 Roughly speaking, the join of two time series is the grouping of
 measures sharing the same time attribute.  Let $R$ and $S$ be two time
 series.  The \emph{join} of $R$ and $S$, denoted $R \join S$, is a
-multivalued time series $R \join S = \{ (t,v_1,v_2) | (t_1,v_1)
-\in R\wedge (t_2,v_2) \in S \wedge t=t_1=t_2 \}$.
+multivalued time series $R \join S = \{ (t,v_1,v_2) | (t_1,v_1) \in
+R\wedge (t_2,v_2) \in S \wedge t=t_1=t_2 \}$.  \todo{Potser allo que
+  es diu al principi que nomes es consideren series univaluades s'ha
+  de repassar}
 
 
-\acro{DBMS} need computational operations to be able to compute with
-the elements contained in time series. In relational \acro{DBMS} these
-operators are extend, aggregate and summarise
-\cite{date:introduction}. For time series, we define a more general
-equivalent computational operators $\map$ and $\fold$.
+A \acro{DBMS} requires computational operators to provide opportunity
+to calculate using the data contained. Relational \acro{DBMS} supply
+operators like extend, aggregate or
+summarise~\cite{date:introduction}. For time series, we define the more
+general computational operators map and fold.
+\todo{Aqui s'escauria una citacio indicant l'origen d'aquests operadors}
 
 
-The operator $\map$ transforms a time series by applying a function to
-every measure.  Let $S$ be a time series and let $\fmap :m \mapsto m'$ be a
+The map operator transforms a time series by applying a function to
+every measure.  Let $S$ be a time series and let $f:m\mapsto m'$ be a
 function over a measure returning a measure. The \emph{map} of $f$
-over $S$ is a new time series defined as $\map(S,\fmap) = \{ \fmap(m) | m \in
-S\}$.
+over $S$ is a new time series defined as $\map(S,f)=\{f(m)|m\in S\}$.
 
-The operator $\fold$ recursively combines every measures of a time
-series.  Let $S_1=\{m_0, \dotsc, m_k\}$ and $S_2$ be two time series
-and let $\ffold: S \times m \mapsto S'$ be a function over a time
-series and a measure returning a time series. The \emph{fold} of $S_1$
-by $\ffold$ with initial value $S_2$ is a new time series defined as
-$\fold(S_1,S_2,\ffold) = \ffold(\dots(
-\ffold(\ffold(\ffold(S_2,m_0),\allowbreak m_1),\allowbreak m_2
-)\dots),\allowbreak m_k)$. 
+The fold operator recursively combines every measure of a time series.
+%
+Let $S=\{m_0,\dots, m_k\}$ and $R$ be two time series and let $f:
+S\times m \mapsto S'$ be a function over a time series and a measure
+returning a time series. 
+%
+The \emph{fold} of $S$ by $f$ with initial value $R$ is a new time
+series defined as $\fold(S,R,f) = f(\cdots(f(f(f(R,m_0),\allowbreak
+m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
 
-A simplified fold operation is the $\agg$ operation which is used for
-combining a time series into one measure. A frequent use is to compute
-aggregate statistics.  Let $S=\{m_0, \dotsc, m_k\}$ be a time series,
-let $m$ be a measure and let $\fagg: m_i \times m_j \mapsto m'$ be a
-function over two measures returning a measure. The \emph{aggregate}
-of $S$ by $\fagg$ with initial value $m$ is a new time series defined
-as $\agg(S,m,\fagg) = \fagg(\dots(
-\fagg(\fagg(\fagg(m,m_0),\allowbreak m_1),\allowbreak m_2
-)\dots),\allowbreak m_k)$.
-% Based on fold operation \emph{aggregate} can be
-% defined as: $\agg(S,m,\fagg) \equiv \fold(S,\{m\},f')$ where $f':
-% \{m_i\} \times m_j \mapsto \{\ffagg(m_i,m_j)\}$.
+The classical aggregation operator is used to combine the data of a
+time series into a single value.  It is worth to note that it is a
+specific case of fold.
+\todo{S'hauria d'explicitar per que es un cas particular}
+
+Let $S=\{m_0,\dots,m_k\}$ be a time series, let $m$ be a measure and
+let $f$ be a function over two measures returning a measure. The
+\emph{aggregate} of $S$ by $f$ with initial value $m$ is a new time
+series defined as $\agg(S,m,f) = f(\cdots(f(f(f(m,m_0),\allowbreak
+m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.  \todo{hi ha un
+  problema notacional en definir les funcions per que no esta definit
+  el conjunt universal de mesures. Potser millor definir-ho de paraula
+  com en aquest darrer paragraf.}
 
 %A more generic version of fold is a fold considering order. 
 In the previous fold, the measures are computed in random order.
 However in some computational operations it is necessary to define the
-order, especially when $\ffold$ is not commutative.  Then, it is possible
+order, especially when $\ffold$ is not commutative.
+\todo{No te sentit parlar de commutativitat d'una funcio}
+Then, it is possible
 to define a \emph{fold with order} as an extension of fold where
 measures are computed in a predetermined order.
 
@@ -352,30 +357,23 @@ measures are computed in a predetermined order.
 \label{ex:computational-operators}
 Let $S=\{(1,1),(2,3),(4,1)\}$ be a time series.  Map operator allows
 computing a new time series whose values result from time multiplied
-by value.  We define the map function $\fmap: (t,v)\mapsto (t,t\times
-v)$. Then $\map(S,\fmap)=\{(1,1),(2,6),(4,4)\}$.
+by value.  We define the map function $f(t,v)=(t,t\cdot v)$. Then
+$\map(S,f)=\{(1,1),(2,6),(4,4)\}$.  \todo{times es pel producte
+  cartesia}
 
+The aggregate operator allows, for instance, to compute the measure
+that results from the sum of all the values.  To illustrate it, we
+define the aggregate function $f(m,n)=(0,V(m)+V(n))$. Now,
+$\agg(S,(0,0),f) = (0,5)$, the sum of all the values of $S$. Note that
+time is meaningless in this computation.
 
-Aggregate operator allows computing a measure that results from the
-sum of all values.  We define the aggregate function $\fagg: (t_i,v_i)
-\times (t_j,v_j) \mapsto (0,v_i+v_j)$. Then $\agg(S,(0,0),\fagg) =
-(0,5)$, where the resulting time is 0 as it does not concern this
-computation.
-
-
-Fold operator allows computing a selection of measures where value
-equals one.  We define the fold function $\ffold: S_i \times (t,v)
-\mapsto S_i \cup S'$ where $S'=\{(t,v)\}$ if $v=1$ or
-$S'=\{\}$ otherwise. Then $\fold(S,\{\},\ffold)=\{(1,1),(4,1)\}$.
-
-
-% Fold operator allows computing a time series that shows the
-% immediately preceding time instant for a measure.
-% Defining the fold function $f^f: S_r\times (t,v) \mapsto \{(t,v,t_p)\}
-% \cup S_r$ where $t_p=T(\sup( S_r[-\infty,t)))$, then
-% $\fold(S,S,f^f)=\{(1,1,-\infty),(2,3,1),(4,1,2)\}$.
-% S_r[-\infty,t) NOT yet defined
+The fold operator allows, for instance, to select the measures having
+its value equal to one.  We define the fold function $f(S,m)=S\cup S'$
+where $S'=\{m\}$ if $V(m)=1$ or $S'=\emptyset$ otherwise. Then
+$\fold(S,\emptyset,f)=\{(1,1),(4,1)\}$.
 \end{example}
+
+%%%%%%% BINARY COMPUTATIONAL OPERATORS
 
 Finally, we describe how \emph{binary computational} operations can be
 defined for two time series in order to operate with their value
