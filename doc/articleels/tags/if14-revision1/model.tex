@@ -11,6 +11,7 @@ We describe the \acro{TSMS} nomenclature in three
 parts: the data structure model, time series manipulation and
 operation, and time series specific properties.
 
+\todo{data model inclou tot: data structure i data manipulation}
 
 \subsection{Data model}
 
@@ -54,6 +55,8 @@ values is the set of projectively extended reals $\Rp = \R \cup
 \{\infty\}$.
 %
 \todo{Per que aqui es $\Rp$ i en el temps $\Rb$?}
+%En els valors només cal extendre amb una marca d'indefinit
+%Però potser per simplificar podríem fer servir Rb a tot arreu
 %
 Note that although we defined values as scalars it is easy to extend
 the concept to multivalues which represent a collection of values
@@ -75,6 +78,8 @@ define two distinct order relations.
 %
 \todo{Te sentit l'ordre entre mesures de fenomens diferents? L'ordre
   nomes s'ha d'aplicar a les mesures d'un mateix time series?}
+%En les operacions binàries hi haurà mesures de dues sèries temporals.
+%En algunes operacions es requreix que les sèries siguin del mateix tipus.
 
 \begin{definition}[Semitemporal order]
   Let $m$ and $n$ be two measures. We name \emph{semitemporal order}
@@ -105,6 +110,8 @@ Observe that although measures in $S$ are expected to be of the same
 phenomena, from a formal standpoint we only require the type of all
 values to be the same.
 %% Per revisar aquest detall. Que vol dir que tenen un ordre total?
+% En una sola sèrie temporal no hi ha mesures repetides.
+% Per tant totes les mesures estan ordenades, és a dir només s'aplica l'ordre temporal. 
 As there are no repeated time values, measures in a time series have a
 total order.
 
@@ -212,6 +219,9 @@ type as happens with union operation in relational \acro{DBMS}
 \cite{date:introduction}.\todo{I la resta d'operacions no?. Aquest
   concepte s'escapa una mica per que es semantic. En un moment de
   l'article es dir que s'assumeix que els valors son sempre reals.}
+%Sí, la diferència i intersecció tambés es requereix. 
+%Cal pensat en mateixa estructura alhora en el sentit de tipus i de sèrie temporal multivaluada
+
 %
 Let $R$ and $S$ be two time series. 
 %
@@ -299,7 +309,7 @@ operators like extend, aggregate or
 summarise~\cite{date:introduction}. For time series, we define the more
 general computational operators map and fold.
 \todo{Aqui s'escauria una citacio indicant l'origen d'aquests operadors}
-
+%Són molt genèrics, no sé d'on podríem treure una referència
 
 The map operator transforms a time series by applying a function to
 every measure.  Let $S$ be a time series and let $f:m\mapsto m'$ be a
@@ -320,6 +330,8 @@ The classical aggregation operator is used to combine the data of a
 time series into a single value.  It is worth to note that it is a
 specific case of fold.
 \todo{S'hauria d'explicitar per que es un cas particular}
+%Doncs potser eliminar aquesta frase? 
+%Prové que abans ho definíem a partir dels fold però ara, per simplificar, ja no.
 
 Let $S=\{m_0,\dots,m_k\}$ be a time series, let $m$ be a measure and
 let $f$ be a function over two measures returning a measure. The
@@ -393,6 +405,7 @@ $f(t,v,w)=(t,v\odot w))$.
 This allows to extend real binary operations such as sum or division
 to time series.  \todo{Epsss aixo del join cal explicar-ho quan es
   parla del join!!!! es important}
+%Sí, totalment!
 It must be noted that join requires both time series
 to have exactly the same time attribute. When time series diverge too
 much then temporal function operations can be applied to fit the time
