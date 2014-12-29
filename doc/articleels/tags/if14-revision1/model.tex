@@ -17,12 +17,12 @@ operation, and time series specific properties.
 
 Roughly speaking a \emph{time series} is a set of observations
 collected at specific time instants. An observation may consist of a
-single attribute or multiple attributes collected at the same time
-instant.  Each pair of time and observed values is refered as a
+single value or multiple values collected at the same time instant.
+Each pair of time and observed values is refered as a
 \emph{measure}. Then, a time series is a correspondence between times
 and values. A time series can be described by a set of measures.
 
-We name \emph{time domain} the set $T$ of all the possible time
+We name \emph{time domain} the set $\cal{T}$ of all the possible time
 values. $T$ can be either a finite or an infinite set and usually it
 is a closed set. 
 
@@ -412,104 +412,131 @@ much then temporal function operations can be applied to fit the time
 instants to what is required.
 
 
-
-
-
 \subsubsection{Sequence operations}
 
 Sequence operations manipulate time series considering measures as
-being totally ordered. Then three basic operations can be defined:
-interval, successor and concatenation.
+being totally ordered.
+%
+\todo{caldria dir en set operations aquesta
+  diferencia tb?}  
+%
+We define three basic operations: slice, successor and concatenation.
 
 
-The \emph{interval} $(t_i,t_j)$, where $t_i$ and $t_j$ are two time
-instants, over a time series $S$ is a time subseries between the two
-time instants $S(t_i,t_j) \subseteq S$. A similar interval concept
-is used by \cite{last:hetland}. The open interval is defined as
-$S(t_i,t_j)=\{m | (m\in S) \wedge (t_i<T(m)<t_j)\}$. Other intervals can be
-defined: closed $S[t_i,t_j]$, left-open $S(t_i,t_j]$, and right-open
-$S[t_i,t_j)$.
+The classical interval concept can be applied to time domain. In this
+context, given two time instants $s$ and $t$, the standart interval
+notation applies.
+%
+Following~\cite{last:hetland}, to slice a time series $S$ means to
+extract a new time series $R\subseteq S$ constrained to a given time
+interval. We denote this operation as the original time serie followed
+by the interval. Therefore, $S(s,t)=\{m|m\in S \wedge
+T(m)\in(s,t)\}$. We can use other intervals to slice a time series in
+a same fashion. For instance, $S(s,t]=\{m|m\in S \wedge
+T(m)\in(s,t]\}$.
 
-The time order in time series also implies the sequence concept of
-\emph{successor} and \emph{predecessor}.  Let $S=\{m_0, \ldots, m_k\}$
-be a time series, $m_i\in S$ a measure and $m$ another measure. We
-say $m_i=\nex_S(m)$ is the \emph{next} measure to $m$ in $S$ if
-and only if $m_i=\inf(S(T(m),+\infty])$.  We say $m_i=\prev_S(m)$
-is the \emph{previous} measure to $m$ in $S$ if and only if
-$m_i=\sup(S[-\infty,T(m)))$. %
+The ordinary time order allows to define te concepts of successor and
+predecesor for the measures of a time series.
+%
+Let $S=\{m_0,\ldots,m_k\}$ be a time series and $m$ be and arbitrary
+measure.
+%
+We say that $m_i=\nex_S(m)$ is the \emph{next} measure to $m$ in $S$ if and
+only if $m_i=\inf(S(T(m),+\infty])$.  
+%
+We also say that $m_i=\prev_S(m)$ is the \emph{previous} measure to
+$m$ in $S$ if and only if $m_i=\sup(S[-\infty,T(m)))$. 
+%
 Infinite measures are obtained when next and previous are applied to
-supremum and infimum measure respectively: $\nex_S(\sup
+supremum and infimum measures respectively: $\nex_S(\sup
 S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
+%
+\todo{Homogeneitzar notacio per infim i suprem: amb parentesi o
+  sense. El infim d'uns series es una mesura o un temps? Sembla que
+  s'esta aplicant amb dos criteris.}
 
 
-
-\emph{Concatenation} comprises the measures of the first time series
-followed in time order by the measures of the second. It is similar to
-union for sets but considering the sequence interval. The
-concatenation requires both time series to have the same structure as
-seen with union operation.  Let $S_1$ and $S_2$ be two time series.
- The concatenation of both $S_1 || S_2$ is a time series $S$ containing
-all measures of $S_1$ and those of $S_2$ that not intersect in the
-time interval of $S_1$.  $S_1 || S_2 = S_1 \cup ( S_2 - S_2[t_i,t_j]
-)$ where $t_i=T(\inf S_1)$ and $t_j=T(\sup S_1)$.
+To concatenate two time series means to compute a new time series with
+the measures of the first time series followed in time order by the
+measures of the second one. 
+%
+The concatenation requires both time series to share the same
+structure.  Let $S_1$ and $S_2$ be two time series. The
+\emph{concatenation} of two time series $R$ and $S$, denoted as
+$R||S$, is a time series that contains all the measures of $R$
+together with those of $S$ that do not intersect with the time
+interval of $R$. That is, $R||S= R\cup (S - S[\inf R,\sup R])$.
 
 
 
 \subsubsection{Temporal function operations}
 \label{sec:model:tfunc}
 
-A time series is a discrete representation of a continuous function,
-more precisely a temporal continuous function as time is the function
-domain. Operations that manipulate time series according to this
-temporal function nature can be defined.
+A time series can be thought as discrete representation of an
+(original) temporal function. In this section we devise some
+operations that manage the time series according to this temporal
+function standpoint.  
+%
+\todo[color=green]{Compte que a tot arreu es diu que la funcio
+  original es continua i aixo no es cert ni en els exemples! He
+  eliminat el tema continua on l'he vist.}
 
-The \emph{graph of a function} allows to obtain and interpret the
+The graph of a function allows to obtain and interpret the
 continuous nature of a time series, when the domain of time and value
 attributes can be plotted then the graph is equivalent to a graphical
-representation.  Let $S$ be a time series and $T$ the time domain. The
-\emph{graph} of the time series is a set of ordered pairs $\graph S =
-\{ (t,S(t)) | t\in T \}$ where $S(t)$ is a temporal representation
+representation.  
+%
+Let $S$ be a time series and $T$ the time domain. The \emph{graph} of
+the time series $S$ is a set of ordered pairs $\graph S
+=\{(t,S(t))|t\in T\}$ where $S(t)$ is a temporal representation
 function for the time series.
+%
+\todo{tot aixo hauria d'anar al final, depres de le srepresentacions
+  temporals}
 
-The \emph{temporal representation function} $S(t)$ is a continuous
-function along variable $t$ in the domain of time and the target in
-the domain of values. $S(t)$ can be obtained by various methods, so
-there are several possible temporal representation functions. In all
-temporal function operations a superscript $r$ indicates the name $r$
-of the representation method used, as instance $S(t)^r$ is the
-representation function using method $r$. We exemplify the
-representation functions using two methods $r$ based on impulse and
-constant piecewise functions.
+Given a time series $S$, the \emph{temporal representation function}
+$S(t)$ is a function along the variable $t$ in the domain of
+time and the target in the domain of values.
+%
+In some sense, $S(t)$ can be thought as the original temporal function
+from which $S$ was obtained.
+%
+
+There is not a single way to obtain $S(t)$ for a given time series
+$S$. Because of this, in temporal representation functions we will
+introduce a superscript, say $r$, that shows the name $r$ of the
+representation method used. Then, $S(t)^r$ means the representation
+function of $S$ using method $r$. Below, we exemplify the
+representation functions using two different methods based on impulse
+and constant piecewise functions.
 
 
-\begin{definition}
-  \emph{Dirac delta} (\dd) is a method of representation based on the
-  Dirac delta function. It is an impulse train function that is zero
-  everywhere except at zero.  Let $S$ be a time series. We define
-  $S(t)^\dd$ as the \emph{\dd{} representation function}
-\[
-    \forall m \in S: S(t)^\dd
-    =  \begin{cases}
-      V(m) & \text{if }  t=T(m) \\
-      0 & \text{otherwise}
-    \end{cases}
-\]
+\begin{definition}[Dirac representation] 
+  Dirac delta (\dd) is a method of representation based on the Dirac
+  delta function. Let $S$ be a time series. We define $S(t)^\dd$ as
+  the following \dd{} representation function:
+  \[
+  S(t)^\dd
+  =  \begin{cases}
+          V(m) & \text{if } \exists m\in S:t=T(m) \\
+          0    & \text{otherwise}
+  \end{cases}
+  \]
 \end{definition}
 
-\begin{definition}
-  \emph{Zero-order hold everted} (\zohe{}) is a method of
-  representation based on the \emph{zero-order hold} signal
-  reconstruction methods. It is a piecewise constant function that has
-  left-continuous step functions.  Let $S$ be a time series. We define
-  $S(t)^\zohe$ as the \emph{\zohe{} representation function}, $\forall
-  m \in S:$
-\[
-    S(t)^\zohe 
-    = \begin{cases}
-      0 & \text{if }  t > T(\max(S)) \\
-      V(m) & \text{if } t\in \big(T(\prev_S(m)),T(m)\big]
-    \end{cases}
-\]
+\begin{definition}[Zohe representation]
+  Zero-order hold everted (\zohe{}) is a method of representation
+  based on the \emph{zero-order hold} signal reconstruction method. It
+  is a piecewise constant function built from left-continuous step
+  functions.  Let $S$ be a time series. We define $S(t)^\zohe$ as the
+  following representation function:
+  \[
+  S(t)^\zohe 
+  = \begin{cases}
+    V(m) & \text{if } \exists m\in S: t\in \big(T(\prev_S(m)),T(m)\big]\\
+    0    & \text{if } t > T(\max(S)) 
+  \end{cases}
+  \]
 \end{definition}
 
 
