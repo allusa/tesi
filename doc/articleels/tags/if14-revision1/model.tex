@@ -4,14 +4,10 @@
 
 Following current database models, a \acro{TSMS} model consists of two
 components: a data model and a set of operations. Measures and time
-series are the main objects of our \acro{TSMS} model. In both objects
-time plays an important role and requires a coherent treatment.
+series are the main objects of our \acro{TSMS} model. 
 %
-We describe the \acro{TSMS} nomenclature in three
-parts: the data structure model, time series manipulation and
-operation, and time series specific properties.
+In this section we describe and formalise the \acro{TSMS} model. 
 
-\todo{data model inclou tot: data structure i data manipulation}
 
 \subsection{Data model}
 
@@ -23,51 +19,50 @@ Each pair of time and observed values is refered as a
 and values. A time series can be described by a set of measures.
 
 We name \emph{time domain} the set $\cal{T}$ of all the possible time
-values. $T$ can be either a finite or an infinite set and usually it
-is a closed set. 
+values. $\cal{T}$ can be either a finite or an infinite set and
+usually it is a closed set. Although time is a complex issue
+%
+\todo[color=yellow]{Afegir citacio}
+%
+In this paper we will assume that the $\cal{T}$ is the set of affinely
+extended real numbers $\Rb = \R \cup \{+\infty,-\infty\}$. This avoids
+the complex details of time modelling while being powerful enough for
+our purposes. Next, we define the main time related concepts using
+this naive approximation.
 
-In this paper we will assume that the domain $T$ is the set of
-affinely extended real numbers $\Rb = \R \cup
-\{+\infty,-\infty\}$. Because $\Rb$ is a metric space, we can
-differentiate between time instants (the elements of the set) and
-durations (the metric). Next, we define the main time related concepts
-using this naive approximation that avoids complex details while being
-powerful enough for our purposes.
+\todo[color=green]{Dominis en lletra caligrafica}
 
-\begin{definition}(Time concepts)
+\begin{definition}[Time concepts]
   \label{def:model:temps}
-  Let $T=\Rb$ be the domain for time.
+  Let $\cal{T}=\Rb$ be the domain for time.
   %
-  We define a \emph{time instant} as an element $i$ of $\Rb$.
+  We name an element $t\in\cal{T}$ as \emph{time instant}.
   %
-  Let $t_i,t_j\in\Rb$ be two time instants.  We define the
-  \emph{duration of time} between $t_i$ and $t_j$ as the value $t \in
-  \Rb$ which measures the distance in time units between two time
-  instants $t = t_i - t_j$.
+  Let $s,t\in\cal{T}$ be two time instants.  We define the
+  \emph{duration of time} between $s$ and $t$ as the value $d
+  \in\cal{T}$ which measures the distance in time units between the
+  two time instants, that is $d =s-t$.
 \end{definition}
 
-A value is an attribute that indicates the magnitude of a measure. The
-domain for the values can be any data type. Valid domains for values
-include integers, real numbers, strings, and more elaborated data
-structures such as arrays, lists, or even other time series. Without
-loss of generality in this paper we will assume that the domain of
-values is the set of projectively extended reals $\Rp = \R \cup
-\{\infty\}$.
+The value is an attribute that indicates the magnitude of a
+measure. The domain for the values can be any data type. Valid domains
+for values include integers, real numbers, strings, and more
+elaborated data structures such as arrays, lists, or even other time
+series. Here below, the domain for values will be denoted by
+$\cal{V}$. 
 %
-\todo{Per que aqui es $\Rp$ i en el temps $\Rb$?}
-%En els valors només cal extendre amb una marca d'indefinit
-%Però potser per simplificar podríem fer servir Rb a tot arreu
-%
-Note that although we defined values as scalars it is easy to extend
-the concept to multivalues which represent a collection of values
-measured at the same time instant~\cite{assfalg08:thesis}.
-
+Without loss of generality in this paper we will assume that the
+domain of values is the set of projectively extended reals $\Rp = \R
+\cup \{\infty\}$.
 
 A measure represents an actual value measured in a particular time
 instant. We define it below.
+
 \begin{definition}
-  Let $v$ be a value and let $t$ be the time instant when the value
-  was acquired. We define a \emph{measure} $m$ as the tuple $m=(t,v)$.
+  Let $v\in\cal{V}$ be a value and let $t\in\cal{T}$ be the time
+  instant when the value was acquired. We define a \emph{measure} $m$
+  as the tuple $m=(t,v)$. The domain of a measure $m$, written as
+  $\dom m$, is the domain of its value.
 \end{definition}
 
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
@@ -75,11 +70,6 @@ value $v$ and $T(m)$ denotes the time $t$.
 
 Order between mesures plays an important role. Given two measures we
 define two distinct order relations.
-%
-\todo{Te sentit l'ordre entre mesures de fenomens diferents? L'ordre
-  nomes s'ha d'aplicar a les mesures d'un mateix time series?}
-%En les operacions binàries hi haurà mesures de dues sèries temporals.
-%En algunes operacions es requreix que les sèries siguin del mateix tipus.
 
 \begin{definition}[Semitemporal order]
   Let $m$ and $n$ be two measures. We name \emph{semitemporal order}
@@ -95,35 +85,39 @@ define two distinct order relations.
 Note that the semitemporal order is a partial order while the temporal
 order is a total order.
 
-Intuitively speaking a time series is set of measures of the same
-phenomena.  Sometimes they are also called time
+Intuitively speaking a time series is a ordered set of measures of the
+same phenomena.  Sometimes they are also called time
 sequences~\cite{last:hetland}. We define it as follows.
 
 \begin{definition}[Time series]
   \label{def:model:timeseries}
-  Let $S = \{m_0,\ldots,m_k\}$ be a set of measures of the same
-  type. Then, $S$ is a \emph{time series} iff $\forall i,j:
-  i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$.
+  Let $S = \{m_0,\ldots,m_k\}\subset\cal{T}\times\cal{V}$ be a finite
+  set of measures of the same type. Then, $S$ is a \emph{time series}
+  iff $\forall i,j: i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$.
+  We define the domain of a time series $S$, denoted as $\dom(S)$, as
+  the domain of its measures.
 \end{definition}
 
 Observe that although measures in $S$ are expected to be of the same
-phenomena, from a formal standpoint we only require the type of all
-values to be the same.
-%% Per revisar aquest detall. Que vol dir que tenen un ordre total?
-% En una sola sèrie temporal no hi ha mesures repetides.
-% Per tant totes les mesures estan ordenades, és a dir només s'aplica l'ordre temporal. 
-As there are no repeated time values, measures in a time series have a
-total order.
+phenomena, from a formal standpoint we only require the domain of all
+values to be the same. 
+
+In a time series there are not two measures with the same time. Thus,
+considering the temporal order, a time series is a totally ordered
+set.
 
 The cardinality of a time series $S=\{m_0,\dots,m_k\}$, noted as
 $|S|$, is the number of measures that contains.  A empty time series is
 noted as $\emptyset$. Needless to say, $|\emptyset|=0$.
 
-A time series can record more than one phenomena if they share the
-same time instants of acquisition. Then it is a \emph{multivalued time
-  series}. Let $S = \{m_0, \ldots, m_k\}$ be a multivalued time
-series. We write its measures as $m=(t,v_1,v_2,\ldots,v_n)$, that is
-the value has domain $(\Rp)^n$.
+Although we defined values as scalars it is easy to extend the
+concept. Following~\cite{assfalg08:thesis}, a time series can record
+more than one phenomena if they share the same acquisition time
+instants.  This kind of series are known as \emph{multivalued time
+  series}. Let $S$ be a multivalued time series and let its domain be
+$\dom(S)={\cal{V}}_1\times\cdots\times{\cal{V}}_n$. Then, we write its
+measures as $m=(t,v_1,v_2,\ldots,v_n)$.
+
 
 
 
@@ -131,23 +125,22 @@ the value has domain $(\Rp)^n$.
 \subsection{Operations}
 \label{sec:model:operations}
 
-Time series have a time attribute that must be manipulated
-coherently. Owing to this time attribute, the behaviour of a time
-series can be handled on three ways:  set operations including
-relational ones,  sequence operations, and  temporal function
-operations that manipulate a time series considering it is a
-representation for a continuous function. Next a brief description of
-most important ones is given.
+Time series can be manipulated through the operations defined in this
+section.
+%
+Like the relational model operations, operations over time series do
+not care about the actual semantics of the data. When a particular
+application aroses, it should be decided whether an operation is
+semantically coherent or cannot be applied. For example, the addition
+of values coming from two different phenomena could be semantically
+erroneous.
 
+In this section operations are introduced in three blocks: the set
+operations, that consider times series as sets; the sequence
+operations, that consider time series as sequences; and the temporal
+operations, that manipulate the time series assuming that are
+representations of functions. 
 
-% These time series manipulations are defined abstractly for any time
-% series having the structure of Definition \ref{def:model:timeseries}.
-% In the same way as the relational model for operations, definitions
-% evaluate algebra and logic concepts for data but do not evaluate the
-% semantics of manipulations. That is, when given a particular context
-% for a time series manipulation it has to be decided whether the
-% algebra is meaningful or cannot be applied, for example an addition of
-% values in two different units could be semantically erroneous.
 
 
 \subsubsection{Set operations}
@@ -156,45 +149,39 @@ We describe how common set operators can be applied to time series. We
 rely on how the relational model of \acro{DBMS} describes operations
 based on set algebra~\cite{date:introduction}.
 
-
 Consider a time series $S$. $S$ is a finite ordered set (by the
 temporal order). Then, if $S$ nonempty, $S$ has a maximum and a
 minimum.  
 %
 Let $S$ be a time series and $n\in S$ be a measure. The \emph{maximum}
-of $S$, noted as $\max(S)$ is an element of $S$ such that $\forall m
-\in S:\max(S)\geq^t m $.  
+of $S$, denoted as $\max S$, is an element of $S$ such that $\forall m
+\in S:\max S\geq^t m $.  
 %
-Note that $\max(S)$ is not defined when $S=\emptyset$. However, the
-time series has a supremum even when empty. In fact, according to~
-\cite{cantrell:extendedreal}, $\sup(\emptyset)=-\infty$.
+Note that $\max S$ is not defined when $S=\emptyset$. However, the
+time series has a supremum even when empty. In fact, according
+to~\cite{cantrell:extendedreal}, $\sup \emptyset=-\infty$.
 %
-Using this fact we define the \emph{supremum} os $S$, noted as
-$\sup(S)$, as $\sup(S)=\max(S)$ when $S$ non empty or
-$\sup(S)=-\infty$ otherwise.
-%
-Dually, we can define the \emph{minimum} of $S$, noted as $\min(S)$,
-and the \emph{infimum} of $S$, noted as $\inf(S)$.
-
-%%%%%%%%% Paragra per repassar en segona volta
-In time series binary set operations, the measures can have the two
-possible order relations: temporal and semitemporal. Consequently,
-these two possible order relations of measures impose two operation
-definitions for some set operators.  Mainly they impose two membership
-operations and so to all operations based on it.
-%%%%%%%%%
+Using this fact we define the \emph{supremum} of $S$, noted as
+$\sup S$, as
+\[
+\sup S =\begin{cases}
+  \max S    & \text{when $S$ non empty}\\
+  -\infty   & \text{otherwise}
+\end{cases}
+\]
+Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
+and the \emph{infimum} of $S$, noted as $\inf S$.
 
 The membership operation defines when a measure belongs to a time
 series. We define two distinct membership operations. This induces two
 different ways to consider time series and its operations.
 
-
 Let $S$ be a time series and $m$ be a measure. 
 %
 We say that $m$ belongs to $S$ (plain \emph{membership}), denoted as
 $m \in S$, when $\exists x\in S: x=m$.  We also say that $m$ belongs
-temporally to $S$ (\emph{temporal membership}), noted $m \inst S$,
-when $\exists x\in S : T(m)=T(x)$.
+temporally to $S$ (\emph{temporal membership}), denoted as $m \inst
+S$, when $\exists x\in S : T(m)=T(x)$.
 
 
 The two distinct membership criteria induce two meanings for
@@ -209,33 +196,26 @@ The \emph{union} of two sets is a set containing elements from both
 sets. Usual set union operations do not apply to time series because
 the result time series could have repeated time values.  Then, we will
 give a slighty modified concept for union.
-% PER ARRANJAR
-Again, two versions of the union will appear according to the 
-XXXX
-%
 
-The union requires both time series to have the same structure and
-type as happens with union operation in relational \acro{DBMS}
-\cite{date:introduction}.\todo{I la resta d'operacions no?. Aquest
-  concepte s'escapa una mica per que es semantic. En un moment de
-  l'article es dir que s'assumeix que els valors son sempre reals.}
-%Sí, la diferència i intersecció tambés es requereix. 
-%Cal pensat en mateixa estructura alhora en el sentit de tipus i de sèrie temporal multivaluada
+The union requires both time series to have the same domain like it
+happens with union operation in relational
+algebra~\cite{date:introduction}.
 
-%
-Let $R$ and $S$ be two time series. 
+Let $R$ and $S$ be two time series and let $\dom R =\dom S$. 
 %
 The \emph{union} of $R$ and $S$, noted $R\cup S$, is a new time series
 $R \cup S = \{m|m\in R\vee (m\in S\wedge m \notinst R)\}$. 
 %
 The \emph{temporal union} of $R$ and $S$, noted $S_1 \cupt S_2$, is a
 time series $R \cupt S = \{ m | (m \in R \wedge m \in S) \vee (m \in R
-\wedge m \notinst S) \vee (m \in S \wedge m \notinst R) \}$.  \todo{te
-  sentit en la unio el concepte 'temporal'? te el mateix sentit que a
-  la pertanyensa? No aplicaria millor el concepte 'unio simetrica'?}
+\wedge m \notinst S) \vee (m \in S \wedge m \notinst R) \}$.  
 %
-It is interesting to emphasize that union is a non commutative
-operation while temproal union is a commutative one.
+\todo{te sentit en la unio el concepte 'temporal'? te el mateix sentit
+  que a la pertanyensa? No aplicaria millor el concepte 'unio
+  simetrica'?}
+%
+It is interesting to emphasize that the union is a non commutative
+operation while the temporal union is a commutative one.
 
 \begin{figure}
   \centering
@@ -272,9 +252,9 @@ operation while temproal union is a commutative one.
 
 
 Time series \emph{difference} can also be defined. Like union, the
-difference requires both time series to have the same structure.
+difference requires both time series to have the same domain.
 %
-Let $R$ and $S$ be two time series.
+Let $R$ and $S$ be two time series and let $\dom R = \dom S$.
 %
 The \emph{difference} between $R$ and $S$, written $R-S$, is a time
 series $R-S=\{m|m\in R\wedge m\notin S\}$.
@@ -297,10 +277,14 @@ define the join operator.
 Roughly speaking, the join of two time series is the grouping of
 measures sharing the same time attribute.  Let $R$ and $S$ be two time
 series.  The \emph{join} of $R$ and $S$, denoted $R \join S$, is a
-multivalued time series $R \join S = \{ (t,v_1,v_2) | (t_1,v_1) \in
-R\wedge (t_2,v_2) \in S \wedge t=t_1=t_2 \}$.  \todo{Potser allo que
-  es diu al principi que nomes es consideren series univaluades s'ha
-  de repassar}
+multivalued time series $R \join S = \{ (t,v_1,v_2) | (t,v_1) \in
+R\wedge (t,v_2) \in S\}$. Note that $\dom(R\join
+S)=\dom R\times\dom S$.
+%
+It must be noted that join requires both time series measures to share
+exactly the same times. When time series diverge, the temporal
+function operations explained later can be applied to adjust the time
+instants to join requirements.
 
 
 A \acro{DBMS} requires computational operators to provide opportunity
@@ -308,48 +292,56 @@ to calculate using the data contained. Relational \acro{DBMS} supply
 operators like extend, aggregate or
 summarise~\cite{date:introduction}. For time series, we define the more
 general computational operators map and fold.
-\todo{Aqui s'escauria una citacio indicant l'origen d'aquests operadors}
-%Són molt genèrics, no sé d'on podríem treure una referència
 
 The map operator transforms a time series by applying a function to
-every measure.  Let $S$ be a time series and let $f:m\mapsto m'$ be a
+every measure.  Let $S$ be a time series, let $\cal{V}=\dom S$, and
+let $f:\cal{T}\times\cal{V}\rightarrow\cal{T}\times\cal{V'}$ be a
 function over a measure returning a measure. The \emph{map} of $f$
-over $S$ is a new time series defined as $\map(S,f)=\{f(m)|m\in S\}$.
-
-The fold operator recursively combines every measure of a time series.
+over $S$ is a new time series defined as $\map(S,f)=\{f(m)|m\in
+S\}$. Note that $\dom(map(S,f))=\cal{V'}$.
 %
-Let $S=\{m_0,\dots, m_k\}$ and $R$ be two time series and let $f:
-S\times m \mapsto S'$ be a function over a time series and a measure
-returning a time series. 
+\todo[color=green]{Compte amb la notacio per definir funcions. Veure
+  la wikipedia anglesa (apartat corresponent)}.
+
+The fold operator recursively combines every measure of a time
+series. Assuming that $\mathcal{P}(C)$ is the powerset of $C$, we
+define fold as follows.
+%
+Let $S=\{m_0,\dots, m_k\}$ and $R$ be two time series, let
+$\mathcal{V}=\dom S$, let $\mathcal{V'}=\dom R$ and let 
+%
+$f:\mathcal{P}(\mathcal{T}\times\mathcal{V'}) \times (\mathcal{T}\times\mathcal{V}) \rightarrow \mathcal{P}(\mathcal{T}\times\mathcal{V'})$ 
+%
+be a function over a time series and a measure returning a time
+series.
 %
 The \emph{fold} of $S$ by $f$ with initial value $R$ is a new time
 series defined as $\fold(S,R,f) = f(\cdots(f(f(f(R,m_0),\allowbreak
 m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
+%
+\todo{No se si els papers d'R i S no estan intercanviats. No es R la
+  serie transformada i S els valors inicials?}
 
-The classical aggregation operator is used to combine the data of a
-time series into a single value.  It is worth to note that it is a
-specific case of fold.
-\todo{S'hauria d'explicitar per que es un cas particular}
-%Doncs potser eliminar aquesta frase? 
-%Prové que abans ho definíem a partir dels fold però ara, per simplificar, ja no.
 
-Let $S=\{m_0,\dots,m_k\}$ be a time series, let $m$ be a measure and
-let $f$ be a function over two measures returning a measure. The
+The classical aggregation operator combines the data of a time series
+into a single value.  It is worth to note that it is a specific
+application of fold.
+
+Let $S=\{m_0,\dots,m_k\}$ be a time series, let $\mathcal{V}=\dom S$,
+let $m$ be a measure with $\dom m=\mathcal{V}$, and let 
+%
+$f:(\mathcal{T}\times\mathcal{V})\times(\mathcal{T}\times\mathcal{V})\rightarrow \mathcal{T}\times\mathcal{V}$ 
+%
+be a function over two measures returning a measure. The
 \emph{aggregate} of $S$ by $f$ with initial value $m$ is a new time
 series defined as $\agg(S,m,f) = f(\cdots(f(f(f(m,m_0),\allowbreak
-m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.  \todo{hi ha un
-  problema notacional en definir les funcions per que no esta definit
-  el conjunt universal de mesures. Potser millor definir-ho de paraula
-  com en aquest darrer paragraf.}
+m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.  
 
-%A more generic version of fold is a fold considering order. 
-In the previous fold, the measures are computed in random order.
-However in some computational operations it is necessary to define the
-order, especially when $\ffold$ is not commutative.
-\todo{No te sentit parlar de commutativitat d'una funcio}
-Then, it is possible
-to define a \emph{fold with order} as an extension of fold where
-measures are computed in a predetermined order.
+% In the previous fold, the measures are computed in random order.
+% However in some computational operations it is necessary to define the
+% order, especially when $f$ is not commutative.  Then, it is possible
+% to define a \emph{fold with order} as an extension of fold where
+% measures are computed in a predetermined order.
 
 % We define a
 % \emph{fold with order}, $\orderfold$, as an extension of fold with a
@@ -403,24 +395,14 @@ $S\odot R=\map(S\join R, f)$ being $f$ the funcion
 $f(t,v,w)=(t,v\odot w))$.
 %
 This allows to extend real binary operations such as sum or division
-to time series.  \todo{Epsss aixo del join cal explicar-ho quan es
-  parla del join!!!! es important}
-%Sí, totalment!
-It must be noted that join requires both time series
-to have exactly the same time attribute. When time series diverge too
-much then temporal function operations can be applied to fit the time
-instants to what is required.
+to time series.  
 
 
 \subsubsection{Sequence operations}
 
 Sequence operations manipulate time series considering measures as
-being totally ordered.
-%
-\todo{caldria dir en set operations aquesta
-  diferencia tb?}  
-%
-We define three basic operations: slice, successor and concatenation.
+being totally ordered by time.  We define three basic operations:
+slice, successor and concatenation.
 
 
 The classical interval concept can be applied to time domain. In this
@@ -450,22 +432,17 @@ $m$ in $S$ if and only if $m_i=\sup(S[-\infty,T(m)))$.
 Infinite measures are obtained when next and previous are applied to
 supremum and infimum measures respectively: $\nex_S(\sup
 S)=(+\infty,\infty)$ and $\prev_S(\inf S)=(-\infty,\infty)$.
-%
-\todo{Homogeneitzar notacio per infim i suprem: amb parentesi o
-  sense. El infim d'uns series es una mesura o un temps? Sembla que
-  s'esta aplicant amb dos criteris.}
-
 
 To concatenate two time series means to compute a new time series with
 the measures of the first time series followed in time order by the
 measures of the second one. 
 %
-The concatenation requires both time series to share the same
-structure.  Let $S_1$ and $S_2$ be two time series. The
-\emph{concatenation} of two time series $R$ and $S$, denoted as
-$R||S$, is a time series that contains all the measures of $R$
-together with those of $S$ that do not intersect with the time
-interval of $R$. That is, $R||S= R\cup (S - S[\inf R,\sup R])$.
+The concatenation requires both time series to share the same domain.
+Let $R$ and $S$ be two time series and let $\dom R=\dom S$. The
+\emph{concatenation} of $R$ and $S$, denoted as $R||S$, is a time
+series that contains all the measures of $R$ together with those of
+$S$ that do not intersect with the time interval of $R$. That is,
+$R||S= R\cup (S - S[\inf R,\sup R])$.
 
 
 
@@ -545,7 +522,25 @@ and constant piecewise functions.
 The concept of representation is used for formalising some set and
 sequence operators as temporal operators. 
 
-%Consequently, the result of each one will depend on a representation method, which is indicated as a parameter.
+% Consequently, the result of each one will depend on a representation
+% method, which is indicated as a parameter.
+
+\todo[color=yellow]{ D'aqui fins el seguent apartat el plantejament no
+  m'entusiasma. Em sembla que és massa complicat. El concepte
+  d'interval temporal no descriu gaire el que es i la idea de
+  sellecion temporal no respon a una seleccio sino mes aviat a un
+  resampling.
+
+  Tal i com ho veig, d'uns serie en derivem (mes d'una) funcio
+  original ---tampoc no veig per que en diem de representacio ja que
+  mes aviar es al reves: la serie vol ser una representacio de la
+  funcio original. Amb aquesta funcio original ens podem replantejar
+  fer resamplings, i.e. avaluar-la en certs instants de temps. Aquests
+  resamplings son noves series temporals que tenen certa relacio amb
+  la serie inicial.
+
+  Com veus aquest plantejament? que em perdo?
+}
 
 
 We define a temporal interval operation to introduce this concept.
@@ -586,70 +581,84 @@ temporal representation function over an argument as $S[t_i,t_i]^r
 \equiv \{ (t_i, S(t_i)^r) \}$.
 
 
+%
+% Realment tot el que segueix ja s'ha dit a la introducció. Si cal es
+% pot reforçar alguna cosa que de la introducció amb
+% material/referencies d'aqui (Aleix?). També s'ha dit que el model
+% multiresolució aborda aquests temes. No se si cal repetir-ho de
+% nou. De moment ho faig fora. A veure si es troba a faltar.
+% SVM
+
+% \subsection{Non ideal time series}
+% \label{sec:model:properties} 
+
+% The model introduced so far assumes to a certain extent that time
+% series are ideal. However, because of the data acquisition process, it
+% is difficult to obtain ideal time series in actual practice. Following
+% we describe some characteristics of time series that challenge manipulating them.
+
+% First, clock is a crucial measuring instrument in time
+% series. Precision and accuracy is very important in timestamps.  In
+% \cite{kopetz11:realtime} these concepts are well described as well as
+% solving methods, especially clock synchronisation methods.
+
+
+% Second, unknown data can corrupt the database. Unknown data appear
+% when data have not been captured or when they have been acquired
+% erroneously. Then data validation must be performed, which can result
+% in rejecting new values if they are not correct or in reconstructing
+% these erroneous data.  Data validation process has to consider when
+% values are outside the possible range domain, when there has not been
+% possible to acquire a sample, when the time of acquisition between
+% measures is not considered freshness, etc. 
+
+% % \acro{MTSMS} is designed to
+% % cope with this data validation process with the help of time series
+% % representation functions such as \zohe{}.
+
+
+% Third, enormous quantity of data difficults computations.  Time series
+% come from data recollected at monitoring systems and so their size gets
+% very big as continuously new measures are added.  
+
+% % \acro{MTSMS} is
+% % designed to be an storage solution with data size reduction by using
+% % time series aggregate operations.
+
+
+% Forth, sample period irregularities difficult later time series
+% analysis. That is when data have not been acquired uniformly at time it
+% is harder to apply join operations between time series and it do not
+% allow to apply time series analysis algorithms defined for sequences
+% approaches. 
 
 
 
-\subsection{Properties}
-\label{sec:model:properties} 
+% \todo{Aixo ja s'ha dit. Potser moure la definicio formal com a exemple
+%   en algun lloc per no perdre-la}
+% %
+% A time series is regular when its measures are equi-spaced in time,
+% according to \cite{last:hetland}. Let $S$ be a time series, $i$
+% be a time instant and $d$ be a time duration. Then the time
+% series' measures can be located in the time interval $I_0=[i,
+% i+d]$ and its multiples $I_n=[i+nd, i+(n+1)d]$
+% for $n=0,1,2,\ldots$. When time series' measures are equally spaced we
+% say it to be regular.
 
-In the acquisition of data it is difficult to obtain ideal times
-series as described. Following we note some properties of time series
-that can be problematic when manipulating them.
-
-First, clock is a crucial measuring instrument in time
-series. Precision and accuracy is very important in timestamps.  In
-\cite{kopetz11:realtime} these concepts are well described as well as
-solving methods, especially clock synchronisation methods.
-
-
-Second, unknown data can corrupt the database. Unknown data appear
-when data have not been captured or when they have been acquired
-erroneously. Then data validation must be performed, which can result
-in rejecting new values if they are not correct or in reconstructing
-these erroneous data.  Data validation process has to consider when
-values are outside the possible range domain, when there has not been
-possible to acquire a sample, when the time of acquisition between
-measures is not considered freshness, etc. \acro{MTSMS} is designed to
-cope with this data validation process with the help of time series
-representation functions such as \zohe{}.
+% \begin{definition}
+%   Let $S=\{m_0,$ $\ldots,$ $m_k\}$ be a time series and $d$ a time
+%   duration. $S$ is \emph{regular} if and only if $\forall m \in
+%   S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = d$.
+% \end{definition}
 
 
-Third, enormous quantity of data difficults computations.  Time series
-come from data recollected at monitoring systems and so their size gets
-very big as continuously new measures are added.  \acro{MTSMS} is
-designed to be an storage solution with data size reduction by using
-time series aggregate operations.
-
-
-Forth, sample period irregularities difficult later time series
-analysis. That is when data have not been acquired uniformly at time it
-is harder to apply join operations between time series and it do not
-allow to apply time series analysis algorithms defined for sequences
-approaches.  \acro{MTSMS} tries to storage regular time series in the
-process of consolidation.  Next we detail the regular concept for time
-series.
-
-
-A time series is regular when its measures are equi-spaced in time,
-according to \cite{last:hetland}. Let $S$ be a time series, $i$
-be a time instant and $d$ be a time duration. Then the time
-series' measures can be located in the time interval $I_0=[i,
-i+d]$ and its multiples $I_n=[i+nd, i+(n+1)d]$
-for $n=0,1,2,\ldots$. When time series' measures are equally spaced we
-say it to be regular.
-
-\begin{definition}
-  Let $S=\{m_0,$ $\ldots,$ $m_k\}$ be a time series and $d$ a time
-  duration. $S$ is \emph{regular} if and only if $\forall m \in
-  S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = d$.
-\end{definition}
-
-
-If a time series is not regular, it can be regularised by the temporal
-selection operation. Let $S$ be a time series, $i$ and $d$ the
-desired regularity parameters, and $k\in\N$ a limit for the scope of
-the range.  A regularised $S$ is obtained with $S[T]^r$ where $T =
-\{i+nd | n\in\N \wedge n\leq k \}$ is a set of time instants equi-spaced.
+% \todo{Aixo moure-ho al final de l'apartat anterior}
+% %
+% If a time series is not regular, it can be regularised by the temporal
+% selection operation. Let $S$ be a time series, $i$ and $d$ the
+% desired regularity parameters, and $k\in\N$ a limit for the scope of
+% the range.  A regularised $S$ is obtained with $S[T]^r$ where $T =
+% \{i+nd | n\in\N \wedge n\leq k \}$ is a set of time instants equi-spaced.
 
 
 
