@@ -62,7 +62,7 @@ instant. We define it below.
   Let $v\in\cal{V}$ be a value and let $t\in\cal{T}$ be the time
   instant when the value was acquired. We define a \emph{measure} $m$
   as the tuple $m=(t,v)$. The domain of a measure $m$, written as
-  $\dom m$, is the domain of its value.
+  $\dom m$\todo{parentesis?}, is the domain of its value.
 \end{definition}
 
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
@@ -115,8 +115,8 @@ concept. Following~\cite{assfalg08:thesis}, a time series can record
 more than one phenomena if they share the same acquisition time
 instants.  This kind of series are known as \emph{multivalued time
   series}. Let $S$ be a multivalued time series and let its domain be
-$\dom(S)={\cal{V}}_1\times\cdots\times{\cal{V}}_n$. Then, we write its
-measures as $m=(t,v_1,v_2,\ldots,v_n)$.
+$\dom(S)={\cal{V}}_1\times\cdots\times{\cal{V}}_n$\todo{$\cal{T}$
+  també?}. Then, we write its measures as $m=(t,v_1,v_2,\ldots,v_n)$.
 
 
 
@@ -168,7 +168,7 @@ $\sup S$, as
   \max S    & \text{when $S$ non empty}\\
   -\infty   & \text{otherwise}
 \end{cases}
-\]
+\]\todo{ha de retornar mesura (-inf,inf)}
 Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
 and the \emph{infimum} of $S$, noted as $\inf S$.
 
@@ -213,6 +213,7 @@ time series $R \cupt S = \{ m | (m \in R \wedge m \in S) \vee (m \in R
 \todo{te sentit en la unio el concepte 'temporal'? te el mateix sentit
   que a la pertanyensa? No aplicaria millor el concepte 'unio
   simetrica'?}
+% mentre que a les operacions següents podem trobar una relació amb la pertinença, a la unió no li trobo. Per coherència amb les altres també definia unió i unió temporal tot i que de forma arbitrària. Potser sí que seria millor dir-li simètrica.
 %
 It is interesting to emphasize that the union is a non commutative
 operation while the temporal union is a commutative one.
@@ -267,7 +268,7 @@ Based on union and difference we can define \emph{intersection} as
 $S_1\cap S_2 \equiv S_1 - (S_1 - S_2)$ and \emph{symmetric difference}
 as $S_1 \ominus S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$. The
 corresponding temporal operations can also be defined.
-
+\todo{canviar per R i S?}
 
 Relational \acro{DBMS} extend set operators with specific ones like
 projection, selection, rename, product or join. This kind of operators
@@ -298,7 +299,7 @@ every measure.  Let $S$ be a time series, let $\cal{V}=\dom S$, and
 let $f:\cal{T}\times\cal{V}\rightarrow\cal{T}\times\cal{V'}$ be a
 function over a measure returning a measure. The \emph{map} of $f$
 over $S$ is a new time series defined as $\map(S,f)=\{f(m)|m\in
-S\}$. Note that $\dom(map(S,f))=\cal{V'}$.
+S\}$. Note that $\dom(\map(S,f))=\cal{V'}$.
 %
 \todo[color=green]{Compte amb la notacio per definir funcions. Veure
   la wikipedia anglesa (apartat corresponent)}.
@@ -322,6 +323,8 @@ m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
 \todo[color=yellow]{No se si els papers d'R i S no estan
   intercanviats. No es R la serie transformada i S els valors
   inicials?}
+% No, seguint el cas simple següent d'agregació es veu més clar el
+% paper de cada paràmetre
 
 
 The classical aggregation operator combines the data of a time series
@@ -374,8 +377,8 @@ $\agg(S,(0,0),f) = (0,5)$, the sum of all the values of $S$. Note that
 time is meaningless in this computation.
 
 The fold operator allows, for instance, to select the measures having
-its value equal to one.  We define the fold function $f(S,m)=S\cup S'$
-where $S'=\{m\}$ if $V(m)=1$ or $S'=\emptyset$ otherwise. Then
+its value equal to one.  We define the fold function $f(R,m)=R\cup R'$
+where $R'=\{m\}$ if $V(m)=1$ or $R'=\emptyset$ otherwise. Then
 $\fold(S,\emptyset,f)=\{(1,1),(4,1)\}$.
 \end{example}
 
@@ -394,7 +397,7 @@ the value domain. The operator $\odot$ can be extended to the time
 series as:
 %
 $S\odot R=\map(S\join R, f)$ being $f$ the funcion
-$f(t,v,w)=(t,v\odot w))$.
+$f(t,v,w)=(t,v\odot w)$.
 %
 This allows to extend real binary operations such as sum or division
 to time series.  
@@ -408,7 +411,7 @@ slice, successor and concatenation.
 
 
 The classical interval concept can be applied to time domain. In this
-context, given two time instants $s$ and $t$, the standart interval
+context, given two time instants $s$ and $t$, the standard interval
 notation applies.
 %
 Following~\cite{last:hetland}, to slice a time series $S$ means to
@@ -422,7 +425,7 @@ T(m)\in(s,t]\}$.
 The ordinary time order allows to define te concepts of successor and
 predecesor for the measures of a time series.
 %
-Let $S=\{m_0,\ldots,m_k\}$ be a time series and $m$ be and arbitrary
+Let $S=\{m_0,\ldots,m_k\}$ be a time series and $m$ be an arbitrary
 measure.
 %
 We say that $m_i=\nex_S(m)$ is the \emph{next} measure to $m$ in $S$ if and
@@ -445,7 +448,7 @@ Let $R$ and $S$ be two time series and let $\dom R=\dom S$. The
 series that contains all the measures of $R$ together with those of
 $S$ that do not intersect with the time interval of $R$. That is,
 $R||S= R\cup (S - S[\inf R,\sup R])$.
-
+\todo{inf i sup retornen mesures, cal indicar T(inf)}
 
 
 \subsubsection{Temporal function operations}
@@ -465,9 +468,9 @@ continuous nature of a time series, when the domain of time and value
 attributes can be plotted then the graph is equivalent to a graphical
 representation.  
 %
-Let $S$ be a time series and $T$ the time domain. The \emph{graph} of
+Let $S$ be a time series and $\cal{T}$ the time domain. The \emph{graph} of
 the time series $S$ is a set of ordered pairs $\graph S
-=\{(t,S(t))|t\in T\}$ where $S(t)$ is a temporal representation
+=\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a temporal representation
 function for the time series.
 %
 \todo{tot aixo hauria d'anar al final, depres de le srepresentacions
@@ -543,6 +546,27 @@ sequence operators as temporal operators.
 
   Com veus aquest plantejament? que em perdo?
 }
+
+% Més aviat una sèrie temporal representa uns valors adquirits en uns
+% instants de temps (una funció original discreta f(k)). Aquest
+% problema podria provenir de l'adquisició d'una variable contínua
+% (una funció original contínua f(t)). Aleshores plantegem S(t)
+% equivalent a f(t). També podriem plantejar S(t) equivalents a f(k)
+% però aquí no ho fem, serien funcions parcials. A partir de S(t)
+% clarament podem dibuixar el gràfic de la sèrie temporal, descrit com
+% a graf més general (p.ex. quan no el podem dibuixar). Per tant,
+% podem dir que S(t) té molta relació amb la representació gràfica de
+% la sèrie temporal?
+%
+% Potser millor dir
+% que la sèrie temporal és una modelització pel problema de la funció
+% original?
+%
+% Interval i selecció: potser sí que els noms no són els
+% adequats. Resampling també estaria bé. L'interval es diu així perquè
+% té la forma S[x,y] tot i que particularitzat per r; és una
+% interpretació en matemàtica discreta de S(t) en un interval [x,y] i
+% en el context de r.
 
 
 We define a temporal interval operation to introduce this concept.
