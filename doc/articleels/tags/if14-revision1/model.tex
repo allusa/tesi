@@ -62,7 +62,7 @@ instant. We define it below.
   Let $v\in\cal{V}$ be a value and let $t\in\cal{T}$ be the time
   instant when the value was acquired. We define a \emph{measure} $m$
   as the tuple $m=(t,v)$. The domain of a measure $m$, written as
-  $\dom m$\todo{parentesis?}, is the domain of its value.
+  $\dom m$, is the domain of its value.
 \end{definition}
 
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
@@ -94,7 +94,7 @@ sequences~\cite{last:hetland}. We define it as follows.
   Let $S = \{m_0,\ldots,m_k\}\subset\cal{T}\times\cal{V}$ be a finite
   set of measures of the same type. Then, $S$ is a \emph{time series}
   iff $\forall i,j: i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$.
-  We define the domain of a time series $S$, denoted as $\dom(S)$, as
+  We define the domain of a time series $S$, denoted as $\dom(S)$ \todo{sense parentesis?}, as
   the domain of its measures.
 \end{definition}
 
@@ -698,7 +698,7 @@ The \acro{MTSMS} are \acro{TSMS} that store time series with a lossy
 compression approach, that is some data are selected and spread
 in different time resolutions. The \acro{MTSMS} model is based on the
 concepts of measures and time series as defined in
-Section~\ref{sec:model:TSMS} and we call multiresolution time series
+Section~\ref{sec:model:TSMS}. We call multiresolution time series
 to each time series stored in a multiresolution database
 (\acro{MTSDB}).
 
@@ -740,49 +740,60 @@ multiresolution schema and extract time series data.
 Following we define the \acro{MTSMS} model structure and structural
 operators, the operations to query a multiresolution schema, and
 attribute aggregate functions.  Furthermore, schema manipulation
-operations could be defined but we focus on structure and data query .
+operations could be defined but we focus on structure and data query.
 
 
 \subsection{Structure}
 
 A \emph{buffer} is a container for a regular or a irregular time
 series. The buffer objective is to regularise the time series using a
-predetermined step and an attribute function. We name
-\emph{consolidation} to this action.
+predetermined temporal step and an attribute aggregate function.  We
+name \emph{consolidation} to this action of regularisation.  Note that
+attribute aggregate functions are defined thoroughly in
+Section~\ref{sec:model:interpolador}.
 \begin{definition}%(Buffer)
-  A \emph{buffer} is defined as the tuple $(S_B,\tau,\delta,f)$ where
-  $S_B$ is a time series, $\tau$ is the last consolidation time,
-  $\delta$ is the duration of the consolidation step and $f$ is an
-  attribute aggregate function.
-
-  An empty buffer $B_{\emptyset} = (\emptyset,t_0, \delta, f)$ has an
-  empty time series, an initial consolidation time $t_0$ and
-  predetermined $\delta$ and $f$.
+  Let $S$ be a time series, let $\tau\in\cal{T}$ be the last
+  consolidation time, let $\delta\in\cal{T}$ be the consolidation step
+  and let $f$ be an attribute aggregate function. We define a
+  \emph{buffer} $B$ as the tuple $B=(S,\tau,\delta,f)$.
 \end{definition}
 
-Operator \emph{addBuffer} adds a measure to its time series. Let $B=
-(S_B,\tau,\delta,f)$ be a buffer and $m$ be a measure. $\addB: B
-\times m \mapsto (S'_B,\tau,\delta,f)$ where $S'_B = S_B \cup \{m\} $.
+An empty buffer is noted as $B = (\emptyset,t, \delta, f)$. That is,
+it has an empty time series, an initial consolidation time
+$t\in\cal{T}$ and predetermined $\delta$ and $f$.  From the empty
+buffer all the consolidation time instants can be determined as
+$\tau_n=t+n\delta, n\in\N$.  Each $\tau_n$ determines the time
+interval $I=[\tau_n,\tau_n+\delta]$ for which the consolidation is
+applied. Let $B=(S,\tau_n,\delta,f)$ be a buffer and $I$ be the
+corresponding time interval. The consolidation of $B$ computes a new
+measure $m=f(S,I)$ that summarises the data of $S$ comprised in the
+interval $I$.
 
-From the $B_{\emptyset}$ all the consolidation time instants can be
-calculated as $t_0+n\delta, n\in\N$. The consolidation of $B$ in a
-time interval $I=[\tau,\tau+\delta]$ results in a measure
-$m'=f(S_B,I)$ where $f$ is an attribute aggregate function
-$f$. Operator \emph{consolidateBuffer} consolidates a set of measures
-and removes the consolidated part of the time series from the
-buffer. Let $B=(S_B,\tau,\delta,f)$ be a buffer. $\consB : B \mapsto
-B' \times m'$ where $ B'= (S'_B,\tau+\delta,\delta,f)$, $m' =
-f(S,[\tau,\tau+\delta])$, and $S'_B$ is the discarding of historic
-data not needed anymore, for example $S'_B = S[\tau+\delta,+\infty]$.
+A buffer has two structural operations. One adds a measure to the
+buffer and the other consolidates the buffer.
 
-On a simplified way, the \emph{consolidateBuffer} is only applied to the present
-consolidation interval and the total consolidation is obtained by
-successive application of the operator. This requires measures to be
-added by time order and to consolidate the buffer when the time of
-some measure is bigger than the buffer's next consolidation time.  Let
-$B=(S_B,\tau,\delta,f)$ be a buffer and $m=\sup(S_B)$ the maximum
-measure. $B$ is consolidable if and only if $T(m) \geq
-\tau+\delta$.
+Let $B=(S,\tau,\delta,f)$ be a buffer and let $m$ be a measure.  The
+addition of $m$ to $B$, noted as $\addB(B,m)=$, is a new buffer
+$\addB(B,m)=(S',\tau,\delta,f)$ where $S' = S \cup \{m\} $.
+
+Let $B=(S,\tau,\delta,f)$ be a buffer. The consolidation of $B$, noted
+as $\consB(B)$, is a new buffer and a new measure $\consB(B)=(B',m')$
+where $ B'= (S',\tau+\delta,\delta,f)$ and $m' =
+f(S,[\tau,\tau+\delta])$. During the consolidation, one can also remove the
+consolidated part of the time series from the buffer. That is, to
+include the notion of discarding historic data that is not needed
+anymore. It could be achived for example with $S' =
+S[\tau+\delta,+\infty]$.
+
+
+On a simplified way, the consolidation of a buffer is only applied to
+the present consolidation interval and the total consolidation is
+obtained by successive application of the operator. This requires
+measures to be added by time order and to consolidate the buffer when
+the time of some measure is bigger than the buffer's next
+consolidation time.  Let $B=(S,\tau,\delta,f)$ be a buffer and
+$m=\sup S$ the maximum measure. We say that $B$ is consolidable if and only if
+$T(m) \geq \tau+\delta$.
 
 
 A \emph{disc} is a finite capacity measures container. A time series
@@ -790,42 +801,48 @@ stored in a disc has its cardinal bounded. When the cardinal of the
 time series is to overcome the limit, some measures need to be
 discarded.
 \begin{definition}%(Disc)
-  A \emph{disc} is a tuple $(S_D,k)$ where $S_D$ is a time series and
-  $k\in\N$ is the maximum allowed cardinal of $S_D$.  An empty disc
-  $D_{\emptyset} = (\emptyset,k)$ has an empty time series and $k$ is
-  the maximum cardinal allowed.
+  Let $S$ be a time series and let $k\in\N$ be the maximum allowed
+  cardinal of $S$. We define a \emph{disc} $D$ as the tuple
+  $D=(S,k)$. 
 \end{definition}
 
-The cardinal of the times series is kept under control by the add
-operator. Let $D=(S_D,k)$ be a disc and $m$ be a measure. $\addD : D\times m\mapsto (S'_D,k)$ where %
-$
- S_D' = \begin{cases}
-  S_D\cup\{m\}                 & \text{if } |S_D|<k  \\
-  (S_D-\{\min(S_D)\}) \cup \{m\} & \text{otherwise}
+An empty disc is noted as $D = (\emptyset,k)$. That is, it has an
+empty time series and a predetermined $k$.
+
+A disc has one structural operation.  It adds a measure to the disc
+while keeping under control the cardinal of the times series. Let
+$D=(S,k)$ be a disc and let $m$ be a measure.  The addition of $m$ to
+$D$, noted as $\addD(D,m)$, is a new disc $\addD(D,m)=(S',k)$ where %
+\[
+ S' = \begin{cases}
+  S\cup\{m\}                 & \text{if } |S|<k  \\
+  (S-\{\min S\}) \cup \{m\} & \text{otherwise}
 \end{cases}  
-$.
+\]
 
 
 A \emph{resolution subseries} is a structure that regularises and
-aggregates a time series. It is composed of a buffer, that contains
-the partial time series to be regularised, and a disc, that contains
+aggregates a time series. It is composed of a buffer, which contains
+the partial time series to be regularised, and a disc, which contains
 the regularised time series.
 \begin{definition}%(Resolution subseries)
-  A \emph{resolution subseries} is a tuple $(B,D)$ where $B$ is a
-  buffer and $D$ is a disc.  An empty buffer and empty disc imply an
-  empty resolution subseries $R_{\emptyset} =
-  (B_{\emptyset},D_{\emptyset})$.
+  Let $B$ be a buffer and let $D$ be a disc.  We define a
+  \emph{resolution subseries} $R$ as the tuple $R=(B,D)$.  
 \end{definition}
  
+An empty buffer and an empty disc imply an empty resolution subseries. 
+
+
 The operators of a resolution subseries extend the buffer and disc
-ones. Let $R=(B,D)$ be a resolution subseries and $m$ be a measure.
-(i) The addition of the measure to the buffer of the resolution
-subseries: $\addR : R \times m \mapsto R'$ where $R'= (B',D)$,
-and $B'= \addB(B,m)$. (ii) The consolidation of the resolution
-subseries by consolidating its buffer and adding the consolidated
-measure to its disc: $\consR : R \mapsto R'$ where $R'=
-(B',D')$, $(B',m') = \consB(B)$, and $D'= \addD(D,m')$.  A resolution
-subseries is consolidable only when its buffer is consolidable.
+ones. Let $R=(B,D)$ be a resolution subseries and let $m$ be a
+measure.  The addition of $m$ to $R$, noted as $\addR(R,m)$, is a new
+resolution subseries $\addR(R,m)=(B',D)$ where $B'= \addB(B,m)$ is the
+addition of the measure to the buffer.  The consolidation of $R$,
+noted as $\consR(R)$, is a new resolution subseries
+$\consR(R)=(B',D')$ where $(B',m') = \consB(B)$ is the consolidation
+of the buffer and $D'= \addD(D,m')$ is the addition of the
+consolidated measure to the disc. A resolution subseries is
+consolidable only when its buffer is consolidable.
 
 
 
@@ -836,29 +853,37 @@ time series is stored regularised and distributed with different
 resolutions in the various resolution subseries, as previously shown
 in Figure~\ref{fig:model:mtsdb}.
 \begin{definition}%(Multiresolution time series)
-  A \emph{Mul\-ti\-re\-solution time series} is a set of resolution
-  subseries $\{R_0, \dots, R_d\}$.  An empty multiresolution series
-  has empty resolution subseries $M_{\emptyset}=\{R_{0_\emptyset},
-  \dots, R_{d_\emptyset}\}$. Usually there are no repeated pairs of
-  ($\delta_i$,$f_i$) among a multiresolution series, so they act as a
-  key attributes.
+  Let $M=\{R_0, \dots, R_k\}$ be a finite set of resolution
+  subseries. Then $M$ is a \emph{multiresolution time series}.
 \end{definition}
 
+
+An empty multiresolution series has empty resolution subseries
 Therefore, defining a multiresolution time series consists basically
 in defining the quantity of resolution subseries and the
-$(\delta,\tau,f,k)$ configuration parameters of each.
+$(\delta,\tau,f,k)$ configuration parameters for each.  Usually there
+are no repeated pairs of $(\delta,f)$ among a multiresolution
+series, so they act as  key attributes.
+
 
 
 The operators of a multiresolution time series apply to every
 resolution subseries contained. Let $M=\{R_0,\allowbreak
-\dots,\allowbreak R_d\}$ be a multiresolution time series.  (i) The
-addition of a measure to every resolution subseries: $\addM : M \times
-m \mapsto \{R'_0, \dots,\allowbreak R'_d\}$ where
-$R'_i=\addR(R_i,m)$. (ii) The consolidation of all resolution
-subseries: $\consM : M \mapsto \{R'_0,\allowbreak \dots,\allowbreak
-R'_d\}$ where $R'_i = \consR(R_i)$ if $R_i$ $\text{ consolidable}$ and
-$R'_i=R_i$ $\text{otherwise}$.
-
+\dots,\allowbreak R_k\}$ be a multiresolution time series and let $m$
+be a measure.
+%
+The addition of a measure to every resolution subseries, noted as
+$\addM(M,m)$, is a new multiresolution time series $\addM(M,m)=\{R'_0,
+\dots,\allowbreak R'_k\}$ where $R'_i=\addR(R_i,m)$. The consolidation
+of all resolution subseries, noted as $\consM(M)$ is a new
+multiresolution time series $\consM(M)=\{R'_0,\allowbreak
+\dots,\allowbreak R'_k\}$ where 
+\[R'_i=
+\begin{cases}
+\consR(R_i) & \text{if } R_i \text{ consolidable}\\
+ R_i & \text{otherwise}
+\end{cases}
+\]
 
 The multiresolution consolidation operation should be applied
 regularly based on a consolidation clock. When the measure ordered
@@ -882,28 +907,32 @@ There are two basic time series queries for a \acro{MTSMS}: (i) extract a
 time subseries from a resolution subseries' disc or (ii) query for a
 total time series from all consolidated data.
 
-Let $M=\{R_0, \dots, R_d\}$ be a multiresolution time series and
-$(\delta,f)$ be the key attributes. The first query selects a disc
-from a multiresolution time series, $\seriedisc: M\times \delta \times
-f \mapsto S'_D$ where $S'_D \in D' | (B',D') \in R',R' \in M$.
+Let $M$ be a multiresolution time series and let $(\delta,f)$ be a
+pair of key attributes.  The first query, denoted as
+$\seriedisc(M,\delta,f)$, is a time series such that $\exists (B,D)
+\in M: B=(S,\tau,\delta,f) \wedge D=(\seriedisc(M,\delta,f), k) $
+where $S,\tau,k$ are bound variables.  Note that we
+assume there are no repeated $(\delta,f)$ pairs in $M$.
 
-Let $M*=\{R_0, \dots, R_d\}$ be a multiresolution time series where
-$R_i$ have a total order by their attribute $\delta_i$.  The second
-query concatenates all discs' time subseries, $\totalseries: M*
-\mapsto S'$ where $S' = S_{D0} || S_{D1} || \cdots || S_{Dd}$ and
-$\delta_0 < \delta_1 < \cdots < \delta_d$. This query tries to obtain
-the most resolution as possible, which is to say by $\delta$ order.
-Being $(\delta,f)$ the key attributes, the $M*$ can be obtained from
-$M$ by selecting resolution subseries with same $f$. If we operated a
-$\totalseries$ to a general $M$ then it could be ambiguous as it could
-contain repeated $\delta_i$.
+
+Let $M*=\{R_0, \dots, R_k\}$ be a multiresolution time series where
+$R_i$ have a strict order by their attribute $\delta_i$.  The second
+query, noted as $\totalseries(M*)$, is the concatenation of all discs'
+time subseries $\totalseries(M*) = S_{0} || S_{1} || \cdots || S_{k}$
+such that $\delta_0 < \delta_1 < \cdots < \delta_k$ and
+$S_i=\seriedisc(M*,\delta_i,f)$ where $f$ is a bound variable . This
+query tries to obtain the most resolution as possible, which is to say
+by $\delta$ order.  Being $(\delta,f)$ the key attributes, the $M*$
+can be obtained from a general $M$ by selecting resolution subseries
+with same $f$. If we operated a $\totalseries$ to a general $M$ then
+it could be ambiguous as it could contain repeated $\delta$.
 
 
 From these two basic time series queries, more elaborated queries can
 be applied to \acro{MTSMS} by using \acro{TSMS} operations. For
-example, let $M_1$ and $M_2$ be two multiresolution time series, we
-can compute the sum of both with $\totalseries(M_1) +
-\totalseries(M_2)$.
+example, let $L$ and $M$ be two multiresolution time series, we
+can compute the sum of both with $\totalseries(L) +
+\totalseries(M)$.
 % This is the general algebraic expressions that describes the model,
 % but an implementation of the model could accomplish this operation
 % in a more efficient way.
@@ -914,6 +943,10 @@ can compute the sum of both with $\totalseries(M_1) +
 
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
+
+
+\todo{refet fins aqui}
+
 
 Attribute aggregate functions are a specific case of \acro{TSMS}
 aggregate operations for summarising time series data when
