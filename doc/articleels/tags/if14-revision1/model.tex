@@ -945,24 +945,28 @@ can compute the sum of both with $\totalseries(L) +
 \label{sec:model:interpolador}
 
 
-\todo{refet fins aqui}
-
 
 Attribute aggregate functions are a specific case of \acro{TSMS}
 aggregate operations for summarising time series data when
-consolidating a buffer. Let $S$ be a time series and $t_i$ and $t_j$
-two time instants. An attribute aggregate function $f$ calculates a
-measure that summarises the measures of $S$ included in the time
-interval $I=[t_i,t_j]$:
-\[
-f : S=\{m_0,\ldots,m_k\} \times I=[t_i,t_j] \mapsto m'
-\]
-where, generally, $m'$ results from two operations on the time series:
-(i) a time subseries selection $S'$ depending on the consolidating
-interval, for example $S' = S[t_i,t_j]$, and (ii) a \acro{TSMS}
-aggregation over this time subseries such as $m' = \agg(S',m, \fagg)$
-where $\fagg$ is a function over two measures and $m$ an initial
-measure.
+consolidating a buffer. Let $S$ be a time series and let $[x,v]$ be a
+time interval. An attribute aggregate function $f$ calculates a new
+measure $m=f(S,[x,v])$. Then, this resulting measure $m$ is interpreted to
+summarise the measures of $S$ for the consolidation interval $[x,v]$.
+% \[
+% f : S=\{m_0,\ldots,m_k\} \times I=[t_i,t_j] \mapsto m'
+% \]
+% \[
+% f: \cal{P}(\cal{T}\times\cal{V}) \times (\cal{T}\times\cal{T}) \rightarrow \cal{T}\times\cal{V}
+% \]
+
+
+
+Generally, $m$ results from two operations on the time series.  First,
+a time subseries selection $S'$ depending on the consolidating
+interval. For example $S' = S[x,v]$. Second, a \acro{TSMS} aggregation
+over this time subseries. For example $m = \agg(S',l, g)$, where $g$
+is a function over two measures and $l$ an initial measure as defined
+in \acro{TSMS} operations.
 
 
 Many different attribute aggregate functions can be used in order to
@@ -975,47 +979,47 @@ process.
 
 
 As it is possible to define many attribute aggregate
-functions no global assumptions can be made about them. Each user has
+functions, no global assumptions can be made about them. Each user has
 to decide which combination of aggregation and representation fits
 better with the measured phenomena.  Therefore, \acro{MTSMS} has to be
-designed for allowing users to define aggregate functions.
+designed generic for allowing users to define aggregate functions.
 
 
+For the rest of this Section, let $m=f(S,[x,v])$ be the resulting
+measure of an attribute aggregation function $f$ applied to a time
+series $S$ for a time interval $[x,v]$.
 
-
-
-Regarding the resulting consolidation time, normally it will be
-$T(m')=t_j$ to be consistent with the consolidation operation of a
-buffer where $\tau' = \tau + \delta \equiv t_j$. However $T(m')$ can
-have a time offset with the buffer consolidating times, as instance
+Regarding the resulting consolidation time, usually it will be
+$T(m)=v$ to be consistent with the consolidation operation of a
+buffer, where $\tau' = \tau + \delta \equiv v$. However $T(m)$ could
+have a time offset with the buffer consolidating times. As instance,
 the resulting measure can be aggregated from a time subseries $S'$
-with open interval $S'=S(t_i,t_j)$, closed interval $S'=S[t_i,t_j]$,
-or other combinations like $S'=S(t_0-d,t_j-d]$ where $d$ is a time
-duration.  The time offset can also be variable, as for example an
-aggregate function that returns the first measure of the interval
-$S[t_i,t_j)$, $m'=\min(S[t_i,t_j))$, then the resulting time can be
-between $t_i \leq T(m') < t_j$.
+with open interval $S'=S(x,v)$, closed interval $S'=S[x,v]$, or other
+combinations like $S'=S(x-d,v-d]$, where $d$ is a time duration that
+delays the consolidation to $T(m)=v-d$.  This time offset can also be
+variable. For example an aggregate function that returns the first
+measure of the interval $m=\min(S[x,v))$, then the resulting
+time can be between $x \leq T(m) < v$.
 
 
 Attribute general patterns can be defined that explain how the
-resulting value $V(m')$ is calculated, letting the resulting time
-instant $T(m')$ subject to interpretation.  Next there are some
+resulting value $V(m)$ is calculated, letting the resulting time
+instant $T(m)$ subject to interpretation.  Next there are some
 attribute patterns examples based on temporal function time series
-operators, that is the time series aggregated corresponds to a
-continuous function $S(t)^r$ where $r$ is a representation as has been
-described in Section~\ref{sec:model:tfunc}. The patterns of these
-functions leave $T(m')$ undefined as well as the representation $r$ of
-the time series. Let the time be continuous on all the time domain
-$t\in T$:
+operators. That is, the time series aggregated is interpeted by the
+temporal representation function $S(t)^r$ where the time is continuous
+on all the time domain $t\in\cal{T}$, as has been described in
+Section~\ref{sec:model:tfunc}. The patterns of these functions leave
+$T(m)$ undefined as well as the representation $r$ of the time series.
 \begin{itemize}
-\item maximum$^r$: $S \times I \mapsto m'$ where $V(m') =
-  \max\limits_{\forall t \in I}(S(t)^r)$. It summarises $S$ with the maximum
-  of the measure values in the interval $I$.
-\item last$^r$: $S \times I \mapsto m'$ where $V(m') = S(t_j)^r$. It
-  summarises $S$ with the value at $t_j$ time instant.
-\item mean$^r$: $S \times I \mapsto m'$ where $V(m') =
-  \frac{1}{t_j-t_i} \int\limits_{t_i}^{t_j} S(t)^r dt$. It summarises $S$
-  with the mean of the function in the interval $I$.
+\item maximum$^r(S,[x,v])=m$ where $V(m) = \max\limits_{\forall t \in
+    [x,v]} S(t)^r$. It summarises $S$ with the maximum of the measure
+  values in the interval $[x,v]$.
+\item last$^r(S,[x,v])=m$ where $V(m) = S(v)^r$. It
+  summarises $S$ with the value at $v$ time instant.
+\item mean$^r(S,[x,v])=m$ where $V(m) =
+  \frac{1}{v-x} \int\limits_{x}^{v} S(t)^r dt$. It summarises $S$
+  with the mean of the function in the interval $[x,v]$.
 \end{itemize}
 
 
@@ -1027,56 +1031,52 @@ particular representations that have been defined previously: \dd{}
 and \zohe{}.
 
 
-Dirac delta attribute aggregation functions $f^\dd$ have a general
-form $f^\dd : S \times [t_i,t_j]\mapsto m'$ where $m'=(t',v')$, the
-resulting time is interpreted as centred on the interval
-$t'=\frac{t_j+t_i}{2}$ and the resulting value depends on the
-attribute, let $S'=S[t_i,t_j]^\dd$ be the selection of measures by
-Dirac delta temporal interval:
+Dirac delta attribute aggregation functions interpret the resulting
+time as centred on the interval $T(m)=\frac{x+v}{2}$. The resulting
+value $V(m)$ depends on the attribute, let $S'=S[x,v]^\dd$ be the
+selection of measures by Dirac delta temporal interval:
 \begin{itemize}
-\item maximum$^\dd$: $v' = \max\big(0,\max_{\forall m \in S'}(V(m))\big)$. 
-\item last$^\dd$: $v' = V(\max(S'))$.
-\item mean$^\dd$: $v' = \frac{1}{t_j-t_i} \sum\limits_{\forall m
-    \in S'} V(m)$, as Dirac delta function has property $\int\dd(t)dt=1$.
+\item maximum$^\dd$: $V(m) = \max\big(0,\max\limits_{\forall m' \in
+    S'} V(m')\big)$.
+\item last$^\dd$: $V(m) = V(\max S')$.
+\item mean$^\dd$: $V(m) = \frac{1}{v-x} \sum\limits_{\forall m' \in S'}
+  V(m')$. Note that Dirac delta function has property $\int\dd(t)dt=1$.
 \end{itemize}
 
-With reference to \acro{TSMS} aggregation, $\max(S')$ is an operator
+With reference to \acro{TSMS} aggregation, $\max S'$ is an operator
 defined in Section~\ref{sec:model:operations}. The remaining
 operations could be implemented with aggregation operations. As
-instance, $\sum\limits_{\forall m \in S'} V(m)$ is a sum of values
-that could be implemented as $\agg(S',(0,0),\fagg)$ where $\fagg:
-(t_a,v_a) \times (t_b,v_b) \mapsto (0,v_a+v_b)$ as showed in
+instance, $\sum\limits_{\forall m' \in S'} V(m')$ is a sum of values
+that could be implemented as $\agg(S',(0,0),g)$ where
+$g(m,n)=(0,V(m)+V(n)$, as showed in
 Example~\ref{ex:computational-operators}.
 
 
 
-\zohe{} attribute aggregation functions $f^\zohe{}$ have a general
-form $f^\zohe{} : S \times [t_i,t_j]\mapsto m'$ where $m'=(t',v')$,
-the resulting time is interpreted as right limit of the interval
-$t'=t_j$ and the resulting value depends on the attribute, let
-$S'=S[t_i,t_j]^\zohe{}$ be the selection of measures by \zohe{} temporal
-interval:
+\zohe{} attribute aggregation functions interpret the resulting time
+as the right limit of the interval $T(m)=v$. The resulting value
+$V(m)$ depends on the attribute, let $S'=S[x,v]^\zohe{}$ be the
+selection of measures by \zohe{} temporal interval:
 \begin{itemize}
-\item maximum$^\zohe{}$: $v' = \max_{\forall m \in S'}(V(m))$. 
-\item last$^\zohe{}$: $v' = V(\max(S'))$.
-\item mean$^\zohe{}$: $v' = \frac{1}{t_j-t_i} \big[ (T(o)-t_0)V(o) +
-  \sum\limits_{\forall m \in S''}( T(m)- T(\prev_S
-  m) )V(m) \big]$ where $o=\min(S')$ and $S''= S' - \{o\}$.
+\item $\maxz$: $V(m) = \max\limits_{\forall m' \in S'} V(m')$. 
+\item last$^\zohe{}$: $V(m) = V(\max S')$.
+\item $\meanz$: $V(m) = \frac{1}{v-x} \big[ (T(o)-x)V(o) +
+  \sum\limits_{\forall m' \in S''}( T(m')- T(\prev_S
+  m') )V(m') \big]$ where $o=\min S'$ and $S''= S' - \{o\}$.
 \end{itemize}
 
-A similar aggregation function to mean$^\zohe{}$ is used by \emph{RRDtool}
+A similar aggregation function to $\meanz$ is used by \emph{RRDtool}
 \cite{rrdtool} in order to summarise velocity coun\-ter
 data by keeping the total counting information, as mean aggregation
 can be seen as one keeping the area below the original signal.
 
 
-In conclusion, some patterns are very similar. As instance maximum and
-last attributes differ basically on the interval selection
+In conclusion, some patterns are very similar. As instance, maximum
+and last attributes differ basically on the interval selection
 operation. However, other patterns have a more elaborated
-interpretation in a particular representation. As instance
-mean$^\zohe{}$ and mean$^\dd$ are an elaborated interpretation for
-the general integral definition.
-
+interpretation in a particular representation. As instance, $\meanz$
+and mean$^\dd$ are an elaborated interpretation for the general
+integral definition.
 
 
 
@@ -1086,30 +1086,31 @@ the general integral definition.
   the database and we query its data.  Let $S = \{
   (1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
   (14,1),\allowbreak (19,6),\allowbreak (22,11),\allowbreak
-  (26,6),(29,0) \}$ be a time series and $M_\emptyset=\{R_0,R_1\}$ a
+  (26,6),(29,0) \}$ be a time series and let $M=\{R_0,R_1\}$ be a
   multiresolution time series where each resolution parameters are
   $\tau_0=0$ , $\delta_0=5$, $f_0 =\meanz$, $k_0=4$ and $\tau_1=0$,
   $\delta_1=10$, $f_1 =\maxz$, $k_1=2$. Therefore $R_0$ will be
   consolidated at time instants 5, 10, 15, 20, 25, 30\dots and $R_1$
   at 10, 20, 30\dots
 
-  All measures of $S$ are added to $M_\emptyset$
+  All measures of $S$ are added to $M$
   and then it is consolidated until it is no more consolidable. As
-  $T(\max(S))=29$, the last consolidation times are $\tau_0=25$ and
-  $\tau_1=20$, so we call $M_{29}$ to this multiresolution time series
+  $T(\max S)=29$, the last consolidation times are $\tau_0=25$ and
+  $\tau_1=20$, so we call $M_{29}$ to the multiresolution time series
   at this state.
 
-  Then the two time subseries consolidated are obtained by querying
-  $\seriedisc(M_{29},5,\allowbreak \meanz)=\{(10,3),\allowbreak
-  (15,\allowbreak 2),\allowbreak (20,7),\allowbreak (25,8)\}$ and
-  $\seriedisc(M_{29},10,\allowbreak  \maxz) =\allowbreak \{ \allowbreak
-  (10,6),\allowbreak (20,11)\}$. Regarding buffers, note that
-  $S_{B0_{29}}= \{\allowbreak (26,6),\allowbreak (29,0)\allowbreak \}$
-  and $S_{B1_{29}}=\{\allowbreak (22,11),\allowbreak (26,6),(29,0)\}$.
+  Then, the two time subseries consolidated are obtained by querying
+  $\seriedisc(M_{29},5,\allowbreak \meanz)=\{\allowbreak
+  (10,3),\allowbreak (15,\allowbreak 2),\allowbreak (20,7),\allowbreak
+  (25,8)\}$ and $\seriedisc(M_{29},\allowbreak 10,\allowbreak \maxz)
+  =\allowbreak \{ \allowbreak (10,6),\allowbreak (20,11)\}$. Regarding
+  buffers, let $S_0$ and $S_1$ be the $M_{29}$ buffer's time series,
+  note that $S_0= \{\allowbreak (26,6),\allowbreak (29,0)\allowbreak
+  \}$ and $S_1=\{\allowbreak (22,11),\allowbreak (26,6),(29,0)\}$.
 
-  In this particular example
+  In this particular example,
   $ \totalseries(M_{29}) = \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has
-  double resolution than $R_1$. 
+  double resolution than $R_1$ and $k_0$ is bigger than $k_1$. 
 \end{example}
 
 
@@ -1119,7 +1120,7 @@ the general integral definition.
 %%% ispell-local-dictionary: "british"
 %%% End:
 
-% LocalWords:  genericity multiresolution subseries consolidable MTSM
+% LocalWords:  genericity multiresolution subseries consolidable
 
 % LocalWords:  pathologies MTSMS TSMS cardinality multivalued infimum
 % LocalWords:  multivalues supremum
