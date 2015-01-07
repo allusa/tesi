@@ -124,21 +124,22 @@ True
 
 \subsection{RoundRobinson}
 
-RoundRobinson is the referent implementation for the model concepts of
-multiresolution time series, resolution subseries, buffers, discs, and
-attribute aggregate functions. Figure
-\ref{fig:implementacio:roundrobinson-uml} shows the relationships
-among these objects in a \acro{UML} diagram. A
-\emph{MultiresolutionSeries} object is an aggregation of
-\emph{Resolution} objects. A \emph{Resolution} is composed of one
-\emph{Buffer} and one \emph{Disc}. Each \emph{Buffer} is associated to
-one \emph{TimeSeries}, from the Pytsms library, and each \emph{Disc}
-is associated to another \emph{TimeSeries}, which respectively are
-$S_B$ and $S_D$ of the \acro{MTSMS} model. Furthermore, each
-\emph{Buffer} is associated to one attribute aggregate function which
-is realised by defining a Python \emph{Function} with two parameters:
-a \emph{TimeSeries} (\emph{s}) and a consolidation time interval
-(\emph{i}).
+\texttt{RoundRobinson} is the reference implementation for the
+multiresolution time series model. It includes objects like
+resolution subseries, buffers, discs, and attribute aggregate
+functions. Figure~\ref{fig:implementacio:roundrobinson-uml} shows the
+relationships among these objects in a \acro{UML} diagram. 
+%
+A \texttt{MultiresolutionSeries} object is an aggregation of
+\texttt{Resolution} objects. A \texttt{Resolution} is composed by one
+\texttt{Buffer} and one \texttt{Disc}. Each \texttt{Buffer} is
+associated to one \texttt{TimeSeries}, from the \texttt{Pytsms}
+library, and each \texttt{Disc} is associated to another
+\texttt{TimeSeries}, which respectively are $S_B$ and $S_D$ in the
+\acro{MTSMS} model. Furthermore, each \texttt{Buffer} is associated to
+one attribute aggregate function which is defined as
+a \texttt{Python} function with two parameters: a \texttt{TimeSeries}
+\texttt{s} and a consolidation time interval \texttt{i}.
 
 %\tikzsetnextfilename{fig_roundrobinson_uml}
 \begin{figure}[tp]
@@ -150,80 +151,85 @@ a \emph{TimeSeries} (\emph{s}) and a consolidation time interval
 \end{figure}
 
 
-A \emph{MultiresolutionSeries} is a subclass of the predefined \emph{Set} Python
-type. It has complementary operations that are grouped into two
-objects: \emph{Storage} has methods for storing and retrieving
-multiresolution time series from file system and \emph{Plot} has
-methods for plotting the time subseries of the multiresolution schema.
+\texttt{MultiresolutionSeries} is a subclass of the predefined
+\emph{Set} Python class. It adds complementary operations that are
+grouped into two objects: \texttt{Storage}, that has methods to store
+and retrieve multiresolution time series from the file system and
+\texttt{Plot}, that has methods to plot the time subseries of the
+multiresolution schema.
 
 
-A \emph{MultiresolutionSeries} has a method \emph{addResolution} for defining
-the multiresolution schema structure by adding resolution
+\texttt{MultiresolutionSeries} has a method \texttt{addResolution} to
+define the multiresolution schema structure by adding resolution
 subseries. Every new resolution is configured by four parameters:
-\emph{delta}, \emph{k}, \emph{f}, and \emph{tau} that create the
-corresponding buffer and disc.  A \emph{MultiresolutionSeries} has methods
-\emph{add}, \emph{consolidable}, and \emph{consolidate} that operate on
-the corresponding methods of the contained resolution subseries.
+\texttt{delta}, \texttt{k}, \texttt{f}, and \texttt{tau} that allow to
+create the corresponding buffer and disc.
+\texttt{MultiresolutionSeries} has methods \texttt{add},
+\texttt{consolidable}, and \texttt{consolidate} that operate on the
+corresponding methods of the contained resolution subseries.
 
 
-A \emph{MultiresolutionSeries} can be queried by two methods:
-\emph{seriedisc} and \emph{totalseries}. The \emph{seriedisc} returns
-the \emph{TimeSeries} for the selected disc by parameters \emph{delta}
-and \emph{f}. The \emph{totalseries} returns the \emph{TimeSeries}
-that results from the concatenation of all \emph{seriedisc} ordered by
+\texttt{MultiresolutionSeries} can be queried using one of two
+methods: \texttt{seriedisc} and \texttt{totalseries}. The method
+\texttt{seriedisc} returns the \texttt{TimeSeries} corresponding to
+the disc identified by the parameters \texttt{delta} and
+\texttt{f}. The method \emph{totalseries} returns the \emph{TimeSeries} that
+results from the concatenation of all \emph{seriedisc} sorted by
 \emph{delta}.
 % as there can not be repeated \emph{delta}, \emph{totalseries} has a
 % parameter \emph{f} for selecting only \emph{discSeries} with a
 % determined attribute aggregate function.
 
-In a module \emph{aggregators} we have implemented some default
-attribute aggregate functions, although users can define more as they
-are Python \emph{Function} objects with parameters \emph{s} as a
-\emph{TimeSeries} and \emph{i} as a pair of times like
-\emph{[ti,tj]}. As instance we have defined the \zohe{} aggregate
-functions from Section~\ref{sec:model:interpolador}, which basically
-aggregate over the temporal interval
-\verb|s.interval_temporal(ti,tj,Zohe)| shown in
+In the module \texttt{aggregators} we have implemented some default
+attribute aggregate functions. Moreover, users can define new
+aggregatoes as well. For instance, we defined the \zohe{} aggregate
+functions explained in Section~\ref{sec:model:interpolador}, which
+basically aggregate over the temporal interval
+\verb|s.interval_temporal(ti,tj,Zohe)|. This is shown in
 Example~\ref{ex:pytsms:example}.
 
 
 \begin{example}
-  We define in Pytsms the time series $S$ and in RoundRobinson we
-  define the multiresolution time series $M_\emptyset$ from
-  Example~\ref{ex:model:smultiresolution}, we apply consolidation and
-  we query the result.
+  In this example we define using \texttt{Pytsms} the time series
+  \texttt{S}. Also, using \texttt{RoundRobinson} we define the
+  multiresolution time series $M_\emptyset$ from
+  Example~\ref{ex:model:smultiresolution}. Then, we apply
+  consolidation and we query the result.
 
 {\small
 \begin{verbatim}
-#Importing the required objects
+# Import the required objects
 >>> from pytsms import TimeSeries, Measure as m
 >>> from roundrobinson import MultiresolutionSeries
->>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+>>> from roundrobinson.aggregators import mean_zohe,
+...                                       maximum_zohe
 
-#Defining the original time series
->>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),m(14,1),m(19,6),m(22,11),m(26,6),m(29,0)])
+# Define the original time series
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),
+...                 m(14,1),m(19,6),m(22,11),
+...                 m(26,6),m(29,0)])
 
-#Defining the multiresolution time series
+# Define the multiresolution time series
 >>> M = MultiresolutionSeries()
-#Defining the multiresolution schema
+# Define the multiresolution schema
 >>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
 >>> M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
 
-#Adding the measures
+# Add the measures
 >>> for m in s: M.add(m)
-#M is consolidable
+# M is consolidable
 >>> M.consolidable()
 True
-#Consolidating until no more consolidable
+# Consolide until no more consolidable
 >>> while M.consolidable():
 ...    M.consolidate()
 
-#Query the consolidated discs 
+# Query the consolidated discs 
 >>> M.seriedisc(5,mean_zohe)
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 >>> M.seriedisc(10,maximum_zohe)
 TimeSeries([m(10,6), m(20,11)])
-#Query the total time series
+# Query the total time series
 >>> M.totalseries()
 TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
 \end{verbatim}
