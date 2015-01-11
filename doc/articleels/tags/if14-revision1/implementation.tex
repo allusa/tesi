@@ -135,11 +135,12 @@ A \texttt{MultiresolutionSeries} object is an aggregation of
 \texttt{Buffer} and one \texttt{Disc}. Each \texttt{Buffer} is
 associated to one \texttt{TimeSeries}, from the \texttt{Pytsms}
 library, and each \texttt{Disc} is associated to another
-\texttt{TimeSeries}, which respectively are $S_B$ and $S_D$ in the
-\acro{MTSMS} model. Furthermore, each \texttt{Buffer} is associated to
-one attribute aggregate function which is defined as
-a \texttt{Python} function with two parameters: a \texttt{TimeSeries}
-\texttt{s} and a consolidation time interval \texttt{i}.
+\texttt{TimeSeries}, which respectively are the buffer's
+and the disc's time series in the \acro{MTSMS} model. Furthermore, each
+\texttt{Buffer} is associated to one attribute aggregate function
+which is defined as a \texttt{Python} function with two parameters: a
+\texttt{TimeSeries} \texttt{s} and a consolidation time interval
+\texttt{i}.
 
 %\tikzsetnextfilename{fig_roundrobinson_uml}
 \begin{figure}[tp]
@@ -182,7 +183,7 @@ results from the concatenation of all \texttt{seriedisc} sorted by
 
 In the module \texttt{aggregators} we have implemented some default
 attribute aggregate functions. Moreover, users can define new
-aggregatoes as well. For instance, we defined the \zohe{} aggregate
+aggregators as well. For instance, we defined the \zohe{} aggregate
 functions explained in Section~\ref{sec:model:interpolador}, which
 basically aggregate over the temporal interval
 \verb|s.interval_temporal(ti,tj,Zohe)|. This is shown in
@@ -192,7 +193,7 @@ Example~\ref{ex:pytsms:example}.
 \begin{example}
   In this example we define using \texttt{Pytsms} the time series
   \texttt{S}. Also, using \texttt{RoundRobinson} we define the
-  multiresolution time series $M_\emptyset$ from
+  multiresolution time series $M$ from
   Example~\ref{ex:model:smultiresolution}. Then, we apply
   consolidation and we query the result.
 
