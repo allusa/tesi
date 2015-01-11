@@ -21,16 +21,13 @@ and values. A time series can be described by a set of measures.
 We name \emph{time domain} the set $\cal{T}$ of all the possible time
 values. $\cal{T}$ can be either a finite or an infinite set and
 usually it is a closed set. Although time is a complex issue
-%
-\todo[color=yellow]{Afegir citacio}
-%
-In this paper we will assume that the $\cal{T}$ is the set of affinely
-extended real numbers $\Rb = \R \cup \{+\infty,-\infty\}$. This avoids
-the complex details of time modelling while being powerful enough for
-our purposes. Next, we define the main time related concepts using
-this naive approximation.
+\cite{iep:time-supplement}, in this paper we will assume that the
+$\cal{T}$ is the set of affinely extended real numbers $\Rb = \R \cup
+\{+\infty,-\infty\}$. This avoids the complex details of time
+modelling while being powerful enough for our purposes. Next, we
+define the main time related concepts using this naive approximation.
 
-\todo[color=green]{Dominis en lletra caligrafica}
+
 
 \begin{definition}[Time concepts]
   \label{def:model:temps}
@@ -58,7 +55,7 @@ domain of values is the set of projectively extended reals $\Rp = \R
 A measure represents an actual value measured in a particular time
 instant. We define it below.
 
-\begin{definition}
+\begin{definition}[Measure]
   Let $v\in\cal{V}$ be a value and let $t\in\cal{T}$ be the time
   instant when the value was acquired. We define a \emph{measure} $m$
   as the tuple $m=(t,v)$. The domain of a measure $m$, written as
@@ -94,7 +91,7 @@ sequences~\cite{last:hetland}. We define it as follows.
   Let $S = \{m_0,\ldots,m_k\}\subset\cal{T}\times\cal{V}$ be a finite
   set of measures of the same type. Then, $S$ is a \emph{time series}
   iff $\forall i,j: i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$.
-  We define the domain of a time series $S$, denoted as $\dom(S)$ \todo{sense parentesis?}, as
+  We define the domain of a time series $S$, denoted as $\dom S$, as
   the domain of its measures.
 \end{definition}
 
@@ -115,9 +112,17 @@ concept. Following~\cite{assfalg08:thesis}, a time series can record
 more than one phenomena if they share the same acquisition time
 instants.  This kind of series are known as \emph{multivalued time
   series}. Let $S$ be a multivalued time series and let its domain be
-$\dom(S)={\cal{V}}_1\times\cdots\times{\cal{V}}_n$\todo{$\cal{T}$
-  també?}. Then, we write its measures as $m=(t,v_1,v_2,\ldots,v_n)$.
+$\dom(S)={\cal{V}}_1\times\cdots\times{\cal{V}}_n$. Then, we write its
+measures as $m=(t,v_1,v_2,\ldots,v_n)$.
 
+
+
+A time series is regular when its measures are equi-spaced in time,
+according to \cite{last:hetland}.  Let $S=\{m_0, m_1,\ldots,
+m_{k-1},m_k\}$ be a time series, where
+$T(m_0)<T(m_1)<\dots<T(m_{k-1})<T(m_k)$, and let $d\in\cal{T}$ be a
+time duration. Then $S$ is \emph{regular} when $d=T(m_1)-T(m_0)=
+\dots =T(m_k)-T(m_{k-1})$.
 
 
 
@@ -265,10 +270,10 @@ is a time series $R-^tS=\{m|m\in R\wedge m \notinst S\}$.
 
 
 Based on union and difference we can define \emph{intersection} as
-$S_1\cap S_2 \equiv S_1 - (S_1 - S_2)$ and \emph{symmetric difference}
-as $S_1 \ominus S_2 \equiv (S_1 - S_2) \cup (S_2 - S_1)$. The
+$R\cap S \equiv R - (R - S)$ and \emph{symmetric difference}
+as $R \ominus S \equiv (R - S) \cup (S - R)$. The
 corresponding temporal operations can also be defined.
-\todo{canviar per R i S?}
+
 
 Relational \acro{DBMS} extend set operators with specific ones like
 projection, selection, rename, product or join. This kind of operators
@@ -301,8 +306,7 @@ function over a measure returning a measure. The \emph{map} of $f$
 over $S$ is a new time series defined as $\map(S,f)=\{f(m)|m\in
 S\}$. Note that $\dom(\map(S,f))=\cal{V'}$.
 %
-\todo[color=green]{Compte amb la notacio per definir funcions. Veure
-  la wikipedia anglesa (apartat corresponent)}.
+
 
 The fold operator recursively combines every measure of a time
 series. Assuming that $\mathcal{P}(C)$ is the powerset of $C$, we
@@ -368,7 +372,7 @@ computing a new time series whose values result from time multiplied
 by value.  We define the map function $f(t,v)=(t,t\cdot v)$. Then
 $\map(S,f)=\{(1,1),(2,6),(4,4)\}$.  
 %
-\todo[color=green]{times es pel producte cartesia}
+
 
 The aggregate operator allows, for instance, to compute the measure
 that results from the sum of all the values.  To illustrate it, we
@@ -447,8 +451,8 @@ Let $R$ and $S$ be two time series and let $\dom R=\dom S$. The
 \emph{concatenation} of $R$ and $S$, denoted as $R||S$, is a time
 series that contains all the measures of $R$ together with those of
 $S$ that do not intersect with the time interval of $R$. That is,
-$R||S= R\cup (S - S[\inf R,\sup R])$.
-\todo{inf i sup retornen mesures, cal indicar T(inf)}
+$R||S= R\cup (S - S[T(\inf R),T(\sup R)])$.
+
 
 
 \subsubsection{Temporal function operations}
@@ -607,6 +611,20 @@ temporal representation function over an argument as $S[t_i,t_i]^r
 \equiv \{ (t_i, S(t_i)^r) \}$.
 
 
+
+% \todo{Aixo moure-ho al final de l'apartat anterior}
+% %
+The temporal selection operation also allows to regularise a irregular
+time series. Let $S$ be a time series, let $d,e\in\cal{T}$ be the
+desired regularity parameters, and let $k\in\N$ be a limit for the
+scope of the range.  A regularised $S$ can be obtained with $S[T]^r$
+where $T = \{e+nd | n\in\N \wedge n\leq k \}$ is a set of time
+instants equi-spaced.
+
+
+
+
+
 %
 % Realment tot el que segueix ja s'ha dit a la introducció. Si cal es
 % pot reforçar alguna cosa que de la introducció amb
@@ -614,6 +632,9 @@ temporal representation function over an argument as $S[t_i,t_i]^r
 % multiresolució aborda aquests temes. No se si cal repetir-ho de
 % nou. De moment ho faig fora. A veure si es troba a faltar.
 % SVM
+%
+% Es pot treure, aquí només s'hi tornava per a descriure els problemes dels TSMS un cop definits i abans de les solucions dels MTSMS.
+
 
 % \subsection{Non ideal time series}
 % \label{sec:model:properties} 
@@ -657,34 +678,6 @@ temporal representation function over an argument as $S[t_i,t_i]^r
 % is harder to apply join operations between time series and it do not
 % allow to apply time series analysis algorithms defined for sequences
 % approaches. 
-
-
-
-% \todo{Aixo ja s'ha dit. Potser moure la definicio formal com a exemple
-%   en algun lloc per no perdre-la}
-% %
-% A time series is regular when its measures are equi-spaced in time,
-% according to \cite{last:hetland}. Let $S$ be a time series, $i$
-% be a time instant and $d$ be a time duration. Then the time
-% series' measures can be located in the time interval $I_0=[i,
-% i+d]$ and its multiples $I_n=[i+nd, i+(n+1)d]$
-% for $n=0,1,2,\ldots$. When time series' measures are equally spaced we
-% say it to be regular.
-
-% \begin{definition}
-%   Let $S=\{m_0,$ $\ldots,$ $m_k\}$ be a time series and $d$ a time
-%   duration. $S$ is \emph{regular} if and only if $\forall m \in
-%   S(T(\min(S),+\infty):T(m) - T(\prev_S(m)) = d$.
-% \end{definition}
-
-
-% \todo{Aixo moure-ho al final de l'apartat anterior}
-% %
-% If a time series is not regular, it can be regularised by the temporal
-% selection operation. Let $S$ be a time series, $i$ and $d$ the
-% desired regularity parameters, and $k\in\N$ a limit for the scope of
-% the range.  A regularised $S$ is obtained with $S[T]^r$ where $T =
-% \{i+nd | n\in\N \wedge n\leq k \}$ is a set of time instants equi-spaced.
 
 
 
