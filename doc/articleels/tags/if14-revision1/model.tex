@@ -813,43 +813,41 @@ measure of $B$. We say that $B$ is consolidable if and only if $T(m)
   que una serie es una estructura desordenada. En tot cas per
   consolidar cal que les mesures de l'interval hi siguin.}
 
-A \emph{disc} is a finite capacity container of measures. A time
+A \emph{disk} is a finite capacity container of measures. A time
 series stored in a disc has its cardinal bounded. When the cardinal of
 the time series is to overcome the limit, some measures need to be
 discarded.
-\begin{definition}%(Disc)
-  Let $S$ be a time series and let $k\in\N$ be the maximum allowed
-  cardinal of $S$. We define a \emph{disc} $D$ as the tuple
-  $D=(S,k)$. 
+
+\begin{definition}[Disk]
+  Let $k\in\N$ and $S$, $|S|\leq k$, be a time series. We define a
+  \emph{disk} $D$ as the tuple $D=(S,k)$.
 \end{definition}
 
-An empty disc is noted as $D = (\emptyset,k)$. That is, it has an
-empty time series and a predetermined $k$.
+An empty disk is noted as $(\emptyset,k)$. It is the tuple of an
+empty time series and a bound $k$.
 
-A disc has one structural operation.  It adds a measure to the disc
-while keeping under control the cardinal of the times series. Let
-$D=(S,k)$ be a disc and let $m$ be a measure.  The addition of $m$ to
-$D$, noted as $\addD(D,m)$, is a new disc $\addD(D,m)=(S',k)$ where %
+The main operation on a disk is to add a measure while keeping under
+control the cardinal of the times series. Let $D=(S,k)$ be a disc and
+let $m$ be a measure.  The addition of $m$ to $D$, written as
+$\addD(D,m)$, is a new disc $\addD(D,m)=(S',k)$ where
+%
 \[
- S' = \begin{cases}
+S' = \begin{cases}
   S\cup\{m\}                 & \text{if } |S|<k  \\
   (S-\{\min S\}) \cup \{m\} & \text{otherwise}
 \end{cases}  
 \]
 
-
 A \emph{resolution subseries} is a structure that regularises and
 aggregates a time series. It is composed of a buffer, which contains
 the partial time series to be regularised, and a disc, which contains
 the regularised time series.
+
 \begin{definition}%(Resolution subseries)
   Let $B$ be a buffer and let $D$ be a disc.  We define a
   \emph{resolution subseries} $R$ as the tuple $R=(B,D)$.  
 \end{definition}
  
-An empty buffer and an empty disc imply an empty resolution subseries. 
-
-
 The operators of a resolution subseries extend the buffer and disc
 ones. Let $R=(B,D)$ be a resolution subseries and let $m$ be a
 measure.  The addition of $m$ to $R$, noted as $\addR(R,m)$, is a new
@@ -865,24 +863,20 @@ consolidable only when its buffer is consolidable.
 
 
 A \emph{multiresolution time series} is a set of resolution subseries
-which share the input of measures, that is the same time series. A
-time series is stored regularised and distributed with different
-resolutions in the various resolution subseries, as previously shown
-in Figure~\ref{fig:model:mtsdb}.
+referred to the same time series. A time series is stored regularised
+and distributed with different resolutions in the various resolution
+subseries, as previously shown in Figure~\ref{fig:model:mtsdb}.
+
 \begin{definition}%(Multiresolution time series)
   Let $M=\{R_0, \dots, R_k\}$ be a finite set of resolution
   subseries. Then $M$ is a \emph{multiresolution time series}.
 \end{definition}
 
-
-An empty multiresolution series has empty resolution subseries
 Therefore, defining a multiresolution time series consists basically
 in defining the quantity of resolution subseries and the
 $(\delta,\tau,f,k)$ configuration parameters for each.  Usually there
 are no repeated pairs of $(\delta,f)$ among a multiresolution
-series, so they act as  key attributes.
-
-
+series, so they act as key attributes.
 
 The operators of a multiresolution time series apply to every
 resolution subseries contained. Let $M=\{R_0,\allowbreak
@@ -919,18 +913,17 @@ external clock.
 
 \subsection{Queries}
 
+There are two basic time series queries for a \acro{MTSMS}: (i)
+extract a time subseries from a resolution subseries' disc or (ii)
+query for a total time series from all consolidated data.
 
-There are two basic time series queries for a \acro{MTSMS}: (i) extract a
-time subseries from a resolution subseries' disc or (ii) query for a
-total time series from all consolidated data.
-
+% Aquesta sembla una consulta una mica circumstancial i menor ...
 Let $M$ be a multiresolution time series and let $(\delta,f)$ be a
 pair of key attributes.  The first query, denoted as
 $\seriedisc(M,\delta,f)$, is a time series such that $\exists (B,D)
 \in M: B=(S,\tau,\delta,f) \wedge D=(\seriedisc(M,\delta,f), k) $
 where $S,\tau,k$ are bound variables.  Note that we
 assume there are no repeated $(\delta,f)$ pairs in $M$.
-
 
 Let $M*=\{R_0, \dots, R_k\}$ be a multiresolution time series where
 $R_i$ have a strict order by their attribute $\delta_i$.  The second
@@ -943,7 +936,6 @@ by $\delta$ order.  Being $(\delta,f)$ the key attributes, the $M*$
 can be obtained from a general $M$ by selecting resolution subseries
 with same $f$. If we operated a $\totalseries$ to a general $M$ then
 it could be ambiguous as it could contain repeated $\delta$.
-
 
 From these two basic time series queries, more elaborated queries can
 be applied to \acro{MTSMS} by using \acro{TSMS} operations. For
@@ -960,8 +952,6 @@ can compute the sum of both with $\totalseries(L) +
 
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
-
-
 
 Attribute aggregate functions are a specific case of \acro{TSMS}
 aggregate operations for summarising time series data when
