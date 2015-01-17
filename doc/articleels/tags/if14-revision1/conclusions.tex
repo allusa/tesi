@@ -1,31 +1,39 @@
 \section{Conclusions}
 \label{sec:concl-future-work}
 
-In this paper we introduced a \acro{MTSMS} model, including a
-motivation example for multiresolution and an application together
-with \acro{TSMS}. Our \acro{MTSMS} model is based on \acro{TSMS}
-notation which we have described firmly rooted on set and relational
-algebra. We have gone a bit further and proposed \acro{TSMS} including
-set, sequence and temporal function behaviour.
+In this paper we have introduced a \acro{MTSMS} model. This model is
+based on a \acro{TSMS} model, which we have also introduced.  We have
+formalised our models heavily rooted on set theory, mainly on
+relational algebra. We have gone a bit further and proposed
+\acro{TSMS} including set, sequence and temporal function
+behaviour. We have also included the motivation for multiresolution
+advantages.  As a reference implementation we have developed a
+\emph{Python} package centred on the basic algebra, that is without
+extended \acro{DBMS} capabilities.
+
+
 
 The main objective of a \acro{MTSMS} is to store compactly a time
-series and manage consistently its temporal dimension.  It stores
-multiresolution time series, that is time series split into time
-subseries called resolution subseries.  Each resolution subseries has
-a different resolution and is compacted with an attribute aggregate
-function. Therefore, each multiresolution time series is configured by
-the quantity of resolution subseries and four parameters for each: the
-consolidation step, the initial consolidation time, the attribute
-aggregate function, and the capacity.  These configuration parameters
-are degrees of freedom for each application. Giving different values a
-multiresolution database is capable to keep the desired data
-from a time series. %
+series and to manage consistently its temporal dimension.  It stores
+multiresolution time series, that is each time series is stored at
+multiple resolutions called resolution subseries.  Each resolution
+subseries has a resolution step and is compacted with an attribute
+aggregate function. Therefore, each multiresolution time series is
+configured by the number of resolution subseries and four parameters
+for each: the resolution step, the initial consolidation time, the
+attribute aggregate function, and the capacity.  These configuration
+parameters are degrees of freedom for each application. Giving
+different values a multiresolution database is capable to keep the
+desired data from a time series. %
+
 We have showed some aggregation functions examples with simple
 aggregation statistics, mean and maximum, and simple representation
 methods, Delta and \zohe{}. More attribute aggregation functions could
-be designed based on methods from other fields such as data streaming
-or time series data mining, especially it would be interesting aggregations with uncertain data.
-
+be designed based on methods from other fields, such as data streaming
+or time series data mining. Especially, it would be interesting to
+design aggregations that coped with uncertain data.  The model allows
+the user to customise a multiresolution database according to the
+actual requirements of a given context.
 
 The queries over \acro{MTSMS} obtain time series from stored
 multiresolution time series. In this way \acro{TSMS} operators can be
@@ -36,43 +44,29 @@ some operations will give approximate queries and that not every
 multiresolution time series. Therefore the correct planning of the
 multiresolution schema is needed.
 
-
-Compared to other \acro{TSMS} we propose a compression solution that
-stores only the data we will require by latter queries or by
+Compared to other \acro{TSMS}, we propose a compression solution that
+stores only the data that we will require by latter queries or by
 human visualisation, instead of trying to reconstruct the original
 signal.  Moreover, our multiresolution solution copes well with
 typical problematic properties of time series: regularity, data
 validation and data volume.  The decompression time is minimal as data
 in discs get stored directly as a time series. As a consequence, the
-queries or visualisation computing time is only due to the computation
-itself. Moreover, if the query is an aggregation or resolution already
-computed in \acro{MTSMS} consolidation, then the visualisation is
-immediate.
+queries or the visualisation computing time is only due to the
+computation itself. Moreover, if the query is an aggregation or
+resolution already computed in a \acro{MTSMS} consolidation, then the
+visualisation is immediate.
 
 
 \acro{MTSMS} imply data selection and so what is not considered
-important is discarded.
-% When this is not possible, we
-% have showed a dual structure of \acro{TSMS} and \acro{MTSMS}. Then a
-% \acro{TSMS} stores losslessly and a \acro{MTSMS} takes advantages of
-% manipulating data in time order in order to achieve pre-computed
-% queries in a stream-like orientation. 
-In future work, information
-theory has to be evaluated for multiresolution schemes. As multimedia
-lossy compression techniques are well founded on information theory,
-similar approaches could be taken for multiresolution time series,
-e.g. evaluating whether a human can visualise original qualities in
-the multiresoluted time series or evaluating
-whether given a query it has the same validity for a multiresoluted
-one as it has for the original.
-
-A \acro{MTSMS} could be implemented as a SQL \acro{DBMS} system or as
-a NoSQL one. As a referent implementation we have developed a
-\emph{Python} package centred on the basic algebra, that is without
-extended \acro{DBMS} capabilities. Regarding other implementations,
-\emph{RRDtool} can be seen as an specific case of \acro{MTSMS} and as
-a NoSQL system, although Oetiker \cite{rrdtool} has not commented
-it. 
+important is discarded.  In future work, information theory has to be
+evaluated for multiresolution schemes. Following multimedia lossy
+compression techniques being well founded on information theory,
+similar approaches could be taken for multiresolution time series. For
+example, we could evaluated whether a human can visualise original
+time series qualities in the multiresoluted time series. Or, given a
+query, we could compare the difference of applying the query to a
+multiresoluted time series instead of applying it to the original time
+series.
 
 
 
@@ -82,4 +76,4 @@ it.
 %%% End:
 
 
-%  LocalWords:  multiresolution
+%  LocalWords:  multiresolution TSMS MTSMS subseries lossy
