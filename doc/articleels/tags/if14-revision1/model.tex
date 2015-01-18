@@ -14,7 +14,7 @@ In this section we describe and formalise the \acro{TSMS} model.
 Roughly speaking a \emph{time series} is a set of observations
 collected at specific time instants. An observation may consist of a
 single value or multiple values collected at the same time instant.
-Each pair of time and observed values is refered as a
+Each pair of time and observed values is referred as a
 \emph{measure}. Then, a time series is a correspondence between times
 and values. A time series can be described by a set of measures.
 
@@ -65,7 +65,7 @@ instant. We define it below.
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
 value $v$ and $T(m)$ denotes the time $t$.
 
-Order between mesures plays an important role. Given two measures we
+Order between measures plays an important role. Given two measures we
 define two distinct order relations.
 
 \begin{definition}[Semitemporal order]
@@ -135,7 +135,7 @@ section.
 %
 Like the relational model operations, operations over time series do
 not care about the actual semantics of the data. When a particular
-application aroses, it should be decided whether an operation is
+application arises, it should be decided whether an operation is
 semantically coherent or cannot be applied. For example, the addition
 of values coming from two different phenomena could be semantically
 erroneous.
@@ -200,7 +200,7 @@ $R$ belong temporally to $S$.
 The \emph{union} of two sets is a set containing elements from both
 sets. Usual set union operations do not apply to time series because
 the result time series could have repeated time values.  Then, we will
-give a slighty modified concept for union.
+give a slightly modified concept for union.
 
 The union requires both time series to have the same domain like it
 happens with union operation in relational
@@ -220,7 +220,7 @@ time series $R \cupt S = \{ m | (m \in R \wedge m \in S) \vee (m \in R
   simetrica'?}
 % mentre que a les operacions següents podem trobar una relació amb la pertinença, a la unió no li trobo. Per coherència amb les altres també definia unió i unió temporal tot i que de forma arbitrària. Potser sí que seria millor dir-li simètrica.
 %
-It is interesting to emphasize that the union is a non commutative
+It is interesting to emphasise that the union is a non commutative
 operation while the temporal union is a commutative one.
 
 \begin{figure}
@@ -266,7 +266,7 @@ The \emph{difference} between $R$ and $S$, written $R-S$, is a time
 series $R-S=\{m|m\in R\wedge m\notin S\}$.
 %
 The \emph{temporal difference} between $R$ and $S$, denoted $R-^t S$, 
-is a time series $R-^tS=\{m|m\in R\wedge m \notinst S\}$.
+is a time series $R-^t S=\{m|m\in R\wedge m \notinst S\}$.
 
 
 Based on union and difference we can define \emph{intersection} as
@@ -400,7 +400,7 @@ Let $S$ and $R$ be two time series and $\odot$ be a binary operator on
 the value domain. The operator $\odot$ can be extended to the time
 series as:
 %
-$S\odot R=\map(S\join R, f)$ being $f$ the funcion
+$S\odot R=\map(S\join R, f)$ being $f$ the function
 $f(t,v,w)=(t,v\odot w)$.
 %
 This allows to extend real binary operations such as sum or division
@@ -420,14 +420,14 @@ notation applies.
 %
 Following~\cite{last:hetland}, to slice a time series $S$ means to
 extract a new time series $R\subseteq S$ constrained to a given time
-interval. We denote this operation as the original time serie followed
+interval. We denote this operation as the original time series followed
 by the interval. Therefore, $S(s,t)=\{m|m\in S \wedge
 T(m)\in(s,t)\}$. We can use other intervals to slice a time series in
 a same fashion. For instance, $S(s,t]=\{m|m\in S \wedge
 T(m)\in(s,t]\}$.
 
-The ordinary time order allows to define te concepts of successor and
-predecesor for the measures of a time series.
+The ordinary time order allows to define the concepts of successor and
+predecessor for the measures of a time series.
 %
 Let $S=\{m_0,\ldots,m_k\}$ be a time series and $m$ be an arbitrary
 measure.
@@ -911,7 +911,7 @@ We note as $\totalseries(M)$, the time ordered concatenation of all
 time subseries. Assume that $i_0,\dots,i_k$ is a permutation of
 $[0,k]$ such that $\delta_{i_0} < \delta_{i_1} < \cdots <
 \delta_{i_k}$ being $\delta_i$ the resolution step of the resolution
-subserie $R_i$. Then, $\totalseries(M) = S_{i_0} || S_{i_1} || \cdots
+subseries $R_i$. Then, $\totalseries(M) = S_{i_0} || S_{i_1} || \cdots
 || S_{i_k}$.
 %
 TotalSeries obtains the better possible resolution.
@@ -1001,7 +1001,7 @@ consolidation to $T(m)=\tau+\delta-d$.
 %
 This time offset can also be variable. For example, an aggregate
 function that returns the first measure of the interval
-$m=\min(S[\tau,\tau+\delta))$, then the resulting time fullfils that
+$m=\min(S[\tau,\tau+\delta))$, then the resulting time fulfils that
 $\tau\leq T(m) < \tau+\delta$.
 
 % Sobre el calcul del nou valor
@@ -1011,7 +1011,7 @@ compute the value of $m$.
 %
 Next there are some examples that illustrate how to compute $V(m)$
 based on the temporal function time series operators. 
-That is, the time series aggregated is interpeted by the temporal
+That is, the time series aggregated is interpreted by the temporal
 representation function $S(t)^r$ as has been described in
 Section~\ref{sec:model:tfunc}. 
 %
@@ -1074,7 +1074,7 @@ below the original signal.
 
 It is interesting to note that some attribute aggregation patterns are
 very similar. For instance, the maximum and last attribute aggregation
-schemas differ basically on the interval selection operation. However,
+schemes differ basically on the interval selection operation. However,
 other patterns have a more elaborated interpretation depending on the
 actual representation used. This is the case of $\meanz$ and $mean^\dd$.
 
@@ -1121,4 +1121,5 @@ actual representation used. This is the case of $\meanz$ and $mean^\dd$.
 % LocalWords:  genericity multiresolution subseries consolidable
 
 % LocalWords:  pathologies MTSMS TSMS cardinality multivalued infimum
-% LocalWords:  multivalues supremum
+% LocalWords:  multivalues supremum tuple affinely projectively MTSDB
+%  LocalWords:  semitemporal piecewise TotalSeries RRDtool
