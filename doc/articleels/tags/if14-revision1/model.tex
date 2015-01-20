@@ -166,14 +166,15 @@ Note that $\max S$ is not defined when $S=\emptyset$. However, the
 time series has a supremum even when empty. In fact, according
 to~\cite{cantrell:extendedreal}, $\sup \emptyset=-\infty$.
 %
+Let $m=(-\infty,\infty)$ be a measure with infinity time and value.
 Using this fact we define the \emph{supremum} of $S$, noted as
 $\sup S$, as
 \[
 \sup S =\begin{cases}
   \max S    & \text{when $S$ non empty}\\
-  -\infty   & \text{otherwise}
+  m   & \text{otherwise}
 \end{cases}
-\]\todo{ha de retornar mesura (-inf,inf)}
+\]
 Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
 and the \emph{infimum} of $S$, noted as $\inf S$.
 
@@ -214,11 +215,6 @@ $R \cup S = \{m|m\in R\vee (m\in S\wedge m \notinst R)\}$.
 The \emph{temporal union} of $R$ and $S$, noted $S_1 \cupt S_2$, is a
 time series $R \cupt S = \{ m | (m \in R \wedge m \in S) \vee (m \in R
 \wedge m \notinst S) \vee (m \in S \wedge m \notinst R) \}$.  
-%
-\todo{te sentit en la unio el concepte 'temporal'? te el mateix sentit
-  que a la pertanyensa? No aplicaria millor el concepte 'unio
-  simetrica'?}
-% mentre que a les operacions següents podem trobar una relació amb la pertinença, a la unió no li trobo. Per coherència amb les altres també definia unió i unió temporal tot i que de forma arbitrària. Potser sí que seria millor dir-li simètrica.
 %
 It is interesting to emphasise that the union is a non commutative
 operation while the temporal union is a commutative one.
@@ -324,11 +320,7 @@ The \emph{fold} of $S$ by $f$ with initial value $R$ is a new time
 series defined as $\fold(S,R,f) = f(\cdots(f(f(f(R,m_0),\allowbreak
 m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
 %
-\todo[color=yellow]{No se si els papers d'R i S no estan
-  intercanviats. No es R la serie transformada i S els valors
-  inicials?}
-% No, seguint el cas simple següent d'agregació es veu més clar el
-% paper de cada paràmetre
+
 
 
 The classical aggregation operator combines the data of a time series
@@ -463,9 +455,6 @@ A time series can be thought as discrete representation of an
 operations that manage the time series according to this temporal
 function standpoint.  
 %
-\todo[color=green]{Compte que a tot arreu es diu que la funcio
-  original es continua i aixo no es cert ni en els exemples! He
-  eliminat el tema continua on l'he vist.}
 
 The graph of a function allows to obtain and interpret the
 continuous nature of a time series, when the domain of time and value
@@ -477,8 +466,7 @@ the time series $S$ is a set of ordered pairs $\graph S
 =\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a temporal representation
 function for the time series.
 %
-\todo{tot aixo hauria d'anar al final, depres de le srepresentacions
-  temporals}
+
 
 Given a time series $S$, the \emph{temporal representation function}
 $S(t)$ is a function along the variable $t$ in the domain of
@@ -534,61 +522,23 @@ sequence operators as temporal operators.
 % Consequently, the result of each one will depend on a representation
 % method, which is indicated as a parameter.
 
-\todo[color=yellow]{ D'aqui fins el seguent apartat el plantejament no
-  m'entusiasma. Em sembla que és massa complicat. El concepte
-  d'interval temporal no descriu gaire el que es i la idea de
-  sellecion temporal no respon a una seleccio sino mes aviat a un
-  resampling.
-
-  Tal i com ho veig, d'uns serie en derivem (mes d'una) funcio
-  original ---tampoc no veig per que en diem de representacio ja que
-  mes aviar es al reves: la serie vol ser una representacio de la
-  funcio original. Amb aquesta funcio original ens podem replantejar
-  fer resamplings, i.e. avaluar-la en certs instants de temps. Aquests
-  resamplings son noves series temporals que tenen certa relacio amb
-  la serie inicial.
-
-  Com veus aquest plantejament? que em perdo?
-}
-
-% Més aviat una sèrie temporal representa uns valors adquirits en uns
-% instants de temps (una funció original discreta f(k)). Aquest
-% problema podria provenir de l'adquisició d'una variable contínua
-% (una funció original contínua f(t)). Aleshores plantegem S(t)
-% equivalent a f(t). També podriem plantejar S(t) equivalents a f(k)
-% però aquí no ho fem, serien funcions parcials. A partir de S(t)
-% clarament podem dibuixar el gràfic de la sèrie temporal, descrit com
-% a graf més general (p.ex. quan no el podem dibuixar). Per tant,
-% podem dir que S(t) té molta relació amb la representació gràfica de
-% la sèrie temporal?
-%
-% Potser millor dir
-% que la sèrie temporal és una modelització pel problema de la funció
-% original?
-%
-% Interval i selecció: potser sí que els noms no són els
-% adequats. Resampling també estaria bé. L'interval es diu així perquè
-% té la forma S[x,y] tot i que particularitzat per r; és una
-% interpretació en matemàtica discreta de S(t) en un interval [x,y] i
-% en el context de r.
-
 
 We define a temporal interval operation to introduce this concept.
-Let $S$ be a time series, $[t_i,t_j]$ a interval of two time instants
-and $r$ a representation function. The \emph{temporal interval} noted
-as $S[t_i,t_j]^r$ is a time series with measures in the interval
-temporal range, $S[t_i,t_j]^r\equiv S(t)^r$ for all $t \in [t_i,t_j]$. This
+Let $S$ be a time series, let $[s,t]$ be a interval of two time instants
+and let $r$ be a representation method. The \emph{temporal interval}, denoted
+as $S[s,t]^r$, is a new time series with measures in the interval
+temporal range. That is, $S[s,t]^r\equiv S(u)^r$ for all $u \in [s,t]$. This
 is a general definition difficult to implement, so for every
 representation a particular temporal interval must be interpreted:
 
 \begin{itemize}
 \item Let $S(t)^\dd$ be the \dd{} representation for $S$. The
-  \emph{\dd{} temporal interval} is $S[t_i,t_j]^\dd = S[t_i,t_j]
-  \cup \{m_i\} \cup \{m_j\}$ where $m_i=(t_i,0)$ and $m_j=(t_j,0)$.
+  \emph{\dd{} temporal interval} is $S[s,t]^\dd = S[s,t]
+  \cup \{m\} \cup \{n\}$ where $m=(s,0)$ and $n=(t,0)$.
 
 \item Let $S(t)^\zohe{}$ be the \zohe{} representation for $S$. The
-  \emph{\zohe{} temporal interval} is $S[t_i,t_j]^\zohe{} = S(t_i,t_j]
-  \cup \{m_j\}$ where $m_j=(t_j,v)$ and $v= V(\inf( S[t_j,+\infty] ))$.
+  \emph{\zohe{} temporal interval} is $S[s,t]^\zohe{} = S(s,t]
+  \cup \{m\}$ where $m=(t,v)$ and $v= V(\inf( S[t,+\infty] ))$.
 \end{itemize}
 
 
@@ -600,20 +550,19 @@ definition of temporal interval operation is given.
 
 The temporal selection over a time series allows to change the
 resolution in the context of a representation function.  Let $S$ be a
-time series, $T=\{t_0,t_1,\dotsc,t_n\}$ a set of time instants, and
-$r$ a representation function. The \emph{temporal selection} noted as
-$S[T]^r$ is a time series with measures in $T$ times computed in
-coherence with the representation function $r$: $S[T]^r = S[t_0,t_0]^r
-\cup S[t_1,t_1]^r \cup \dotsb \cup S[t_n,t_n]^r$. Let $t_i$ be a time
+time series, let $T=\{t_0,t_1,\dotsc,t_k\}$ be a set of time instants, and let 
+$r$ be a representation method. The \emph{temporal selection}, denoted as
+$S[T]^r$, is a time series with measures in $T$ times computed in
+coherence with the representation method $r$. That is, $S[T]^r = S[t_0,t_0]^r
+\cup S[t_1,t_1]^r \cup \dotsb \cup S[t_n,t_n]^r$. Let $t$ be a time
 instant, note that temporal selection depends on the temporal interval
-operation $S[t_i,t_i]^r$, which is equivalent to the notion of
-temporal representation function over an argument as $S[t_i,t_i]^r
-\equiv \{ (t_i, S(t_i)^r) \}$.
+operation $S[t,t]^r$, which is equivalent to the notion of
+temporal representation function over a single time instant. That is, $S[t,t]^r
+\equiv \{ (t, S(t)^r) \}$.
 
 
 
-% \todo{Aixo moure-ho al final de l'apartat anterior}
-% %
+
 The temporal selection operation also allows to regularise a irregular
 time series. Let $S$ be a time series, let $d,e\in\cal{T}$ be the
 desired regularity parameters, and let $k\in\N$ be a limit for the
@@ -705,8 +654,6 @@ temporarily accumulate measures in a \emph{buffer}. This allow to
 aggregate original data to obtain the expected resolution and finally
 store them in a \emph{disc}.
 
-The figure~\ref{fig:model:mtsdb} shows the architecture of a
-\acro{MTSMS} for a single multiresolution time series.
 
 \begin{figure}
   \centering
@@ -716,10 +663,12 @@ The figure~\ref{fig:model:mtsdb} shows the architecture of a
   \label{fig:model:mtsdb}
 \end{figure}
 
-
+The figure~\ref{fig:model:mtsdb} shows the architecture of a
+\acro{MTSMS} for a single multiresolution time series.
+%
 In this way, the original time series gets stored in the resolution
 subseries, each with a different time resolution and distinct
-attribute aggregation policies. Disks are size bounded so they only
+attribute aggregation policies. Discs are size bounded so they only
 contain a fixed amount of measures. When a disc becomes full it
 discards a measure. Thus, a multiresolution database is bounded in
 size and the time series gets stored in a number of storage bounded
@@ -789,20 +738,20 @@ Let $B=(S,\tau,\delta,f)$ be a buffer and $m=\sup S$ the maximum
 measure of $B$. We say that $B$ is consolidable if and only if $T(m)
 \geq \tau+\delta$.
 
-A \emph{disk} is a finite capacity container of measures. A time
+A \emph{disc} is a finite capacity container of measures. A time
 series stored in a disc has its cardinal bounded. When the cardinal of
 the time series is to overcome the limit, some measures need to be
 discarded.
 
-\begin{definition}[Disk]
+\begin{definition}[Disc]
   Let $k\in\N$ and $S$, $|S|\leq k$, be a time series. We define a
-  \emph{disk} $D$ as the tuple $D=(S,k)$.
+  \emph{disc} $D$ as the tuple $D=(S,k)$.
 \end{definition}
 
-An empty disk is noted as $(\emptyset,k)$. It is the tuple of an
+An empty disc is noted as $(\emptyset,k)$. It is the tuple of an
 empty time series and a bound $k$.
 
-The main operation on a disk is to add a measure while keeping under
+The main operation on a disc is to add a measure while keeping under
 control the cardinal of the times series. Let $D=(S,k)$ be a disc and
 let $m$ be a measure.  The addition of $m$ to $D$, written as
 $\addD(D,m)$, is a new disc $\addD(D,m)=(S',k)$ where
@@ -819,8 +768,6 @@ aggregates a time series. It is composed of a buffer, which contains
 the partial time series to be regularised, and a disc, which contains
 the regularised time series.
 
-\todo[color=yellow]{Decidir si regularitzar o consolidar. S'usen tots
-  dos indistintament}
 
 \begin{definition}[Resolution subseries]
   Let $B$ be a buffer and let $D$ be a disc.  We define a
