@@ -1,4 +1,5 @@
 \section{Propietats de les sèries temporals}
+\label{sec:sgst:propietats}
 
 En el model de \gls{SGST} descrit anteriorment, les sèries temporals
 tenen una única estructura i uns operadors genèrics definits per un
@@ -36,27 +37,26 @@ A continuació estudiem els tres semàntics de les sèries temporals
 segons l'origen; és a dir segons com s'han adquirit amb l'aparell de
 mesura, quina continuïtat té el temps d'adquisició o de si provenen
 d'un model d'intervals de temps.
-
-
-Cal aclarir que els trets semàntics no es corresponen amb
-l'estudi de les sèries temporals com a conjunt, seqüència i funció
-temporal que hem dut a terme en el model d'operacions, cosa que es
-correspon amb la formalització matemàtica del model com a conseqüència
-de l'atribut de temps.
-
+%
+% Cal aclarir que en el model
+% hem classificat les operacions de les sèries temporals segons
+% naturalesa de conjunt, de seqüència i de funció temporal. Aquesta classificació, però,
+% els trets semàntics no es corresponen amb l'estudi de
+% les sèries temporals com a conjunt, com a seqüència ni com a funció
+% temporal que hem dut a terme en la formalització matemàtica del model
+% d'operacions.
 
 \subsubsection{Aparell de mesura}
 
 
 Un primer tret semàntic de les sèries temporals és deu al mètode
 d'adquisició segons l'aparell de mesura.  Segons
-\textcite[cap.~1]{proakismanolakis96} els senyal discrets tenen dos
-orígens principals: l'adquisició mitjançant el mostreig d'un senyal
-continu cada cert període de temps o l'adquisició que prové d'una
-acumulació o d'un comptatge d'esdeveniments en un cert període de
-temps. 
-
-
+\textcite[cap.~1]{proakismanolakis96} els senyal discrets tenen
+principalment dos orígens: l'adquisició mitjançant el mostreig d'un
+senyal continu cada cert període de temps o l'adquisició que prové
+d'una acumulació o d'un comptatge d'esdeveniments en un cert període
+de temps.
+%
 Aquest tret semàntic descrit fa referència a l'eix del
 temps. Pel que fa a l'eix de valors es pot distingir entre una
 adquisició contínua o discreta, procés que s'anomena quantització del
@@ -96,7 +96,7 @@ anterior.
 
 Les sèries temporals amb tret semàntic de magnitud ofereixen la
 informació en una sola forma: l'estat de la variable. A la
-\autoref{fig:model:magnitud} es mostra amb una sèrie temporal
+\autoref{fig:model:magnitud} es mostra una sèrie temporal
 d'exemple: $S_m = \{(0,0),(2,1),(3,
 1{\glsdisp{not:signedecimal}{,}}5),(4,0),(5,2),(8,2)\}$ on els valors
 mostren l'estat de la magnitud física en els instants de temps
@@ -107,8 +107,8 @@ defineix com el producte d’un valor numèric per una unitat.
 Les sèries temporals amb tret semàntic de comptador poden oferir la
 informació en diverses formes : en valor absolut, en valor relatiu i
 en velocitat. A la \autoref{fig:model:comptador-formes} es mostren
-aquestes formes amb tres sèries temporals d'exemple provinents del
-mateix comptatge:
+aquestes formes d'informació mitjançant tres sèries temporals
+d'exemple provinents del mateix comptatge:
 
 \begin{itemize}
 \item $S_a = \{(0,0),(2,1),(4,3),(5,4),(8,10)\}$ amb els valors
@@ -229,8 +229,9 @@ d'adquisició però en aquest cas segons la continuïtat del temps.
 (\emph{dense time}) i temps discret (\emph{discrete time}) segons si
 entre dos instants de temps n'hi pot haver un de tercer o si els
 instants de temps son punts aïllats. Un exemple de domini del temps
-com a conjunt dens són els reals, $T\in \glssymbol{not:Rb}$, i com a
-conjunt discret són els naturals, $T\in \glssymbol{not:N}$.
+com a conjunt dens són els reals, $\glssymbol{not:temps-domini} =
+\glssymbol{not:Rb}$, i com a conjunt discret són els naturals,
+$\glssymbol{not:temps-domini} = \glssymbol{not:N}$.
 \textcite[cap.~3]{kopetz11:realtime} descriu conceptes similars tot i
 que els anomena \emph{dense time} i \emph{sparse time} i ho fa des del
 punt de vista d'esdeveniments de temps real. Així fa notar que els
@@ -265,7 +266,7 @@ posició absoluta en el sistema de coordenades.
   una sèrie temporal que recull les temperatures mitjanes de cada mes
   $S=\{(\text{gen99},10),(\text{feb99},11),(\text{març99},15),\dotsc\}$. En
   aquest cas el temps és discret amb el domini
-  $T\in\{\text{gen99},\text{feb99},\text{març99},\dotsc\}$ i cada
+  $\glssymbol{not:temps-domini} =\{\text{gen99},\text{feb99},\text{març99},\dotsc\}$ i cada
   instant de temps es pot observar com un lapse que dura tot el
   mes. Això no obstant, aquestes sèries temporals s'expressen amb més
   exactitud amb temps dens, per exemple en el cas de les mitjanes
@@ -285,12 +286,12 @@ posició absoluta en el sistema de coordenades.
   dels mesos d'octubre
   $S=\{(\text{oct98},15),(\text{oct99},10),(\text{oct00},13),\dotsc\}$.
   En aquest cas el temps és discret amb el domini
-  $T\in\{\text{oct98},\text{oct99},\text{oct00},\dotsc\}$ i cada
-  instant de temps es pot observar com un lapse que dura tot un mes
-  d'octubre però no hi ha continuïtat del temps entre els mesos. Així
-  doncs, aquestes sèries temporals presenten més dificultats a l'hora
-  d'expressar-se amb temps dens, per exemple com en el cas anterior es
-  pot precisar amb els instants de temps
+  $\glssymbol{not:temps-domini}=\{\text{oct98},\text{oct99},\text{oct00},\dotsc\}$
+  i cada instant de temps es pot observar com un lapse que dura tot un
+  mes d'octubre però no hi ha continuïtat del temps entre els
+  mesos. Així doncs, aquestes sèries temporals presenten més
+  dificultats a l'hora d'expressar-se amb temps dens, per exemple com
+  en el cas anterior es pot precisar amb els instants de temps
   $S=\{(\text{31-oct-98},15),(\text{31-oct-99,10}),(\text{31-oct-00,13}),\dotsc\}$
   o bé refermar-ho amb valors indefinits
   $S=\{(\text{30-set-98},\infty),(\text{31-oct-98},15),(\text{1-nov-98},\infty),(\text{30-set-99},\infty),(\text{31-oct-99,10}),\dotsc\}$,
@@ -310,14 +311,14 @@ posició absoluta en el sistema de coordenades.
   mitjana de les temperatures de cada mes
   $S=\{(\text{gen},10),(\text{feb},11),\dotsc,(\text{des},15)\}$. En
   aquest cas el temps és discret amb el domini
-  $T\in\{\text{gen},\text{feb},\dotsc,\text{des}\}$ i el lapse dura
-  tot un mes però sense cap posició absoluta en el sistema de
-  coordenades de temps. Aquest cas no es pot expressar amb temps dens.
-  Encara que aquest i casos semblants compleixen les propietats de
-  sèries temporals, la interpretació del temps és dificultosa i pot
-  resultar més còmode tractar-los com a casos genèrics dels
-  \gls{SGBDR} on la interpretació de l'atribut de temps com a
-  característica agrupada serà més apropiada.
+  $\glssymbol{not:temps-domini}=\{\text{gen},\text{feb},\dotsc,\text{des}\}$
+  i el lapse dura tot un mes però sense cap posició absoluta en el
+  sistema de coordenades de temps. Aquest cas no es pot expressar amb
+  temps dens.  Encara que aquest i casos semblants compleixen les
+  propietats de sèries temporals, la interpretació del temps és
+  dificultosa i pot resultar més còmode tractar-los com a casos
+  genèrics dels \gls{SGBDR} on la interpretació de l'atribut de temps
+  com a característica agrupada serà més apropiada.
 \end{example}
 
 
@@ -1457,39 +1458,50 @@ associada, si bé només és necessari implementar l'operació d'interval
 temporal per a cada representació atès que les altres operacions es
 defineixen a partir d'aquesta. 
 
-Un exemple d'interpretació de la funció de representació en l'operació
-d'interval temporal (v. \autoref{def:sgst:intervalt}) s'ha vist a la
-\autoref{def:sgst:interval-temporal-zohe} per a la representació
-\gls{zohe}. A continuació apliquem el mateix esquema usat a la
-\autoref{def:sgst:interval-temporal-zohe} a tres altres exemples
-segons les representacions \gls{dd}, \gls{foh} i lineal.
+A la definició de l'operació d'interval temporal
+(v. \autoref{def:sgst:intervalt}) hem deixat oberta la interpretació
+del mètode de representació.  A continuació particularitzem l'interval
+temporal segons quatre representacions: \gls{dd}, \gls{zohe},
+\gls{foh} i lineal.
 
 \begin{definition}[Interval temporal \gls{dd}]
   \label{def:sgst:interval-temporal-delta}
-  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
-  el mètode de representació $r=\gls{dd}$, es defineix
-  l'interval temporal $S[t_0,t_f]^{\gls{dd}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\gls{dd}} = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$  on
-  $m_0=(t_0,0)$ i $m_f=(t_f,0)$.
+  Sigui $S$ una sèrie temporal, $[s,t]$ un interval de temps i el
+  mètode de representació $\gls{dd}$. Definim l'interval temporal
+  \gls{dd}, $S[s,t]^{\gls{dd}}$, com la sèrie temporal
+  $S[s,t]^{\gls{dd}} = S[s,t] \cup \{(s,0), (t,0)\}$.
 \end{definition}
+
+
+\begin{definition}[Interval temporal \gls{zohe}]
+  \label{def:sgst:interval-temporal-zohe}
+  Sigui $S$ una sèrie temporal, $[s,t]$ un interval de temps i el
+  mètode representació $\gls{zohe}$. Definim l'interval temporal
+  \gls{zohe}, $S[s,t]^{\glssymbol{not:zohe}}$, com la sèrie temporal
+    $S[s,t]^{\glssymbol{not:zohe}} = S(s,t] \cup \{m\}$ on $m=(t,v)$
+    i $v= V(\inf( S[t,+\infty] ))$.
+\end{definition}
+  %Atenció S(t_0,t_f] \cup \{m\} no és equivalent a  (S \cup \{m\})(t_0,t_f] ni sabent que m=(t_f,v); comprovar-ho pel cas t_0=t_f
+
+
 
 \begin{definition}[Interval temporal \gls{foh}]
   \label{def:sgst:interval-temporal-foh}
-  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i el
-  mètode de representació $r=\gls{foh}$, es defineix l'interval
-  temporal $S[t_0,t_f]^{\gls{foh}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\gls{foh}} = S[t_0,t_f] \cup \{m_0\} \cup \{m_f\}$ on
-  $m_0=(t_0,S^{\text{FOH}}(t_0))$ i $m_f=(t_f,S^{\gls{foh}}(t_f))$.
+  Sigui $S$ una sèrie temporal, $[s,t]$ un interval de temps i el
+  mètode de representació $\gls{foh}$. Definim l'interval
+  temporal \gls{foh}, $S[s,t]^{\gls{foh}}$, com la sèrie temporal
+  $S[s,t]^{\gls{foh}} = S[s,t] \cup \{m, n\}$ on
+  $m=(s,S^{\text{FOH}}(s))$ i $n=(t,S^{\gls{foh}}(t))$.
 \end{definition}
 
 \begin{definition}[Interval temporal lineal]
   \label{def:sgst:interval-temporal-lineal}
-  Sigui $S$ una sèrie temporal, $[t_0,t_f]$ un interval de temps i
-  el mètode de representació $r=\text{lineal}$, es defineix
-  l'interval temporal $S[t_0,t_f]^{\text{lineal}}$ com la sèrie temporal
-  $S[t_0,t_f]^{\text{lineal}} = \{m_0\} \cup \{m_f\}$ on
-  $m_0=(t_0,S^{\text{lineal}}(t_0))$ i
-  $m_f=(t_f,S^{\text{lineal}}(t_f))$.
+  Sigui $S$ una sèrie temporal, $[s,t]$ un interval de temps i
+  el mètode de representació $\text{lineal}$. Definim
+  l'interval temporal lineal, $S[s,t]^{\text{lineal}}$, com la sèrie temporal
+  $S[s,t]^{\text{lineal}} = \{m,n\}$ on
+  $m=(s,S^{\text{lineal}}(s))$ i
+  $n=(t,S^{\text{lineal}}(t))$.
 \end{definition}
 
 
@@ -1775,7 +1787,9 @@ $S[i]^r \equiv \{ (t_I, v_0), (t_I+\delta,v_1), \dotsc ,
 propietat ja ha estat anunciada anteriorment en la definició de
 l'operador d'interval temporal però ara la clarifiquem amb el
 vocabulari de sèries temporals regulars. 
-
+%   equi-espaiat $i = \{\tau+n\delta | n,j\in\glssymbol{not:N}, n\leq j
+%   \}$ és una sèrie temporal regular $S[i]^r \equiv \{ (\tau, v_0),
+%   (\tau+\delta,v_1), \dotsc , (\tau+j\delta,v_j)\}$ 
 
 A continuació mostrem algunes tècniques simples per a regularitzar les
 sèries temporals de temps real, les d'ultramostreig i les

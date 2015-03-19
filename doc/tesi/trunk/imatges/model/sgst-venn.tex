@@ -1,6 +1,6 @@
-\def\nodeA{node [anchor=east] {$A$}}
-\def\nodeB{node [anchor=west] {$B$}}
-\def\nodeT{node [left=0.4cm] {\tiny $t_A$} node [right=0.4cm] {\tiny $t_B$}}
+\def\nodeA{node [anchor=east] {$S_1$}}
+\def\nodeB{node [anchor=west] {$S_2$}}
+\def\nodeT{node [left=0.4cm] {\tiny $T_1$} node [right=0.4cm] {\tiny $T_2$}}
 % Definition of circles
 \def\firstcircle{(0,0) circle (1.5cm)}
 \def\secondcircle{(0:2cm) circle (1.5cm)}
@@ -27,8 +27,8 @@
    \end{scope}
       \draw[outline] \secondcircle \nodeB;
 
-   \node[anchor=south] at (current bounding box.north) {$A \subset B$};
-   \node[anchor=west] at (current bounding box.west) {$A$};
+   \node[anchor=south] at (current bounding box.north) {$S_1 \subset S_2$};
+   \node[anchor=west] at (current bounding box.west) {$S_1$};
 \end{tikzpicture}
 %Set temporal A in B
 \begin{tikzpicture}
@@ -51,8 +51,8 @@
    \end{scope}
       \draw[outline] \secondcircle \nodeB;
 
-   \node[anchor=south] at (current bounding box.north) {$A \subset^t B$};
-   \node[anchor=east] at (current bounding box.center) {$A$};
+   \node[anchor=south] at (current bounding box.north) {$S_1 \subset^t S_2$};
+   \node[anchor=east] at (current bounding box.center) {$S_1$};
 \end{tikzpicture}
 
 
@@ -74,14 +74,14 @@
                    \secondcircle \nodeB
                    \thirdcircle \nodeT;
 
-   \node[anchor=south] at (current bounding box.north) {$A \cup B$};
+   \node[anchor=south] at (current bounding box.north) {$S_1 \cup S_2$};
 \end{tikzpicture}
 %Set temporal A or B
 \begin{tikzpicture}
     \draw[filled, even odd rule] \firstcircle \nodeA
                                  \secondcircle \nodeB
                                  \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A \cup^t B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 \cup^t S_2$};
 \end{tikzpicture}
 
 
@@ -98,7 +98,7 @@
     \draw[outline] \firstcircle
                    \secondcircle \nodeB
                    \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A - B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 - S_2$};
 \end{tikzpicture}
 % Set temporal A but not B
 \begin{tikzpicture}
@@ -111,7 +111,7 @@
     \draw[outline] \firstcircle
                    \secondcircle \nodeB
                    \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A -^t B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 -^t S_2$};
 \end{tikzpicture}
 
 
@@ -127,7 +127,7 @@
     \draw[outline] \firstcircle \nodeA;
     \draw[outline] \secondcircle \nodeB;
     \draw[outline] \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A \cap B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 \cap S_2$};
 \end{tikzpicture}
 % Set temporal A and B
 \begin{tikzpicture}
@@ -138,7 +138,7 @@
     \draw[outline] \firstcircle \nodeA;
     \draw[outline] \secondcircle \nodeB;
     \draw[outline] \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A \cap^t B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 \cap^t S_2$};
 \end{tikzpicture}
 
 
@@ -159,7 +159,7 @@
     \draw[outline] \firstcircle \nodeA;
     \draw[outline] \secondcircle \nodeB;
     \draw[outline] \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A \ominus B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 \ominus S_2$};
 \end{tikzpicture}
 %Set temporal A or B but not (A and B) also known a A xor B
 \begin{tikzpicture}
@@ -177,5 +177,5 @@
     \draw[outline] \firstcircle \nodeA;
     \draw[outline] \secondcircle \nodeB;
     \draw[outline] \thirdcircle \nodeT;
-    \node[anchor=south] at (current bounding box.north) {$A \ominus^t B$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 \ominus^t S_2$};
 \end{tikzpicture}
