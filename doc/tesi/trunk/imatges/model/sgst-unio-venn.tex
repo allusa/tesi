@@ -39,6 +39,21 @@
 
    \node[anchor=south] at (current bounding box.north) {$S_1 \cup S_2$};
 \end{tikzpicture}
+%Set B or A
+\begin{tikzpicture}[scale=\escala]
+  \draw[filled] \secondcircle \nodeB;
+    \begin{scope}
+        \clip \firstcircle;
+        \draw[filled, even odd rule] \secondcircle \nodeB
+                                 \firstcircle 
+                                 \thirdcircle;
+   \end{scope}
+    \draw[outline] \secondcircle
+                   \firstcircle \nodeA
+                   \thirdcircle \nodeT;
+
+   \node[anchor=south] at (current bounding box.north) {$S_2 \cup S_1$};
+\end{tikzpicture}
 %Set temporal A or B
 \begin{tikzpicture}[scale=\escala]
     \draw[filled, even odd rule] \firstcircle \nodeA
