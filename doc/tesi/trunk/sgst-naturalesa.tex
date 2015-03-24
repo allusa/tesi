@@ -442,27 +442,21 @@ el temps de validesa de cada tasca.
 \label{sec:model:repr}
 \glsaddsec{not:sgst:repr} %%%%secció d'operacions
 
-
-Una sèrie temporal és la representació discreta d'una funció contínua;
-la qual és una funció temporal atès que depèn del temps. El model de
-\gls{SGST} definit formalitza la sèrie temporal en aquesta
-representació discreta. Però a partir d'una sèrie temporal es pot
-interpretar quina era la funció contínua original; és a dir obtenir
-nous valors segons una funció. Aquesta nova co\l.lecció de valors
-s'anomena graf d'una funció (\emph{graph of a function}), en el sentit
-de gràfic (\emph{plot}) que cal no confondre amb els grafs d'arestes i
-vèrtexs (\emph{vertex-edge graph}).
-
-
-
-\begin{definition}[Graf d'una sèrie temporal]%an. graph
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $T$ un domini del
-  temps, es defineix el graf de la sèrie temporal
-  $\glssymboldef{not:sgst:graf} S(t)$ com un conjunt de parells
-  ordenats $(t,S(t))$ : $\glssymboldef{not:sgst:graf} S(t) = \{ (t,S(t)) |
-  t\in T \}$  on $S(t)$ és una funció de representació de la sèrie
-  temporal.
-\end{definition}
+%  El
+% model de \gls{SGST} definit formalitza la sèrie temporal com una
+% representació discreta.
+Una sèrie temporal pot representar discretament una funció temporal
+(original), és a dir una funció que depèn de la variable temps. Una
+sèrie temporal pot representar-se com una funció temporal, és a dir
+obtenir nous valors a partir de la sèrie temporal segons una
+funció. Aquesta nova co\l.lecció de valors s'anomena graf d'una funció
+(\emph{graph of a function}), en el sentit de gràfic (\emph{plot}) que
+cal no confondre amb els grafs d'arestes i vèrtexs (\emph{vertex-edge
+  graph}).  Així, una sèrie temporal pot representar-se com una funció
+que descrigui o s'aproximi a com era la funció temporal original
+representada. En aquesta secció, però, descrivim com poden
+representar-se independentment que s'ajustin a la funció temporal
+original.
 
 
 Per a calcular el graf d'una sèrie temporal es necessita una funció de
@@ -473,20 +467,36 @@ funció contínua l'anomenem funció de representació.  Així doncs,
 donada una sèrie temporal es poden definir funcions amb el temps com a
 variable que calculin nous valors a partir de les mesures
 emmagatzemades.
+
+
+
 \begin{definition}[Funció de representació]
   \label{def:model:frepr}
-  Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix $S(t)$
-  com la funció de representació de la sèrie temporal contínua al
-  llarg del temps $t$; és a dir que per cada instant de temps la
-  funció pren un valor: $\forall t\in T: v(t) = S(t)$. 
+  Sigui $S$ una sèrie temporal, es defineix $S(t)$ com la funció de
+  representació de la sèrie temporal contínua al llarg del temps, $t\in
+  \glssymbol{not:temps-domini}$. És a dir que per cada instant de
+  temps la funció pren un valor i per tant és una funció
+  $\glssymbol{not:temps-domini}\rightarrow\glssymbol{not:valor-domini}$.
 
   Atenent a les operacions de càlcul que es facin per a obtenir $S(t)$
   diem que hi ha diverses funcions de representació. Així per a cada
   funció de representació indicarem a quina ens referim amb un
-  superíndex \glsdispdef{not:sgst:frepr}{$S^r(t)$} a on
+  superíndex \glsdispdef{not:sgst:frepr}{$S^r(t)$} on
   \glssymbol{not:sgst:repr} és el nom d'una funció de representació
   de la sèrie temporal.
 \end{definition}
+
+
+\begin{definition}[Graf d'una sèrie temporal]%an. graph
+  Sigui $S(t)$ la funció de representació d'una sèrie temporal i
+  $\glssymbol{not:temps-domini}$ un domini del temps, es defineix el
+  graf de la sèrie temporal, $\glssymboldef{not:sgst:graf} S(t)$, com
+  un conjunt de parells ordenats $(t,S(t))$ de manera que
+  $\glssymboldef{not:sgst:graf} S(t) = \{ (t,S(t)) |
+  t\in\glssymbol{not:temps-domini} \}$.
+\end{definition}
+
+
 
 La utilitat de les funcions de representació és diversa i per això les
 operacions de càlcul poden ser qualssevol. Una funció de representació
@@ -520,7 +530,7 @@ càlculs successius a una sèrie temporal seguint diferents funcions de
 representació.  Això no obstant, en la formalització del model de
 funcions de representacions no definim cap criteri en concret per a,
 així, donar llibertat en les possibilitats de càlcul amb les sèries
-temporals. En \textref{sec:art:seriestemporals} s'ha descrit
+temporals. En \textref{sec:art:seriestemporals} s'ha comentat
 breument la diversitat en els algoritmes de representació que
 s'utilitzen per a l'anàlisi de sèries temporals.
 % entre els quals destaquen els que es basen en aproximació als valors

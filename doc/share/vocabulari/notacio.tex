@@ -13,6 +13,8 @@
 \newglossaryentry{not:R}{description={$\mathbb{R}$},name={Reals},symbol={\ensuremath{\mathbb{R}}}, parent={not:mat}}
 \newglossaryentry{not:Rb}{description={\ensuremath{\bar{\glssymbol{not:R}}}},name={Reals estesos},symbol={\ensuremath{\bar{\glssymbol{not:R}}}}, parent={not:mat}}
 \newglossaryentry{not:R*}{description={\ensuremath{\glssymbol{not:R}^*}},name={Reals projectius},symbol={\ensuremath{\glssymbol{not:R}^*}}, parent={not:mat}}
+\newglossaryentry{dom}{description={\ensuremath{\operatorname{dom}(\{\})}},name={Domini},symbol={\ensuremath{\operatorname{dom}}}, parent={not:mat}}
+\newglossaryentry{powerset}{description={\ensuremath{\mathcal{P}(\{\})}},name={Conjunt potència},symbol={\ensuremath{\mathcal{P}}}, parent={not:mat}}
 
 %igualtat o definició variables =
 %assignació :=
@@ -36,26 +38,27 @@
 \newglossaryentry{not:sgst}{ name={Notació SGST}, description={\nopostdesc},sort=10}
 
 
-\newglossaryentry{not:temps}{ name={temps}, description={\ensuremath{t\in T}},sort=20,parent={not:sgst}}
+\newglossaryentry{not:temps}{ name={temps}, description={\ensuremath{t\in\glssymbol{not:temps-domini} }},sort=20,parent={not:sgst}}
 
-\newglossaryentry{not:instant}{description={\ensuremath{t^i}},name={Instant de temps}, parent={not:temps}, sort=1 }
-\newglossaryentry{not:durada}{name={durada},description={\ensuremath{t^d}},parent={not:temps}, sort=2 }
-\newglossaryentry{not:temps-referencia}{name={Temps de referència},description={\ensuremath{t^R}},parent={not:temps}, sort=3 }
-\newglossaryentry{not:temps-interval}{name={Interval de temps},description={\ensuremath{[t^i_a,t^i_b]}},parent={not:temps}, sort=4 }
-\newglossaryentry{not:temps-domini}{name={Domini del temps },description={\ensuremath{T} (p.ex.~$\glssymbol{not:Rb}$)},parent={not:temps}, sort=5 }
+\newglossaryentry{not:instant}{description={\ensuremath{t}},name={Instant de temps}, parent={not:temps}, sort=1 }
+\newglossaryentry{not:durada}{name={durada},description={\ensuremath{d}},parent={not:temps}, sort=2 }
+\newglossaryentry{not:temps-referencia}{name={Temps de referència},description={\ensuremath{0}},parent={not:temps}, sort=3 }
+\newglossaryentry{not:temps-interval}{name={Interval de temps},description={\ensuremath{[s,t]}},parent={not:temps}, sort=4 }
+\newglossaryentry{not:temps-domini}{name={Domini del temps },description={\ensuremath{\cal{T}} (p.ex.~$\glssymbol{not:Rb}$)},symbol={\ensuremath{\cal{T}}},parent={not:temps}, sort=5 }
 
 
-\newglossaryentry{not:valor}{ name={valor}, description={\ensuremath{v\in V}},sort=30,parent={not:sgst}}
-\newglossaryentry{not:valor-domini}{name={Domini del valor},description={\ensuremath{V} (p.ex.~$\glssymbol{not:R*}$)},symbol={\ensuremath{V}},parent={not:valor}, sort=5 }
+\newglossaryentry{not:valor}{ name={valor}, description={\ensuremath{v\in\glssymbol{not:valor-domini} }},sort=30,parent={not:sgst}}
+\newglossaryentry{not:valor-domini}{name={Domini del valor},description={\ensuremath{\cal{V}} (p.ex.~$\glssymbol{not:R*}$)},symbol={\ensuremath{\cal{V
+}}},parent={not:valor}, sort=5 }
 
 
 
 \newglossaryentry{not:mesura}{ name={mesura}, description={\ensuremath{m=(t,v)}},sort=40,parent={not:sgst}}
 
-\newglossaryentry{not:mesura-temps}{name={Temps},description={\ensuremath{T(m)}},parent={not:mesura}, sort=1 }
-\newglossaryentry{not:mesura-valor}{name={Valor},description={\ensuremath{V(m)}},parent={not:mesura}, sort=2 }
-\newglossaryentry{not:mesura:ordretotal}{name={Ordre total},description={\ensuremath{m_a \leq^t m_b}},symbol={\ensuremath{\leq^t}},parent={not:mesura}, sort=3 }
-\newglossaryentry{not:mesura:ordreparcial}{name={Ordre parcial},description={\ensuremath{m_a \leq m_b}},symbol={\ensuremath{\leq}},parent={not:mesura}, sort=3 }
+\newglossaryentry{not:mesura-temps}{name={Temps},description={\ensuremath{T(m)}},parent={not:mesura} }
+\newglossaryentry{not:mesura-valor}{name={Valor},description={\ensuremath{V(m)}},parent={not:mesura} }
+\newglossaryentry{not:mesura:ordretotal}{name={Ordre total},description={\ensuremath{m \leq^t n}},symbol={\ensuremath{\leq^t}},parent={not:mesura} }
+\newglossaryentry{not:mesura:ordreparcial}{name={Ordre parcial},description={\ensuremath{m \leq n}},symbol={\ensuremath{\leq}},parent={not:mesura} }
 
 \newglossaryentry{not:mesura-vindefinit}{name={Valor indefinit},description={\ensuremath{(t,\infty)}},parent={not:mesura}, sort=4 }
 \newglossaryentry{not:mesura-indefinida}{name={Mesura indefinida},description={\ensuremath{(\pm\infty,\infty)}},parent={not:mesura}, sort=5 }
@@ -96,7 +99,7 @@
 \newglossaryentry{not:sgst:select}{name={selecció},description={\ensuremath{\sigma_{a_1 \Theta a_2}(S)}},symbol={\ensuremath{\sigma}},parent={not:op-conjunts}}
 \newglossaryentry{not:sgst:rename}{name={reanomena},description={\ensuremath{\rho_{a/b}(S)}},symbol={\ensuremath{\rho}},parent={not:op-conjunts}}
 \newglossaryentry{not:sgst:times}{name={producte},description={\ensuremath{S_1\times S_2}},symbol={\ensuremath{\times}},parent={not:op-conjunts}}
-\newglossaryentry{not:sgst:join}{name={junció},description={\ensuremath{S_1 \operatorname{join} S_2}},parent={not:op-conjunts},symbol={\ensuremath{\operatorname{join}}}}
+\newglossaryentry{not:sgst:join}{name={junció},description={\ensuremath{S_1 \Join S_2}},parent={not:op-conjunts},symbol={\ensuremath{\Join}}}
 
 
 
@@ -106,15 +109,15 @@
 \newglossaryentry{not:sgst:fagg}{name={Funció d'agregació},description={\ensuremath{\glssymbol{not:F}^a:m\times m_b\mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^a}}}
 \newglossaryentry{not:sgst:ffold}{name={Funció de plegament},description={\ensuremath{\glssymbol{not:F}^p:S \times m \mapsto S'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^p}}}
 \newglossaryentry{not:sgst:forder}{name={Funció d'ordre},description={\ensuremath{\glssymbol{not:F}^o:S \mapsto m'}},parent={not:sgst:computacional},symbol={\ensuremath{\glssymbol{not:F}^o}}}
-\newglossaryentry{not:sgst:opbinari}{name={operació binària de valors},description={\ensuremath{\operatorname{op}: v_1 \times v_2 \mapsto v'}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{op}}}}
+\newglossaryentry{not:sgst:opbinari}{name={operació binària de valors},description={\ensuremath{\odot: v_1 \times v_2 \mapsto v'}},parent={not:sgst:computacional},symbol={\ensuremath{\odot}}}
 
-\newglossaryentry{not:sgst:map}{name={mapa},description={\ensuremath{\operatorname{mapa}(S,\glssymbol{not:sgst:fmap})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{mapa}}}}
-\newglossaryentry{not:sgst:aggregate}{name={agregació},description={\ensuremath{\operatorname{agregaci\acute{o}}(S,m_i,\glssymbol{not:sgst:fagg})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{agregaci\acute{o}}}}}
-\newglossaryentry{not:sgst:fold}{name={plec},description={\ensuremath{\operatorname{plec}(S,S_i,\glssymbol{not:sgst:ffold})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{plec}}}}
-\newglossaryentry{not:sgst:ofold}{name={plec amb ordre},description={\ensuremath{\operatorname{oplec}(S,S_i,\glssymbol{not:sgst:ffold},\glssymbol{not:sgst:forder})}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{oplec}}}}
+\newglossaryentry{not:sgst:map}{name={mapa},description={\ensuremath{\operatorname{mapa}(S,f)}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{mapa}}}}
+\newglossaryentry{not:sgst:aggregate}{name={agregació},description={\ensuremath{\operatorname{agregaci\acute{o}}(S,m,f)}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{agregaci\acute{o}}}}}
+\newglossaryentry{not:sgst:fold}{name={plec},description={\ensuremath{\operatorname{plec}(S,R,f)}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{plec}}}}
+\newglossaryentry{not:sgst:ofold}{name={plec amb ordre},description={\ensuremath{\operatorname{oplec}(S,R,f,g)}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{oplec}}}}
 
 
-\newglossaryentry{not:sgst:computacionalbinaria}{name={binària amb els valors},description={\ensuremath{\operatorname{op}:S_1\times S_2 \mapsto S'}},parent={not:sgst:computacional},symbol={\ensuremath{\operatorname{op}}}}
+\newglossaryentry{not:sgst:computacionalbinaria}{name={binària amb els valors},description={\ensuremath{\odot:S_1\times S_2 \mapsto S'}},parent={not:sgst:computacional},symbol={\ensuremath{\odot}}}
 
 
 
@@ -147,8 +150,9 @@
 \newglossaryentry{not:sgst:intervalt}{name={interval temporal},description={\ensuremath{S[t^i_a,t^i_b]^r}},parent={not:op-funcio}}
 \newglossaryentry{not:sgst:selectt}{name={selecció temporal},description={\ensuremath{S[\{t_0,\dotsc,t_n\}]^r}},parent={not:op-funcio}}
 \newglossaryentry{not:sgst:concatenatet}{name={concatenació temporal},description={$S_1 ||^r S_2$},symbol={\ensuremath{\glssymbol{not:sgst:concatenate}}},parent={not:op-funcio}}
-\newglossaryentry{not:sgst:joint}{name={junció temporal},description={\ensuremath{S_1 \operatorname{join}^r S_2}},parent={not:op-funcio},symbol={\ensuremath{\operatorname{join}}}}
-\newglossaryentry{not:sgst:semijoint}{name={semijunció temporal},description={\ensuremath{S_1 \operatorname{semijoin}^r S_2}},parent={not:op-funcio},symbol={\ensuremath{\operatorname{semijoin}}}}
+\newglossaryentry{not:sgst:joint}{name={junció temporal},description={\ensuremath{S_1 \Join^r S_2}},parent={not:op-funcio},symbol={\ensuremath{\Join}}}
+%${\tiny \textifsym{d|><|d}}$
+\newglossaryentry{not:sgst:semijoint}{name={semijunció temporal},description={\ensuremath{S_1 \ltimes^r S_2}},parent={not:op-funcio},symbol={\ensuremath{\ltimes}}}
 
 
 
