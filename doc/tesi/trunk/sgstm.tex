@@ -3,9 +3,9 @@
 \glsaddchap{not:sgstm}%%secció d'operacions
 \glsreset{SGSTM}
 
-En aquest capítol es defineix un model dels \glspl{SGSTM}, els quals
-emmagatzemen sèries temporals de forma resumida i compacta. Aquest
-model s'estructura en un objecte principal que són les \emph{sèries
+En aquest capítol es defineix un model dels \glspl{SGSTM}, el qual permet
+emmagatzemar sèries temporals de forma resumida i compacta. Aquest
+model s'estructura en uns objectes principal que són les \emph{sèries
   temporals multiresolució}, les quals es defineixen com a conjunts de
 \emph{subsèries resolució} formades per \emph{discs} i \emph{buffers},
 i utilitza els objectes de sèries temporals i mesures descrits en el
@@ -23,9 +23,10 @@ model de \gls{SGST}.  El model es dissenya en tres parts.
 
 \item Tercer, s'expliquen amb més detall les funcions específiques del
   model que permeten agregar diferents atributs de les sèries
-  temporals per a obtenir les multiresolucions. Les funcions
-  d'agregació d'atributs són requerides pel model però en són
-  independents.
+  temporals per a obtenir les multiresolucions. 
+% Les funcions
+%   d'agregació d'atributs són requerides pel model però en són
+%   independents.
 \end{itemize}
 
 
@@ -34,8 +35,7 @@ model de \gls{SGST}.  El model es dissenya en tres parts.
 \section{Model estructural de dades}
 
 
-Els objectes estructurals principals d'un \gls{SGSTM}, els quals es
-defineixen en aquesta secció, són els següents:
+Els objectes estructurals principals d'un \gls{SGSTM} són els següents:
 \begin{itemize}
 \item Buffer
 \item Disc
@@ -44,16 +44,6 @@ defineixen en aquesta secció, són els següents:
 \item Esquema de multiresolució
 \end{itemize}
 
-
-Resumint, una base de dades multiresolució és una solució
-d'emmagatzematge per a sèries temporals en què la informació de
-cadascuna es distribueix mitjançant diferents resolucions
-temporals. Així, una base de dades multiresolució és un contenidor de
-sèries temporals multiresolució on cadascuna és una subsèrie resolució
-formada per una relació d'un buffer amb un disc. Cada sèrie temporal
-multiresolució té un esquema de multiresolució que indica de quina
-manera s'ha de resumir la informació i calcular les resolucions.
-
 \begin{figure}[tp]
 \centering
 \input{imatges/model/mtsms-arquitectura_interna.tex}
@@ -61,33 +51,46 @@ manera s'ha de resumir la informació i calcular les resolucions.
 \label{fig:model:bdstm}
 \end{figure}
 
+Definirem formalment cadascun d'aquests objectes a cada apartat
+següent.  Aquests objectes permeten definir l'arquitectura d'una base
+de dades multiresolució, la qual es pot veure gràficament a la
+\autoref{fig:model:bdstm}.  Una sèrie temporal multiresolució és una
+co\l.lecció de subsèries resolució, les quals acumulen temporalment
+mesures en un buffer a on són processades i finalment emmagatzemades
+en un disc. Aquest processament té per objectiu canviar els intervals
+de temps entre les mesures per tal de compactar la informació de les
+sèries temporals i emmagatzemar-la en forma de subsèries temporals amb
+diferents resolucions distribuïdes en els discs. Els discs tenen la
+mida limitada i només poden contenir un nombre fixat de
+mesures.% ; quan no hi
+% ha més capacitat cal eliminar mesures.  En síntesi, una base de dades
+% multiresolució té la mida fixada i les sèries temporals hi queden
+% emmagatzemades en forma de multiresolució, és a dir a 
+% trossos com a
+% subsèries temporals.
+
+
+Resumint, una base de dades multiresolució és una
+solució d'emmagatzematge per a sèries temporals en què la informació
+de cadascuna es distribueix mitjançant diferents resolucions
+temporals. Així, una base de dades multiresolució és un contenidor de
+sèries temporals multiresolució on cadascuna és una subsèrie resolució
+formada per una relació d'un buffer amb un disc. Cada sèrie temporal
+multiresolució té un esquema de multiresolució que indica de quina
+manera s'ha de resumir la informació per calcular les resolucions.
 
 
 
-Aquests objectes defineixen l'arquitectura d'una base de dades
-multiresolució com es pot veure a la \autoref{fig:model:bdstm}.  Una
-sèrie temporal multiresolució és una co\l.lecció de subsèries
-resolució, les quals acumulen temporalment mesures en un buffer a on
-són processades i finalment emmagatzemades en un disc. Aquest
-processament té per objectiu canviar els intervals de temps entre les
-mesures per tal de compactar la informació de les sèries temporals i
-emmagatzemar-la en forma de subsèries temporals amb diferents
-resolucions distribuïdes en els discs. Els discs tenen la mida
-limitada i només poden contenir un nombre fixat de mesures; quan no hi
-ha més capacitat cal eliminar mesures.  En síntesi, una base de dades
-multiresolució té la mida fixada i les sèries temporals hi queden
-emmagatzemades en forma de multiresolució, és a dir a trossos com a
-subsèries temporals.
 
 
-En aquesta secció només es defineixen els conceptes referents a
-l'estructura del model i al final s'ofereixen alguns exemples amb
-valors concrets. Aquesta estructura, però, requereix uns operadors
-específics per a emmagatzemar-hi i consolidar-hi les mesures, els
-quals es defineixen a
-l'\autoref{sec:model:sgstm-estructurals}. També requereix unes
-funcions per a agregar els atributs d'una sèrie temporal, les quals
-es defineixen a la \autoref{sec:model:agregador}.
+
+En aquesta secció es defineixen els conceptes referents a l'estructura
+del model i al final s'ofereixen alguns exemples amb valors
+concrets. Aquesta estructura, però, requereix uns operadors específics
+per a emmagatzemar-hi i consolidar-hi les mesures, els quals es
+defineixen a l'\autoref{sec:model:sgstm-estructurals}. També requereix
+unes funcions per a agregar els atributs d'una sèrie temporal, les
+quals es defineixen a la \autoref{sec:model:agregador}.
 
 
 
@@ -113,14 +116,14 @@ que anomenem funció d'agregació d'atributs.
 
 
 \begin{definition}[Buffer]
-  Definim \emph{buffer} com el tuple
-  \glsdispdef{not:buffer}{$(S_B,\tau,\delta,f)$}, en què
-  \glsdispdef{not:sgstm:sb}{$S_B$} és una sèrie temporal pendent de
-  ser consolidada, \glsdispdef{not:sgstm:tau}{$\tau$} és el darrer
+  Sigui \glsdispdef{not:sgstm:sb}{$S_B$} una sèrie temporal pendent de
+  ser consolidada, \glsdispdef{not:sgstm:tau}{$\tau$} el darrer
   instant de temps de consolidació,
-  \glsdispdef{not:sgstm:delta}{$\delta$} és una durada de temps que
-  indica el pas de consolidació i \glsdispdef{not:sgstm:f}{$f$} és una
-  funció d'agregació d'atributs.
+  \glsdispdef{not:sgstm:delta}{$\delta$} una durada de temps que
+  indica el pas de consolidació i \glssymboldef{not:sgstm:f} una
+  funció d'agregació d'atributs.  Definim un \emph{buffer} $B$ com el
+  tuple
+  \glsdispdef{not:buffer}{$B=(S_B,\tau,\delta,\glssymbol{not:sgstm:f})$}.
 \end{definition}
 
 La consolidació d'una sèrie temporal s'inicia en un instant de temps
@@ -129,21 +132,23 @@ finalitat d'establir els intervals de consolidació de la sèrie
 temporal, es defineix un buffer inicial.
 
 \begin{definition}[Buffer buit]\label{def:model:buffer_buit}
-  Definim buffer inicial o buffer buit com el buffer $B_{\emptyset} =
-  (\emptyset,\tau_0, \delta, f)$, el qual conté una sèrie temporal
-  buida, l'instant de temps inicial de consolidació, el pas de
-  consolidació i una funció d'agregació d'atributs.
+  Definim buffer inicial o buffer buit com el buffer $(\emptyset,t_0,
+  \delta, \glssymbol{not:sgstm:f})$, el qual conté una sèrie temporal
+  buida, un instant de temps inicial de consolidació
+  $t_0\in\glssymbol{not:temps-domini}$, el pas de consolidació $\delta$ i una
+  funció d'agregació d'atributs $\glssymbol{not:sgstm:f}$.
 \end{definition}
 
-A partir del buffer buit es poden conèixer tots els instants de temps
-de consolidació del buffer, els quals seran $\tau_0+k\delta,
-k\in\glssymbol{not:N}$. Aquests instants de temps de consolidació
+A partir d'un buffer es poden conèixer tots els instants de temps de
+consolidació, els quals seran $\tau_n=t_0+n\delta$ per tot
+$n\in\glssymbol{not:N}$. Aquests instants de temps de consolidació
 també defineixen els intervals de temps de consolidació del buffer de
-la forma $i=[\tau,\tau+\delta]$. La consolidació de la sèrie temporal
-$S_B$ d'un buffer en un interval de temps $i$ dóna com a resultat una
-mesura $m'=(t,v)$ calculada a partir de la funció d'agregació
-d'atributs $m' = f (S, i)$. Més endavant a la
-\autoref{sec:model:agregador} detallem el concepte de funció
+la forma $[\tau_n,\tau_n+\delta]$. La consolidació de la sèrie
+temporal $S_B$ d'un buffer en un interval de temps
+$[\tau,\tau+\delta]$ dóna com a resultat una mesura $m$
+calculada a partir de la funció d'agregació d'atributs $m =
+\glssymbol{not:sgstm:f}(S_B,[\tau,\tau+\delta])$. Més endavant a la
+\autoref{sec:model:agregador} detallem aquest concepte de funció
 d'agregació d'atributs.
 
 
@@ -154,7 +159,7 @@ d'agregació d'atributs.
         ymin = 0,
         yticklabels= {,,,,valors},
         y tick label style = {rotate=90,anchor=south},
-        xticklabels={,,$\underbrace{\tau_{0}\vphantom{\delta}}_{\tau^0}$,,$\underbrace{\tau^0+\delta}_{\tau^1}$,,$\underbrace{\tau^1+\delta}_{\tau^2}$,,$\underbrace{\tau^2+\delta}_{\tau^3 \ldots}$},
+        xticklabels={,,$\underbrace{t_0 \vphantom{\delta}}_{\tau^0}$,,$\underbrace{\tau_0+\delta}_{\tau_1}$,,$\underbrace{\tau_1+\delta}_{\tau_2}$,,$\underbrace{\tau_2+\delta}_{\tau_3 \ldots}$},
         ]
  
     \addplot[ycomb,blue] coordinates {
@@ -181,9 +186,9 @@ d'agregació d'atributs.
             (50,6)
           };
 
-          \node[right] at (axis cs:30,7) {$m'_1$};
-          \node[right] at (axis cs:40,3) {$m'_2$};
-          \node[above] at (axis cs:50,6) {$m'_3$};
+          \node[right] at (axis cs:30,7) {$m_1$};
+          \node[right] at (axis cs:40,3) {$m_2$};
+          \node[above] at (axis cs:50,6) {$m_3$};
     \end{axis}
   \end{tikzpicture}
 
@@ -198,17 +203,16 @@ A la \autoref{fig:sgstm:consB} es mostra un exemple de sèrie temporal
 les mesures de la qual es mostren amb punts vermells, en línies blaves
 verticals s'indiquen els intervals de consolidació d'un buffer sobre
 aquesta sèrie temporal, i les mesures consolidades es mostren amb
-punts verds.  Sigui $\tau_0$ l'instant inicial de consolidació, el
-primer instant de consolidació $\tau$, anomenant-lo $\tau^0$ com el
-primer valor que pren, és $\tau^0=\tau_0$. El següent valor que
-prendrà és $\tau^1=\tau^0+\delta$ i així successivament.  Per tant el
-primer interval de consolidació és $i^0=[\tau^0,\tau^1]$. Quan es
-consolida el buffer per aquest interval, el darrer instant de
-consolidació esdevé $\tau^1$ i es calcula una mesura
-$m'_1=f(S,[\tau^0,\tau^1])$; la qual per facilitar la comprensió podem
-assumir de moment que és el resultat de calcular una agregació sobre
-les mesures en l'interval $[\tau^0,\tau^1]$. De la mateixa manera es
-calculen les mesures consolidades $m_2'$ i $m_3'$.
+punts verds.  Sigui $t_0$ l'instant inicial de consolidació, el primer
+valor que pren $\tau$ és $\tau_0=t_0$, el següent valor que pren és
+$\tau_1=\tau_0+\delta$, i així succesivament. Per tant el primer
+interval de consolidació és $[\tau_0,\tau_1]$.  Quan es consolida el
+buffer en aquest aquest interval, el darrer instant de consolidació
+esdevé $\tau_1$ i es calcula una mesura $m_1=f(S,[\tau_0,\tau_1])$; la
+qual per facilitar la comprensió podem assumir de moment que és el
+resultat de calcular una agregació sobre les mesures en l'interval
+$[\tau_0,\tau_1]$. De la mateixa manera es calculen les mesures
+consolidades $m_2$ i $m_3$.
 
 
 
@@ -224,19 +228,20 @@ la sèrie temporal.  Així doncs, un disc és semblant a una cua
 primer de sortir.
 
 \begin{definition}[Disc]
-  Definim \emph{disc} com el tuple \glsdispdef{not:disc}{$(S_D,k)$},
-  en què \glsdispdef{not:sgstm:sd}{$S_D$} és una sèrie temporal
-  regular i \glsdispdef{not:sgstm:k}{$k\in\glssymbol{not:N}$} és el
-  cardinal màxim de $S_D$.
+  Sigui \glsdispdef{not:sgstm:sd}{$S_D$} una sèrie temporal regular i
+  $\glssymboldef{not:sgstm:k}\in\glssymbol{not:N}$ el cardinal màxim
+  que pot prendre, $|S_D|\leq \glssymbol{not:sgstm:k}$.  Definim
+  un \emph{disc} $D$ com el tuple
+  \glsdispdef{not:disc}{$D=(S_D,\glssymbol{not:sgstm:k})$}.
 \end{definition}
 
 A l'inici, un disc no conté mesures però cal que estigui caracteritzat
 pel cardinal màxim. Amb aquesta finalitat es defineix un disc inicial.
 
 \begin{definition}[Disc buit]\label{def:model:disc_buit}
-  Definim disc inicial o disc buit com el disc $D_{\emptyset} =
-  (\emptyset,k)$, el qual conté una sèrie temporal buida i el cardinal
-  màxim que podrà prendre $S_D$.
+  Definim disc inicial o disc buit com el disc
+  $(\emptyset,\glssymbol{not:sgstm:k})$, el qual conté una sèrie
+  temporal buida i el cardinal màxim $\glssymbol{not:sgstm:k}$ que podrà pendre.
 \end{definition}
 
 
@@ -253,32 +258,32 @@ amb el concepte descrit pels buffers.
 
 
 \begin{definition}[Subsèrie resolució]
-  Definim \emph{subsèrie resolució} com el tuple
-  \glsdispdef{not:subserieresolucio}{$(B,D)$}, en què $B$ és un buffer i $D$
-  és un disc.
+  Sigui $B$ un buffer i $D$
+  un disc.
+  Definim una \emph{subsèrie resolució} $R$ com el tuple
+  \glsdispdef{not:subserieresolucio}{$R=(B,D)$}.
 \end{definition}
  
 La \autoref{def:model:buffer_buit} de buffer buit i la
 \autoref{def:model:disc_buit} de disc buit indueixen a una definició
 de subsèrie resolució buida.  
 
-\begin{definition}[Subsèrie resolució
-  buida]\label{def:model:subserie_resolucio_buida}
-  Definim subsèrie resolució buida com la subsèrie resolució $R_{\emptyset}
-  = (B_{\emptyset},D_{\emptyset})$, la qual conté un buffer buit i un
-  disc buit.
+\begin{definition}[Subsèrie resolució buida]\label{def:model:subserie_resolucio_buida}
+  Sigui $B$ un buffer buit i $D$ un disc buit.  Definim subsèrie
+  resolució buida com la subsèrie resolució $(B,D)$.
 \end{definition}
 
 
 Les subsèries resolució es consoliden seguint els criteris del seu
 buffer i emmagatzemant al seu disc la mesura que resulta de la
 consolidació. Així, els paràmetres del buffer i del disc d'una
-subsèrie resolució ($\tau_0, \delta, f, k$) caracteritzen la resolució
-de la subsèrie temporal $S_D$ que finalment queda emmagatzemada.  A la
+subsèrie resolució ($\tau, \delta, \glssymbol{not:sgstm:f},
+\glssymbol{not:sgstm:k}$) caracteritzen la resolució de la subsèrie
+temporal $S_D$ que finalment queda emmagatzemada.  A la
 \autoref{fig:sgstm:bdsubserie} es mostra un esquema semblant a la
 \autoref{fig:model:bdstm} on es veu una subsèrie resolució amb la
 relació d'aquests paràmetres entre el buffer i el disc, llevat de
-$\tau_0$ que és difícil de representar.
+$\tau$ que és difícil de representar.
 
 
 \begin{figure}[tp]
@@ -294,7 +299,7 @@ $\tau_0$ que és difícil de representar.
   
   \node[ellipse,draw,minimum height=3.5cm,minimum width=2.5cm,alias=discr0]  {};
 
-  \node[cylinder, draw, shape border rotate=90, aspect=0.25,alias=buffer0] [below=3mm of discr0.north] {$f$};
+  \node[cylinder, draw, shape border rotate=90, aspect=0.25,alias=buffer0] [below=3mm of discr0.north] {$\glssymbol{not:sgstm:f}$};
   \node[circle, draw,alias=disc0,minimum width=1.2cm]  [above=3mm of discr0.south] {$\delta$} ;
   \draw [->] (disc0.center)++(.2:.2cm) arc(0:180:.2cm);
   \draw[myarrow] (buffer0.bottom) -- (disc0.north);
@@ -305,7 +310,7 @@ $\tau_0$ que és difícil de representar.
   \node[below=0mm of d0boles.south,anchor=center] {$\circ$};
   \node[below=0mm of d0boles.west,anchor=center] {$\circ$};
 
-  \node[below=0mm of d0boles.east,anchor=south west] {$k)$};
+  \node[below=0mm of d0boles.east,anchor=south west] {$\glssymbol{not:sgstm:k})$};
 
 %  \node[circle, draw,dotted,minimum width=1cm]  (disc0.center) {} ;
   \draw [dotted] (disc0.center)++(.5:.5cm) arc(0:360:.5cm);
@@ -329,8 +334,9 @@ diferents, tal com s'ha vist a la \autoref{fig:model:bdstm}
 
 \begin{definition}[Sèrie temporal multiresolució]
   \label{def:sgstm:stm}
-  Definim \emph{sèrie temporal multiresolució} com el conjunt de subsèries
-  resolució \glsdispdef{not:seriemultiresolucio}{$M=\{R_0,\dotsc,R_d\}$}.
+  Definim una \emph{sèrie temporal multiresolució} $M$ com el conjunt
+  de subsèries resolució
+  \glsdispdef{not:seriemultiresolucio}{$M=\{R_0,\dotsc,R_k\}$}.
 \end{definition}
 
 A partir de la \autoref{def:model:subserie_resolucio_buida} de
@@ -341,17 +347,20 @@ buida.
   buida]\label{def:model:st_multiresolucio_buit}
   Definim sèrie temporal multiresolució buida o inicial com el conjunt
   de subsèries resolució buides
-  $M_{\emptyset}=\{R_{0_{\emptyset}},\dotsc,R_{d_{\emptyset}\}}$.
+  $\{R_{0},\dotsc,R_{k}\}$.
 \end{definition}
 
 
 Normalment, en una sèrie temporal multiresolució no hi ha dues
 subsèries resolució amb la mateixa informació. És a dir, no hi dues
-subsèries resolució el buffers de les quals tinguin alhora el mateix
-pas de consolidació i funció d'agregació d'atributs: $\forall
-R_i,R_j\in M, i\neq j : \delta_i \neq \delta_j \vee f_i \neq f_j$ on
-$R_i = (B_i, D_i)$, $R_j = (B_j, D_j)$,
-$B_i=(S_i,\tau_i,\delta_i,f_i)$ i $B_j=(S_j,\tau_j,\delta_j,f_j)$.
+subsèries resolució els buffers de les quals tinguin alhora el mateix
+pas de consolidació i funció d'agregació d'atributs:
+$|\{(\delta,\glssymbol{not:sgstm:f})| (B,D)\in M,
+B=(S_B,\tau,\delta,\glssymbol{not:sgstm:f})\}|=|M|$.
+% $\forall
+% R_i,R_j\in M, i\neq j : \delta_i \neq \delta_j \vee f_i \neq f_j$ on
+% $R_i = (B_i, D_i)$, $R_j = (B_j, D_j)$,
+% $B_i=(S_i,\tau_i,\delta_i,f_i)$ i $B_j=(S_j,\tau_j,\delta_j,f_j)$.
 
 
 
@@ -359,8 +368,9 @@ $B_i=(S_i,\tau_i,\delta_i,f_i)$ i $B_j=(S_j,\tau_j,\delta_j,f_j)$.
 
 Una sèrie temporal multiresolució s'expressa com un conjunt i com a
 tal és susceptible d'aplicar-hi els conceptes del model dels
-\glspl{SGBDR}, a continuació expressem la forma de sèrie temporal
-multiresolució seguint també el concepte de relació. 
+\glspl{SGBDR} (\seeref{sec:art:sgbd}), a continuació expressem la
+forma de sèrie temporal multiresolució seguint també el concepte de
+relació.
 
 
 Una sèrie temporal multiresolució és una
@@ -375,21 +385,22 @@ atributs
 \item sèrie temporal del disc ($S_D$),
 \item darrer instant de consolidació ($\tau$),
 \item pas de consolidació ($\delta$),
-\item màxim cardinal del disc ($k$),
-\item i funció d'agregació d'atributs ($f$).
+\item màxim cardinal del disc ($\glssymbol{not:sgstm:k}$),
+\item i funció d'agregació d'atributs ($\glssymbol{not:sgstm:f}$).
 \end{itemize}
 
 
 
-Com ja s'ha comentat, una restricció habitual és que $\delta$ i $f$ no
-estiguin repetits, és a dir que és una restricció que indica que els
-atributs $\{\delta,f\}$ són la clau primària.  El predicat
-corresponent a les sèries temporals multiresolució és similar a: «La
-resolució amb pas de consolidació \emph{$\delta$} i funció d'agregació
-\emph{$f$}, de la qual se n'emmagatzemarà com a màxim \emph{$k$}
-mesures, s'ha consolidat amb la sèrie temporal \emph{$S_D$} per darrer
-cop a l'instant \emph{$\tau$} i té pendent per consolidar la sèrie
-temporal \emph{$S_B$}».
+Com ja s'ha comentat, una restricció habitual és que $\delta$ i
+$\glssymbol{not:sgstm:f}$ no siguin repetits, és a dir que és una
+restricció que indica que $\{\delta,\glssymbol{not:sgstm:f}\}$ són els
+attributs clau.  El predicat corresponent a les sèries temporals
+multiresolució és similar a: «La resolució amb pas de consolidació
+\emph{$\delta$} i funció d'agregació \emph{$\glssymbol{not:sgstm:f}$},
+de la qual se n'emmagatzemarà com a màxim
+\emph{$\glssymbol{not:sgstm:k}$} mesures, s'ha consolidat amb la sèrie
+temporal \emph{$S_D$} per darrer cop a l'instant \emph{$\tau$} i té
+pendent per consolidar la sèrie temporal \emph{$S_B$}».
 
 
 
@@ -398,28 +409,36 @@ canònica de les sèries temporals
 (v.~\autoref{def:sgst:forma-canonica}), podem escriure la forma
 canònica d'una sèrie temporal multiresolució.
 \begin{definition}[Forma canònica]
-  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució on
-  cada subsèrie resolució $R_i =(B_i,D_i),
-  B_i=(S_{B_i},\tau_i,\delta_i,f_i), D_i=(S_{D_i},k_i)$ té domini de
-  sèrie temporal per les sèries temporals $S_{B_i}$ i $S_{D_i}$, de
+  Sigui $M=\{R_0,\dotsc,R_k\}$ una sèrie temporal multiresolució on
+  cada subsèrie resolució té la forma $R_i =(B_i,D_i),
+  B_i=(S_{B_i},\tau_i,\delta_i,\glssymbol{not:sgstm:f}_i),
+  D_i=(S_{D_i},\glssymbol{not:sgstm:k}_i)$ té domini de sèrie temporal
+  per les sèries temporals $S_{B_i}$ i $S_{D_i}$, de
   $\glssymbol{not:Rb}$ pels temps $\tau_i$ i $\delta_i$, de
   $\glssymbol{not:N}$ pel cardinal $k$, i de funció per a la funció
   d'agregació d'atributs; \glsdispdef{not:sgstm:canonica}{en la forma
-    canònica} s'escriu com $ M = ( \{S_B: \text{sèrie temporal}, S_D:
-  \text{sèrie temporal}, \tau: \glssymbol{not:Rb}, \delta:
-  \glssymbol{not:Rb}, k: \glssymbol{not:N}, f: \text{funció}\}, \{ \{
+    canònica} s'escriu com $ M = \{S_B, S_D, \tau,
+  \delta,\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:f}\}, \{ \{
   (S_B, S_{B_0}) , (S_D , S_{D_0}) , (\tau, \tau_0), (\delta,
-  \delta_0), (k, k_0), (f, f_0) \} , \dotsc, \{ (S_B,
-  S_{B_d}) , (S_D , S_{D_d}) , (\tau, \tau_d), (\delta,
-  \delta_d), (k, k_d), (f, f_d) \} \} )$.
+  \delta_0), (\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:k}_0), (\glssymbol{not:sgstm:f}, \glssymbol{not:sgstm:f}_0) \} , \dotsc, \{ (S_B, S_{B_k}) , (S_D
+  , S_{D_k}) , (\tau, \tau_k), (\delta, \delta_k), (\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:k}_k), (\glssymbol{not:sgstm:f}, \glssymbol{not:sgstm:f}_k)
+  \} \} )$.
+
+% ( \{S_B: \text{sèrie temporal}, S_D:
+%   \text{sèrie temporal}, \tau: \glssymbol{not:Rb}, \delta:
+%   \glssymbol{not:Rb}, k: \glssymbol{not:N}, f: \text{funció}\}, \{ \{
+%   (S_B, S_{B_0}) , (S_D , S_{D_0}) , (\tau, \tau_0), (\delta,
+%   \delta_0), (k, k_0), (f, f_0) \} , \dotsc, \{ (S_B, S_{B_d}) , (S_D
+%   , S_{D_d}) , (\tau, \tau_d), (\delta, \delta_d), (k, k_d), (f, f_d)
+%   \} \} )$.
 \end{definition}
 
 
 
-De la mateixa manera que per a les sèries temporals, també escrivim
+De la mateixa manera que per les sèries temporals, també escrivim
 una sèrie temporal multiresolució de manera simplificada com el
-conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} , \tau_0, \delta_0, k_0,
-f_0 ), \dotsc, (S_{B_d}, S_{D_d} , \tau_d, \delta_d, k_d, f_d ) \}$,
+conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} , \tau_0, \delta_0, \glssymbol{not:sgstm:k}_0,
+\glssymbol{not:sgstm:f}_0 ), \dotsc, (S_{B_k}, S_{D_k} , \tau_k, \delta_k, \glssymbol{not:sgstm:k}_k, \glssymbol{not:sgstm:f}_k ) \}$,
 la qual es correspon amb la forma expressada inicialment a la
 \autoref{def:sgstm:stm} amb els tuples de $B_i$ i $D_i$ units.  També
 com amb les sèries temporals, les sèries temporals multiresolució es
@@ -442,20 +461,24 @@ possibles d'aquests paràmetres.
 
 
 En la forma canònica de les sèries temporals multiresolució es pot
-observar més clarament que els atributs $\{\delta,\tau,f,k\}$ són els
-paràmetres configurables al conjunt de tuples dels quals anomenem
+observar més clarament que els atributs
+$\{\delta,\tau,\glssymbol{not:sgstm:f},\glssymbol{not:sgstm:k}\}$ són
+els paràmetres configurables al conjunt de tuples dels quals anomenem
 esquema de multiresolució.
 \begin{definition}[Esquema de multiresolució]
   \label{def:sgstm:esquema}
-  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució, el
+  Sigui $M=\{R_0,\dotsc,R_k\}$ una sèrie temporal multiresolució, el
   seu \glsdispdef{not:esquemaM}{esquema de multiresolució $e$} és la
   projecció dels atributs que constitueixen els paràmetres
   configurables:
-  $e=\glssymbol{not:sgst:project}_{\{\delta,\tau,f,k\}}(M)$. Així,
+  $e=\glssymbol{not:sgst:project}_{\{\delta,\tau,\glssymbol{not:sgstm:f},\glssymbol{not:sgstm:k}\}}(M)$. Així,
   l'esquema de multiresolució de $M$ es pot expressar com la relació
-  $e = \{ (\delta_0,\tau_0,f_0,k_0), \dotsc,
-  (\delta_d,\tau_d,f_d,k_d)\}$, és a dir una relació amb la capçalera
-  $\{\delta,\tau,f,k\}$.
+  $e = \{
+  (\delta_0,\tau_0,\glssymbol{not:sgstm:f}_0,\glssymbol{not:sgstm:k}_0),
+  \dotsc,
+  (\delta_k,\tau_k,\glssymbol{not:sgstm:f}_k,\glssymbol{not:sgstm:k}_k)\}$,
+  és a dir una relació amb la capçalera
+  $\{\delta,\tau,\glssymbol{not:sgstm:f},\glssymbol{not:sgstm:k}\}$.
 \end{definition}
 
 
