@@ -410,19 +410,25 @@ canònica de les sèries temporals
 canònica d'una sèrie temporal multiresolució.
 \begin{definition}[Forma canònica]
   Sigui $M=\{R_0,\dotsc,R_k\}$ una sèrie temporal multiresolució on
-  cada subsèrie resolució té la forma $R_i =(B_i,D_i),
-  B_i=(S_{B_i},\tau_i,\delta_i,\glssymbol{not:sgstm:f}_i),
-  D_i=(S_{D_i},\glssymbol{not:sgstm:k}_i)$ té domini de sèrie temporal
-  per les sèries temporals $S_{B_i}$ i $S_{D_i}$, de
-  $\glssymbol{not:Rb}$ pels temps $\tau_i$ i $\delta_i$, de
+  cada subsèrie resolució té la forma $R =(B,D),
+  B=(S_{B},\tau,\delta,\glssymbol{not:sgstm:f}),
+  D=(S_{D},\glssymbol{not:sgstm:k})$ i té domini de sèrie temporal
+  per les sèries temporals $S_{B}$ i $S_{D}$, de
+  $\glssymbol{not:Rb}$ pels temps $\tau$ i $\delta$, de
   $\glssymbol{not:N}$ pel cardinal $k$, i de funció per a la funció
-  d'agregació d'atributs; \glsdispdef{not:sgstm:canonica}{en la forma
-    canònica} s'escriu com $ M = \{S_B, S_D, \tau,
-  \delta,\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:f}\}, \{ \{
-  (S_B, S_{B_0}) , (S_D , S_{D_0}) , (\tau, \tau_0), (\delta,
-  \delta_0), (\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:k}_0), (\glssymbol{not:sgstm:f}, \glssymbol{not:sgstm:f}_0) \} , \dotsc, \{ (S_B, S_{B_k}) , (S_D
+  d'agregació d'atributs. \glsdispdef{not:sgstm:canonica}{En la forma
+    canònica} s'escriu com 
+  \begin{align*} 
+    M &= (\{S_B, S_D, \tau,
+  \delta,\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:f}\}, \{ \\
+  &\{ (S_B, S_{B_0}) , (S_D , S_{D_0}) , (\tau, \tau_0), (\delta,
+  \delta_0), (\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:k}_0), (\glssymbol{not:sgstm:f}, \glssymbol{not:sgstm:f}_0) \} ,\\
+    &\dotsc,\\
+   &\{ (S_B, S_{B_k}) , (S_D
   , S_{D_k}) , (\tau, \tau_k), (\delta, \delta_k), (\glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:k}_k), (\glssymbol{not:sgstm:f}, \glssymbol{not:sgstm:f}_k)
-  \} \} )$.
+  \}\\
+  \} )
+\end{align*}
 
 % ( \{S_B: \text{sèrie temporal}, S_D:
 %   \text{sèrie temporal}, \tau: \glssymbol{not:Rb}, \delta:
@@ -440,7 +446,7 @@ una sèrie temporal multiresolució de manera simplificada com el
 conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} , \tau_0, \delta_0, \glssymbol{not:sgstm:k}_0,
 \glssymbol{not:sgstm:f}_0 ), \dotsc, (S_{B_k}, S_{D_k} , \tau_k, \delta_k, \glssymbol{not:sgstm:k}_k, \glssymbol{not:sgstm:f}_k ) \}$,
 la qual es correspon amb la forma expressada inicialment a la
-\autoref{def:sgstm:stm} amb els tuples de $B_i$ i $D_i$ units.  També
+\autoref{def:sgstm:stm} amb els tuples de $B$ i de $D$ units.  També
 com amb les sèries temporals, les sèries temporals multiresolució es
 poden visualitzar com a taules, cosa que mostrem en exemples
 posteriors.
@@ -453,8 +459,8 @@ posteriors.
 \subsection{Esquema de multiresolució}
 
 Una sèrie temporal multiresolució té paràmetres que
-s'han de configurar en el seu estat inicial: la quantitat de subsèries
-resolucions i els paràmetres de cada una --pas de consolidació, funció
+s'han de configurar en el seu estat inicial; la quantitat de subsèries
+resolucions i els paràmetres de cada una: pas de consolidació, funció
 d'agregació d'atributs, darrer instant de consolidació i cardinal
 màxim. Anomenem esquema de multiresolució a les configuracions
 possibles d'aquests paràmetres.
@@ -551,8 +557,8 @@ Si consolidem la sèrie temporal multiresolució cada cop que sigui
 consolidable, és a dir en els instants que marca l'esquema de
 multiresolució, a l'instant 29 després d'haver inserit la darrera
 mesura la sèrie temporal multiresolució és $M_1^{29} = \{ (
-\{(26,0),(29,0)\},\{(10,0),(15,0),(20,0),(25,0)\}, 25 , 5 ,4 ,
-\text{mitjana} ), ( \{(22,0),(26,0),(29,0)\}, \{(10,0),(20,0)\},
+\{(26,0),(29,0)\},\{\allowbreak (10,0),(15,0),(20,0),(25,0)\}, 25 , 5 ,4 ,
+\text{mitjana} ), ( \{(22,0),(26,0),(29,0)\}, \{\allowbreak (10,0),(20,0)\},
 20 , 10 ,3 , \text{mitjana} ) \}$.  Aquesta sèrie temporal
 multiresolució es mostra a la \autoref{fig:model:stm} en forma de
 taula.
@@ -568,9 +574,10 @@ mesures consolidades:
   l'instant $5$ ja s'ha perdut.
 \item Per a la subsèrie resolució $R_2$ hi ha pendent de consolidar
   l'interval de temps $[20,30]$ i al disc hi ha emmagatzemades 2
-  mesures. El disc encara no ha arribat al cardinal màxim $k=3$ a
-  causa que la base de dades s'ha iniciat a l'instant $0$ i la primera
-  consolidació d'aquesta subsèrie ha estat a l'instant $10$.
+  mesures. El disc encara no ha arribat al cardinal màxim
+  $\glssymbol{not:sgstm:k}=3$ a causa que la base de dades s'ha
+  iniciat a l'instant $0$ i la primera consolidació d'aquesta subsèrie
+  ha estat a l'instant $10$.
 \end{itemize}
 
 
@@ -580,15 +587,15 @@ mesures consolidades:
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
     \multicolumn{2}{c}{$M_1^{29}$} \\ \hline
-    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $\glssymbol{not:sgstm:k}$ & $\glssymbol{not:sgstm:f}$ \\ \hline
       \begin{tabular}{|c|c|}
-         \hline
+         \hline 
          $t$  & $v$ \\ \hline
          26  & 0 \\
          29 & 0 \\\hline
        \end{tabular} & 
       \begin{tabular}{|c|c|}
-         \hline
+         \hline 
          $t$  & $v$ \\ \hline
          10  & 0 \\
          15  & 0 \\
@@ -630,22 +637,28 @@ mesures consolidades:
   relacionals.
 
 
-  Siguin una relació de sèries temporals i noms $M_2^{\text{series}}=
-  ((S':\text{nom},S:\text{sèrie temporal}),\{
+  Sigui $S$ un atribut amb domini de sèrie temporal, siguin
+  $S',S'_B,S'_D$ uns atributs amb domini de noms, i siguin
+  $\tau,\delta, \glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:f}$ els
+  atributs de l'esquema de multiresolució amb els dominis
+  corresponents.
+  %
+  Siguin una relació de noms i sèries temporals $L =
+  ((S',S),\{
   (S_{B1},\{(26,0),(29,0)\}), (S_{B2},\{(22,0),(26,0),(29,0)\}),
   (S_{D1},\{(10,0), (15,0), (20,0), (25,0)\}), (S_{D2},\{(10,0),
   (20,0)\} )\})$ i una sèrie temporal multiresolució amb noms com a
-  domini dels atributs de sèries temporals $M_2^{\text{noms}}=
-  ((S'_B:\text{nom},S'_D:\text{nom}, \tau:\glssymbol{not:Rb},
-  \delta:\glssymbol{not:Rb}, k:\glssymbol{not:N}, f:\text{funció} ),\{
+  domini dels atributs de sèries temporals $M =
+  ((S'_B,S'_D, \tau,
+  \delta, \glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:f} ),\{
   (S_{B1},S_{D1},25 ,5 ,4 ,\text{mitjana} ), ( S_{B2},S_{D2},20 , 10
   ,3 , \text{mitjana} ) \})$, les quals es mostren a la
-  \autoref{fig:model:stm:vistes}, la vista de la sèrie temporal
-  multiresolució es defineix com
+  \autoref{fig:model:stm:vistes}. Definim la vista de la sèrie temporal
+  multiresolució com
   \begin{align*}
-    \text{vista } M_2 =& \glssymbol{not:sgst:project}_{\text{tots llevat } \{S_B',S_D'\} } \big( M_2^{\text{noms}} \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{\{S'/S_B', S/S_B\}} M_2^{\text{series}}) \\
+    \text{vista } M_2 =& \glssymbol{not:sgst:project}_{\text{tots llevat } \{S_B',S_D'\} } \big( M \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{\{S'/S_B', S/S_B\}} L) \\
     & \glssymbol{not:sgst:join} (\glssymbol{not:sgst:rename}_{\{S'/S_D',
-      S/S_D\}} M_2^{\text{series}} )\big)
+      S/S_D\}} L )\big)
   \end{align*}
 
   aplicant les operacions relacionals de reanomena, junció i
@@ -656,13 +669,13 @@ mesures consolidades:
   \begin{figure}[tp]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
-      \multicolumn{2}{c}{$M_2^{\text{noms}}$} \\ \hline
-      $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+      \multicolumn{2}{c}{$M$} \\ \hline
+      $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $\glssymbol{not:sgstm:k}$ & $\glssymbol{not:sgstm:f}$ \\ \hline
       $S_{B1}$ & $S_{D1}$ & 25 & 5  & 4 & mitjana  \\
       $S_{B2}$ & $S_{D2}$ & 20 & 10 & 3 & mitjana  \\ \hline
     \end{tabular}\qquad
     \begin{tabular}{|c|c|c|}
-      \multicolumn{3}{c}{$M^{\text{series}}_{2}$} \\ \hline
+      \multicolumn{3}{c}{$L$} \\ \hline
       \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
       & $t$      & $v$  \\ \hline
       \multirow{2}{*}{$S_{B1}$} 
@@ -709,7 +722,7 @@ mesures consolidades:
 
 A l'\autoref{ex:model:bdm1} s'ha mostrat una sèrie temporal
 multiresolució en què la consolidació de les dues subsèries obeeix
-a la mateixa funció d'agregador d'atributs $f$. En aquest exemple
+a la mateixa funció d'agregador d'atributs. En aquest exemple
 treballem amb els mateixos valors que a l'\autoref{ex:model:bdm1} però
 ara canviem la funció de la segona subsèrie resolució per un agregador
 amb desfasament; és a dir que cada cop que consolida retorna una
@@ -724,7 +737,7 @@ Seguint el mateix procediment que a l'\autoref{ex:model:bdm1}, a
 l'instant 29 després d'haver inserit la darrera mesura la sèrie
 temporal multiresolució és $M_3^{29} = \{ ( \{(26,0),(29,0)\} ,
 \{(10,0),(15,0),(20,0),(25,0)\} , 25 , 5 ,4 , \text{mitjana} ) , (
-\{(19,0),(22,0),(26,0),(29,0)\} , \{(5,0),(15,0)\} , 20 , 10 ,3 ,
+\{(19,0),(22,0),(26,0),(29,0)\} , \{\allowbreak(5,0),(15,0)\} , 20 , 10 ,3 ,
 \text{mitjanad5} ) \}$.  Aquesta sèrie temporal multiresolució es
 mostra a la \autoref{fig:model:stm:desfasaments} en forma de taula.
 
@@ -733,7 +746,7 @@ mostra a la \autoref{fig:model:stm:desfasaments} en forma de taula.
   \centering
   \begin{tabular}{|c|c|c|c|c|c|}
     \multicolumn{2}{c}{$M_3^{29}$} \\ \hline
-    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+    $S_B$  & $S_D$ & $\tau$ & $\delta$ & $\glssymbol{not:sgstm:k}$ & $\glssymbol{not:sgstm:f}$ \\ \hline
       \begin{tabular}{|c|c|}
          \hline
          $t$  & $v$ \\ \hline
