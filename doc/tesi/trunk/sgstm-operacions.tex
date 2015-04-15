@@ -64,11 +64,11 @@ L'operació d'afegir una mesura al buffer consisteix en afegir-la a la
 sèrie temporal pendent de consolidar.
 \begin{definition}[Afegeix mesura al buffer]
   \label{def:sgstm:addB}
-  Sigui $B=(S,\tau,\delta,f)$ un buffer i $m=(t,v)$ una mesura, la
-  inserció de la mesura al buffer $\glssymboldef{addB}(B,m)$ és un
-  buffer $B'=(S',\tau,\delta,f)$ amb la mesura afegida a la sèrie
-  temporal del buffer: $\glssymbol{addB}(B,m) = (S',\tau,\delta,f)$ a
-  on $S'=S\cup \{m\}$.
+  Sigui $B=(S,\tau,\delta,\glssymbol{not:sgstm:f})$ un buffer i $m$
+  una mesura, la inserció de la mesura al buffer, notada
+  $\glssymboldef{addB}(B,m)$, retorna un nou buffer amb la mesura
+  afegida a la sèrie temporal del buffer: $\glssymbol{addB}(B,m) =
+  (S',\tau,\delta,\glssymbol{not:sgstm:f})$ on $S'=S\cup \{m\}$.
 \end{definition}
 
 
@@ -76,22 +76,23 @@ L'operació de consolidació d'un buffer consisteix en compactar les
 mesures segons els intervals de consolidació i la funció d'agregació i
 a suprimir la part ja consolidada de la sèrie temporal.  Així doncs,
 la consolidació d'un buffer per cada interval de temps
-$i=[\tau,\tau+\delta]$ dóna com a resultat una mesura calculada en
-funció de l'agregador d'atributs i un nou buffer amb la sèrie temporal
-reduïda.
+$[\tau,\tau+\delta]$ dóna com a resultat una mesura calculada en
+funció de l'agregador d'atributs. També en la consolidació es pot
+calcular un nou buffer descartant les mesures ja consolidades.
 \begin{definition}[Consolida el buffer]\label{def:model:consolidacio-buffer}
-  Sigui $B=(S,\tau,\delta,f)$ un buffer, la consolidació del buffer
-  $\glssymboldef{consolidaB}(B)$ en l'interval de temps
-  $[\tau,\tau+\delta]$ és un nou buffer amb el nou instant de
-  consolidació i una mesura resultant de la consolidació:
-  $\glssymbol{consolidaB}(B) = (B',m')$ on $B'=(S',\tau',\delta,f)$,
-  $m'=f(S,[\tau,\tau+\delta])$, $\tau'=\tau+\delta$ i $S'$ és el
-  resultat d'eliminar les dades històriques que no es necessiten més.
+  Sigui $B=(S,\tau,\delta,\glssymbol{not:sgstm:f})$ un buffer, la
+  consolidació del buffer, notada $\glssymboldef{consolidaB}(B)$,
+  retorna un nou buffer amb el nou instant de consolidació i una nova
+  mesura $\glssymbol{consolidaB}(B) = (B',m')$ on
+  $B'=(S',\tau+\delta,\delta,\glssymbol{not:sgstm:f})$ i
+  $m'=\glssymbol{not:sgstm:f}(S,\tau,\delta)$.  En el nou buffer, $S'$
+  és el resultat d'eliminar les dades històriques que no es necessiten
+  més.
 
   \emph{Sobre eliminar les dades històriques}: En el model teòric es
-  pot donar $S'=S$ tot i que a les implementacions normalment caldrà
-  eliminar les dades ja no necessàries per no ocupar espai amb per
-  exemple $S'= S[\tau+\delta,+\infty]$.
+  pot donar $S'=S$. Això no obstant, a les implementacions normalment
+  caldrà eliminar les dades ja no necessàries.  Es poden eliminar, per
+  exemple, retornant la sèrie temporal $S'= S[\tau+\delta,+\infty]$.
 \end{definition}
 
 
@@ -108,10 +109,10 @@ buffer té l'estat de consolidable quan el temps d'una mesura de la
 sèrie temporal és més gran que el següent instant de temps de
 consolidació del buffer.
 \begin{definition}[Buffer consolidable]\label{def:model:buffer_consolidable}
-  Sigui $B=(S,\tau,\delta,f)$ un buffer, definim que
-  \glsdispdef{consolidableB}{$B$ és
-    consolidable} si i només si $T(m) \geq \tau+\delta$ a on
-  $m=\sup(S)$ és la mesura suprema de la sèrie temporal del buffer.
+  Sigui $B=(S,\tau,\delta,\glssymbol{not:sgstm:f})$ un buffer i
+  $m=\sup(S)$ la mesura suprema de la sèrie temporal del
+  buffer. Definim que \glsdispdef{consolidableB}{$B$ és consolidable}
+  si i només si $T(m) \geq \tau+\delta$. 
 \end{definition}
 
 
@@ -119,22 +120,26 @@ consolidació del buffer.
 \subsubsection{Disc}
 
 Els discs reben les mesures consolidades per a emmagatzemar-les de
-forma acotada. Així, tenen un operador associat que afegeix noves
-mesures al disc mantenint sota control el seu cardinal.
+forma afitada. Així, tenen un operador associat que afegeix noves
+mesures al disc i manté sota control el cardinal màxim
 
 
 L'operació d'afegir una mesura al disc consisteix en afegir-la a la
-sèrie temporal i a eliminar la mesura mínima d'aquesta si se supera el
-cardinal permès.
+sèrie temporal. Quan se supera el cardinal permès, aleshores es
+descarten algunes mesures.
 \begin{definition}[Afegeix mesura al disc]
-  Sigui $D=(S,k)$ un disc i $m=(t,v)$ una mesura, la inserció de la
-  mesura al disc $\glssymboldef{addD}(D,m)$ és un disc $D'=(S',k)$
-  amb la mesura afegida a la sèrie temporal del disc mantenint el
-  cardinal màxim: $\glssymbol{addD}(D,m) = (S',k)$ on $S'=
+  Sigui $D=(S,\glssymbol{not:sgstm:k})$ un disc i $m$ una mesura, la
+  inserció de la mesura al disc, notada $\glssymboldef{addD}(D,m)$,
+  retorna un nou disc amb la mesura afegida a la sèrie
+  temporal, la qual manté el cardinal màxim:
+  $\glssymbol{addD}(D,m) = (S',k)$ on 
+\[
+S'=
   \begin{cases}
       S\cup\{m\} &\text{si }  |S|<k\\
       (S-\{\min(S)\}) \cup \{m\} &\text{altrament}
-    \end{cases}$.
+    \end{cases}
+\]
 \end{definition}
 
 
