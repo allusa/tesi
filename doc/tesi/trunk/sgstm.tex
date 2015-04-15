@@ -147,7 +147,7 @@ la forma $[\tau_n,\tau_n+\delta]$. La consolidació de la sèrie
 temporal $S_B$ d'un buffer en un interval de temps
 $[\tau,\tau+\delta]$ dóna com a resultat una mesura $m$
 calculada a partir de la funció d'agregació d'atributs $m =
-\glssymbol{not:sgstm:f}(S_B,[\tau,\tau+\delta])$. Més endavant a la
+\glssymbol{not:sgstm:f}(S_B,\tau,\delta)$. Més endavant a la
 \autoref{sec:model:agregador} detallem aquest concepte de funció
 d'agregació d'atributs.
 
@@ -208,11 +208,11 @@ valor que pren $\tau$ és $\tau_0=t_0$, el següent valor que pren és
 $\tau_1=\tau_0+\delta$, i així succesivament. Per tant el primer
 interval de consolidació és $[\tau_0,\tau_1]$.  Quan es consolida el
 buffer en aquest aquest interval, el darrer instant de consolidació
-esdevé $\tau_1$ i es calcula una mesura $m_1=f(S,[\tau_0,\tau_1])$; la
-qual per facilitar la comprensió podem assumir de moment que és el
-resultat de calcular una agregació sobre les mesures en l'interval
-$[\tau_0,\tau_1]$. De la mateixa manera es calculen les mesures
-consolidades $m_2$ i $m_3$.
+esdevé $\tau_1$ i es calcula una mesura
+$m_1=\glssymbol{not:sgstm:f}(S,\tau_0,\delta)$; la qual per facilitar
+la comprensió podem assumir de moment que és el resultat de calcular
+una agregació sobre les mesures en l'interval $[\tau_0,\tau_1]$. De la
+mateixa manera es calculen les mesures consolidades $m_2$ i $m_3$.
 
 
 
@@ -441,15 +441,16 @@ canònica d'una sèrie temporal multiresolució.
 
 
 
-De la mateixa manera que per les sèries temporals, també escrivim
-una sèrie temporal multiresolució de manera simplificada com el
-conjunt de tuples $M = \{ (S_{B_0}, S_{D_0} , \tau_0, \delta_0, \glssymbol{not:sgstm:k}_0,
-\glssymbol{not:sgstm:f}_0 ), \dotsc, (S_{B_k}, S_{D_k} , \tau_k, \delta_k, \glssymbol{not:sgstm:k}_k, \glssymbol{not:sgstm:f}_k ) \}$,
-la qual es correspon amb la forma expressada inicialment a la
-\autoref{def:sgstm:stm} amb els tuples de $B$ i de $D$ units.  També
-com amb les sèries temporals, les sèries temporals multiresolució es
-poden visualitzar com a taules, cosa que mostrem en exemples
-posteriors.
+De la mateixa manera que per les sèries temporals, també escrivim una
+sèrie temporal multiresolució de manera simplificada com el conjunt de
+tuples $M = \{ (S_{B_0}, S_{D_0} , \tau_0, \delta_0,
+\glssymbol{not:sgstm:k}_0, \glssymbol{not:sgstm:f}_0 ), \dotsc,
+(S_{B_k}, S_{D_k} , \tau_k, \delta_k, \glssymbol{not:sgstm:k}_k,
+\glssymbol{not:sgstm:f}_k ) \}$, la qual es correspon amb la forma
+expressada inicialment a la \autoref{def:sgstm:stm} amb els tuples de
+$B$ i de $D$ units.  També com amb les sèries temporals, les sèries
+temporals multiresolució es poden visualitzar com a taules, cosa que
+mostrem en exemples posteriors.
 
 
 
