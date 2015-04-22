@@ -132,11 +132,11 @@ descarten algunes mesures.
   inserció de la mesura al disc, notada $\glssymboldef{addD}(D,m)$,
   retorna un nou disc amb la mesura afegida a la sèrie
   temporal, la qual manté el cardinal màxim:
-  $\glssymbol{addD}(D,m) = (S',k)$ on 
+  $\glssymbol{addD}(D,m) = (S',\glssymbol{not:sgstm:k})$ on 
 \[
 S'=
   \begin{cases}
-      S\cup\{m\} &\text{si }  |S|<k\\
+      S\cup\{m\} &\text{si }  |S|<\glssymbol{not:sgstm:k}\\
       (S-\{\min(S)\}) \cup \{m\} &\text{altrament}
     \end{cases}
 \]
@@ -148,17 +148,16 @@ S'=
 \subsubsection{Subsèrie resolució}
 
 Les subsèries resolució són l'aparellament d'un buffer amb un disc.
-Així tenen dos operadors associats, els quals treballen amb els
-operadors del buffer i del disc : un per afegir una mesura al buffer i
+Així tenen dos operadors associats: un per afegir una mesura al buffer i
 un altre per consolidar el buffer i afegir la mesura resultant al disc
 
 
 L'operació d'afegir una mesura a la subsèrie resolució consisteix en
 afegir-la al buffer.
 \begin{definition}[Afegeix mesura a la subsèrie resolució]
-  Sigui $R=(B,D)$ una subsèrie resolució i $m=(t,v)$ una mesura, la
-  inserció de la mesura a la subsèrie resolució
-  $\glssymboldef{addR}(R,m)$ és una subsèrie resolució $R'=(B',D)$
+  Sigui $R=(B,D)$ una subsèrie resolució i $m$ una mesura, la
+  inserció de la mesura a la subsèrie resolució, notada 
+  $\glssymboldef{addR}(R,m)$, retorna una nova subsèrie resolució 
   amb la mesura afegida al buffer: $\glssymbol{addR}(R,m) = (B',D)$ 
   on $B'=\glssymbol{addB}(B,m)$.
 \end{definition}
@@ -169,9 +168,11 @@ una mesura de consolidació del buffer, en l'interval de consolidació
 actual, i desar-la al disc. 
 \begin{definition}[Consolida la subsèrie resolució]
   Sigui $R=(B,D)$ una subsèrie resolució, la consolidació de la
-  subsèrie resolució $\glssymboldef{consolidaR}(R)$ és una subsèrie
-  resolució $R'=(B',D')$ on $(B',m') = \glssymbol{consolidaB}(B)$ i
-  $D'=\glssymbol{addD}(D,m')$.
+  subsèrie resolució, notada $\glssymboldef{consolidaR}(R)$, retorna
+  una nova subsèrie resolució $R'=(B',D')$ on $(B',m') =
+  \glssymbol{consolidaB}(B)$ és la consolidació del buffer i
+  $D'=\glssymbol{addD}(D,m')$ és la inserció la mesura consolidada al
+  buffer.
 \end{definition}
 
 Una subsèrie resolució és consolidable quan ho és el seu buffer.
@@ -195,12 +196,12 @@ subsèrie i un altre per a consolidar cadascuna de les subsèries.
 L'operació d'afegir una mesura a la sèrie temporal multiresolució
 consisteix en afegir-la a cadascuna de les subsèries resolució.
 \begin{definition}[Afegeix mesura a la sèrie temporal multiresolució]
-  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució i
-  $m=(t,v)$ una mesura, la inserció de la mesura a la sèrie temporal
-  multiresolució $\glssymboldef{addM}(M,m)$ és una sèrie temporal
-  multiresolució $M'=\{R_0',\dotsc,R_d'\}$ amb la mesura afegida a
-  cada subsèrie resolució: $\glssymbol{addM}(M,m) = \{ \forall R_i\in
-  M: \glssymbol{addR}(R_i,m) \}$.
+  Sigui $M=\{R_0,\dotsc,R_k\}$ una sèrie temporal multiresolució i $m$
+  una mesura, la inserció de la mesura a la sèrie temporal
+  multiresolució, notada $\glssymboldef{addM}(M,m)$, retorna una nova
+  sèrie temporal multiresolució amb la
+  mesura afegida a cada subsèrie resolució: $\glssymbol{addM}(M,m) =
+  \{R_0',\dotsc,R_k'\}$ on  $R_i'=\glssymbol{addR}(R_i,m)$.
 \end{definition}
 
 
@@ -208,20 +209,20 @@ L'operació de consolidar una sèrie temporal multiresolució consisteix
 en consolidar cadascuna de les subsèries resolució que siguin
 consolidables.
 \begin{definition}[Consolida la sèrie temporal multiresolució]
-  Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució, la
-  consolidació de la sèrie temporal multiresolució
-  $\glssymboldef{consolidaM}(M)$ és una sèrie temporal multiresolució
-  $M'=\{R_0',\dotsc,R_d'\}$ que consolida les subsèries resolució
-  consolidables:
+  Sigui $M=\{R_0,\dotsc,R_k\}$ una sèrie temporal multiresolució, la
+  consolidació de la sèrie temporal multiresolució, notada
+  $\glssymboldef{consolidaM}(M)$, retorna una nova sèrie temporal
+  multiresolució que consolida les subsèries resolució consolidables:
+  $\glssymbol{consolidaM}(M) =\{R_0',\dotsc,R_k'\}$ on
   \[
-  \glssymbol{consolidaM}(M) = \left\{ \forall R_i\in M:
+  R_i' = 
   \begin{cases}
     \glssymbol{consolidaR}(R_i) & \text{si }
     \glsdisp{consolidableR}{R_i \text{ és
         consolidable}}\\
     R_i & \text{altrament}
-  \end{cases}\right\}
-  \].
+  \end{cases}
+  \]
 \end{definition}
 
 
@@ -229,22 +230,21 @@ consolidables.
 Una sèrie temporal multiresolució és un conjunt de subsèries
 resolució. Per a tractar amb tots i cadascun dels elements del conjunt
 és útil tenir l'operació de mapatge, de manera similar a com s'ha
-definit per les sèries temporals però que es pugui obtenir qualsevol
-conjunt de valors.
+definit per les sèries temporals.
  \begin{definition}[Mapa d'una sèrie temporal multiresolució]
    \label{def:sgstm:mapa}
-   Sigui $M=\{R_0,\dotsc,R_d\}$ una sèrie temporal multiresolució i
-   \glssymbol{not:F} una funció sobre una subsèrie resolució que
-   retorna un valor $v'$ on $\glssymbol{not:F}:R\mapsto v'$, el mapa
-   de \glssymbol{not:F} a $M$ és un conjunt de valors resultant
-   d'aplicar la funció a cada subsèrie resolució:
-   $\glssymboldef{not:sgstm:map}(M,\glssymbol{not:F}) = \{
-   \glssymbol{not:F}(R_0), \dotsc, \glssymbol{not:F}(R_d) \}$.
+   Sigui $M=\{R_0,\dotsc,R_k\}$ una sèrie temporal multiresolució en
+   què $\glssymbol{dom}(R)$ és el domini de les subsèries resolució i
+   sigui $g: \glssymbol{dom}(R) \rightarrow \glssymbol{dom}(R)$ una
+   funció sobre una subsèrie resolució que retorna una nova subsèrie
+   resolució.
+   %
+   El mapa de $g$ a $M$, notat $\glssymboldef{not:sgstm:map}(M,g)$,
+   retorna una nova sèrie temporal multiresolució resultant d'aplicar
+   la funció a cada subsèrie resolució:
+   $\glssymbol{not:sgstm:map}(M,g) = \{ g(R_0), \dotsc, g(R_k) \}$.
 \end{definition}
-Atès que una sèrie temporal multiresolució és un conjunt de subsèries
-resolució, un dels resultats possible del mapa és una nova sèrie
-temporal multiresolució si la funció és de la forma
-$\glssymbol{not:F}:R\mapsto R'$.
+
 
 
 % Aplicació de fold a una BDM
