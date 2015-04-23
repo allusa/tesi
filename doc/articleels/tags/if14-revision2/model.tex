@@ -615,7 +615,7 @@ store them in a \emph{disc}.
   \label{fig:model:mtsdb}
 \end{figure}
 
-The figure~\ref{fig:model:mtsdb} shows the architecture of a
+Figure~\ref{fig:model:mtsdb} shows the architecture of a
 \acro{MTSMS} for a single multiresolution time series.
 %
 In this way, the original time series gets stored in the resolution
@@ -953,7 +953,7 @@ delta temporal interval. Then,
 
 Note that $\sum\limits_{\forall n \in S'} V(n)$ is a sum of values
 that could be implemented as $\agg(S',(0,0),g)$ where
-$g(m,n)=(0,V(m)+V(n)$, as shown in
+$g(m,n)=(0,V(m)+V(n))$, as shown in
 Example~\ref{ex:computational-operators}.
 
 \zohe{} attribute aggregation functions interpret the resulting time
@@ -968,8 +968,18 @@ $S'=S[\tau:\tau+\delta]^\zohe{}$ be the selection of measures by
 \item The $last^\zohe{}$ is such that $V(m) = V(\max S')$.
 \item The $\meanz$ is such that $V(m) = \frac{1}{\delta}
   \big[(T(o)-\tau)V(o) + \sum\limits_{\forall n\in R}( T(n)-
-  T(\prev_S n) )V(n)\big]$ where $o=\min S'$ and $R= S' - \{o\}$.\todo{repassar}
+  T(\prev_S n) )V(n)\big]$ where $o=\min S'$ and $R= S' - \{o\}$.
 \end{itemize}
+
+Note that  $\meanz$ is a sum of values
+that could be implemented as $\meanz = \frac{1}{\delta}\agg(S',(0,0),g)$ where $g(m,n)=(0,V(m)+v)$ and 
+\[
+ v= 
+ \begin{cases}
+   (T(n)-\tau)V(n) & \text{if } n=\min S'\\
+   (T(n)-T(\prev_{S'} n))V(n) & \text{else }
+ \end{cases}
+\]
 
 \emph{RRDtool}, \cite{rrdtool}, uses an aggregation function similar
 to $\meanz$ to summarise velocity counter data by keeping the area

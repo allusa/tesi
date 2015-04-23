@@ -4,14 +4,14 @@
 In this section we briefly describe a reference implementation of the
 models introduced in Sections~\ref{sec:model:TSMS}
 and~\ref{sec:MTSMS}. This implementation is given as a proof of
-concept and do not seeks to be an efficient nor a complete database
+concept and do not seeks to be neither an efficient or a complete database
 system. We implemented the \acro{TSMS} and \acro{MTSMS} models using
 then Python~\cite{python:doc2} programming language.
 
 The implementations of the two models, \acro{TSMS} and \acro{MTSMS},
 are organised respectively in two separated Python libraries:
 \texttt{Pytsms} and \texttt{RoundRobinson}.  \texttt{RoundRobinson}
-has a strong dependency on \texttt{Pytsms} following the dependency of
+strongly depends on \texttt{Pytsms} following the dependency of
 \acro{MTSMS} on \acro{TSMS}.  The code of this implementation can be
 found at~\cite{llusa:roundrobinson}.
 
@@ -19,7 +19,8 @@ The reference implementation follows the object orientated paradigm
 and it observes a clear mapping between the model and the object
 classes. Unified Modeling Language~(\acro{UML}) diagrams are used to
 define the classes structure.  Operations are implemented as object
-methods, which are not show in \acro{UML} diagrams for space reasons.
+methods, which are not shown in \acro{UML} diagrams, due to space
+limitations.
 
 
 \subsection{Pytsms}
@@ -29,9 +30,9 @@ of measure, time series and temporal representation function.
 Figure~\ref{fig:implementacio:pytsms-uml} shows the relationships
 among these objects in a \acro{UML} diagram. A \texttt{TimeSeries}
 object is an aggregation of \texttt{Measure}
-objects. \texttt{TimeSeries} and \texttt{Representation} objects have
-a relation of association, that is each \texttt{TimeSeries} has a
-default representation and a \texttt{Representation} operates over a
+objects. \texttt{TimeSeries} and \texttt{Representation} objects are
+associated, that is each \texttt{TimeSeries} has a default
+representation and a \texttt{Representation} operates over a
 \texttt{TimeSeries}.
 
 %\tikzsetnextfilename{fig_pytsms_uml}
@@ -44,26 +45,27 @@ default representation and a \texttt{Representation} operates over a
 \end{figure}
 
 
-A \texttt{TimeSeries} object has a big amount of methods. We classify
-them based on their functionality. First, a \texttt{TimeSeries} object
-includes methods to manipulate the structural model. We implement
-\texttt{TimeSeries} as a subclass of the predefined \texttt{set}
-Python type. Second, a \texttt{TimeSeries} object has methods that
-implement set, sequence and temporal function operators as described
-in Section~\ref{sec:model:operations}.  Third, accessory operations of
-\texttt{TimeSeries} are grouped into two visitor objects:
-\texttt{RegularProp} groups the regularity operation definitions and
-\texttt{Storage} has methods for storing and retrieving time series
-from the file system. Recall that visitor is a pattern design that
-allows new functionality to be added to objects without modifying the
-objects~\cite{ziade08:expert_python_programming:visitor,martin02:visitor}.
+A \texttt{TimeSeries} object has a large amount of methods. We
+classify them based on their functionality. First, a
+\texttt{TimeSeries} object includes methods to manipulate the
+structural model. We implement \texttt{TimeSeries} as a subclass of
+the predefined \texttt{set} Python type. Second, a \texttt{TimeSeries}
+object has methods that implement set, sequence and temporal function
+operators as described in Section~\ref{sec:model:operations}.  Third,
+accessory operations of \texttt{TimeSeries} are grouped into two
+\emph{visitor} objects: \texttt{RegularProp} groups the regularity
+operation definitions and \texttt{Storage} has methods for storing and
+retrieving time series from the file system. Recall that
+\emph{visitor} is a design pattern that allows new functionality to be
+added to objects without modifying the objects themselves
+\cite{ziade08:expert_python_programming:visitor,martin02:visitor}.
 
 Figure~\ref{fig:implementacio:pytsms-uml} shows two specialisations
 for \texttt{Representation} that refer to the representation functions
 given in Section~\ref{sec:model:tfunc}. Basically, each actual
 \texttt{Representation} defines the graph and the temporal interval
 operation. Furthermore, there is also a method to plot coherently the
-time series to its representation; for which we use the Python
+time series to its representation. For this purpose we use the Python
 \emph{Matplotlib} library.
 %
 % Aqui hi els temes que he comentat en la revisio de la primera part
