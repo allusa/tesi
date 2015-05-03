@@ -3,8 +3,8 @@
 \label{sec:model:TSMS}
 
 Following current database models, a \acro{TSMS} model consists of two
-components: a data model and a set of operations. Measures and time
-series are the main objects of our \acro{TSMS} model. 
+components: a data model and a set of operations. \emph{Measures} and
+\emph{time series} are the main objects of our \acro{TSMS} model.
 %
 In this section we describe and formalise the \acro{TSMS} model. 
 
@@ -68,13 +68,14 @@ value $v$ and $T(m)$ denotes the time $t$.
 Order between measures plays an important role. Given two measures we
 define two distinct order relations.
 
-\begin{definition}[Semitemporal order]
+\begin{definition}[Semitemporal order]\label{def:semitemporal_order}
   Let $m$ and $n$ be two measures. We name \emph{semitemporal order}
   the binary relation written $m\leq n$, defined as $m\leq n\iff
-  (T(m)<T(n) \vee m=n)$.
+  (T(m)<T(n) \vee ( T(m)=T(n) \wedge V(m) = V(n) ))$.
 \end{definition}
 
-\begin{definition}[Temporal order] Let $m$ and $n$ be two measures. We
+\begin{definition}[Temporal order]\label{def:temporal_order}
+  Let $m$ and $n$ be two measures. We
     name \emph{temporal order} the binary relation written $m \leq^t
     n$ and defined as $m \leq^t n \iff T(m) \leq T(n)$.
 \end{definition}
@@ -139,7 +140,7 @@ it should be decided whether an operation is semantically coherent or
 must not be applied. For example, the addition of values coming from two
 different phenomena could be semantically erroneous.
 
-In this section three groups of operations are introduced, one in each
+In this section three groups of operations are formalised, one in each
 of the subsections which follow. The set operations, that consider
 times series as sets; the sequence operations, that consider time
 series as sequences; and the temporal operations, that manipulate the
@@ -158,7 +159,7 @@ Consider a time series $S$. $S$ is a finite ordered set (by the
 temporal order). Then, if $S$ nonempty, $S$ has a maximum and a
 minimum.  
 %
-Let $S$ be a time series. The \emph{maximum}
+The \emph{maximum}
 of $S$, denoted as $\max S$, is an element of $S$ such that $\forall m
 \in S:\max S\geq^t m $.  
 %
@@ -179,8 +180,11 @@ Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
 and the \emph{infimum} of $S$, noted as $\inf S$.
 
 The membership operation defines when a measure belongs to a time
-series. We define two distinct membership operations. This induces two
-different ways to consider time series and its operations.
+series. We define two distinct membership operations which consider
+the semitemporal order (Definition~\ref{def:semitemporal_order}) and
+the temporal order (Definition~\ref{def:temporal_order}). In
+consequence, they induce two different ways to consider time series
+and its operations.
 
 Let $S$ be a time series and $m$ be a measure. 
 %
@@ -592,10 +596,10 @@ example.
 A \acro{MTSMS} is a \acro{TSMS} that stores time series using a lossy
 compression approach. 
 %
-The \acro{MTSMS} model is based on the concepts of measures and time
-series as defined in Section~\ref{sec:model:TSMS}. We call
+The \acro{MTSMS} model is based on the concepts of \emph{measures} and
+\emph{time series} as defined in Section~\ref{sec:model:TSMS}. We call
 \emph{multiresolution time series} to each time series stored in a
-\acro{MTSDB}. 
+\acro{MTSDB}.
 %
 A multiresolution time series is a collection of \emph{resolution
   subseries} that store a view of the original time series in a given
@@ -642,10 +646,11 @@ focus on structure and data query operators.
 \subsection{Structure}
 
 A \emph{buffer} is a container for a time series. The aim of the
-buffer is to regularise the time series using a constant resolution step
-and an attribute aggregate function.  We name \emph{consolidation} to
-this action of regularisation.  Note that the attribute aggregate
-functions are defined in Section~\ref{sec:model:interpolador}.
+buffer is to regularise the time series using a constant
+\emph{resolution step} and an \emph{attribute aggregate function}.  We
+name \emph{consolidation} to this action of regularisation.  Note that
+the attribute aggregate functions are defined in
+Section~\ref{sec:model:interpolador}.
 
 \begin{definition}[Buffer]
   Let $S$ be a time series, let $\tau\in\cal{T}$ be the last
@@ -657,7 +662,7 @@ functions are defined in Section~\ref{sec:model:interpolador}.
 An empty buffer is noted as $(\emptyset, t_0, \delta, f)$, that is an
 empty time series, an initial consolidation time $t_0\in\cal{T}$, a
 resolution step $\delta$ and a function $f$.  Given a buffer all the
-consolidation time instants can be determined as $\tau_n=t+n\delta$
+consolidation time instants can be determined as $\tau_n=t_0+n\delta$
 for all $n\in\N$.
 
 Let $B=(S, \tau, \delta, f)$ be a buffer. The \emph{consolidation} of
@@ -727,7 +732,7 @@ the regularised time series.
 \end{definition}
  
 The operators of a resolution subseries extend the buffer and disc
-ones. Let $R=(B,D)$ be a resolution subseries and let $m$ be a
+ones. Let $R=(B,D)$ be a resolution subseries and let $m$ be new a
 measure.  The addition of $m$ to $R$, noted as $\addR(R,m)$, is a new
 resolution subseries $\addR(R,m)=(B',D)$ where $B'= \addB(B,m)$ is the
 addition of the measure to the buffer.  The consolidation of $R$,
@@ -859,7 +864,7 @@ it obtains a time subseries $S'$ according to the consolidating
 interval using a slice operator. For example, $S' =
 S[\tau:\tau+\delta]$. Second, it applies a \acro{TSMS} aggregation
 function on this time subseries to obtain $m$. For instance, $m =
-\agg(S',n, g)$, being $g$ an aggregation function and $n$ an initial
+\agg(S',n, f)$, being $f$ an aggregation function and $n$ an initial
 measure, as defined in Section~\ref{sec:set}.
 
 Many different attribute aggregate functions can be used in order to
@@ -952,8 +957,8 @@ delta temporal interval. Then,
 \end{itemize}
 
 Note that $\sum\limits_{\forall n \in S'} V(n)$ is a sum of values
-that could be implemented as $\agg(S',(0,0),g)$ where
-$g(m,n)=(0,V(m)+V(n))$, as shown in
+that could be implemented as $\agg(S',(0,0),f)$ where
+$f(m,n)=(0,V(m)+V(n))$, as shown in
 Example~\ref{ex:computational-operators}.
 
 \zohe{} attribute aggregation functions interpret the resulting time
@@ -972,7 +977,7 @@ $S'=S[\tau:\tau+\delta]^\zohe{}$ be the selection of measures by
 \end{itemize}
 
 Note that  $\meanz$ is a sum of values
-that could be implemented as $\meanz = \frac{1}{\delta}\agg(S',(0,0),g)$ where $g(m,n)=(0,V(m)+v)$ and 
+that could be implemented as $\meanz = \frac{1}{\delta}\agg(S',(0,0),f)$ where $f(m,n)=(0,V(m)+v)$ and 
 \[
  v= 
  \begin{cases}

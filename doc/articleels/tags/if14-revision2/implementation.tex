@@ -17,7 +17,7 @@ found at~\cite{llusa:roundrobinson}.
 
 The reference implementation follows the object orientated paradigm
 and it observes a clear mapping between the model and the object
-classes. Unified Modeling Language~(\acro{UML}) diagrams are used to
+classes. \emph{Unified Modeling Language}~(\acro{UML}) diagrams are used to
 define the classes structure.  Operations are implemented as object
 methods, which are not shown in \acro{UML} diagrams, due to space
 limitations.
@@ -76,8 +76,8 @@ time series to its representation. For this purpose we use the Python
 \begin{example}
   \label{ex:pytsms:example}
   In this example we reproduce an interpreter session working with
-  \texttt{Pytsms}. First we define the two time series \texttt{s1} and
-  \texttt{s2} from Example~\ref{ex:model:s1s2} and after that we apply
+  \texttt{Pytsms}. First we define the two time series \texttt{r} and
+  \texttt{s} from Example~\ref{ex:model:s1s2} and after that we apply
   different operations: union, temporal union, concatenation, closed
   interval, \zohe{} temporal interval, \zohe{} temporal selection, and
   the test of regular property. Note that \texttt{Measure} is
@@ -91,30 +91,30 @@ time series to its representation. For this purpose we use the Python
 >>> from pytsms.properties import isRegular
 
 # Define the two time series
->>> s1 = TimeSeries([m(1,1),m(3,1),m(4,0),m(5,1)])
->>> s2 = TimeSeries([m(2,2),m(3,2),m(4,0),m(6,2)])
+>>> r = TimeSeries([m(1,1),m(3,1),m(4,0),m(5,1)])
+>>> s = TimeSeries([m(2,2),m(3,2),m(4,0),m(6,2)])
 
 # Manipulate the two time series
->>> s1.union(s2)
+>>> r.union(s)
 TimeSeries([m(1,1), m(2,2), m(3,1), 
             m(4,0), m(5,1), m(6,2)])
->>> s1.union_temporal(s2)
+>>> r.union_temporal(s)
 TimeSeries([m(1,1), m(2,2), m(4,0), m(5,1), m(6,2)])
->>> s1.concatenate(s2) 
+>>> r.concatenate(s) 
 TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
->>> s2.interval_closed(2,5)
+>>> s.interval_closed(2,5)
 TimeSeries([m(2,2), m(3,2), m(4,0)])
->>> s2.interval_temporal(2,5,Zohe)
+>>> s.interval_temporal(2,5,Zohe)
 TimeSeries([m(3,2), m(4,0), m(5,2)])
 
 # Check for regularity
->>> s2.accept(isRegular())
+>>> s.accept(isRegular())
 False
-# regularise to {0,2,4} by Zohe method
->>> r2 = s2.selection_temporal(range(0,6,2),Zohe)
->>> r2
+# regularise to {0,2,4} by ZOHE method
+>>> sr = s.selection_temporal(range(0,6,2),Zohe)
+>>> sr
 TimeSeries([m(0,2), m(2,2), m(4,0)])
->>> r2.accept(isRegular())
+>>> sr.accept(isRegular())
 True
 \end{verbatim}
 }
