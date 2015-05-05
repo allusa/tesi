@@ -41,7 +41,7 @@ define the main time related concepts using this naive approximation.
   two time instants, that is $d =|s-t|$.
 \end{definition}
 
-The value is an attribute that indicates the magnitude of a
+The \emph{value} is an attribute that indicates the magnitude of a
 measure. The domain for the values can be any data type. Valid domains
 for values include integers, real numbers, strings, and more
 elaborated data structures such as arrays, lists, or even other time
@@ -66,7 +66,7 @@ Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
 value $v$ and $T(m)$ denotes the time $t$.
 
 Order between measures plays an important role. Given two measures we
-define two distinct order relations.
+define two distinct \emph{order relations}.
 
 \begin{definition}[Semitemporal order]\label{def:semitemporal_order}
   Let $m$ and $n$ be two measures. We name \emph{semitemporal order}
@@ -83,9 +83,9 @@ define two distinct order relations.
 Note that the semitemporal order is a partial order while the temporal
 order is a total order.
 
-Intuitively speaking a time series is a ordered set of measures of the
-same phenomena.  Sometimes they are also called time
-sequences~\cite{last:hetland}. We define it as follows.
+Intuitively speaking a \emph{time series} is a ordered set of measures of the
+same phenomena.  Sometimes they are also called \emph{time
+sequences}~\cite{last:hetland}. We define it as follows.
 
 \begin{definition}[Time series]
   \label{def:model:timeseries}
@@ -104,11 +104,11 @@ In a time series there are not two measures with the same time. Thus,
 considering the temporal order, a time series is a totally ordered
 set.
 
-The cardinality of a time series $S=\{m_0,\dots,m_k\}$, noted as
-$|S|$, is the number of measures that contains.  An empty time series is
+The \emph{cardinality} of a time series $S=\{m_0,\dots,m_k\}$, noted as
+$|S|$, is the number of measures that contains.  An \emph{empty time series} is
 noted as $\emptyset$. Needless to say, $|\emptyset|=0$.
 
-Although we defined values as scalars it is easy to extend the
+Although we defined values as scalars, it is easy to extend the
 concept. Following~\cite{assfalg08:thesis}, a time series can record
 more than one phenomena if they share the same acquisition time
 instants.  This kind of series are known as \emph{multivalued time
@@ -118,7 +118,7 @@ measures as $m=(t,v_1,v_2,\ldots,v_n)$.
 
 
 
-A time series is regular when its measures are equi-spaced in time,
+A time series is \emph{regular} when its measures are equi-spaced in time,
 according to \cite{last:hetland}.  Let $S=\{m_0, m_1,\ldots,
 m_{k-1},m_k\}$ be a time series, where
 $T(m_0)<T(m_1)<\dots<T(m_{k-1})<T(m_k)$, and let $d\in\cal{T}$ be a
@@ -179,7 +179,7 @@ $\sup S$, as
 Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
 and the \emph{infimum} of $S$, noted as $\inf S$.
 
-The membership operation defines when a measure belongs to a time
+The \emph{membership} operation defines when a measure belongs to a time
 series. We define two distinct membership operations which consider
 the semitemporal order (Definition~\ref{def:semitemporal_order}) and
 the temporal order (Definition~\ref{def:temporal_order}). In
@@ -297,7 +297,7 @@ A \acro{DBMS} requires computational operators to provide opportunity
 to calculate using the data contained. Relational \acro{DBMS} supply
 operators like extend, aggregate or
 summarise~\cite{date:introduction}. For time series, we define the more
-general computational operators map and fold.
+general computational operators \emph{map} and \emph{fold}.
 
 The map operator transforms a time series $S$ into a new time series
 $R$ by applying a function to every measure.  Let $S$ and $R$ be two
@@ -410,7 +410,7 @@ division, $R/S$, to time series.
 
 Sequence operations manipulate time series considering measures as
 being totally ordered by time.  We define three basic operations:
-slice, successor and concatenation.
+\emph{slice}, \emph{successor} and \emph{concatenation}.
 
 
 The classical interval concept can be applied to time domain. In this
@@ -471,8 +471,8 @@ representation.
 %
 Let $S$ be a time series and $\cal{T}$ the time domain. The \emph{graph} of
 the time series $S$ is a set of ordered pairs $\graph S
-=\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a temporal representation
-function for the time series.
+=\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a \emph{temporal representation
+function} for the time series.
 %
 
 
@@ -638,7 +638,7 @@ to extract the time series data.
 
 Following, we define the \acro{MTSMS} model structure and the
 structural operators, the operations to query a multiresolution
-schema, and the attribute aggregate functions.  Although schema
+schema, and the \emph{attribute aggregate functions}.  Although schema
 manipulation operations could be defined, in this paper we exclusively
 focus on structure and data query operators.
 
@@ -844,7 +844,7 @@ consolidating a buffer.
 % summarise the measures of $S$ for the consolidation interval $[x,v]$.
 
 Let $S$ be a time series, let $\delta$ be a resolution step and let
-$\tau$ be a consolidation time.  An attribute aggregate function $f$
+$\tau$ be a consolidation time.  An \emph{attribute aggregate function} $f$
 calculates a new measure $m=f(S,\tau,\delta)$. From $\tau$ and
 $\delta$, we obtain the time interval $[\tau:\tau+\delta]$.  Then, the
 resulting measure $m$ is interpreted to summarise the measures of $S$
@@ -885,7 +885,7 @@ functions.
 In what follows we will give some examples of usual attribute
 aggregation functions. These functions compute a new measure given a
 set of known measures. Then, an attribute aggregation function should
-compute a new time and a new value from the set known measures.
+compute a new \emph{time} and a new \emph{value} from the set known measures.
 %
 % For the rest of this Section we will write $m=f(S,[x,v])$ be the
 % resulting measure of an attribute aggregation function $f$ applied to
