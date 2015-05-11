@@ -265,15 +265,15 @@ definit per les sèries temporals.
 El model de \gls{SGSTM} associa a cada sèrie temporal un esquema de
 multiresolució. En aquest apartat definim els operadors que permeten
 consultar i manipular aquest esquema de multiresolució de forma
-coherent amb el model de \gls{SGSTM}.
-Segons s'ha descrit a la~\autoref{def:sgstm:esquema}, l'esquema de
-multiresolució de cada sèrie temporal multiresolució consisteix en el
-nombre de subsèries resolució i els quatre paràmetres de cadascuna: el
-darrer instant de consolidació ($\tau$), el pas de consolidació
-($\delta$), el cardinal màxim ($k$) i la funció d'agregació d'atributs
-($f$).  Així doncs, quan es manipula una base de dades multiresolució
-cal conservar o tractar adequadament aquests esquemes de
-multiresolució.
+coherent amb el model de \gls{SGSTM}.  Segons s'ha descrit a
+la~\autoref{def:sgstm:esquema}, l'esquema de multiresolució de cada
+sèrie temporal multiresolució consisteix en el nombre de subsèries
+resolució i els quatre paràmetres de cadascuna: el darrer instant de
+consolidació ($\tau$), el pas de consolidació ($\delta$), el cardinal
+màxim ($\glssymbol{not:sgstm:k}$) i la funció d'agregació d'atributs
+($\glssymbol{not:sgstm:f}$).  Així doncs, quan es manipula una base de
+dades multiresolució cal conservar o tractar adequadament aquests
+esquemes de multiresolució.
 
 
 A continuació es descriuen operadors per a poder estudiar aquest
@@ -284,7 +284,7 @@ multiresolució com a conjunt de l'esquema de cada subsèrie.  Així, per
 simplicitat, definim la majoria dels operadors de manipulació sobre
 les subsèries resolució, tot i que es poden estendre fàcilment a una sèrie
 temporal multiresolució mitjançant l'operació de mapatge
-(v.~\autoref{def:sgstm:mapa}), on la funció $\glssymbol{not:F}$
+(v.~\autoref{def:sgstm:mapa}), on la funció de mapatge
 correspon a l'operador d'esquema que es vol aplicar a totes i
 cadascuna de les subsèries resolució.
 
@@ -303,12 +303,14 @@ partir d'un esquema de multiresolució.
 A partir d'un esquema de multiresolució es pot dibuixar la situació
 relativa en el temps que prendran les mesures. A aquest dibuix de
 l'esquema de multiresolució l'anomenem cronograma. Per exemple, sigui
-la sèrie temporal multiresolució $M_3=\{R_1,R_2\}$ de
+la sèrie temporal multiresolució $M = \{R_1,R_2\}$ de
 l'\autoref{ex:model:bdm-desfasaments} dibuixem el seu cronograma a la
 \autoref{fig:model:cronograma} per a l'instant de temps $30$, just
-abans de la seva consolidació. Les subsèries resolució de $M_3$ tenen
-els paràmetres $\delta_1=5$, $\delta_2=10$, $k_1=4$, $k_2=3$,
-$f_1=\text{mitjana}$ i $f_2=\text{mitjanad5}$ on la funció
+abans de la seva consolidació. Les subsèries resolució de $M$ tenen
+els paràmetres $\delta_1=5$, $\delta_2=10$,
+$\glssymbol{not:sgstm:k}_1=4$, $\glssymbol{not:sgstm:k}_2=3$,
+$\glssymbol{not:sgstm:f}_1=\text{mitjana}$ i
+$\glssymbol{not:sgstm:f}_2=\text{mitjanad5}$ on la funció
 $\text{mitjanad5}$, ja utilitzada a
 l'\autoref{ex:model:bdm-desfasaments}, té un desfasament de $5$
 unitats de temps. Tot seguit definim els conceptes que apareixen al
@@ -322,28 +324,29 @@ cronograma.
 \end{figure}
 
 
-Els paràmetres $k$, $\delta$ i $f$ d'una subsèrie resolució són fixats
-per l'esquema, mentre que el paràmetre $\tau$ és fixat a un valor
-inicial i va essent canviat per l'operació de consolidació. Així doncs,
-les propietats que impliquin a $\tau$ dependran de l'instant temporal
-en què es faci la consulta i les que no l'impliquin seran fixes per a
+Els paràmetres $\glssymbol{not:sgstm:k}$, $\delta$ i
+$\glssymbol{not:sgstm:f}$ d'una subsèrie resolució són fixats per
+l'esquema, mentre que el paràmetre $\tau$ és fixat a un valor inicial
+i va essent canviat per l'operació de consolidació. Així doncs, les
+propietats que impliquin a $\tau$ dependran de l'instant temporal en
+què es faci la consulta i les que no l'impliquin seran fixes per a
 cada esquema.
 
 Una propietat que observem en el cronograma és el lapse temporal d'una
 subsèrie resolució, és a dir la mida temporal que ocupa
 la sèrie temporal emmagatzemada en el disc.
 \begin{definition}[Lapse de la subsèrie resolució] %angl. span
-  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució, el lapse
+  Sigui $R=(S_B,S_D,\tau,\delta,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$ una subsèrie resolució, el lapse
   $\glssymboldef{not:sgstm:lapseR}(R)$ és una durada de temps que
   indica la mida de l'interval que ocupa el disc:
-  $\glssymbol{not:sgstm:lapseR}(R) = k\delta$.
+  $\glssymbol{not:sgstm:lapseR}(R) = \glssymbol{not:sgstm:k}\delta$.
 \end{definition}
 
 
-Si definim l'interval de temps del lapse com a $[\tau - k\delta,
+Si definim l'interval de temps del lapse com a $[\tau - \glssymbol{not:sgstm:k}\delta,
 \tau]$ i l'interval de temps real de la sèrie temporal del disc com a
 $[\min(S_D),\max(S_D)]$, aleshores normalment es complirà que
-$\max(S_D)=\tau$ i $\min(S_D)=\tau - (k-1)\delta$. No obstant això,
+$\max(S_D)=\tau$ i $\min(S_D)=\tau - (\glssymbol{not:sgstm:k}-1)\delta$. No obstant això,
 pot no complir-se per exemple si la sèrie temporal no és regular o per
 exemple si $\tau$ i $\max(S_D)$ no coincideixen.  Aquest darrer fet
 que $\tau$ i $\max(S_D)$ no coincideixen ocorre quan la funció
@@ -351,14 +354,16 @@ d'agregació d'atributs causa un desfasament; ho anomenem desfasament
 de la subsèrie resolució.
 \begin{definition}[Desfasament de la subsèrie resolució] %angl. offset
   \label{def:sgstm:desdsamentR}
-  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució, el seu
-  desfasament $\glssymboldef{not:sgstm:desfasamentR}(R)$ és una durada
-  de temps que indica la distància entre $\tau$ i $\max(S_D)$ causada
-  per la funció d'agregació $f$. Així havent definit la consolidació
-  sobre $m'=f(S,[\tau,\tau+\delta]$
+  Sigui
+  $R=(S_B,S_D,\tau,\delta,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$
+  una subsèrie resolució, el seu desfasament
+  $\glssymboldef{not:sgstm:desfasamentR}(R)$ és una durada de temps
+  que indica la distància entre $\tau$ i $\max(S_D)$ causada per la
+  funció d'agregació $\glssymbol{not:sgstm:f}$. Així havent definit la
+  consolidació sobre $m=\glssymbol{not:sgstm:f}(S,[\tau,\tau+\delta]$
   (v.~\autoref{def:model:consolidacio-buffer}), una funció d'agregació
-  amb desfasament retorna una mesura $m'=(\tau - r,v)$ con
-  $\glssymbol{not:sgstm:desfasamentR}(R) = r$.
+  amb desfasament retorna una mesura amb $T(m)=\tau -
+  \glssymbol{not:sgstm:desfasamentR}(R)$.
 \end{definition}
 
 
@@ -369,36 +374,39 @@ l'instant de temps actual. Aquest interval de temps és durant el qual
 el buffer emmagatzema les noves mesures que arriben i l'anomenen
 període de buffer.
 \begin{definition}[Període de buffer de la subsèrie resolució]
-  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució,
-  $\glssymbol{not:sgstm:desfasamentR}(R)$ el seu desfasament i $t_N$
-  l'instant de temps actual, el període de buffer de la subsèrie
-  resolució $\glssymboldef{not:sgstm:periodeB}(R)$ és una durada de
-  temps que indica la distància entre $\tau$ i $t_N$ tenint en compte
-  el desfasament: $\glssymbol{not:sgstm:periodeB}(R) = t_N - (\tau -
+  Sigui
+  $R=(S_B,S_D,\tau,\delta,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$
+  una subsèrie resolució, $\glssymbol{not:sgstm:desfasamentR}(R)$ el
+  seu desfasament i $t$ l'instant de temps actual, el període de
+  buffer de la subsèrie resolució
+  $\glssymboldef{not:sgstm:periodeB}(R)$ és una durada de temps que
+  indica la distància entre $\tau$ i $t$ tenint en compte el
+  desfasament: $\glssymbol{not:sgstm:periodeB}(R) = t - (\tau -
   \glssymbol{not:sgstm:desfasamentR}(R))$.
 \end{definition}
 
 Si la consolidació de la subsèrie resolució es realitza immediatament
 cada cop que estigui en estat de consolidable i existeix una mesura
-$m\in S_B$ que compleix $T(m)=t_N$, aleshores el període de buffer té
-una variació afitada atès que, per ser la consolidació immediata, $t_N
+$m\in S_B$ que compleix $T(m)=t$, aleshores el període de buffer té
+una variació afitada atès que, per ser la consolidació immediata, $t
 - \tau \leq \delta$. En aquest cas, el mínim que pot prendre el
 període de buffer és el desfasament,
 $\glssymbol{not:sgstm:desfasamentR}(R)\leq
 \glssymbol{not:sgstm:periodeB}(R)$, que correspon a l'instant
-$t_N=\tau$. El màxim que pot prendre l'anomenem lapse de buffer de la
+$t=\tau$. El màxim que pot prendre l'anomenem lapse de buffer de la
 subsèrie resolució.
 \begin{definition}[Lapse de buffer de la subsèrie resolució]
-  Sigui $R=(S_B,S_D,\tau,\delta,k,f)$ una subsèrie resolució i
-  $\glssymbol{not:sgstm:desfasamentR}(R)$ el seu desfasament, el lapse
-  de buffer de la subsèrie resolució
+  Sigui
+  $R=(S_B,S_D,\tau,\delta,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$
+  una subsèrie resolució i $\glssymbol{not:sgstm:desfasamentR}(R)$ el
+  seu desfasament, el lapse de buffer de la subsèrie resolució
   $\glssymboldef{not:sgstm:lapseB}(R)$ és una durada de temps que
   indica el període de buffer màxim que pot prendre:
   $\glssymbol{not:sgstm:lapseB}(R) = \delta +
   \glssymbol{not:sgstm:desfasamentR}(R)$.  Sempre es compleix que
   $\glssymbol{not:sgstm:periodeB}(R) \leq
   \glssymbol{not:sgstm:lapseB}(R)$ atès que, per ser la consolidació
-  immediata, $t_N - \tau \leq \delta$.
+  immediata, $t - \tau \leq \delta$.
 \end{definition}
 
 
@@ -409,10 +417,12 @@ amb $\delta$.  Així, segons el pas de consolidació descrit a
 l'esquema de multiresolució, descrivim quina subsèrie resolució conté
 més resolució.
 \begin{definition}[Subsèrie resolució amb més resolució]
-  Siguin $R_1=(S_{B1},S_{D1},\tau_1,\delta_1,k_1,f_1)$ i
-  $R_2=(S_{B2},S_{D2},\tau_2,\delta_2,k_2,f_2)$ dues subsèries
-  resolució, la subsèrie amb més resolució
-  $\glssymboldef{not:sgstm:maxR}(R_1,R_2)$ és la que té el pas de
+  Siguin
+  $R_1=(S_{B1},S_{D1},\tau_1,\delta_1,\glssymbol{not:sgstm:k}_1,\glssymbol{not:sgstm:f}_1)$
+  i
+  $R_2=(S_{B2},S_{D2},\tau_2,\delta_2,\glssymbol{not:sgstm:k}_2,\glssymbol{not:sgstm:f}_2)$
+  dues subsèries resolució. La subsèrie amb més resolució,
+  $\glssymboldef{not:sgstm:maxR}(R_1,R_2)$, és la que té el pas de
   consolidació més petit: $\glssymbol{not:sgstm:maxR}(R_1,R_2) = R_i$
   on $\delta_i = \min(\delta_1,\delta_2)$.
 \end{definition}
@@ -433,23 +443,23 @@ altra banda, la subsèrie resolució té informació no consolidada al
 davant de la consolidada per un interval de mida
 $\glssymbol{not:sgstm:periodeB}(R)$ i de com a màxim
 $\glssymbol{not:sgstm:lapseB}(R)$. A continuació mostrem aquestes
-propietats en cronogrames d'esquemes multiresolució per a la mateixa
-sèrie temporal multiresolució però en diferents situacions temporals
-d'exemple.
+propietats en diversos exemples mitjançant cronogrames d'esquemes
+multiresolució per a la mateixa sèrie temporal multiresolució però en
+diferents situacions temporals.
 
 
 
 \begin{example}[Instant de temps just abans de la consolidació]
   \label{ex:sgstm:abanscons}
   El cronograma de la \autoref{fig:model:cronograma} mostra la sèrie
-  temporal multiresolució $M_3=\{R_1,R_2\}$ de
+  temporal multiresolució $M=\{R_1,R_2\}$ de
   l'\autoref{ex:model:bdm-desfasaments} a l'instant de temps
-  determinat, el $t_N=30$. Exactament mostra una fotografia en
+  determinat, el $t=30$. Exactament mostra una fotografia en
   l'instant just abans d'aplicar l'operació de consolidació per a
   totes dues subsèries, les quals ja són consolidables:
-  $t_N\geq\delta_1+\tau_1$ i $t_N\geq\delta_2+\tau_2$ assumint que
-  existeixen les mesures $m_1\in S_{D1}: T(m_1)=t_N$ i $m_2\in S_{D2}:
-  T(m_2)=t_N$.  Aquest és un moment en què es compleix la propietat
+  $t\geq\delta_1+\tau_1$ i $t\geq\delta_2+\tau_2$ assumint que
+  existeixen les mesures $m_1\in S_{D1}: T(m_1)=t$ i $m_2\in S_{D2}:
+  T(m_2)=t$.  Aquest és un moment en què es compleix la propietat
   $\glssymbol{not:sgstm:periodeB}(R_i)=\glssymbol{not:sgstm:lapseB}(R_i)$,
   és a dir en què el període de buffer té la mida màxima.
 
@@ -458,17 +468,17 @@ d'exemple.
   valors concrets per l'exemple:
   \begin{itemize}
   \item Lapses de les subsèries:
-    $\glssymbol{not:sgstm:lapseR}(R_1)=k_1\delta_1=20$ i
-    $\glssymbol{not:sgstm:lapseR}(R_2)=k_2\delta_2=30$.
+    $\glssymbol{not:sgstm:lapseR}(R_1)=\glssymbol{not:sgstm:k}_1\delta_1=20$ i
+    $\glssymbol{not:sgstm:lapseR}(R_2)=\glssymbol{not:sgstm:k}_2\delta_2=30$.
   \item Desfasaments de les subsèries:
     $\glssymbol{not:sgstm:desfasamentR}(R_1)=0$ i
     $\glssymbol{not:sgstm:desfasamentR}(R_2)=5$, segons interpretació
-    de la $f_1=\text{mitjana}$ i $f_2=\text{mitjanad5}$.
+    de la $\glssymbol{not:sgstm:f}_1=\text{mitjana}$ i $\glssymbol{not:sgstm:f}_2=\text{mitjanad5}$.
   \item Períodes de buffer: $\glssymbol{not:sgstm:periodeB}(R_1)
-    =t_N-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
+    =t-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
     =30-(25-0)=5$ i $\glssymbol{not:sgstm:periodeB}(R_2)
-    =t_N-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
-    =30-(20-5)=15$ atès que en l'instant de temps actual $t_N=30$ just
+    =t-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
+    =30-(20-5)=15$ atès que en l'instant de temps actual $t=30$ just
     abans de consolidar-se $\tau_1=25$ i $\tau_2=20$.
   \item Lapses de buffer: $\glssymbol{not:sgstm:lapseB}(R_1)=
     \delta_1+\glssymbol{not:sgstm:desfasamentR}(R_1)=5$ i
@@ -492,11 +502,12 @@ d'exemple.
 
    El cronograma canvia amb el pas del temps i per tant també canvia
    la mida dels buffers i la posició temporal dels discs.  Ara el
-   cronograma de la \autoref{fig:model:cronograma} mostra el mateix
-   cas que l'\autoref{ex:sgstm:abanscons} per $t_N=30$ però exactament
-   en una fotografia a l'instant just després d'aplicar l'operació de
-   consolidació per a totes dues subsèries. Aquest és un moment en què
-   es compleix la propietat $\glssymbol{not:sgstm:periodeB}(R_i)=
+   cronograma de la \autoref{fig:model:cronograma-consolidat} mostra
+   el mateix cas que l'\autoref{ex:sgstm:abanscons} per $t=30$ però
+   exactament en una fotografia a l'instant just després d'aplicar
+   l'operació de consolidació per a totes dues subsèries. Aquest és un
+   moment en què es compleix la propietat
+   $\glssymbol{not:sgstm:periodeB}(R_i)=
    \glssymbol{not:sgstm:desfasamentR}(R_i)$, és a dir en què el
    període de buffer té la mida mínima.
 
@@ -513,10 +524,10 @@ Pel que fa als valors de les propietats del cronograma, tots són els
 mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
  \begin{itemize}
   \item Períodes de buffer: $\glssymbol{not:sgstm:periodeB}(R_1)
-    =t_N-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
+    =t-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
     =30-(30-0)=0$ i $\glssymbol{not:sgstm:periodeB}(R_2)
-    =t_N-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
-    =30-(30-5)=5$ atès que en l'instant de temps actual $t_N=30$ just
+    =t-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
+    =30-(30-5)=5$ atès que en l'instant de temps actual $t=30$ just
     després de consolidar-se $\tau_1=30$ i $\tau_2=30$.
   \end{itemize}
  
@@ -530,9 +541,9 @@ mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
 
   L'\autoref{ex:sgstm:desprescons} és la continuació temporal
   (instantània) de l'\autoref{ex:sgstm:abanscons} assumint que en
-  l'instant $t_N=30$ s'aplica l'operació de consolidació.  Ara
+  l'instant $30$ s'aplica l'operació de consolidació.  Ara
   descrivim un cas no ideal en què aquesta operació de consolidació no
-  s'aplica fins a l'instant $t_N=35$. Això podria ser degut que no es
+  s'aplica fins a l'instant $t=35$. Això podria ser degut que no es
   vol executar l'operació en el mateix moment que les subsèries siguin
   consolidables o bé que encara no són consolidables perquè no
   existeixen les mesures $m_1\in S_{B1}: 30\leq T(m_1)\leq 35$ i
@@ -550,10 +561,10 @@ mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
 
 
   Així doncs, reprenem l'\autoref{ex:sgstm:abanscons} i avancem el
-  temps actual fins a l'instant $t_N=35$ però sense aplicar la
+  temps actual fins a l'instant $t=35$ però sense aplicar la
   consolidació. El cronograma es mostra a la
   \autoref{fig:model:cronograma-noideal}, en línia contínua vertical
-  es mostra l'instant de temps actual $t_N=30$ i en línia discontínua
+  es mostra l'instant de temps actual $30$ i en línia discontínua
   es mostra la consolidació immediata ideal que hauria estat a
   l'instant $30$.  Aquest és un moment en què apareix la propietat
   $\glssymbol{not:sgstm:periodeB}(R_i)>\glssymbol{not:sgstm:lapseB}(R_i)$,
@@ -566,10 +577,10 @@ Pel que fa als valors de les propietats del cronograma, tots són els
 mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
  \begin{itemize}
  \item Períodes de buffer: $\glssymbol{not:sgstm:periodeB}(R_1)
-   =t_N-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
+   =t-(\tau_1-\glssymbol{not:sgstm:desfasamentR}(R_1))
    =35-(25-0)=10$ i $\glssymbol{not:sgstm:periodeB}(R_2)
-   =t_N-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
-   =35-(20-5)=20$ atès que en l'instant de temps actual $t_N=35$
+   =t-(\tau_2-\glssymbol{not:sgstm:desfasamentR}(R_2)))
+   =35-(20-5)=20$ atès que en l'instant de temps actual $t=35$
    encara queda pendent de consolidar-se $\tau_1=25$ i $\tau_2=20$.
   \end{itemize}
 
@@ -588,7 +599,7 @@ mateixos que a l'\autoref{ex:sgstm:abanscons} llevat de:
 \paragraph{Cronograma periòdic}
 El cronograma evoluciona amb el temps i a cada instant determinat
 presenta una forma. Això no obstant totes les propietats de l'esquema
-són fixes llevat del període de buffer que varia segons $t_N$, a més
+són fixes llevat del període de buffer que varia segons $t$, a més
 si assumim el cas ideal de consolidació immediata aleshores les formes
 es repeteixen periòdicament en el temps de $\delta$ per a cada
 subsèrie resolució.  Per a simplificar, dibuixem un cronograma on no
@@ -621,13 +632,13 @@ dades multiresolució de forma coherent amb les dades emmagatzemades.
 L'operació que canvia la mida del disc d'una subsèrie resolució ha de
 controlar que si la mida disminueix s'han d'eliminar dades.
 \begin{definition}[Canvi de mida d'una subsèrie resolució]
-  Sigui $R=(B,D)$ una subsèrie resolució, en què $D=(S_D,k)$ és el
-  disc de la subsèrie, i $k'$ un nou cardinal màxim, el canvi de mida
-  de la subsèrie resolució $\glssymboldef{not:sgstm:canviaK}(R,k')$ és
+  Sigui $R=(B,D)$ una subsèrie resolució, en què $D=(S_D,\glssymbol{not:sgstm:k})$ és el
+  disc de la subsèrie, i $\glssymbol{not:sgstm:k}'$ un nou cardinal màxim, el canvi de mida
+  de la subsèrie resolució $\glssymboldef{not:sgstm:canviaK}(R,\glssymbol{not:sgstm:k}')$ és
   una nova subsèrie resolució $R'=(B,D')$ amb les dades antigues
-  afegides de nou al disc: $\glssymbol{not:sgstm:canviaK}(R,k')=
+  afegides de nou al disc: $\glssymbol{not:sgstm:canviaK}(R,\glssymbol{not:sgstm:k}')=
   (B,D')$ aplicant l'operació $\forall m_i \in S_D:
-  \glssymbol{addD}(D',m_i)$ amb $D'=(\{\},k')$ com a disc inicial.
+  \glssymbol{addD}(D',m_i)$ amb $D'=(\{\},\glssymbol{not:sgstm:k}')$ com a disc inicial.
 \end{definition}
 
 
@@ -636,11 +647,11 @@ no cal que tingui en compte les dades ja que la sèrie temporal
 emmagatzemada s'anirà canviant quan es consolidin noves mesures.
 \begin{definition}[Canvi de pas de consolidació d'una subsèrie resolució]
   \label{def:sgstm:canviad}
-  Sigui $R = (S_B,S_D,\delta,\tau,k,f)$ una subsèrie resolució i
+  Sigui $R = (S_B,S_D,\delta,\tau,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$ una subsèrie resolució i
   $\delta'$ un nou pas de consolidació, el canvi del pas de
   consolidació de la subsèrie resolució
   $\glssymboldef{not:sgstm:canviad}(R,\delta')$ és la nova subsèrie resolució
-  $\glssymbol{not:sgstm:canviad}(R,\delta')=(S_B,S_D,\delta',\tau,k,f)$.
+  $\glssymbol{not:sgstm:canviad}(R,\delta')=(S_B,S_D,\delta',\tau,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$.
 \end{definition}
 
 Hi ha altres canvis de l'esquema que tampoc no requereixen tenir en
@@ -655,16 +666,16 @@ alhora la mida i el pas de consolidació tenint en compte les dades; és
 a dir, canvia el període de la sèrie temporal emmagatzemada seguint el
 criteri de representació.
 \begin{definition}[Canvi de resolució d'una subsèrie resolució]
-  Sigui $R = (S_B,S_D,\delta,\tau,k,f)$ una subsèrie resolució, $r$
-  una funció de representació per a la sèrie temporal, $k'$ un nou
+  Sigui $R = (S_B,S_D,\delta,\tau,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$ una subsèrie resolució, $r$
+  una funció de representació per a la sèrie temporal, $\glssymbol{not:sgstm:k}'$ un nou
   cardinal màxim i $\delta'$ un nou pas de consolidació, el canvi de
   resolució de la subsèrie resolució
-  $\glssymboldef{not:sgstm:canviaR}(R,k',\delta',r)$ és una nova subsèrie
-  resolució $R' = (S_B,S_D',\delta',\tau,k',f)$ amb una selecció
+  $\glssymboldef{not:sgstm:canviaR}(R,\glssymbol{not:sgstm:k}',\delta',r)$ és una nova subsèrie
+  resolució $R' = (S_B,S_D',\delta',\tau,\glssymbol{not:sgstm:k}',\glssymbol{not:sgstm:f})$ amb una selecció
   temporal segons el criteri de representació en el nou conjunt
   regular de temps:
-  $\glssymbol{not:sgstm:canviaR}(R,k',\delta',r)=(S_B,S_D',\delta',\tau,k',f)$
-  a on $S_D' = S_D[i]^r$ i $i=\{ \tau-n\delta' | n\in\glssymbol{not:N},n<k'
+  $\glssymbol{not:sgstm:canviaR}(R,\glssymbol{not:sgstm:k}',\delta',r)=(S_B,S_D',\delta',\tau,\glssymbol{not:sgstm:k}',\glssymbol{not:sgstm:f})$
+  a on $S_D' = S_D[i]^r$ i $i=\{ \tau-n\delta' | n\in\glssymbol{not:N},n<\glssymbol{not:sgstm:k}'
   \}$.
 \end{definition}
 
@@ -678,13 +689,13 @@ subsèrie resolució considerant sèries temporals en la forma canònica;
 a la pràctica, per comoditat, habitualment cada atribut de multivalor
 tindrà un nom.
 \begin{definition}[Afegeix multivalor a una subsèrie resolució]
-  Sigui $R = (S_B,S_D,\delta,\tau,k,f)$ una subsèrie resolució,
+  Sigui $R = (S_B,S_D,\delta,\tau,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$ una subsèrie resolució,
   l'addició d'un nou multivalor és una subsèrie resolució
-  $\glssymboldef{not:sgstm:addMV}(R) = (S_B',S_D',\delta,\tau,k,f)$
+  $\glssymboldef{not:sgstm:addMV}(R) = (S_B',S_D',\delta,\tau,\glssymbol{not:sgstm:k},\glssymbol{not:sgstm:f})$
   amb les sèries temporals ampliades amb un nou atribut inicialment de
   valor indefinit $S'_{B} =
-  \glssymbol{not:sgst:map}(S_B,(t,v)\mapsto(t,(v,\infty)))$ i $S'_{D}
-  = \glssymbol{not:sgst:map}(S_D,(t,v)\mapsto(t,(v,\infty)))$.
+  \glssymbol{not:sgst:map}(S_B,g)$ on $g(t,v)=(t,(v,\infty))$ i $S'_{D}
+  = \glssymbol{not:sgst:map}(S_D,h)$ on $h(t,v)=(t,(v,\infty))$.
 \end{definition}
 
 Per a eliminar un multivalor només cal eliminar l'atribut a totes les
@@ -714,45 +725,61 @@ bases de dades.
 L'operació d'unió de dues subsèries resolució és una unió de les
 sèries temporals de cada un.
 \begin{definition}[Unió de dues subsèries resolució]
-  Sigui $R_1=(S_{B1},S_{D1},\delta_1,\tau_1,k_1,f_1)$ i
-  $R_2=(S_{B2},S_{D2},\delta_2,\tau_2,k_2,f_2)$ dues subsèries
-  resolució, la unió de les dues subsèries resolució
-  $\glssymboldef{not:sgstm:unioR}(R_1,R_2)$ és una subsèrie resolució $R' =
-  (S'_B,S'_D,\delta',\tau',k',f')$ que conté la unió de les sèries
-  temporals dels seus buffers i discs: $\glssymbol{not:sgstm:unioR}(R_1,R_2)=
-  (S'_B,S'_D,\delta_1,\max(\tau_1,\tau_2),k_1+k_2,f_1)$ a on $S'_B =
-  S_{B1} \cup S_{B2}$ i $S'_D = S_{D1} \cup S_{D2}$.
+  Sigui
+  $R_1=(S_{B1},S_{D1},\delta_1,\tau_1,\glssymbol{not:sgstm:k}_1,\glssymbol{not:sgstm:f}_1)$
+  i
+  $R_2=(S_{B2},S_{D2},\delta_2,\tau_2,\glssymbol{not:sgstm:k}_2,\glssymbol{not:sgstm:f}_2)$
+  dues subsèries resolució, la unió de les dues subsèries resolució
+  $\glssymboldef{not:sgstm:unioR}(R_1,R_2)$ és una subsèrie resolució
+  $R' =
+  (S'_B,S'_D,\delta',\tau',\glssymbol{not:sgstm:k}',\glssymbol{not:sgstm:f}')$
+  que conté la unió de les sèries temporals dels seus buffers i discs:
+  $\glssymbol{not:sgstm:unioR}(R_1,R_2)=
+  (S'_B,S'_D,\delta_1,\max(\tau_1,\tau_2),\glssymbol{not:sgstm:k}_1+\glssymbol{not:sgstm:k}_2,\glssymbol{not:sgstm:f}_1)$
+  a on $S'_B = S_{B1} \cup S_{B2}$ i $S'_D = S_{D1} \cup S_{D2}$.
 \end{definition}
-La unió de dues subsèries resolució no és commutativa degut a que les
-unions de les sèries temporals no ho són. Tampoc ho és degut a que si
-s'uneixen dues subsèries resolució amb diferent $\delta$ i $f$ llavors
-es determina que la primera marca quins són els $\delta'$ i $f'$
-resultants.  És a dir que en cas que es vulguin unir subsèries
-resolució que continguin mesures en el mateix temps o informació
-diferent; es prioritza la primera.
+La unió de dues subsèries resolució no és commutativa a causa que les
+unions de les sèries temporals no ho són. Tampoc ho és a causa que si
+s'uneixen dues subsèries resolució amb diferent $\delta$ i
+$\glssymbol{not:sgstm:f}$ llavors es determina que la primera marca
+quins són els $\delta'$ i $\glssymbol{not:sgstm:f}'$ resultants.  És a
+dir que en cas que es vulguin unir subsèries resolució que continguin
+mesures en el mateix temps o informació diferent; es prioritza la
+primera.
 
 
 L'operació d'unió de dues sèries temporals multiresolució és la unió
 de conjunts per a les subsèries resolució quan no intersequen en les
-claus $(\delta,f)$. En cas que intersequin cal unir les dues subsèries
-resolució.
+claus $(\delta,\glssymbol{not:sgstm:f})$. En cas que intersequin cal
+unir les dues subsèries resolució.
 \begin{definition}[Unió de dues sèries temporals  multiresolució]
-  Sigui $M_1=\{R_0^1,\dotsc,R_{d1}^1\}$ i
-  $M_2=\{R_0^2,\dotsc,R_{d2}^2\}$ dues sèries temporals
-  multiresolució, la unió de les dues
-  $\glssymboldef{not:sgstm:unioM}(M_1, M_2)$ és una sèrie temporal
-  multiresolució $M'=\{R_0',\dotsc,R_d'\}$ que conté les subsèries que
-  no intersequen i la unió de les subsèries que intersequen:
-  $\glssymbol{not:sgstm:unioM}(M_1, M_2)= M_{a} \cup M'_{1} \cup
-  M'_{2}$ a on $M_a = \{\forall R_1\in M_1,R_2\in M_2:
-  \glssymbol{not:sgstm:unioR}(R_1,R_2) | (\delta_1,f_1) =
-  (\delta_2,f_2) \}$, $M_1' =\{\forall R_1\in M_1: R_1 | \nexists R_2
-  \in M_2 : (\delta_1,f_1) = (\delta_2,f_2) \}$ i $M_2' =\{\forall
-  R_2\in M_2: R_2 | \nexists R_1 \in M_1 : (\delta_1,f_1) =
-  (\delta_2,f_2) \}$.
+  Sigui $M_1$ i $M_2$ dues sèries temporals multiresolució, les
+  subsèries resolució de les quals tenen la forma
+  $R_i=(S_{Bi},S_{Di},\delta_i,\tau_i,\glssymbol{not:sgstm:k}_i,\glssymbol{not:sgstm:f}_i)$. La
+  unió de les dues $\glssymboldef{not:sgstm:unioM}(M_1, M_2)$ retorna
+  una sèrie temporal multiresolució que conté les subsèries que no
+  intersequen i la unió de les subsèries que intersequen:
+  \[
+  \glssymbol{not:sgstm:unioM}(M_1, M_2)= M \cup M'_{1} \cup
+  M'_{2}\] on 
+  \[
+  M = \{\glssymbol{not:sgstm:unioR}(R_1,R_2) | R_1\in M_1 \wedge
+  R_2\in M_2 \wedge (\delta_1,\glssymbol{not:sgstm:f}_1) =
+  (\delta_2,\glssymbol{not:sgstm:f}_2) \}
+  \]
+  \[
+  M_1' =\{ R_1 | R_1\in M_1 \wedge \nexists R_2 \in M_2 :
+  (\delta_1,\glssymbol{not:sgstm:f}_1) =
+  (\delta_2,\glssymbol{not:sgstm:f}_2) \}
+  \]
+  \[
+  M_2' =\{R_2 | R_2\in M_2 \wedge \nexists R_1 \in M_1 :
+  (\delta_1,\glssymbol{not:sgstm:f}_1) =
+  (\delta_2,\glssymbol{not:sgstm:f}_2) \}
+  \]
 \end{definition}
 La unió de dues sèries temporals multiresolució no és commutativa
-degut a que la unió de subsèries resolució no ho és.
+ a causa que la unió de subsèries resolució no ho és.
 
 
 
@@ -765,45 +792,60 @@ sèries temporals. En el cas que alguns temps no coincideixin cal
 utilitzar la junció temporal amb una representació que donarà valors
 allà on manquin.
 \begin{definition}[Junció de dues subsèries resolució]
-  Sigui $R_1=(S_{B1},S_{D1},\delta_1,\tau_1,k_1,f_1)$ i
-  $R_2=(S_{B2},S_{D2},\delta_2,\tau_2,k_2,f_2)$ dues subsèries
-  resolució i $r$ una funció de representació de sèries temporals, la
-  junció de les dues subsèries resolució
+  Sigui
+  $R_1=(S_{B1},S_{D1},\delta_1,\tau_1,\glssymbol{not:sgstm:k}_1,\glssymbol{not:sgstm:f}_1)$
+  i
+  $R_2=(S_{B2},S_{D2},\delta_2,\tau_2,\glssymbol{not:sgstm:k}_2,\glssymbol{not:sgstm:f}_2)$
+  dues subsèries resolució i $r$ una funció de representació de sèries
+  temporals, la junció de les dues subsèries resolució
   $\glssymboldef{not:sgstm:joinR}^r(R_1,R_2)$ és una subsèrie
-  resolució $R' = (S'_B,S'_D,\delta',\tau',k',f')$ que conté la junció
-  temporal de les sèries temporals dels seus buffers i discs:
-  $\glssymbol{not:sgstm:joinR}^r(R_1,R_2)=
-  (S'_B,S'_D,\delta_1,\max(\tau_1,\tau_2),k_1+k_2,f_1)$ a on $S'_B =
-  S_{B1} \glssymbol{not:sgst:joint}^r S_{B2}$ i $S'_D = S_{D1}
-  \glssymbol{not:sgst:joint}^r S_{D2}$.
+  resolució $R' =
+  (S'_B,S'_D,\delta',\tau',\glssymbol{not:sgstm:k}',\glssymbol{not:sgstm:f}')$
+  que conté la junció temporal de les sèries temporals dels seus
+  buffers i discs: $\glssymbol{not:sgstm:joinR}^r(R_1,R_2)=
+  (S'_B,S'_D,\delta_1,\max(\tau_1,\tau_2),\glssymbol{not:sgstm:k}_1+\glssymbol{not:sgstm:k}_2,\glssymbol{not:sgstm:f}_1)$
+  a on $S'_B = S_{B1} \glssymbol{not:sgst:joint}^r S_{B2}$ i $S'_D =
+  S_{D1} \glssymbol{not:sgst:joint}^r S_{D2}$.
 \end{definition}
-La junció de dues subsèries resolució no és commutativa degut a que si
-s'uneixen dues subsèries resolució amb diferent $\delta$ i $f$ llavors
-es determina que la primera marca quins són els $\delta'$ i $f'$
-resultants.
+La junció de dues subsèries resolució no és commutativa a causa que si
+s'uneixen dues subsèries resolució amb diferent $\delta$ i
+$\glssymbol{not:sgstm:f}$ llavors es determina que la primera marca
+quins són els $\delta'$ i $\glssymbol{not:sgstm:f}'$ resultants.
 
 
 
-L'operació de junció de dues sèries temporals multiresolució
-és la unió de conjunts per a les subsèries resolució, ampliades amb un
-multivalor indefinit, quan no intersequen en les claus $(\delta,f)$. En
-cas que intersequin cal ajuntar les dues subsèries resolució.
+L'operació de junció de dues sèries temporals multiresolució és la
+unió de conjunts per a les subsèries resolució, ampliades amb un
+multivalor indefinit, quan no intersequen en les claus
+$(\delta,\glssymbol{not:sgstm:f})$. En cas que intersequin cal ajuntar
+les dues subsèries resolució.
 \begin{definition}[Junció de dues sèries temporals multiresolució]
-  Sigui $M_1=\{R_0^1,\dotsc,R_{d1}^1\}$ i
-  $M_2=\{R_0^2,\dotsc,R_{d2}^2\}$ dues sèries temporals multiresolució
-  i $r$ una funció de representació de sèries temporals, la junció de
-  les dues $\glssymboldef{not:sgstm:joinM}^r(M_1, M_2)$ és una sèrie
-  temporal multiresolució $M'=\{R_0',\dotsc,R_d'\}$ que conté les
-  subsèries que no intersequen ampliades amb un multivalor i la junció
-  de les subsèries que intersequen:
-  $\glssymbol{not:sgstm:joinM}^r(M_1, M_2)= M_{a} \cup M'_{1} \cup
-  M'_{2}$ a on $M_a = \{\forall R_1\in M_1,R_2\in M_2:
-  \glssymbol{not:sgstm:joinR}(R_1,R_2) | (\delta_1,f_1) =
-  (\delta_2,f_2) \}$, $M_1' = \{\forall R_1\in M_1:
-  \glssymbol{not:sgstm:addMV}(R_1)| \nexists R_2 \in M_2 :
-  (\delta_1,f_1) = (\delta_2,f_2) \}$ i $M_2' = \{\forall R_2\in M_2:
-  \glssymbol{not:sgstm:addMV}(R_2)| \nexists R_1 \in M_1 :
-  (\delta_1,f_1) = (\delta_2,f_2) \}$.
+  Sigui $M_1$ i $M_2$ dues sèries temporals multiresolució, les
+  subsèries resolució de les quals tenen la forma
+  $R_i=(S_{Bi},S_{Di},\delta_i,\tau_i,\glssymbol{not:sgstm:k}_i,\glssymbol{not:sgstm:f}_i)$,
+  i sigui $r$ una funció de representació de sèries temporals. La
+  junció de totes dues $\glssymboldef{not:sgstm:joinM}^r(M_1, M_2)$
+  retorna una sèrie temporal multiresolució que conté les subsèries
+  que no intersequen ampliades amb un multivalor i la junció de les
+  subsèries que intersequen:
+  \[\glssymbol{not:sgstm:joinM}^r(M_1, M_2)= M \cup M'_{1} \cup
+  M'_{2}\] on 
+  \[
+  M = \{ \glssymbol{not:sgstm:joinR}(R_1,R_2) | R_1\in M_1 \wedge
+  R_2\in M_2 \wedge (\delta_1,\glssymbol{not:sgstm:f}_1) =
+  (\delta_2,\glssymbol{not:sgstm:f}_2) \}
+  \]
+  \[
+  M_1' = \{\glssymbol{not:sgstm:addMV}(R_1) | R_1\in M_1 \wedge
+  \nexists R_2 \in M_2 : (\delta_1,\glssymbol{not:sgstm:f}_1) =
+  (\delta_2,\glssymbol{not:sgstm:f}_2) \}
+  \]
+  \[
+  M_2' = \{\glssymbol{not:sgstm:addMV}(R_2)| R_2\in
+  M_2 \wedge \nexists R_1 \in M_1 :
+  (\delta_1,\glssymbol{not:sgstm:f}_1) =
+  (\delta_2,\glssymbol{not:sgstm:f}_2) \}
+  \]
 \end{definition}
 
 
