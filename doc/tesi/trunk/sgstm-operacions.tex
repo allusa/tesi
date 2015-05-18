@@ -675,7 +675,7 @@ criteri de representació.
   temporal segons el criteri de representació en el nou conjunt
   regular de temps:
   $\glssymbol{not:sgstm:canviaR}(R,\glssymbol{not:sgstm:k}',\delta',r)=(S_B,S_D',\delta',\tau,\glssymbol{not:sgstm:k}',\glssymbol{not:sgstm:f})$
-  a on $S_D' = S_D[i]^r$ i $i=\{ \tau-n\delta' | n\in\glssymbol{not:N},n<\glssymbol{not:sgstm:k}'
+  a on $S_D' = S_D[T]^r$ i $T=\{ \tau-n\delta' | n\in\glssymbol{not:N},n<\glssymbol{not:sgstm:k}'
   \}$.
 \end{definition}
 
@@ -824,7 +824,7 @@ les dues subsèries resolució.
   subsèries resolució de les quals tenen la forma
   $R_i=(S_{Bi},S_{Di},\delta_i,\tau_i,\glssymbol{not:sgstm:k}_i,\glssymbol{not:sgstm:f}_i)$,
   i sigui $r$ una funció de representació de sèries temporals. La
-  junció de totes dues $\glssymboldef{not:sgstm:joinM}^r(M_1, M_2)$
+  junció de totes dues, $\glssymboldef{not:sgstm:joinM}^r(M_1, M_2)$,
   retorna una sèrie temporal multiresolució que conté les subsèries
   que no intersequen ampliades amb un multivalor i la junció de les
   subsèries que intersequen:
@@ -883,23 +883,26 @@ sèrie temporal amb diferents períodes de mostreig.
 
 
 Les subsèries resolució estan caracteritzades per la parella de pas de
-consolidació i funció d'agregació d'atributs $(\delta,f)$, ja que són
-els atributs clau del conjunt. Seleccionant aquests dos paràmetres
-d'una sèrie temporal multiresolució s'obté la subsèrie resolució
-corresponent, de la qual es pot extreure la sèrie temporal
-emmagatzemada al seu buffer o al seu disc. A continuació mostrem con
-seleccionar la sèrie temporal del disc, per a la del buffer es pot
-procedir de forma similar.
+consolidació i funció d'agregació d'atributs
+$(\delta,\glssymbol{not:sgstm:f})$, els quals són els atributs clau del
+conjunt. Seleccionant aquests dos paràmetres d'una sèrie temporal
+multiresolució s'obté la subsèrie resolució corresponent, de la qual
+es pot extreure la sèrie temporal emmagatzemada al seu buffer o al seu
+disc. A continuació mostrem con seleccionar la sèrie temporal del
+disc, per a la del buffer es pot procedir de forma similar.
 
 \begin{definition}[Selecció de la sèrie temporal d'un disc]
-  Sigui $M=\{R_0,\dotsc,R_{d}\}$ una sèrie temporal multiresolució, on
-  cada $R_i=(S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i)$ és una subsèrie
-  resolució, $\delta$ un pas de consolidació i $f$ una funció
-  d'agregació d'atributs, la selecció de la sèrie temporal d'un disc
-  de la sèrie temporal multiresolució és la sèrie temporal
-  $\glssymboldef{not:sgstm:seriedisc}(M,\delta,f)= S_{Di}$ on
-  $(S_{Bi},S_{Di},\delta,\tau_i,k_i,f) \in M$ essent $S_{Bi}$,
-  $\tau_i$ i $k_i$ qualsevol valor.
+  Sigui $M$ una sèrie temporal multiresolució i sigui
+  $(\delta,\glssymbol{not:sgstm:f})$ una parella d'atributs clau. La
+  selecció de la sèrie temporal d'un disc de la sèrie temporal
+  multiresolució és una sèrie temporal tal que $\exists(B,D)\in M:
+  B=(S,\tau,\delta,\glssymbol{not:sgstm:f}) \wedge D=
+  (\glssymboldef{not:sgstm:seriedisc}(M,\delta,f),\glssymbol{not:sgstm:k})$
+  on $S$, $\tau$ i $\glssymbol{not:sgstm:k}$ són variables lligades. 
+  % bound variables
+  Noteu que hem assumit que no hi ha parelles
+  $(\delta,\glssymbol{not:sgstm:f})$ repetides en una sèrie temporal
+  multiresolució.
 \end{definition}
 
 
@@ -918,31 +921,33 @@ cada una. El resultat és una sèrie temporal amb períodes de mostreig
 regulars a trossos.
 \begin{definition}[Sèrie temporal total]
   \label{def:sgstm:total}
-  Sigui $M^*=\{R_0,\dotsc,R_{d}\}$ una sèrie temporal multiresolució a
-  on no hi ha $\delta$ repetits, la sèrie temporal total de la sèrie
-  temporal multiresolució $\glssymboldef{not:sgstm:serietotal}(M^*)$
-  és la sèrie temporal que resulta de la concatenació de les sèries
-  temporals dels discs per ordre de pas de consolidació:
-  $\glssymbol{not:sgstm:serietotal}(M^*)=S'$ a on $S'= S_{D0}
-  \glssymbol{not:sgst:concatenate} S_{D1} \glssymbol{not:sgst:concatenate} S_{D2} \glssymbol{not:sgst:concatenate} \dotsb \glssymbol{not:sgst:concatenate}
-  S_{Dd}$ complint que $\forall
-  (S_{Bi},S_{Di},\delta_i,\tau_i,k_i,f_i) \in M^* : \delta_0 <
-  \delta_1 < \delta_2 < \dots < \delta_d$.
+  Sigui $M=\{R_0,\dotsc,R_{k}\}$ una sèrie temporal multiresolució i
+  siguin $S_0,\dotsc,S_{k}$ les sèries temporals de cadascun dels
+  discs i $\delta_0,\dotsc,\delta_{k}$ els corresponents passos de
+  consolidació. Assumiu que $M$ està ordenada en una permutació que
+  compleix $\delta_0 < \dotsb < \delta_k$.  La sèrie temporal total de la
+  sèrie temporal multiresolució,
+  $\glssymboldef{not:sgstm:serietotal}(M)$, retorna la sèrie temporal
+  que resulta de la concatenació de les sèries temporals dels discs
+  per ordre de pas de consolidació:
+  $\glssymbol{not:sgstm:serietotal}(M)= S_{0}
+  \glssymbol{not:sgst:concatenate} \dotsb
+  \glssymbol{not:sgst:concatenate} S_{k}$.
 \end{definition}
 
-La sèrie temporal total s'ha definit a partir d'una sèrie temporal
-multiresolució sense $\delta$ repetits. Com a conseqüència, els
-$\delta_i$ pertanyents a la sèrie temporal multiresolució tenen un
-ordre estricte i la sèrie temporal total resultant no és ambigua.
-En el cas que una sèrie temporal multiresolució tingui $\delta$
-repetits, prèviament a l'obtenció de la sèrie temporal total cal
-decidir com seleccionar un conjunt únic de $\delta$. Proposem dos
-exemples de selecció prèvia:
+Per tal que els passos de consolidació de la sèrie temporal
+multiresolució tinguin un ordre estricte, $\delta_0 < \dotsb <
+\delta_k$, cal que no hi hagi $\delta$ repetits.
+En el cas que una sèrie temporal
+multiresolució tingui $\delta$ repetits, prèviament a l'obtenció de la
+sèrie temporal total cal decidir com seleccionar un conjunt únic de
+$\delta$. Proposem dos exemples de selecció prèvia:
 \begin{itemize}
-\item Una sèrie temporal multiresolució és un conjunt amb $(\delta,f)$
-  com a atributs clau i una selecció prèvia habitual pot ser la
-  selecció de les subsèries resolució que comparteixin un determinat
-  agregador d'atribut $f$.
+\item Una sèrie temporal multiresolució és un conjunt amb
+  $(\delta,\glssymbol{not:sgstm:f})$ com a atributs clau i una
+  selecció prèvia habitual pot ser la selecció de les subsèries
+  resolució que comparteixin un determinat agregador d'atributs
+  $\glssymbol{not:sgstm:f}$.
 \item Un altra selecció prèvia possible és utilitzar l'operació d'unió
   de subsèries resolució per a les subsèries que tinguin el mateix pas
   de consolidació $\delta$.
@@ -953,15 +958,15 @@ exemples de selecció prèvia:
 L'operació de sèrie temporal total definida és una operació genèrica
 per a extreure una sèrie temporal amb la màxima resolució, però se'n
 poden definir altres casos particulars. Per exemple, una operació de
-sèrie temporal total on la concatenació sigui temporal: $S_{D0}
+sèrie temporal total on la concatenació sigui temporal: $S_{0}
 \glssymbol{not:sgst:concatenate}^r \dotsb
-\glssymbol{not:sgst:concatenatet}^r S_{Dd}$; o una on es consulti una
+\glssymbol{not:sgst:concatenatet}^r S_{k}$; o una on es consulti una
 subsèrie resolució en particular
-$S_{Di}=\glssymboldef{not:sgstm:seriedisc}(M,\delta,f)$ i s'acabi de
-completar la informació amb les dades d'altres resolucions: $S_{Di}
-\glssymbol{not:sgst:concatenate}^r S_{D0}
+$S_{i}=\glssymboldef{not:sgstm:seriedisc}(M,\delta,\glssymbol{not:sgstm:f})$
+i s'acabi de completar la informació amb les dades d'altres
+resolucions: $S_{i} \glssymbol{not:sgst:concatenate}^r S_{0}
 \glssymbol{not:sgst:concatenate}^r \dotsb
-\glssymbol{not:sgst:concatenatet}^r S_{Dd}$.
+\glssymbol{not:sgst:concatenatet}^r S_{k}$.
 
 
 Així doncs, la sèrie temporal total és una abstracció d'una sèrie
@@ -970,14 +975,15 @@ aplicar totes les operacions de les sèries temporals dels
 \gls{SGST}. En mostrem dos exemples:
 \begin{itemize}
 \item Per a extreure una resolució determinada de la sèrie temporal
-  emmagatzemada a una base de dades multiresolució, es consulta la
-  sèrie temporal total i s'aplica una selecció de resolució:
-  $\glssymbol{not:sgstm:serietotal}(M)[i]^r$ on $i$ és un conjunt
+  multiresolució $M$, es consulta la sèrie temporal total i s'aplica
+  una selecció de resolució:
+  $\glssymbol{not:sgstm:serietotal}(M)[T]^r$ on $T$ és un conjunt
   d'instants de temps i $r$ la representació de la sèrie temporal.
 
-\item Per a sumar dues sèries temporals emmagatzemades a una base de
-  dades multiresolució, es consulta la sèrie temporal total de cada
-  una i s'hi aplica l'operació computacional de sumar:
+\item Per a sumar dues sèries temporals emmagatzemades com a sèries
+  temporals multiresolució, es consulta la sèrie
+  temporal total de cada una i s'hi aplica l'operació computacional de
+  sumar (\seeref{ex:sgst:suma}):
   $\glssymbol{not:sgstm:serietotal}(M_1)+\glssymbol{not:sgstm:serietotal}(M_2)$.
 
 \end{itemize}
