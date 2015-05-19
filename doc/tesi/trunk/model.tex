@@ -69,12 +69,15 @@ noves mitjançant les consultes.
 Els models de \gls{SGST} i \gls{SGSTM} que proposem són models lògics
 matemàtics, és a dir són models formals i abstractes que defineixen
 amb exactitud l'estructura i la manipulació d'unes dades
-independentment de la realitat.  Així doncs es defineixen models de
-\gls{SGBD} i es presenten com un model matemàtic formal, per tant la
-realitat que es modelitza són els \gls{SGBD}. Un cop definit el model,
-aleshores els \gls{SGBD} s'usen com a eines simbòliques per a
-modelitzar la realitat, és a dir en el procés de dissenyar un model
-que aproximi i simplifiqui una realitat. Cal no confondre la definició
+independentment de la realitat.  
+% Així doncs es defineixen models de
+% \gls{SGBD} i es presenten com un model matemàtic formal, per tant la
+% realitat que es modelitza són els \gls{SGBD}.
+Així, definim els models com models matemàtics formals i els utilitzem
+com a eines simbòliques per a modelitzar la
+realitat.% , és a dir en el procés de dissenyar un model
+% que aproximi i simplifiqui una realitat
+Cal no confondre la definició
 del model formal matemàtic amb la interpretació del model en una
 realitat concreta.
 
@@ -82,30 +85,27 @@ Tot i tenir tot el sentit matemàtic, un model lògic abstracte no té
 sentit pràctic si no es té en compte la descripció que fa de la
 realitat, és a dir que també s'ha d'interpretar el significat que té
 el model en la realitat.  Aquest procés d'interpretació construeix un
-model aproximat i simplificat de la realitat; és a dir que consisteix
-en definir per a un determinat context quines variables hi ha, de quin
-tipus són els valors, quina forma tenen, com s'interpreten, etc.  Els
-\gls{SGBD} descriuen la realitat mitjançant predicats que indiquen
-quins fets es consideren certs, però els models de \gls{SGBD}
-parteixen d'assumir que aquests predicats són la realitat, en tot cas
-deixen per altres teories l'avaluació de com els predicats s'aproximen
-a la realitat i deixen per als usuaris la interpretació del significat
-dels predicats a la realitat llevat d'allò que es pot expressar
-mitjançant regles d'integritat.
+model aproximat i simplificat de la realitat; consisteix en definir,
+per a un determinat context, quines variables hi ha, de quin tipus són
+els valors, quina forma tenen, com s'interpreten, etc.  Els \gls{SGBD}
+descriuen la realitat mitjançant predicats que indiquen quins fets es
+consideren certs. Per tant, els models de \gls{SGBD} assumeixen que
+aquests predicats són la realitat i deixen per a altres teories
+l'avaluació de com els predicats s'aproximen a la realitat. Alhora,
+deleguen als usuaris la interpretació del significat dels predicats a
+la realitat llevat d'allò que es pot expressar mitjançant regles
+d'integritat.
 
 
-En l'àmbit dels \gls{SGST}, el model descriu
-exactament com a fet cert la mesura d'un valor i deixen que altres
-teories, com per exemple podria ser la teoria de la mesura, avaluïn
-fins a quin punt el valor mesurat s'aproxima a la
-realitat. Particularment, si els fets descriuen allò que s'ha mesurat
-aleshores podem plantejar el cas de mesurar valors desconeguts, mentre
-si descriuen directament allò que realment val la variable en el model
-no hi tenen cabuda les propietats de l'adquisició de la mesura. 
-En l'àmbit dels \gls{SGSTM}, el model descriu com a fet cert unes
-resolucions de la sèrie temporal i mitjançant altres teories, com per
-exemple la teoria de la informació, s'avalua com s'aproximen a la
-informació d'una sèrie temporal original.
+En l'àmbit dels \gls{SGST}, el model assumeix com a predicat la mesura
+d'un valor i deixen que altres teories, com per exemple la teoria de
+la mesura, avaluïn fins a quin punt el valor mesurat s'aproxima a la
+realitat. Emfatitzant en aquest aspecte, es poden formular mesures
+desconegudes per a descriure errors en l'adquisició de les mesures. En
+el cas particular dels \gls{SGSTM}, el model que es proposa descriu
+com a fet cert unes resolucions de la sèrie temporal i mitjançant
+altres teories, com per exemple la teoria de la informació, s'avalua
+com s'aproximen a la informació d'una sèrie temporal original.
 
 
 
@@ -132,8 +132,8 @@ informació d'una sèrie temporal original.
 En la~\autoref{sec:art:sgbd} s'han nombrat els tres nivells de
 l'arquitectura dels \gls {SGBD}: el físic, el lògic i el d'usuari.
 Els models que es proposen pertanyen al nivell lògic, és a dir són
-models lògics per les dades i pel comportament dels \gls{SGST} i
-\gls{SGSTM}.  En \textref{sec:implementacio:python} es
+models lògics de l'estructura de dades i del comportament dels
+\gls{SGST} i dels \gls{SGSTM}.  En \textref{sec:implementacio:python} es
 proposen implementacions per a aquests models i per tant pertanyen al
 nivell físic.  En alguns exemples i descripcions de propietats dels
 models, s'avalua el significat en un context particular del model, és
@@ -181,29 +181,34 @@ conjunts segons convingui i faciliti la comprensió de les definicions.
 
 Una sèrie temporal és una representació per a unes variables o
 magnituds físiques que evolucionen al llarg del temps.  En els models
-usarem les sèries temporals des de la visió més genèrica possible, és
-a dir una sèrie temporal com a conjunt de dades que s'han adquirit en
-uns certs instants de temps.  En aquest sentit, les sèries temporals
-poden representar dades molt variades i que pertanyen a àmbits molt
-diferents.
+usarem les sèries temporals des de la visió més genèrica possible, per
+tant considerem una sèrie temporal com a conjunt de dades que s'han
+adquirit en uns certs instants de temps.  En aquest sentit, les sèries
+temporals poden representar dades molt variades i que pertanyen a
+àmbits molt diferents.
 
 
-Les mateixes dades, la variació en el temps de magnituds, són
-estudiades en altres teories com per exemple la teoria del senyal; de
-fet les sèries temporals són una de les eines en aquesta teoria.  Això
-no obstant, en les anàlisis aquests senyals normalment s'assumeixen
-com a periòdics, afitats en freqüència, valors adquirits com a
-seqüències equiespaiades i amb una forta anàlisi en els components
-freqüencials. %
-L'aproximació que presentem en sèries temporals és un raonament
-similar més genèric però més propi de l'àlgebra discreta matemàtica
-mentre que la teoria del senyal és més pròpia de l'àmbit del càlcul
-matemàtic. És a dir, que les sèries temporals tindran una forma més
-genèrica on per exemple es podrà tenir en compte la posició absoluta
-en el temps de les mostres o es podrà tolerar l'inframostreig.  Això
-no treu, però, que quan una sèrie temporal compleix amb els paràmetres
-de senyal digital, les operacions més adients a aplicar-hi siguin les
-del processament digital del senyal.
+La variació en el temps de magnituds com a sèries temporals són
+estudiades en altres teories com per exemple la teoria del senyal.% ; de
+% fet les sèries temporals són una de les eines en aquesta teoria.
+% Això
+% no obstant, en les anàlisis aquests senyals normalment s'assumeixen
+% com a periòdics, afitats en freqüència, valors adquirits com a
+% seqüències equiespaiades i amb una forta anàlisi en els components
+% freqüencials. %
+% L'aproximació que presentem en sèries temporals és un raonament
+% similar més genèric però més propi de l'àlgebra discreta matemàtica
+% mentre que la teoria del senyal és més pròpia de l'àmbit del càlcul
+% matemàtic.
+L'aproximació que presentem de les sèries temporals és un raonament
+similar al de les altres teories però des d'un punt de vista més
+genèric i més propi de l'àlgebra discreta matemàtica.  És a dir,
+les sèries temporals tenen una forma més genèrica on, per exemple, es
+ té en compte la posició absoluta en el temps de les mostres o
+es pot tolerar l'inframostreig.  Això no treu, però, que quan una
+sèrie temporal compleix amb els paràmetres de senyal digital, les
+operacions més adients a aplicar-hi siguin les del processament
+digital del senyal.
 
 %5El teorema de mostreig de Shanon-Nyquist és vital en els senyals digitals?
 % Un senyal digital és un senyal (una quantitat que té informació) representat per una seqüència de valors discrets de la quantitat. Un senyal analògic és un senyal representat per una quantitat que varia contínuament.
@@ -212,24 +217,25 @@ del processament digital del senyal.
 
 Així doncs, l'estudi genèric proposat de les sèries temporals no
 pretén substituir aquests estudis propis de cada àmbit sinó que pretén
-oferir una visió més àmplia i comuna a totes aquestes dades i oferir
-un estudi per a aquelles dades que no tenen un comportament clarament
-definit. Aquest és el cas, per exemple, de les dades adquirides en un
-monitoratge en entorns no controlats d'una variable física: aquestes
-variables són aleatòries, el temps d'adquisició pot ser irregular i
-per tant cal estudiar-les com a sèries temporals genèriques.
-Cal dir, que a vegades les sèries temporals es redueixen a seqüències
-temporals, és a dir a estudis de dades on només importa l'ordre en què
-s'han adquirit i el període d'adquisició es constant. No fem
-aquesta reducció sinó que tractem les sèries temporals des del punt de
-vista més genèric on cal saber també la posició de temps absoluta que
-ocupen i la distància de temps entre els valors.
-Aquests estudis més particulars de les sèries temporals, els quals es
-focalitzen i simplifiquen algunes propietats, permeten concentrar-se
-més en àmbits específics i oferir solucions molt ben raonades.  Per
-tant és interessant poder incorporar aquests estudis en els models, en
-aquest sentit per exemple utilitzarem conceptes de la teoria del
-senyal per a interpretar propietats de les sèries temporals.
+oferir una visió més àmplia i comuna a totes aquestes dades i
+complementar-lo amb aquelles dades que no tenen un comportament
+clarament definit. Aquest és el cas, per exemple, de les dades
+adquirides en monitoratges en entorns no controlats d'una variable
+física, on aquestes variables són aleatòries i el temps d'adquisició pot
+ser irregular, i per tant cal estudiar-les com a sèries temporals
+genèriques.  Cal dir, que a vegades les sèries temporals es redueixen
+a seqüències temporals, és a dir a estudis de dades on només importa
+l'ordre en què s'han adquirit i el període d'adquisició es
+constant. No pretenem fer aquesta reducció sinó que tractem les sèries
+temporals des del punt de vista més genèric on cal saber també la
+posició de temps absoluta que ocupen i la distància de temps entre els
+valors.  Aquests estudis més particulars de les sèries temporals, els
+quals es focalitzen i simplifiquen algunes propietats, permeten
+concentrar-se més en àmbits específics i oferir solucions molt ben
+raonades.  Per tant és interessant poder incorporar aquests estudis en
+els models, en aquest sentit per exemple utilitzarem conceptes de la
+teoria del senyal per a interpretar propietats de les sèries
+temporals.
 
 
 
@@ -245,12 +251,12 @@ d'un valor en un temps, és a dir que el fet que es constata com a cert
 parella de temps i valor.  
 
 
-El models de \gls{SGBD} defineixen la metodologia i asseguren la
-correctesa en la inferència d'informació a partir dels fets que es
-donen com a certs. Des del punt de vista del model relacional, alhora
-es donen com a falsos els fets que no són constatats; és a dir que si
-en una sèrie temporal hi apareix una mesura en un temps $t$ de valor
-$v$ significa alhora que és fals que en aquell instant s'ha mesurat un
+El models de \gls{SGBD}, com el model relacional, defineixen la
+metodologia per tal d'assegurar la correctesa en la inferència
+d'informació a partir dels fets que es donen com a certs. Alhora es
+donen com a falsos els fets que no són constatats; és a dir que si en
+una sèrie temporal hi apareix una mesura en un temps $t$ de valor $v$
+significa alhora que és fals que en aquell instant s'ha mesurat un
 altre valor diferent de $v$. Particularment, en el cas que en una
 sèrie temporal no hi apareix un temps $t$ significa que és fals que en
 aquell instant s'ha mesurat qualsevol valor; així, si s'ha mesurat
@@ -280,10 +286,11 @@ mateix instant.
 %\paragraph{Modelització de la realitat amb sèries temporals.} %?
 \paragraph{Semàntica de les sèries temporals.}
 Les sèries temporals s'utilitzen per a modelitzar aspectes de la
-realitat i per tant per a cada cas cal estudiar-ne l'adequació. Aquest
-no és l'objectiu central dels models que presentem, tot i que cal
-plantejar alguns aspectes semàntics per a poder comprendre'n la
-utilitat. Així, cal tenir en compte dues consideracions.
+realitat i per tant per a cada cas cal estudiar-ne l'adequació.  Això
+no obstant, en el nostre cas ens centrem en els aspectes formals dels
+models, tot i que cal exposar alguns aspectes semàntics per a poder
+comprendre'n la utilitat. Així, cal tenir en compte dues
+consideracions.
 
 
 Per una banda, en el context del monitoratge, per a estudiar la
@@ -299,9 +306,9 @@ informació que s'infereix, els models asseguren que aquest raonament
 sigui correcte, però responsabilitzen a l'usuari d'interpretar si
 aquella operació efectivament es correspon amb la informació que vol
 inferir. És a dir, els operadors només tenen en compte l'estructura de
-les dades i el significat i dels operadors en un context és extern al
-model; com de fet és el cas d'altres àlgebres que no defineixen com
-s'han d'interpretar la validesa dels resultats.
+les dades mentre que el significat contextualitzat dels operadors és
+extern al model; com de fet és el cas d'altres àlgebres que tampoc no
+defineixen com s'han d'interpretar la validesa dels resultats.
 
 %per exemple pensem en el cas de la suma on
 %  la definició matemàtica no explica com s'ha d''interpretar la
@@ -334,12 +341,12 @@ té un estat estable.
 
 
 En resum, les sèries temporals tenen un atribut, l'instant de temps,
-que ofereix unes particularitats a l'estructura i amb què cal operar
-coherentment. Tant els instants de temps com els valors poden ser de
-qualsevol tipus, tot i així sobretot els exemplificarem amb nombres
+que ofereix unes particularitats a l'estructura de dades i amb què cal
+operar coherentment. Tant els instants de temps com els valors poden
+ser de qualsevol tipus, tot i així els exemplificarem amb nombres
 reals per tal de facilitar-ne la comprensió i per ser més propers a
-l'anàlisi de sèries temporals que sol focalitzar-se en mètodes
-estadístics per a variables numèriques \parencite{last04:book}.
+les anàlisi de sèries temporals basades en variables
+numèriques \parencite{last04:book}.
 
 
 % * El temps és un nom donat al camp, qualsevol objecte que tingui la mateixa interfície que el temps pot funcionar. En el cas del valor pot ser qualsevol objecte, s'exemplifica amb reals per facilitar-ne la comprensió i per ser el més proper al time series analysis: statistical methods focused on sequences of values representing a single numeric variable [llibre-last].
@@ -476,7 +483,7 @@ respecte als \gls{SGST}.
 
 \item Resum de la informació.  La multiresolució extreu i selecciona
   les característiques desitjades de les dades mitjançant diverses
-  funcions d'agregació d'atributs. Per tant, emmagatzema resumida la
+  funcions d'agregació d'atributs. Per tant, emmagatzema resumidament la
   informació que l'usuari posteriorment pot consultar. Això no
   obstant, aquesta selecció de la informació s'ha de determinar a
   priori considerant el context en què les consultes futures s'hauran
@@ -484,15 +491,16 @@ respecte als \gls{SGST}.
 
 
 \item Computació en flux. Els resums d'informació que resulten de la
-  multiresolució són cars de computar, sobretot si es té en gran volum
-  de les sèries temporals i que en monitoratges periòdics constantment
-  arriben més dades noves. El model de \gls{SGSTM} permet calcular la
-  multiresolució en flux amb l'adquisició de dades, és a dir al mateix
-  temps que arriben noves mesures de la sèrie temporal computa
-  incrementalment el nou resultat de multiresolució. D'aquesta manera
-  el temps de còmput es pot repartir des del moment d'adquisició fins
-  al moment de la consulta. Això, però, requereix que les mesures
-  s'insereixin amb ordre als \gls{SGSTM}.
+  multiresolució són cars de computar, sobretot si s'han emmagatzemat
+  grans quantitats de sèries temporals o bé si es té en compte que en
+  monitoratges periòdics constantment arriben dades noves. El
+  model de \gls{SGSTM} permet calcular la multiresolució en flux amb
+  l'adquisició de dades, és a dir al mateix temps que arriben noves
+  mesures de la sèrie temporal computa incrementalment el nou resultat
+  de multiresolució. D'aquesta manera el temps de còmput es pot
+  repartir des del moment d'adquisició fins al moment de la
+  consulta. Això, però, requereix que les mesures s'insereixin amb
+  ordre als \gls{SGSTM}.
 
 \item Computació distribuïda i para\l.lela. En el cas que es vulgui
   computar la multiresolució en temps diferit del procés d'adquisició
@@ -537,7 +545,7 @@ A continuació mostrem la motivació per a la multiresolució mitjançant
 dos exemples: \textref{fig:model:multiresolucio-motivacio} i
 \textref{fig:model:multiresolucio-motivacio-irregular}. Les figures
 mostren el càlcul de la multiresolució per a una sèrie temporal
-regular i una d'irregular, respectivament.  Suposeu que les figures
+regular i una d'irregular, respectivament.  Assumim que les figures
 mostren una instantània entre els instants de temps nou i deu.
 
 
@@ -586,7 +594,7 @@ també són marcades com a desconegudes fins que el temps avanci, tot i
 que en alguns casos en gris mostrem els valors que prendran.
 
 
-A \textref{fig:model:multiresolucio-motivacio} la sèrie temporal s'ha
+A \textref{fig:model:multiresolucio-motivacio-irregular} la sèrie temporal s'ha
 adquirit cada una \gls{unitatstemps}\ de forma regular, és a dir que
 hi ha valors per a cada adquisició. Les fletxes mostren com es
 resumeixen les dades adquirides per tal d'emmagatzemar-les: així de
