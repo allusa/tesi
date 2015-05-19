@@ -8,13 +8,13 @@
 
 Les funcions d'agregació d'atributs s'utilitzen en la consolidació
 dels buffers per tal de compactar certa informació de la sèrie
-temporals. Sigui $S$ una sèrie temporal, $\delta$ un pas de
-consolidació i $\tau$ un instant de consolidació. Una funció
-d'agregació d'atributs $f$ calcula una nova mesura
-$m=f(S,\tau,\delta)$. A partir de $\tau$ i $\delta$ s'obté l'interval
-de temps $[\tau, \tau+\delta]$. Aleshores, la mesura resultant $m$
-s'interpreta com un resum de la informació de $S$ per l'interval de
-temps $[\tau, \tau+\delta]$.
+temporals. Sigui $S$ una sèrie temporal, $\tau$ un instant de
+consolidació i $\delta$ un pas de consolidació. Una funció d'agregació
+d'atributs $f$ calcula una nova mesura $m=f(S,\tau,\delta)$. A partir
+de $\tau$ i $\delta$ s'obté l'interval de temps $[\tau,
+\tau+\delta]$. Aleshores, la mesura resultant $m$ s'interpreta com un
+resum de la informació de $S$ per l'interval de temps $[\tau,
+\tau+\delta]$.
 
 
 Generalment, $m$ resulta d'aplicar dues operacions a $S$: 
@@ -128,27 +128,27 @@ possibles per al càlcul de $T(m)$ i de $V(m)$.
 
 \subsubsection{Temps d'agregació resultant}
 
-\todo{Canviar a f(S,tau,delta)}
-
 
 
 L'objectiu de les funcions d'agregació d'atributs és determinar un
 instant de temps $T(m)$ i un valor $V(m)$. Aquest càlcul del temps i
 del valor es pot realitzar al mateix temps però també pot ser
 independent. Així, en principi el temps resultant serà independent i
-valdrà $T(m)=\tau+\delta$ per estar d'acord amb l'operació de consolidació
-del buffer i no causar desfasament de la subsèrie resolució
-(v.~\autoref{def:sgstm:desdsamentR}), però en alguns casos aquest
-$T(m)$ serà dependent del valor calculat o estarà subjecte a una
-interpretació adient com és el cas per les representacions a l'apartat
-següent.
+valdrà $T(m)=\tau+\delta$ per estar d'acord amb l'operació de
+consolidació del buffer i no causar desfasament de la subsèrie
+resolució (v.~\autoref{def:sgstm:desdsamentR}). Però en alguns casos
+aquest $T(m)$ serà dependent del valor calculat o estarà subjecte a
+una interpretació adient com és el cas de les representacions a
+l'apartat següent.
 
 
 Un exemple de funció d'agregació on temps i valor són dependents és
-una que retorni la primera mesura que troba, $\operatorname{primera}:
-S \times i \mapsto m'$ on $m' = \min(S[\tau,\tau+\delta))$ i llavors
-el temps resultant pot ser $\tau \leq T(m) < \tau+\delta$. Noteu, però, que
-en aquest cas la sèrie temporal consolidada resultant no és regular.
+una funció que retorni la primera mesura que troba,
+$\operatorname{primera}(S,\tau,\delta) = \min(S[\tau,\tau+\delta))$.
+Llavors el temps resultant pot ser $\tau \leq T(m) <
+\tau+\delta$. Noteu, però, que en aquest cas la sèrie temporal
+consolidada resultant no és regular perquè els temps resultants
+depenen de les mesures de cada interval.
 
 
 Un exemple de funció d'agregació on temps i valor són independents i
@@ -156,9 +156,9 @@ on la subsèrie resolució resultant és regular però amb desfasament, és
 una funció que fa la mitjana amb un desfasament de 5 unitats de temps.
 La funció d'agregació $\operatorname{mitjanad5}$ s'ha utilitzat
 anteriorment a l'\autoref{ex:model:bdm-desfasaments}, ara podem
-definir-la contextualitzada en les funcions d'agregació d'atributs,
-$\operatorname{mitjanad5}: S \times i \mapsto m'$ on $V(m')=
-\glssymbol{not:sgst:mitjanav}(S[t_a-5,t_b-5))$ i $T(m')=t_b-5$.
+definir-la contextualitzada en les funcions d'agregació d'atributs:
+$\operatorname{mitjanad5}(S,\tau,\delta)=m$ on $V(m)=
+\glssymbol{not:sgst:mitjanav}(S[\tau-5,\tau+\delta-5))$ i $T(m)=\tau+\delta-5$.
 
 %De què pot servir la mitjanad5? per calcular mitjanes centrades? estem fent una interpolació sobre la representació centrada en l'interval de la sèrie temporal?
 
@@ -176,84 +176,91 @@ indueix a una varietat de funcions d'agregació per a un mateix patró
 d'atributs. Per exemple, la funció d'agregació per l'atribut de màxim
 dóna com a resultat valors diferents si es considera una representació
 lineal o una representació a trossos constant. A continuació mostrem
-la interpretació dels patrons definits anteriorment per a tres mètodes de
-representació: \gls{pd}, \gls{dd} i \gls{zohe}.
+la interpretació dels patrons definits anteriorment per a tres mètodes
+de representació: parcial discreta (\gls{pd}), delta de Dirac
+(\gls{dd}) i zero-order hold enrere (\gls{zohe}).
+
 
 
 \paragraph{Parcial discreta.}
 En els casos parcials, $S^r(t)$ no és totalment contínua en el temps,
 però es pot resoldre l'agregació del valor resultant assumint que el
-domini de temps $T$ es correspon als instants de temps que hi ha a la
-sèrie temporal, és a dir $T=\glssymbol{not:sgst:project}_{t}(S)$.  El
-temps resultant es pot interpretar segon descrit a l'apartat anterior,
-per exemple $T(m')=t_b$, i a més també es pot interpretar l'interval
-de temps d'agregació $i=[t_a,t_b]$. Així sigui $S$ la sèrie original,
-el resultat es pot calcular sobre una subsèrie amb interval obert
-$S'=S(t_a,t_b)$, tancat $S'=S(t_a,t_b]$, semiobert $S'=S(t_a,t_b]$ o
-$S'=S[t_a,t_b)$, o altres combinacions com per exemple tenir
-desfasaments $S'=S[t_a-d,t_b-d]$ on $d$ és una durada.  Així de forma
-general podem definir les funcions d'agregació d'atributs amb
-representació \gls{pd}, $f^{\gls{pd}}\in f$, com $f^{\gls{pd}}: S
-\times [t_a,t_b] \mapsto m'$ on $m'=(t_b,v')$ i el valor resultant
-depèn del l'atribut que es vulgui resumir calculat en l'interval
-$S'=S[t_a,t_b]$, a continuació es mostren els patrons d'exemple
-interpretats segons aquest criteri.
+domini de temps $\glssymbol{not:temps-domini}$ es correspon als
+instants de temps que hi ha a la sèrie temporal, és a dir
+$\glssymbol{not:temps-domini}=\glssymbol{not:sgst:project}_{t}(S)$.
+El temps resultant es pot interpretar segons s'ha descrit a l'apartat
+anterior, per exemple $T(m)=\tau+\delta$. A més, també es pot
+interpretar l'interval de temps d'agregació $[\tau,\tau+\delta]$. Així
+sigui $S$ la sèrie original, el resultat es pot calcular sobre una
+subsèrie amb interval obert $S'=S(\tau,\tau+\delta)$, tancat
+$S'=S(\tau,\tau+\delta]$, semiobert $S'=S(\tau,\tau+\delta]$ o
+$S'=S[\tau,\tau+\delta)$, o altres combinacions com per exemple tenir
+desfasaments $S'=S[\tau-d,\tau+\delta-d]$ on $d$ és una durada.  Així
+de forma general podem definir les funcions d'agregació d'atributs amb
+representació \gls{pd} com $f(S,\tau,\delta)=m$ on $T(m)=\tau+\delta$
+i el valor resultant $V(m)$ depèn del l'atribut que es vulgui resumir
+calculat en l'interval $S'=S[\tau,\tau+\delta]$, a continuació es mostren els
+patrons d'exemple interpretats segons aquest criteri.
 
 \begin{definition}[Agregació parcial discreta]
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $i=[t_a,t_b]$ un
-  interval de temps i $S'=S[t_a,t_b]$ un interval de la sèrie
-  temporal, les funcions d'agregació \gls{pd} per als atributs màxim,
-  darrer i mitjana són:
+  Sigui $S$ una sèrie temporal, $\tau$ un instant de consolidació,
+  $\delta$ un pas de consolidació i $S'=S[\tau,\tau+\delta]$ un
+  interval de la sèrie temporal. Les funcions d'agregació \gls{pd} per
+  als atributs màxim, darrer i mitjana són:
   \begin{itemize}
 
-  \item $\glssymboldef{not:sgstm:maxpd}: S \times i \mapsto
-    m'$ on $V(m') = \max_{\forall m \in S'}(V(m))$ i
-    $T(m')=t_b$. Aquest càlcul de $V(m')$ es correspon amb l'operació
-    $\glssymbol{not:sgst:maxv}(S')$ dels \gls{SGST}.  \label{def:sgstm:maxpd}
+  \item $\glssymboldef{not:sgstm:maxpd}(S,\tau,\delta)=m$ on $V(m) =
+    \max_{\forall m' \in S'}(V(m'))$ i $T(m)=\tau+\delta$. Aquest càlcul
+    de $V(m)$ es correspon amb l'operació
+    $\glssymbol{not:sgst:maxv}(S')$ dels
+    \gls{SGST}.  \label{def:sgstm:maxpd}
 
-\item $\operatorname{darrer}^{\gls{pd}}$: $S \times i \mapsto m'$ on $V(m') =
-  V(\max(S'))$ i $T(m')=t_b$.
+\item $\operatorname{darrer}^{\gls{pd}}(S,\tau,\delta)=m$ on $V(m) =
+  V(\max(S'))$ i $T(m)=\tau+\delta$.
 
-\item $\glssymboldef{not:sgstm:mitjanapd}: S \times i \mapsto m'$ on $V(m') =
-  \frac{1}{|S'|} \sum\limits_{\forall m\in S'} V(m)$ i $T(m')=t_b$. Aquest càlcul de
-  $V(m')$ es correspon amb l'operació $\glssymbol{not:sgst:mitjanav}(S')$
-  dels \gls{SGST}, és a dir amb calcular la mitjana aritmètica dels
-  valors de les mesures. \label{def:sgstm:mitjanapd}
+\item $\glssymboldef{not:sgstm:mitjanapd}(S,\tau,\delta)=m$ on $V(m) =
+  \frac{1}{|S'|} \sum\limits_{\forall m'\in S'} V(m')$ i
+  $T(m)=\tau+\delta$. Aquest càlcul de $V(m)$ es correspon amb
+  l'operació $\glssymbol{not:sgst:mitjanav}(S')$ dels \gls{SGST}, és a
+  dir amb calcular la mitjana aritmètica dels valors de les
+  mesures. \label{def:sgstm:mitjanapd}
 \end{itemize}
 
 \end{definition}
 
 
 
+
+
 \paragraph{Delta de Dirac.} 
 Per a les funcions d'agregació delta de Dirac interpretem el temps
-d'agregació resultant centrat en l'interval $T(m')=\frac{t_b+t_a}{2}$,
+d'agregació resultant centrat en l'interval $T(m)=\frac{2\tau+\delta}{2}$,
 tot i que també es podrien considerar altres interpretacions com per
-exemple $T(m')=t_b$. Així de forma general podem definir les funcions
-d'agregació d'atributs amb representació \gls{dd}, $f^{\gls{dd}}\in
-f$, com $f^{\gls{dd}}: S \times [t_a,t_b] \mapsto m'$ on
-$m'=(\frac{t_b+t_a}{2},v')$ i el valor resultant depèn del l'atribut
+exemple $T(m)=\tau+\delta$. Així de forma general podem definir les funcions
+d'agregació d'atributs amb representació \gls{dd} com $f(S,\tau,\delta)=m$ on
+$T(m)=\frac{2\tau+\delta}{2}$ i el valor resultant $V(m)$ depèn del l'atribut
 que es vulgui resumir calculat en l'interval temporal \gls{dd}
-$S'=S[t_a,t_b]^{\gls{dd}}$.
+$S'=S[\tau,\tau+\delta]^{\gls{dd}}$.
 
 
 \begin{definition}[Agregació delta de Dirac]
   \label{def:sgstm:maxdd}
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $i=[t_a,t_b]$ un
-  interval de temps i $S'=S[t_a,t_b]^{\gls{dd}}$ un interval temporal
-  de la sèrie temporal, les funcions d'agregació \gls{dd} per als
+  Sigui $S$ una sèrie temporal, $\tau$ un instant de consolidació,
+  $\delta$ un pas de consolidació i $S'=S[\tau,\tau+\delta]^{\gls{dd}}$ un
+  interval temporal de la sèrie temporal. 
+  Les funcions d'agregació \gls{dd} per als
   atributs màxim, darrer i mitjana són:
 \begin{itemize}
-\item \glssymboldef{not:sgstm:maxdd}: $S
-  \times i \mapsto m'$ on $V(m') = \max\big(0,\max_{\forall m \in
-    S'}(V(m))\big)$ i $T(m')=\frac{t_b+t_a}{2}$. 
+\item $\glssymboldef{not:sgstm:maxdd}(S,\tau,\delta)=m$ on $V(m) =
+  \max\big(0,\max_{\forall m' \in S'}(V(m'))\big)$ i
+  $T(m)=\frac{2\tau+\delta}{2}$.
 
-\item $\operatorname{darrer}^{\gls{dd}}$: $S \times i \mapsto m'$ on $V(m') =
-  V(\max(S'))$ i $T(m')=\frac{t_b+t_a}{2}$.
+\item $\operatorname{darrer}^{\gls{dd}}(S,\tau,\delta)=m$ on $V(m) =
+  V(\max(S'))$ i $T(m)=\frac{2\tau+\delta}{2}$.
 
-\item \glssymboldef{not:sgstm:mitjanadd}: $S \times i \mapsto m'$ on
-  $V(m') = \frac{1}{t_b-t_a}\sum\limits_{\forall m \in S'} V(m)$ i
-  $T(m')=\frac{t_b+t_a}{2}$. Nota: la funció delta de Dirac té la
+\item $\glssymboldef{not:sgstm:mitjanadd}(S,\tau,\delta)=m$ on
+  $V(m) = \frac{1}{\delta}\sum\limits_{\forall m' \in S'} V(m')$ i
+  $T(m)=\frac{2\tau+\delta}{2}$. Nota: la funció delta de Dirac té la
   propietat fonamental $\int \delta(t)dt = 1$. 
 \end{itemize}
 \end{definition}
@@ -262,32 +269,30 @@ $S'=S[t_a,t_b]^{\gls{dd}}$.
 
 \paragraph{Zero-order hold enrere.}
 Per a les funcions d'agregació \gls{zohe} interpretem sempre el temps
-d'agregació resultant com $T(m')=t_b$, atès que la representació
-\gls{zohe} es defineix amb funcions graó contínues per
+d'agregació resultant com $T(m)=\tau+\delta$, atès que la
+representació \gls{zohe} es defineix amb funcions graó contínues per
 l'esquerra. Així de forma general podem definir les funcions
-d'agregació d'atributs amb representació \gls{zohe},
-$f^{\gls{zohe}}\in f$, com $f^{\gls{zohe}}: S \times [t_a,t_b] \mapsto
-m'$ on $m'=(t_b,v')$ i el valor resultant depèn de l'atribut que es
-vulgui resumir calculat en l'interval temporal \gls{zohe}
-$S'=S[t_a,t_b]^{\gls{zohe}}$.
+d'agregació d'atributs amb representació \gls{zohe} com
+$f(S,\tau,\delta)=m$ on $T(m)=\tau+\delta$ i el valor resultant $V(m)$
+depèn de l'atribut que es vulgui resumir calculat en l'interval
+temporal \gls{zohe} $S'=S[\tau,\tau+\delta]^{\gls{zohe}}$.
 \begin{definition}[Agregació zero-order hold enrere]
   \label{def:sgstm:agregadorszohe}
-  Sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal, $i=[t_a,t_b]$ un
-  interval de temps i $S'=S[t_a,t_b]^{\gls{zohe}}$ un interval
-  temporal de la sèrie temporal, les funcions d'agregació \gls{zohe}
+  Sigui $S$ una sèrie temporal, $\tau$ un instant de consolidació,
+  $\delta$ un pas de consolidació i $S'=S[\tau,\tau+\delta]^{\gls{zohe}}$ un
+  interval temporal de la sèrie temporal. Les funcions d'agregació \gls{zohe}
   per als atributs màxim, darrer i mitjana són:
   \begin{itemize}
-  \item \glssymboldef{not:sgstm:maxzohe}: $S \times i \mapsto m'$ on
-    $V(m') = \max_{\forall m \in S'}(V(m))$ i $T(m')=t_b$.
+  \item $\glssymboldef{not:sgstm:maxzohe}(S,\tau,\delta)=m$ on
+    $V(m) = \max_{\forall m' \in S'}(V(m'))$ i $T(m)=\tau+\delta$.
 
-  \item $\operatorname{darrer}^{\gls{zohe}}$: $S \times i \mapsto m'$
-    on $V(m') = V(\max(S'))$ i $T(m')=t_b$.
+  \item $\operatorname{darrer}^{\gls{zohe}}(S,\tau,\delta)=m$ on $V(m) = V(\max(S'))$ i $T(m)=\tau+\delta$.
 
-  \item \glssymboldef{not:sgstm:meanzohe}: $S \times i \mapsto m'$ on
-    $V(m') = \frac{1}{t_b-t_a} \big[ (T(o)-t_a)V(o) +
-    \sum\limits_{\forall m \in S''}( T(m)-
-    T(\glssymbol{not:sgst:prev}_S (m)) )V(m) \big]$; $o=\min(S')$;
-    $S''= S' - \{o\}$; i $T(m')=t_b$.  \label{def:sgstm:meanzohe}
+  \item $\glssymboldef{not:sgstm:meanzohe}(S,\tau,\delta)=m$ on
+    $V(m) = \frac{1}{\delta} \big[ (T(o)-\tau)V(o) +
+    \sum\limits_{\forall m' \in S''}( T(m')-
+    T(\glssymbol{not:sgst:prev}_S (m')) )V(m') \big]$; $o=\min(S')$;
+    $S''= S' - \{o\}$; i $T(m)=\tau+\delta$.  \label{def:sgstm:meanzohe}
 % \[
 %   \begin{split}
 %   V(m')  = & \frac{1}{t_b-T_0} 
@@ -304,23 +309,23 @@ $S'=S[t_a,t_b]^{\gls{zohe}}$.
 
 Un cop definits els tres exemples de famílies d'agregacions, podem
 comparar-les en funció de com resumeixen la informació de la sèrie
-temporal. Reprenent la consolidació dels buffers
+temporal. Reprenent la consolidació d'un buffer $B$
 (v.~\autoref{sec:model:buffer}), l'interval de consolidació es
-correspon a $t_a=\tau$ i $t_b=\tau+\delta$ i és consolidable quan
-existeix una mesura $T(m)\geq\tau+\delta$. A la
+correspon a $[\tau,\tau+\delta]$ i és consolidable quan
+existeix una mesura $n\in B$ tal que $T(n)\geq\tau+\delta$. A la
 \autoref{fig:sgstm:agg} dibuixem les mesures d'una sèrie temporal en
 vermell, un interval de consolidació del buffer en línies blaves i la
 mesura resultant de consolidació en verd.  Així, sigui
 $S=\{\dotsc,m_{a-1},m_{a+1},\dotsc,m_{b-1},m_{b+1}, \ldots\}$ una
-sèrie temporal on $ T(m_{a-1}) < t_a < T(m_{a+1}) < \dotsc <
-T(m_{b-1}) < t_b < T(m_{b+1})$ i la consolidació del buffer que
-calcula la mesura resultant $m'=f(S,[t_a,t_b])$ amb la funció
-d'agregació d'atributs $f$.  Assumim $T(m')=t_b$ per simplificar el
+sèrie temporal on $ T(m_{a-1}) < \tau < T(m_{a+1}) < \dotsc <
+T(m_{b-1}) < \tau+\delta < T(m_{b+1})$ i la consolidació del buffer que
+calcula la mesura resultant $m=f(S,\tau,\delta)$ amb la funció
+d'agregació d'atributs $f$.  Assumim $T(m)=\tau+\delta$ per simplificar el
 dibuix, de manera general el càlcul del valor resultant és una
 agregació a partir de les mesures:
 \begin{itemize}
 \item $\{m_{a+1},\dotsc,m_{b-1}\}$ en el cas de les agregacions \gls{pd}
-\item $\{(t_a,0),(\ldots,0),m_{a+1},\dotsc,(\ldots,0),\dotsc,m_{b-1},(\ldots,0),(t_b,0)\}$ en el cas de les
+\item $\{(\tau,0),(\ldots,0),m_{a+1},\dotsc,(\ldots,0),\dotsc,m_{b-1},(\ldots,0),(t_b,0)\}$ en el cas de les
   agregacions \gls{dd}
 \item $\{m_{a+1},\dotsc,m_{b-1},m_{b+1}\}$ en el cas de les
   agregacions \gls{zohe}
@@ -342,7 +347,7 @@ agregació a partir de les mesures:
           xmax = 50,
           xmin = 20,
           yticklabels= {},
-          xticklabels={,,,$t_a$,,$t_b$},
+          xticklabels={,,,$\tau$,,$\tau+\delta$},
           ]
           \addplot[ycomb,blue] coordinates {
             (30,10)
@@ -366,7 +371,7 @@ agregació a partir de les mesures:
           \node[below] at (axis cs:35,4) {$\ldots$};
           \node[above] at (axis cs:38,6) {$m_{b-1}$};
           \node[above] at (axis cs:45,8) {$m_{b+1}$};
-          \node[right] at (axis cs:40,4) {$m'$};
+          \node[right] at (axis cs:40,4) {$m$};
         \end{axis}
       \end{tikzpicture}
 
@@ -380,7 +385,7 @@ agregació a partir de les mesures:
 
 
 
-En conclusió, per una banda alguns exemples mostrats de patrons tenen
+En resum, alguns exemples mostrats de patrons tenen
 una interpretació semblant per a les representacions particulars, en
 certa manera només es diferencien en la interpretació de l'interval on
 s'ha de resumir la sèrie temporal. Per exemple la diferència principal
@@ -389,14 +394,14 @@ en la $S'$, tot i que en el cas del $\glssymbol{not:sgstm:maxdd}$
 l'agregació a més ha de tenir en compte que en la funció de
 representació hi ha valors intermitjos que valen zero.
 
-Per altra banda, altres exemples són molt diferents, com és el cas de
+Altres exemples són molt diferents, com és el cas de
 l'atribut mitjana. En aquest cas, per a la \gls{pd} i la \gls{dd} és
 el càlcul de la suma dels valors tot i que dividit per $|S'|$ en la
-primera i per $t_b-t_a$ en la segona, i és una mitjana ponderada per
+primera i per $\delta$ en la segona, i és una mitjana ponderada per
 les durades de temps en la \gls{zohe}.  En general, es pot dissenyar
 qualsevol operació d'agregació, com per exemple calcular la mitjana
 aritmètica de l'interval \gls{zohe} amb
-$\glssymbol{not:sgst:mitjanav}(S[t_a,t_b]^{\gls{zohe}})$, tot i que
+$\glssymbol{not:sgst:mitjanav}(S[\tau,\tau+\delta]^{\gls{zohe}})$, tot i que
 llavors cal interpretar quin patró d'atribut li correspon o altrament
 aquesta operació d'agregació pot no tenir sentit real.
 
@@ -420,7 +425,6 @@ senyal original.
 
 
 \subsection{Tractament i validació de dades}
-
 
 En les patologies de les sèries temporals
 (v.~\autoref{sec:sgst:patologies}) s'ha descrit el problema de les
@@ -452,11 +456,11 @@ indefinit. Això no obstant, el domini de valors podria tenir diversos
 valors per a marcar diferents casos de dades desconegudes.
 
 \paragraph{Tractament de dades desconegudes.}
-Una funció d'agregació d'atributs $f^u \in f$ que tracti dades
+Una funció d'agregació d'atributs $f$ que tracti dades
 desconegudes és aquella que pot calcular un resultat quan la sèrie
 temporal original conté valors desconeguts
 \[
-f^u: S \times i \mapsto m' \text{ on } \exists m \in S: V(m)=\infty
+f(S,\tau,\delta)=m \text{ on } \exists n \in S: V(n)=\infty
 \]
 
 Com ja hem comentat, treballar amb valors desconeguts estrictament
@@ -473,8 +477,8 @@ en una $\operatorname{mitjana}^{u}$ que sigui capaç de tractar valors
 desconeguts conservant l'àrea coneguda, és a dir, l'àrea total
 coneguda quedarà escampada en l'interval de consolidació.
 \begin{gather*}
-  \operatorname{mitjana}^{cu}: S \times i \mapsto m' \text{ on }\\
-  V(m') = \frac{1}{t_b-t_a}\int_{t_a}^{t_b} S^u(t)dt \text{ i }
+  \operatorname{mitjana}^{u}(S,\tau,\delta)=m \text{ on }\\
+  V(m) = \frac{1}{\delta}\int_{\delta}^{\tau+\delta} S^u(t)dt \text{ i }\\
   S^u(t)=
   \begin{cases}
     0 &\text{si }  S^r(t)=\infty\\
@@ -484,24 +488,24 @@ coneguda quedarà escampada en l'interval de consolidació.
 
 
 \paragraph{Marcatge de dades desconegudes.}
-Una funció d'agregació d'atributs $f^{mu} \in f$ que marqui
+Una funció d'agregació d'atributs $f$ que marqui
 dades desconegudes és aquella que pot retornar una mesura de valor
 indefinit com a resultat
 \[
-f^{mu}: S \times i \mapsto m' \text{ on } V(m')\in \glssymbol{not:R*}
+f(S,\tau,\delta)=m \text{ on } V(m)\in \glssymbol{not:R*}
 \]
 
 
 Per exemple, podem definir un patró de funció d'agregació d'atribut
 màxim que retorni valor desconegut
 si hi ha un a mesura amb el valor més gran que 2; és a dir establim un
-límit superior de 2 (L2). 
+límit superior de 2, cosa que identifiquem amb L2. 
 \begin{gather*}
-  \operatorname{m\grave{a}xim}^{L2}: S \times i \mapsto m' \text{ on }\\
-  m' = \begin{cases}
-    (T(m''),\infty) &\text{si }  \exists m\in S[t_a,t_b]: V(m)>2\\
-    m'' & \text{altrament }
-  \end{cases} \text{ i } m''= \operatorname{m\grave{a}xim}(S,i)
+  \operatorname{m\grave{a}xim}^{L2}(S,\tau,\delta)=m \text{ on }\\
+  m = \begin{cases}
+    (T(n),\infty) &\text{si }  \exists o\in S[\tau,\tau+\delta]: V(o)>2\\
+    n & \text{altrament }
+  \end{cases} \text{ i } n= \operatorname{m\grave{a}xim}(S,\tau,\delta])
 \end{gather*}
 
 
