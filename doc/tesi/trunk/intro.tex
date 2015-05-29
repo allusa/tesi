@@ -3,50 +3,51 @@
 \chapter{Introducció}
 \label{sec:intro}
 
-En els darrers anys, el cost dels sensors de monitoratge s'ha reduït
-considerablement i com a conseqüència cada cop n'hi ha més al nostre
-voltant.  Per exemple, recentment ha aparegut el concepte de ciutat
-inte\l.ligent (\emph{smart city}) --una ciutat plena de sensors i per
-tant amb una gran potència de monitoratge-- o bé el concepte de
-comptador inte\l.ligent (\emph{smart meter}) --un sensor amb capacitat
-d'enregistrar dades, d'analitzar-les i amb sistemes de comunicació
-integrats. Així doncs, és possible de recollir grans quantitats de
-dades per a monitorar i controlar sistemes complexos. 
+Aquests darrers anys la tecnologia digital ha transformat la forma en
+què ens relacionem amb l’entorn i adquirim nou coneixement. Conceptes
+recentment apareguts com ciutat inte\l.ligent (emph{smart city}) o
+comptador inte\l.ligent (\emph{smart meter}) són alguns dels exemples
+que fan visible la transformació tecnològica que vivim.  Aquest nous
+paradigmes han incrementat el nombre de sensors actius i passius que
+recullen informació de l’entorn i de l’estat dels sistemes i, entre
+altres, han convertit els usuaris de dispositius electrònics en
+consumidors actius. Com a conseqüència, han aparegut grans conjunts de
+dades digitals per a les quals es requereixen equips informàtics que
+les capturin, emmagatzemin, manipulin, cerquin i visualitzin. Aquesta
+nova tecnologia ha quedat associada al nom de \emph{Big Data}.
 
-Però, cal emmagatzemar totes les dades que aquests sistemes de
-monitoratge són capaços de recollir?, cal emmagatzemar-les
-indefinidament en el temps? O bé es pot emmagatzemar només la
-informació que es desitgi monitorar o controlar i rebutjar la resta?,
-de manera que no calgui gestionar un volum de dades massiu que
-realment no s'utilitzarà? En aquesta tesi dissertem sobre un mètode
-capaç de seleccionar i emmagatzemar una determinada informació de les
-dades, com gestionar aquesta informació i fins a quin límit això es pot
-aplicar. L'anomenem multiresolució.
+En el marc d'aquesta nova situació sorgeixen preguntes com: cal
+realment emmagatzemar totes les dades?, cal emmagatzemar-les
+indefinidament en el temps?, o, es viable tan sols emmagatzemar la
+informació útil i durant un temps restringit?. En aquesta tesi
+dissertem sobre un mètode, anomenat multiresolució, capaç de
+seleccionar i d'emmagatzemar la informació d'una forma
+determinada. Avaluem com aquesta metodologia gestiona la informació i
+els seus límits.
 
 
 Contextualitzem la multiresolució en dos àmbits: les sèries temporals
-i els \glspl{SGBD}. En aquesta tesi unim conceptes d'aquest dos àmbits
-i proposem solucions per alguns dels problemes que en resulten.
+i els \glspl{SGBD}. En aquesta tesi unim conceptes d'aquests dos àmbits
+i proposem solucions per a alguns dels problemes que en resulten.
 
 
 
 \paragraph{Les sèries temporals}
 Les sèries temporals es defineixen com a co\l.lecions d'observacions
 d'un mateix fenomen al llarg del temps.  Les sèries temporals són
-útils per a formalitzar dades com les que adquireixen els sensors, és
+útils per a formalitzar dades adquirides pels sensors, és
 a dir conjunts de valors mesurats en un instant de temps
 determinat. Aquestes sèries temporals contenen informació de l'entorn
-monitorat i han de ser analitzades per a predir l'evolució dels
+monitorat i poden ser analitzades per a predir l'evolució dels
 sistemes, per a detectar patrons de comportament, per a detectar
 anomalies, per a reconstruir els històrics, etc.
 
 
 La recerca en anàlisi de sèries temporals ha augmentat en la darrera
-dècada, tal com explica \textcite{fu11}. Actualment, és un camp de
-gran interès, sobretot pel que fa a processar grans volums de dades.
-Com es mostra en \textref{cap:estat} d'aquesta memòria, hi ha multitud
-de metodologies i algoritmes que proposen solucions a aquests
-problemes. Un dels problemes de la gestió de sèries temporals és
+dècada, tal com explica \textcite{fu11}.  Com es mostra en
+\textref{cap:estat} d'aquesta memòria, hi ha multitud de metodologies
+i algoritmes per a solucionar els problemes que presenten les sèries
+temporals. Un dels problemes de la gestió de sèries temporals és
 conseqüència del fet que són dades voluminoses i per tant són
 complicades d'emmagatzemar i de tractar \cite{fu11,keogh08:isax}.
 Aquest problema és especialment crític en el disseny de sistemes
@@ -58,16 +59,15 @@ temps, ja que alguns algoritmes d'anàlisi de sèries temporals ho
 requereixen.
 
 Contextualitzem el nostre estudi de les sèries temporals en l'àmbit
-del monitoratge en què les variables adquirides són aleatòries, el
-temps d'adquisició pot ser irregular, etc.  En l'anàlisi de sèries
-temporals a vegades reben estudis més particulars, focalitzant i
-simplificant l'estudi en algunes propietats específiques de les
-dades. Per exemple la teoria del senyal es focalitza en dades
-adquirides regularment i amb components de periodicitat o bé a vegades
-les sèries temporals es redueixen a seqüències temporals en què només
-importa l'ordre en què s'han adquirit i el període d'adquisició es
-constant. El nostre estudi tracta les sèries temporals des del punt de
-vista genèric temporal en què, a més, cal saber la posició de temps
+del monitoratge en què les variables adquirides mesuren una variable
+contínua en el temps, són aleatòries, el temps d'adquisició pot ser
+irregular, etc.  En l'anàlisi de sèries temporals a vegades reben
+estudis més particulars, focalitzant i simplificant l'estudi en
+algunes propietats específiques de les dades. Per exemple a vegades
+les sèries temporals es redueixen a seqüències temporals en les quals
+només importa l'ordre en què s'han adquirit i el període d'adquisició
+és constant. El nostre estudi tracta les sèries temporals des del punt
+de vista genèric temporal en què, a més, cal saber la posició de temps
 absoluta que ocupa cada dada i la distància de temps entre els valors.
 
 
@@ -77,7 +77,7 @@ absoluta que ocupa cada dada i la distància de temps entre els valors.
 
 \paragraph{Els SGBD}
 Els \gls{SGBD} són els sistemes informàtics encarregats d'emmagatzemar
-i gestionar dades de forma genèrica, la qual cosa s'inscriu en l'àmbit
+i gestionar dades de forma genèrica, els quals s'inscriuen en l'àmbit
 dels sistemes d'informació. Els conceptes dels \gls{SGBD} es basen en
 models matemàtics formals que defineixen l'estructura dels objectes i
 les operacions que els usuaris perceben de forma abstracta. El model
@@ -92,11 +92,11 @@ i \emph{NewSQL}, per tal de millorar el rendiment i la flexibilitat
 dels
 \gls{SQL} \parencite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}. Alguns
 autors \parencite{dreyer94,schmidt95,stonebraker09:scidb,zhang11}
-noten els aspectes en què cal millorar els \gls{SGBD} per tal de
+comenten els aspectes en què cal millorar els \gls{SGBD} per tal de
 tractar les sèries temporals i fan èmfasi en el fet que és necessari
 un model que enllaci el coneixement dels \gls{SGBD} amb el de
 l'anàlisi de sèries temporals. Sobretot, l'adquisició contínua de nous
-valors és el un repte a l'hora d'emmagatzemar i analitzar les sèries
+valors és un repte a l'hora d'emmagatzemar i analitzar les sèries
 temporals \parencite{keogh97}. 
 
 % Dels
@@ -107,8 +107,7 @@ temporals \parencite{keogh97}.
 % de consultes de \textcite{zhang11} per algunes de les propietats de
 % les sèries temporals.
 
-
-També cal que els \gls{SGBD} gestionin adequadament i amb coherència
+Un altre repte dels \gls{SGBD} és que gestionin adequadament i amb coherència
 l'atribut temporal de les sèries temporals.  En els \gls{SGBD} també
 es gestionen històrics temporals, és a dir l'evolució de les dades al
 llarg del temps. Aquest és un problema similar a les sèries temporals

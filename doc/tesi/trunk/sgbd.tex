@@ -67,7 +67,7 @@ físic, el lògic i el d'usuari \parencite{date:introduction}.
   dades, per exemple el mateix model relacional en el cas relacional.
 
 \item El nivell físic o intern agrupa la programació informàtica de
-  com s'han d'emmagatzemar físicament les base dades i de com s'has
+  com s'han d'emmagatzemar físicament les base dades i de com s'han
   d'executar les operacions. Per exemple en aquest nivell apareixen
   els registres de memòria, punters, mètodes d'accés als fitxers,
   etc., conceptes que no tenen res de relacional.
@@ -77,14 +77,14 @@ físic, el lògic i el d'usuari \parencite{date:introduction}.
 Una bona diferenciació entre els tres nivells d'arquitectura aporta
 independència a les dades (\emph{data
   independence}) \parencite{date:dictionary}. Date considera que és
-una de les propietats més importants que han de complir els \gls{SGBD}. De
-forma resumida, la independència a les dades significa que el nivell
-lògic no ha de contenir detalls d'implementació ni parlar d'objectius
-de rendiment sinó que aquests són part del nivell físic. Així ha de
-ser possible canviar el nivell físic sense afectar el nivell lògic.
-mantenint.  Així doncs, un model de dades concret pot tenir diverses
-implementacions en el nivell físic, per exemple
-\emph{PostgreSQL} \parencite{postgresql} per al model
+una de les propietats més importants que han de complir els
+\gls{SGBD}. De forma resumida, la independència a les dades significa
+que el nivell lògic no ha de contenir detalls d'implementació ni
+parlar d'objectius de rendiment sinó que aquests són part del nivell
+físic. D'aquesta forma és possible canviar el nivell físic sense
+afectar el nivell lògic.  Així doncs, un model de dades
+concret pot tenir diverses implementacions en el nivell físic, per
+exemple \emph{PostgreSQL} \parencite{postgresql} per al model
 relacional. \textcite{dbdebunk} detalla algunes confusions actuals
 sobre la independència entre el model i la implementació.
 
@@ -127,7 +127,8 @@ El model relacional defineix el nucli dels \gls{SGBD} en tres parts:
   complir les variables relació. La integritat es basa en aplicar
   operacions que han de retornar el valor cert. La integritat s'ha de
   complir sempre, normalment es comprova durant les assignacions.  Per
-  exemple la clau primària és una regla d'integritat.
+  exemple la clau primària \parencite{date04:introduction8} és una
+  regla d'integritat.
 \end{itemize}
 
 
@@ -224,7 +225,7 @@ el reanomena \parencite[\gls{capitol}~7]{date04:introduction8}.  En el cas del
 càlcul lògic, també anomenat càlcul relacional, estan relacionats amb
 la lògica de predicats. Així per exemple hi ha un operador de rang per
 recórrer el conjunt de tuples, el quantificador existencial o el
-quantificador universal.\parencite[cap.~8]{date04:introduction8}.
+quantificador universal \parencite[cap.~8]{date04:introduction8}.
 
 
 
@@ -407,7 +408,7 @@ capaços d'emmagatzemar i consultar dades històriques, que a vegades
 també s'anomenen multiversió perquè emmagatzemen diverses versions
 d'unes mateixes dades. Cal precisar, però, que de forma genèrica
 s'anomena dades temporals al que hem definit com a dades bitemporals a
-la~\autoref{sec:art:seriestemporals}, tot i fins i tot seria més
+la~\autoref{sec:art:seriestemporals}, tot i que fins i tot seria més
 còmode anomenar-lo model d'intervals temporals per a distingir-lo
 clarament del model de sèries temporals. A continuació, aclarim els
 termes temporals, bitemporals i intervals temporals.
@@ -425,10 +426,10 @@ relacional.  El model de les dades
 temporals \parencite{date02:_tempor_data_relat_model} es basa en
 estendre les relacions amb un atribut que és un interval
 temporal. Aquest interval temporal indica el rang temporal de validesa
-de les proposicions descrites en la relació. A més el model també
+de les proposicions descrites en la relació. A més, el model també
 defineix les operacions necessàries per a tractar amb les dades
 temporals, aquestes operacions són extensions de l'àlgebra relacional.
-De fet, i més particularment, el model de dades temporals representa
+Més particularment, el model de dades temporals representa
 les dades històriques amb dos atributs d'interval temporal; aleshores
 també es poden anomenar dades bitemporals. En aquest model de dades
 bitemporals
@@ -447,7 +448,7 @@ es consideren adequats com a \gls{SGBD} per sèries temporals ja que
 els primers estan pensats per a històrics, es descriuen amb intervals
 temporals, i els segons per a anàlisi d'observacions seqüencials, es
 descriuen amb instants temporals. Tot i així, per a desenvolupaments
-futurs observen que hi aspectes temporals comuns entre els dos
+futurs, observen que hi aspectes temporals comuns entre els dos
 sistemes i es pregunten si es podran trobar sistemes que els englobin
 a tots dos o cadascun necessitarà sistemes específics.  A causa de la
 relació entre les dades temporals i les sèries temporals, sobretot pel
@@ -508,10 +509,10 @@ exemples amb \gls{SQL}.
 
 
 \textcite[cap.~2]{date06} %ch2pp21-22
-considera que actualment no hi cap implementació comercial, per
+considera que actualment no hi ha cap implementació comercial, per
 exemple les de \gls{SGBD} \gls{SQL}, que segueixi fidelment el model relacional.
 Si bé recull diverses implementacions que
-S'estan desenvolupant i que segueixen les
+s'estan desenvolupant i que segueixen les
 especificacions del Third
 Manifesto \parencite[Projects]{date:thethirdmanifesto.com}.  Algunes
 d'aquestes implementacions són:
@@ -589,7 +590,7 @@ MapReduce \parencite{deanghemawat04:mapreduce}. %[lemel08]
 
 
 El Third Manifesto, que ja hem comentat, principalment defineix els
-requisits D per a les implementacions. Defensa que els models teòrics
+requisits \emph{D} per a les implementacions. Defensa que els models teòrics
 dels \gls{SGBD} tenen més sentit que mai ja que permeten mantenir una
 definició comuna per a les diverses implementacions que hi pugui
 haver.  És un corrent molt crític amb els \gls{SGBD} \gls{SQL} i els NoSQL perquè
@@ -603,7 +604,7 @@ basats en estructures
 d'arbre \parencite[cap.~14]{date06} \parencite[cap.~27]{date04:introduction8}
 o els ODMG basats en objectes \parencite[cap.~27]{date06}.
 \textcite[cap.~21--25]{date06} considera que els nous models de \gls{SGBD},
-a vegades anomenats post-relacionals, no estan fundats tan sòlidament
+a vegades anomenats post-relacionals, no estan fonamentats tan sòlidament
 en teories matemàtiques i la lògica de predicats com el model
 relacional ni tenen el mateix nivell teòric de
 formalització. %[date06ch19pp354,date06ch20pp365]
@@ -611,7 +612,7 @@ Considera, però, la possibilitat que es pugui definir un model més
 potent que el relacional tot i que no veu cap indici que sigui el cas
 dels nous model proposats. Per tant, aconsella que per ara els \gls{SGBD} no
 s'allunyin del model relacional. %[date06ch25,ch21pp379-380]
-Precisament, actualment del Third Manifesto destaca la proposta del
+Concretament, en el Third Manifesto destaca la proposta del
 llenguatge Tutorial D, fidel al model relacional i que a més no és
 \gls{SQL}. Tot i així, actualment no hi ha completada cap implementació
 totalment fidedigna al model relacional del Third Manifesto. Aquest és
@@ -636,7 +637,7 @@ programació que tenen poc a veure amb la teoria de \gls{SGBD}, en canvi
 veuen amb bons ulls la recerca NoSQL en camps on els \gls{SGBD} \gls{SQL} no hi
 funcionen gaire bé com la gestió de documents o dades
 semiestructurades \parencite{stonebraker11:nocoug}.  Per exemple,
-avaluen que les aportacions del model de programació MapReduce ja
+remarquen que les aportacions del model de programació MapReduce ja
 estan suportades pels \gls{SGBD} para\l.lels des de fa molt
 temps \parencite{pavlo09:sigmod}.  Alguns exemples de sistemes NewSQL
 són: SciDB \parencite{stonebraker09:scidb}, els autors del qual
