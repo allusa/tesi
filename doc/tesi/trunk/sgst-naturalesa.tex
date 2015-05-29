@@ -61,7 +61,7 @@ Aquest tret semàntic descrit fa referència a l'eix del
 temps. Pel que fa a l'eix de valors es pot distingir entre una
 adquisició contínua o discreta, procés que s'anomena quantització del
 senyal, tot i que sovint per simplificar no es té en
-compte \parencite{proakismanolakis96}.%S1.4.7
+compte \parencite{proakismanolakis96}. %S1.4.7
 En el nostre cas, per tal de no restringir el model a cap domini de
 valors en concret (v.~\autoref{sec:sgst:valor}), no avaluem el
 significat de la quantització en les sèries temporals perquè només
@@ -314,7 +314,9 @@ posició absoluta en el sistema de coordenades.
   $\glssymbol{not:temps-domini}=\{\text{gen},\text{feb},\dotsc,\text{des}\}$
   i el lapse dura tot un mes però sense cap posició absoluta en el
   sistema de coordenades de temps. Aquest cas no es pot expressar amb
-  temps dens.  Encara que aquest i casos semblants compleixen les
+  temps dens.  
+  
+  Encara que aquest i casos semblants compleixen les
   propietats de sèries temporals, la interpretació del temps és
   dificultosa i pot resultar més còmode tractar-los com a casos
   genèrics dels \gls{SGBDR} on la interpretació de l'atribut de temps
@@ -643,7 +645,7 @@ aleshores $\glssymbol{not:sgst:graf} S^{\gls{pd}}(t) \equiv
 
 Una família de funcions contínues que recorda a la funció discreta són
 les funcions d'impulsos (\emph{impulse train function}), tot i que
-pertanyen a les funcions definides a trossos contínues.  A continuació
+pertanyen a les funcions definides contínues a trossos.  A continuació
 ho exemplifiquem amb una representació que anomenem delta de Dirac
 (\gls{dd}) perquè es basa en la funció homònima, la qual val zero a
 tot arreu excepte en el punt zero.
@@ -735,7 +737,7 @@ tot arreu excepte en el punt zero.
 
 
 Una altra família de funcions contínues són les que es basen en
-funcions definides a trossos constants (\emph{piecewise constant
+funcions definides constants a trossos \emph{piecewise constant
   functions}).  A continuació ho exemplifiquem amb quatre
 representacions basades en la funció graó (\emph{step function} o
 \emph{staircase function}) atenent a quatre de les possibles
@@ -1033,7 +1035,7 @@ graó en els casos del \gls{zohe} i del \acro{ZOHC}.
 
 
 Una família de funcions d'un ordre superior a les de trossos constants
-són les que es basen en funcions definides a trossos lineals
+són les que es basen en funcions definides lineals a trossos
 (\emph{piecewise linear functions}).  A continuació ho exemplifiquem
 amb una representació basada en la funció triangular (\emph{triangular
   function}). Seguint l'analogia amb la teoria del senyal, l'anomenem
@@ -1110,15 +1112,20 @@ simètriques:
 
 \begin{example}[Sèrie temporal amb representació \gls{foh}]
   Sigui la sèrie temporal $S=\{ (3,1), (4,3), (6,2), (9,1) \}$, la
-  seva representació \gls{foh} és $S^\text{\gls{foh}}(t) =
-  1\operatorname{tri}^{\text{ant}}\left(\frac{t-3}{3-(-\infty)}\right)
+  seva representació \gls{foh} és 
+  \begin{align*}
+  S^\text{\gls{foh}}(t) &= \\
+  &1\operatorname{tri}^{\text{ant}}\left(\frac{t-3}{3-(-\infty)}\right)
   + 1\operatorname{tri}^{\text{seg}}\left(\frac{t-3}{4-3}\right)
-  +3\operatorname{tri}^{\text{ant}}\left(\frac{t-4}{4-3}\right) +
-  3\operatorname{tri}^{\text{seg}}\left(\frac{t-4}{6-4}\right)
-  +2\operatorname{tri}^{\text{ant}}\left(\frac{t-6}{6-4}\right) +
+  +3\operatorname{tri}^{\text{ant}}\left(\frac{t-4}{4-3}\right) 
+  +3\operatorname{tri}^{\text{seg}}\left(\frac{t-4}{6-4}\right) \\
+  +&2\operatorname{tri}^{\text{ant}}\left(\frac{t-6}{6-4}\right) +
   2\operatorname{tri}^{\text{seg}}\left(\frac{t-6}{9-6}\right)
   +1\operatorname{tri}^{\text{ant}}\left(\frac{t-9}{9-6}\right) +
-  1\operatorname{tri}^{\text{seg}}\left(\frac{t-9}{+\infty-9}\right)$. El
+  1\operatorname{tri}^{\text{seg}}\left(\frac{t-9}{+\infty-9}\right)
+  \end{align*}
+
+  El
   graf d'aquesta representació, $\glssymbol{not:sgst:graf}
   S^\text{\gls{foh}}(t)$, es mostra a la \autoref{fig:model:repr:foh}
   en què en gris es dibuixa cada funció triangular i en blau la funció
@@ -1217,14 +1224,14 @@ regressió lineal (\emph{linear regression}), i ho generalitzem per a
 representacions basades en aproximacions polinomials.
 
 Definim una representació que consisteix en trobar la recta d'ajust
-mínima quadràtica a les mesures de la sèrie temporal. L'anomenem
+per mínims quadràtics a les mesures de la sèrie temporal. L'anomenem
 representació \emph{lineal} de la sèrie temporal.
 \begin{definition}[Funció de representació lineal]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal, es defineix
   $S^\text{lineal}(t)$ com la funció de representació de regressió
   lineal al llarg del temps, $\forall m \in S: S^\text{lineal}(t) =
   \alpha + \beta t$ on els valors de la regressió lineal es calculen
-  aplicant la pseudoinversa:
+  aplicant:
   \begin{align*}
     & 
     \left[\begin{array}{c}
@@ -1242,11 +1249,11 @@ representació \emph{lineal} de la sèrie temporal.
         \vdots \\
         V(m_k)
       \end{array}\right]       
-   \end{align*}.
+   \end{align*}
 \end{definition}
 
 
-Aplicant la pseudoinversa es pot generalitzar el problema a
+Aplicant una equació similar es pot generalitzar el problema a
 una regressió n-polinomial.
 \begin{definition}[Funció de representació polinomial]
   Sigui $S=\{m_0,\ldots,m_k\}$ una sèrie temporal i $n$ el grau del
@@ -1254,7 +1261,7 @@ una regressió n-polinomial.
   com la funció de representació de regressió polinomial al llarg del
   temps, $\forall m \in S: S^{\text{polinomi}}(t)=\alpha_0 + \alpha_1
   t + \dotsb +\alpha_n t^n$ on els valors de la regressió es calculen
-  aplicant la pseudoinversa:
+  aplicant:
   \begin{align*}
     & 
     \left[\begin{array}{c}
@@ -1274,7 +1281,7 @@ una regressió n-polinomial.
         \vdots \\
         V(m_k)
       \end{array}\right]     
-   \end{align*}.
+   \end{align*}
 \end{definition}
 
 
@@ -1699,8 +1706,8 @@ fitar per una durada anomenada termini.
 \begin{definition}[Sèrie temporal de temps real]
   \label{def:st:tempsreal}
   Sigui $S$ una sèrie temporal, $t$ un instant de temps, $d$ una
-  durada de temps i $e$ una durada que indica termini. La sèrie
-  temporal $S$ és de temps real si i només si $e\leq d$ i la
+  durada de temps i $D$ una durada que indica termini. La sèrie
+  temporal $S$ és de temps real si i només si $D\leq d$ i la
   subsèrie de cada interval amb termini només conté una mesura
   $\forall n\in\{0,\ldots,|S|-1\}: |S[t+nd,t+nd+D)| =
   1$.
@@ -1710,7 +1717,7 @@ fitar per una durada anomenada termini.
 
 Si una sèrie temporal és de temps real, l'anomenem sèrie temporal
 mostrejada en temps real de període $d$ iniciada a $t$ i
-compliment del termini $e$.  Si $e=d$, es pot anomenar que $S$ és
+compliment del termini $D$.  Si $D=d$, es pot anomenar que $S$ és
 una sèrie temporal de temps real sense termini.
 
 Pel que fa al temps inicial $t$, en el cas de les sèries temporals
@@ -1851,7 +1858,7 @@ Aquesta regularització també es pot expressar mitjançant operadors de
 funció temporal. Sigui una funció de representació de mitjana a trossos
 de la qual definim l'operador d'interval temporal com
 $S[s,t]^\text{mitjana}=\{(s,v)\}$  on
-$v=\glssymbol{not:sgst:mitjanav}(S[s,t))$. L''operació temporal
+$v=\glssymbol{not:sgst:mitjanav}(S[s,t))$. L'operació temporal
 corresponent a la regularització per mitjana de l'ultramostreig és
 $S[I]^\text{mitjana}$.
 

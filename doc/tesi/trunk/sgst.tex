@@ -49,8 +49,9 @@ un instant de temps.
 
 El temps és la variable que permet ordenar les mesures.  Anomenem
 \emph{domini del temps} al conjunt \glssymbolsec{not:temps-domini} de
-tots els possibles valors de temps. $T$ pot ser tant un conjunt finit
-com infinit i normalment serà un conjunt tancat %(compactificat?)
+tots els possibles valors de temps. $\glssymbol{not:temps-domini}$ pot
+ser tant un conjunt finit com infinit i normalment serà un conjunt
+tancat %(compactificat?)
 per a poder incloure les mesures indefinides (v.\
 \autoref{def:model:mesura_indefinida}) com a límits.  Per tal de
 facilitar la comprensió, en aquest document assumim que
@@ -97,7 +98,7 @@ del concepte temps \parencite{iep:time}.
   Siguin $s,t\in\glssymbol{not:Rb}$ dos instants de temps.  Definim la
   \emph{durada de temps} entre $s$ i $t$ com el valor $d \in\glssymbol{not:Rb}$
   que mesura la distància en unitats de temps entre tots dos instants
-  de temps, és a dir $d= s-t$.
+  de temps, és a dir $d= |s-t|$.
 
 
 \end{definition}
@@ -282,7 +283,8 @@ entre les mesures. Definim dues relacions d'ordre diferents.
 \begin{definition}[Ordre semitemporal]
   Siguin $m$ i $n$ dues mesures. Anomenem \emph{ordre semitemporal} a
   la relació binària $m\glssymboldef{not:mesura:ordreparcial} n$ que
-  definim com $m\leq n \iff (T(m) < T(n) \vee m=n)$.
+  definim com $m\leq n \iff T(m) < T(n) \vee ( T(m) = T(n)\wedge V(m)
+  = V(n))$.
 \end{definition}
 
 
@@ -379,8 +381,7 @@ alguns autors les anomenen seqüències temporals, per exemple
   j\in[0,k] \wedge i \neq j : T(m_i)\neq T(m_j)$.
 
   Definim el domini d'una sèrie temporal $S$, notat com a
-  $\glssymbol{dom}S$, com el domini de les seves mesures.\todo{i per
-    què no TxV?}
+  $\glssymbol{dom}S$, com el domini de les seves mesures.
 \end{definition}
 
 % En una sèrie temporal no hi pot haver temps repetits perquè una mateixa mesura no pot haver estat mesurada en el mateix temps i tenir diferent valor (mesurada en el mateix temps, amb el mateix aparell...) seria una contradicció \todo{}
