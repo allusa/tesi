@@ -7,17 +7,20 @@ En aquest capítol definim la multiresolució com una funció que
 s'aplica a una sèrie temporal i retorna una nova sèrie temporal.
 Aquesta nova sèrie temporal és el resultat d'aplicar, en l'àmbit dels
 \glspl{SGST}, un esquema de multiresolució a la sèrie temporal
-original. Aquesta aplicació té el mateix efecte que utilitzar, en
-l'àmbit dels \glspl{SGSTM}, una sèrie temporal multiresolució amb
-aquest esquema, però en canvi les aplicacions que resulten d'ambdós
-casos no tenen les mateixes propietats.
+original. Aquesta funció té el mateix efecte que utilitzar, en l'àmbit
+dels \glspl{SGSTM}, una sèrie temporal multiresolució amb el mateix
+esquema. Tot i així, les aplicacions que resulten d'ambdós casos no
+tenen les mateixes propietats.
 
-En el model de \gls{SGSTM} s'ha definit la
-multiresolució com una estructura de base de dades en què cal
-emmagatzemar i tractar una sèrie temporal. En canvi, ara observem la
-multiresolució com una funció que opera sobre una sèrie
-temporal i no té capacitats d'emmagatzematge de dades.  D'aquesta
-manera, la funció de multiresolució permet:
+
+
+En els capítols anteriors, hem definit la multiresolució com una
+estructura de base de dades per a emmagatzemar i tractar sèries
+temporals. La multiresolució també podria ser útil per a operar
+directament sobre una sèrie temporal, sense la capacitat
+d'emmagatzematge de dades. En aquest capítol avaluem com la funció de
+multiresolució por aplicar-se directament als \glspl{SGST}. Aquesta
+funció permet:
 \begin{itemize}
 
 \item Expressar problemes en què la multiresolució sigui gestionada
@@ -62,25 +65,26 @@ En el model de \gls{SGSTM} del \autoref{cap:model:sgstm} hem definit
 un model de dades per a gestionar sèries temporals
 multiresolució. Aquest model té una estructura que emmagatzema la
 informació d'una sèrie temporal d'una forma determinada denominada
-multiresolució.  Aquest model de \gls{SGSTM} té com a objectius
-emmagatzemar compactament les dades i resumir la informació per a
-consultes posteriors.
+multiresolució: en l'emmagatzematge és compacten les dades i es
+resumeix la informació per a consultes posteriors.
 
-Així, aquest model té capacitats de computació sincronitzada o en
-línia (\emph{online}) amb el temps i té característiques dels sistemes
-que tracten fluxos de dades (\emph{data stream}); és a dir, dades que
-s'adquireixen contínuament i cal anar gestionant al mateix temps que
-es van adquirint. Això no treu, però, que de manera més simplificada
-també es pugui treballar amb un \gls{SGSTM} en temps diferit
-(\emph{offline}); és a dir, que primer s'emmagatzemin les dades
-adquirides i després, en temps posteriors, s'hi apliqui la consolidació.
+Per aquest motiu, el model de \gls{SGSTM} té capacitats de computació
+sincronitzada o en línia (\emph{online}) amb el temps i té
+característiques dels sistemes que tracten fluxos de dades (\emph{data
+  stream}); és a dir, dades que es van adquirint contínuament i 
+gestionant al mateix temps. Això no treu, però,
+que de manera més simplificada també es pugui treballar amb un
+\gls{SGSTM} en temps diferit (\emph{offline}); és a dir, que primer
+s'emmagatzemin les dades adquirides i després, en temps posteriors,
+s'hi apliqui la consolidació.
 
 
 
-Això no obstant, podem simplificar el problema de càlcul de
-multiresolució en temps diferit com una consulta, en l'àmbit dels
-\gls{SGST}, que transforma una sèrie temporal a una nova sèrie
-temporal.
+A continuació, simplifiquem el càlcul de la multiresolució per a
+poder-lo aplicar, en temps diferit, directament als \gls{SGST}.
+Aquest nou càlcul consisteix en una funció que transforma una sèrie
+temporal a una nova sèrie temporal. 
+
 
 
 
@@ -88,25 +92,25 @@ temporal.
 \section{Context de la formulació}
 
 Expressem el context de la funció de multiresolució que ens permet
-formular dues operacions mapa i plec com a equivalents funcionalment a
+formular dues operacions mapa i plec amb un funcionament equivalent a
 un \gls{SGSTM}.
 %
-Els tres passos, de forma resumida, per a calcular la multiresolució
-d'una sèrie temporal en un \gls{SGSTM} són els següents.
-
 
 Sigui $S=\{m_0,m_1,\dotsc,m_k\}$ una sèrie temporal, $M$ una sèrie
 temporal multiresolució i $e = \{ (\delta_0,f_0,\tau_0,k_0), \ldots,
 (\delta_d,f_d,\tau_d,k_d)\}$ els paràmetres de l'esquema de
 multiresolució de $M$ (\seeref{def:sgstm:esquema}). 
+Els tres passos, de forma resumida, per a calcular la multiresolució
+d'una sèrie temporal en un \gls{SGSTM} són els següents.
 
-Primer, s'afegeixen totes les mesures de la sèrie temporal a la sèrie temporal
+\begin{enumerate}
+\item Primer, s'afegeixen totes les mesures de la sèrie temporal a la sèrie temporal
 multiresolució, $\forall m \in S:$
 \[
 M_0=\glssymbol{addM}(M,m_0),M_1=\glssymbol{addM}(M_0,m_1),\dotsc,M_k=\glssymbol{addM}(M_{k-1},m_k)
 \]
 
-Segon, es consolida la sèrie temporal multiresolució fins que no sigui
+\item Segon, es consolida la sèrie temporal multiresolució fins que no sigui
 consolidable (\seeref{def:model:buffer_consolidable}), sigui
 $c\in\glssymbol{not:N}:$
 \[
@@ -115,7 +119,7 @@ M'_0=\glssymbol{consolidaM}(M_k),\dotsc,M'_{c}=\glssymbol{consolidaM}(M'_{c-1}),
 on $M_k,M'_{0},\dotsc,M'_{c-1},M'_{c}$ són consolidables i $M'$ no és
 consolidable.  
 
-Tercer, es consulta la sèrie temporal multiresolució amb les dues
+\item Tercer, es consulta la sèrie temporal multiresolució amb les dues
 consultes bàsiques definides a \textref{sec:sgstm:consultes}, les
 quals retornen les sèries temporals
 $S'=\glssymbol{not:sgstm:serietotal}(M')$ i $S_{\delta
@@ -124,6 +128,8 @@ són dos paràmetres de l'esquema de multiresolució de $M$ que estan
 associats als altres dos paràmetres $\tau$ i $k$ de la resolució.  Hi
 ha una $S_{\delta f}'$ possible per a cada paràmetre de l'esquema
 $(\delta,f,\tau,k) \in e$.
+
+\end{enumerate}
 
 
 
