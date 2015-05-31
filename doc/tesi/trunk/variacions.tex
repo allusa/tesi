@@ -109,7 +109,7 @@ La \autoref{fig:sgstm:encadenats} mostra l'arquitectura d'una base de
 dades multiresolució ja presentada a la \autoref{fig:model:bdstm} però
 ara modificada amb les resolucions encadenades.  En aquest cas, les
 mesures del disc de $R_0$ s'utilitzen en altres buffers i les mesures
-del buffer de $R_d$ provenen d'un altre disc. En un cas simple de
+del buffer de $R_k$ provenen d'un altre disc. En un cas simple de
 resolucions encadenades, podem considerar que el buffer d'una
 resolució és exactament el disc de l'altra. En un cas més elaborat,
 podem considerar que quan el disc d'una resolució descarta una mesura,
@@ -175,31 +175,31 @@ les resolucions encadenades en el model de \gls{SGSTM}.
   vistes.
 
   En aquest cas la relació de sèries temporals i noms
-  $M_2^{\text{series}}$ segueix sent la mateixa $M_2^{\text{series}}=
-  ((S':\text{nom},S:\text{sèrie temporal}),\{
+   segueix sent la mateixa $L=
+  ((S',S),\{
   (S_{B1},\{(26,0),(29,0)\}), (S_{D1},\{(10,0), (15,0), (20,0),
   (25,0)\}), (S_{D2},\{(10,0), (20,0)\} )\})$ llevat que no hi ha
   $S_{B2}$, i la sèrie temporal multiresolució amb noms com a domini
-  dels atributs de sèries temporals $M_2^{\text{noms}}$ també és la
-  mateixa $M_2^{\text{noms}}= ((S'_B:\text{nom},S'_D:\text{nom},
-  \tau:\glssymbol{not:Rb}, \delta:\glssymbol{not:Rb},
-  k:\glssymbol{not:N}, f:\text{funció} ),\{ (S_{B1},S_{D1},25 ,5 ,4
+  dels atributs de sèries temporals també és la
+  mateixa $M= ((S'_B,S'_D,
+  \tau, \delta,
+  \glssymbol{not:sgstm:k}, \glssymbol{not:sgstm:f} ),\{ (S_{B1},S_{D1},25 ,5 ,4
   ,\text{mitjana} ), ( \mathbf{S_{D1}},S_{D2},20 , 10 ,3 ,
   \text{mitjana} ) \})$ excepte que el buffer de la segona resolució
   és el disc de la primera $S_{D1}$, el qual el destaquem en negreta.
-  Mostrem $M_2^{\text{series}}$ i $M_2^{\text{noms}}$ en forma de
+  Mostrem $L$ i $M$ en forma de
   taula a la \autoref{fig:multiresolucio:exencadenat}.
 
   \begin{figure}[tp]
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
-      \multicolumn{2}{c}{$M_2^{\text{noms}}$} \\ \hline
-      $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $k$ & $f$ \\ \hline
+      \multicolumn{2}{c}{$M$} \\ \hline
+      $S'_B$  & $S'_D$ & $\tau$ & $\delta$ & $\glssymbol{not:sgstm:k}$ & $\glssymbol{not:sgstm:f}$ \\ \hline
       $S_{B1}$ & $S_{D1}$ & 25 & 5  & 4 & mitjana  \\
       $\mathbf{S_{D1}}$ & $S_{D2}$ & 20 & 10 & 3 & mitjana  \\ \hline
     \end{tabular}\qquad
     \begin{tabular}{|c|c|c|}
-      \multicolumn{3}{c}{$M_2^{\text{series}}$} \\ \hline
+      \multicolumn{3}{c}{$L$} \\ \hline
       \multirow{2}{*}{$S'$}  &  \multicolumn{2}{c|}{$S$} \\ \cline{2-3}
       & $t$      & $v$  \\ \hline
       \multirow{2}{*}{$S_{B1}$} 
@@ -246,10 +246,9 @@ les resolucions encadenades en el model de \gls{SGSTM}.
     cas de l'exemple només al buffer $B_1$.  Aquests buffers, als
     quals podem anomenar buffers d'entrada, es poden expressar amb
     l'operació $ \glssymbol{not:sgst:project}_{\{S'_B\}}(
-    M_2^{\text{noms}} ) -
+    M ) -
     \glssymbol{not:sgst:rename}_{S'_D/S'_B}\left(
-      \glssymbol{not:sgst:project}_{\{S'_D\}}( M_2^{\text{noms}}
-      )\right)$.
+      \glssymbol{not:sgst:project}_{\{S'_D\}}( M)\right)$.
 
 
   \item Només es poden eliminar les mesures dels buffers que no siguin
@@ -295,33 +294,43 @@ d'agregació d'atributs es poden implementar amb orientació a flux.
 
 Definim una funció d'agregació amb orientació a flux com aquella que
 implementa el comportament equivalent a una funció d'agregació
-d'atributs, $f$. A diferència de les $f$, treballen sobre dues mesures
-$m'=\text{flux}(m_f,m,i)$ per a retornar la mesura resultant $m'$, on
-$m$ és la nova mesura que s'ha d'incorporar al flux, $m_f$ és el flux
-anterior ja processat i $i=[t_a,t_b]$ és l'interval de consolidació de
-$f$.  Per exemple, redefinim les funcions d'agregació \gls{dd} màxim i
-mitjana per tal que tinguin orientació a flux:
+d'atributs, la qual hem notat anteriorment com a $f(S,\tau,\delta)$ on
+$S$ és la sèrie temporal agregada i $\tau$ i $\delta$ són els
+paràmetres de consolidació. A diferència, però, una funció d'agregació
+amb orientació a flux, que notem com a $\text{flux}$, treballa sobre
+dues mesures $m'=\text{flux}(m,n,\tau,\delta)$ per a retornar la
+mesura resultant $m'$, on $n$ és la nova mesura que s'ha d'incorporar
+al flux, $m$ és el flux anterior ja processat.  Per a exemplificar-ho,
+redefinim les funcions d'agregació \gls{dd} màxim i mitjana
+(\seeref{def:sgstm:maxdd}) per tal que tinguin orientació a flux:
 
 \begin{itemize}
-\item $\text{flux-\glssymbol{not:sgstm:maxdd}}: m_f \times m \times i \mapsto
-  m'$ on $V(m')=\max(V(m_f),V(m))$ i $T(m')=\frac{t_b+t_a}{2}$. 
+\item $\text{flux\_\glssymbol{not:sgstm:maxdd}}(m,n,\tau,\delta)=m'$
+  on $V(m')=\max(V(m),V(n))$ i $T(m')=\frac{2\tau+\delta}{2}$.
 
 
-\item $\text{flux-\glssymbol{not:sgstm:mitjanadd}}: m_f \times m
-  \times i \mapsto m'$ on $V(m') = V(m_f) + \frac{V(m)}{t_b-t_a}$ i
-  $T(m')=\frac{t_b+t_a}{2}$.
+\item
+  $\text{flux\_\glssymbol{not:sgstm:mitjanadd}}(m,n,\tau,\delta)=m'$
+  on $V(m') = V(m) + \frac{V(n)}{\delta}$ i
+  $T(m')=\frac{2\tau+\delta}{2}$.
 
 \end{itemize}
 
 
-Així, sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal i $i=[t_a,t_b]$
-un interval de dos instants de temps, calcular en flux $m'_0 =
-\text{flux-\glssymbol{not:sgstm:mitjanadd}}((0,0),m_0,i), m'_1 =
-\text{flux-\glssymbol{not:sgstm:mitjanadd}}(m'_0,m_1,i), \dotsc, m'_k
-= \text{flux-\glssymbol{not:sgstm:mitjanadd}}(m'_{k-1},m_k,i)$ és
-equivalent a $m_k'=\glssymbol{not:sgstm:mitjanadd}(S,i)$, on $(0,0)$
-és una mesura inicial per al flux.
-
+Així, sigui $S=\{m_0,\dotsc,m_k\}$ una sèrie temporal i $\tau$ i
+$\delta$ els paràmetres de consolidació. La funció d'agregació
+d'atributs $\glssymbol{not:sgstm:mitjanadd}$ calcula
+$m'=\glssymbol{not:sgstm:mitjanadd}(S,\tau,\delta)$. En canvi, la
+funció equivalent en flux
+$\text{flux\_\glssymbol{not:sgstm:mitjanadd}}$ calcula $m'_0 =
+\text{flux\_\glssymbol{not:sgstm:mitjanadd}}((0,0),m_0,\tau,\delta),
+m'_1 =
+\text{flux\_\glssymbol{not:sgstm:mitjanadd}}(m'_0,m_1,\tau,\delta),
+\dotsc, m'_k =
+\text{flux\_\glssymbol{not:sgstm:mitjanadd}}(m'_{k-1},m_k,\tau,\delta)$
+, on $(0,0)$ és una mesura inicial per al flux.  Podem observar,
+doncs, que els dos càlculs són equivalents
+$m_k'=\glssymbol{not:sgstm:mitjanadd}(S,\tau,\delta)$.
 
 
 
@@ -331,24 +340,28 @@ consolidar dels buffers:
 
 
 
+
+
 \begin{itemize}
 \item Sigui la \autoref{def:sgstm:addB}, se'n modifica el comportament
-  perquè $B=(m_B,\tau,\delta,f)$ sigui un buffer que emmagatzema una
-  mesura $m_B$ en comptes d'una sèrie temporal i l'operació d'afegir
-  sigui $\glssymbol{addB}(B,m)= (m'_B,\tau,\delta,f)$ on $m'_B =
-  \text{flux}(m_B,m,[\tau,\tau+\delta])$ i $\text{flux}$ és una
-  funció d'agregació d'atributs orientada a flux.
+  perquè $B=(m,\tau,\delta,\glssymbol{not:sgstm:f})$ sigui un buffer
+  que emmagatzema una mesura $m$ en comptes d'una sèrie temporal i
+  l'operació d'afegir sigui $\glssymbol{addB}(B,n)=
+  (m',\tau,\delta,f)$ on $m' =
+  \glssymbol{not:sgstm:f}(m,n,\tau,\delta)$ i
+  $\glssymbol{not:sgstm:f}$ és una funció d'agregació d'atributs
+  orientada a flux.
 
 
 \item Sigui la \autoref{def:model:consolidacio-buffer}, se'n modifica
   el comportament perquè essent el buffer modificat
-  $B=(m_B,\tau,\delta,f)$ l'operació de consolidar sigui
-  $\glssymbol{consolidaB}(B) = (B',m_B)$ on
-  $B'=(m'_B,\tau+\delta,\delta,f)$ i $m'_B$ ha de ser l'element
-  d'identitat de $\text{flux}$. Per exemple $m'_B=(0,0)$ per a l'atribut
-  de mitjana i $m'_B=(0,\min(\glssymbol{not:valor-domini}))$ per a
-  l'atribut de màxim on $\glssymbol{not:valor-domini}$ és el domini
-  dels valors. 
+  $B=(m,\tau,\delta,\glssymbol{not:sgstm:f})$ l'operació de consolidar
+  sigui $\glssymbol{consolidaB}(B) = (B',m)$ on
+  $B'=(m',\tau+\delta,\delta,\glssymbol{not:sgstm:f})$ i $m'$ és
+  l'element d'identitat de $\text{flux}$. Per exemple $m'=(0,0)$ per
+  a l'atribut de mitjana i
+  $m'=(0,\min(\glssymbol{not:valor-domini}))$ per a l'atribut de
+  màxim on $\glssymbol{not:valor-domini}$ és el domini dels valors.
 
 \end{itemize}
 
@@ -381,7 +394,7 @@ de consolidació hi pot haver els escenaris següents:
 
 \begin{itemize}
 \item Extern. Ho anomenem rellotge extern o \emph{push} perquè les
-  mesures són les que controlen el procés de consolidació, de fet el
+  mesures són les que controlen el procés de consolidació, de fet, el
   controla un sistema de monitoratge extern.  El \gls{SGSTM} no té
   rellotge sinó que s'utilitza l'atribut de temps de les mesures per
   conèixer l'instant actual.  És el cas que hem definit en el model,
@@ -420,6 +433,18 @@ de consolidació hi pot haver els escenaris següents:
 
 
 \end{itemize}
+
+
+Així doncs, en les implementacions dels \gls{SGSTM} cal decidir com ha
+de ser el rellotge de consolidació depenent del context on s'hagin
+d'aplicar. En els casos del model que hem definit, hem assumit un
+rellotge extern perquè permet definir exactament la consolidació a
+partir de la sèrie temporal original. En els altres dos tipus de
+rellotge, la consolidació esdevé variable i per tant la sèrie temporal
+resultant depèn, a més, del rellotge. És a dir, en aquests dos darrers
+casos els \gls{SGSTM} participen activament en l'adquisició de les
+dades mentre que en el cas del rellotge extern els \gls{SGSTM} són
+passius.
 
 
 
