@@ -77,15 +77,15 @@ d'atributs, etc.
 Pel que fa a la consolidació de la multiresolució, aquesta s'ha pensat
 sobretot periòdica per tal d'obtenir sèries temporals regulars.
 Aleshores s'obtenen els esquemes de multiresolució periòdics que hem
-analitzat. Això no obstant, altres escenaris de consolidació són
-possibles; per exemple sistemes de monitoratge que adquireixen dades
-només quan ho creuen interessant en base a esdeveniments.  En el model
-de \gls{SGSTM} no estan previstos aquests casos i requereixen un
-estudi més profund. Per exemple, en un cert moment es podria
-considerar que una subsèrie resolució és molt significativa i que
-s'han de mantenir aquestes dades, per tant en l'esquema de
-multiresolució hi hauria una subsèrie fixada a un interval de temps en
-el passat.
+analitzat. Això no obstant, són possibles altres escenaris de
+consolidació; un exemple seria el cas sistemes de monitoratge que
+adquireixen dades només quan ho creuen interessant en base a
+esdeveniments.  En el model de \gls{SGSTM} no estan previstos aquests
+casos i requereixen un estudi més profund. Per exemple, en un cert
+moment es podria considerar que una subsèrie resolució és molt
+significativa i que s'han de mantenir aquestes dades, per tant en
+l'esquema de multiresolució hi hauria una subsèrie fixada a un
+interval de temps en el passat.
 
 
 
@@ -157,26 +157,25 @@ fàcilment i estudiat en el model.
 
 
 Ara bé, aquesta correspondència model-implementació no sempre és
-senzilla de mantenir. A Pytsms i RoundRobinson, les implementacions
-més completes que hem realitzat dels models, s'hauria de simplificar
-la definició de les mesures genèriques.  En el model abstracte
-matemàtic és senzill de descriure uns valors genèrics, en canvi a les
-implementacions això complica l'estructura. Així, s'ha hagut de
-dissenyar mesures de diferents tipus que contenen el rang del domini
-de temps i valors per tal de definir les mesures indefinides, el
-suprem i l'ínfim, etc.  També s'hauria de repensar la gestió de la
-homogeneïtat de les sèries temporals: en el model les sèries temporals
-són homogènies i en les implementacions és difícil gestionar el
-concepte de nova sèrie temporal amb el mateix tipus de mesures que les
-originals.
+senzilla de mantenir. A Pytsms i RoundRobinson, les quals són les
+implementacions més completes, s'hauria de simplificar la definició de
+les mesures genèriques.  En el model abstracte matemàtic és senzill de
+descriure uns valors genèrics, en canvi a les implementacions això
+complica l'estructura. Així, s'ha hagut de dissenyar mesures de
+diferents tipus que contenen el rang del domini de temps i valors per
+tal de definir les mesures indefinides, el suprem i l'ínfim, etc.
+També s'hauria de repensar la gestió de la homogeneïtat de les sèries
+temporals: en el model les sèries temporals són homogènies i en les
+implementacions és difícil gestionar el concepte de nova sèrie
+temporal amb el mateix tipus de mesures que les originals.
 
 En altres casos, però, s'ha trobat una solució adequada per a
 implementar la genericitat del model.  És el cas de la
 multitud d'operacions de les sèries temporals implementades amb
-Mixins, el de les representacions com a objectes independents
+\emph{Mixin}, el de les representacions com a objectes independents
 associats a les sèries temporals, o bé els de les funcionalitats
 complementàries com l'emmagatzematge i els gràfics implementades amb
-el patró Visitor. Tanmateix, algunes parts encara no han estat prou
+el patró \emph{Visitor}. Tanmateix, algunes parts encara no han estat prou
 generalitzades; per exemple els gràfics de RoundRobinson sempre
 utilitzen la representació \gls{zohe}.
 
@@ -210,12 +209,12 @@ Hi ha altres projectes que també utilitzen Hadoop com a sistema
 d'emmagatzematge distribuït de sèries temporals. És el cas
 d'OpenTSDB \parencite{opentsdb}, que utilitza Hadoop per a
 emmagatzemar i recuperar ràpidament sèries temporals.  Aquest, però,
-només no té en compte l'aplicació de consultes a les dades sinó només
-recuperar les dades originals.  RoundRobindoop és una solució per a
-computar la multiresolució a Hadoop. Així doncs, OpenTSDB i
-RounbdRobindoop podrien treballar conjuntament: el primer per a
-emmagatzemar distribuïdament les sèries temporals i el segon per a
-calcular la multiresolució aprofitant que les dades ja estan
+tan sols té en compte recuperar les dades originals emmagatzemades i
+no preveu consultes elaborades.  RoundRobindoop és una
+solució per a computar la multiresolució a Hadoop. Així doncs,
+OpenTSDB i RounbdRobindoop podrien treballar conjuntament: el primer
+per a emmagatzemar distribuïdament les sèries temporals i el segon per
+a calcular la multiresolució aprofitant que les dades ja estan
 distribuïdes en diversos nodes.
 
 
