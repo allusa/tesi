@@ -182,7 +182,7 @@ explorades són: diverses resolucions que comparteixen el mateix
 buffer; resolucions encadenades, en què unes depenen de les sèries
 temporals consolidades en altres; funcions d'agregació d'atributs
 orientades a flux, és a dir que acumulen incrementalment la computació
-de les agregacions; i rellotges de consolidació amb diferent
+de les agregacions; i rellotges de consolidació de diferent
 naturalesa --externs al sistema, interns o bé relatius a altres
 resolucions.
 
@@ -334,10 +334,10 @@ de comptatge que contenen coherentment amb la seva naturalesa.
 \section{Experimentació}
 
 
-Un cop s'ha definit el model dels \gls{SGST} i dels \gls{SGSTM}, es
-poden implementar. D'aquesta manera, el model descriu exactament el
+Un cop s'han definit els models dels \gls{SGST} i dels \gls{SGSTM}, es
+poden implementar. D'aquesta manera, els models descriuen exactament el
 comportament de les implementacions i es pot assegurar que aquestes
-tenen el funcionament desitjat.  De fet, el model definit descriu
+tenen el funcionament desitjat.  De fet, els models definits descriuen
 essencialment les operacions, entrades, sortides i tipus de dades
 bàsics amb els quals han de treballar les implementacions. Això és
 conegut com a interfície de programació d'aplicacions, tot i que
@@ -353,14 +353,15 @@ implementacions de naturalesa diferent.
 
 
 
-En primer lloc, Pytsms i RoundRobinson implementats amb llenguatge
-Python.  Aprofita el paradigma d'orientació a objectes per a obtenir
-una bona correspondència entre implementació i model. A més Python té
-unes biblioteques extensa que permet afegir complements com per
-exemple gràfics o gestionar l'emmagatzematge en fitxers.  Aquesta és
-la implementació de referència, és a dir la que considerem que mostra
-com es pot implementar el model de multiresolució definit.  Tant admet
-la computació en línia com en diferit.
+En primer lloc, Pytsms i RoundRobinson que són la implementació de
+referència, és a dir la que considerem que mostra com es pot
+implementar el model de multiresolució definit.  Tant admet la
+computació en línia com en diferit.  S'ha implementat amb llenguatge
+Python, tot aprofitant el paradigma d'orientació a objectes per a
+obtenir una bona correspondència entre implementació i model. A més
+Python té unes biblioteques extenses que permet afegir complements com
+per exemple gràfics o gestionar l'emmagatzematge en fitxers.
+
 
 En segon lloc, RoundRobindoop implementat amb MapReduce i
 Hadoop. Utilitza MapReduce com a tècnica de programació para\l.lela i
@@ -393,22 +394,24 @@ família \gls{zohe}.
 
 
 En una comparació entre les diverses implementacions de la
-multiresolució, s'ha observat que computen de manera similar per a un
-mateix cas. A excepció de Reltsms que no admet casos reals massius,
-car es basa en un \gls{SGBDR} totalment acadèmic i encara
-desenvolupament.  Si bé cal notar que en la programació de les
+multiresolució, s'ha observat que computen els mateixos resultats per
+a un mateix cas. Tot i així, Reltsms no admet casos reals massius, ja que
+es basa en un \gls{SGBDR} totalment acadèmic i encara en
+desenvolupament.  Cal notar, però, que en la programació de les
 implementacions no hem tingut en compte l'eficiència, de fet hem
-preferit conservar certa similitud amb les operacions algebraiques i
-lògiques fetes en les definicions del models.    Així
-doncs, basar-se en el model relacional ha resultat adequat per a
-aquests objectius abstractes d'implementació. A més, ha permès
+preferit conservar una bona similitud amb les operacions algebraiques
+definides en els models.
+%
+Així doncs, basar-se en la teoria dels \gls{SGBD} a l'hora de definir
+els models ha resultat adequat per a obtenir unes implementacions
+abstractes, sense gaires detalls físics.  A més, ha permès
 implementacions de diversa natura, com són Pytsms i Reltsms.
 RoundRobindoop és la implementació més específica de totes, la podem
-qualificar com a sistema de càlcul de la multiresolució. En canvi,
-RoundRobinson i Pytsms són les més genèriques, car les hem dissenyat
-com a referència dels models. Però també gràcies que Python disposa de
-biblioteques extenses, les quals són útils a l'hora d'implementar
-funcionalitats complementàries.
+qualificar com a sistema de càlcul en para\l.lel de la
+multiresolució. En canvi, RoundRobinson i Pytsms són les més
+genèriques, car les hem dissenyat com a referència dels models. Però
+també gràcies que Python disposa de biblioteques extenses, les quals
+són útils a l'hora d'implementar funcionalitats complementàries.
 
 
 
