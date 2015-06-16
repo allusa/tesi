@@ -18,12 +18,12 @@
  \node (ml1) [below=of m1] {};
  \node[mynode,verd] (m2) [below=of ml1] {map 2};
  \node (ml2) [below=of m2] {};
- \node[mynode,verd,dotted] (mn) [below=of ml2] {map M};
+ \node[mynode,verd,dotted] (mn) [below=of ml2] {map i};
 
 
  \node[mynode] (d1) [right=0.5cm of m1] {
    \begin{tabu}{|c|cc|}\hline
-     \multirow{2}{*}{$i$} & \multicolumn{2}{c|}{valor} \\\cline{2-3}
+     \multirow{2}{*}{id} & \multicolumn{2}{c|}{val.} \\\cline{2-3}
        & \multicolumn{1}{c|}{t} & v \\\hline
       & & \\
       & & \\\tabucline[1pt on 3pt]\\%\hdashline
@@ -34,7 +34,7 @@
 
  \node[mynode] (d2) [right=0.5cm of m2] {
    \begin{tabu}{|c|cc|}\hline
-     \multirow{2}{*}{$i$} & \multicolumn{2}{c|}{valor} \\\cline{2-3}
+     \multirow{2}{*}{id} & \multicolumn{2}{c|}{val.} \\\cline{2-3}
        & \multicolumn{1}{c|}{t} & v \\\hline
       & & \\\tabucline[1pt on 3pt]\\%\hdashline
       & &\\\hline
@@ -45,9 +45,9 @@
 
 
 
- \node[mynode,verd] (r1) [right=0.5cm of d1] {\parbox{1cm}{reduce $\delta_0,f_0$}};
- \node[mynode,verd] (r2) [below=2cm of r1] {\parbox{1cm}{reduce $\delta_1,f_1$}};
- \node[mynode,verd,dotted] (rn) [right=1cm of dn] {\parbox{1cm}{reduce $\delta_d,f_d$}};
+ \node[mynode,verd] (r1) [right=0.5cm of d1] {\parbox{1cm}{reduce $\delta_1,f_1$}};
+ \node[mynode,verd] (r2) [below=2cm of r1] {\parbox{1cm}{reduce $\delta_2,f_2$}};
+ \node[mynode,verd,dotted] (rn) [right=1cm of dn] {\parbox{1cm}{reduce $\delta_j,f_j$}};
 
 
 
@@ -62,7 +62,7 @@
        \\\hline
    \end{tabular}
  };
- \node [above=0cm of o] {$O$};
+ \node [above=0cm of o] {$S$};
  \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {
    \begin{tabular}{|c|}\hline
     $\delta\, f$ t v \\\hline
@@ -73,8 +73,8 @@
         \\\hline
    \end{tabular}
 };
- \node [above=0cm of f] {$F$};
- \node [above=0cm of d1] {$E$};
+ \node [above=0cm of f] {$Y$};
+ \node [above=0cm of d1] {$X$};
 
 
 
@@ -82,26 +82,26 @@
  \draw[dashed] (ml1) -- (ml1-|o.west);
  \draw[dashed] (ml2) -- (ml2-|o.west);
 
- \draw[myarrow] (o.center|-m1) -- (m1)  node[sloped,above,near end] {$S'_1$};
- \draw[myarrow] (o.center|-m2) -- (m2) node[sloped,above,near end] {$S'_2$};
- \draw[myarrow,dotted] (o.center|-mn) -- (mn) node[sloped,above,near end] {$S'_M$};
+ \draw[myarrow] (o.center|-m1) -- (m1)  node[sloped,above,near end] {$S_1$};
+ \draw[myarrow] (o.center|-m2) -- (m2) node[sloped,above,near end] {$S_2$};
+ \draw[myarrow,dotted] (o.center|-mn) -- (mn) node[sloped,above,near end] {$S_i$};
 
 
- \draw[myarrow] (m1) -- (d1) node[sloped,above,near start] {$E'_1$};
- \draw[myarrow] (m2) -- (d2) node[sloped,above,near start] {$E'_2$};
- \draw[myarrow,dotted] (mn) -- (dn)  node[sloped,above,near start] {$E'_M$};
+ \draw[myarrow] (m1) -- (d1) node[sloped,above,near start] {$X_1$};
+ \draw[myarrow] (m2) -- (d2) node[sloped,above,near start] {$X_2$};
+ \draw[myarrow,dotted] (mn) -- (dn)  node[sloped,above,near start] {$X_i$};
 
- \draw[myarrow] (d1.center) -- (r1) node[sloped,above,near end] {$E_{1}^0$};
+ \draw[myarrow] (d1.center) -- (r1) node[sloped,above,near end] {$X_{1}^1$};
  \node (d1b) [above=3ex of d1.280] {}; 
  \draw[myarrow] (d1b.center) -- (r2) ;
 
- \draw[myarrow] (d2.center) -- (r1) node[sloped,above,near end] {$E_{2}^0$};
+ \draw[myarrow] (d2.center) -- (r1) node[sloped,above,near end] {$X_{2}^1$};
  \node (d2b) [above=3ex of d2.280] {}; 
  \draw[myarrow] (d2b.center) -- (r2) ;
 
- \draw[myarrow,dotted] (dn) -- (r1) node[sloped,above,near end] {$E_{1}^1$};
+ \draw[myarrow,dotted] (dn) -- (r1) node[sloped,above,near end] {$X_{1}^2$};
  \draw[myarrow,dotted] (dn) -- (r2);
- \draw[myarrow,dotted] (dn) -- (rn) node[sloped,above,near end] {$E_{d}^d$};
+ \draw[myarrow,dotted] (dn) -- (rn) node[sloped,above,near end] {$X_{i}^j$};
 
 
  \node (r1l) [below=of r1] {};
@@ -110,9 +110,9 @@
  \draw[dashed] (r2l) -- (r2l-|f.east);
 
 
- \draw[myarrow] (r1) -- (r1-|f.center)  node[sloped,above,near start] {$F'_0$};
- \draw[myarrow] (r2) -- (r2-|f.center)  node[sloped,above,near start] {$F'_1$};
- \draw[myarrow,dotted] (rn) -- (rn-|f.center)  node[sloped,above,near start] {$F'_d$};
+ \draw[myarrow] (r1) -- (r1-|f.center)  node[sloped,above,near start] {$Y_0$};
+ \draw[myarrow] (r2) -- (r2-|f.center)  node[sloped,above,near start] {$Y_1$};
+ \draw[myarrow,dotted] (rn) -- (rn-|f.center)  node[sloped,above,near start] {$Y_j$};
 
 
   \end{tikzpicture}

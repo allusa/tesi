@@ -1,4 +1,4 @@
-\lstMakeShortInline[style=py,basicstyle=\sffamily]{@}
+\lstMakeShortInline[style=pynocolor,basicstyle=\sffamily]{@}
 
 
 \chapter{Implementació de referència}
@@ -20,8 +20,12 @@ En la implementació amb Python utilitzem el paradigma de programació
 d'orientació a objectes. Aquest paradigma permet definir objectes que
 tenen atributs per a estructurar les dades i mètodes associats per a
 manipular-les, cosa que ens permet relacionar de manera senzilla la
-implementació amb el model.  Per a mostrar les relacions entre els
-diversos objectes utilitzem diagrames de classe de \gls{UML}.
+implementació amb els conceptes d'estructura i d'operacions del model.
+Per a mostrar les relacions entre els diversos objectes utilitzem
+diagrames de classe de \gls{UML}. Aquests diagrames mostren els
+objectes en caixes però, per tal que no esdevinguin massa grans, només
+hi assenyalem el nom de l'objecte, és a dir sense els atributs ni els
+mètodes.
 
 
 
@@ -54,7 +58,7 @@ tres s'implementen respectivament com a classes @Measure@,
   \begin{tikzpicture}
 
   %Timeseries
-  \umlclass[x=0,y=0] {TimeSeries}{}{}  
+  \umlsimpleclass[x=0,y=0] {TimeSeries}{}{}  
 
   % Measure
   \umlclass[x=-4] {Measure}{}{}
@@ -68,9 +72,9 @@ tres s'implementen respectivament com a classes @Measure@,
   \umlclass[x=4] {Representation}{}{} %,type=abstract
   \umlassoc[mult1=1,mult2=1]  {TimeSeries}{Representation}
   \umlclass[x=3,y=-2] {Zohe}{}{}
-  \umlclass[x=5,y=-2] {Delta}{}{}
+  \umlclass[x=5,y=-2] {Dd}{}{}
   \umlinherit {Zohe}{Representation}
-  \umlinherit {Delta}{Representation}
+  \umlinherit {Dd}{Representation}
 
   %Associacions visitor
   \umlclass[x=-1.5,y=-4] {RegularProp}{}{}
@@ -81,7 +85,7 @@ tres s'implementen respectivament com a classes @Measure@,
   %Dependencies
   \umlemptypackage[x=5,y=-5]{Matplotlib}
   \umldep{Zohe}{Matplotlib}
-  \umldep{Delta}{Matplotlib}
+  \umldep{Dd}{Matplotlib}
 
 
   \end{tikzpicture}
@@ -102,7 +106,7 @@ tres s'implementen respectivament com a classes @Measure@,
 \begin{tikzpicture}
 
   %Timeseries
-  \umlclass[x=0,y=0] {TimeSeries}{}{}  
+  \umlsimpleclass[x=0,y=0] {TimeSeries}{}{}  
   %Realisations 
   \umlclass[x=-3.5,y=-3] {Structure}{}{}
   \umlclass[x=-1.2,y=-3] {OpSet}{}{}
@@ -210,7 +214,7 @@ indefinit o bé la @MChar@ que defineix mesures de tipus caràcter.
 
 Pel que fa a les representacions, cada representació en concret és una
 especialització de @Representation@. Per exemple @Zohe@ i
-@Delta@ implementen la funció de representació \gls{zohe} i la delta
+@Dd@ implementen la funció de representació \gls{zohe} i la \gls{dd}
 respectivament.
 %\emph{Representation} és una classe abstracta?
 Bàsicament, cada representació particular ha de definir l'operació que
@@ -244,11 +248,11 @@ representacions definides s'usa la biblioteca
 La biblioteca RoundRobinson implementa un \gls{SGSTM} de
 referència. Així doncs, seguint el model, els objectes principals són
 les sèries temporals multiresolució, les subsèries resolució, els
-buffers, els discs i les funcions d'agregació
+discs, els buffers i les funcions d'agregació
 d'atributs. Respectivament s'implementen com a classes
-@MultiresolutionSeries@, @Resolution@, @Buffer@, @Disc@ i
-@Function@ --les funcions d'agregació d'atributs són realitzades per
-@Function@ de Python.
+@MultiresolutionSeries@, @Resolution@, @Disc@, @Buffer@ i @Function@
+--les funcions d'agregació d'atributs són realitzades per @Function@
+de Python.
 
 
 \begin{figure}[tp]
@@ -257,7 +261,7 @@ d'atributs. Respectivament s'implementen com a classes
 \begin{tikzpicture}
 
   %MultiTimeseries
-  \umlclass[x=0,y=0] {MultiresolutionSeries}{}{}  
+  \umlsimpleclass[x=0,y=0] {MultiresolutionSeries}{}{}  
   \umlclass[x=-4,y=0,type=python] {set}{}{}
   \umlinherit{MultiresolutionSeries}{set}
   %Components 
@@ -280,7 +284,7 @@ d'atributs. Respectivament s'implementen com a classes
   \umlinherit{mean\_zohe}{Function}
 
   %TimeSeries
-  \begin{umlpackage}[x=1,y=-9]{Pytsms}
+  \begin{umlpackage}[x=1.2,y=-9]{Pytsms}
     \umlclass{TimeSeries}{}{}  
   \end{umlpackage}
   \umluniassoc[mult=1]  {Buffer}{TimeSeries}
@@ -303,19 +307,23 @@ d'atributs. Respectivament s'implementen com a classes
 
 
 La \autoref{fig:implementacio:roundrobinson-uml} mostra amb un
-diagrama \gls{UML} la relació entre aquests cinc objectes principals. Així,
-una @MultiresolutionSeries@ té una relació d'agregació amb les
-@Resolution@, és a dir que una sèrie temporal multiresolució
-conté subsèries resolucions.  Una @Resolution@ té una relació de
-composició amb un @Buffer@ i una altra amb un @Disc@, és a
+diagrama \gls{UML} la relació entre aquests cinc objectes
+principals. Així, una @MultiresolutionSeries@ té una relació
+d'agregació amb les @Resolution@, és a dir que una sèrie temporal
+multiresolució conté subsèries resolucions.  Una @Resolution@ té una
+relació de composició amb un @Buffer@ i una altra amb un @Disc@, és a
 dir que cada subsèrie resolució està formada exactament per un buffer
 i un disc. Cada @Buffer@ té una relació d'associació amb una
-@TimeSeries@, és a dir amb la sèrie temporal del buffer; de
-manera similar per la sèrie temporal del disc cada @Disc@
-s'associa a una @TimeSeries@. A més, cada @Buffer@ també té
-una relació d'associació amb una @Function@ que ha de tenir dos
-paràmetres: la sèrie temporal (@s@) i l'interval de consolidació
-(@i@).
+@TimeSeries@, és a dir amb la sèrie temporal del buffer; de manera
+similar per la sèrie temporal del disc cada @Disc@ s'associa a una
+@TimeSeries@. A més, cada @Buffer@ també té una relació d'associació
+amb una @Function@ que ha de tenir dos paràmetres: la sèrie temporal
+(@s@) i l'interval de consolidació (@i@). Noteu que en el model hem
+definit una funció d'agregació d'atributs sobre una sèrie temporal, un
+instant de consolidació $\tau$ i un pas de consolidació $\delta$,
+mentre que les implementem sobre una sèrie temporal i directament
+sobre l'interval de consolidació $i=[\tau,\tau+\delta]$.
+
 
 
 
@@ -361,8 +369,8 @@ d'agregació d'atributs com per exemple la @max_zohe@ o la
 la representació \gls{zohe}.  Això no obstant, els usuaris en poden
 definir de pròpies ja que són @Function@ de Python amb els paràmetres
 @s@ una @TimeSeries@ i @i@ una parella d'instants de temps com ara
-@[t0,tf]@ i que retornen una @Measure@. Per exemple la funció
-@mean_zohe@ retorna una mesura amb @tf@ com a temps i com a valor
+@[ta,tb]@ i que retornen una @Measure@. Per exemple la funció
+@mean_zohe@ retorna una mesura amb @tb@ com a temps i com a valor
 l'àrea mitjana a partir la selecció temporal \gls{zohe} de la sèrie
 temporal en l'interval de temps donat.
 
@@ -382,7 +390,7 @@ semblant als models algebraics de \gls{SGST} i de \gls{SGSTM}.
 
 
 El \autoref{lst:pytsms:ex1} és un exemple d'ús de Pytsms on definim
-dues sèries temporals $s_1$ i $s_2$ i hi apliquem diverses operacions:
+dues sèries temporals @s1@ i @s2@ i hi apliquem diverses operacions:
 unió, unió temporal, concatenació, interval tancat, interval temporal
 \gls{zohe}, selecció temporal \gls{zohe}, comprovació de propietats de
 regularitat i consultes de gràfics. Noteu que @Measure@ s'abrevia amb
@@ -493,8 +501,8 @@ TimeSeries([m(2,2), m(3,2), m(4,0), m(6,2)])
 
 
 El \autoref{lst:roundrobinson:ex1} és un exemple d'ús de RoundRobinson
-on definim una sèrie temporal multiresolució $M$, hi afegim una sèrie
-temporal $s$, hi apliquem la consolidació fins que no sigui
+on definim una sèrie temporal multiresolució @M@, hi afegim una sèrie
+temporal @s@, i hi apliquem la consolidació fins que no sigui
 consolidable. Finalment, consultem el resultat amb les dues consultes
 bàsiques --$\glssymbol{not:sgstm:seriedisc}$ i
 $\glssymbol{not:sgstm:serietotal}$-- i ho dibuixem gràficament.  Les
