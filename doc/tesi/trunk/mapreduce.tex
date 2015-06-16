@@ -150,13 +150,13 @@ $\glssymbol{not:sgstm:multiresolucio}$.
 
 
 
-Sigui $S=\{m_0,m_1,\dotsc,m_k\}$ una sèrie temporal, i $e = \{
-(\delta_0,f_0,\tau_0,k_0),\ldots, (\delta_d,f_d,\tau_d,k_d)\}$ els
-paràmetres d'un esquema de multiresolució, definim l'algoritme
-MapReduce que calcula $\operatorname{mapreduce}(S,e) = \{
-(\delta_0,f_0,
-\glssymbol{not:sgstm:dmap}(S,\delta_0,f_0,\tau_0,k_0)),\dotsc,
-(\delta_c,f_c,\glssymbol{not:sgstm:dmap}(S,\delta_c,f_c,\tau_c,k_c))
+Sigui $S$ una sèrie temporal, i $\glssymbol{not:esquemaM} = \{
+(\delta_1,f_1,\tau_1,\glssymbol{not:sgstm:k}_1),\ldots,
+(\delta_l,f_l,\tau_l,\glssymbol{not:sgstm:k}_l)\}$ un esquema de
+multiresolució, definim l'algoritme MapReduce que calcula
+$\operatorname{mapreduce}(S,\glssymbol{not:esquemaM}) = \{
+(\delta_1,f_1,
+\glssymbol{not:sgstm:dmap}(S,\delta_1,f_1,\tau_1,\glssymbol{not:sgstm:k}_1)),\dotsc,(\delta_l,f_l,\glssymbol{not:sgstm:dmap}(S,\delta_l,f_l,\tau_l,\glssymbol{not:sgstm:k}_l))
 \}$. És a dir, calcula tots els $\glssymbol{not:sgstm:dmap}$ possibles
 i els identifica amb el pas de consolidació $\delta$ i la funció
 d'agregació d'atributs $f$, els quals identifiquen les subsèries
@@ -174,12 +174,27 @@ multiresolució.  De forma resumida, RoundRobindoop en l'etapa de map
 classifica les mesures en funció de a quin disc i temps resultant es
 consolidaran i en l'etapa de reduce calcula la funció d'agregació per
 a les mesures que s'hagin de consolidar al mateix disc.  A continuació
-expliquem detalladament com són les dades originals ($O$), les
-d'entremig ($E$) i les finals ($F$), i finalment definim l'operació de
-map i la de reduce.
+expliquem detalladament com són les dades originals ($S$), les
+d'entremig ($X$) i les finals ($Y$), i finalment definim l'operació de
+map i la de reduce. Per a les dades d'entremig, distingim com resulten
+de l'operació map i com s'agrupen per a l'operació reduce. A la
+\autoref{tab:mapreduce:notacio} resumim la notació dels conjunts i els
+seus cardinals utilitzats en aquesta secció.
 
-
-
+\begin{table}
+  \centering
+  \begin{tabular}[bp]{l|l}
+    Cardinal & Conjunt \\\hline
+    $i$ & nombre de maps  \\
+    $j$ & nombre de reduces \\
+    $k$ & sèrie temporal ($S$)  \\
+    $l$ & esquema multiresolució ($\glssymbol{not:esquemaM}$) \\
+    $n$ & dades d'entremig ($X$) \\
+    $o$ & dades finals ($Y$)
+  \end{tabular}
+  \caption{Notació dels conjunts i els cardinals per a definir RoundRobindoop}
+  \label{tab:mapreduce:notacio}
+\end{table}
 
 
 \begin{figure}[tp]
@@ -193,101 +208,123 @@ map i la de reduce.
 
 
 
-
-Les dades originals són la sèrie temporal $S$ és a dir un conjunt de
-parelles de temps i valor, a les quals anomenem mesures. Un sèrie
-temporal es pot partir en trossos on cada tros és un subconjunt de
-mesures, és a dir una subsèrie temporal. Per tant, cada operació map
-rep una subsèrie temporal de l'original: $S'_1 =
-\{m_0,\dotsc,m_{o1}\}, S'_2 = \{m_{o1+1},\dotsc,m_{o2}\}, \dotsc, S'_M
-= \{\dotsc,m_{k}\}$ on $M$ són el nombre de maps i $o_1,o_2\in
-\glssymbol{not:N}$, $o_1 < o_2 < k$.
-
+\paragraph{Dades originals}
+Sigui $i$ el nombre de processos map i sigui la sèrie temporal
+$S=\{m_0,\dotsc,m_a,\dotsc,,m_k\}$ les dades originals. La sèrie
+temporal es pot partir en subconjunts $S=S_1 \cup S_2 \cup \dotsb \cup
+S_i$ on cada subconjunt és una subsèrie temporal $S_1 =
+\{m_0,\dotsc,m_{a}\}, S_2 = \{m_{a+1},\dotsc\}, \dotsc, S_i =
+\{\dotsc,m_{k}\}$ i $a\in \glssymbol{not:N}$, $a < k$.  Cada
+operació map rep una subsèrie temporal de l'original.
 
 
-Les dades d'entremig són les sèries temporals dels buffers, és a dir
-les mesures pendents de consolidar per a cada subsèrie resolució.
-Així doncs, les dades d'entremig vistes com a conjunt són un conjunt
-de dades pendents de consolidar $E=\{ D_{0}, \dotsc, D_t\}$ on cada
-dada pendent de consolidar és un tuple $D=(i,m)$ on $i=(\delta,f,t_b)$
-funciona com a identificador i $m=(t,v)$ com a valor.  És a dir, que
-classifica cada mesura $m$ a quines resolucions s'han de consolidar
+
+\paragraph{Dades d'entremig (map)}
+Les dades d'entremig equivalen a les sèries temporals dels buffers, és
+a dir les mesures pendents de consolidar per a cada subsèrie
+resolució.  Així doncs, les dades d'entremig són un conjunt de dades
+pendents de consolidar $X=\{ \chi_{1}, \dotsc, \chi_n\}$ on cada dada
+és un tuple $\chi=(\text{id},m)$ en què
+$\text{id}=(\delta,f,\tau+\delta)$ funciona com a identificador i la
+mesura $m$ funciona com a valor. L'identificador classifica per a cada
+mesura original $m$ les resolucions on s'hauran de consolidar,
 identificades pel pas de consolidació $\delta$, per la funció
 d'agregació d'atributs $f$ i pel temps resultant de consolidació
-$t_b$. Per tant, cada operació map resulta en un subconjunt de les
-dades d'entremig: $E'_1=\{ (\delta_0,f_0, t_{b0}^0, t_0,v_0),
-(\delta_1,f_1, t_{b1}^0, t_0,v_0), \dotsc , (\delta_d,f_d, t_{bd}^0,
-t_0,v_0), (\delta_0,f_0, t_{b0}^1, t_1,v_1), \dotsc, (\delta_d,f_d,
-t_{bd}^{o1}, t_{o1},v_{o1}) \}$, i $E'_2$ i $E'_M$ de manera similar.
-En total, les dades d'entremig tenen un cardinal de $|E|=t+1=|e||S|$
-és a dir la quantitat de resolucions de l'esquema multiplicat per la
-quantitat de mesures de la sèrie temporal original.
+$\tau+\delta$.
 
 
-Un cop calculades, les dades d'entremig $E$ s'ordenen i
-s'agrupen per identificadors $(\delta,f, t_b)$ idèntics.  Així s'obté
-unes dades d'entremig ordenades, de les quals expressem a continuació
-cada subconjunt de forma simplificada agrupant per $\delta$ i $f$
-sense tenir en comte els $t_b$. Siguin $ t_b, t,v$ variables lliures,
-cada subconjunt agrupat de $E$ té la forma:
-% Del subconjunt $E'_1$ s'obtenen els subconjunts $O_0^0= \{  (\delta_0,f_0, t_{b0}^0, t,v) \in E'_1 \}, O_0^1= \{  (\delta_0,f_0, t_{b0}^1, t,v) \in E'_1 \},\dotsc,  O_0^d= \{  (\delta_0,f_0, t_{b0}^{r0}, t,v) \in E'_1 \}$
-a partir del subconjunt $E'_1$ s'obtenen $E_1^0=\{ (\delta_0,f_0, t_b,
-t,v) \in E'_1 \}, E_1^1=\{ (\delta_1,f_1, t_b, t,v) \in E'_1 \},
-\dotsc, E_1^d=\{ (\delta_d,f_d, t_b, t,v) \in E'_1 \}$, i de manera
-similar s'obtenen els subconjunts agrupats a partir de
-$E'_2,\dotsc,E'_d$.  D'aquesta manera cada operació reduce rep, en la
-forma simplificada, tots els tuples de $E$ amb el mateix $\delta$ i
-$f$: per a $\delta_0$ i $f_0$ rep $E^0 = E_1^0 \cup E_2^0 \cup \dotsb
-\cup E_d^0$, per a $\delta_1$ i $f_1$ rep $E^1$, etc.  Com hem dit,
-hem expressat aquests conjunts de forma simplificada per a $\delta$ i
-$f$ tot i a més hi ha un reduce per a cada $t_b$ diferent; a
-continuació per a les dades finals ho expressem de totes dues maneres.
+Cada operació map calcula un subconjunt de les dades d'entremig, és a
+dir en total $X=X_1\cup X_2 \cup \dotsb \cup X_i$, on per exemple el
+primer subconjunt té la forma $X_1= \{
+(\text{id}_1,m_0),(\text{id}_2,m_0),\dotsc,(\text{id}_j,m_0),(\text{id}_1,m_a),\dotsc,(\text{id}_j,m_a)\}$
+i per exemple el primer identificador té la forma
+$\text{id}_1=(\delta_1,f_1,\tau^*+\delta_1)$ i $\tau^*+\delta_1$ seria
+l'instant en què s'hauria de consolidar $m_0$. %
+%\delta_0,f_0, t_{b0}^0, t_0,v_0), (\delta_1,f_1, t_{b1}^0, t_0,v_0),
+%\dotsc , (\delta_d,f_d, t_{bd}^0, t_0,v_0), (\delta_0,f_0, t_{b0}^1,
+%t_1,v_1), \dotsc, (\delta_d,f_d, t_{bd}^{o1}, t_{o1},v_{o1}) \}$
+Així doncs, les dades d'entremig tenen un cardinal
+$|X|=|\glssymbol{not:esquemaM}||S|$ és a dir la quantitat de
+resolucions de l'esquema multiplicat per la quantitat de mesures de la
+sèrie temporal original.
+%aquí no tenim en compte kappa
 
 
 
-Les dades finals són les sèries temporals dels discs, és a dir les
-mesures consolidades per a cada subsèrie resolució. Així doncs, les
-dades finals vistes com a conjunt són un conjunt de dades consolidades
-$F=\{ D'_{0}, \dotsc, D'_r\}$ on cada dada consolidada és un tuple
-$D'=(\delta,f,m')$ que indica quina mesura $m'=(t_b,v')$ és i a quin
-disc pertany identificat per $\delta$ i $f$.  Per tant, cada operació
-reduce calcula un subconjunt de $F$: $F_0^0
-=\{(\delta_0,f_0,t_{b0}^0,v_0^0)\}, F_0^1
-=\{(\delta_0,f_0,t_{b0}^1,v_0^1)\}, \dotsc, F_0^{r0}
-=\{(\delta_0,f_0,t_{b0}^{r0},v_0^{r0})\}, F_1^0= \dotsc, F_1^{r1}=
-\dotsc, F_d^0= \dotsc, F_d^{rd}=
-\{(\delta_d,f_d,t_{bd}^{rd},v_d^{rd})\}$ on el nombre de mesures
-consolidades per cada disc és afitat als cardinals màxims, $r_0 +1
-\leq k_0, r_1 +1 \leq k_1, \dotsc r_d +1 \leq k_d$, i per tant el
-nombre total de reduces està afitat a $|F| \leq k_0+k_1\dotsb+k_d$.
-Per a simplificar la~\autoref{fig:roundrobindoop:esquema} s'han
-agrupat els reduce per $\delta$ i $f$, és a dir $F'_0 =
-\{(\delta_0,f_0,t_{b0}^0,v_0^0),(\delta_0,f_0,t_{b0}^1,v_0^1),\dotsc,
-(\delta_0,f_0,t_{b0}^{r0},v_0^{r0})\}$, etc.\ i per tant $d+1= |e|$
-són el nombre total de reduces agrupats.
+\paragraph{Dades d'entremig (reduce)}
+Un cop calculades, les dades d'entremig $X$ s'ordenen i s'agrupen per
+identificadors $(\delta,f, \tau+\delta)$ idèntics.  Sigui $j$ el
+nombre de processos reduce i siguin $X=X^1\cup X^2 \cup \dotsb \cup
+X^j$ les agrupacions d'identificadors.  
+ Cada agrupació de dades està
+formada per subconjunts que provenen de qualsevol map, $X^1 = X_1^1
+\cup X_2^1 \cup \dotsb X_i^1$ on per exemple $X_1^1 = \{
+(\delta_1,f_1,\tau^*+\delta_1,m_0), \dotsc
+,(\delta_1,f_1,\tau^*+\delta_1,m_*) \} $ conté les mesures que s'han
+processat en el primer map i han estat classificades per a
+processar-se en el reduce identificat per
+$(\delta_1,f_1,\tau^*+\delta_1)$.  
+%
+De forma més general, un reduce pot rebre diverses agrupacions
+d'identificadors idèntics, per exemple tots els que comparteixin
+$\delta$ i $f$ que és el cas que hem dibuixat a la
+\autoref{fig:roundrobindoop:esquema}.
 
 
 
+
+
+\paragraph{Dades finals}
+Les dades finals equivalen a les sèries temporals dels discs, és a dir
+les mesures consolidades per a cada subsèrie resolució. Així doncs,
+les dades finals són un conjunt de dades consolidades $Y=\{
+\upsilon_{1}, \dotsc, \upsilon_o\}$ on cada dada consolidada és un
+tuple $\upsilon=(\delta,f,t,v)$ identificat per la resolució $\delta$
+i $f$ a què pertany i amb el valor $v$ consolidat en l'instant temps de la
+forma $t=\tau+\delta$.  Sigui $j$ el nombre de reduce.  En la forma més
+general, cada reduce calcula un subconjunt de les dades finals
+$Y=Y_1\cup Y_2 \cup \dotsb Y_j$.  Per exemple en la
+\autoref{fig:roundrobindoop:esquema}, que s'agrupen els identificadors
+per $\delta$ i $f$, el primer subconjunt té la forma $Y_1 = \{
+(\delta_1,f_1,\tau^*+\delta_1,v^*), \dotsc
+,(\delta_1,f_1,\tau^{**}+\delta_1,v^{**}) \}$ on $\tau^*$, $v^*$, $\tau^{**}$ i
+$v^{**}$ són els instants i valors que corresponguin.
+ 
+Atès que en la multiresolució cada disc està afitat per un cardinal
+màxim, es poden afitar el nombre total de processos reduce.  Així
+siguin $\glssymbol{not:sgstm:k}$ els cardinals de l'esquema de
+multiresolució, el cardinal de les dades finals és $|Y|\leq
+\glssymbol{not:sgstm:k}_1 + \glssymbol{not:sgstm:k}_2 + \dotsb +
+\glssymbol{not:sgstm:k}_l$. En el cas de la
+\autoref{fig:roundrobindoop:esquema}, $|Y|\leq l$ perquè hi ha els
+reduce agrupats per cada resolució $\delta$ i $f$.
+
+
+
+
+\paragraph{Operació map}
 L'operació map calcula les dades d'entremig a partir de les dades
-originals i un esquema multiresolució, treballa en subconjunts de les
+originals i un esquema multiresolució. Treballa en subconjunts de les
 dades per a així poder-se computar para\l.lelament.
 \begin{definition}[Operació Map]
-  Sigui $S'=\{m_0,\dotsc,m_{o1}\}$ una subsèrie temporal de les dades
-  originals, $e=\{ (\delta_0,f_0,\tau_0,k_0),\ldots,
-  (\delta_d,f_d,\tau_d,k_d)\}$ un esquema de multiresolució i
-  $E'=\{(\delta_0,f_0, t_{b0}^0, t_0,v_0),\dotsc, \dotsc,
-  (\delta_d,f_d, t_{bd}^{o1}, t_{o1},v_{o1}) \}$ un subconjunt de les
-  dades d'entremig abans de ser ordenades, l'operació map de
-  l'algoritme MapReduce és $E'=\operatorname{map}(S',e)$ on $E'=
-  \forall m \in S': \bigcup\operatorname{classifica}(m,e)$.
+  Sigui $S_1$ una subsèrie temporal de les dades originals,
+  $\glssymbol{not:esquemaM}$ un esquema de multiresolució i $X_1$ un
+  subconjunt de les dades d'entremig abans de ser
+  ordenades. L'operació $\operatorname{map}$ de l'algoritme MapReduce,
+  notada com a $X_1=\operatorname{map}(S_1,\glssymbol{not:esquemaM})$,
+  resulta en el subconbjunt $X_1=
+  \bigcup\limits_{ \forall m \in S_1}
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM})$.
 
-  La funció $\operatorname{classifica}$ indica per a cada mesura a quins
-  discs s'ha de consolidar: $\operatorname{classifica}(m,e)=\{ \forall
-  (\delta,f,\tau,k) \in e: (\delta,f,\tau+n\delta,t,v) |
-  \tau+(n-1)\delta < t \leq \tau+n\delta, n\in\glssymbol{not:Z}, t >
-  \tau \}$. Cal tenir en compte que $t > \tau$ indica que $\tau$ és el temps
-  d'inici de la resolució i per tant no té sentit incloure mesures
-  anteriors.
+
+  La funció $\operatorname{classifica}$ indica per a cada mesura a
+  quins discs s'ha de consolidar:
+  $\operatorname{classifica}(m,\glssymbol{not:esquemaM})=\{
+  (\delta,f,\tau+n\delta,T(m),T(v)) | (\delta,f,\tau,\glssymbol{not:sgstm:k}) \in
+  \glssymbol{not:esquemaM} \wedge \tau+(n-1)\delta < T(m) \leq
+  \tau+n\delta \wedge n\in\glssymbol{not:Z} \wedge T(m) > \tau \}$. Cal
+  tenir en compte que $T(m) > \tau$ indica que $\tau$ és el temps d'inici
+  de la resolució i per tant no té sentit incloure mesures anteriors.
 \end{definition}
 
 
@@ -317,19 +354,21 @@ hem definit:
 \begin{example}[Classificació d'una mesura en les resolucions]
   \label{ex:mapreduce:classifica}
   Sigui l'esquema de multiresolució
-  $e=\{(\delta_0=2,f_0,\tau_0=0,k_0=4),(\delta_1=5,f_1,\tau_1=10,k_1=3)\}$
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,\glssymbol{not:sgstm:k}_1=4),(\delta_2=5,f_2,\tau_2=10,k_2=3)\}$
   i la mesura $m=(25,1)$, aquesta és classificada per a consolidar-se
-  en les dues resolucions $\operatorname{classifica}(m,e)=\{
-  (2,f_0,t_{b0},25,1), (5,f_1,t_{b1},25,1) \}$ on
-  $\tau_0+(n-1)\delta_0 < 25 \leq \tau_0+n\delta_0,
-  n\in\glssymbol{not:Z}$ i $t_{b0}=\tau_0+n\delta_0 = 26$, i de manera
-  semblant $t_{b1}= 25$.
+  en les dues resolucions següents:
+  $\operatorname{classifica}(m,\glssymbol{not:esquemaM})=\{
+  (2,f_1,t^*,25,1), (5,f_2,t^{**},25,1) \}$ on $\tau_1+(n-1)\delta_1 <
+  25 \leq \tau_1+n\delta_1, n\in\glssymbol{not:Z}$ i per tant
+  $t^*=\tau_1+n\delta_1 = 26$, i de manera semblant es pot calcular
+  $t^{**}= 25$.
 \end{example}
 
 
+\todo{canviar notació}
 
 
-
+\paragraph{Operació reduce}
 Un cop s'han obtingut les dades d'entremig $E$, el sistema com per
 exemple Hadoop agrupa els tuples de $E$ amb el mateix identificador i
 els processa a un mateix reduce. És a dir, sigui $E$ la unió de tots
