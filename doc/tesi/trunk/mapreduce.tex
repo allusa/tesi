@@ -306,27 +306,30 @@ reduce agrupats per cada resolució $\delta$ i $f$.
 L'operació map calcula les dades d'entremig a partir de les dades
 originals i un esquema multiresolució. Treballa en subconjunts de les
 dades per a així poder-se computar para\l.lelament.
-\begin{definition}[Operació Map]
-  Sigui $S_1$ una subsèrie temporal de les dades originals,
-  $\glssymbol{not:esquemaM}$ un esquema de multiresolució i $X_1$ un
+\begin{definition}[Operació map]
+  Sigui $S$ una subsèrie temporal de les dades originals,
+  $\glssymbol{not:esquemaM}$ un esquema de multiresolució i $X$ un
   subconjunt de les dades d'entremig abans de ser
-  ordenades. L'operació $\operatorname{map}$ de l'algoritme MapReduce,
-  notada com a $X_1=\operatorname{map}(S_1,\glssymbol{not:esquemaM})$,
-  resulta en el subconbjunt $X_1=
-  \bigcup\limits_{ \forall m \in S_1}
+  ordenades. L'operació \emph{map} l'algoritme MapReduce,
+  notada com a $X=\operatorname{map}(S_1,\glssymbol{not:esquemaM})$,
+  resulta en el subconbjunt $X=
+  \bigcup\limits_{ \forall m \in S}
   \operatorname{classifica}(m,\glssymbol{not:esquemaM})$.
 
 
   La funció $\operatorname{classifica}$ indica per a cada mesura a
   quins discs s'ha de consolidar:
-  $\operatorname{classifica}(m,\glssymbol{not:esquemaM})=\{
-  (\delta,f,\tau+n\delta,T(m),T(v)) | (\delta,f,\tau,\glssymbol{not:sgstm:k}) \in
-  \glssymbol{not:esquemaM} \wedge \tau+(n-1)\delta < T(m) \leq
-  \tau+n\delta \wedge n\in\glssymbol{not:Z} \wedge T(m) > \tau \}$. Cal
-  tenir en compte que $T(m) > \tau$ indica que $\tau$ és el temps d'inici
-  de la resolució i per tant no té sentit incloure mesures anteriors.
+  \begin{align*}\operatorname{classifica}(m,\glssymbol{not:esquemaM})= &\{
+    (\delta,f,\tau+n\delta,T(m),V(m)) |
+    (\delta,f,\tau,\glssymbol{not:sgstm:k}) \in \glssymbol{not:esquemaM} \\
+    &\wedge\; \tau+(n-1)\delta < T(m) \leq \tau+n\delta \\
+    &\wedge\; n\in\glssymbol{not:Z} \wedge T(m) > \tau \}
+  \end{align*} 
 \end{definition}
 
+Cal tenir en compte que $T(m) > \tau$ indica que $\tau$ és el temps
+d'inici de la resolució i per tant no té sentit incloure mesures
+anteriors.
 
 
 
@@ -354,9 +357,11 @@ hem definit:
 \begin{example}[Classificació d'una mesura en les resolucions]
   \label{ex:mapreduce:classifica}
   Sigui l'esquema de multiresolució
-  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,\glssymbol{not:sgstm:k}_1=4),(\delta_2=5,f_2,\tau_2=10,k_2=3)\}$
-  i la mesura $m=(25,1)$, aquesta és classificada per a consolidar-se
-  en les dues resolucions següents:
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,
+  \glssymbol{not:sgstm:k}_1=4),
+  (\delta_2=5,f_2,\tau_2=10,\glssymbol{not:sgstm:k}_2=3)\}$ i la
+  mesura $m=(25,1)$, aquesta és classificada per a consolidar-se en
+  les dues resolucions següents:
   $\operatorname{classifica}(m,\glssymbol{not:esquemaM})=\{
   (2,f_1,t^*,25,1), (5,f_2,t^{**},25,1) \}$ on $\tau_1+(n-1)\delta_1 <
   25 \leq \tau_1+n\delta_1, n\in\glssymbol{not:Z}$ i per tant
@@ -365,31 +370,33 @@ hem definit:
 \end{example}
 
 
-\todo{canviar notació}
-
 
 \paragraph{Operació reduce}
-Un cop s'han obtingut les dades d'entremig $E$, el sistema com per
-exemple Hadoop agrupa els tuples de $E$ amb el mateix identificador i
-els processa a un mateix reduce. És a dir, sigui $E$ la unió de tots
-els $E'$ calculats pels map, un subconjunt de les dades ordenades és
-$E''_{\delta,f,t_b} = \{ (\delta,f,t_b,m) \in E \}$.  L'operació
-reduce calcula les dades finals a partir de les dades d'entremig
-ordenades, treballa en subconjunts de les dades per a així poder-se
-computar para\l.lelament.
-\begin{definition}[Operació Reduce]
-  Sigui $E''= \{ (\delta,f,t_b,m_0) ,\dotsc, (\delta,f,t_b,m_k) \}$ un
-  subconjunt de les dades d'entremig ordenades i $F'=\{
-  (\delta,f,t_b,v) \}$ un subconjunt de les dades finals, l'operació
-  reduce de l'algoritme MapReduce és $F'=\operatorname{reduce}(E'')$
-  on $F'= (\delta,f,t_b,v)$ i $v= V( f(\{m_0,\dotsc,m_k\},i))$ i
-  $i=[t_b-\delta,t_b]$.
+Un cop s'han obtingut les dades d'entremig el sistema, com per exemple
+Hadoop, agrupa els tuples amb el mateix identificador i els processa
+en un mateix reduce.  L'operació reduce calcula les dades finals a
+partir de les dades d'entremig ordenades, tot i que treballa en
+subconjunts de les dades per a així poder-se computar para\l.lelament.
+\begin{definition}[Operació reduce]
+  Sigui $X = \{ (\delta,f,\tau,m_0) ,\dotsc, (\delta,f,\tau,m_k) \}$
+  un subconjunt de les dades d'entremig ordenades i $Y$ un subconjunt
+  de les dades finals. L'operació \emph{reduce} de l'algoritme
+  MapReduce, notada com a $Y=\operatorname{reduce}(X)$, resulta en el
+  subconjunt $Y= \{(\delta,f,\tau,v)\}$ on $v= V(
+  f(\{m_0,\dotsc,m_k\},\tau-\delta,\delta))$. 
+
+  De manera senzilla, es pot estendre la definició per a treballar amb
+  diverses agrupacions d'identificadors a les dades d'entremig $X = \{
+  (\text{id}_0,m_a) ,\dotsc, (\text{id}_0,m_b),
+  (\text{id}_1,m_c),\dotsc, (\text{id}_1,m_d), \dots\}$ i retornar el
+  corresponent subconjunt final $Y=
+  \{(\text{id}_0,v_0),(\text{id}_1,v_1),\dots\}$.
 \end{definition}
 
-L'expressió de l'interval $i$ es pot ometre ja que l'operació map ja
-ha classificat les mesures d'aquest interval, tot i així l'indiquem
-per a seguir la forma genèrica $f(S,i)$ de les funcions d'agregació
-d'atributs de la definició. A continuació d'aquest apartat
+L'expressió de l'interval $[\tau-\delta, \tau]$ es pot ometre ja que
+l'operació map ja ha classificat les mesures d'aquest interval. Tot i
+així l'indiquem per a seguir la forma genèrica $f(S,\tau,\delta)$ de
+les funcions d'agregació d'atributs. A continuació d'aquest apartat
 contextualitzem aquest problema de les $f$.
 
 
@@ -397,8 +404,8 @@ En conclusió, el map i el reduce no es corresponen exactament
 amb les definicions de les funcions de $\glssymbol{not:sgstm:dmap}$ i
 $\glssymbol{not:sgstm:multiresolucio}$, sinó
 que el map classifica les mesures de la sèrie temporal segons el
-buffer que els correspon i el reduce calcula les mesures consolidades
-per un disc. És a dir, que un map i un reduce equivalen a la
+buffer que hi correspon i el reduce calcula les mesures consolidades
+per un disc. És a dir que un map i un reduce equivalen a la
 funcionalitat de la funció $\glssymbol{not:sgstm:dmap}$ però el
 conjunt de tots els maps i reduces equivalen a la funció de
 $\glssymbol{not:sgstm:multiresolucio}$, sense expressar-ho en forma de
@@ -410,14 +417,15 @@ sèrie temporal total.
 \label{sec:mapreduce:f}
 
 Al model de \gls{SGSTM} hem definit de forma genèrica les funcions
-d'agregació d'atributs com a $m=f(S,i)$ en què $i=[t_a,t_b]$ és un
-interval de temps (\seeref{sec:model:agregador}). Aquestes funcions
-principalment realitzen dues operacions: una selecció sobre la sèrie
-temporal i una agregació de les mesures seleccionades.
+d'agregació d'atributs com a $m=f(S,\tau,\delta)$
+(\seeref{sec:model:agregador}). Aquestes funcions principalment
+realitzen dues operacions: una selecció sobre la sèrie temporal en
+l'interval de temps en què $[\tau,\tau+\delta]$ i una agregació de les
+mesures seleccionades.
 
 A RoundRobindoop, l'operació de selecció es duu a terme a l'etapa de
-map i en canvi l'agregació, a l'etapa de reduce.  En l'algoritme de
-MapReduce definit per a RoundRobindoop usem el model de $f$ descrit
+map i en canvi l'agregació, a l'etapa de reduce.  Així en l'algoritme
+de MapReduce definit per a RoundRobindoop usem el model de $f$ descrit
 anteriorment, però per a implementar correctament aquestes funcions
 cal interpretar-ne el significat per a l'etapa de map i per a la de
 reduce. És a dir, cada $f$ hauria de tenir dos components: un amb les
@@ -429,101 +437,130 @@ Així doncs, caldria afegir en els paràmetres de RoundRobindoop
 l'operació de selecció d'interval per a cada $f$ que s'utilitzi. Però
 això complica la resolució de l'algoritme de MapReduce. Per exemple,
 resoldre l'interval temporal \gls{zohe},
-$S[t_0,t_f]^{\glssymbol{not:zohe}} = S(t_0,t_f] \cup \{
-(t_f,V(\inf(S[t_f,+\infty))) \}$ (\seeref{def:model:zohe}), implica
-conèixer la mesura següent a un $t_f$ i per tant treballar sobre tota
-la sèrie temporal original, cosa que no és possible perquè en les
-etapes map només es treballa sobre un subconjunt de la sèrie temporal
-original. Això no obstant, per al RoundRobindoop definit, si
-considerem que la sèrie temporal no té inframostreig aleshores en
-l'etapa map podem fer la selecció prèvia per l'interval
-$S(t_b-\delta,t_b+\delta]$, és a dir assumim que hi ha mesura a
-$[t_b,t_b+\delta]$, i a l'etapa reduce ja es calcularà correctament
-$f(S,[t_b-\delta,t_b])$.
+$S[\tau,\tau+\delta]^{\glssymbol{not:zohe}} = S(\tau,\tau+\delta] \cup
+\{ (\tau+\delta,V(\inf(S[\tau+\delta,+\infty))) \}$
+(\seeref{def:model:zohe}), implica conèixer la mesura següent a un
+$\tau+\delta$ i per tant treballar sobre tota la sèrie temporal
+original, cosa que no és possible perquè en les etapes map només es
+treballa sobre un subconjunt de la sèrie temporal original. Això no
+obstant, per al RoundRobindoop definit, si considerem que la sèrie
+temporal no té inframostreig aleshores en l'etapa map podem fer la
+selecció prèvia per l'interval $S(\tau,\tau+2\delta]$, és a dir
+assumim que hi ha mesura a l'interval $[\tau+\delta,\tau+2\delta]$, i
+a l'etapa reduce ja es calcularà correctament $f(S,\tau,\delta)$ per a
+l'interval $[\tau,\tau+\delta]$.
 
 
-Recordem que en l'algoritme de RoundRobindoop definit hem assumit que
-l'interval de selecció en l'etapa map sempre és $(t_b-\delta,t_b]$ i
-en l'etapa reduce usem el model genèric d'agregació $f(S,i)$ tot i que
-les mesures ja han estat seleccionades. Per tant, la interpretació en
-l'etapa map no és vàlida per a totes les $f$.
+Noteu que en l'algoritme de RoundRobindoop definit hem assumit que
+l'interval de selecció en l'etapa map sempre és $(\tau,\tau+\delta]$ i
+en l'etapa reduce usem el model genèric d'agregació $f(S,\tau,\delta)$
+tot i que les mesures ja han estat seleccionades. Per tant, la
+interpretació en l'etapa map no és vàlida per a totes les $f$.
 
 Per tal d'ampliar l'etapa map, proposem una nova funció de
 classificació que admeti ampliar l'interval de selecció. Si en la
 classificació definida cada mesura es classificava en un i només un
-$t_b$ per a cada resolució, en la nova funció de classificació es pot
-escollir a quants $t_b$ es classifica cada mesura.  Sigui
-$\operatorname{classifica}(m,e)$ la funció de classificació original i
-sigui $l,g\in\glssymbol{not:N}$ les quantitats desitjades, la nova funció
-de classificació és $\operatorname{classifica}'(m,e,l,g)=\{ \forall
-(\delta,f,\tau,k) \in e: (\delta,f,\tau+(n-G_g)\delta,t,v), \dotsc,
-(\delta,f,\tau+(n-G_0)\delta,t,v), (\delta,f,\tau+n\delta,t,v),
-(\delta,f,\tau+(n+L_0)\delta,t,v), \dotsc,
-(\delta,f,\tau+(n+L_l)\delta,t,v) | \tau+(n-1)\delta < t \leq
-\tau+n\delta, n\in\glssymbol{not:Z}, t > \tau \}$ on
-$L=\{1,2,\dotsc,l\}$ i $G=\{1,2,\dotsc,g\}$. El paràmetre $l$
-permet classificar una mesura en temps posteriors i el paràmetre $g$
-en temps anteriors; si ho observem des del punt de vista de la
-selecció d'interval $S(t_b-(l+1)\delta,t_b+g\delta]$, el paràmetre $l$
+$\tau+\delta$ per a cada resolució, en la nova funció de classificació
+es pot escollir a quants $\tau^*+\delta$ es classifica cada mesura.
+Sigui $\operatorname{classifica}(m,\glssymbol{not:esquemaM})$ la
+funció de classificació original i siguin $l,g\in\glssymbol{not:N}$ les
+quantitats desitjades. La nova funció de classificació és
+\begin{align*}
+  &\operatorname{classifica}'(m,\glssymbol{not:esquemaM},l,g)= 
+  % & \{ (\delta,f,\tau+(n-G_g)\delta,t,v), \dotsc,
+  % (\delta,f,\tau+(n-G_0)\delta,t,v), \\
+  % & (\delta,f,\tau+n\delta,t,v), \\
+  % &(\delta,f,\tau+(n+L_0)\delta,t,v), \dotsc,
+  % (\delta,f,\tau+(n+L_l)\delta,t,v) \\
+  % &| (\delta,f,\tau,k) \in \glssymbol{not:esquemaM} \wedge
+  % \tau+(n-1)\delta < t \leq \tau+n\delta \wedge n\in\glssymbol{not:Z}
+  % \wedge t > \tau \} \\
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM}) \cup \\
+  &\cup \{ (\delta,f,\tau+(n-\gamma)\delta,t,v)  
+  |(\delta,f,\tau+n\delta,t,v) \in
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM}) \wedge \gamma \in
+  \{1,\dotsc,g\} \} \\
+  &\cup \{ (\delta,f,\tau+(n+\lambda)\delta,t,v)  
+  |(\delta,f,\tau+n\delta,t,v) \in
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM}) \wedge \lambda \in
+  \{1,\dotsc,l\} \}
+\end{align*}
+% \forall
+%   (\delta,f,\tau,k) \in e: (\delta,f,\tau+(n-G_g)\delta,t,v), \dotsc,
+%   (\delta,f,\tau+(n-G_0)\delta,t,v), 
+% (\delta,f,\tau+n\delta,t,v),
+%   (\delta,f,\tau+(n+L_0)\delta,t,v), \dotsc,
+%   (\delta,f,\tau+(n+L_l)\delta,t,v)
+%  | \tau+(n-1)\delta < t \leq
+%   \tau+n\delta, n\in\glssymbol{not:Z}, t > \tau \}
+
+
+El paràmetre $l$ permet classificar una mesura en temps posteriors i
+el paràmetre $g$ en temps anteriors; si ho observem des del punt de
+vista de la selecció d'interval
+$S(\tau-l\delta,\tau+(1+g)\delta]$, el paràmetre $l$
 permet estendre l'interval cap a l'esquerra i $g$ cap a la dreta.
 
 \begin{example}[Classificació d'una mesura per \gls{zohe}]
   \label{ex:mapreduce:fzohe} 
   Com ja hem comentat, per a les funcions d'agregació d'atributs de la
   família \gls{zohe} s'ha d'aproximar l'interval temporal \gls{zohe} a
-  una selecció en l'interval $S(t_b-\delta,t_b+\delta]$. És a dir, que
+  una selecció en l'interval $S(\tau,\tau+2\delta]$. És a dir, que
   la funció de classifica ha de retornar dues classificacions per a
-  cada mesura, una amb $t_b$ i l'altra amb $t_b-\delta$. Per tant, per
+  cada mesura, una amb $\tau+\delta$ i l'altra amb $\tau$. Per tant, per
   aquesta família $g=1$ i $l=0$.
 
   Sigui l'esquema de multiresolució
-  $e=\{(\delta_0=2,f_0,\tau_0=0,k_0=4),(\delta_1=5,f_1,\tau_1=10,k_1=3)\}$
-  i la mesura $m=(25,1)$, aquesta és classificada per a consolidar-se
-  en les dues resolucions i en els dos instants per a cada un:
-  $\operatorname{classifica}'(m,e,l=0,g=1)=\{
-  (2,f_0,t_{b0}-g\delta_0,25,1), (2,f_0,t_{b0},25,1),
-  (5,f_1,t_{b1}-g\delta_1,25,1), (5,f_1,t_{b1},25,1) \}$ on $t_{b0}=
-  26$, $t_{b0}-g\delta_0= 24$, $t_{b1}= 25$ i $t_{b1}-g\delta_1= 20$.
-  És a dir, es pot interpretar per a $\delta_0$ que quan es consolidi
-  l'instant $24$ s'ha de fer la selecció $S(22,26]$ i per l'instant
-  $26$ s'ha de fer la selecció $S(24,28]$, intervals en els quals hi
-  ha la mesura $(25,1)$.
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,
+  \glssymbol{not:sgstm:k}_1=4), (\delta_2=5,f_2,
+  \tau_2=10,\glssymbol{not:sgstm:k}_2=3)\}$ i la mesura $m=(25,1)$,
+  aquesta és classificada per a consolidar-se en les dues resolucions
+  i en els dos instants següents:
+  $\operatorname{classifica}'(m,\glssymbol{not:esquemaM},l,g)=\{
+  (2,f_1,\tau^*-g\delta_1,25,1), (2,f_1,\tau^*,25,1),
+  (5,f_2,\tau^{**}-g\delta_2,25,1), (5,f_2,\tau^{**},25,1) \}$ on
+  $\tau^*= 26$, $\tau^*-g\delta_0= 24$, $\tau^{**}= 25$ i
+  $\tau^{**}-g\delta_1= 20$.  
 
-  A continuació, en l'apartat d'execució de l'algoritme, utilitzarem un exemple
-  amb aquests processos de classificació.
+  Mentre que a \textref{ex:mapreduce:classifica} es classifica la
+  mesura $(25,1)$ als instants $26$ per a $\delta_1$ i $25$ per a
+  $\delta_2$, ara s'afegeixen respectivament els instants $24$ i $20$.
+  Així, mentre que a \textref{ex:mapreduce:classifica} s'interpretaven
+  respectivament els intervals de selecció com a $S(24,26]$ i
+  $S(20,25]$, ara s'han ampliat a $S(24,28]$ i $S(22,26]$ per a
+  $\delta_1$ i  $S(20,30]$ i $S(15,25]$ per a $\delta_2$.
 \end{example}
-
-
-
 
 
 
 En resum, el model de programació MapReduce limita les capacitats dels
 \gls{SGSTM}, sobretot pel que fa a les funcions d'agregació
-d'atributs. 
-
+d'atributs.  A continuació, en l'apartat d'execució de l'algoritme,
+utilitzarem un exemple amb aquests processos de classificació.
 
 
 \subsubsection{Quant a l'ajustament de l'inici de la consolidació}
 
 L'algoritme de MapReduce definit no té en compte els cardinals màxims.
 És a dir, en l'etapa map es classifiquen les mesures en l'interval de
-consolidació que correspon segons $\tau+n\delta$.  Aleshores, un cop
-computat el resultat, el cardinal màxim $k$ decidiria quins intervals
-de consolidació s'han d'eliminar.  Però com que és una computació en
-diferit, no cal calcular els intervals de consolidació que hauran de
-ser eliminats posteriorment.  Aquest problema es pot solucionar
-fàcilment ajustant els $\tau$ inicials de l'esquema multiresolució.
+consolidació que correspon segons $\tau+n\delta$, per
+$n\in\glssymbol{not:Z}$.  Aleshores, un cop computat el resultat, el
+cardinal màxim $\glssymbol{not:sgstm:k}$ decidiria quins intervals de
+consolidació s'han d'eliminar.  Però com que és una computació en
+diferit, ja es poden conèixer els intervals que hauran de ser
+eliminats posteriorment i no caldria tenir-los en compte.  Aquest
+problema es pot solucionar fàcilment ajustant els $\tau$ inicials de
+l'esquema multiresolució.
 
 
-Així, en la computació en diferit, sigui $S$ la sèrie temporal de la
-qual es vol calcular la multiresolució, el temps de la darrera mesura
-$t_k=T(\max(S))$ indueix els intervals de consolidació quan es tenen en
-compte els cardinals màxims. Sigui $e$ l'esquema de multiresolució
-original, per a tenir en compte els cardinals màxims s'haurà d'usar un
-nou esquema $e'$ en què cada $\tau$ original sigui canviat a un altre
-temps de consolidació múltiple $\tau'= \tau+n\delta$, on
-$n\in\glssymbol{not:Z}$, que tingui en compte $t_k$.
+Així, en la computació en diferit, sigui $S$ una sèrie temporal i
+sigui $\glssymbol{not:esquemaM}$ un esquema de multiresolució, el
+temps de la darrera mesura $T(\max S)$ indueix els intervals de
+consolidació quan es tenen en compte els cardinals màxims. Per a tenir
+en compte els cardinals màxims s'haurà d'usar un nou esquema
+$\glssymbol{not:esquemaM}'$ en què cada $\tau$ original sigui canviat
+a un altre temps de consolidació múltiple $\tau'= \tau+n\delta$, per
+$n\in\glssymbol{not:Z}$, que tingui en compte $T(\max S)$.
 
 
 
@@ -531,25 +568,30 @@ $n\in\glssymbol{not:Z}$, que tingui en compte $t_k$.
   de la sèrie temporal]
   \label{def:mapreduce:ajustamentdetaus}
 
-  Sigui $(\delta,f,\tau,k)$ un dels paràmetres de multiresolució i
-  sigui $S$ una sèrie temporal de la qual es coneix $t_k=T(\max(S))$.
-  Es calcula un nou temps d'inici $\tau'= \tau+n\delta$ (1), on
-  $n\in\glssymbol{not:Z}$, que tingui en compte el cardinal màxim per
-  a $t_k$. És a dir que compleixi $\tau'+k\delta \leq t_k$ (2) i
-  alhora $\tau'+(k+1)\delta \leq t_k$ (3).  Això significa
-  que les mesures entre $[\tau',\tau'+k\delta]$ són les pendents de
-  consolidar, les mesures entre $[\tau'+k\delta,t_k]$ encara no es
-  poden consolidar i les anteriors a $\tau'$ ja es poden
+  Sigui $(\delta,f,\tau,\glssymbol{not:sgstm:k})$ un dels paràmetres
+  de l'esquema de multiresolució i sigui $S$ una sèrie temporal de la
+  qual es coneix $T(\max S)$.  Es calcula un nou temps d'inici $\tau'=
+  \tau+n\delta$ (1), on $n\in\glssymbol{not:Z}$, que tingui en compte
+  el cardinal màxim per a $T(\max S)$. És a dir que compleixi
+  $\tau'+\glssymbol{not:sgstm:k}\delta \leq T(\max S)$ (2) i alhora
+  $\tau'+(\glssymbol{not:sgstm:k}+1)\delta \leq T(\max S)$ (3).  Això
+  significa que les mesures entre
+  $[\tau',\tau'+\glssymbol{not:sgstm:k}\delta]$ són les pendents de
+  consolidar, les mesures entre
+  $[\tau'+\glssymbol{not:sgstm:k}\delta,T(\max S)]$ encara no es poden
+  consolidar i les anteriors a $\tau'$ ja es poden
   eliminar. \emph{Nota:} sense tenir en compte retards de buffer.
 
 
   \emph{Càlcul de $n$:} Substituint la (1) a la (2) s'obté
-  $\tau+n\delta+k\delta \leq t_k$, operant s'obté $\tau+(n+k)\delta
-  \leq t_k$ i $n \leq \frac{t_k-\tau}{\delta}-k$ d'on amb (3) es
-  conclou que $n = \left\lfloor \frac{t_k-\tau}{\delta}-k
-  \right\rfloor$ .  A més a més, si no es considera vàlid
-  $\tau'<\tau$, és a dir que no es volen mesures abans del temps
-  d'inici original, aleshores $n$ com a mínim pot valdre zero.
+  $\tau+n\delta+\glssymbol{not:sgstm:k}\delta \leq T(\max S)$, operant
+  s'obté $\tau+(n+\glssymbol{not:sgstm:k})\delta \leq T(\max S)$ i $n
+  \leq \frac{T(\max S)-\tau}{\delta}-\glssymbol{not:sgstm:k}$ d'on amb
+  (3) es conclou que $n = \left\lfloor \frac{T(\max
+      S)-\tau}{\delta}-\glssymbol{not:sgstm:k} \right\rfloor$ .  A més
+  a més, si no es considera vàlid $\tau'<\tau$, és a dir que no es
+  volen mesures abans del temps d'inici original, aleshores $n$ com a
+  mínim pot valdre zero.
 
 \end{definition}
 
@@ -574,6 +616,8 @@ $n\in\glssymbol{not:Z}$, que tingui en compte $t_k$.
 \end{example}
 
 
+
+\todo{corregir notació}
 
 Com que l'ajustament dels temps d'inici es pot aplicar per a qualsevol
 computació en diferit de la multiresolució, implementem un nou mètode
