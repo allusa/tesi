@@ -118,9 +118,10 @@ M_0=\glssymbol{addM}(M,m_0),M_1=\glssymbol{addM}(M_0,m_1),\dotsc,M_k=\glssymbol{
   (\seeref{def:model:buffer_consolidable}). Sigui
   $l\in\glssymbol{not:N}$, recursivament
 \[
-M'_0=\glssymbol{consolidaM}(M_k),\dotsc,M'_{l}=\glssymbol{consolidaM}(M'_{l-1}),M'=\glssymbol{consolidaM}(M'_{l})
+M'_0=\glssymbol{consolidaM}(M_k),M'_1=\glssymbol{consolidaM}(M_0'),\dotsc\]
+\[\dotsc,M'_{l}=\glssymbol{consolidaM}(M'_{l-1}),M'=\glssymbol{consolidaM}(M'_{l})
 \]
-on $M_k,M'_{0},\dotsc,M'_{l-1},M'_{l}$ són consolidables i $M'$ no és
+on $M_k,M'_{0},M'_{1},\dotsc,M'_{l-1},M'_{l}$ són consolidables i $M'$ no és
 consolidable.  
 
 \item Es consulta la sèrie temporal multiresolució amb les dues
@@ -192,17 +193,18 @@ esquema multiresolució. El mapa de multiresolució és
 \glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,\glssymbol{not:sgstm:k})=
 \glssymbol{not:sgst:map}(R,g)\]
  on
- \[
- Z = \{ \tau+n\delta | n\in\glssymbol{not:Z}\;
- \glssymbol{not:wedge}\; T(\max S) - \glssymbol{not:sgstm:k}\delta <
- \tau+n\delta \leq T(\max S) \},
- \]
   \[
   R = \{ (t,\infty) | t\in Z  \},
   \]
   \[
   g(m)=f(S, T(m)-\delta,\delta) %[\tau,\tau+\delta]=[T(m_i)-\delta,T(m_i)]
   \]
+ \[
+ Z = \{ \tau+n\delta | n\in\glssymbol{not:Z}\;
+ \glssymbol{not:wedge}\; T(\max S) - \glssymbol{not:sgstm:k}\delta <
+ \tau+n\delta \leq T(\max S) \},
+ \]
+
 \end{definition}
 
 
@@ -225,7 +227,7 @@ l'esquema de multiresolució.
   \glssymboldef{not:sgstm:multiresolucio}(S,\glssymbol{not:esquemaM})=
   \glssymbol{not:sgst:ofold}(\glssymbol{not:esquemaM},\emptyset,g,\min)
   \]
-  on
+  on, usant la funció de la \textref{def:multiresolucio:mapmu},
   \[
   g(R,(\delta,f,\tau,\glssymbol{not:sgstm:k}))= R ||
   \glssymbol{not:sgstm:dmap}(S,\delta,f,\tau,\glssymbol{not:sgstm:k}).

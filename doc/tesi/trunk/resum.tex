@@ -1,7 +1,5 @@
 \chapter*{Resum}
 
-\todo{repassar la taula de notació que a vegades fa un salt de pàgina on no toca}
-
 Actualment és possible d'adquirir una gran quantitat de dades,
 principalment gràcies a la facilitat de disposar de sistemes de
 monitoratge amb grans xarxes de sensors. Això no obstant, no és tan
@@ -25,7 +23,7 @@ part de les dades originals que conté una certa informació
 seleccionada. Aquesta selecció de la informació es duu a terme
 mitjançant el resum de diferents resolucions de les dades, cadascuna
 de les quals bàsicament són agregacions de les dades a intervals de
-temps periòdics. A aquesta tècnica l'anomenem multiresolució.
+temps periòdics. A aquesta tècnica l'anomenem \emph{multiresolució}.
 
 
 
@@ -67,6 +65,8 @@ que es comet amb la multiresolució en comparació amb disposar de totes
 les dades originals.
 
 
+
+
 Com es diu actualment en l'àmbit dels \gls{SGBD}, un mateix sistema no
 pot ser adequat per a tots els contextos. A més, els sistemes han de
 tenir en compte un bon rendiment en altres recursos a part del temps
@@ -93,8 +93,82 @@ reflexions sobre els límits de la multiresolució.
 
 \chapter*{Abstract}
 
+Nowadays, it is possible to acquire a huge amount of data, mainly due
+to the fact that it is easy to build monitoring systems together with
+big sensor networks. However, data has to be managed accordingly,
+which is not so trivial. Furthermore. the storage for all this data
+also has to be considered.
 
 
+On the one hand, time series is the formalisation for the process of
+acquiring values from a variable along time. There is a great deal of
+algorithms and methodologies for analysing time series which describe
+how information can be extracted from data. On the other hand,
+\gls{DBMS} are the formalisation for the systems that store and
+manage data. That is, these computer systems are devoted to infer the
+information that a given user may query.  These systems are formally
+defined by logic models from which the relational model is the main
+reference.
+
+This thesis is a dissertation on the hypothesis to store only parts of
+original data which contain selected information.  This information
+selection involves summarising data with different resolutions, mainly
+by aggregating data at periodic time intervals.
+We name \emph{multiresolution} to this technique.
+
+
+Multiresolution is operated on time series. The results are time
+subseries that have bounded size and summaries of information.
+Particular \gls{DBMS} are used for managing time series, then they are
+called \gls{TSMS}. In this context, we define \gls{TSMS} with
+multiresolution capabilities, which we call \gls{MTSMS}.  Similarly
+to how it is done for \gls{DBMS}, we formalise a model for
+\gls{TSMS} and for \gls{MTSMS}.
+
+
+
+The acquisition of time series presents troublesome properties owing
+to the fact of variable acquired along time.
+In \gls{MTSMS} we consider some of this properties such as:
+\begin{itemize}
+\item The clock synchronisation for different acquisition systems. 
+\item Unknown data when data has not been acquired or when it is
+  erroneous.
+\item A huge amount of data to be manage. Moreover it increases as
+  more data gets acquired.
+\item Queries with data that has not been acquired regularly along
+  time.
+\end{itemize}
+
+
+\gls{MTSMS} are defined as systems to store data by selecting
+information and so by discarding data that is not considered
+important. Therefore, the parameters for selecting information must be
+decided previously to storing data. The information theory is the base
+for measuring the quality of theses systems, which depends on the
+parameters chosen. Regarding this, multiresolution can be considered
+as a lossy compression technique. We introduce some hypothesis on
+measuring the error caused by multiresolution in comparison with the
+case of having all the original data.
+
+
+Paraphrasing a current opinion in \gls{DBMS}, the same system can not
+be adequate for all the different contexts. In addition, systems must
+consider performance in a variety of resources apart from computing
+time, such as energy consumption, storage capacity or network
+transmission. Concerning this, we design different implementations for
+the model of \gls{MTSMS}. These implementations experiment with
+various computing methodologies: incremental computing along the data
+stream, parallel computing and relational databases computing.
+
+
+Summarising, in this thesis we formalise a model for \gls{MTSMS}.
+\gls{MTSMS} are useful for storing time series in bounded capacity
+systems and in order to precompute the multiresolution. In this way
+they can achieve immediate queries and graphical visualisations for
+summarised time series.  However, they imply an information selection
+that has to be considered previously to the storage. In this thesis we
+consider the limits for the multiresolution technique.
 
 
 
@@ -102,6 +176,9 @@ reflexions sobre els límits de la multiresolució.
 \glsreset{SGST}
 \glsreset{SGSTM}
 
+\glsreset{DBMS}
+\glsreset{TSMS}
+\glsreset{MTSMS}
 
 %%% Local Variables: 
 %%% mode: latex
