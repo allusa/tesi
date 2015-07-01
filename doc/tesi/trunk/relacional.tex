@@ -469,7 +469,7 @@ Tutorial~D és incòmode principalment per dos motius:
 \begin{itemize}
 \item Emmascara el concepte de tipus relació per als propòsits
   acadèmics que tenim. Principalment, Tutorial~D no permet definir
-  objectes que siguin ciutadans del mateix ordre que les relacions.
+  objectes que siguin del mateix ordre que les relacions.
 
 
 \item La definició estàtica de tipus en les operacions i la rigidesa
@@ -487,7 +487,7 @@ Tutorial~D és incòmode principalment per dos motius:
 
 Els valors relació en l'àlgebra relacional sempre són d'un tipus i
 aquest tipus es correspon amb la seva capçalera. Però les relacions de
-Tutorial~D són uns ciutadans de més ordre que la resta de tipus, tant
+Tutorial~D són uns objectes de més ordre que la resta de tipus, tant
 els predefinits com els d'usuari, ja que tenen un tractament molt
 diferenciat i no es poden declarar nous tipus amb la mateixa
 funcionalitat que les relacions.  Per exemple no es pot heretar del
@@ -773,8 +773,9 @@ implementar la forma canònica i la multivaluada.
 \section{Multiresolució relacional}
 
 
-La implementació de la funció de \glssymbol{not:sgstm:multiresolucio}
-sobre els \gls{SGST} és l'operador \emph{mtsms.multiresolution} amb
+Implementem la funció de \glssymbol{not:sgstm:multiresolucio} 
+ de \textref{def:multiresolucio:plecmu}
+sobre els \gls{SGST} amb l'operador \emph{mtsms.multiresolution}. Té
 dos paràmetres: la sèrie temporal \emph{s} que és una
 \emph{timeseries} de Reltsms i l'esquema multiresolució \emph{schema}
 que és una relació, és a dir un conjunt, d'atributs \emph{delta},
@@ -792,7 +793,7 @@ OPERATOR mtsms.multiresolution(
 
 
 Els atributs de l'esquema multiresolució són de tipus real, seguint
-amb la simplificació de Reltsms, llevat del \emph{f} que és un nom
+amb la simplificació de Reltsms, llevat de \emph{f} que és un nom
 d'un operador que actua com a funció d'agregació d'atributs i per tant
 permet que l'usuari se'ls defineixi. Per a calcular la subsèrie
 temporal de cada disc a partir de cada tuple de paràmetres
@@ -814,8 +815,14 @@ L'operador \emph{mtsms.dmap} és el que executarà l'operador
 d'agregació d'atributs corresponent al nom mitjançant la sentència
 \emph{execute}, de manera similar a com s'ha descrit en el Reltsms.
 Els operadors d'agregació d'atributs tenen tres paràmetres: la sèrie
-temporal \emph{s}, l'instant de temps menor $t_0$ i l'instant de temps
-major $t_f$.
+temporal \emph{s}, l'instant de temps menor $l$ i l'instant de temps
+major $h$. %
+Noteu que en el model hem
+definit una funció d'agregació d'atributs sobre una sèrie temporal, un
+instant de consolidació $\tau$ i un pas de consolidació $\delta$,
+mentre que les implementem sobre una sèrie temporal i directament
+sobre l'interval de consolidació $[l=\tau,h=\tau+\delta]$.
+
 
 Així doncs, prèviament a l'execució de la multiresolució cal tenir
 definit un operador d'agregació d'atributs. Com a exemple, definim
@@ -824,19 +831,19 @@ l'operador \emph{mtsms.aaf.maxzohe} per a la funció d'agregació
 \begin{lstlisting}[style=tutorialD]
 OPERATOR mtsms.aaf.maxzohe(
          s SAME_TYPE_AS  (timeseries), 
-         t0 rational, 
-         tf rational)        
+         l rational, 
+         h rational)        
          RETURNS RELATION SAME_HEADING_AS  (timeseries);
-  return summarize ts.interval.zohe(s,t0,tf) add (max(t) as t, max(v) as v);
+  return summarize ts.interval.zohe(s,l,h) add (max(t) as t, max(v) as v);
 END OPERATOR;
 \end{lstlisting}
 
 
 Per exemple, sigui la sèrie temporal $s=\{(4,1),(5,6),(8,2)\}$ i la
-sèrie temporal multiresolució amb esquema $ M_{\text{schema}} = \{ \{
-\tau : 0, \delta : 2, k: 4, f : \glssymbol{not:sgstm:maxzohe} \} , \{
-\tau : 0, \delta : 5, k: 2, f :\glssymbol{not:sgstm:maxzohe} \} \}$,
-la $\glssymbol{not:sgstm:multiresolucio}(s,M_{\text{schema}})$ és
+sèrie temporal multiresolució amb esquema $ \glssymbol{not:esquemaM} = \{ \{
+\tau : 0, \delta : 2, \glssymbol{not:sgstm:k}: 4, f : \glssymbol{not:sgstm:maxzohe} \} , \{
+\tau : 0, \delta : 5, \glssymbol{not:sgstm:k}: 2, f :\glssymbol{not:sgstm:maxzohe} \} \}$,
+la $\glssymbol{not:sgstm:multiresolucio}(s, \glssymbol{not:esquemaM})$ és
 
 
 \begin{lstlisting}[style=tutorialD]
@@ -849,8 +856,8 @@ WITH
  RELATION {
    TUPLE { delta 2.0, tau 0.0, f 'mtsms.aaf.maxzohe', k 4.0},
    TUPLE { delta 5.0, tau 0.0, f 'mtsms.aaf.maxzohe', k 2.0}
-  } AS mschema:
-mtsms.multiresolution(s,mschema)
+  } AS schema:
+mtsms.multiresolution(s,schema)
 \end{lstlisting}
 \begin{lstlisting}[style=stdout]
  t   v 
@@ -861,6 +868,23 @@ mtsms.multiresolution(s,mschema)
 6.0 6.0
 8.0 2.0
 \end{lstlisting}
+
+
+
+\section{Resum}
+
+En resum, mitjançant el llenguatge acadèmic dels \gls{SGBDR},
+Tutorial~D, hem implementat un \gls{SGST} a partir del qual hem pogut
+implementar les operacions de multiresolució.  En aquest capítol hem
+presentat les operacions més destacables de les implementacions per
+tal d'experimentar com els models dissenyats s'adapten al model
+relacional. Si bé no hem implementat un \gls{SGSTM}, es podria seguir
+un raonament similar al que hem fet per als \gls{SGST}.
+
+
+
+
+
 
 
 

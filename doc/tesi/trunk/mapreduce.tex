@@ -601,23 +601,26 @@ $n\in\glssymbol{not:Z}$, que tingui en compte $T(\max S)$.
   ajustament dels temps d'inici]
   \label{ex:mapreduce:classifica-ajustament}
   Reprenent \textref{ex:mapreduce:classifica-ajustament} per a
-  classificar la mesura $m=(25,1)$ a
-  $e=\{(\delta_0=2,f_0,\tau_0=0,k_0=4),(\delta_1=5,f_1,\tau_1=10,k_1=3)\}$,
-  ara es volen tenir en compte els cardinals màxims.
+  classificar la mesura $m=(25,1)$ segons l'esquema de multiresolució
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,
+  \glssymbol{not:sgstm:k}_1=4), (\delta_2=5,f_2,\tau_2=10,
+  \glssymbol{not:sgstm:k}_2=3)\}$, ara es volen tenir en compte els
+  cardinals màxims.
     
-  Sigui $t_k=T(\max(S))=35$ el temps de la mesura màxima de la sèrie
+  Sigui $T(\max S)=35$ el temps de la mesura màxima de la sèrie
   temporal original. Aleshores cal canviar l'esquema de multiresolució
-  a
-  $e'=\{(\delta_0=2,f_0,\tau'_0,k_0=4),(\delta_1=5,f_1,\tau'_1,k_1=3)\}$
-  on $\tau'_0=26$ i $\tau'_1=20$ aplicant la
+  a $\glssymbol{not:esquemaM}'=\{(\delta_1=2,f_1,\tau'_1,
+  \glssymbol{not:sgstm:k}_1=4),
+  (\delta_2=5,f_2,\tau'_2,\glssymbol{not:sgstm:k}_2=3)\}$ on
+  $\tau'_1=26$ i $\tau'_2=20$ aplicant la
   \autoref{def:mapreduce:ajustamentdetaus}. La classificació esdevé
-  $\operatorname{classifica}(m,e')=\{ (5,f_1,25,25,1) \}$ on no hi ha
-  la resolució $\delta_0,f_0$ perquè $25< \tau'_0$.
+  $\operatorname{classifica}(m,\glssymbol{not:esquemaM}')=\{
+  (5,f_2,25,25,1) \}$ on no hi ha la resolució $\delta_1$ perquè $25<
+  \tau'_1$.
 \end{example}
 
 
 
-\todo{corregir notació}
 
 Com que l'ajustament dels temps d'inici es pot aplicar per a qualsevol
 computació en diferit de la multiresolució, implementem un nou mètode
@@ -656,12 +659,13 @@ cardinal màxim del disc.  Al
 
 
 Ara es podria aplicar la consolidació com al
-\autoref{lst:roundrobinson:ex1} però aquesta es duria a terme
+\autoref{lst:roundrobinson:ex1}. A diferència, però, aquesta es duria a terme
 directament en els instants $10, 15, 20, 25$ per a la resolució
 $\delta=5$, és a dir sense calcular l'instant $5$ i posteriorment
-eliminar-lo, i en $0, 10, 20$ per a $\delta=10$. En aquest darrer cas,
-no es té en compte cap limitació i per tant es permet un $\tau'=-10$
-inferior a $\tau=0$.
+eliminar-lo com havíem fet al \autoref{lst:roundrobinson:ex1}. I es
+duria a terme en $0, 10, 20$ per a $\delta=10$, en aquest cas no es té
+en compte cap limitació i per tant es permet un $\tau'=-10$ inferior a
+$\tau=0$.
 
 
 
@@ -672,28 +676,29 @@ inferior a $\tau=0$.
 \lstMakeShortInline[style=sh]{@}
 
 Hadoop s'encarrega de l'execució de l'algoritme de MapReduce i de la
-gestió de les dades d'entrada i de sortida.  Per a implementar-lo, cal
+gestió de les dades d'entrada i de sortida.  Per a implementar-lo cal
 dissenyar un programa per al map i un programa per al reduce, els
 quals reben de Hadoop els subconjunts de dades escaients i han de
 retornar els subconjunts també escaients.  
 
 Es pot utilitzar diferents llenguatges de programació a l'hora
 d'implementar l'algoritme de MapReduce, hem escollit el llenguatge
-Python \parencite{python:doc2}.  Implementem l'algoritme de MapReduce
-que hem definit, RoundRobindoop, en un mateix programa que anomenem
-@rrdoop.py@. El programa té un paràmetre que permet escollir l'etapa,
-@rrdoop.py -map@ o @rrdoop.py -reduce@. A més també hi ha un paràmetre
-per a definir l'esquema de multiresolució utilitzat, %
+Python \parencite{python:doc2}.  Implementem les dues etapes de
+l'algoritme de MapReduce que hem definit, RoundRobindoop, en un mateix
+programa que anomenem @rrdoop.py@. El programa té un paràmetre que
+permet escollir l'etapa: @rrdoop.py -map@ o @rrdoop.py -reduce@. A més
+també hi ha un paràmetre per a definir l'esquema de multiresolució
+utilitzat, %
 @rrdoop.py -map -schema e@.
 
-El programa es comunica amb Hadoop mitjançant l'entrada estàndard
-(stdin) per a rebre dades i mitjançant la sortida estàndard (stdout)
-per a retornar els resultats.  Gràcies a la generalització del
-programa amb comunicació per stdin i stdout, també es pot executar
-l'algoritme de MapReduce al shell del sistema operatiu, cosa que
-facilita l'experimentació amb l'algoritme.  Així, a continuació,
-primer mostrem l'execució pas a pas de @rrdoop.py@ al shell i després
-mostrem l'execució a Hadoop.
+El programa es comunica amb Hadoop mitjançant l'entrada estàndard (que
+abreviem amb \emph{stdin}) per a rebre dades i mitjançant la sortida
+estàndard (que abreviem amb \emph{stdout}) per a retornar els
+resultats.  Gràcies a la generalització del programa amb comunicació
+per stdin i stdout, també es pot executar l'algoritme de MapReduce al
+shell del sistema operatiu, cosa que facilita l'experimentació amb
+l'algoritme.  Així, a continuació, primer mostrem l'execució pas a pas
+de @rrdoop.py@ al shell i després mostrem l'execució a Hadoop.
 
 
 
@@ -738,15 +743,18 @@ funcionalitats complementàries per a l'emmagatzematge de Pytsms.
 
 El fitxer @original.csv@ es transmet a través de @cat@ i pipe a
 l'stdin del procés de map %
-@rrdoop.py -map -schema e.pickle -mapg 1@.  El procés de map té un esquema de
-multiresolució com a paràmetre, @rrdoop.py@ a través del paràmetre
-@-schema@ admet una sèrie temporal multiresolució en format Pickle,
-com s'ha vist al~\autoref{lst:roundrobinson:storage}, l'esquema de la
-qual serà el que s'utilitzi. En aquest cas, @e.pickle@ es correspon
-amb el fitxer @mrd.pickle@ del~\autoref{lst:roundrobinson:storage} i
-per tant amb l'esquema de multiresolució
-del~\autoref{lst:roundrobinson:ex1}:
-$e=\{(\delta_0=5,k_0=4,f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0),(\delta_1=10,k_1=3,f_1=\glssymbol{not:sgstm:maxzohe},\tau_1=0)\}$.
+@rrdoop.py -map -schema e.pickle -mapg 1@.  El procés de map té un
+esquema de multiresolució com a paràmetre, @rrdoop.py@ a través del
+paràmetre @-schema@ admet una sèrie temporal multiresolució en format
+Pickle, com s'ha vist al~\autoref{lst:roundrobinson:storage},
+l'esquema de la qual serà el que s'utilitzi. En aquest cas, @e.pickle@
+es correspon amb el fitxer @mrd.pickle@
+del~\autoref{lst:roundrobinson:storage} i per tant amb l'esquema de
+multiresolució del~\autoref{lst:roundrobinson:ex1}:
+$\glssymbol{not:esquemaM}=\{(\delta_0=5,\glssymbol{not:sgstm:k}_0=4,
+f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0), (\delta_1=10,
+\glssymbol{not:sgstm:k}_1=3, f_1=\glssymbol{not:sgstm:maxzohe},
+\tau_1=0)\}$.
 
 
 En aquest exemple d'esquema de multiresolució s'usen funcions
@@ -755,25 +763,25 @@ l'\autoref{ex:mapreduce:fzohe}, s'ha de canviar la selecció que
 l'etapa map duu a terme. A tal efecte RoundRobindoop admet un
 paràmetre @-mapg@ per a indicar l'expansió de la classificació cap a
 la dreta. Aproximem l'interval temporal \gls{zohe} a una selecció en
-l'interval $(t_b-\delta,t_b+\delta]$, és a dir que hem d'expandir un
+l'interval $(\tau,\tau+2\delta]$, és a dir que hem d'expandir un
 interval @-mapg 1@.  RoundRobindoop també admet un paràmetre @-mapl@
-per a l'expansió cap a l'esquerra.
+per a l'expansió cap a l'esquerra, que en aquest cas no cal utilitzar.
 
 
 El procés de map retorna el resulta a través de l'stdout, el qual es
 mostra al~\autoref{lst:rrdoop:sortidamap} i es correspon amb les dades
 d'entremig de MapReduce. El format és el requerit per Hadoop, és a dir
 cada línia és una parella d'identificador i valor separats per un
-tabulador. L'identificador és $(\delta,\tau,t_b)$ però escrit en el
-format $\delta$/$\tau$--$t_b$ i el valor és $(t,v)$ escrit separat per
+tabulador. L'identificador és $(\delta,f,\tau+\delta)$ però escrit en el
+format $\delta$/$f$--$\tau+\delta$ i el valor és $(t,v)$ escrit separat per
 un espai. Es pot observar com es comença classificant la primera
-mesura $(1,6)$ en l'instant de consolidació $t_b=10$ per $\delta_1$ i
-$t_b=5$ per $\delta_0$.  A continuació la mesura $(8,5)$ es classifica
-a l'instant de consolidació $t_b=10$ per $\delta_1$ i en els $t_b=10$
-i $t_b=5$ per $\delta_0$, en aquest darrer cas s'aplica l'aproximació
-de la selecció \gls{zohe} per l'interval $(t_b-\delta,t_b+\delta]$;
+mesura $(1,6)$ en l'instant de consolidació $10$ per $\delta_1$ i
+$5$ per $\delta_0$.  A continuació la mesura $(8,5)$ es classifica
+a l'instant de consolidació $10$ per $\delta_1$ i en els $10$
+i $5$ per $\delta_0$, en aquest darrer cas s'aplica l'aproximació
+de la selecció \gls{zohe} per l'interval $(\tau,\tau+2\delta]$;
 cal destacar que en els casos anteriors no s'aplica perquè resultaria en
-un $t_b<= \tau$.  I així per a totes fins a la darrera mesura
+un $\tau'<= \tau$.  I així per a totes fins a la darrera mesura
 $(22,11)$.
 \begin{lstlisting}[style=stdout,caption=Sortida del procés map,label=lst:rrdoop:sortidamap]
 10/maximum_zohe-10	1 6.0
@@ -858,9 +866,9 @@ dades del~\autoref{lst:rrdoop:sortidasort} i retorna les dades finals
 per l'stdout que està redirigit al fitxer @final.csv@, el contingut
 del qual es mostra al~\autoref{lst:rrdoop:sortidashell}.  Hadoop
 emmagatzemaria aquestes dades en un fitxer o fitxers de dades.
-Aquestes dades tenen el format $\delta$ $f$ $t_b$ $v$ on $(t_b,v)$ és
-la mesura consolidada per a la resolució identificada per
-$(\delta,f)$.
+Aquestes dades tenen el format $\delta$ $f$ $\tau+\delta$ $v$ on
+$(\tau+\delta,v)$ és la mesura consolidada per a la resolució
+identificada per $(\delta,f)$.
 
 \begin{lstlisting}[style=file,caption=Dades de sortida final.csv,label=lst:rrdoop:sortidashell]
 10 maximum_zohe	10 6.0
@@ -874,22 +882,32 @@ $(\delta,f)$.
 5 mean_zohe	5 2.8
 \end{lstlisting}
 
-Així aquest resultat és el mateix que el de les consultes $\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$ i $\glssymbol{not:sgstm:seriedisc}(M,10,\glssymbol{not:sgstm:maxzohe})$ del~\autoref{lst:roundrobinson:ex1} però amb les particularitats següents:
+Així aquest resultat és el mateix que el de les consultes
+$\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$
+i
+$\glssymbol{not:sgstm:seriedisc}(M,10,\glssymbol{not:sgstm:maxzohe})$
+del~\autoref{lst:roundrobinson:ex1} però amb les particularitats
+següents:
 
 \begin{itemize}
-\item RoundRobindoop no té en compte els cardinals màxims $k$ de les resolucions. Hi ha la mesura consolidada a l'instant $t_b=5$ per a la resolució $\delta_0=5$ que ja hauria d'haver estat eliminada per complir amb $k_0=4$.
+\item RoundRobindoop no té en compte els cardinals màxims
+  $\glssymbol{not:sgstm:k}$ de les resolucions. Hi ha la mesura
+  consolidada a l'instant $5$ per a la resolució $\delta_0=5$ que ja
+  hauria d'haver estat eliminada per complir amb
+  $\glssymbol{not:sgstm:k}_0=4$.
 
 \item RoundRobindoop no té en compte el temps màxim de la sèrie
   temporal original per a conèixer les mesures que encara no són
-  consolidables. Hi ha la mesures en l'instant $t_b=30$ per a
+  consolidables. Hi ha la mesures en l'instant $30$ per a
   $\delta_0=5$ i $\delta_1=10$ que encara no podien ser calculades
-  perquè $T(\max(S))=29$, de fet tenen valor nul (\emph{None}) a causa
+  perquè $T(\max S)=29$. De fet tenen valor nul (\emph{None}) a causa
   que l'interval \gls{zohe} no es pot calcular.
 
 \item Així doncs, hi ha 9 mesures consolidades finals però 3 s'han de
-  descartar. Per tant, per a la resolució $\delta_0=5$ hi ha 4 mesures
-  i es compleix $4 \leq k_0=4$, i per a la resolució $\delta_1=10$ hi ha 2
-  mesures i es compleix $2 \leq k_1=3$.
+  descartar. Un cop s'hagin descartat, per a la resolució $\delta_0=5$
+  hi haurà 4 mesures i es complirà $4 \leq \glssymbol{not:sgstm:k}_0=4$,
+  i per a la resolució $\delta_1=10$ hi haurà 2 mesures i es complirà $2
+  \leq \glssymbol{not:sgstm:k}_1=3$.
 \end{itemize}
 
 
@@ -908,11 +926,12 @@ subsèries, fer-ne gràfics, etc.
 El~\autoref{lst:rrdoop:hadoop} mostra els passos d'execució de
 @rrdoop.py@ a Hadoop. Primer cal copiar la sèrie temporal original a
 \gls{HDFS}, després s'executa l'algoritme MapReduce i finalment es
-recupera el resultat de \gls{HDFS}.  Hadoop streaming és l'eina que
-permet l'execució a Hadoop de qualsevol programa, en qualsevol
-llenguatge, que tingui el model de MapReduce.
-Per a més detall sobre les ordres
-i els processos vegeu la documentació de Hadoop~\parencite{hadoop}, en aquest exemple hem simplificat amb [...] algunes adreces.
+recupera el resultat de \gls{HDFS}.  Hadoop \emph{streaming} és l'eina
+que permet l'execució a Hadoop de qualsevol programa, en qualsevol
+llenguatge, que tingui el model de MapReduce.  Per a més detall sobre
+les ordres i els processos vegeu la documentació de
+Hadoop~\parencite{hadoop}, en aquest exemple hem simplificat amb [...]
+algunes adreces.
 %http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/HadoopStreaming.html
 
 
@@ -939,11 +958,12 @@ El resultat és el mateix fitxer @final.csv@ que per a l'execució a la
 shell, és a dir el~\autoref{lst:rrdoop:sortidashell}.  Hadoop gestiona
 automàticament la distribució i la quantitat dels processos map i
 reduce. Així, alguns dels map o reduces es poden ajuntar en el mateix
-procés, per exemple els reduce poden rebre tant els subconjunts $E^0$
-o $E''$ de la secció anterior, però mai se separa el mateix
-identificador en diferents reduces. De fet, rebre totes les dades
-ajuntades és el cas quan s'executa a la shell, on només hi ha un
-procés map i un de reduce.
+procés, per exemple els reduce poden rebre tant un subconjunt de les
+dades d'entremig amb el mateix identificador com un conjunt d'aquests
+subconjunts, però mai se separa el mateix identificador en diferents
+reduces. De fet, en el cas anterior que hem executat a la shell
+s'utilitza un conjunt amb tots els subconjunts possibles, ja que només
+hi ha un procés map i un de reduce.
 
 
 
