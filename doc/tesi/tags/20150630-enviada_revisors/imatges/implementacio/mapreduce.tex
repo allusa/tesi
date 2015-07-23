@@ -1,0 +1,97 @@
+  \begin{tikzpicture}
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+ \node[mynode,verd] (m1) {map 1};
+ \node (ml1) [below=of m1] {};
+ \node[mynode,verd] (m2) [below=of ml1] {map 2};
+ \node (ml2) [below=of m2] {};
+ \node[mynode,verd,dotted] (mn) [below=of ml2] {};
+
+
+ \node[mynode] (d1) [right=of m1] {
+   \begin{tabu}{|c|c|}\hline
+     id & valor \\\hline
+     a & \\
+     a & \\
+     a & \\\tabucline[1pt on 3pt]\\%\hdashline
+     b & \\
+     b & \\\hline
+   \end{tabu}
+ };
+
+ \node[mynode] (d2) [right=of m2] {
+   \begin{tabu}{|c|c|}\hline
+     id & valor \\\hline
+     a & \\
+     a & \\\tabucline[1pt on 3pt]\\%\hdashline
+     b & \\\hline
+   \end{tabu}
+ };
+
+ \node[mynode,dotted] (dn) [right=2cm of mn] {};
+
+
+
+ \node[mynode,verd] (r1) [right=of d1] {reduce $a$};
+ \node[mynode,verd] (r2) [below=2cm of r1] {reduce $b$};
+ \node[mynode,verd,dotted] (rn) [right=2cm of dn] {};
+
+
+ \node[mynode,minimum height=10cm] (o) [above left=of m1, anchor=north east] {};
+ \node [above=0cm of o] {original};
+ \node[mynode,minimum height=10cm] (f) [above right=of r1, anchor=north west] {};
+ \node [above=0cm of f] {final};
+
+
+
+
+ \draw[dashed] (ml1) -- (ml1-|o.west);
+ \draw[dashed] (ml2) -- (ml2-|o.west);
+
+ \draw[myarrow] (o.center|-m1) -- (m1);
+ \draw[myarrow] (o.center|-m2) -- (m2);
+ \draw[myarrow,dotted] (o.center|-mn) -- (mn);
+
+
+ \draw[myarrow] (m1) -- (d1);
+ \draw[myarrow] (m2) -- (d2);
+ \draw[myarrow,dotted] (mn) -- (dn);
+
+ \draw[myarrow] (d1.center) -- (r1);
+ \node (d1b) [above=3ex of d1.280] {}; 
+ \draw[myarrow] (d1b.center) -- (r2);
+
+ \draw[myarrow] (d2.center) -- (r1);
+ \node (d2b) [above=3ex of d2.280] {}; 
+ \draw[myarrow] (d2b.center) -- (r2);
+
+ \draw[myarrow,dotted] (dn) -- (r1) ;
+ \draw[myarrow,dotted] (dn) -- (r2) ;
+ \draw[myarrow,dotted] (dn) -- (rn) ;
+
+
+ \node (r1l) [below=of r1] {};
+ \draw[dashed] (r1l) -- (r1l-|f.east);
+ \node (r2l) [below=of r2] {};
+ \draw[dashed] (r2l) -- (r2l-|f.east);
+
+
+ \draw[myarrow] (r1) -- (r1-|f.center) ;
+ \draw[myarrow] (r2) -- (r2-|f.center) ;
+ \draw[myarrow,dotted] (rn) -- (rn-|f.center) ;
+
+
+  \end{tikzpicture}

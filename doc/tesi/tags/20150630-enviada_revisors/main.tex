@@ -1,0 +1,225 @@
+%--------------------
+% document principal
+%--------------------
+% cal compilar amb 
+% 1. `pdflatex main.tex`
+% 2. `biber main`
+% 3. `makeglossaries main`
+% 4. `pdflatex main.tex`
+%--------------------
+\documentclass[paper=a4, parskip=half, fontsize=11pt
+twoside, BCOR12mm, %DIV = 10, %%format en paper
+%oneside,fontsize=11pt, %%format web
+% openany,
+%,toc=listof, %afegir índexs a l'índex
+]{scrbook}
+%%%%BCOR12mm  factor de correcció per enquadernació en rústica
+%%%%BCOR??mm  factor de correcció per enquadernació amb espiral -0.5mm??
+%------------- capçalera ----------------------
+\input{capçalera}
+\ExecuteBibliographyOptions{backref=true}
+%backref=true, urldate=long, abbreviate=false,%%format web 
+%annotation=true %per veure comentaris
+%---------- Esborrany --------------------
+%\includeonly
+%{resum}
+%{intro}
+%{art,seriestemporals,sgbd,sistemessimilars}
+%{model,sgst,sgst-operacions,sgst-naturalesa,sgstm,sgstm-operacions,sgstm-interpoladors}
+%{variacions,multiresolucio,informacio}
+%{implementacio,python,mapreduce,relacional}
+%{exemple}
+%{conclusions,futur}
+%\usepackage[catalan]{todonotes} %%ús: \todo{text} \missingfigure{text}
+%\usepackage{scrpage2}\pagestyle{scrheadings}\chead[--- esborrany \today\ ---]{\color{gray}{\today}}   
+%\usepackage[showframe,a4paper]{geometry}%page margins %\geometry{layoutheight=230mm,layoutwidth=160mm,layoutvoffset=30mm,showcrop}
+%\usepackage[cam,a3,center]{crop} %frame
+%------------- Format -------------------------
+\usepackage{imatges/tikz-uml}
+\input{imatges/estils_pgf}
+%---------- Bibliografia i glossaris ------------
+\bibliography{bibliografia}
+\loadglsentries{vocabulari/abreviacions.tex}
+\loadglsentries[notation]{vocabulari/notacio.tex}
+%-------------- dades --------------------------
+\hypersetup{
+    pdftitle={Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals},
+    pdfauthor={Aleix Llusà Serra},
+    pdfcreator={DiPSE--UPC},
+    pdfsubject={Tesi 2011--2015},
+    pdfkeywords={sèries temporals; model de dades; sistemes de bases de dades; sistemes de monitoratge},
+    pdflang={ca},
+}
+
+\title{Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals}
+\author{Aleix Llusà Serra}
+%----------------------------------------------
+
+
+\begin{document}
+%\frontmatter
+%------------- Pàgina de títol ------------
+%\maketitle
+\input{portada}
+%----------------------------------------------
+
+%------------- Abstract ------------
+%\begin{abstract}
+\include{resum}
+%\end{abstract}
+%----------------------------------------------
+
+%------------- Índex de continguts ------------
+\cleardoublepage\pdfbookmark{\contentsname}{bookmark:index}\tableofcontents{}
+%\addtocontents{toc}{\protect\enlargethispage{1cm}}
+%----------------------------------------------
+
+
+
+%------------- Cos ------------
+%\mainmatter
+
+\part{Introducció}
+
+\include{intro}
+
+%-- ART --
+\include{art}
+
+
+\part{Models}
+%-- MODELS --
+\include{model}
+
+\include{sgst}
+\include{sgst-operacions}
+\include{sgst-naturalesa}
+
+\include{sgstm}
+\include{sgstm-operacions}
+\include{sgstm-interpoladors}
+
+
+
+\part{Consideracions i reflexions sobre els models}
+%-- POST-MODELS --
+
+\include{variacions}
+\include{multiresolucio}
+\include{informacio}
+
+
+\part{Experimentació}
+%-- Implementacions --
+
+\include{implementacio}
+
+\include{python}
+\include{mapreduce}
+\include{relacional}
+%\include{vhdl}
+\include{exemple}
+
+
+\part{Conclusions}
+
+\include{conclusions}
+\include{futur}
+
+
+%------- Annexos ------
+%\appendix
+
+
+
+
+\backmatter
+\bookmarksetup{startatroot}%  per eliminar les parts
+\addtocontents{toc}{\bigskip}% perhaps as well
+
+%------- Bibliografia ------
+\cleardoublepage
+\phantomsection\addcontentsline{toc}{chapter}{\bibname}
+%\pdfbookmark{\bibname}{bookmark:bibliografia}
+\printbibliography
+%----------------------------------------------
+
+
+%------- Glossari ------
+\cleardoublepage
+%\phantomsection\addcontentsline{toc}{chapter}{\glossaryname}
+%\pdfbookmark{\glossaryname}{bookmark:glossari}
+\chapter{Abreviacions i nomenclatura}
+
+\glsaddall[counter=subsection,types={abreviatura,\acronymtype}]
+
+\printglossary[type=abreviatura,nonumberlist]
+
+\printglossary[type=\acronymtype,title=Sigles,nonumberlist]
+
+
+\renewcommand{\glossarypreamble}{Índex de notació segons nom, símbol i
+  referència --pàgina o en negreta lloc on es defineix el concepte:
+  definició, secció (\S) o exemple (ex.). Organitzada en símbols
+  matemàtics que requereixen aclariment i notació dels
+  components dels \gls{SGST} i dels \gls{SGSTM}.}
+
+\printglossary[type=notation,style=estil-notation]
+
+
+
+%------------- Índexs ------------
+%ATENCIÓ, hi ha problemes quan s'activen molts índexs
+\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{Índexs}
+\chapter*{Índexs}
+\begingroup
+\let\clearpage\relax
+\let\cleardoublepage\relax
+\phantomsection\addcontentsline{toc}{section}{\listfigurename}\listoffigures
+\phantomsection\addcontentsline{toc}{section}{\listtablename}\listoftables
+\phantomsection\addcontentsline{toc}{section}{\lstlistlistingname}\lstlistoflistings %
+\renewcommand\listtheoremname{Índex de definicions}
+\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={definition}]
+\renewcommand\listtheoremname{Índex d'exemples}
+\phantomsection\addcontentsline{toc}{section}{\listtheoremname}\listoftheorems[ignoreall,show={example}]
+\endgroup
+%\listoftodos %%%%mode esborrany
+%----------------------------------------------
+
+
+
+\end{document}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% Memòria Tesi Doctoral. 
+%
+% Copyright (C) 2011-2014 Aleix Llusà Serra.
+% 
+% This LaTeX document is free software: you can redistribute it and/or
+% modify it under the terms of the GNU General Public License as
+% published by the Free Software Foundation, either version 3 of the
+% License, or (at your option) any later version.
+%
+% This document is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this document. If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Aleix Llusà Serra
+% Departament de Disseny i Programació de Sistemes Electrònics de la Universitat Politècnica de Catalunya (DiPSE-UPC)
+% Escola Politècnica Superior d'Enginyeria de Manresa (EPSEM)
+% Av. de les Bases de Manresa, 61-73
+% 08242 Manresa (Barcelona)
+% PAÏSOS CATALANS 
+%
+% aleix (a) dipse.upc.edu
+% 
+% El codi font LaTeX del document es troba a 
+% <http://escriny.epsem.upc.edu/projects/rrb/>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
