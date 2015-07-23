@@ -1,0 +1,371 @@
+\documentclass{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+
+\usepackage{url}
+
+\usepackage{todonotes}
+
+\begin{document}
+\section*{Informe del doctorand per al dipòsit de la tesi}
+
+
+\subsection*{1. DEPARTAMENT/INSTITUT UNIVERSITARI RESPONSABLE DEL PROGRAMA:}
+
+Institut  d’Organització i Control de Sistemes Industrials i Departament d'Enginyeria de Sistemes, Automàtica i Informàtica Industrial
+
+\subsection*{2. PROGRAMA QUE HA SEGUIT EL DOCTORAND:}
+
+Automàtica, Robòtiva i Visió
+
+
+\subsection*{3. TÍTOL DE LA TESI PRESENTADA:}
+
+
+Disseny i modelització d'un sistema de gestió multiresolució per a sèries temporals
+
+
+
+
+\subsection*{4. NOM DEL DOCTORAND QUE PRESENTA LA TESI:}
+
+Aleix Llusà Serra
+
+
+
+
+
+
+
+\subsection*{5. ORIGINALITAT DEL TREBALL}
+
+
+Aquesta recerca té per objectiu l'estudi de les necessitats
+específiques que comporta l'emmagatzematge i gestió de dades amb
+naturalesa de sèrie temporal i la proposta d'un model de sistema de
+gestió de bases de dades (SGBD) que satisfaci aquestes
+necessitats. Els punts destacats del treball són els següents:
+
+\begin{itemize}
+\item Formalitzem el concepte de multiresolució de sèries temporals,
+  com una tècnica d'emmagatzematge compacte de diferents atributs i
+  resolucions de les dades. Com a solució de compressió amb pèrdua,
+  s'ha de definir un esquema de multiresolució per a cada aplicació.
+
+
+\item La formalització es basa en la teoria de conjunts i s'inspira
+  fortament en la teoria relacional de SGBD.
+
+\item Definim el model de forma genèrica per tal que els usuaris
+  puguin configurar-lo segons els requisits d'un context determinat.
+  El concepte de funció d'agregació i el de funció temporal de
+  representació gràfica d'una sèrie temporal són configurables
+  depenent del significat que hagin de tenir en una aplicació
+  concreta.
+
+\item El model està preparat perquè pugui ser computat
+  incrementalment, seguint una arribada seqüencial d'un flux de dades.
+  Incorpora la idea de preveure i de precomputar diversos atributs i
+  resolucions de les dades per tal que es puguin visualitzar immediatament
+  quan es consultin.
+
+\item La formalització té en compte les irregularitats en el mostratge de
+  sèries temporals. A més, les operacions definides són coherents amb
+  la dimensió temporal de les sèries temporals. 
+
+
+\item Reflexionem sobre el problema d'avaluar la qualitat de la
+  informació emmagatzemada en un sistema de multiresolució.
+
+
+\item Explorem vàries necessitats a l'hora d'implementar el
+  model. Experimentem amb una computació incremental a partir del flux
+  de dades, amb una computació para\l.lela i amb una
+  computació de bases de dades relacionals.
+
+
+\end{itemize}
+
+
+
+\subsection*{6. OBJECTIUS ASSOLITS AMB LA TESI EN RELACIÓ AMB ELS PROPOSATS INICIALMENT EN EL PROJECTE DE TESI}
+
+
+\begin{itemize}
+
+\item Estudi de les aplicacions en què les dades són sèries temporals
+  amb la finalitat de determinar quines són les propietats i problemes
+  comuns que planteja la seva gestió i emmagatzematge.
+
+\item Estudi dels models de SGBD existents. Segons es desprèn de la
+  formalització de Date%\textcite{date:introduction}
+  el model principal és el model relacional, el qual es fonamenta en
+  dos conceptes: relacions i tipus de dades.
+
+
+\item Disseny d'un model de SGBD per a les sèries temporals
+  multiresolució. El model consisteix en la definició de l'estructura de les
+  sèries temporals i les operacions bàsiques que necessiten.
+  L'assoliment d'aquest objectiu té tres parts:
+
+  \begin{enumerate}
+  \item Disseny d'un model per a la gestió bàsica de les sèries
+    temporals, el qual anomenem model de SGBD per a sèries temporals
+    (SGST).  
+    Prenent com a base el model de SGST, el qual és un model general
+    per a les sèries temporals, s'hi poden incloure altres models per
+    a propietats més específiques de les sèries temporals.
+
+  \item Disseny d'un model específic en base del model de
+    SGST. Concretament es dissenya un model pels SGST multiresolució
+    (SGSTM).  En el model de SGSTM s'hi poden incloure propietats de
+    les sèries temporals relacionades amb la resolució que s'han
+    observat en les aplicacions pràctiques de les sèries temporals:
+    regularització, canvis de resolució mitjançant agregacions,
+    reconstrucció de forats, etc.
+ 
+  \item Disseny de la metodologia per a definir funcions d'agregació
+    d'atributs. Estudi de la relació de les funcions d'agregació
+    d'atributs amb la representació gràfica com a funció d'una sèrie
+    temporal.
+
+
+  \end{enumerate}
+
+\item Consideracions sobre la multiresolució.  El model de SGSTM
+  proposat està preparat per a rebre contínuament dades en flux
+  (\emph{data stream}). Això no obstant, la multiresolució també es
+  pot aplicar en temps diferit (\emph{offline}) per a dades
+  emmagatzemades. S'ha formulat una funció que permet determinar com
+  d'una sèrie temporal s'obté una nova sèrie temporal resultant
+  d'haver aplicat un esquema de multiresolució.
+
+    
+
+\item Reflexió sobre la qualitat de la multiresolució. Determinar
+  quina selecció i quina pèrdua d'informació té un esquema de
+  multiresolució en particular.
+
+
+
+\item Implementació de referència dels models de SGST i SGSTM. Per una
+  banda, aquesta implementació, a nivell acadèmic, serveix com a
+  exemple per a futurs desenvolupaments de sistemes de gestió,
+  acadèmics o productius. Per altra banda, serveix per a
+  exemplificar-ne els seu funcionament amb unes dades de prova.
+
+\item Implementació específica del model per a una determinada
+  aplicació de sèries temporals. Experimentació de com una estructura
+  de SGSTM pot ser implementada per a aconseguir una aplicació
+  concreta. Aquesta implementació treballa amb conceptes de
+  para\l.lelisme.
+
+\item Implementació genèrica del model mitjançant un sistema
+  relacional. Aquest experiment avalua a nivell acadèmic les capacitats dels sistemes relacionals per a implementar un SGSTM.
+
+
+
+
+\end{itemize} 
+
+
+
+
+\subsection*{7. METODOLOGIA EMPRADA}
+
+\begin{itemize}
+\item Inicialment, ens vam interessar en les aplicacions del sistema
+  de gestió de bases de dades RRDtool de Oetiker. Vam notar que tenia
+  particularitzacions que en dificultaven la comprensió.  Això va
+  motivar a analitzar-lo profundament i a basar el nostre estudi en la
+  seva idea de tractament de sèries temporals, que és el que hem
+  anomenat multiresolució.
+
+
+\item Un dels reptes principals ha estat la formalització d'un model
+  abstracte matemàtic basant-nos en el model relacional com a teoria
+  dels sistemes de gestió de bases de dades. La formalització es basa
+  en la teoria de conjunts. Ens hem inspirat fortament en el model
+  relacional definit per Codd i divulgat per Date i Darwen,
+  especialment la seva proposta \emph{The Third Manifesto}, del qual
+  s'han seguit les darreres novetats a través de la llista de
+  distribució en què debaten les noves propostes.
+
+\item A partir de la teoria de la informació i la compressió de dades
+  amb pèrdua, hem reflexionat sobre com es podrien aplicar anàlisis similars
+  per a la multiresolució d'una sèrie temporal per tal d'avaluar-ne la
+  qualitat. A causa d'això, hem trobat necessari formular la
+  multiresolució com una funció sobre una sèrie temporal que retorna
+  una nova sèrie temporal.
+
+\item Un cop formalitzat el nostre model, l'hem utilitzat per a
+  avaluar-ne diferents consideracions. Per una banda, el concepte
+  d'agregació de \emph{data streams} com el de Cormode, a banda
+  d'ajudar-nos a caracteritzar l'aspecte de computació incremental de
+  la multiresolució, també ens ha servit per a definir funcions
+  d'agregació d'atributs que computin seguint el flux de dades.  Per
+  altra banda, a partir del concepte de vistes relacionals i de
+  l'arquitectura \emph{Lambda} de Marz, s'ha considerat oportú dissenyar
+  sistemes duals de SGST i SGSTM que tinguin en compte altres
+  escenaris per a la multiresolució.
+
+\item Seguint el lema de Stonebraker <<one size does not fit all>> per
+  als SGBD, s'ha considerat interessant implementar els models amb
+  llenguatges de programació i amb sistemes de gestió de bases de
+  dades de diversa naturalesa. Així s'han experimentat tres
+  implementacions: una implementació de referència amb orientació a
+  objectes, un sistema de computació para\l.lela mitjançant la tècnica
+  MapReduce i Hadoop, i un sistema de computació relacional mitjançant
+  el llenguatge Tutorial D i amb Rel.
+
+
+
+% \item Experimentació amb dades. S'ha provat la implementació dels
+%   models amb dades experimentals per a una aplicació concreta. S'han
+%   aconseguit dades reals gràcies al projecte \emph{i-Sense} (FP7-
+%   ICT-270428) que són sèries temporals i amb les quals s'ha pogut
+%   experimentar.
+
+
+
+
+\end{itemize}
+
+
+
+
+
+\subsection*{8. RESULTATS}
+
+\begin{itemize}
+
+
+\item Report de recerca conjuntament amb la
+  doctora Teresa Escobet Canal i el doctor Sebastià Vila Marta,
+  publicat el 17 de desembre de 2012 al departament de Disseny i
+  Programació de Sistemes Electrònics de la Universitat Politècnica de
+  Catalunya. És un report on consten les mancances que tenen els
+  SGBD per a les sèries temporals, les propietats i requisits
+  que haurien de complir i la idea bàsica de la proposta d'un nou
+  model multiresolució per a sèries temporals.
+
+\item Ponència a congrés  conjuntament amb la
+  doctora Teresa Escobet Canal i el doctor Sebastià Vila Marta, realitzada
+  a l'\emph{International Conference on Artificial Intelligence, Knowledge
+  Engineering and Data Bases} (AIKED '13) a Cambridge, UK, els dies
+  20--22 de febrer de 2013.  Es dóna a conèixer de forma resumida el
+  model multiresolució que dissenyem.
+
+
+\item Article en revisió a \emph{Information Systems} presentat
+  conjuntament amb la doctora Teresa Escobet Canal i el doctor
+  Sebastià Vila Marta. Un cop s'ha completat el disseny del model de
+  SGSTM, s'ha escrit compactament en format article per a
+  l'àmbit de les bases de dades.  En aquest article també s'ha inclòs
+  el disseny de la implementació de referència dels model i la
+  motivació del treball comparada amb recerques similars.
+  Actualment ha passat dos processos de revisió.
+
+\item Les implementacions de les metodologies són  programari lliure
+  i es poden trobar a
+  \url{http://escriny.epsem.upc.edu/projects/rrb/repository/show/src}. Tot
+  i que són experimentals i tenen nivell acadèmic, mostren el
+  funcionament correcte del model.
+
+\end{itemize}
+
+
+\subsection*{9. EL TREBALL DE TESI S’HA REALITZAT EN EL MARC D’ALGUN PROJECTE O CONTRACTE DE RECERCA AMB FINANÇAMENT ESPECÍFIC}
+
+
+La recerca s'ha dut a terme amb el suport de la Universitat
+Politècnica de Catalunya (UPC) mitjançant una beca predoctoral FPU-UPC
+adscrita al departament d'Enginyeria del Disseny i Programació de
+Sistemes Electrònics (DiPSE).
+
+S'ha participat en el projectes d'investigació subvencionats pel
+Ministerio de Economia y Competitividad TEC2012-35571 \emph{Nuevas
+  aplicaciones del principio superregenerativo a comunicaciones por
+  radiofrecuencia}, DPI2011-26243 \emph{System Health Management and
+  Reliable Control of Complex Systems} i DPI2014-58104-R \emph{Control
+  basado en la saluda y la resilencia de infraestructuras críticas y
+  sistemas complejos}.
+
+
+\section*{10. ANÀLISI DE L’IMPACTE DELS RESULTATS DE LA TESI I DE LES METODOLOGIES DESENVOLUPADES EN L’ENTORN SOCIO-ECONÒMIC}
+  
+
+Actualment és possible d'adquirir una gran quantitat de dades,
+principalment gràcies a la facilitat de disposar de sistemes de
+monitoratge amb grans xarxes de sensors i també gràcies a
+l'abaratiment del maquinari informàtic que hi ha al voltant de la
+gestió d'aquesta informació.  Com a conseqüència, han aparegut grans
+conjunts de dades digitals per a les quals es requereixen equips
+informàtics que les capturin, emmagatzemin, manipulin, cerquin i
+visualitzin. Aquesta nova tecnologia ha quedat associada al nom de
+\emph{Big Data}.  La gestió d’aquestes dades té aplicació en àmbits
+diversos com la mobilitat, l’energia o les  anomenades
+\emph{smart cities}.
+
+
+
+
+En el marc d'aquesta nova situació, la multiresolució permet gestionar
+les dades de manera que no cal emmagatzemar totes les que s'hagin
+capturat, sinó que permet seleccionar només aquells atributs i
+aquelles resolucions que posteriorment hauran de ser consultades.  A
+més, la multiresolució restringeix el temps
+d'emmagatzematge i permet oferir més resolució a les dades recents i
+eliminar dades conforme esdevenen antigues.
+
+
+
+El model de sistema de multiresolució resultant admet la computació
+incremental seguint el flux d'adquisició d'una sèrie
+temporal. D'aquesta manera el temps de computació queda repartit
+durant el temps d'adquisició i permet reduir els sistemes de
+processament a l'hora d'obtenir els resultats de les consultes.  A
+més, aquesta precomputació de dades permet disposar de
+visualitzacions immediates de diversos resums de les dades i per tant
+permet observar senzillament  com evolucionen
+diversos paràmetres en el temps.
+
+Els sistemes de multiresolució són adequats per a les xarxes de
+sensors, en les quals cal que els sistemes tinguin en compte un bon
+rendiment en altres recursos a part del temps de computació, com per
+exemple la capacitat finita, el consum d'energia o la transmissió per
+la xarxa.  Atès que les xarxes de sensors tenen naturalesa
+distribuïda, la multiresolució està pensada tant per a computar-se en
+un node central que reculli totes les dades com en els mateixos
+sensors. D'aquesta darrera manera es redueix la transmissió de dades i
+només es transmeten els resums de la informació i les alarmes.  El
+model de multiresolució que hem definit és genèric pel que fa a les
+funcions d'agregació i per tant es pot adaptar per a qualsevol context
+de dades massives.
+
+
+El manteniment dels sistemes de multiresolució és petit gràcies a
+tres motius. Primer, hi ha un emmagatzematge
+compacte en què la mida de les dades està afitada. Segon, la
+consolidació de les dades es pot aplicar en flux amb
+l'adquisició. Tercer, el model preveu  gestionar algunes
+de les irregularitats que els sistemes d'adquisició causen.
+
+Hem desenvolupat una implementació de referència que ha de servir tant
+per a experiment acadèmics amb la multiresolució com per a guia de
+desenvolupament de nous sistemes productius que vulguin treballar
+seguint aquesta tècnica.  Això no obstant, hem notat que les
+necessitats actuals de computació són molt variades i cal estudiar una
+implementació adequada per a cada context. En aquest sentit, hem
+experimentat amb altres possibles implementacions del model per tal
+d'observar com la multiresolució es podria adequar a algunes
+d'aquestes necessitats.
+
+
+
+
+
+
+\end{document}
+
+%  LocalWords:  multiresolució SGST SGSTM

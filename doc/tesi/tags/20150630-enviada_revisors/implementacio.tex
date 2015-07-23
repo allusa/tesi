@@ -1,0 +1,144 @@
+%\part{Experimentació}
+
+
+\chapter{Introducció a les implementacions}
+\label{sec:implementacions}
+
+En aquest capítol implementem \glspl{SGST} i \glspl{SGSTM} segons els
+models definits.
+
+
+
+Idealment, en un \gls{SGBD} l'usuari executa una consulta i
+l'optimitzador s'encarrega d'executar les operacions físiques més
+eficients, en aquest sentit el model relacional permet trobar
+expressions equivalents donada una determinada consulta. Això no
+obstant, i com s'ha detallat en \textref{sec:art:sgbd}, una
+implementació de \gls{SGBD} no pot abastar i ser eficient en tots els
+àmbits i contextos. Així doncs, no és tan senzill mantenir totalment
+la independència entre l'usuari i la implementació ja que cal que
+aquest decideixi un \gls{SGBD} adequat per a cada context i fins i tot
+que declari com resoldre algunes operacions.  Ara bé, és possible
+mantenir la independència del nivell lògic respecte a les
+implementacions, i és en aquest sentit que a continuació avaluem
+diferents implementacions per als models definits de \gls{SGST} i de
+\gls{SGSTM}, on cada implementació està pensada per a un context
+determinat.
+
+
+Anomenem de forma diferent cada implementació que dissenyem per tal de
+distingir-les clarament. Són les següents:
+
+\begin{itemize}
+\item Pytsms i RoundRobinson: Implementacions a alt nivell per a
+  observar el funcionament a nivell acadèmic, amb llenguatge
+  Python. Aquesta és la nostra implementació de referència per als
+  models de \gls{SGST} i \gls{SGSTM}, la qual a més usem per als
+  experiments amb dades.
+
+\item RoundRobindoop: Implementació específica per a la resolució en
+  diferit i amb computació para\.lela de la multiresolució, amb model
+  de programació MapReduce i en el sistema de computació distribuïda
+  Hadoop.
+
+\item Reltsms: Implementació a alt nivell en un \gls{SGBDR}, amb
+  llenguatge Tutorial~D i en el sistema Rel.
+
+% \item RoundRobinhard: Implementació a baix nivell d'estructures
+%   específiques, amb disseny de circuits digitals o amb llenguatge
+%   VHDL. \todo{aquesta va en un apèndix?}
+
+
+%S'avaluen implementacions específiques com RRDtool?
+
+\end{itemize}
+
+Finalment, en un exemple complet s'experimenta amb les implementacions
+amb dades reals. Les implementacions són de programari lliure i els
+codis font es poden trobar a \cite{llusa:implementacions}.
+
+
+
+
+
+
+
+
+
+
+\section{Particularitats de les implementacions}
+
+
+
+Els models d'implementacions pertanyen al nivell físic dels \gls{SGBD}
+i són una realització d'un model lògic, en el nostre cas dels models
+lògics de \gls{SGST} i de \gls{SGSTM}. Per a les implementacions se
+sol definir el nivell d'usuari, que és el llenguatge que serà visible
+per als usuaris. Les implementacions que realitzem volen ser molt
+properes al model lògic i per tant el nivell d'usuari que se'n deriva
+és molt similar. Per a ser un llenguatge d'usuari complet es
+requereixen facilitats i capacitats de llenguatge de programació
+--bucles, condicionals, declarar variables, etc.-- per a la qual
+cosa ens basem en els recursos particulars de cada implementació:
+Python, Tutorial~D, etc. L'objectiu principal, però, d'aquestes
+implementacions és acadèmic i per tant no considerem prioritari el
+llenguatge d'usuari.
+
+% Aquestes facilitats en el nivell lògic no s'expliciten ja que es
+% consideren inherents a les matemàtiques.
+
+
+
+En la implementació s'afegeixen alguns operadors que en el model
+estructural no havíem definit explícitament perquè ja són propis de
+l'àlgebra de conjunts. Així per exemple, alguns d'aquests operadors
+que s'han d'implementar són els relacionats amb la notació de creació
+de conjunts, %set-builder notation (set comprehension)
+els quals en els \gls{SGBD} s'inclouen en el que es coneix com a
+\gls{DDL}, o els relacionats amb la manipulació de les dades amb
+assignació, inserció, modificació o esborrament, els quals en els
+\gls{SGBD} es coneixen com a \gls{DML}.  En el cas dels \gls{SGSTM} sí
+que hem definit en el model algunes operacions de \gls{DDL} i \gls{DML} per a
+l'esquema multiresolució, ja que aquest requereix ser manipulat
+coherentment.
+
+% Pel que fa al llenguatge de consultes (\emph{query language}),
+% s'implementa seguint el model d'operacions de consulta de cada cas.
+
+
+
+
+
+\section{Qüestions de format}
+
+% Llistat: Resultat d’operacions efectuades per un ordinador, escrit en paper per una impressora. en l'àmbit de l'electrònica/informàtica
+
+
+En els capítols següents s'utilitzen llistats per a mostrar exemples
+de funcionament i els resultats de les operacions efectuades.  El
+format dels llistats depèn del tipus d'informació que mostren. Així,
+bàsicament, els exemples de codi tenen fons gris, com el
+\autoref{lst:format:python}, i els exemples de fitxers o sortides per
+pantalla tenen fons groc, com el \autoref{lst:format:stdout}.
+
+
+
+\begin{lstlisting}[style=py,caption=Exemple de codi,label=lst:format:python]
+>>> from pytsms import TimeSeries, Measure as m
+
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),m(14,1),m(19,6),m(22,11),m(26,6),m(29,0)])
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[style=stdout,caption=Exemple de fitxer o de sortida per pantalla,label=lst:format:stdout]
+10/maximum_zohe-10	10 0.0
+10/maximum_zohe-10	14 1.0
+\end{lstlisting}
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:

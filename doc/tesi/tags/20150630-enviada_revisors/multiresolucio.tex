@@ -1,0 +1,870 @@
+
+\chapter{Funció de multiresolució aplicada a les sèries temporals}
+\label{cap:funciomultiresolucio}
+
+
+En aquest capítol definim la multiresolució com una funció que
+s'aplica a una sèrie temporal i retorna una nova sèrie temporal.
+Aquesta nova sèrie temporal és el resultat d'aplicar, en l'àmbit dels
+\glspl{SGST}, un esquema de multiresolució a la sèrie temporal
+original. Aquesta funció té el mateix efecte que utilitzar, en l'àmbit
+dels \glspl{SGSTM}, una sèrie temporal multiresolució amb el mateix
+esquema. Tot i així, les aplicacions que resulten d'ambdós casos no
+tenen les mateixes propietats.
+
+
+
+En els capítols anteriors, hem definit la multiresolució com una
+estructura de base de dades per a emmagatzemar i tractar sèries
+temporals. La multiresolució també podria ser útil per a operar
+directament sobre una sèrie temporal, sense la capacitat
+d'emmagatzematge de dades. En aquest capítol avaluem com la funció de
+multiresolució por aplicar-se directament als \glspl{SGST}. Aquesta
+funció permet:
+\begin{itemize}
+
+\item Expressar problemes en què la multiresolució sigui gestionada
+  com una consulta sobre una sèrie temporal; és a dir, com una
+  operació dels \gls{SGST} que calcula parelles d'agregació d'atributs
+  i resolucions temporals per a una sèrie temporal de la mateixa
+  manera com ho calculen els \gls{SGSTM} (segons el model del
+  \autoref{cap:model:sgstm}).
+
+\item Dissenyar sistemes duals de multiresolució, en els quals una
+  sèrie temporal és emmagatzemada doblement en un \glspl{SGSTM} i en
+  un \glspl{SGST} amb capacitats de resoldre funcions de
+  multiresolució (\seeref{sec:multiresolucio:dual}).
+
+\item Estudiar l'aplicació de la teoria de la informació per a
+  determinar l'efecte que produeix la multiresolució en comprimir unes
+  dades (\seeref{sec:multiresolucio:teoriainformacio}).
+
+\item Estudiar altres implementacions de la consulta de
+  multiresolució, per exemple amb computació distribuïda i para\l.lela
+  (\seeref{sec:implementacio:mapreduce}).
+
+\end{itemize}
+
+
+
+
+%es podria implementar com una operació de summarize? \todo{}
+A continuació descriurem com aplicar un esquema de
+multiresolució a una sèrie temporal mitjançant les operacions mapa i
+plec dels \gls{SGST}. Això serà equivalent funcionalment als
+\gls{SGSTM}.
+
+
+
+\section{Funció de multiresolució}
+\label{sec:multiresolucio:funcio}
+
+
+
+En el model de \gls{SGSTM} del \autoref{cap:model:sgstm} hem definit
+un model de dades per a gestionar sèries temporals
+multiresolució. Aquest model té una estructura que emmagatzema la
+informació d'una sèrie temporal d'una forma determinada denominada
+multiresolució: en l'emmagatzematge és compacten les dades i es
+resumeix la informació per a consultes posteriors.
+
+Per aquest motiu, el model de \gls{SGSTM} té capacitats de computació
+sincronitzada o en línia (\emph{online}) amb el temps i té
+característiques dels sistemes que tracten fluxos de dades (\emph{data
+  stream}); és a dir, dades que es van adquirint contínuament i 
+gestionant al mateix temps. Això no treu, però,
+que de manera més simplificada també es pugui treballar amb un
+\gls{SGSTM} en temps diferit (\emph{offline}); és a dir, que primer
+s'emmagatzemin les dades adquirides i després, en temps posteriors,
+s'hi apliqui la consolidació.
+
+
+
+A continuació, simplifiquem el càlcul de la multiresolució per a
+poder-lo aplicar, en temps diferit, directament als \gls{SGST}.
+Aquest nou càlcul consisteix en una funció que transforma una sèrie
+temporal a una nova sèrie temporal. 
+
+
+
+
+
+\section{Context de la formulació}
+
+Expressem el context de la funció de multiresolució que ens permet
+formular dues operacions mapa i plec amb un funcionament equivalent a
+un \gls{SGSTM}.
+%
+
+Sigui $S=\{m_0,m_1,\dotsc,m_k\}$ una sèrie temporal, $M$ una sèrie
+temporal multiresolució i $\glssymbol{not:esquemaM} = \{
+(\delta_0,\glssymbol{not:sgstm:f}_0,\tau_0,\glssymbol{not:sgstm:k}_0),
+\ldots,
+(\delta_d,\glssymbol{not:sgstm:f}_d,\tau_d,\glssymbol{not:sgstm:k}_d)\}$
+ l'esquema de multiresolució de $M$
+(\seeref{def:sgstm:esquema}).  Els tres passos, de forma resumida, per
+a calcular la multiresolució d'una sèrie temporal en un \gls{SGSTM}
+són els següents.
+
+\begin{enumerate}
+\item S'afegeixen totes les mesures de la sèrie temporal $S$ a la sèrie temporal
+multiresolució $M$, recursivament:
+\[
+M_0=\glssymbol{addM}(M,m_0),M_1=\glssymbol{addM}(M_0,m_1),\dotsc,M_k=\glssymbol{addM}(M_{k-1},m_k)
+\]
+
+\item Es consolida la sèrie temporal multiresolució resultant anterior, $M_k$,
+  fins que no sigui consolidable
+  (\seeref{def:model:buffer_consolidable}). Sigui
+  $l\in\glssymbol{not:N}$, recursivament
+\[
+M'_0=\glssymbol{consolidaM}(M_k),M'_1=\glssymbol{consolidaM}(M_0'),\dotsc\]
+\[\dotsc,M'_{l}=\glssymbol{consolidaM}(M'_{l-1}),M'=\glssymbol{consolidaM}(M'_{l})
+\]
+on $M_k,M'_{0},M'_{1},\dotsc,M'_{l-1},M'_{l}$ són consolidables i $M'$ no és
+consolidable.  
+
+\item Es consulta la sèrie temporal multiresolució amb les dues
+  consultes bàsiques definides a \textref{sec:sgstm:consultes}, les
+  quals retornen les sèries temporals
+  $S'=\glssymbol{not:sgstm:serietotal}(M')$ i $S'_{\delta
+    f}=\glssymbol{not:sgstm:seriedisc}(M',\delta,f)$; on $\delta$ i
+  $f$ són dos paràmetres qualssevol de l'esquema de multiresolució
+  $\glssymbol{not:esquemaM}$, és a dir que existeix
+  $(\delta,f,\tau,\glssymbol{not:sgstm:k}) \in
+  \glssymbol{not:esquemaM}$.
+\end{enumerate}
+
+
+
+En aquest context, formulem les funcions de transformació que permeten
+calcular en un \gls{SGST} les sèries temporals $S'$ i $S'_{\delta f}$
+a partir de la sèrie temporal original $S$. Són dues funcions de
+multiresolució que anomenem mapa de multiresolució
+($\glssymbol{not:sgstm:dmap}$) i plec de multiresolució
+($\glssymbol{not:sgstm:multiresolucio}$). Així doncs, l'equivalència
+d'aquestes funcions amb les sèries temporals calculades en un
+\gls{SGSTM} és la següent:
+\[
+\glssymbol{not:sgstm:dmap}(S,\delta,f,\tau,\glssymbol{not:sgstm:k})=S'_{\delta f}
+\]
+\[
+ \glssymbol{not:sgstm:multiresolucio}(S,\glssymbol{not:esquemaM})= S'
+\]
+
+
+és a dir amb un funcionament equivalent, en computació diferida, a
+
+\[
+\glssymbol{not:sgstm:seriedisc}(M',\delta,f) =
+\glssymbol{not:sgstm:dmap}(S,\delta,f,\tau,\glssymbol{not:sgstm:k})
+\]
+\[
+\glssymbol{not:sgstm:serietotal}(M') = \glssymbol{not:sgstm:multiresolucio}(S,\glssymbol{not:esquemaM})
+\]
+
+
+En resum. Primer, s'insereixen les mateixes mesures a un \gls{SGST} i
+a un \gls{SGSTM}. Després, en temps diferit: per una banda es
+consolida el \gls{SGSTM} i es consulta la sèrie total i el conjunt de
+subsèries resolució emmagatzemades en els disc; per altra banda es
+calcula en el \gls{SGST} l'operació de
+$\glssymbol{not:sgstm:multiresolucio}$ i el conjunt d'operacions
+possibles de $\glssymbol{not:sgstm:dmap}$. Aleshores s'obtenen,
+respectivament, la mateixa sèrie temporal i el mateix conjunt de
+subsèries temporals.
+
+
+
+
+
+\section{Definicions}
+
+En primer lloc, definim l'operació de mapa mitjançant l'operador de
+mapa dels \gls{SGST} (\seeref{def:sgst:mapa}).
+
+
+\begin{definition}[Mapa de multiresolució]
+\label{def:multiresolucio:mapmu}
+Sigui $S$ una sèrie temporal i
+$(\delta,f,\tau,\glssymbol{not:sgstm:k})$ un tuple de paràmetres d'un
+esquema multiresolució. El mapa de multiresolució és
+\[
+\glssymboldef{not:sgstm:dmap}(S,\delta,f,\tau,\glssymbol{not:sgstm:k})=
+\glssymbol{not:sgst:map}(R,g)\]
+ on
+  \[
+  R = \{ (t,\infty) | t\in Z  \},
+  \]
+  \[
+  g(m)=f(S, T(m)-\delta,\delta) %[\tau,\tau+\delta]=[T(m_i)-\delta,T(m_i)]
+  \]
+ \[
+ Z = \{ \tau+n\delta | n\in\glssymbol{not:Z}\;
+ \glssymbol{not:wedge}\; T(\max S) - \glssymbol{not:sgstm:k}\delta <
+ \tau+n\delta \leq T(\max S) \},
+ \]
+
+\end{definition}
+
+
+
+
+En segon lloc, definim l'operació de plec mitjançant l'operador de
+plec amb ordre dels \gls{SGST} (\seeref{def:sgst:oplec}) aplicat a
+l'esquema de multiresolució.
+
+
+\begin{definition}[Plec de multiresolució, amb comportament de 
+  \glssymbol{not:sgstm:serietotal}]
+  \label{def:multiresolucio:plecmu}
+  Sigui $S$ una sèrie temporal i $\glssymbol{not:esquemaM} = \{
+  (\delta_0,f_0,\tau_0,\glssymbol{not:sgstm:k}_0), \ldots,
+  (\delta_d,f_d,\tau_d,\glssymbol{not:sgstm:k}_d)\}$ un esquema de
+  multiresolució. El plec de multiresolució d'una sèrie
+  temporal és 
+  \[
+  \glssymboldef{not:sgstm:multiresolucio}(S,\glssymbol{not:esquemaM})=
+  \glssymbol{not:sgst:ofold}(\glssymbol{not:esquemaM},\emptyset,g,\min)
+  \]
+  on, usant la funció de la \textref{def:multiresolucio:mapmu},
+  \[
+  g(R,(\delta,f,\tau,\glssymbol{not:sgstm:k}))= R ||
+  \glssymbol{not:sgstm:dmap}(S,\delta,f,\tau,\glssymbol{not:sgstm:k}).
+  \]
+\end{definition}
+
+  
+Així, el plec de multiresolució és la concatenació de tots els
+\glssymbol{not:sgstm:dmap} possibles per a l'esquema
+$\glssymbol{not:esquemaM}$. De la mateixa manera que a
+\textref{def:sgstm:total}, s'ha d'assumir que
+$\glssymbol{not:esquemaM}$ no conté $\delta$ repetits i que els
+concatenem per odre de $\delta$. A més, noteu que en l'operació de
+plec tractem l'esquema $\glssymbol{not:esquemaM}$ com una sèrie
+temporal multivaluada.
+
+
+
+
+
+
+\section{Exemples}
+
+Vegem en dos exemples el càlcul de la funció de multiresolució.
+Utilitzem la funció d'agregació d'atributs \glssymbol{not:sgstm:maxpd}
+ (\seeref{def:sgstm:maxpd}).
+
+
+\begin{example}[Mapa de multiresolució]
+  \label{ex:multiresolucio:dmap}
+  Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i els
+  paràmetres de multiresolució
+  $(\delta=5,f=\glssymbol{not:sgstm:maxpd},\tau=0,\glssymbol{not:sgstm:k}=2)$.
+  El mapa de multiresolució resulta en la sèrie temporal
+  $S_{5\glssymbol{not:sgstm:maxpd}}'=
+  \glssymboldef{not:sgstm:dmap}(S,5,\glssymbol{not:sgstm:maxpd},0,2)$
+  on $S'_{5\glssymbol{not:sgstm:maxpd}}=\{(5,1),(10,1)\}$. A
+  continuació expressem aquest càlcul pas a pas i a la
+  \autoref{fig:multiresolucio:dmap} es visualitzen en taula les sèries
+  temporals corresponents:
+  \begin{enumerate}
+  \item El primer pas és obtenir els instants de temps que
+    s'emmagatzemarien al disc d'una sèrie temporal
+    multiresolució. Així, els instants de consolidació possibles són
+    $Z'=\{\tau+n\delta|n\in\glssymbol{not:Z}\}=
+    \{\ldots,-5,0,5,10,15,\ldots\}$. Però un cop consolidat el disc
+    només hi haurà els $\glssymbol{not:sgstm:k}=2$ més recents abans
+    de $T(\max S)=10$, és a dir $Z=\{t\in Z'| T(\max S) - k\delta
+    < t \leq T(\max S)\}=\{5,10\}$.
+
+  \item El segon pas és obtenir a partir de $Z$ la sèrie temporal
+    $R$ que correspon a la sèrie temporal que s'inicialitzaria
+    al disc encara amb valors desconeguts,
+    $R=\{(5,\infty),(10,\infty)\}$.
+
+
+
+  \item El tercer pas és calcular la funció d'agregació a $S$ per a
+    cada intervals de consolidació del disc de la forma
+    $[T(m)-\delta,T(m)]$ on $m\in R$, és a dir $f(S,0,5)$ per a
+    l'interval $[0,5]$ i $f(S,5,5))$ per a l'interval $[5,10]$. A tal
+    efecte utilitzem el mapa sobre $R$ per a calcular la sèrie
+    temporal resultant $S'_{5\glssymbol{not:sgstm:maxpd}}=\{
+    (5,f(S,0,5)), (10,f(S,5,5)) \}$, en què
+    $f=\glssymbol{not:sgstm:maxpd}$ i per tant resulta en els valors
+    ja expressats
+    $S'_{5\glssymbol{not:sgstm:maxpd}}=\{(5,1),(10,1)\}$.
+
+    Es pot calcular un pas entremig per tal de mostrar les sèries
+    temporals que hi hauria en el buffer abans de cada instant de
+    consolidació. Així, per a cada $T(m)$ hi hauria la sèrie
+    temporal $S[T(m)-\delta,T(m)]$, és a dir $B=\{
+    (5,S[0,5]),(10,S[5,10]) \}=\{ (5,\{(1,0),(3,1)\}),
+    (10,\{(5,0),(10,1)\})\}$.
+  \end{enumerate}
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 0 \\
+    3  & 1 \\
+    6  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$R$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & $\infty$ \\
+    10  & $\infty$ \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$B$} \\ \hline 
+    $t$  & $v$ \\ \hline
+    5  &  \raisebox{0pt}[1ex+\height][1ex+\depth]{\begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 1&0\\ 3&1 \\\hline  \end{tabular}} \\\hline
+    10  & \raisebox{0pt}[1ex+\height][1ex+\depth]{\begin{tabular}[c]{|c|c|}\hline $t$  & $v$ \\ \hline 6&0\\ 10&1 \\\hline  \end{tabular}} \\ \hline
+  \end{tabular} \qquad
+ \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S'_{5\glssymbol{not:sgstm:maxpd}}$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    10  & 1\\ \hline
+  \end{tabular}
+  \caption{Taules de les sèries temporals per l'operació \glssymbol{not:sgstm:dmap}}
+  \label{fig:multiresolucio:dmap}
+\end{figure}
+ 
+\end{example}
+
+\begin{example}[Plec de multiresolució]
+  Sigui la sèrie temporal $S=\{(1,0),(3,1),(6,0),(10,1)\}$ i l'esquema
+  de multiresolució
+  $\glssymbol{not:esquemaM}=\{(\delta_0=5,f_0=\glssymbol{not:sgstm:maxpd},\tau_0=0,\glssymbol{not:sgstm:k}_0=2),
+  (\delta_1=2,f_1=\glssymbol{not:sgstm:maxpd},\tau_1=0,\glssymbol{not:sgstm:k}_1=3)\}$.
+  El plec de multiresolució resulta en la sèrie temporal $S'=
+  \glssymboldef{not:sgstm:multiresolucio}(S,\glssymbol{not:esquemaM})$ on
+  $S'=\{(5,1),(6,0),(8,0),(10,1)\}$. A continuació expressem aquest
+  càlcul pas a pas I a la \autoref{fig:multiresolucio:multiresolucio}
+  es visualitzen en taula les sèries temporals corresponents:
+
+  \begin{enumerate}
+  \item En primer lloc es calcula la sèrie temporal pels paràmetres de
+    multiresolució de $\delta_0$:
+    $S_{D0}=\glssymbol{not:sgstm:dmap}(5,\glssymbol{not:sgstm:maxpd},0,2)=\{(5,1),(10,1)\}$,
+    com ja s'ha vist a l'\autoref{ex:multiresolucio:dmap}.
+
+  \item En segon lloc, es calcula la sèrie temporal pels paràmetres de
+    multiresolució de $\delta_1$:
+    $S_{D1}=\glssymbol{not:sgstm:dmap}(2,\glssymbol{not:sgstm:maxpd},0,3)=\{(6,0),(8,0),(10,1)\}$,
+    de manera similar a com s'ha calculat $S_{D0}$.
+
+  \item En tercer lloc es concatenen les sèries temporals per ordre de
+    $\delta$: $\delta_1<\delta_0$. Així, $S'= S_{D1} || S_{D0}$ que
+    resulta en els valors ja expressats
+    $S'=\{(5,1),(6,0),(8,0),(10,1)\}$ .
+
+  \end{enumerate}
+  
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S$} \\ \hline
+    $t$  & $v$ \\ \hline
+    1  & 0 \\
+    3  & 1 \\
+    6  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_{D1}$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S_{D2}$} \\ \hline
+    $t$  & $v$ \\ \hline
+    6  & 0 \\
+    8  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular} \qquad
+  \begin{tabular}[c]{|c|c|}
+    \multicolumn{2}{c}{$S'$} \\ \hline
+    $t$  & $v$ \\ \hline
+    5  & 1 \\
+    6  & 0 \\
+    8  & 0 \\
+    10  & 1 \\ \hline
+  \end{tabular}
+  \caption{Taules de les sèries temporals per l'operació \glssymbol{not:sgstm:multiresolucio}}
+  \label{fig:multiresolucio:multiresolucio}
+\end{figure}
+ 
+
+
+\end{example}
+
+
+
+
+
+
+
+
+% \section{Demostració}
+
+% Cal demostrar l'equivalència formalment de \todo{demostrar}
+
+
+% \[
+% \glssymbol{not:sgstm:seriedisc}(M',\delta,f) \equiv
+% \glssymbol{not:sgstm:dmap}(S,\delta,f,\tau,k)
+% \]
+% \[
+% \glssymbol{not:sgstm:serietotal}(M') \equiv \glssymbol{not:sgstm:multiresolucio}(S,e)
+% \]
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Sistemes duals de multiresolució}
+\label{sec:multiresolucio:dual}
+
+
+Una sèrie temporal es pot emmagatzemar i gestionar en un \gls{SGST} o
+en un \gls{SGSTM}. També es pot dissenyar un sistema dual de
+multiresolució en què una sèrie temporal es tracti alhora en un \gls{SGST}
+i en un \gls{SGSTM}.
+
+Les equivalències entre els \gls{SGSTM} i les funcions de
+multiresolució aplicades a un \gls{SGST}, formulades a
+\textref{sec:multiresolucio:funcio}, permeten dissenyar sistemes duals
+que tinguin propietats complementàries.  Així, aquests sistemes duals
+ofereixen altres utilitats a la multiresolució més enllà de
+l'orientació de compressió amb pèrdua que hem descrit en el model del
+\autoref{cap:model:sgstm}. 
+% 
+A continuació:
+\begin{itemize}
+\item Dissenyem l'estructura d'aquests sistemes duals de multiresolució.
+\item Avaluem conceptes relacionats en l'àmbit genèric dels
+  \gls{SGBD}. Particularment la relació que hi ha amb la precomputació
+  de consultes i amb el concepte de vistes dels \glspl{SGBDR}.
+\item Mostrem algunes aplicacions que permeten aquests sistemes duals:
+  per a precomputar consultes, per a poder modificar els esquemes de
+  multiresolució en un \gls{SGSTM}, per a conservar totes les dades
+  originals en un dipòsit massiu però que no cal consultar
+  freqüentment, etc.
+\end{itemize}
+
+
+
+
+
+\section{Estructura}
+
+Un sistema dual de multiresolució està format per un \gls{SGST} i un
+\gls{SGSTM} on s'emmagatzemen les mateixes sèries temporals. A
+cadascun s'hi poden fer les consultes pertinents de cada model per a les
+sèries temporal. A més, s'obté el mateix resultat en els dos sistemes
+per a les consultes que segueixin les restriccions de la funció de
+multiresolució formulades a \textref{sec:multiresolucio:funcio}.
+
+
+A la \autoref{fig:multiresolucio:dual} es mostra l'estructura d'un
+sistema dual de multiresolució. L'usuari percep aquest sistema com un
+\gls{SGST} on emmagatzema una sèrie temporal, $S$, i hi gestiona les
+consultes. %
+% , on algunes d'aquestes consultes són de multiresolució o
+% treballen sobre sèries temporals $S'$ que provenen de la
+% multiresolució.
+Internament hi ha un \gls{SGST} i un \gls{SGSTM} que comparteixen
+l'entrada de mesures de la sèrie temporal. Així, quan l'usuari
+so\l.licita una multiresolució, $S'$, el sistema dual tant pot
+calcular-la a partir del \gls{SGST} amb l'operació de
+$S'=\glssymbol{not:sgstm:multiresolucio}(S,\glssymbol{not:esquemaM})$
+com a partir del \gls{SGSTM} amb l'operació de
+$S'=\glssymbol{not:sgstm:serietotal}(M)$, on
+$\glssymbol{not:esquemaM}$ és un esquema de multiresolució i $M$ és
+una sèrie multiresolució amb aquest esquema.  La mateixa estructura
+també pot servir per al cas de les operacions de
+$\glssymbol{not:sgstm:dmap}$ i les de
+$\glssymbol{not:sgstm:seriedisc}$.
+
+
+\begin{figure}
+  \centering
+  \input{imatges/multiresolucio/sgst-m-dual.tex}
+  \caption{Arquitectura dels sistemes duals de multiresolució:
+    \gls{SGST}+\gls{SGSTM}}
+  \label{fig:multiresolucio:dual}
+\end{figure}
+
+
+Cal aclarir que el model de \gls{SGSTM} està dissenyat en base al
+model de \gls{SGST} i per tant aquests primers sempre depenen dels
+segons. No obstant això, cal no confondre aquesta dependència amb el
+sistema dual, el qual gestiona una mateixa sèrie temporal independentment
+en un \gls{SGSTM} i en un \gls{SGST}.
+
+
+
+
+Tot i que per al sistema dual és equivalent calcular la sèrie temporal
+resultant a partir del \gls{SGST} o del \gls{SGSTM}, no pot seguir el
+mateix procediment en cada cas. Per una banda, la
+$\glssymbol{not:sgstm:multiresolucio}(S)$ és una operació computada en
+temps diferit; cada cop que s'afegeix una nova mesura cal tornar a
+calcular tot el resultat. Per altra banda, la
+$\glssymbol{not:sgstm:serietotal}(M)$ és una operació computada en
+línia; és a dir seguint el flux d'adicions de les mesures.  Això no
+obstant, en un sistema de multiresolució dual no cal que les mesures
+s'emmagatzemin físicament en tots dos sistemes, sinó que els buffers
+dels \gls{SGSTM} poden treballar amb les mesures emmagatzemades en un
+\gls{SGST} massiu com hem comentat a
+\textref{sec:multiresolucion:variacionsbuffer}.
+
+
+El sistema dual dissenyat funciona a partir de l'adició de mesures, de
+la mateixa manera que els \gls{SGSTM}. L'ordre d'arribada d'aquestes
+mesures és crític en el sistema dual ja que, un cop el \gls{SGSTM}
+s'ha consolidat, les dades més antigues que arribin no seran tingudes
+en compte i per tant l'equivalència entre les consultes de \gls{SGST}
+i \gls{SGSTM} ja no serà certa. Així doncs, si es vol mantenir
+l'equivalència, el sistema dual dissenyat té dues
+restriccions: només permet operacions d'adició i l'ordre d'adició és
+important.  Més endavant, en les aplicacions d'aquests sistemes,
+descriurem l'abast d'aquestes restriccions.
+
+
+
+
+\section{Conceptes relacionats}
+
+En l'àmbit genèric dels \gls{SGBD}, hi ha altres sistemes o altres
+conceptes semblants a l'estructura de sistema dual que
+proposem. Principalment s'utilitzen en dos àmbits similars: en la
+precomputació de consultes i en la precomputació de vistes.
+
+
+
+\textcite{marz13:nosql13, marz14:bigdata} generalitzen un concepte
+similar al de sistema dual, ho emmarquen en l'àmbit dels \gls{SGBD}
+per a \emph{Big Data}.  Proposen \gls{SGBD} dissenyats amb tres
+nivells, que anomenen arquitectura \emph{Lambda}:
+\begin{itemize}
+\item Nivell \emph{batch}: Emmagatzema totes les dades originals i
+  permet realitzar qualsevol consulta sobre aquestes dades. Preveu que
+  algunes consultes operin sobre dades consultades prèviament, per
+  tant en aquest nivell es gestionen també aquestes consultes
+  precomputades, les quals a més es poden obtenir amb computació
+  para\l.lela com per exemple amb Hadoop. Es considera
+  que les dades originals són immutables, és a dir que les bases de
+  dades només permeten afegir però no modificar.
+
+\item Nivell \emph{server}: Emmagatzema les consultes precomputades i
+  n'ofereix les dades per a altres consultes. Les consultes
+  precomputades s'han de tornar a calcular periòdicament i en el
+  nivell \emph{server} sempre hi ha la versió calculada més
+  recent. Per tant, es preveu que les consultes precomputades no
+  ofereixen la informació actualitzada al moment, sinó que hi ha un
+  cert temps des que es modifiquen les dades originals fins que té
+  impacte en les consultes.
+
+\item Nivell \emph{speed}: Precomputa les mateixes consultes que el
+  nivell \emph{batch} però incrementalment, és a dir cada cop que
+  s'afegeix una dada nova les dades de la consulta \emph{speed}
+  s'actualitzen adequadament.  Aquest nivell només s'usa per a dades
+  recents per tal de complementar el problema de les dades
+  desactualitzades en els nivells \emph{batch} i \emph{server}.
+\end{itemize}
+
+L'arquitectura Lambda té moltes similituds amb el treball amb vistes
+en els \glspl{SGBDR}.  Una vista (\seeref{sec:estat:sgbdr}) és un
+àlies per a una expressió relacional, és a dir una consulta que
+s'utilitza en altres consultes. Així doncs, una vista $v$ és un àlies
+d'una consulta \emph{op1} sobre unes \emph{dades},
+$v:=\text{op1}(\text{dades})$, que si s'utilitza en una altra
+consulta, $\text{op2}(v)$, és equivalent a executar totes dues
+operacions sobre les dades, $\text{op2}(v) \equiv
+\text{op2}(\text{op1}(\text{dades}))$. En aquest sentit, el concepte
+de vista s'assembla a les consultes que es basen en altres consultes
+proposades per l'arquitectura Lambda de \citeauthor{marz14:bigdata} i
+també a les sèries temporals multiresolució que proposem, les quals
+podem observar com a vista multiresolució d'una sèrie temporal
+original.
+
+En el model relacional \cite[cap.~10.\ Views]{date04:introduction8} es
+considera, conceptualment, que les vistes no s'avaluen quan es
+defineixen sinó cada cop que s'executa una consulta una variable de la
+qual és una vista.  En les implementacions, però, les vistes poden ser
+precomputades per tal d'emmagatzemar-ne temporalment els resultats i
+poder-los reutilitzar en altres consultes; aleshores les vistes
+s'anomenen \emph{snapshots} o \emph{materialized views}. En el context
+de sistemes de suport a les decisions, la precomputació també es
+preveu en el càlcul de taules resum per a agregacions de les dades
+\cite[cap.~22.\ Decision support]{date04:introduction8}.  Això no
+obstant, la precomputació de vistes no sempre comporta un millor
+rendiment; el concepte de vista del model permet la substitució
+algebraica i per tant també permet l'optimització global de la consulta i
+l'operació continguda a la vista.
+
+
+
+% PostgreSQL no té materialized views però aquí expliquen com definir-ne a partir de triggers. \url{http://tech.jonathangardner.net/wiki/PostgreSQL/Materialized_Views}.
+
+
+
+Les vistes precomputades tenen associada una acció per actualitzar de
+nou el seu valor, és a dir per a recalcular la consulta que contenen
+quan les dades originals han canviat. En usar vistes precomputades cal
+preveure el termini de validesa dels càlculs precomputats, com ocorre
+en el nivell \emph{server} de l'arquitectura \emph{Lambda}. Així
+doncs, les vistes precomputades es poden actualitzar de vàries
+maneres:
+\begin{itemize}
+
+\item L'usuari decideix manualment quan s'han de tornar a
+  computar. Per exemple, es pot utilitzar per a treballar amb les
+  dades congelades a un cert instant en el temps (\emph{snapshots})
+  sense haver de blocar les operacions de modificació de la base de
+  dades \cite[\S{}10.5]{date04:introduction8}.
+
+\item Es computen periòdicament, com també es proposa en el nivell
+  \emph{batch} de l'arquitectura \emph{Lambda}.
+
+\item Quan s'utilitzen per primer cop, es computen associades a un
+  termini a partir del qual si es tornen a utilitzar s'hauran
+  de tornar a computar. 
+
+
+\item Es computen cada cop que es modifiquen les dades amb les quals
+  operen, és a dir quan les dades originals reben una operació
+  d'afegir, de modificar o d'actualitzar es torna a computar tota la
+  vista.
+
+\item Es computen incrementalment. Quan es modifiquen les dades,
+  s'aplica la mateixa operació a la vista precomputada; requereix,
+  però, especificar quina operació s'ha d'aplicar per a actualitzar el
+  resultat que ja hi ha a la vista precomputada. És a dir, inicialment
+  es precomputa el resultat de la vista, sigui
+  $v:=\text{op1}(\text{dades})$. Quan es modifiquen les dades
+  originals, amb una operació $\text{dades} :=
+  \text{op3}(\text{dades})$, s'ha de traslladar aquesta operació a la
+  precomputació de la vista, amb una nova operació $v:=
+  \text{op3}'(v)$, de manera que s'aconsegueixi que
+  $\text{op3}'(v)=\text{op3}(\text{op1}(\text{dades}))$. Així doncs,
+  cal determinar $\text{op3}'$ as partir de $\text{op3}$, cosa que pot
+  requerir un estudi complicat o fins i tot no ser possible.  Aquesta
+  translació és més senzilla quan només hi ha possibilitat
+  d'operacions d'afegir noves dades però no de modificar-les: és el
+  que es proposa en el nivell \emph{speed} de l'arquitectura
+  \emph{Lambda} i el que admet el model de \gls{SGSTM} que
+  proposem. \textcite{jagadish95} també proposen una solució semblant
+  de mantenir vistes computades incrementalment segons arriben les
+  dades amb un estudi contextualitzat en els \emph{data stream}.
+% When data comes as an ordered sequence of instances it is called
+% data stream, then specific \acro{DBMS} are designed to manage data
+% stream data \cite{stonebraker05:sigmod}.  \acro{MTSMS} can take
+% advantage of data stream orientation in order to simplify the
+% consolidation process.  Assuming a time order acquisition of time
+% series, the update of a \acro{MTSMS} only consists in the addition of
+% new measures and the incremental consolidation of subseries. 
+\end{itemize}
+
+
+
+En resum, la sèrie temporal resultant dels sistemes duals de
+multiresolució pot ser considerada com una vista calculada sobre les
+sèries temporals originals. Aquesta vista pot ser precomputada, cosa
+que en els sistemes duals de multiresolució es pot fer de dues
+maneres: mitjançant la funció de multiresolució en l'\gls{SGST}, que
+s'ha de computar totalment cada cop que s'afegeix una nova mesura, i
+mitjançant l'\gls{SGSTM}, que computa incrementalment.  Aleshores
+aquestes vistes es poden usar per a altres consultes que tinguin com a
+context l'aproximació de multiresolució realitzada o per a
+visualitzacions gràfiques, com les que ofereix RRDtool \cite{rrdtool}.
+
+
+
+
+
+
+%Estudiar també Aurora
+%http://www.cs.brown.edu/research/aurora/vldb03_journal.pdf
+% Abadi, D., Carney, D., Cetintemel, U., Cherniack, M., Convey, C., Lee, S., Stonebraker, M., Tatbul, N., and Zdonik, S. Aurora: A New Model and Architecture for Data Stream Management. In VLDB Journal (12)2:120-139, August 2003.
+
+
+
+
+
+\section{Aplicacions}
+
+
+
+Les sèries temporals són dades que s'adquireixen contínuament i per
+tant cada cop és més gran el volum de dades que s'ha d'emmagatzemar i
+tractar. Aquest gran volum de dades és un problema per a operar amb
+les sèries temporals i és un problema en els sistemes que tenen
+l'emmagatzematge limitat. En aquest sentit, originalment hem
+plantejat el model de \gls{SGSTM} per tal d'oferir una solució
+d'emmagatzematge que comprimeix la informació seleccionant-ne una
+multiresolució determinada.
+
+
+Així, un \gls{SGSTM} implica un selecció d'informació i la informació
+que no es considera importat és descartada. Aquests sistemes, per
+tant, no són adequats quan totes les dades monitorades han de ser
+emmagatzemades tal com s'adquireixen. Un cas d'aquests és quan no es
+coneixen quines funcions d'agregació són les més escaients per a les
+dades futures que s'adquiriran. Un altre cas és quan volem resoldre
+consultes detallades sobre les dades, com per exemple: a quina hora
+exacta ha ocorregut un esdeveniment.
+
+
+Els sistemes duals de multiresolució ofereixen una solució per tal
+d'emmagatzemar totes les dades i alhora mantenen una gestió de
+multiresolució.  En el sistema dual, s'ha d'entendre l'\gls{SGST} com
+un emmagatzematge a llarg termini que no és consultat freqüentment;
+així pot estar implementat com a \gls{SGBD} per a dades massives o
+basat en tècniques de compressió sense pèrdua. L'\gls{SGSTM} s'ha
+d'entendre com un emmagatzematge de compressió amb pèrdua que conté
+multiresolucions precomputades de la sèries temporal.  El temps de
+còmput no és tant crític en els \gls{SGSTM} perquè es reparteix al
+llarg del temps, és a dir tal com es van adquirint les dades; més
+enllà del temps de còmput de cada funció d'agregació d'atributs, el
+qual limita la quantitat de multiresolucions diferents que pot
+gestionar un mateix \gls{SGSTM}.
+
+
+En la compressió de dades multimèdia s'utilitza una tècnica de gestió
+similar.  Les dades s'emmagatzemen inicialment amb compressió sense
+pèrdua, a partir d'aquestes es generen dades amb compressió amb pèrdua
+que ocupen menys i són més àgils per a treballar. En el cas que calgui
+modificar les dades, es canvien les comprimides sense pèrdua i es
+regeneren de nou les comprimides amb pèrdua. Amb aquesta gestió
+s'evita el problema que les compressions amb pèrdua acumulin pèrdua
+entre successives modificacions (\emph{generation loss}).
+
+
+
+En resum, les aplicacions del sistema dual de multiresolució són les
+següents:
+\begin{itemize}
+\item Sistemes on els \gls{SGSTM} precomputen incrementalment les
+  consultes de multiresolució. És a dir, funcionen com a precomputació
+  d'informació que es preveuen que es necessitarà; per tant al llarg
+  del temps es creen i eliminen vistes segons les necessitats que es
+  preveuen. Aleshores els \gls{SGST} funcionen com a emmagatzematge a
+  llarg termini que es consulta rarament.  Aquesta aplicació és
+  similar a la proposta de l'arquitectura Lambda i a la de les vistes
+  precomputades incrementalment.
+
+\item Les dades emmagatzemades en els \gls{SGST} s'utilitzen per al
+  farciment inicial dels \gls{SGSTM} gràcies a la funció de
+  multiresolució que permet computar les sèries temporals dels discs a
+  partir de l'operació \glssymbol{not:sgstm:dmap}. Pot tenir diversos
+  objectius:
+  \begin{itemize}
+  \item Quan es creen les vistes precomputades anteriors, inicialment
+    el \gls{SGSTM} contindrà sèries temporals amb valors desconeguts;
+    amb la funció de multiresolució es poden inicialitzar amb els
+    valors correctes.
+
+  \item Es pot usar per a canviar l'esquema de multiresolució dels
+    \gls{SGSTM}. En alguns canvis d'esquema, per exemple ampliar un
+    disc, inicialment hi ha dades desconegudes però que es poden
+    computar amb la funció de multiresolució.
+
+  \item Es pot usar per a canviar d'un emmagatzematge de sèries
+    temporals en \gls{SGST} a un emmagatzematge en \gls{SGSTM}. Cal
+    notar que és un canvi irreversible perquè l'emmagatzematge en els
+    \gls{SGSTM} és amb pèrdua.
+  \end{itemize}
+
+\item Es poden usar els \gls{SGST} per a experimentar amb diversos
+  esquemes de multiresolució per a les dades adquirides i així
+  observar-ne la idoneïtat i escollir-ne un de millor.
+
+\item En el cas que no es compleixi la restricció d'ordre d'arribada
+  de les mesures per a l'equivalència entre els \gls{SGST} i els
+  \gls{SGSTM}, es podria refer la informació emmagatzemada en els
+  \gls{SGSTM} a partir dels \gls{SGST}.
+
+\end{itemize}
+
+
+Com a contrapartida, però, en els sistemes duals apareix un \gls{SGST}
+amb una gran quantitat de dades. Per tant, cal tenir en compte que si
+la informació computada pels \gls{SGSTM} és suficient per a les
+consultes que s'han de realitzar, aleshores la informació
+emmagatzemada en els \gls{SGST} és redundant. Això no obstant, no és
+senzill identificar i predir quan la informació emmagatzemada en el
+\gls{SGSTM} serà totalment suficient; en
+\textref{sec:multiresolucio:teoriainformacio} descrivim el problema
+d'identificar la informació que selecciona i la que perd un
+\gls{SGSTM}.
+
+
+En conclusió, encara que l'objectiu final sigui l'emmagatzematge de
+les sèries temporals comprimides amb pèrdua en un \gls{SGSTM}, és a
+dir el model proposat originalment, els sistemes duals de
+multiresolució es poden utilitzar mentre hi hagi dubtes sobre quin
+esquema de multiresolució escollir i eliminar-los un cop es consideri
+que l'esquema és correcte. Aleshores, l'estructura de sistema dual
+serveix per a observar clarament que els \gls{SGSTM} ofereixen una
+sèrie temporal que és una aproximació de l'original i que, per tant,
+permeten resoldre consultes aproximades. %
+La \autoref{fig:multiresolucio:comparacio-propietats} resumeix les
+propietats descrites dels \gls{SGST}, dels \gls{SGSTM} i dels
+duals \gls{SGST}+\gls{SGSTM}, on es comparen segons si les compleixen (S) o
+si no les compleixen (N).
+
+
+\begin{table}[tp]
+  \centering
+  \begin{tabular}[c]{r|ccc}
+  & \gls{SGST} & \gls{SGSTM} & \gls{SGST}+\gls{SGSTM}\\\hline
+  càlcul de la multiresolució & S & S & S \\
+  emmagatzematge comprimit i limitat & N & S & N+S\\
+  pèrdua de dades & N & S & N\\
+  redundància de dades & N & N & S\\ 
+  actualització de la multiresolució & S & N & S\\
+  precomputacions en flux & N & S & S\\
+  precomputacions en para\l.lel & S & N & S\\
+\end{tabular}
+  \caption{Comparació de les propietats dels \gls{SGST}, dels \gls{SGSTM} i dels duals \gls{SGST}+\gls{SGSTM}}
+  \label{fig:multiresolucio:comparacio-propietats}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+
+
+%  LocalWords:  multiresolució multiresolucions subsèries SGST SGSTM
+%  LocalWords:  precomputada

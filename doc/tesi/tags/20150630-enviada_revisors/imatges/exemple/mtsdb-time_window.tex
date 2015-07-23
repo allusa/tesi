@@ -1,0 +1,134 @@
+%mrd.afegeix_disc(h5,24,mitjana,zero)
+%mrd.afegeix_disc(d2,20,mitjana,zero)
+%mrd.afegeix_disc(d15,12,mitjana,zero)
+%mrd.afegeix_disc(d50,12,mitjana,zero)
+
+\begin{tikzpicture}
+
+  %R0
+  \node[circle,draw,minimum width=2 cm] (R0d) {};
+  \draw [->] (R0d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R0d.center,anchor=north] {\color{cyan}5 hores};
+  \node[below=0mm of R0d.east,anchor=south west] {\color{cyan}24)};
+
+  \node[circle,draw] [left=0mm of R0d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.west,anchor=center] {};
+ 
+  \draw [dotted] (R0d.center)++(1.1:1.1cm) arc(0:360:1.1cm);
+
+
+  %R1
+  \node[circle,draw,minimum width=2 cm] (R1d) [right=of R0d] {};
+  \draw [->] (R1d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R1d.center,anchor=north] {\color{red}2 dies};
+  \node[below=0mm of R1d.east,anchor=south west] {\color{red}20)};
+
+  \node[circle,draw] [left=0mm of R1d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.west,anchor=center] {};
+ 
+  \draw [dotted] (R1d.center)++(1.1:1.1cm) arc(0:360:1.1cm);
+
+  %R2
+  \node[circle,draw,minimum width=2 cm] (R2d) [right=of R1d] {};
+  \draw [->] (R2d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R2d.center,anchor=north] {\color{orange}15 dies};
+  \node[below=0mm of R2d.east,anchor=south west] {\color{orange}12)};
+
+  \node[circle,draw] [left=0mm of R2d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.west,anchor=center] {};
+
+  \node[circle,draw] [left=0mm of R2d.30,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.60,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.120,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.150,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.210,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.240,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.300,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.330,anchor=center] {};
+
+  %R3
+  \node[circle,draw,minimum width=2 cm] (R3d) [right=of R2d] {};
+  \draw [->] (R3d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R3d.center,anchor=north] {\color{blue}50 dies};
+  \node[below=0mm of R3d.east,anchor=south west] {\color{blue}12)};
+
+  \node[circle,draw] [left=0mm of R3d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.west,anchor=center] {};
+
+  \node[circle,draw] [left=0mm of R3d.30,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.60,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.120,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.150,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.210,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.240,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.300,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.330,anchor=center] {};
+
+\end{tikzpicture}
+\begin{tikzpicture}
+
+  %referencia
+  \def\ut{1.5}
+  \node (ref) {};
+
+  \node[align=center] (-7) [right=0cm of ref.center,anchor=center] {};
+
+  \foreach \x in {-6,...,0}
+  {
+    \pgfmathparse{int(\x-1)}
+    \let\antx=\pgfmathresult
+    \pgfmathparse{int(100*\x)}
+    \let\nomx=\pgfmathresult
+
+    \node[align=center] (\x) [right=\ut cm of \antx.center,anchor=center] {
+    %  \x
+    \nomx  %noms de les x      
+    };
+    \node [above=2mm of \x.center] {\tiny$\vert$};
+  }
+
+
+  %eixos
+  \node (et0) [above=2mm of 0.center] {};
+  \node (eti) [above=2mm of ref.center] {};%[left=8.5cm of et0] {};
+  \node (etf) [right=0.5cm of et0.center] {};
+  \draw[->] (eti) to (etf);
+  \node [below=5mm of -7,anchor=west] {Temps (dies)};
+
+  \node (ara) [above=3cm of et0] {};
+  \node (ara2) [below=5mm of et0] {};
+  \draw[-] (ara) to (ara2);
+  \node (ara3) [below=-2mm of ara2] {};
+
+  
+
+ %R3
+  \node (R3) [above=1cm of 0] {};
+  \node[rectangle,draw,minimum width=6*\ut cm] (R3d) [left=0 cm of R3.center, anchor=east] {\color{blue}600 dies};
+
+  %R2
+  \node (R2) [above=0.5cm of R3.center] {};
+  \node[rectangle,draw,minimum width=1.8*\ut cm] (R2d) [left=0 cm of R2.center, anchor=east] {\color{orange}180 dies};
+
+  %R1
+  \node (R1) [above=0.5cm of R2.center] {};
+  \node[rectangle,draw,minimum width=0.4*\ut cm,minimum height=3ex] (R1d) [left=0 cm of R1.center, anchor=east] {};
+  \node[left=-0.11 cm of R1.center, anchor=east] {\color{red}40d};
+
+  %R0 
+  \node (R0) [above=0.5cm of R1.center] {};
+  \node[rectangle,draw,minimum width=0.05*\ut cm,minimum height=3ex] (R0d) [left=0 cm of R0.center] {};
+  \node[left=0.2 cm of R0.center, anchor=east] {\color{cyan}5d};
+\end{tikzpicture}
