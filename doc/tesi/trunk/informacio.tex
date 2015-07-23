@@ -507,17 +507,17 @@ $S[t-\delta,t]$.
           yticklabels= {},
           xticklabels={,,$\underset{s}{\tau}$,,$\tau+\delta$,$t$,$\tau+2\delta$},
           ]
-          \addplot[ycomb,blue] coordinates {
-            (20,10)
-            (30,10)
-            (40,10)
-          }; 
-          
- 
+
+%problema tikz amb shading (fill opacity en aquest pfplot): genera codi postcript3 incompatible amb algunes impressores 
+
+%http://tex.stackexchange.com/questions/65332/tikzpictures-give-huge-pdf-files-when-processed-via-dvips-and-ps2pdf
+%https://bugs.freedesktop.org/show_bug.cgi?id=64939
+
+
           \addplot[
           ybar interval, 
           fill=green!25,
-          fill opacity=0.5,
+          %fill opacity=0.5, 
           draw=none,
           ] plot coordinates
           {(20,7)(35,7)};
@@ -525,10 +525,16 @@ $S[t-\delta,t]$.
           \addplot[
           ybar interval, 
           fill=orange!75,
-          fill opacity=0.5,
+          %fill opacity=0.5,
           draw=none,
           ] plot coordinates
           {(35,7)(40,7)};
+
+          \addplot[ycomb,blue] coordinates {
+            (20,10)
+            (30,10)
+            (40,10)
+          }; 
 
 
           \addplot[red,mark=*,only marks] coordinates {
