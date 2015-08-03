@@ -1,0 +1,137 @@
+
+\section{Case study}
+\label{sec:example}
+
+In this section we introduce a real case database for a time series
+data. Actual data come from a temperature distributed sensor
+monitoring system~\cite{alippi10}. We focus on the data of a specific
+sensor. We use \texttt{Pytsms} and \texttt{RoundRobinson}
+implementations in order to create a \acro{MTSDB} and to query it.
+
+\emph{Data}. Figure~\ref{fig:exemple:original} shows the original
+data for one year and a half. The plot interpolates linearly the
+measures. In this plot we can see that there are missing data and some
+outlying observations. There are $146\,709$ stored values.
+
+\begin{figure}[tp]
+  \centering
+  %\tikzset{every picture/.style={scale=0.8}}
+  %\tikzsetnextfilename{fig_exemple_original}
+  %\input{imatges/isense_original.tex}
+  \includegraphics{fig_exemple_original.pdf}
+  \caption{Example of a temperature time series data}
+  \label{fig:exemple:original}
+\end{figure}
+
+\emph{Schema}. We design a \acro{MTSDB} that stores a multiresolution
+time series with higher resolution at recent times and with lower
+resolution at older times. The schema is illustrated in 
+Figure~\ref{fig:exemple:window}. At the top there are four discs with
+different number of measures and at the bottom there is a timeline
+showing the resolution subseries along time. 
+%
+Going from most to least granularity, disks are configured as follows:
+(i) a measure every 5 h in the fourth disc, which has a capacity of 24
+measures and thus it spans 5 days; (ii) a measure every 2 days in the
+third disc, with a capacity of 20 measures and thus spanning 40 days;
+(iii) a measure every 15 days in the second disc, with a capacity of
+12 thus spanning 180 days and; (iv) a measure every 50 days in the
+first disc that, with a capacity of 12 measures results in a span of
+600 days. This last span is longer than the original time series so
+that at least one resolution keeps some data about the complete
+original time interval.
+
+\begin{figure}[tp]
+  \centering
+  \setlength{\unitlength}{1.3mm}
+  %\input{imatges/mtsdb-time_window.tex}
+  \includegraphics{fig_exemple_window.pdf}
+  \caption{Schema of multiresolution}
+  \label{fig:exemple:window}
+\end{figure}
+
+\emph{Attribute aggregate functions}.  In order to illustrate this
+example we consolidate all the resolution subseries using the
+mean$^\zohe{}$ aggregate function and the two highest resolution
+subseries using the maximum$^\zohe{}$ aggregate function. 
+
+
+
+\emph{Consolidation}. The time subseries after consolidating the
+\acro{MTSDB} are shown in Figure~\ref{fig:exemple:4mrd}. 
+Each graphic corresponds to the possible $\seriedisc$ queries, that is
+every resolution disc time series from the \acro{MTSDB}. Each title
+shows the resolution subseries and its cardinal, and each attribute
+aggregate function has different colour.  
+%
+Time series are plotted using \zohe{} representation function
+$S(t)^\zohe{}$. The time axis has \acro{UTC} units rounded to nearest
+time points and temperature axis has Kelvin units. Outliers are
+marked as discontinuities, for instance see fourth plot's 2938 K
+maximum.
+
+\begin{figure}[tp]
+  \centering
+  % \tikzset{
+  %   every picture/.style={scale=0.7},
+  % }
+  % \input{imatges/isense_4mrdb.tex}
+  \includegraphics{fig_exemple_4mrd1.pdf}
+  \includegraphics{fig_exemple_4mrd2.pdf}
+  \includegraphics{fig_exemple_4mrd3.pdf}
+  \includegraphics{fig_exemple_4mrd4.pdf}
+  \caption{Resolution subseries in the MTSDB}
+  \label{fig:exemple:4mrd}
+\end{figure}
+
+In all the four plots, we can see that mean aggregate function has
+filled missing data and filtered outlier observations. This is
+because the aggregate function comes from a \zohe{} interpretation.
+In the 50 days step resolution, the first data point consolidated is
+previous to the original time series. However, it is consolidated with
+the first known data as its aggregation comes from \zohe{}
+interpretation.
+
+Figure~\ref{fig:exemple:4mrdtot} shows the $\totalseries$ queries for
+the mean$^{\zohe}$ aggregate function resolution and for the
+maximum$^{\zohe}$ resolution.  Each resulting time series is plotted
+by interpolating linearly its measures. Note that this linear
+rendering looks displaced to the right because of \zohe{} aggregation.
+Comparing this figure with the original series in
+Figure~\ref{fig:exemple:original}, we observe that it resembles an
+incremental low-pass filter because we applied mean aggregation while
+the maximum aggregation resembles an envelope function.
+
+%\tikzsetnextfilename{fig_exemple_4mrdtot}
+\begin{figure}[tp]
+  \centering
+  %\tikzset{every picture/.style={scale=0.8}}
+  %\input{imatges/isense_mrdb-all.tex}
+  \includegraphics{fig_exemple_4mrdtot.pdf}
+  \caption{$\totalseries$ for the mean$^{\zohe}$ and maximum$^{\zohe}$
+    resolutions}
+  \label{fig:exemple:4mrdtot}
+\end{figure}
+
+
+In conclusion, this \acro{MTSDB} example schema does not store the
+complete original data but a compression of the original function
+which contains more data for recent times.  Each of the
+$\seriedisc$ time series is regular with $\delta$. Although
+$\totalseries$ is not a regular time series, it has piece-wise
+regularity as a concatenation of every disc's $\delta$.  The purpose
+of this example is to show how the multiresolution is computed for a
+time series, it has been computed offline as the original data had
+already been acquired. However, a \acro{MTSMS} is designed to
+consolidate while the original data are being acquired so that the
+multiresolution computation spreads along the acquisition and the
+computing time becomes less critical.
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+% LocalWords:  multiresolution MTSDB Pytsms RoundRobinson timeline
+%  LocalWords:  subseries UTC Outliers outlier MTSMS
