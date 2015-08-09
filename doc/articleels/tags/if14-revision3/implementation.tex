@@ -4,21 +4,21 @@
 In this section we briefly describe a reference implementation of the
 models introduced in Sections~\ref{sec:model:TSMS}
 and~\ref{sec:MTSMS}. This implementation is given as a proof of
-concept and do not seeks to be neither an efficient or a complete database
+concept and does not seek to be either an efficient or a complete database
 system. We implement the \acro{TSMS} and \acro{MTSMS} models using
-then Python~\cite{python:doc2} programming language.
+the Python~\cite{python:doc2} programming language.
 
 The implementations of the two models, \acro{TSMS} and \acro{MTSMS},
 are organised respectively in two separated Python libraries:
 \texttt{Pytsms} and \texttt{RoundRobinson}.  \texttt{RoundRobinson}
 strongly depends on \texttt{Pytsms} following the dependency of
 \acro{MTSMS} on \acro{TSMS}.  The code of this implementation can be
-found at~\cite{llusa:roundrobinson}.
+found in~\cite{llusa:roundrobinson}.
 
 The reference implementation follows the object orientated paradigm
 and it observes a clear mapping between the model and the object
 classes. \emph{Unified Modeling Language}~(\acro{UML}) diagrams are used to
-define the classes structure.  Operations are implemented as object
+define the class structures.  Operations are implemented as object
 methods, which are not shown in \acro{UML} diagrams, due to space
 limitations.
 
@@ -31,7 +31,7 @@ Figure~\ref{fig:implementacio:pytsms-uml} shows the relationships
 among these objects in a \acro{UML} diagram. A \texttt{TimeSeries}
 object is an aggregation of \texttt{Measure}
 objects. \texttt{TimeSeries} and \texttt{Representation} objects are
-associated, that is each \texttt{TimeSeries} has a default
+associated, i.e.\ each \texttt{TimeSeries} has a default
 representation and a \texttt{Representation} operates over a
 \texttt{TimeSeries}.
 
@@ -65,8 +65,8 @@ for \texttt{Representation} that refer to the representation functions
 given in Section~\ref{sec:model:tfunc}. Basically, each actual
 \texttt{Representation} defines the graph and the temporal interval
 operation. Furthermore, there is also a method to plot coherently the
-time series to its representation. For this purpose we use the Python
-\emph{Matplotlib} library.
+graphical representation of a time series. For this purpose we use the
+Python \emph{Matplotlib} library.
 %
 % Aqui hi els temes que he comentat en la revisio de la primera part
 % SBS
