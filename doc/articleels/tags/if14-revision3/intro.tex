@@ -1,177 +1,158 @@
 \section{Introduction}
 
 Data collection processes proliferate due to the emergence of embedded
-systems and sensor networks.  This provides opportunities to collect
-large amounts of data. To be useful, these data should be analysed and
-processed by information systems. A typical processing, for instance,
+systems and sensor networks, providing opportunities to collect large
+amounts of data.  These data should be analysed and processed by
+information systems to be useful. A typical processing, for instance,
 is to detect eventual sensor failures or malfunctions and, if it is
 possible, to reconstruct the faulty data. The acquired data instances
-are bound to a timestamp, therefore correctness criteria must include
-both data values and their timestamps. The sequences of data values
+hold a timestamp. Therefore, correctness criteria must include both
+data values and their timestamps. The sequences of data values
 collected at specific timestamps are formalised as \emph{time series}.
 
-Time series are defined as a collection of chronological observations.
-In general, time series are acquired continuously from a phenomena
-monitoring. The observations can be recorded at regular intervals,
-such as hourly or daily, resulting in equi-time spaced data; or at
-irregular intervals, such as recording when a pump is open or closed,
-resulting in non equi-time spaced data. Time series data are often
-voluminous \cite{fu11,keogh08:isax}, thus efficiently storing and
-accessing them can be complex. Moreover, this is specially critical
-when developing small embedded systems, whose resources (capacity,
-energy or processing power) are constrained \cite{yaogehrke02}.
-Additionally, non equi-time spaced data increases the difficulty of
-processing.
+Time series are a collection of chronological observations.  In
+general, time series are acquired continuously from phenomena
+monitoring. On the one hand, we can record observations at regular
+intervals, such as hourly or daily ones, resulting in equally spaced
+time data.  On the other hand, we can record observations at irregular
+intervals, such as recording when a pump is open or closed, resulting
+in unequally spaced time data. Time series data are often voluminous
+\cite{fu11,keogh08:isax}, thus efficiently storing and accessing them
+can be complex. Moreover, this is especially critical when developing
+small embedded systems with constrained resources (capacity, energy or
+processing power) \cite{yaogehrke02}. Additionally, unequally spaced
+time data increases the difficulty of processing.
 
 The literature describes several attempts to build systems devoted to
-manage and store time series data. These systems are generically known
-as \emph{Time Series Data Base Management Systems} (\acro{TSMS}),
-\cite{dreyer94,last01}. However, as shown below, most of them exhibit
-some drawbacks when trying to solve 
-the challenging issues of time series in the temporal data domain.   
+managing and store time series data. These systems are generically
+known as \emph{Time Series Data Base Management Systems}
+(\acro{TSMS}), \cite{dreyer94,last01}. However, as shown below, most
+of them exhibit some drawbacks when trying to solve the challenging
+issues of time series in the temporal data domain.
 
 Time series can be stored and managed by \emph{relational database
-management systems} that are usually queried using \emph{Structured Query
-Language} (\acro{SQL}) .
-%
-However, some authors
+  management systems} that are usually queried using \emph{Structured
+  Query Language} (\acro{SQL}). However, some authors
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11} notice that the
 use of \acro{SQL} systems as a time series backend suffers from some
 drawbacks.
 
 \acro{NoSQL} or \acro{NewSQL} products are being developed in order to
 increase the performance and flexibility of \acro{SQL} systems
-\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}.
-%
-It is natural to consider them to store time series data. Even so, the
+\cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}. It
+is natural to consider them to store time series data. Even so, the
 continuous acquisition nature of the time series poses an issue when
 trying to store and analyse all the data \cite{keogh97}.
 
-Compression techniques for time series are applied in two distinct
+We can apply compression techniques for time series in two distinct
 ways to face the challenges posed by time series data. First, to get
-an approximation to the original signal in order to compute similarity
-or pattern search analysis \cite{fu11,keogh01,last01}. Second, as a
-compression and aggregation approach to store massive \emph{data streams}
-\cite{cormode08:pods,bonnet01}.
-%
-Nonetheless, handling time series like data streams neither considers
-adequately the time dimension nor computes the evolution of aggregated
-parameters along time, which is interesting for monitoring purposes.
+an approximation to the original signal to compute similarity or
+pattern search analysis \cite{fu11,keogh01,last01}. Second, as a
+compression and aggregation approach to store massive \emph{data
+  streams} \cite{cormode08:pods,bonnet01}. Nonetheless, handling time
+series like data streams neither considers adequately the time
+dimension nor computes the evolution of aggregated parameters along
+the time, which is interesting for monitoring purposes.
 
 \emph{RRDtool} \cite{rrdtool} is a system that stores time series
-aggregated in different resolutions. This allows to compact the data
-and facilitates faster visualisations.
-%
-In spite of this, \emph{RRDtool} is a very specific application and
+aggregated using different resolutions. These characteristics allow
+to compact the data and facilitates faster visualisations. In spite of
+this, because \emph{RRDtool} is a particular application,
 aggregation operations are limited to network monitoring.
-
-
 
 
 \subsection{Contributions}
 
-%TSMS
-
 This paper formalises a model for \acro{TSMS} that stores and manages
-time series data.
-%
-This model exhibits several interesting characteristics:
+time series data. This model exhibits several unusual characteristics:
+
 \begin{itemize}
+
 \item It organises the data in an aggregated way and it allows to
-  store time series using different time resolutions. This
-  characteristic is known as \emph{multiresolution}.  Thus, being
-  multiresolution the most salient characteristic of our model, we
-  name the formalised system as \emph{Multiresolution Time Series
-    Data Base Management System} (\acro{MTSMS}).  It is designed to
-  satisfy the requirements of bounded storage computers such as sensor
-  systems.
+  store time series using different time resolutions. We know this
+  feature as \emph{multiresolution}.  Thus, being multiresolution the
+  most salient characteristic of our model, we name the formalised
+  system as \emph{Multiresolution Time Series Data Base Management
+    System} (\acro{MTSMS}).  It is designed to satisfy the
+  requirements of bounded storage computers such as sensor systems.
 
-
-\item It is a \emph{lossy storage} solution. Multiresolution allows for a
-  lossy storage solution that selects only the relevant data. This is
-  close to multimedia lossy compression methods where meaningless data
-  is discarded in favour of size. 
+\item It is a \emph{lossy storage} solution. Multiresolution allows
+  for a lossy storage solution that selects only the relevant data. In
+  some sense, multiresolution is close to the lossy compression
+  methods used in multimedia applications, that discard meaningless
+  data in favour of size.
 
 \item It considers the time sampling irregularities of time series and
   operates coherently with the time dimension of time series.
 
 \item It offers a degree of genericity to cope with the semantic
-  characteristics of the actual data. 
+  characteristics of the actual data.
 
-  Multiresolution requires to aggregate several data instances into a
-  single one. This is abstracted through an \emph{aggregation function} that
-  is tied to the specific semantics of the actual data. Because of
-  this, aggregation functions are set as an independent object of the
-  main model.  Users can define new aggregation methods which are
-  better suited for specific fields.
+  Multiresolution requires aggregating several data instances into a
+  single one. We abstracted this through an \emph{aggregation
+    function} bound to the precise semantics of the actual
+  data. Because of this, aggregation functions are set as an
+  independent object of the main model.  The users can define new
+  aggregation methods better suited for particular fields.
 
-  The model also formalises the concept of time series \emph{representation
-  function}.  This allows users to define different operators
-  considering the behaviour of time series in different contexts. This
-  is important to manage the specific semantics of the stored time
-  series. 
+  The model also formalises the concept of time series
+  \emph{representation function}.  This concept allows the users to
+  define different operators considering the behaviour of time series
+  in different contexts. This issue is important to manage the precise
+  semantics of the stored time series.
 
 \item It is soundly formalised using set algebra and, particularly,
   relational algebra.
+
 \end{itemize}
 
 
 Our model shares some of its characteristics with other known
-approaches.
-%
-The multiresolution concept is inspired by a thorough analysis of
-\emph{RRDtool}~\cite{rrdtool}. However, we provide a sound
+approaches. The thorough analysis of \emph{RRDtool}~\cite{rrdtool}
+inspired the multiresolution. However, we provide a sound
 formalisation that lacks in~\cite{rrdtool} and a degree of genericity
-unavailable in \emph{RRDtool}. Under our model \emph{RRDtool}-like
-specific counter time series aggregations can be defined based on this
-facility.
-%
-We formalise time series following the way bitemporal data is
-formalised for relational \acro{DBMS}.
-%
-The model allows to favour more recent data over older one. This is 
-common in some approaches, like that of Cormode et
+unavailable in \emph{RRDtool}. In our model \emph{RRDtool}-like
+particular counter time series aggregations can be defined based on
+this facility. We formalise time series following the way bitemporal
+data is formalised for a relational \acro{DBMS}. The model allows to
+favour more recent data over the older one, which is in common with
+some other approaches, like that of Cormode et
 al.~\cite{cormode08:pods}.
 
-It should be remarked that the only goal of the model formalised here
-is to manage time series data. In practical applications it would be
-usual to complement this model with a standard database system to
-manage all the remaining data if needed. For instance, time series'
-metadata such as units of values, sensor localisation or
-classification tags would be stored in a standard \acro{DBMS}.
-
+We remark that the only goal of the model formalised here is to manage
+time series data. In practical applications, it would be usual to
+complement this model with a standard database system to handle all
+the remaining data if needed. For instance, time series metadata such
+as units of values, sensor localization or classification tags would
+be stored in a standard \acro{DBMS}.
 
 \subsection{Outline}
 
 This manuscript is organised as
 follows. Section~\ref{sec:related-work} introduces previous work that
 concerns \acro{TSMS} and \acro{MTSMS}.  The motivation for
-multiresolution is shown in Section~\ref{sec:features}.  The model is
-described in two steps.
-%
-First, in Section~\ref{sec:model:TSMS} we formalise a \acro{TSMS}
-model that is devoted to time series basic elements and operations.
-%
-Second, in Section~\ref{sec:MTSMS} we formalise a \acro{MTSMS} model
-that adds multiresolution capabilities to the \acro{TSMS} model.
-%
-In Section~\ref{sec:implementation} we describe an implementation of
-the integrated \acro{TSMS} and \acro{MTSMS} model.  Section~\ref{sec:example} is
-devoted to a real data multiresolution database example.  Finally,
-Section~\ref{sec:concl-future-work} offers some conclusions.
-
-
+multiresolution is shown in Section~\ref{sec:features}.  We describe
+the model in two steps.  First, in Section~\ref{sec:model:TSMS} we
+formalise a \acro{TSMS} model devoted to the basic elements and
+operations of time series.  Second, in Section~\ref{sec:MTSMS} we
+formalise a \acro{MTSMS} model that adds multiresolution capabilities
+to the \acro{TSMS} model.  In Section~\ref{sec:implementation} we
+describe an implementation of the integrated \acro{TSMS} and
+\acro{MTSMS} model. The Section~\ref{sec:example} is devoted to a real
+data multiresolution database example.  Finally,
+the Section~\ref{sec:concl-future-work} offers some conclusions.
 
 
 \section{Previous work}
 \label{sec:related-work}
 
 For the sake of completeness here we describe some previous work
-related to time series storage. It is organised in three subsections.
-First, we introduce some previous database management systems
-approaches for time series. Second, we explain how compression
-techniques are applied to leverage time series storage. Third, we
-review time series storage systems based on the data streams paradigm.
+related to time series storage. We organise this in three
+subsections. First, we introduce some previous approaches to database
+management systems for time series. Second, we explain how some
+authors applied compression techniques to leverage time series
+storage. Third, we review time series storage systems based on the
+data streams paradigm.
 
 
 \subsection{Database approaches}
@@ -182,12 +163,12 @@ Shoshani~\cite{segev87:sigmod} propose a structured language for
 querying \acro{TSMS}. Their time series structures include the notion
 of regularity and temporal representation and their operations are
 \acro{SQL}-like.  Dreyer et al.~\cite{dreyer94} suggest the
-requirements of a special purpose \acro{TSMS} and base the model on
+requirements of a particular purpose \acro{TSMS} and base the model on
 five basic structural elements: events, time series, groups, metadata
-and time series bases. They implement a \acro{TSMS} named
+and time series basis. They implement a \acro{TSMS} named
 \emph{Calanda} which includes calendar operations, it allows grouping
-of time series and it operates with simple queries. They exemplify it
-with financial data. In~\cite{schmidt95} \emph{Calanda} is compared
+of time series, and it operates with simple queries. They exemplify it
+using financial data. In~\cite{schmidt95} \emph{Calanda} is compared
 with temporal systems designed for time series.
  
 Other authors consider array database systems well suited to
@@ -201,107 +182,96 @@ series.  In contrast, \emph{SciQL} defines time series as a mixture of
 array, set, and sequence properties and exhibits some time series
 managing characteristics that include time series regularities,
 interpolation or correlation queries.
-% However,
-% difference between tables and arrays seems too physical and leads to
-% ambiguity when representing time series.  
-% Our TSMS model proposes time
-% series as firmly based on relational algebra, clarifying this
-% ambiguity and describing them coherently in terms of information
-% systems theory.
-
 
 \emph{Bitemporal} \acro{DBMS}, sometimes referred directly as
 \emph{temporal data}, is a database field that inherently considers
 temporal dimension of data. Bitemporal data manages historical data
 and events in databases by associating pairs of \emph{valid} and
 \emph{transaction} time intervals to data.  Bitemporal data and time
-series data are not exactly the same and so they cannot be treated
+series data are not exactly the same, and so they cannot be treated
 interchangeably~\cite{schmidt95}, however, there are some similarities
 that can be considered. Moreover, \acro{DBMS} research represents
 bitemporal data as relations extended with time intervals attributes
-and extends relational operations in order to deal with related time
+and extends relational operations to deal with related time
 aspects~\cite{jensen99:temporaldata,date02:_tempor_data_relat_model}.
-% On the other hand, some bitemporal time concepts might be taken
-% into account by \acro{TSMS}, such as the discussions about time
-% granularities.
-
 
 
 \subsection{Compression approaches}
 
 Oetiker's \emph{RRDtool}~\cite{rrdtool,lisa98:oetiker} is a free
-software database management system. It is designed to be used for
-monitoring systems. Because of this, it is focused to a particular
-kind of data, gauges and counters, and it lacks general time series
-operations. \emph{RRDtool} can store multiple time resolution data,
-however Plonka et al.~\cite{lisa07:plonka} evaluated \emph{RRDtool}
-performance and found limitations when storing a huge number of
-different time series. They suggest a caching system on top of
-\emph{RRDtool} as a solution.
-%
-Weigel et al.~\cite{weigel10} advocate a similar approach named
-\emph{TSDS} that caches queries by aggregate parameters.  In this
-paper, the authors state that other systems only show subsets of data
-but it is also necessary to show data in their complete time span.
-They develop the software package \emph{TSDS} where time series are
-fully stored and then queried by date ranges or by applying different
-filters and operations to the time series data.  
+software database management system designed for monitoring
+systems. Because of this, it is focused on a particular kind of data,
+gauges and counters, and it lacks general time series
+operations. \emph{RRDtool} can store data at diverse time
+resolutions. However, Plonka et al.~\cite{lisa07:plonka} evaluated
+\emph{RRDtool} performance and found limitations when storing a vast
+number of different time series. They suggested a caching system on
+top of \emph{RRDtool} as a solution. Weigel et al.~\cite{weigel10}
+advocate for a similar approach that caches queries by aggregate
+parameters.  In Weigel's paper, the authors state that other systems
+only show subsets of data, but they also consider necessary to show
+data in their complete time span. They developed the software package
+known as \emph{TSDS} that fully stores time series and then query them
+by date ranges or by applying different filters and operations to the
+data.
 
-Deri et al.~\cite{deri12:tsdb_compressed_database} suggest
+Deri et al.~\cite{deri12:tsdb_compressed_database} suggested
 \emph{Tsdb}, a lossless compression storage \acro{TSMS} for time
 series that share the same time instants of acquisition. Different
-time series are stored grouped by the time of acquisition instead of
-in a isolated way.  They compare \emph{Tsdb} with \emph{RRDtool} and
-with a relational product. As a consequence of \emph{Tsdb} structure,
-they achieve a better measure addition time but a worse global
-retrieval time as data have to be contiguously regrouped. However,
-when the measurements share the same time, a \acro{MTSMS} considers
-them as the same time series. Thus, when having much equal acquired
-time series, it would be interesting to use the \emph{Tsdb}
-implementation architecture of shared time arrays in \acro{MTSMS} to
-achieve better performance requirements.
+series are stored grouped by the acquisition time instead of in an
+isolated way.  Deri et al. compared \emph{Tsdb} with \emph{RRDtool}
+and with a relational product. They found that as a consequence of
+\emph{Tsdb} structure, it achieves a better measure store time but a
+worse measure retrieval time than other products. Differences are due
+to the need to be continuously regrouping the data.  However, when the
+measures share the same time, \acro{MTSMS} considers them as the same
+time series and measure retrieval time improves. In these
+circumstances, it would be interesting to use the \emph{Tsdb}
+implementation architecture of shared time arrays in a \acro{MTSMS} to
+achieve a better store performance.
 
-Some lossy compression techniques for time series are devoted to the
-optimal approximation representation. They seek to balance between the
-least data that can reconstruct the original signal and the least
-error. Keogh et al.~\cite{keogh01} cite some possible approximation
-representations for time series such as Fourier transforms, wavelets,
-symbolic mappings or piecewise linear representation. They remark this
-last one as very usual due to its simplicity and develop a system
-called \emph{iSAX}~\cite{keogh08:isax,keogh10:isax} in order to
-analyse and index massive collections of time series. They argue
-that the main problem is in the indexing of time series and they
-propose methods for processing efficiently. The first method proposed
-is based on a constant piecewise approximation. The time series
-representation obtained with \emph{iSAX} allows reducing the stored
-space and indexing faster with the same quality as other more complex
-representation methods.  These compression techniques are candidates
+Some lossy compression techniques for time series pursuit an optimal
+approximation representation. They seek to balance between the least
+amount of data that can reconstruct the original signal and the data
+that gives the least error. Keogh et al.~\cite{keogh01} cite some
+possible approximation representations for time series such as Fourier
+transforms, wavelets, symbolic mappings or piecewise linear
+representation. They remark the last one as very usual due to its
+simplicity and develop a system called
+\emph{iSAX}~\cite{keogh08:isax,keogh10:isax} to analyze and index
+massive collections of time series. They argue that the main problem
+is the indexing of time series, and they propose methods for
+processing efficiently. The first method proposed is based on a
+constant piecewise approximation. The time series representation
+obtained with \emph{iSAX} allows to reduce the stored space and faster
+indexing while maintaining the same quality as other more
+sophisticated methods.  These compression techniques are candidates
 for being used as attribute aggregate functions in the \acro{MTSMS}
 model.
 
 
 \subsection{Data stream approaches}
 
-\emph{Cougar}~\cite{bonnet01} is a sensor database system that has two
-main structures: one for sensor properties that are stored into
-relational tables and another for time series coming from sensors that
-are stored into data sequences. Time series have specific operations
-and can combine relations and sequences. \emph{Cougar} target field is
-sensor networks, where data are stored distributed in different
-locations. Queries are resolved combining sensor data in a data stream
-abstraction that improves processing performance.
+\emph{Cougar}~\cite{bonnet01} is a sensor database system that
+maintains two main structures: a relational structure for sensor
+properties and a set of data sequences for time series coming from
+sensors. \emph{Cougar} time series have specific operations that can
+combine relations and sequences. \emph{Cougar} target field is sensor
+networks, where data are stored distributed in different
+locations. Queries inc \emph{Cougar} are resolved by combining sensor
+data in a data stream abstraction. According to the authors, this
+improves the processing performance.
 
-Time series are also considered as data streams to aggregate data
-statistically. Cormode et al.~\cite{cormode08:pods} develop
+To compute statistical aggregates, some authors consider time series
+as data streams. Cormode et al.~\cite{cormode08:pods} developed some
 aggregation techniques that give more weight to recent data and that
-allow to do fast approximate queries with compressed data.
+allow to run fast approximate queries on compressed data.
 
 Dou et al.~\cite{dou14:historic_queries_flash_storage} create index
 structures as multiresolution aggregates, like average, count, or top,
-for historical data managed in flash storage. They consider a specific
+for historical data managed in a flash storage. They consider a specific
 storage solution based on a register with pointers similar to the
 multiresolution storage in \emph{RRDtool}~\cite{lisa98:oetiker}.
-
 
 
 \section{Multiresolution motivation}
@@ -309,30 +279,34 @@ multiresolution storage in \emph{RRDtool}~\cite{lisa98:oetiker}.
 
 An important characteristic of the model formalised in this paper is
 \emph{multiresolution}.  Previously to this paper's complete
-formalisation for the \acro{MTSMS} model, we analysed the requirements
-and we summarised the main target for multiresolution systems
-\cite{llusa13:aiked}.
+formalisation for the \acro{MTSMS} model, we analysed the
+requirements, and we summarised the main target for multiresolution
+systems \cite{llusa13:aiked}.
 
-In this section we motivate the advantages of the multiresolution
+In this section, we motivate the advantages of the multiresolution
 approach. First, we intuitively introduce the concept of
-multiresolution through an example. Then, we discuss the advantages of
+multiresolution through an example. Then, we discuss the benefits of
 this approach.
 
 Figure~\ref{fig:mtsms:sequence} shows an example of the
-multiresolution approach. 
-%
-In the upper part there is a representation of a signal being
-monitored. The signal values range from $0$ to $10$ along the
-time. There are two specific time instants marked in the figure:
+multiresolution approach. In the upper part, there is a representation
+of a signal being monitored. The signal values range from $0$ to $10$
+along the time. There are two specific time instants marked in the
+figure:
+
 \begin{enumerate}
-\item The first is marked with the word \emph{init} and refers to the
+
+\item The first, marked with the word \emph{init}. It refers to the
   instant in which the database started to receive signal samples.
-\item The second is marked with the word \emph{now} and refers to the
-  instant in which the process snapshot was made.
+
+\item The second, marked with the word \emph{now}. It refers to the
+  instant in which the process made the snapshot.
+
 \end{enumerate}
-Note that time coordinates are assumed to be positive for the time instants 
-after \emph{init} and negative otherwise. The time before \emph{now}
-corresponds to the past and the time after to the future.
+
+Note that time coordinates are assumed to be positive for the time
+instants after \emph{init} and negative otherwise. The time before
+\emph{now} corresponds to the past and the time after to the future.
 The data before \emph{init} are unknown to the database.
 
 \begin{figure}
@@ -345,24 +319,19 @@ The data before \emph{init} are unknown to the database.
 \end{figure}
 
 At the bottom of Figure~\ref{fig:mtsms:sequence} there is a diagram
-that shows how multiresolution works.
-%
-The first row shows the signal's sample values that correspond to the
-above plot. The sampling frequency is of one time unit.
-%
-The second and the third row show an actual schema of a
-multiresolution database. It consists of two summaries for the time
-series resolutions. Every summary has a distinct resolution.
-%
-The first of the rows computes the mean of the sampled values every three units.
-The second computes the mean every five units.
-%
-In this example, aggregation function corresponds to a statistical
-mean. The values before \emph{init} are not acquired and they are
-marked as unknown (\emph{u}). Future values are also marked as unknown
-\emph{u} until time advances. Therefore, the first summary for the
-original signal at time instant \emph{now} corresponds to values
-$\{u,u,2,5,8,u\}$.
+that shows how multiresolution works. The first row displays the
+signal's sample values that correspond to the above plot. The sampling
+frequency is of one unit of time. The second and the third row show an
+actual schema of a multiresolution database. It consists of two
+summaries for the time series resolutions. Every summary has a
+distinct resolution. The first of the rows computes the mean of the
+sampled values every three units. The second computes the mean every
+five units. In this example, aggregation function corresponds to a
+statistical mean. The values before \emph{init} are not acquired, and
+they are marked as unknown (\emph{u}). Future values are also marked
+as unknown \emph{u} until time advances. Therefore, the first summary
+for the original signal at time instant \emph{now} corresponds to
+values $\{u,u,2,5,8,u\}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -370,32 +339,34 @@ The multiresolution approach enhances \acro{TSMS} features in several
 aspects:
 
 \begin{itemize}
-\item Voluminous data. Monitoring systems capture a huge amount of
-  data from sensors. To be able to process these data, their volume must
-  be reduced. The multiresolution approach allows to select and store
-  only the most interesting segments of data. These segments are seen
-  as different resolutions for the same time series and the user can
-  configure how they are extracted and summarised by defining
-  different time steps and functions. Multiresolution also facilitates
-  the graphing of huge time series by allowing to select the best time
-  range and time step that fits into the screen: there is no need to
-  render more data if it cannot be appreciated in the screen.
+
+\item Voluminous data. The monitoring systems capture an enormous
+  amount of data from sensors. To be able to process these data, their
+  volume must be reduced. The multiresolution approach allows to
+  select and store only the most interesting segments of data. We
+  understand these segments as different resolution views for the same
+  time series. The user can configure how these segments are extracted
+  and summarised by defining different time steps and
+  functions. Multiresolution also facilitates the graphing of huge
+  time series. It allows to select the best time range and time step
+  that makes the graph fit on the screen. Because we cannot appreciate
+  more data on the screen, there is no need to render it.
 
 \item Data validation. The use of monitoring systems to capture data
   is a current practice. However, the nature of these systems has some
-  drawbacks that will have impact on the obtained data. Quevedo et
-  al.~\cite{quevedo10} note that the main problems arise when monitors
-  cannot capture data, producing errors known as gaps, or monitors
-  capture data erroneously.  The multiresolution
-  attribute functions are designed to cope well with validation,
-  filtering and reconstruction of these unknown data in order to keep
-  a consistent history.
+  drawbacks that will have an impact on the obtained data. Quevedo et
+  al.~\cite{quevedo10} note that the main problems arise when the
+  monitoring system cannot capture data, producing errors known as
+  gaps, or when the monitoring system captures data erroneously.  The
+  multiresolution attribute functions are designed to cope well with
+  validation, filtering and reconstruction of these unknown data to
+  keep a consistent history.
 
-\item Data time regularisation. To monitor with a non constant
-  sampling rate has a side effect that induces irregularities in data.
-  According to Kopetz~\cite{kopetz11:realtime} there are two main
-  reasons for sampling rate variation: either sampling jitters in
-  periodic sampling or non periodic rates caused by event-based
+\item Data time regularisation. To monitor with a non-constant
+  sampling rate has a side effect that induces irregularities in
+  data. According to Kopetz~\cite{kopetz11:realtime} there are two
+  main reasons for sampling rate variation: either sampling jitters in
+  periodic sampling or non-periodic rates caused by event-based
   sampling.  Multiresolution regularises the time interval while
   processing a time series. As a consequence, every obtained time
   series segment has a regular time resolution. This feature can also
@@ -405,17 +376,13 @@ aspects:
 
 \item Data summaries. The target of a database system is to answer the
   user queries about the stored information. The multiresolution
-  approach allows a lossy compression storage solution. This can be
-  thought as an online way to compute and store a number of data
-  summaries, i.e. data of interest. These stored data summaries
-  allow faster queries of voluminous data. However, they should be
-  determined a priori, considering the context where the future queries
-  will be issued.
+  approach allows a lossy compression storage solution. In some sense,
+  it is an online way to compute and store data summaries, i.e. data
+  of interest. These stored data summaries allow faster queries of
+  voluminous data. However, they should be determined a priori
+  considering the context where the future queries will be issued.
+
 \end{itemize}
-
-
-
-
 
 
 %%% Local Variables:
