@@ -229,37 +229,28 @@ while the temporal union is a commutative one.
   Figure~\ref{fig:model:venn} shows Venn diagrams for all three cases,
   where the coloured area depicts the result time series. In every
   diagram, the central intersection area contains measures that share
-  both time and value attributes, like measure $(4,0)$. The left
+  both time and value attributes, as it is measure $(4,0)$. The left
   central area contains the measures in $R$ that only share the time
-  attribute with a measure in $S$, like measure $(3,1)$. The central
-  right area has a symmetrical meaning. The left and right outer areas
-  are the remaining measures of $R$ and $S$ respectively.
+  attribute with a measure in $S$, as it is measure $(3,1)$. The right
+  central area has a symmetrical meaning. The left and right outer
+  areas are the remaining measures of $R$ and $S$ respectively.
 \end{example}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FINS AQUI
-
-
-
-Time series \emph{difference} can also be defined. Similar to union, the
-difference requires both time series to have the same domain.
-%
-Let $R$ and $S$ be two time series and let $\dom R = \dom S$.
-%
-The \emph{difference} between $R$ and $S$, written $R-S$, is a time
-series $R-S=\{m|m\in R\wedge m\notin S\}$.
-%
-The \emph{temporal difference} between $R$ and $S$, denoted $R-^t S$, 
-is a time series $R-^t S=\{m|m\in R\wedge m \notinst S\}$.
-
+Time series \emph{difference} can also be defined. Similar to the
+union, the difference requires both time series to have the same
+domain. Let $R$ and $S$ be two time series and let $\dom R = \dom
+S$. The \emph{difference} between $R$ and $S$, written $R-S$, is a
+time series $R-S=\{m|m\in R\wedge m\notin S\}$. The \emph{temporal
+  difference} between $R$ and $S$, denoted $R-^t S$, is a time series
+$R-^t S=\{m|m\in R\wedge m \notinst S\}$.
 
 Based on union and difference we can define \emph{intersection} as
-$R\cap S = R - (R - S)$ and \emph{symmetric difference}
-as $R \ominus S = (R - S) \cup (S - R)$. The
-corresponding temporal operations can also be defined.
-
+$R\cap S = R - (R - S)$ and \emph{symmetric difference} as $R \ominus
+S = (R - S) \cup (S - R)$. We can also define the corresponding
+temporal operations.
 
 Relational \acro{DBMS} extend the set operators by some more, such as
-selection, rename or join. This kind of operators also make sense for
+selection, rename or join. This kind of operators also makes sense for
 time series. To illustrate this possibility we define the join
 operator.
 
@@ -267,14 +258,11 @@ Roughly speaking, the join of two time series is the combination of
 measures sharing the same time attribute.  Let $R$ and $S$ be two time
 series.  The \emph{join} of $R$ and $S$, denoted $R \join S$, is a
 multivalued time series $R \join S = \{ (t,v_1,v_2) | (t,v_1) \in
-R\wedge (t,v_2) \in S\}$. Note that $\dom(R\join
-S)=\dom R\times\dom S$.
-%
-It must be noted that join requires both time series measures to share
+R\wedge (t,v_2) \in S\}$. Note that $\dom(R\join S)=\dom R\times\dom
+S$.  Noted that join requires both time series measures to share
 exactly the same times. When time series diverge, the temporal
 function operations explained later can be applied to adjust the time
 instants to join requirements.
-
 
 A \acro{DBMS} requires computational operators to enable calculations
 between pieces of data. Relational \acro{DBMS} supply operators such
@@ -289,15 +277,13 @@ $f:\cal{T}\times\cal{V}\rightarrow\cal{T}\times\cal{V'}$ be a function
 over a measure returning a measure. The \emph{map} of $f$ over $S$ is
 a new time series defined as $\map(S,f)=\{f(m)|m\in S\}$. Note that
 $\dom(\map(S,f))=\cal{V'}$.
-%
-
 
 The fold operator recursively combines every measure of a time
 series. Assuming that $\mathcal{P}(C)$ is the powerset of $C$, we
 define fold as follows.
 %
 Let $S=\{m_0,\dots, m_k\}$ and $R$ be two time series, let
-$\mathcal{V}=\dom S$, let $\mathcal{V'}=\dom R$ and let 
+$\mathcal{V}=\dom S$, let $\mathcal{V'}=\dom R$ and let
 %
 $f:\mathcal{P}(\mathcal{T}\times\mathcal{V'}) \times (\mathcal{T}\times\mathcal{V}) \rightarrow \mathcal{P}(\mathcal{T}\times\mathcal{V'})$ 
 %
@@ -309,40 +295,19 @@ series defined as $\fold(S,R,f) = f(\cdots(f(f(f(R,m_0),\allowbreak
 m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
 %
 
-
-
 The classical aggregation operator combines the data of a time series
-into a single value.  It is worth noting that it is a special
-case of fold.
+into a single value.  It is worth noting that it is a special case of
+fold.
 
 Let $S=\{m_0,\dots,m_k\}$ be a time series, let $\mathcal{V}=\dom S$,
-let $m$ be a measure with $\dom m=\mathcal{V}$, and let 
+let $m$ be a measure with $\dom m=\mathcal{V}$, and let
 %
-$f:(\mathcal{T}\times\mathcal{V})\times(\mathcal{T}\times\mathcal{V})\rightarrow \mathcal{T}\times\mathcal{V}$ 
-%
-be a function over two measures returning a measure. The
-\emph{aggregate} of $S$ by $f$ with initial value $m$ is a new time
-series defined as $\agg(S,m,f) = f(\cdots(f(f(f(m,m_0),\allowbreak
-m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.  
-
-% In the previous fold, the measures are computed in random order.
-% However in some computational operations it is necessary to define the
-% order, especially when $f$ is not commutative.  Then, it is possible
-% to define a \emph{fold with order} as an extension of fold where
-% measures are computed in a predetermined order.
-
-% We define a
-% \emph{fold with order}, $\orderfold$, as an extension of fold with a
-% function $o$ that selects measures in order where $o: S_a \mapsto m_r$
-% \[
-%  \orderfold(S,S_i,f^f,o) =
-%   \begin{cases}
-%     S_i  \text{ if } |S|=0, \\
-%     \orderfold(S_o,f^f(S_i,m_o),f^f,o)  \text{ else}
-%   \end{cases}
-% \]
-% where $m_o = o(S)$ and $S_o = S - \{m_o\}$.
-
+$f:(\mathcal{T}\times\mathcal{V})\times(\mathcal{T}\times\mathcal{V})\rightarrow
+\mathcal{T}\times\mathcal{V}$ be a function over two measures
+returning a measure. The \emph{aggregate} of $S$ by $f$ with initial
+value $m$ is a new time series defined as $\agg(S,m,f) =
+f(\cdots(f(f(f(m,m_0),\allowbreak m_1),\allowbreak
+m_2)\cdots),\allowbreak m_k)$.
 
 
 \begin{example}
@@ -350,9 +315,8 @@ m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
 Let $S=\{(1,1),(2,3),(4,1)\}$ be a time series.  Map operator allows
 computing a new time series whose values result from time multiplied
 by value.  We define the map function $f(t,v)=(t,t\cdot v)$. Then
-$\map(S,f)=\{(1,1),(2,6),(4,4)\}$.  
+$\map(S,f)=\{(1,1),(2,6),(4,4)\}$.
 %
-
 
 The fold operator allows, for instance, to select the measures having
 its value equal to one.  We define the fold function $f(R,m)=R\cup R'$
@@ -361,31 +325,28 @@ any measure, note that $f(\emptyset,m)= R'$. Then
 $\fold(S,\emptyset,f)=\{(1,1),(4,1)\}$.
 
 
-The aggregate operator allows, for instance, to compute the measure
+The aggregate operator allows, for example, to compute the measure
 that results from the sum of all the values.  To illustrate it, we
 define the aggregate function $f(m,n)=(0,V(m)+V(n))$. Now,
 $\agg(S,(0,0),f) = (0,5)$, where $5$ is the sum of all the values of
 $S$. Note that time is meaningless in this computation.
 \end{example}
 
+
+
 %%%%%%% BINARY COMPUTATIONAL OPERATORS
 
 Finally we describe how, using the operators defined before, we can
 implement \emph{binary computational} operators between two time
-series. This illustrates the power of the operators defined so far.
-%
+series. This implementation illustrates the power of the operators
+defined so far.
 
-The strategy requires first to join the two time series and then
-apply the computational operations. 
-%
-Let $S$ and $R$ be two time series and $\odot$ be a binary operator on
-the value domain. The operator $\odot$ can be extended to the time
-series as:
-%
-$S\odot R=\map(S\join R, f)$ being $f$ the function
-$f(t,v,w)=(t,v\odot w)$.
-%
-This allows to extend real binary operations such as sum, $R+S$, or
+The strategy requires first to join the two time series and then apply
+the computational operations. Let $S$ and $R$ be two time series and
+$\odot$ be a binary operator on the value domain. We can extend the
+operator $\odot$ to the time series as $S\odot R=\map(S\join R, f)$
+being $f$ the function $f(t,v,w)=(t,v\odot w)$. The extended operator
+allows to extend real binary operations such as sum, $R+S$, or
 division, $R/S$, to time series.
 
 \begin{example}
@@ -406,7 +367,6 @@ the same times. As aforementioned, when time series diverge, the
 temporal function operations explained later can be applied to adjust
 the time instants to join requirements.
 
-%%%%%%%%%%%==================
 
 
 \subsubsection{Sequence operations}
@@ -462,39 +422,30 @@ $R||S= R\cup (S - S[T(\inf R):T(\sup R)])$.
 \subsubsection{Temporal function operations}
 \label{sec:model:tfunc}
 
-A time series can be thought as a discrete representation of an
-(original) temporal function. In this section we devise some
-operations that manage time series according to this temporal
-function standpoint.  
-%
+We can think a time series as a discrete representation of an original
+temporal function. In this section, we devise some operations that
+manage time series according to this temporal function standpoint.
 
-The graph of a function allows to obtain and interpret the
-continuous nature of a time series. When the domain of time and value
-attributes can be plotted then the graph is equivalent to a graphical
-representation.  
-%
-Let $S$ be a time series and $\cal{T}$ the time domain. The \emph{graph} of
-the time series $S$ is a set of ordered pairs $\graph S
-=\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a \emph{temporal representation
-function} for the time series.
-%
-
+The graph of a function allows to obtain and interpret the continuous
+nature of a time series. When we can plot the domain of time and value
+attributes, then the graph is equivalent to a graphical
+representation.  Let $S$ be a time series and $\cal{T}$ the time
+domain. The \emph{graph} of the time series $S$ is a set of ordered
+pairs $\graph S =\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a
+\emph{temporal representation function} for the time series.
 
 Given a time series $S$, the \emph{temporal representation function}
-$S(t)$ is a function along the variable $t$ in the domain of
-time and the target in the domain of values.
-%
-In some sense, $S(t)$ can be thought as the original temporal function
-from which $S$ was obtained.
-%
+$S(t)$ is a function along the variable $t$ in the domain of time and
+the target in the domain of values. In some sense, we can think of
+$S(t)$ as the original temporal function from which $S$ was obtained.
 
 There is not an unique way to obtain $S(t)$ for a given time series
 $S$. Because of this, in temporal representation functions we will
-introduce a superscript, say $r$, that shows the name $r$ of the
-representation method used. Then, $S(t)^r$ means the representation
-function of $S$ using method $r$. Below, we exemplify the
-representation functions using two different methods based on impulse
-and constant piecewise functions.
+introduce a superscript that shows the name $r$ of the representation
+method used. Then, $S(t)^r$ means the representation function of $S$
+using method $r$. Below, we exemplify the representation functions
+using two different methods based on impulse and constant piecewise
+functions.
 
 
 \begin{definition}[Dirac representation] 
@@ -525,15 +476,8 @@ and constant piecewise functions.
   \]
 \end{definition}
 
-
-
-
-The concept of representation is used for formalising some set and
-sequence operators as temporal operators. 
-
-% Consequently, the result of each one will depend on a representation
-% method, which is indicated as a parameter.
-
+We use the concept of representation to formalise some set and
+sequence operators as temporal operators.
 
 We define a temporal interval operation to introduce this concept.
 Let $S$ be a time series, let $[s:t]$ be an interval of two time
@@ -556,40 +500,34 @@ must be interpreted:
 
 
 
-From temporal interval other operators can also be defined such as temporal
-selection, temporal concatenation, or temporal join. As an example, the
-definition of temporal selection operation is given.
-
+From temporal interval, we can define other operators such as temporal
+selection, temporal concatenation, or temporal join. As an example, we
+give the definition of the temporal selection operation.
 
 The temporal selection over a time series allows to change the
 resolution in the context of a representation function.  Let $S$ be a
-time series, let $T=\{t_0,t_1,\dotsc,t_k\}$ be a set of time instants, and let 
-$r$ be a representation method. The \emph{temporal selection}, denoted as
-$S[T]^r$, is a time series with measures in $T$ times computed in
-coherence with the representation method $r$. That is, $S[T]^r = S[t_0:t_0]^r
-\cup S[t_1:t_1]^r \cup \dotsb \cup S[t_k:t_k]^r$. If $t$ is a time
-instant, note that the temporal selection depends on the temporal interval
-operation $S[t:t]^r$, which is equivalent to the notion of
-temporal representation function over a single time instant. That is, $S[t:t]^r
-= \{ (t, S(t)^r) \}$.
+time series, let $T=\{t_0,t_1,\dotsc,t_k\}$ be a set of time instants,
+and let $r$ be a representation method. The \emph{temporal selection},
+denoted as $S[T]^r$, is a time series of measures in $T$ and times
+computed in coherence with the representation method $r$. That is,
+$S[T]^r = S[t_0:t_0]^r \cup S[t_1:t_1]^r \cup \dotsb \cup
+S[t_k:t_k]^r$. If $t$ is a time instant, note that the temporal
+selection depends on the temporal interval operation $S[t:t]^r$, which
+is equivalent to the notion of temporal representation function over a
+single time instant. That is, $S[t:t]^r = \{ (t, S(t)^r) \}$.
 
-
-
-
-The temporal selection operation also allows to regularise an irregular
-time series. Let $S$ be a time series, let $d,e\in\cal{T}$ be the
-desired regularity parameters, and let $k\in\N$ be a limit for the
-scope of the range.  A regularised $S$ can be obtained with $S[T]^r$
-where $T = \{e+nd | n\in\N \wedge n\leq k \}$ is a set of time
-instants equi-spaced.
-
-
-
-
+The temporal selection operation also allows to regularise an
+irregular time series. Let $S$ be a time series, let $d,e\in\cal{T}$
+be the desired regularity parameters, and let $k\in\N$ be a limit for
+the scope of the range.  A regularised $S$ can be obtained with
+$S[T]^r$ where $T = \{e+nd | n\in\N \wedge n\leq k \}$ is a set of
+evenly spaced time instants.
 
 
 \section{Multiresolution model}
 \label{sec:MTSMS}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TOCA AQUEST
 
 In this section we formalise a model for \acro{MTSMS}. Illustration
 examples of the definitions given can be found at the end of the
