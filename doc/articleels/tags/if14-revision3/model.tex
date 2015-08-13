@@ -6,53 +6,49 @@ Following current database models, a \acro{TSMS} model consists of two
 components: a data model and a set of operations. \emph{Measures} and
 \emph{time series} are the main objects of our \acro{TSMS} model.
 %
-In this section we describe and formalise the \acro{TSMS} model. 
+In this section, we describe and formalise the \acro{TSMS} model. 
 
 
 \subsection{Data model}
 
 Roughly speaking a \emph{time series} is a set of observations
 collected at specific time instants. An observation may consist of
-single value or multiple values collected at the same time instant.
-Each pair of time and observed values is referred to as a
-\emph{measure}. Then, a time series is a correspondence between times
-and values. A time series can be described by a set of measures.
+single value or multiple values collected at the same time instant. We
+refer a pair of time and observed values as a \emph{measure}. Then, a
+time series is a correspondence between times and
+values. Additionally, time series are also described as a set of
+measures.
 
 We name \emph{time domain} the set $\cal{T}$ of all the possible time
 values. $\cal{T}$ can be either a finite or an infinite set and
 usually it is a closed set. Although time is a complex issue
-\cite{iep:time-supplement}, in this paper we will assume that 
+\cite{iep:time-supplement}, in this paper we will assume that
 $\cal{T}$ is the set of affinely extended real numbers $\Rb = \R \cup
-\{+\infty,-\infty\}$. This avoids the complex details of time
-modelling while being powerful enough for our purposes. Next, we
-define the main time related concepts using this naive approximation.
+\{+\infty,-\infty\}$. This assumption avoids the complex details of
+time modelling while being powerful enough for our purposes. Next, we
+define the main time-related concepts using this naive approximation.
 
 
 
 \begin{definition}[Time concepts]
   \label{def:model:temps}
-  Let $\cal{T}=\Rb$ be the domain for time.
-  %
-  We name an element $t\in\cal{T}$ as \emph{time instant}.
-  %
-  Let $s,t\in\cal{T}$ be two time instants.  We define the
-  \emph{duration of time} between $s$ and $t$ as the value $d
-  \in\cal{T}$ which measures the distance in time units between the
-  two time instants, that is $d =|s-t|$.
+  Let $\cal{T}=\Rb$ be the domain of time. We name an element
+  $t\in\cal{T}$ as \emph{time instant}. Let $s,t\in\cal{T}$ be two
+  time instants.  We define the \emph{duration of time} between $s$
+  and $t$ as the value $d\in\cal{T}$ which measures the distance in
+  time units between the two time instants, that is $d =|s-t|$.
 \end{definition}
 
 The \emph{value} is an attribute that indicates the magnitude of a
-measure. The domain for the values can be of any data type. Valid domains
-for values include integers, real numbers, strings, and more
-elaborated data structures such as arrays, lists, or even other time
-series. In the sequel, the domain for values will be denoted by
-$\cal{V}$. 
-%
-Without loss of generality in this paper we will assume that the
-domain of values is the set of projectively extended reals $\Rp = \R
-\cup \{\infty\}$.
+measure. The domain for the values can be of any data type. Valid
+domains for values include integers, real numbers, strings, and richer
+data structures such as arrays, lists, or even other time series. In
+the sequel, the domain for values will be denoted by
+$\cal{V}$. Without loss of generality, in this paper we will assume
+that the domain of values is the set of projectively extended reals
+$\Rp = \R \cup \{\infty\}$.
 
-A measure represents an actual value measured in a particular time
+A measure represents an actual value measured at a particular time
 instant. We define it below.
 
 \begin{definition}[Measure]
@@ -65,7 +61,7 @@ instant. We define it below.
 Let $m = (t,v)$ be a measure. In what follows, $V(m)$ denotes the
 value $v$ and $T(m)$ denotes the time $t$.
 
-Order between measures plays an important role. Given two measures we
+Order between measures plays a significant role. Given two measures we
 define two distinct \emph{order relations}.
 
 \begin{definition}[Semitemporal order]\label{def:semitemporal_order}
@@ -75,128 +71,115 @@ define two distinct \emph{order relations}.
 \end{definition}
 
 \begin{definition}[Temporal order]\label{def:temporal_order}
-  Let $m$ and $n$ be two measures. We
-    name \emph{temporal order} the binary relation written $m \leq^t
-    n$ and defined as $m \leq^t n \iff T(m) \leq T(n)$.
+  Let $m$ and $n$ be two measures. We name \emph{temporal order} the
+  binary relation written $m \leq^t n$ and defined as $m \leq^t n \iff
+  T(m) \leq T(n)$.
 \end{definition}
 
-Note that the semitemporal order is a partial order while the temporal
+Note that the semitemporal order is a partial order and the temporal
 order is a total order.
 
-Intuitively speaking a \emph{time series} is a ordered set of measures of the
-same phenomena.  Sometimes they are also called \emph{time
-sequences}~\cite{last:hetland}. We define it as follows.
+Intuitively speaking a \emph{time series} is a ordered set of measures
+of the same phenomena.  Sometimes they are also called \emph{time
+  sequences}~\cite{last:hetland}. We define it as follows.
 
 \begin{definition}[Time series]
   \label{def:model:timeseries}
   Let $S = \{m_0,\ldots,m_k\}\subset\cal{T}\times\cal{V}$ be a finite
   set of measures of the same type. Then, $S$ is a \emph{time series}
-  iff $\forall i,j: i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$.
-  We define the domain of a time series $S$, denoted as $\dom S$, as
-  the domain of its measures.
+  iff $\forall i,j: i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$. We
+  define the domain of a time series $S$ as the domain of its
+  measures, denoted by $\dom S$, .
 \end{definition}
 
 Observe that although measures in $S$ are expected to be of the same
 phenomena, from a formal standpoint we only require the domain of all
-values to be the same. 
+values to be the same.
 
-In a time series there are not two measures with the same time. Thus,
-considering the temporal order, a time series is a totally ordered
-set.
+A time series do not contain two measures at the same time. Therefore,
+taking account of the temporal order, a time series is a totally
+ordered set.
 
-The \emph{cardinality} of a time series $S=\{m_0,\dots,m_k\}$, noted as
-$|S|$, is the number of measures that contains.  An \emph{empty time series} is
-noted as $\emptyset$. Needless to say, $|\emptyset|=0$.
+The \emph{cardinality} of a time series $S=\{m_0,\dots,m_k\}$, noted
+as $|S|$, is the number of measures that contains.  An \emph{empty
+  time series} is noted as $\emptyset$. Needless to say,
+$|\emptyset|=0$.
 
 Although we defined values as scalars, it is easy to extend the
 concept. Following~\cite{assfalg08:thesis}, a time series can record
 more than one phenomena if they share the same acquisition time
-instants.  This kind of series are known as \emph{multivalued time
+instants.  This kind of series is known as \emph{multivalued time
   series}. Let $S$ be a multivalued time series and let its domain be
 $\dom S={\cal{V}}_1\times\cdots\times{\cal{V}}_n$. Then, we write its
 measures as $m=(t,v_1,v_2,\ldots,v_n)$.
 
-
-
-A time series is \emph{regular} when its measures are equi-spaced in time,
-according to \cite{last:hetland}.  Let $S=\{m_0, m_1,\ldots,
+A time series is \emph{regular} when its measures are evenly spaced in
+time, according to \cite{last:hetland}.  Let $S=\{m_0, m_1,\ldots,
 m_{k-1},m_k\}$ be a time series, where
 $T(m_0)<T(m_1)<\dots<T(m_{k-1})<T(m_k)$, and let $d\in\cal{T}$ be a
-time duration. Then $S$ is \emph{regular} when $d=T(m_1)-T(m_0)=
-\dots =T(m_k)-T(m_{k-1})$.
-
-
-
+time duration. Then $S$ is \emph{regular} when $d=T(m_1)-T(m_0)=\dots
+=T(m_k)-T(m_{k-1})$.
 
 \subsection{Operations}
 \label{sec:model:operations}
 
-Time series can be manipulated through the operations defined in this
-section.
-%
-Like the relational model operations, operations over time series
-ignore the actual semantics of the data. In a particular application,
+We can manipulate time series using the operations defined in this
+section. Like the relational model operations, operations over time
+series ignore the actual semantics of the data. In a real application,
 it should be decided whether an operation is semantically coherent or
-should not be applied. For example, the addition of values coming from two
-different phenomena could be semantically erroneous.
+not and thus if it should be applied. For example, the addition of
+values coming from two different phenomena could be semantically
+wrong.
 
 In this section three groups of operations are formalised, one in each
-of the subsections which follow. The set operations, that consider
+of the subsections that follow. The set operations, that consider
 times series as sets; the sequence operations, that consider time
-series as sequences; and the temporal operations, that manipulate the
-time series assuming that are representations of functions.
-
+series as sequences; and the temporal operations that manipulate the
+time series assuming that they are representations of functions.
 
 
 \subsubsection{Set operations}
 \label{sec:set}
 
-We describe how common set operators can be applied to time series. We
-rely on how the relational model of \acro{DBMS} describes operations
-based on set algebra~\cite{date:introduction}.
+We describe how to apply common set operators to time series. We rely
+on how the relational model of \acro{DBMS} describes operations based
+on set algebra~\cite{date:introduction}.
 
 Consider a time series $S$. $S$ is a finite ordered set (by the
 temporal order). Then, if $S$ nonempty, $S$ has a maximum and a
-minimum.  
-%
-The \emph{maximum}
-of $S$, denoted as $\max S$, is an element of $S$ such that $\forall m
-\in S:\max S\geq^t m $.  
-%
-Note that $\max S$ is not defined when $S=\emptyset$. However, the
-time series has a supremum even when it is empty.  Regarding the time
-domain being the set of affinely extended real numbers, $\Rb$, we can
-apply the property $\sup(\emptyset)=-\infty$
-\cite{cantrell:extendedreal}; note that here $\emptyset$ means an
-empty set of $\Rb$. %
-Let $m=(-\infty,\infty)$ be a measure with infinite time and value.
-We define the \emph{supremum} of $S$, noted as $\sup S$, as
+minimum.  The \emph{maximum} of $S$, denoted as $\max S$, is an
+element of $S$ such that $\forall m \in S:\max S\geq^t m $.  Note that
+$\max S$ is not defined when $S=\emptyset$. However, the time series
+has a supremum even when it is empty.  Being the time domain the set
+of affinely extended real numbers $\Rb$, we can apply the property
+that says $\sup(\emptyset)=-\infty$ \cite{cantrell:extendedreal}. Note
+that here $\emptyset$ means an empty subset of $\Rb$. Let
+$m=(-\infty,\infty)$ be a measure of infinite time and
+value. $T(m)=-\infty$ is a consequence of the extended real numbers
+property.  $V(m)$ could be any value. However, we choose an infinite
+value for simplicity. We define the \emph{supremum} of $S$, noted as
+$\sup S$, as
 \[
 \sup S =\begin{cases}
   \max S    & \text{when $S$ nonempty}\\
   m   & \text{otherwise}
 \end{cases}
 \]
-where $T(m)=-\infty$ is a consequence from the extended real numbers
-property and $V(m)$ could be any value but we generalise it
-as an infinite value. %  
 Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
 and the \emph{infimum} of $S$, noted as $\inf S$.
 
-The \emph{membership} operation defines when a measure belongs to a time
-series. We define two distinct membership operations which consider
-the semitemporal order (Definition~\ref{def:semitemporal_order}) and
-the temporal order (Definition~\ref{def:temporal_order}). In
-consequence, they induce two different ways to consider time series
-and its operations.
+The \emph{membership} operation defines when a measure belongs to a
+time series. We define two distinct membership operations which
+consider the semitemporal order
+Definition~\ref{def:semitemporal_order}) and the temporal order
+(Definition~\ref{def:temporal_order}). In consequence, they induce two
+different ways to consider time series and its operations.
 
-Let $S$ be a time series and $m$ be a measure. 
-%
-We say that $m$ belongs to $S$ (plain \emph{membership}), denoted as
-$m \in S$, when $\exists x\in S: x=m$.  We also say that $m$ belongs
-temporally to $S$ (\emph{temporal membership}), denoted as $m \inst
-S$, when $\exists x\in S : T(m)=T(x)$.
-
+Let $S$ be a time series and $m$ be a measure. We say that $m$ belongs
+to $S$ (plain \emph{membership}), denoted as $m \in S$, when $\exists
+x\in S: x=m$.  We also say that $m$ belongs temporally to $S$
+(\emph{temporal membership}), denoted as $m \inst S$, when $\exists
+x\in S : T(m)=T(x)$.
 
 The two distinct membership criteria induce two meanings for
 inclusion. Let $R$ and $S$ be two time series.  We say that $R$ is
@@ -205,27 +188,23 @@ of $R$ belong to $S$.  Analogously, we say that $R$ is \emph{included
   temporally} in $S$, noted $R\subseteqt S$, when all the elements of
 $R$ belong temporally to $S$.
 
-
 The \emph{union} of two sets is a set containing elements from both
-sets. The traditional set union operations do not apply to time series because
-the result time series may have repeated time values.  Thus, we 
-give a slightly modified concept for union.
+sets. The traditional set union operations do not apply to time series
+because the result time series may have repeated time values.  Thus,
+we give a slightly modified concept for the union.
 
 The union operation requires both time series to have the same domain,
 as is also true with the union operation of relational
 algebra~\cite{date:introduction}.
 
-Let $R$ and $S$ be two time series and let $\dom R =\dom S$. 
-%
-The \emph{union} of $R$ and $S$, noted $R\cup S$, is a new time series
-$R \cup S = \{m|m\in R\vee (m\in S\wedge m \notinst R)\}$. 
-%
-The \emph{temporal union} of $R$ and $S$, noted $R \cupt S$, is a
-time series $R \cupt S = \{ m | (m \in R \wedge m \in S) \vee (m \in R
-\wedge m \notinst S) \vee (m \in S \wedge m \notinst R) \}$.  
-%
-It is interesting to emphasise that the union is a non commutative
-operation while the temporal union is a commutative one.
+Let $R$ and $S$ be two time series and let $\dom R =\dom S$.  The
+\emph{union} of $R$ and $S$, noted $R\cup S$, is a new time series $R
+\cup S = \{m|m\in R\vee (m\in S\wedge m \notinst R)\}$.  The
+\emph{temporal union} of $R$ and $S$, noted $R \cupt S$, is a time
+series $R \cupt S = \{ m | (m \in R \wedge m \in S) \vee (m \in R
+\wedge m \notinst S) \vee (m \in S \wedge m \notinst R) \}$.  It is
+interesting to emphasise that the union is a non-commutative operation
+while the temporal union is a commutative one.
 
 \begin{figure}
   \centering
@@ -243,21 +222,21 @@ operation while the temporal union is a commutative one.
   Let $R=\{(1,1), (3,1), (4,0), (5,1)\}$ and $S=\{(2,2), (3,2), (4,0),
   (6,2)\}$ be two time series. The union of $R$ and $S$ is $R\cup
   S=\{(1,1), (2,2), (3,1), (4,0), (5,1), (6,2)\}$. Because union is
-  not symmetric, $S\cup R=\{(1,1), (2,2), \allowbreak(3,2), (4, 0), (5,1),
-  (6,2)\}$. The temporal union results in $R\cupt S= S \cupt
-  R=\{(1,1), (2,2), (4,0), (5,1), (6,2)\}$.  
+  not symmetric, $S\cup R=\{(1,1), (2,2), \allowbreak(3,2), (4, 0),
+  (5,1), (6,2)\}$. The temporal union results in $R\cupt S= S \cupt
+  R=\{(1,1), (2,2), (4,0), (5,1), (6,2)\}$.
   %
-  Venn diagrams for all three cases are shown in
-  Figure~\ref{fig:model:venn}, where the coloured area depicts the
-  result time series. In every diagram, the central intersection area
-  contains measures that share both time and value attributes, as it
-  is measure $(4,0)$. The central left area contains the measures in
-  $R$ that only share the time attribute with a measure in $S$, as it
-  is measure $(3,1)$. The central right area has a symmetrical
-  meaning. The left and right outer areas are the remaining measures
-  of $R$ and $S$ respectively.
+  Figure~\ref{fig:model:venn} shows Venn diagrams for all three cases,
+  where the coloured area depicts the result time series. In every
+  diagram, the central intersection area contains measures that share
+  both time and value attributes, like measure $(4,0)$. The left
+  central area contains the measures in $R$ that only share the time
+  attribute with a measure in $S$, like measure $(3,1)$. The central
+  right area has a symmetrical meaning. The left and right outer areas
+  are the remaining measures of $R$ and $S$ respectively.
 \end{example}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FINS AQUI
 
 
 
@@ -427,6 +406,7 @@ the same times. As aforementioned, when time series diverge, the
 temporal function operations explained later can be applied to adjust
 the time instants to join requirements.
 
+%%%%%%%%%%%==================
 
 
 \subsubsection{Sequence operations}
