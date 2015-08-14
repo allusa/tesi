@@ -23,7 +23,7 @@ multiresolution time series is configured with a few parameters. These
 parameters are the number of resolution subseries and, for every
 subseries: the resolution step, the initial consolidation time, the
 attribute aggregate function, and the capacity.  If we properly tune
-these parameters, a multiresolution database is can keep the desired
+these parameters, a multiresolution database can keep the desired
 data from a time series.
 
 
@@ -43,7 +43,7 @@ multiresolution time series. In this way \acro{TSMS} operators can be
 applied if needed. The $\seriedisc$ time series being \emph{regular}
 facilitates these operations. However, the lossy storage implies that
 some operations will give approximate queries and that not
-every\acro{TSMS} operation will be semantically correct for a
+every \acro{TSMS} operation will be semantically correct for a
 multiresolution time series. Therefore, the correct planning of the
 multiresolution schema is mandatory.
 
@@ -59,6 +59,18 @@ query is an aggregation or resolution already calculated in a
 \acro{MTSMS} consolidation, then the response is immediate.
 
 
+Compared to other \acro{TSMS}, we formalised our model using set
+algebra without specifying any particular query language.  This allows
+us to achieve an independent model from an actual implementation or an
+actual query language.  In future work, a particular query language
+might be defined to be able to compare our multiresolution solution
+with other approaches. As our model is heavily inspired on relational
+algebra, we plan to implement it using academically relational query
+languages, such as Tutorial~D \cite{date:introduction}.  We think
+that, then, it will be clearer whether the multiresolution time series
+use cases are cumbersome when using other languages.
+
+
 Using a \acro{MTSMS} to store time series data results in discarding
 some data given its lossy nature.  In future work, it would be
 interesting to apply information theory to measure the information
@@ -71,6 +83,11 @@ series and based on some multiresolution time series. Alternatively,
 given a query, we could compare the difference between the results
 obtained by applying the query to a multiresolution time series or
 applying the query to the original time series.
+
+
+
+
+
 
 %%% Local Variables:
 %%% TeX-master: "main"
