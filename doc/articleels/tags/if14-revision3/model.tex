@@ -527,30 +527,22 @@ evenly spaced time instants.
 \section{Multiresolution model}
 \label{sec:MTSMS}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%TOCA AQUEST
-
-In this section we formalise a model for \acro{MTSMS}. Illustration
-examples of the definitions given can be found at the end of the
-section. Furthermore, in Section~\ref{sec:features} we have
-intuitively introduced the concept of multiresolution through an
-example.
+In Section~\ref{sec:features} we intuitively introduced the concept of
+multiresolution through an example. In this section, we formalise a
+model for \acro{MTSMS}. At the end of the section, we will offer some
+illustrative examples of the previous formalisation.
 
 A \acro{MTSMS} is a \acro{TSMS} that stores time series using a lossy
-compression approach. 
-%
-The \acro{MTSMS} model is based on the concepts of \emph{measures} and
-\emph{time series} as defined in Section~\ref{sec:model:TSMS}.  A
-\acro{MTSMS} stores a time series as a structure that we call
-\emph{multiresolution time series}.
-%
-A multiresolution time series is a collection of \emph{resolution
+compression approach. The \acro{MTSMS} model is based on the concepts
+of \emph{measures} and \emph{time series} as defined in
+Section~\ref{sec:model:TSMS}.  A \acro{MTSMS} stores a time series as
+a structure that we call \emph{multiresolution time series}. A
+multiresolution time series is a collection of \emph{resolution
   subseries} that store a view of the original time series in a given
-resolution.
-%
-The operator that adds data to a resolution subseries requires to
-temporarily accumulate measures in a \emph{buffer}. This allow to
-aggregate original data to obtain the expected resolution and finally
-store them in a \emph{disc}.
+resolution. The operator that adds data to a resolution subseries
+requires accumulating transient measures in a \emph{buffer}. This
+procedure allows to aggregate original data to obtain the expected
+resolution and finally store them in a \emph{disc}.
 
 
 \begin{figure}
@@ -561,18 +553,16 @@ store them in a \emph{disc}.
   \label{fig:model:mtsdb}
 \end{figure}
 
-Figure~\ref{fig:model:mtsdb} shows the architecture of a
-\acro{MTSMS} for a single multiresolution time series.
-%
-In this way, the original time series gets stored in the resolution
-subseries, each with a different time resolution and distinct
-attribute aggregation policies. Discs are size bounded so they only
-contain a fixed amount of measures. When a disc becomes full it
-discards a measure. Thus, a multiresolution database is bounded in
-size and the time series gets stored in a number of storage bounded
-time subseries.
+Figure~\ref{fig:model:mtsdb} shows the architecture of a \acro{MTSMS}
+for a single multiresolution time series. In this way, the original
+time series gets stored in the resolution subseries, each with a
+different time resolution and distinct attribute aggregation
+policies. Discs are size bounded so they only contain a fixed amount
+of measures. When a disc becomes full, it discards a measure. Thus, a
+multiresolution database is bounded in size and the time series gets
+stored in some storage bounded time subseries.
 
-Regarding operations, the \acro{MTSMS} model requires two kind of
+Regarding operations, the \acro{MTSMS} model requires two kinds of
 operators. Some operators should be devoted to set up the time
 intervals between measures and to aggregate the attributes. Some other
 operators should be dedicated to query the multiresolution schema and
@@ -580,18 +570,19 @@ to extract the time series data.
 
 Following, we define the \acro{MTSMS} model structure and the
 structural operators, the operations to query a multiresolution
-schema, and the \emph{attribute aggregate functions}.  Although schema
+scheme, and the \emph{attribute aggregate functions}.  Although schema
 manipulation operations could be defined, in this paper we exclusively
 focus on structure and data query operators.
 
 
 \subsection{Structure}
 
+
 A \emph{buffer} is a container for a time series. The aim of the
 buffer is to regularise the time series using a constant
 \emph{resolution step} and an \emph{attribute aggregate function}.  We
-name \emph{consolidation}  this action of regularisation.  Note that
-the attribute aggregate functions are defined in
+name \emph{consolidation} this action of regularisation.  Note that we
+define the attribute aggregate functions are in
 Section~\ref{sec:model:interpolador}.
 
 \begin{definition}[Buffer]
@@ -619,23 +610,20 @@ addition of $m$ to $B$, noted as $\addB(B,m)$, returns a new buffer
 $\addB(B,m)=(S',\tau,\delta,f)$ where $S' = S \cup \{m\}$.
 
 Let $B=(S,\tau,\delta,f)$ be a buffer. The consolidation of $B$, noted
-as $\consB(B)$, returns a new buffer and a new measure $\consB(B)=(B',m')$
-where $ B'= (S[\tau+\delta:+\infty], \tau+\delta,\delta,f)$ and $m' =
-f(S,\tau,\delta)$. Note that after the consolidation, the
-consolidated part of the time series can be removed from the buffer:
-historic data is discarded.
+as $\consB(B)$, returns a new buffer and a new measure $\consB(B)
+(B',m')$ where $ B'= (S[\tau+\delta:+\infty], \tau+\delta,\delta,f)$
+and $m' = f(S,\tau,\delta)$. Note that after the consolidation, we can
+remove from the buffer the consolidated part of the time series and
+thus we discard historical data.
 
-The consolidation of a buffer is applied to the first non consolidated
-time instant and the total consolidation is obtained by successive
-applications of the operator. 
-%
-This requires measures to be added by time order and to consolidate
-the buffer when the time of some measure is bigger than the buffer's
-next consolidation time.  
-%
-Let $B=(S,\tau,\delta,f)$ be a buffer and $m=\sup S$ the maximum
-measure of $B$. We say that $B$ is consolidable if and only if $T(m)
-\geq \tau+\delta$.
+We apply the consolidation of a buffer to the first non-consolidated
+time instant. We obtain the total consolidation by successive
+applications of the operator. Consolidation requires the measures to
+be added by time order and to consolidate the buffer when the time of
+some measure is bigger than the buffer's next consolidation time.  Let
+$B=(S,\tau,\delta,f)$ be a buffer and $m=\sup S$ the maximum measure
+of $B$. We say that $B$ is consolidable if and only if $T(m) \geq
+\tau+\delta$.
 
 A \emph{disc} is a finite capacity container of measures. A time
 series stored in a disc has its cardinal bounded. When the cardinal of
@@ -647,14 +635,13 @@ discarded.
   \emph{disc} $D$ as the tuple $D=(S,k)$.
 \end{definition}
 
-An empty disc is noted as $(\emptyset,k)$. It is the tuple of an
-empty time series and a bound $k$.
+An empty disc is noted as $(\emptyset,k)$. It is the tuple of an empty
+time series and a bound $k$.
 
 The main operation on a disc is to add a measure while keeping under
 control the cardinal of the times series. Let $D=(S,k)$ be a disc and
 let $m$ be a measure.  The addition of $m$ to $D$, written as
 $\addD(D,m)$, is a new disc $\addD(D,m)=(S',k)$ where
-%
 \[
 S' = \begin{cases}
   S\cup\{m\}                 & \text{if } |S|<k  \\
@@ -663,14 +650,13 @@ S' = \begin{cases}
 \]
 
 A \emph{resolution subseries} is a structure that regularises and
-aggregates a time series. It is composed of a buffer, which contains
-the time series to be regularised, and a disc, which contains
-the regularised time series.
-
+aggregates a time series. This structure is composed of a buffer,
+which contains the time series to be regularised, and a disc, which
+contains the regularised time series.
 
 \begin{definition}[Resolution subseries]
   Let $B$ be a buffer and let $D$ be a disc.  We define a
-  \emph{resolution subseries} $R$ as the tuple $R=(B,D)$.  
+  \emph{resolution subseries} $R$ as the tuple $R=(B,D)$.
 \end{definition}
  
 The operators of a resolution subseries extend the buffer and disc
@@ -696,21 +682,19 @@ previously shown in Figure~\ref{fig:model:mtsdb}.
 
 Therefore, to define a multiresolution time series we must define the
 number of resolution subseries and its corresponding parameters
-$(\delta,\tau,f,k)$.  Usually there are no repeated pairs of
+$(\delta,\tau,f,k)$.  Usually, there are no repeated pairs of
 $(\delta,f)$ parameters among a multiresolution series, so they act as
 key attributes.
 
 The operators of a multiresolution time series apply to every
-resolution subseries contained. Let $M=\{R_0,\allowbreak
-\dots,\allowbreak R_k\}$ be a multiresolution time series and let $m$
-be a measure.
-%
-The addition of a measure to every resolution subseries, noted as
-$\addM(M,m)$, is a new multiresolution time series $\addM(M,m)=\{R'_0,
-\dots,\allowbreak R'_k\}$ where $R'_i=\addR(R_i,m)$. The consolidation
-of all resolution subseries, noted as $\consM(M)$ is a new
-multiresolution time series $\consM(M)=\{R'_0,\allowbreak
-\dots,\allowbreak R'_k\}$ where
+resolution subseries contained. Let
+$M=\{R_0,\allowbreak\dots,\allowbreak R_k\}$ be a multiresolution time
+series and let $m$ be a measure. The addition of a measure to every
+resolution subseries, noted as $\addM(M,m)$, is a new multiresolution
+time series $\addM(M,m)=\{R'_0, \dots,\allowbreak R'_k\}$ where
+$R'_i=\addR(R_i,m)$. The consolidation of all resolution subseries,
+noted as $\consM(M)$ is a new multiresolution time series
+$\consM(M)=\{R'_0,\allowbreak\dots,\allowbreak R'_k\}$ where
 \[R'_i=
 \begin{cases}
 \consR(R_i) & \text{if } R_i \text{ consolidable}\\
@@ -718,89 +702,56 @@ multiresolution time series $\consM(M)=\{R'_0,\allowbreak
 \end{cases}
 \]
 
-% The multiresolution consolidation operation should be applied
-% regularly based on a consolidation clock. When the measure ordered
-% addition approach is taken as explained in the buffer's consolidation,
-% then there is no need for a clock in a \acro{MTSMS}. The consolidation
-% clock is induced by the measure's addition and then it is only
-% necessary to check the multiresolution consolidation operation on new
-% additions. However, there could be other approaches where the
-% consolidation clock was given by an external clock or external
-% events. Then the consolidable definitions would depend on this
-% external clock.
-
-
-
-
 
 \subsection{Queries}
 
-There are two basic time series queries for a \acro{MTSMS}: (i) to
-extract a time subseries from a resolution subseries or (ii) to query
-for a total time series from all consolidated data.
+There are two basic time series queries for a \acro{MTSMS}: (i) a
+query to extract a time subseries from a resolution subseries and (ii)
+a query to obtain a total time series from all consolidated data.
 
-% Aquesta sembla una consulta una mica circumstancial i menor ...
 Let $M$ be a multiresolution time series and let $(\delta,f)$ be a
-pair of key attributes.  The first query, denoted as
-$\seriedisc(M,\delta,f)$, is a time series such that $\exists (B,D)
-\in M: B=(S,\tau,\delta,f) \wedge D=(\seriedisc(M,\delta,f), k) $
-where $S,\tau,k$ are bound variables.  Note that we
-assume that there are no repeated $(\delta,f)$ pairs in $M$.
+pair of key attributes.  The query operator denoted as
+$\seriedisc(M,\delta,f)$ computes a time series such that $\exists
+(B,D) \in M: B=(S,\tau,\delta,f) \wedge D=(\seriedisc(M,\delta,f), k)
+$ where $S,\tau,k$ are bound variables.  Note that we assume that
+there are no repeated $(\delta,f)$ pairs in $M$.
 
 Let $M=\{R_0,\dots,R_k\}$ be a multiresolution time series and let
-$S_0,\dots,S_k$ the time series corresponding to the resolution
+$S_0, \dots, S_k$ the time series corresponding to the resolution
 subseries $R_0,\dots,R_k$. Assume that the attribute aggregation
 functions of all $R_i$ are the same and the resolution steps of all
-$R_i$ are distinct.
-%
-We note as $\totalseries(M)$, the time ordered concatenation of all
-time subseries. Recall that $R||S$ is the concatenation for two time
-series $R$ and $S$, which has been defined in
-Section~\ref{sec:sequence}. Assume that $i_0,\dots,i_k$ is a
-permutation of $[0,k]$ such that $\delta_{i_0} < \delta_{i_1} < \cdots
-< \delta_{i_k}$ being $\delta_i$ the resolution step of the resolution
-subseries $R_i$. Then, $\totalseries(M) = S_{i_0} || S_{i_1} || \cdots
-|| S_{i_k}$.
-%
-TotalSeries obtains the better possible resolution.
+$R_i$ are distinct. We define the query operator $\totalseries(M)$,
+the time ordered concatenation of all time subseries, as
+follows. Recall that $R||S$ is the concatenation of two time series
+$R$ and $S$, which we defined in Section~\ref{sec:sequence}. Assume
+that $i_0,\dots,i_k$ is a permutation of $[0,k]$ such that
+$\delta_{i_0} < \delta_{i_1} < \cdots < \delta_{i_k}$ being $\delta_i$
+the resolution step of the resolution subseries $R_i$. Then,
+$\totalseries(M) = S_{i_0} || S_{i_1} || \cdots ||
+S_{i_k}$. TotalSeries obtains the better possible resolution.
 
-From these aforementioned basic time series queries, more elaborated
-queries can be applied to an \acro{MTSMS} by using \acro{TSMS}
-operations. For example, let $L$ and $M$ be two multiresolution time
-series with the same multiresolution parameters. We can compute the
-sum of both as $\totalseries(L) + \totalseries(M)$. Recall that $R+S$
-is the sum of the values of two time series $R$ and $S$, which has
-been defined in Example~\ref{ex:model:sum} as a binary computational
-operator.
+Using these basic time series queries, we can define more elaborated
+queries for an \acro{MTSMS} by using \acro{TSMS} operations. For
+example, let $L$ and $M$ be two multiresolution time series with the
+same multiresolution parameters. We can compute the sum of both as
+$\totalseries(L) + \totalseries(M)$. Recall that $R+S$ is the sum of
+the values of two time series $R$ and $S$ that we defined in
+example~\ref{ex:model:sum} as a binary computational operator.
 
 
 \subsection{Attribute aggregate function}
 \label{sec:model:interpolador}
 
-Attribute aggregate functions are a specific case of \acro{TSMS}
+Attribute aggregate functions are a particular case of \acro{TSMS}
 aggregate operations used to summarise time series data while
 consolidating a buffer.
-%
-% Let $S$ be a time series and let $[x,v]$ be a
-% time interval. An attribute aggregate function $f$ calculates a new
-% measure $m=f(S,[x,v])$. Then, this resulting measure $m$ is interpreted to
-% summarise the measures of $S$ for the consolidation interval $[x,v]$.
 
 Let $S$ be a time series, let $\delta$ be a resolution step and let
-$\tau$ be a consolidation time.  An \emph{attribute aggregate function} $f$
-calculates a new measure $m=f(S,\tau,\delta)$. From $\tau$ and
-$\delta$, we obtain the time interval $[\tau:\tau+\delta]$.  Then, the
-resulting measure $m$ is interpreted to summarise the measures of $S$
-for the time interval $[\tau:\tau+\delta]$.
-
-
-
-% \[
-% f : S=\{m_0,\ldots,m_k\} \times I=[t_i,t_j] \mapsto m'
-% \]
-% \[
-% f: \cal{P}(\cal{T}\times\cal{V}) \times (\cal{T}\times\cal{T}) \rightarrow \cal{T}\times\cal{V}
-% \]
+$\tau$ be a consolidation time.  An \emph{attribute aggregate
+  function} $f$ calculates a new measure $m=f(S,\tau,\delta)$. From
+$\tau$ and $\delta$, we obtain the time interval $[\tau:\tau+\delta]$.
+Then, the resulting measure $m$ is interpreted to summarise the
+measures of $S$ for the time interval $[\tau:\tau+\delta]$.
 
 An attribute aggregation function follows this general schema. First,
 it obtains a time subseries $S'$ according to the consolidating
@@ -810,19 +761,19 @@ function on this time subseries to obtain $m$. For instance, $m =
 \agg(S',n, f)$, being $f$ an aggregation function and $n$ an initial
 measure, as defined in Section~\ref{sec:set}.
 
-Many different attribute aggregate functions can be used in order to
-summarise a time series, for example it is possible to calculate a
-statistical indicator of the time series such as the average or a more
-complex digital signal processing operation as proposed
-in~\cite{zhang11}. Furthermore, the representation of a time series
-and some of its pathologies can be considered during the aggregation
-process.
+We can use many different attribute aggregate functions to summarise a
+time series. For instance, it is possible to calculate a statistical
+indicator of the time series such as the average or a more complex
+digital signal processing operation as proposed
+in~\cite{zhang11}. Furthermore, during the aggregation process we can
+consider the representation of a time series and some of its
+pathologies.
 
 Given the diversity of attribute aggregate functions, no global
 assumptions can be made about them. Each user should decide which
 combination of aggregation and representation fits better to the
 measured phenomena.  Therefore, the \acro{MTSMS} model must have a
-generic design that allows the users to define their own aggregate
+generic design that allows the users to define their aggregate
 functions.
 
 In what follows we will give some examples of usual attribute
@@ -830,60 +781,49 @@ aggregation functions. These functions compute a new measure given a
 set of known measures. Then, an attribute aggregation function should
 compute a new \emph{time} and a new \emph{value} from the set of known
 measures.
-%
-% For the rest of this Section we will write $m=f(S,[x,v])$ be the
-% resulting measure of an attribute aggregation function $f$ applied to
-% a time series $S$ for a time interval $[x,v]$.
 
-% Sobre el calcul del nou temps
+Usually, an attribute aggregation function returns measures that match
+the buffer consolidating times. Assume, for instance, that $f$ is an
+attribute aggregation function and let $m=f(S,\tau,\delta)$.  Then,
+the time of $m$ is usually computed as $T(m)=\tau+\delta$.  However,
+in some cases it is preferable for $T(m)$ not to match the buffer
+consolidating times. For instance, the resulting measure can be
+aggregated from a time subseries $S'$ using an open interval
+$S'=S(\tau:\tau+\delta)$, a closed interval $S'=S[\tau:\tau+\delta]$,
+or other combinations as it is $S'=S(\tau-d:\tau+\delta-d]$, where $d$
+is a time duration that delays the consolidation to
+$T(m)=\tau+\delta-d$.  This time offset can also be variable. For
+example, an aggregate function that returns the first measure of the
+interval $m=\min(S[\tau:\tau+\delta))$, then the resulting time
+fulfils that $\tau\leq T(m) < \tau+\delta$.
 
-The attribute aggregation functions generally return measures that
-match the buffer consolidating times. Assume, for instance, that $f$
-is an attribute aggregation function and let $m=f(S,\tau,\delta)$.
-Then, the time of $m$ is usually computed as $T(m)=\tau+\delta$.
-%
-However, in some cases it is preferable for $T(m)$  not to match the
-buffer consolidating times.
-%
-For instance, the resulting measure can be aggregated from a time
-subseries $S'$ using an open interval $S'=S(\tau:\tau+\delta)$, a
-closed interval $S'=S[\tau:\tau+\delta]$, or other combinations as it is
-$S'=S(\tau-d:\tau+\delta-d]$, where $d$ is a time duration that delays the
-consolidation to $T(m)=\tau+\delta-d$.
-%
-This time offset can also be variable. For example, an aggregate
-function that returns the first measure of the interval
-$m=\min(S[\tau:\tau+\delta))$, then the resulting time fulfils that
-$\tau\leq T(m) < \tau+\delta$.
-
-% Sobre el calcul del nou valor
 Assume that $f$ is an attribute aggregation function and let
 $m=f(S,\tau,\delta)$.  An attribute aggregation function $f$ should
-compute the value of $m$.
-%
-Next there are some examples that illustrate how to compute $V(m)$
-based on the temporal function time series operators. 
-That is, the time series aggregated is interpreted by the temporal
-representation function $S(t)^r$ as has been described in
-Section~\ref{sec:model:tfunc}. 
-%
-In these example functions we leave the time series representation $r$
-uninstantiated.
+compute the value of $m$. Next there are some examples that illustrate
+how to compute $V(m)$ based on the temporal function time series
+operators.  That is, the time series aggregated is interpreted by the
+temporal representation function $S(t)^r$ as has been described in
+Section~\ref{sec:model:tfunc}. In these example functions, we leave
+the time series representation $r$ uninstantiated.
 
 \begin{itemize}
+
 \item The \emph{maximum} computes $V(m)$ as $V(m) =
   \max\limits_{\forall t \in [\tau:\tau+\delta]} S(t)^r$. It
   summarises $S$ with the maximum of the measure values in the
   interval $[\tau:\tau+\delta]$.
+
 \item The \emph{last} computes $V(m)$ as $V(m) = S(\tau+\delta)^r$. It
   summarises $S$ with the value at $\tau+\delta$ time instant.
+
 \item The \emph{mean} computes $V(m)$ as $V(m) = \frac{1}{\delta}
   \int\limits_{\tau}^{\tau+\delta} S(t)^r dt$. It summarises $S$ with
   the mean of the function in the interval $[\tau:\tau+\delta]$.
+
 \end{itemize}
 
-The time series representation in the previous examples can be
-instantiated in several ways. In what follows, we exemplify this
+We can instantiate the time series representation in the previous
+examples in several ways. In what follows, we exemplify this by
 instantiating $r$ as \dd{} and \zohe{}.
 
 Dirac delta attribute aggregation functions interpret the resulting
@@ -912,18 +852,23 @@ $S'=S[\tau:\tau+\delta]^\zohe{}$ be the selection of measures by
 \zohe{} temporal interval. Then,
 
 \begin{itemize}
+
 \item The $\maxz$ is such that $V(m) = \max\limits_{\forall n \in S'}
   V(n)$.
+
 \item The $last^\zohe{}$ is such that $V(m) = V(\max S')$.
+
 \item The $\meanz$ is such that $V(m) = \frac{1}{\delta}
   \big[(T(o)-\tau)V(o) + \sum\limits_{\forall n\in R}( T(n)-
   T(\prev_S n) )V(n)\big]$ where $o=\min S'$ and $R= S' - \{o\}$.
+
 \end{itemize}
 
-Note that  $\meanz$ is a sum of values
-that could be implemented as $\meanz = \frac{1}{\delta}\agg(S',(0,0),f)$ where $f(m,n)=(0,V(m)+v)$ and 
+Note that $\meanz$ is a sum of values that could be implemented as
+$\meanz = \frac{1}{\delta}\agg(S',(0,0),f)$ where $f(m,n)=(0,V(m)+v)$
+and
 \[
- v= 
+ v=
  \begin{cases}
    (T(n)-\tau)V(n) & \text{if } n=\min S'\\
    (T(n)-T(\prev_{S'} n))V(n) & \text{else }
@@ -936,12 +881,12 @@ below the original signal.
 
 It is interesting to note that some attribute aggregation patterns are
 very similar. For instance, the maximum and last attribute aggregation
-schemes differ basically on the interval selection operation. However,
+schemes differ basically in the interval selection operation. However,
 other patterns have a more elaborated interpretation depending on the
-actual representation used. This is the case of $\meanz$ and $mean^\dd$.
+actual representation used, as it is the case of $\meanz$ and
+$mean^\dd$.
 
-
-\begin{example}\label{ex:model:smultiresolution} 
+\begin{example}\label{ex:model:smultiresolution}
   We define a multiresolution schema for a time series, we consolidate
   the database and we query its data.  Let $S = \{
   (1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
@@ -953,11 +898,10 @@ actual representation used. This is the case of $\meanz$ and $mean^\dd$.
   consolidated at time instants 5, 10, 15, 20, 25, 30\dots and $R_1$
   at 10, 20, 30\dots
 
-  All measures of $S$ are added to $M$
-  and then it is consolidated until it is no more consolidable. As
-  $T(\max S)=29$, the last consolidation times are $\tau_0=25$ and
-  $\tau_1=20$, so let $M_{29}$ be the multiresolution time series
-  at this state.
+  We add all measures of $S$ to $M$, and then we consolidate it until
+  it is no more consolidable. As $T(\max S)=29$, the last
+  consolidation times are $\tau_0=25$ and $\tau_1=20$, so let $M_{29}$
+  be the multiresolution time series at this state.
 
   Then, the two time subseries consolidated are obtained by querying
   $\seriedisc(M_{29},5,\allowbreak \meanz)=\{\allowbreak
@@ -968,11 +912,10 @@ actual representation used. This is the case of $\meanz$ and $mean^\dd$.
   note that $S_0= \{\allowbreak (26,6),\allowbreak (29,0)\allowbreak
   \}$ and $S_1=\{\allowbreak (22,11),\allowbreak (26,6),(29,0)\}$.
 
-  In this particular example,
-  $ \totalseries(M_{29}) = \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has
-  twice the resolution of $R_1$ and $k_0$ is bigger than $k_1$. 
+  In this particular example, $ \totalseries(M_{29}) =
+  \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has twice the
+  resolution of $R_1$ and $k_0$ is bigger than $k_1$.
 \end{example}
-
 
 
 %%% Local Variables:
