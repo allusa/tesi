@@ -10,8 +10,8 @@ hold a timestamp. Therefore, correctness criteria must include both
 data values and their timestamps. The sequences of data values
 collected at specific timestamps are formalised as \emph{time series}.
 
-Time series are a collection of chronological observations.  In
-general, time series are acquired continuously from phenomena
+A time series is a collection of chronological observations.  In
+general, we continously acquire a time series from phenomena
 monitoring. On the one hand, we can record observations at regular
 intervals, such as hourly or daily ones, resulting in equally spaced
 time data.  On the other hand, we can record observations at irregular
@@ -32,27 +32,28 @@ issues of time series in the temporal data domain.
 
 Time series can be stored and managed by \emph{relational database
   management systems} that are usually queried using \emph{Structured
-  Query Language} (\acro{SQL}). However, some authors
+  Query Language} (\acro{SQL}). Nonetheless, some authors
 \cite{dreyer94,schmidt95,stonebraker09:scidb,zhang11} notice that the
 use of \acro{SQL} systems as a time series backend suffers from some
 drawbacks.
 
-\acro{NoSQL} or \acro{NewSQL} products are being developed in order to
+\acro{NoSQL} or \acro{NewSQL} products are being developed to
 increase the performance and flexibility of \acro{SQL} systems
 \cite{atzeni13:relational_model_dead,stonebraker10,stonebraker09:scidb,zhang11}. It
-is natural to consider them to store time series data. Even so, the
+is natural to consider them to store time series data. Indeed, the
 continuous acquisition nature of the time series poses an issue when
 trying to store and analyse all the data \cite{keogh97}.
 
-We can apply compression techniques for time series in two distinct
-ways to face the challenges posed by time series data. First, to get
-an approximation to the original signal to compute similarity or
-pattern search analysis \cite{fu11,keogh01,last01}. Second, as a
-compression and aggregation approach to store massive \emph{data
-  streams} \cite{cormode08:pods,bonnet01}. Nonetheless, handling time
-series like data streams neither considers adequately the time
-dimension nor computes the evolution of aggregated parameters along
-the time, which is interesting for monitoring purposes.
+We can apply compression techniques in two distinct styles to face the
+challenges posed by time series data. First, to get an approximation
+to the original signal that facilitates to do pattern search analysis
+or finding similarities\cite{fu11,keogh01,last01}. Second, as a
+compression and aggregation approach that leverages the storage of
+massive \emph{data streams}
+\cite{cormode08:pods,bonnet01}. Nonetheless, handling time series like
+data streams neither considers adequately the time dimension nor
+computes the evolution of aggregated parameters along the time, which
+is interesting for monitoring purposes.
 
 \emph{RRDtool} \cite{rrdtool} is a system that stores time series
 aggregated using different resolutions. These characteristics allow
