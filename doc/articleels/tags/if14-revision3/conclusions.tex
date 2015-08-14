@@ -1,74 +1,76 @@
 \section{Conclusions}
 \label{sec:concl-future-work}
 
-In this paper we have formalised a \acro{MTSMS} model. This model is
-based on a \acro{TSMS} model, which we have also formalised.  We have
-formalised our models based on set theory, heavily inspired on
-relational algebra. We have gone a bit further and proposed
-\acro{TSMS} including set, sequence and temporal function
-behaviour. We have also included the motivation for multiresolution
-advantages.  As a reference implementation we have developed a
-\emph{Python} package centred on the basic algebra, that is without
+In this paper, we formalised a \acro{MTSMS} model. The foundation of
+\acro{MTSMS} is the \acro{TSMS} model, which we also formalised.  We
+structured our models based on set theory, and heavily inspired on
+relational algebra. We have gone a bit further and proposed a
+\acro{TSMS} model that includes set, sequence and temporal function
+behaviour. We also motivated the interest of multiresolution and its
+advantages.  As a reference implementation, we developed a
+\emph{Python} package focused on the basic algebra, i.e., without the
 extended \acro{DBMS} capabilities.
 
 
+The main purpose of a \acro{MTSMS} is to store compactly a \emph{time
+  series} and to operate its temporal dimension consistently.  It
+stores time series using \emph{multiresolution time series}, i.e. it
+stores a time series at multiple resolutions called \emph{resolution
+  subseries}. Any resolution subseries has two key features: its
+resolution step and its \emph{attribute aggregate function}, that is
+used to compact the data. According to this structure, a
+multiresolution time series is configured with a few parameters. These
+parameters are the number of resolution subseries and, for every
+subseries: the resolution step, the initial consolidation time, the
+attribute aggregate function, and the capacity.  If we properly tune
+these parameters, a multiresolution database is can keep the desired
+data from a time series.
 
-The main objective of a \acro{MTSMS} is to store compactly a \emph{time
-series} and to manage consistently its temporal dimension.  It stores
-\emph{multiresolution time series}, that is each time series is stored at
-multiple resolutions called \emph{resolution subseries}.  Each resolution
-subseries has a resolution step and is compacted with an \emph{attribute
-aggregate function}. Therefore, each multiresolution time series is
-configured by the number of resolution subseries and four parameters
-for each: the resolution step, the initial consolidation time, the
-attribute aggregate function, and the capacity.  These configuration
-parameters are degrees of freedom for each application. Giving
-different values a multiresolution database is capable to keep the
-desired data from a time series. %
 
 We have shown some aggregation functions examples with simple
-aggregation statistics, mean and maximum, and simple \emph{representation
-methods}, \dd{} and \zohe{}. More attribute aggregation functions could
-be designed based on methods from other fields, such as data streaming
-or time series data mining. Especially, it would be interesting to
-design aggregations that coped with uncertain data.  The model allows
-the user to customise a multiresolution database according to the
-actual requirements of a given context.
+aggregation statistics, mean and maximum, and simple
+\emph{representation methods}, \dd{} and \zohe{}. More attribute
+aggregation functions could be designed based on methods from other
+fields, such as data streaming or time series data mining. Especially,
+it would be interesting to design aggregations that coped with
+uncertain data.  The model allows the user to customise a
+multiresolution database according to the actual requirements of a
+given context.
+
 
 The queries over \acro{MTSMS} obtain time series from stored
 multiresolution time series. In this way \acro{TSMS} operators can be
 applied if needed. The $\seriedisc$ time series being \emph{regular}
 facilitates these operations. However, the lossy storage implies that
-some operations will give approximate queries and that not every
-\acro{TSMS} operation will be semantically correct for a
-multiresolution time series. Therefore the correct planning of the
-multiresolution schema is needed.
-
-Compared to other \acro{TSMS}, we propose a compression solution that
-stores only the data that we will require by later queries or by
-human visualisation, instead of trying to reconstruct the original
-signal.  Moreover, our multiresolution solution copes well with
-typical problematic properties of time series: regularity, data
-validation and data volume.  The decompression time is minimal as data
-in discs get stored directly as a time series. As a consequence, the
-queries or the visualisation computing time is only due to the
-computation itself. Moreover, if the query is an aggregation or
-resolution already computed in a \acro{MTSMS} consolidation, then the
-visualisation is immediate.
+some operations will give approximate queries and that not
+every\acro{TSMS} operation will be semantically correct for a
+multiresolution time series. Therefore, the correct planning of the
+multiresolution schema is mandatory.
 
 
-\acro{MTSMS} imply data selection and so what is not considered
-important is discarded.  In future work, information theory has to be
-evaluated for multiresolution schemes. Following multimedia lossy
-compression techniques being well founded on information theory,
-similar approaches could be taken for multiresolution time series. For
-example, we could evaluate whether a human can visualise original
-time series qualities in the multiresoluted time series. Or, given a
-query, we could compare the difference of applying the query to a
-multiresoluted time series instead of applying it to the original time
-series.
+Compared to other \acro{TSMS}, we introduce a compression solution
+that stores only the data that can be required in later queries. We do
+not intend to reconstruct the original signal. Our multiresolution
+solution copes well with some difficult aspects of time series:
+regularity, data validation and data volume.  The decompression time
+is minimal as data in discs get stored directly as a time series. As a
+consequence, computing a query has a small time cost. Moreover, if the
+query is an aggregation or resolution already calculated in a
+\acro{MTSMS} consolidation, then the response is immediate.
 
 
+Using a \acro{MTSMS} to store time series data results in discarding
+some data given its lossy nature.  In future work, it would be
+interesting to apply information theory to measure the information
+lost depending on the configuration of the multiresolution schema. We
+think that it is possible to get inspired by the approaches used by
+some authors on multimedia lossy compression techniques. For example,
+we could evaluate whether a human can distinguish some specific
+features in a time series visualisation based on the original time
+series and based on some multiresolution time series. Alternatively,
+given a query, we could compare the difference between the results
+obtained by applying the query to a multiresolution time series or
+applying the query to the original time series.
 
 %%% Local Variables:
 %%% TeX-master: "main"
