@@ -73,8 +73,8 @@ time series data. This model exhibits several unusual characteristics:
   store time series using different time resolutions. We know this
   feature as \emph{multiresolution}.  Thus, being multiresolution the
   most salient characteristic of our model, we name the formalised
-  system as \emph{Multiresolution Time Series Data Base Management
-    System} (\acro{MTSMS}).  It is designed to satisfy the
+  system \emph{Multiresolution Time Series Data Base Management
+    System} (\acro{MTSMS}).  The model is designed to satisfy the
   requirements of bounded storage computers such as sensor systems.
 
 \item It is a \emph{lossy storage} solution. Multiresolution allows
@@ -93,13 +93,13 @@ time series data. This model exhibits several unusual characteristics:
   single one. We abstracted this through an \emph{aggregation
     function} bound to the precise semantics of the actual
   data. Because of this, aggregation functions are set as an
-  independent object of the main model.  The users can define new
+  independent object of the main model.  Users can define new
   aggregation methods better suited for particular fields.
 
   The model also formalises the concept of time series
-  \emph{representation function}.  This concept allows the users to
-  define different operators considering the behaviour of time series
-  in different contexts. This issue is important to manage the precise
+  \emph{representation function}.  This concept allows users to define
+  different operators considering the behaviour of time series in
+  different contexts. This issue is important to manage the precise
   semantics of the stored time series.
 
 \item It is soundly formalised using set algebra and, particularly,
@@ -107,18 +107,16 @@ time series data. This model exhibits several unusual characteristics:
 
 \end{itemize}
 
-
 Our model shares some of its characteristics with other known
-approaches. The thorough analysis of \emph{RRDtool}~\cite{rrdtool}
-inspired the multiresolution. However, we provide a sound
-formalisation that lacks in~\cite{rrdtool} and a degree of genericity
-unavailable in \emph{RRDtool}. In our model \emph{RRDtool}-like
-particular counter time series aggregations can be defined based on
-this facility. We formalise time series following the way bitemporal
-data is formalised for a relational \acro{DBMS}. The model allows to
-favour more recent data over the older one, which is in common with
-some other approaches, like that of Cormode et
-al.~\cite{cormode08:pods}.
+approaches. The analysis of \emph{RRDtool}~\cite{rrdtool}inspired the
+multiresolution. However, we provide a sound formalisation that lacks
+in~\cite{rrdtool} and a degree of genericity unavailable in
+\emph{RRDtool}. Based on this facility, in our model we can define
+particular time series aggregations like those of\emph{RRDtool}. To
+formalise time series we follow the same approach used to formalise
+bitemporal data for a relational \acro{DBMS}. The model favours more
+recent data over the older one, which is in common with some other
+methods, like that of Cormode et al.~\cite{cormode08:pods}.
 
 We remark that the only goal of the model formalised here is to manage
 time series data. In practical applications, it would be usual to
@@ -126,6 +124,7 @@ complement this model with a standard database system to handle all
 the remaining data if needed. For instance, time series metadata such
 as units of values, sensor localization or classification tags would
 be stored in a standard \acro{DBMS}.
+
 
 \subsection{Outline}
 
