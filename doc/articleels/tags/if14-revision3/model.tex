@@ -79,7 +79,7 @@ define two distinct \emph{order relations}.
 Note that the semitemporal order is a partial order and the temporal
 order is a total order.
 
-Intuitively speaking a \emph{time series} is a ordered set of measures
+Intuitively speaking a \emph{time series} is an ordered set of measures
 of the same phenomena.  Sometimes they are also called \emph{time
   sequences}~\cite{last:hetland}. We define it as follows.
 
@@ -89,14 +89,14 @@ of the same phenomena.  Sometimes they are also called \emph{time
   set of measures of the same type. Then, $S$ is a \emph{time series}
   iff $\forall i,j: i,j\in[0,k] \wedge i\neq j: T(m_i)\neq T(m_j)$. We
   define the domain of a time series $S$ as the domain of its
-  measures, denoted by $\dom S$, .
+  measures, denoted by $\dom S$.
 \end{definition}
 
 Observe that although measures in $S$ are expected to be of the same
 phenomena, from a formal standpoint we only require the domain of all
 values to be the same.
 
-A time series do not contain two measures at the same time. Therefore,
+A time series does not contain two measures at the same time. Therefore,
 taking account of the temporal order, a time series is a totally
 ordered set.
 
@@ -153,8 +153,9 @@ $\max S$ is not defined when $S=\emptyset$. However, the time series
 has a supremum even when it is empty.  Being the time domain the set
 of affinely extended real numbers $\Rb$, we can apply the property
 that says $\sup(\emptyset)=-\infty$ \cite{cantrell:extendedreal}. Note
-that here $\emptyset$ means an empty subset of $\Rb$. Let
-$m=(-\infty,\infty)$ be a measure of infinite time and
+that here $\emptyset$ means an empty subset of $\Rb$. Analogously, the
+supremum applied to an empty subset of the time series returns a
+measure $m=(-\infty,\infty)$ with infinite time and
 value. $T(m)=-\infty$ is a consequence of the extended real numbers
 property.  $V(m)$ could be any value. However, we choose an infinite
 value for simplicity. We define the \emph{supremum} of $S$, noted as
@@ -171,9 +172,9 @@ and the \emph{infimum} of $S$, noted as $\inf S$.
 The \emph{membership} operation defines when a measure belongs to a
 time series. We define two distinct membership operations which
 consider the semitemporal order
-Definition~\ref{def:semitemporal_order}) and the temporal order
+(Definition~\ref{def:semitemporal_order}) and the temporal order
 (Definition~\ref{def:temporal_order}). In consequence, they induce two
-different ways to consider time series and its operations.
+different ways to consider a time series and its operations.
 
 Let $S$ be a time series and $m$ be a measure. We say that $m$ belongs
 to $S$ (plain \emph{membership}), denoted as $m \in S$, when $\exists
@@ -276,7 +277,15 @@ time series, let $\cal{V}=\dom S$ and $\cal{V'}=\dom R$, and let
 $f:\cal{T}\times\cal{V}\rightarrow\cal{T}\times\cal{V'}$ be a function
 over a measure returning a measure. The \emph{map} of $f$ over $S$ is
 a new time series defined as $\map(S,f)=\{f(m)|m\in S\}$. Note that
-$\dom(\map(S,f))=\cal{V'}$.
+$\dom(\map(S,f))=\cal{V'}$. 
+In order to be as generic as possible, we do not impose any
+restrictions on defining $f$. As a consequence, when $f$ operates with
+time attributes the result of the map operation may be invalid as a
+time series. However, when $f$ only operates with value attributes the
+result is always valid. Therefore, the user must assure the proper
+definition for $f$.
+
+
 
 The fold operator recursively combines every measure of a time
 series. Assuming that $\mathcal{P}(C)$ is the powerset of $C$, we
@@ -346,8 +355,8 @@ the computational operations. Let $S$ and $R$ be two time series and
 $\odot$ be a binary operator on the value domain. We can extend the
 operator $\odot$ to the time series as $S\odot R=\map(S\join R, f)$
 being $f$ the function $f(t,v,w)=(t,v\odot w)$. The extended operator
-allows to extend real binary operations such as sum, $R+S$, or
-division, $R/S$, to time series.
+allows to extend real binary operations such as sum, $R+S$, to time
+series.
 
 \begin{example}
   \label{ex:model:sum}
@@ -355,10 +364,6 @@ division, $R/S$, to time series.
   two time series.  The sum of $R$ and $S$ is defined as
   $R+S=\map(S\join R, f)$ being $f$ the function $f(t,v,w)=(t,v+ w)$.
   Then the sum results $R+S= \{(1,3), (2,4), (4,1)\}$.
-  
-  The division of $R$ and $S$ is defined as
-  $R/S=\map(S\join R, f)$ being $f$ the function $f(t,v,w)=(t,v/w)$.
-  Then the division results $R/S= \{(1,2), (2,1), (4,0)\}$.
 \end{example}
 
 As binary computational operators depend on join operator, it must be
@@ -502,7 +507,8 @@ must be interpreted:
 
 From temporal interval, we can define other operators such as temporal
 selection, temporal concatenation, or temporal join. As an example, we
-give the definition of the temporal selection operation.
+give the definition of the temporal selection and the temporal join
+operations.
 
 The temporal selection over a time series allows to change the
 resolution in the context of a representation function.  Let $S$ be a
@@ -522,6 +528,41 @@ be the desired regularity parameters, and let $k\in\N$ be a limit for
 the scope of the range.  A regularised $S$ can be obtained with
 $S[T]^r$ where $T = \{e+nd | n\in\N \wedge n\leq k \}$ is a set of
 evenly spaced time instants.
+
+
+Another use case for the temporal selection is for joining two time
+series that do not share the same times. Let $R$ and $S$ be two time
+series that do not share times, i.e. their time sets are dissimilar
+$\{t | (t,v) \in R\} \neq \{t | (t,v) \in S\}$. Then, we can not apply
+the previously defined $R \join S$.  However, we can define a more
+elaborated join based on the temporal selection, which we name
+\emph{temporal join}.  Let $r$ be a representation method and let
+$T=\{t | (t,v) \in R\} \cup \{t | (t,v) \in S\}$ be the union of both
+time sets.  The \emph{temporal join}, denoted as $R \join^r S$,
+returns a new time series $R \join^r S = R[T]^r \join S[T]^r$.
+
+Using temporal join, we can also solve binary computational operation
+for time series that have dissimilar time sets. Next, we redo
+Example~\label{ex:model:sum} to extend sum binary computational
+operation with temporal join.
+
+\begin{example}
+  \label{ex:model:sumtemporal}
+  Let $R=\{(1,2), (2,2), (4,0)\}$ and $S=\{(1,1), (3,2), (4,1)\}$ be
+  two time series and let $r=\zohe{}$ be a representation method.  
+  The sum of $R$ and $S$ is defined as $R+S=\map(S\join^r R, f)$ being
+  $f$ the function $f(t,v,w)=(t,v+ w)$.
+
+  The union of both time sets is $T=\{1,2,3,4\}$. The corresponding
+  temporal selection over both time series is $R[T]^r=\{
+  (1,2),\allowbreak (2,2), (3,0),\allowbreak (4,0)\}$ and
+  $S[T]^r=\{(1,1),\allowbreak (2,2),\allowbreak (3,2), (4,1)\}$.  The
+  temporal join of both is $R \join^r S=\{ (1,2,1),\allowbreak (2,2,2), (3,0,2),
+  (4,0,1)\}$.  Then the sum results $R+S= \{(1,3),\allowbreak (2,4), (3,2),
+  (4,1)\}$.
+\end{example}
+
+
 
 
 \section{Multiresolution model}
@@ -570,7 +611,7 @@ to extract the time series data.
 
 Following, we define the \acro{MTSMS} model structure and the
 structural operators, the operations to query a multiresolution
-scheme, and the \emph{attribute aggregate functions}.  Although schema
+schema, and the \emph{attribute aggregate functions}.  Although schema
 manipulation operations could be defined, in this paper we exclusively
 focus on structure and data query operators.
 
@@ -582,7 +623,7 @@ A \emph{buffer} is a container for a time series. The aim of the
 buffer is to regularise the time series using a constant
 \emph{resolution step} and an \emph{attribute aggregate function}.  We
 name \emph{consolidation} this action of regularisation.  Note that we
-define the attribute aggregate functions are in
+define the attribute aggregate functions in
 Section~\ref{sec:model:interpolador}.
 
 \begin{definition}[Buffer]
@@ -610,7 +651,7 @@ addition of $m$ to $B$, noted as $\addB(B,m)$, returns a new buffer
 $\addB(B,m)=(S',\tau,\delta,f)$ where $S' = S \cup \{m\}$.
 
 Let $B=(S,\tau,\delta,f)$ be a buffer. The consolidation of $B$, noted
-as $\consB(B)$, returns a new buffer and a new measure $\consB(B)
+as $\consB(B)$, returns a new buffer and a new measure $\consB(B)=
 (B',m')$ where $ B'= (S[\tau+\delta:+\infty], \tau+\delta,\delta,f)$
 and $m' = f(S,\tau,\delta)$. Note that after the consolidation, we can
 remove from the buffer the consolidated part of the time series and
@@ -728,7 +769,7 @@ that $i_0,\dots,i_k$ is a permutation of $[0,k]$ such that
 $\delta_{i_0} < \delta_{i_1} < \cdots < \delta_{i_k}$ being $\delta_i$
 the resolution step of the resolution subseries $R_i$. Then,
 $\totalseries(M) = S_{i_0} || S_{i_1} || \cdots ||
-S_{i_k}$. TotalSeries obtains the better possible resolution.
+S_{i_k}$. TotalSeries obtains the best possible resolution.
 
 Using these basic time series queries, we can define more elaborated
 queries for an \acro{MTSMS} by using \acro{TSMS} operations. For
@@ -737,6 +778,30 @@ same multiresolution parameters. We can compute the sum of both as
 $\totalseries(L) + \totalseries(M)$. Recall that $R+S$ is the sum of
 the values of two time series $R$ and $S$ that we defined in
 example~\ref{ex:model:sum} as a binary computational operator.
+
+
+% \todo{}
+
+% When two multiresolution time
+% series do not have the same multiresolution parameters, then $\totalseries(L) + \totalseries(M)$ must be solved using temporal join, as defined in \ref{?}. 
+%However we can consider some multiresolution enhancements:
+% note that it has $r$ as a parameter.However, there is also $r$ as a
+%parameter, so we find these operations a bit cumbersome.
+
+% 1. They share some $\tau$ and $\delta$, then it is possible to compute
+% $\seriedisc(L,\delta,f_1) + \seriedisc(M,\delta,f_2)$ where $f_1$ and
+% $f_2$ are any attribute aggregate functions, although generally it
+% makes more sense to be the same $f_1=f_2$.
+
+% 2. They share some $\delta$. Then one time series must be translated. $\seriedisc(L,\delta,f_1) + \seriedisc(translate(M),\delta,f_2)$ where $translate(M)=$!!!!
+
+% 3. They do not share any $\delta$. Then temporal join must be used in
+% the sum $\totalseries(L) + \totalseries(M)$. However, 
+% $\totalseries(L) + \totalseries(M)$ contains less data than $L + M$. 
+
+
+
+
 
 
 \subsection{Attribute aggregate function}
@@ -886,6 +951,9 @@ other patterns have a more elaborated interpretation depending on the
 actual representation used, as it is the case of $\meanz$ and
 $mean^\dd$.
 
+
+To summarise the model we have formalised in this section, we show a
+basic multiresolution example.
 \begin{example}\label{ex:model:smultiresolution}
   We define a multiresolution schema for a time series, we consolidate
   the database and we query its data.  Let $S = \{
@@ -916,6 +984,45 @@ $mean^\dd$.
   \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has twice the
   resolution of $R_1$ and $k_0$ is bigger than $k_1$.
 \end{example}
+
+We extend the previous example to show some of the \acro{MTSMS}
+enhancements.  We exemplify what happens when a new measure is
+added to the previous consolidated multiresolution time series.
+\begin{example}
+  Let $S$, $M$ and $M_{29}$ be the same values from the previous
+  Example~\ref{ex:model:smultiresolution}.  Now we acquire a new
+  measure, let $m=(31,4)$ be this new measure and let $S' = S \cup
+  \{m\}$ be the updated time series.
+
+  We add this measure to the previous consolidated multiresolution
+  time series and, as it is now again consolidable, we consolidate
+  it. So let $M_{31} = \consM(\addM(M_{29},m))$ be the multiresolution
+  time series at this new state.
+
+  Otherwise, similarly to Example~\ref{ex:model:smultiresolution}, we
+  can add all measures of $S'$ to $M$ and then consolidate it until it
+  is no more consolidable. This also results in the multiresolution
+  time series $M_{31}$. However, this approach does not notice that
+  $M_{29}$ has already been defined.
+
+  Whichever approach is taken, we can query the two new consolidated
+  time subseries by applying $\seriedisc(M_{31},5,\allowbreak
+  \meanz)=\{\allowbreak (15,\allowbreak 2),\allowbreak
+  (20,7),\allowbreak (25,8),\allowbreak(30,2)\}$ and
+  $\seriedisc(M_{31},\allowbreak 10,\allowbreak \maxz) =\allowbreak \{
+  \allowbreak (20,11),\allowbreak (30,11)\}$.
+
+  The purpose of this example is to show that the new state of the
+  multiresolution time series can be computed online. Following the
+  acquisition stream of the time series, we can add the measure $m$ to
+  the previously computed $M_{29}$ and then consolidate it to obtain
+  $M_{31}$. There is no need to store either the original $S$ or
+  $S'$. Furthermore, the successive states of $M$ store compacted
+  summaries of the original data. At any time during the acquisition
+  of the original time series, we can query the consolidated time
+  subseries and visualise them immediately.
+\end{example}
+
 
 
 %%% Local Variables:
