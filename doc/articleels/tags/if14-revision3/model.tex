@@ -322,9 +322,11 @@ m_2)\cdots),\allowbreak m_k)$.
 \begin{example}
 \label{ex:computational-operators}
 Let $S=\{(1,1),(2,3),(4,1)\}$ be a time series.  Map operator allows
-computing a new time series whose values result from time multiplied
-by value.  We define the map function $f(t,v)=(t,t\cdot v)$. Then
-$\map(S,f)=\{(1,1),(2,6),(4,4)\}$.
+computing a new time series whose values result from time attribute
+plus a duration of time.  We define the map function
+$f(t,v)=(t,t+5)$. Then $\map(S,f)=\{(6,1),(7,3),(9,1)\}$. As we will
+use it later, we name this operation \emph{translation} of a time
+series.
 %
 
 The fold operator allows, for instance, to select the measures having
@@ -780,26 +782,41 @@ the values of two time series $R$ and $S$ that we defined in
 example~\ref{ex:model:sum} as a binary computational operator.
 
 
-% \todo{}
+When two multiresolution time series do not have the same
+multiresolution parameters, then $\totalseries(L) + \totalseries(M)$
+must be solved using temporal join, as we showed in
+Example~\ref{ex:model:sumtemporal}. Nevertheless, dealing with
+temporal join operations can be cumbersome as they depend on a
+representation method parameter. In this regard, we can consider some
+multiresolution enhancements:
 
-% When two multiresolution time
-% series do not have the same multiresolution parameters, then $\totalseries(L) + \totalseries(M)$ must be solved using temporal join, as defined in \ref{?}. 
-%However we can consider some multiresolution enhancements:
-% note that it has $r$ as a parameter.However, there is also $r$ as a
-%parameter, so we find these operations a bit cumbersome.
+\begin{itemize}
 
-% 1. They share some $\tau$ and $\delta$, then it is possible to compute
-% $\seriedisc(L,\delta,f_1) + \seriedisc(M,\delta,f_2)$ where $f_1$ and
-% $f_2$ are any attribute aggregate functions, although generally it
-% makes more sense to be the same $f_1=f_2$.
+\item If $L$ and $M$ share a resolution subseries with the same
+  $\tau$ and $\delta$ parameters, then it is possible to compute
+  $\seriedisc(L,\delta,f_1) + \seriedisc(M,\delta,f_2)$ with the basic
+  join. The uninstantiated variables $f_1$ and $f_2$ are any attribute
+  aggregate functions, although usually it makes more sense to be the
+  same $f_1=f_2$.
 
-% 2. They share some $\delta$. Then one time series must be translated. $\seriedisc(L,\delta,f_1) + \seriedisc(translate(M),\delta,f_2)$ where $translate(M)=$!!!!
+\item If $L$ and $M$ share a resolution subseries with only the same
+  $\delta$, then the previous point can be applied if one time
+  subseries is be translated. Let $R=\seriedisc(L,\delta,f_1)$ and
+  $S=\seriedisc(M,\delta,f_2)$ be the time subseries desired and let
+  $\tau_R$ and $\tau_S$ be the corresponding last consolidation time
+  for each $\delta$. Let $f(t,v)=(t,t+\tau_R-\tau_S)$ be a map
+  function and let $S'=\map(S,f)$ be the result of the translation
+  operation, as we showed in Example~\ref{ex:computational-operators}.
+  Then, we can apply $R+S'$ with the basic join.
+  
+\item Otherwise, when $L$ and $M$ do not share any resolution
+  subseries with the same $\delta$, the temporal join must be used in
+  the sum $\totalseries(L) + \totalseries(M)$.  However, as $L$ and
+  $M$ are lossy storage solutions for the original time series they
+  represent, $\totalseries(L) + \totalseries(M)$ computes less data
+  than applying the sum directly to the original time series.
 
-% 3. They do not share any $\delta$. Then temporal join must be used in
-% the sum $\totalseries(L) + \totalseries(M)$. However, 
-% $\totalseries(L) + \totalseries(M)$ contains less data than $L + M$. 
-
-
+\end{itemize}
 
 
 
