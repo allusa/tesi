@@ -2,9 +2,10 @@
 \section{Time series model}
 \label{sec:model:TSMS}
 
-Following current database models, a \acro{TSMS} model consists of two
-components: a data model and a set of operations. \emph{Measures} and
-\emph{time series} are the main objects of our \acro{TSMS} model.
+Following the traditional database models, a \acro{TSMS} model
+consists of two components: a data model and a set of
+operations. \emph{Measures} and \emph{time series} are the main
+objects of our \acro{TSMS} model.
 %
 In this section, we describe and formalise the \acro{TSMS} model. 
 
@@ -12,7 +13,7 @@ In this section, we describe and formalise the \acro{TSMS} model.
 \subsection{Data model}
 
 Roughly speaking a \emph{time series} is a set of observations
-collected at specific time instants. An observation may consist of
+collected at specific time instants. An observation may consist of a
 single value or multiple values collected at the same time instant. We
 refer a pair of time and observed values as a \emph{measure}. Then, a
 time series is a correspondence between times and
@@ -27,8 +28,6 @@ $\cal{T}$ is the set of affinely extended real numbers $\Rb = \R \cup
 \{+\infty,-\infty\}$. This assumption avoids the complex details of
 time modelling while being powerful enough for our purposes. Next, we
 define the main time-related concepts using this naive approximation.
-
-
 
 \begin{definition}[Time concepts]
   \label{def:model:temps}
@@ -79,9 +78,10 @@ define two distinct \emph{order relations}.
 Note that the semitemporal order is a partial order and the temporal
 order is a total order.
 
-Intuitively speaking a \emph{time series} is an ordered set of measures
-of the same phenomena.  Sometimes they are also called \emph{time
-  sequences}~\cite{last:hetland}. We define it as follows.
+
+Intuitively speaking, a \emph{time series} is a ordered set of
+measures of the same phenomena.  Sometimes they are also called
+\emph{time sequences}~\cite{last:hetland}. We define it as follows.
 
 \begin{definition}[Time series]
   \label{def:model:timeseries}
@@ -93,7 +93,7 @@ of the same phenomena.  Sometimes they are also called \emph{time
 \end{definition}
 
 Observe that although measures in $S$ are expected to be of the same
-phenomena, from a formal standpoint we only require the domain of all
+phenomenon, from a formal standpoint we only require the domain of all
 values to be the same.
 
 A time series does not contain two measures at the same time. Therefore,
@@ -101,13 +101,13 @@ taking account of the temporal order, a time series is a totally
 ordered set.
 
 The \emph{cardinality} of a time series $S=\{m_0,\dots,m_k\}$, noted
-as $|S|$, is the number of measures that contains.  An \emph{empty
+as $|S|$, is the number of measures that it contains.  An \emph{empty
   time series} is noted as $\emptyset$. Needless to say,
 $|\emptyset|=0$.
 
 Although we defined values as scalars, it is easy to extend the
 concept. Following~\cite{assfalg08:thesis}, a time series can record
-more than one phenomena if they share the same acquisition time
+more than one phenomenon if they share the same acquisition time
 instants.  This kind of series is known as \emph{multivalued time
   series}. Let $S$ be a multivalued time series and let its domain be
 $\dom S={\cal{V}}_1\times\cdots\times{\cal{V}}_n$. Then, we write its
@@ -131,39 +131,48 @@ not and thus if it should be applied. For example, the addition of
 values coming from two different phenomena could be semantically
 wrong.
 
-In this section three groups of operations are formalised, one in each
+In this section, we formalise three groups of operations, one in each
 of the subsections that follow. The set operations, that consider
 times series as sets; the sequence operations, that consider time
-series as sequences; and the temporal operations that manipulate the
-time series assuming that they are representations of functions.
+series as sequences; and the temporal operations, that manipulate the
+time series assuming they are representations of functions.
 
 
 \subsubsection{Set operations}
 \label{sec:set}
 
-We describe how to apply common set operators to time series. We rely
-on how the relational model of \acro{DBMS} describes operations based
-on set algebra~\cite{date:introduction}.
+In what follows, we describe how to apply common set operators to time
+series. We rely on how the relational model of \acro{DBMS} describes
+operations based on set algebra~\cite{date:introduction}.
 
 Consider a time series $S$. $S$ is a finite ordered set (by the
 temporal order). Then, if $S$ nonempty, $S$ has a maximum and a
 minimum.  The \emph{maximum} of $S$, denoted as $\max S$, is an
-element of $S$ such that $\forall m \in S:\max S\geq^t m $.  Note that
-$\max S$ is not defined when $S=\emptyset$. However, the time series
-has a supremum even when it is empty.  Being the time domain the set
-of affinely extended real numbers $\Rb$, we can apply the property
-that says $\sup(\emptyset)=-\infty$ \cite{cantrell:extendedreal}. Note
-that here $\emptyset$ means an empty subset of $\Rb$. Analogously, the
-supremum applied to an empty subset of the time series returns a
-measure $m=(-\infty,\infty)$ with infinite time and
-value. $T(m)=-\infty$ is a consequence of the extended real numbers
-property.  $V(m)$ could be any value. However, we choose an infinite
-value for simplicity. We define the \emph{supremum} of $S$, noted as
-$\sup S$, as
+element of $S$ such that $\forall m \in S:\max S\geq^t m $. Because
+$\max S$ is not defined when $S=\emptyset$, we are interested in the
+concept of supremum.
+
+Recall that the time domain is the set of affinely extended real
+numbers $\Rb$. Then, for an empty subset $T=\emptyset$ of $\Rb$ we
+know that its supremum is $\sup(T)=-\infty$
+\cite{cantrell:extendedreal}.
+
+Following the affinely extended reals, we apply the concept of
+supremum to sets of measures, i.e., time series.
+
+Assume that $m$ is an infinite measure.  To be consistent with the
+affinely extended reals supremum, we consider $T(m)=-\infty$. $V(m)$
+could be any arbitrary value. However, we choose an infinite value for
+simplicity.
+%
+Then, we define an infinite measure $m$ as $m=(-\infty,\infty)$.
+
+Henceforth, we say that the \emph{supremum} of a time series $S$,
+noted as $\sup S$, is
 \[
 \sup S =\begin{cases}
-  \max S    & \text{when $S$ nonempty}\\
-  m   & \text{otherwise}
+  \max S              & \text{when $S$ nonempty}\\
+  (-\infty,\infty)    & \text{otherwise}
 \end{cases}
 \]
 Dually, we can define the \emph{minimum} of $S$, noted as $\min S$,
@@ -173,8 +182,10 @@ The \emph{membership} operation defines when a measure belongs to a
 time series. We define two distinct membership operations which
 consider the semitemporal order
 (Definition~\ref{def:semitemporal_order}) and the temporal order
-(Definition~\ref{def:temporal_order}). In consequence, they induce two
-different ways to consider a time series and its operations.
+(Definition~\ref{def:temporal_order}). 
+%
+The two distinct membership definitions will induce two different ways
+to consider time series and its operations.
 
 Let $S$ be a time series and $m$ be a measure. We say that $m$ belongs
 to $S$ (plain \emph{membership}), denoted as $m \in S$, when $\exists
@@ -209,7 +220,6 @@ while the temporal union is a commutative one.
 
 \begin{figure}
   \centering
-  %\input{imatges/sgst-union-venn.tex}
   \includegraphics{fig_model_venn.pdf}
   \includegraphics{fig_model_venn_reverse.pdf}
   \includegraphics{fig_model_venn2.pdf}
@@ -217,7 +227,6 @@ while the temporal union is a commutative one.
     \acro{TSMS}}
   \label{fig:model:venn}
 \end{figure}
-
 
 \begin{example}\label{ex:model:s1s2}
   Let $R=\{(1,1), (3,1), (4,0), (5,1)\}$ and $S=\{(2,2), (3,2), (4,0),
@@ -294,7 +303,9 @@ define fold as follows.
 Let $S=\{m_0,\dots, m_k\}$ and $R$ be two time series, let
 $\mathcal{V}=\dom S$, let $\mathcal{V'}=\dom R$ and let
 %
-$f:\mathcal{P}(\mathcal{T}\times\mathcal{V'}) \times (\mathcal{T}\times\mathcal{V}) \rightarrow \mathcal{P}(\mathcal{T}\times\mathcal{V'})$ 
+$f:\mathcal{P}(\mathcal{T}\times\mathcal{V'}) \times
+(\mathcal{T}\times\mathcal{V}) \rightarrow
+\mathcal{P}(\mathcal{T}\times\mathcal{V'})$
 %
 be a function over a time series and a measure, which returns a time
 series.
@@ -302,7 +313,7 @@ series.
 The \emph{fold} of $S$ by $f$ with initial value $R$ is a new time
 series defined as $\fold(S,R,f) = f(\cdots(f(f(f(R,m_0),\allowbreak
 m_1),\allowbreak m_2)\cdots),\allowbreak m_k)$.
-%
+
 
 The classical aggregation operator combines the data of a time series
 into a single value.  It is worth noting that it is a special case of
@@ -310,7 +321,6 @@ fold.
 
 Let $S=\{m_0,\dots,m_k\}$ be a time series, let $\mathcal{V}=\dom S$,
 let $m$ be a measure with $\dom m=\mathcal{V}$, and let
-%
 $f:(\mathcal{T}\times\mathcal{V})\times(\mathcal{T}\times\mathcal{V})\rightarrow
 \mathcal{T}\times\mathcal{V}$ be a function over two measures
 returning a measure. The \emph{aggregate} of $S$ by $f$ with initial
@@ -327,14 +337,12 @@ plus a duration of time.  We define the map function
 $f(t,v)=(t,t+5)$. Then $\map(S,f)=\{(6,1),(7,3),(9,1)\}$. As we will
 use it later, we name this operation \emph{translation} of a time
 series.
-%
 
 The fold operator allows, for instance, to select the measures having
 its value equal to one.  We define the fold function $f(R,m)=R\cup R'$
 where $R'=\{m\}$ if $V(m)=1$ or $R'=\emptyset$ otherwise. Let $m$ be
 any measure, note that $f(\emptyset,m)= R'$. Then
 $\fold(S,\emptyset,f)=\{(1,1),(4,1)\}$.
-
 
 The aggregate operator allows, for example, to compute the measure
 that results from the sum of all the values.  To illustrate it, we
@@ -343,11 +351,9 @@ $\agg(S,(0,0),f) = (0,5)$, where $5$ is the sum of all the values of
 $S$. Note that time is meaningless in this computation.
 \end{example}
 
-
-
 %%%%%%% BINARY COMPUTATIONAL OPERATORS
 
-Finally we describe how, using the operators defined before, we can
+Finally, we describe how using the operators defined before, we can
 implement \emph{binary computational} operators between two time
 series. This implementation illustrates the power of the operators
 defined so far.
@@ -383,11 +389,10 @@ Sequence operations manipulate time series considering measures as
 being totally ordered by time.  We define three basic operations:
 \emph{slice}, \emph{successor} and \emph{concatenation}.
 
-
 The classical interval concept can be applied to the time domain. In this
 context, given two time instants $s$ and $t$, we use the notation
 $[s:t]$, $(s:t)$, $[s:t)$ and $(s:t]$ respectively for the closed
-interval, open interval, open right and open left interval.
+interval, open interval, right open and left open interval.
 %
 Following~\cite{last:hetland}, to slice a time series $S$ means to
 extract a new time series $R\subseteq S$ constrained to a given time
@@ -431,20 +436,26 @@ $R||S= R\cup (S - S[T(\inf R):T(\sup R)])$.
 
 We can think a time series as a discrete representation of an original
 temporal function. In this section, we devise some operations that
-manage time series according to this temporal function standpoint.
+manage time series according to this point of view.
+
+Let $S$ be a time series. A \emph{temporal representation function} is
+a function $S$ defined as $S:\Rb\rightarrow\cal{V}$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% REPASSAR ALEIXXXX IMPORTANT!!!!!
+such that for every measure $m\in S$, $V(m)=S(T(m))$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In some sense, we can think of $S(t)$ as the original temporal
+function from which $S$ was obtained.
 
 The graph of a function allows to obtain and interpret the continuous
 nature of a time series. When we can plot the domain of time and value
 attributes, then the graph is equivalent to a graphical
-representation.  Let $S$ be a time series and $\cal{T}$ the time
-domain. The \emph{graph} of the time series $S$ is a set of ordered
-pairs $\graph S =\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a
-\emph{temporal representation function} for the time series.
-
-Given a time series $S$, the \emph{temporal representation function}
-$S(t)$ is a function along the variable $t$ in the domain of time and
-the target in the domain of values. In some sense, we can think of
-$S(t)$ as the original temporal function from which $S$ was obtained.
+representation.
+%
+Let $S$ be a time series and let $\cal{T}$ be the time domain. The
+\emph{graph} of the time series $S$ is a set of ordered pairs $\graph
+S =\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a temporal
+representation function for the time series.
 
 There is not an unique way to obtain $S(t)$ for a given time series
 $S$. Because of this, in temporal representation functions we will
@@ -453,7 +464,6 @@ method used. Then, $S(t)^r$ means the representation function of $S$
 using method $r$. Below, we exemplify the representation functions
 using two different methods based on impulse and constant piecewise
 functions.
-
 
 \begin{definition}[Dirac representation] 
   Dirac delta (\dd) is a method of representation based on the Dirac
@@ -504,8 +514,6 @@ must be interpreted:
   \emph{\zohe{} temporal interval} is $S[s:t]^\zohe{} = S(s:t]
   \cup \{m\}$ where $m=(t,v)$ and $v= V(\inf( S[t:+\infty] ))$.
 \end{itemize}
-
-
 
 From temporal interval, we can define other operators such as temporal
 selection, temporal concatenation, or temporal join. As an example, we
@@ -597,13 +605,13 @@ resolution and finally store them in a \emph{disc}.
 \end{figure}
 
 Figure~\ref{fig:model:mtsdb} shows the architecture of a \acro{MTSMS}
-for a single multiresolution time series. In this way, the original
-time series gets stored in the resolution subseries, each with a
-different time resolution and distinct attribute aggregation
-policies. Discs are size bounded so they only contain a fixed amount
+for a single multiresolution time series. The original time series
+gets stored in multiple resolution subseries. Each resolution
+subseries has a particular time resolution and attribute aggregation
+policy. Discs are size bounded so they only contain a fixed amount
 of measures. When a disc becomes full, it discards a measure. Thus, a
 multiresolution database is bounded in size and the time series gets
-stored in some storage bounded time subseries.
+stored in several storage bounded time subseries.
 
 Regarding operations, the \acro{MTSMS} model requires two kinds of
 operators. Some operators should be devoted to set up the time
@@ -611,22 +619,26 @@ intervals between measures and to aggregate the attributes. Some other
 operators should be dedicated to query the multiresolution schema and
 to extract the time series data.
 
+<<<<<<< .mine
+Following, we define the \acro{MTSMS} model structure, its structural
+operators, the operations to query a multiresolution time series, and
+the \emph{attribute aggregate functions}.  Although schema
+=======
 Following, we define the \acro{MTSMS} model structure and the
 structural operators, the operations to query a multiresolution
 schema, and the \emph{attribute aggregate functions}.  Although schema
+>>>>>>> .r561
 manipulation operations could be defined, in this paper we exclusively
 focus on structure and data query operators.
 
 
 \subsection{Structure}
 
-
-A \emph{buffer} is a container for a time series. The aim of the
-buffer is to regularise the time series using a constant
-\emph{resolution step} and an \emph{attribute aggregate function}.  We
-name \emph{consolidation} this action of regularisation.  Note that we
-define the attribute aggregate functions in
-Section~\ref{sec:model:interpolador}.
+A \emph{buffer} is a container for a time series. The aim of a buffer
+is to regularise the time series using a constant \emph{resolution
+  step} and an \emph{attribute aggregate function}.  We name the
+regularisation action as \emph{consolidation}. We defined the
+attribute aggregate functions in Section~\ref{sec:model:interpolador}.
 
 \begin{definition}[Buffer]
   Let $S$ be a time series, let $\tau\in\cal{T}$ be the last
@@ -635,18 +647,18 @@ Section~\ref{sec:model:interpolador}.
   \emph{buffer} $B$ as the tuple $B=(S,\tau,\delta,f)$.
 \end{definition}
 
-An empty buffer is noted as $(\emptyset, t_0, \delta, f)$, that is an
-empty time series, an initial consolidation time $t_0\in\cal{T}$, a
-resolution step $\delta$ and a function $f$.  Given a buffer all the
-consolidation time instants can be determined as $\tau_n=t_0+n\delta$
-for all $n\in\N$.
+An empty buffer $B$ is defined as $B=(\emptyset, t_0, \delta, f)$,
+i.e., an empty time series, an initial consolidation time
+$t_0\in\cal{T}$, a resolution step $\delta$, and a function $f$.
+Given a buffer, all the consolidation time instants can be determined
+as $\tau_n=t_0+n\delta$ for all $n\in\N$.
 
 Let $B=(S, \tau, \delta, f)$ be a buffer. The \emph{consolidation} of
 $B$ is an operation that computes a new measure $m=f(S, \tau, \delta)$
 summarising the data of $S$ comprised in the given interval.
 
 A buffer has two main structural operations. The first one adds a
-measure to the buffer and the second one consolidates the buffer.
+measure to the buffer, and the second one consolidates the buffer.
 
 Let $B=(S,\tau,\delta,f)$ be a buffer and let $m$ be a measure.  The
 addition of $m$ to $B$, noted as $\addB(B,m)$, returns a new buffer
@@ -654,19 +666,19 @@ $\addB(B,m)=(S',\tau,\delta,f)$ where $S' = S \cup \{m\}$.
 
 Let $B=(S,\tau,\delta,f)$ be a buffer. The consolidation of $B$, noted
 as $\consB(B)$, returns a new buffer and a new measure $\consB(B)=
-(B',m')$ where $ B'= (S[\tau+\delta:+\infty], \tau+\delta,\delta,f)$
-and $m' = f(S,\tau,\delta)$. Note that after the consolidation, we can
-remove from the buffer the consolidated part of the time series and
-thus we discard historical data.
+(B',m')$ where $B'= (S[\tau+\delta:+\infty], \tau+\delta,\delta,f)$
+and $m' = f(S,\tau,\delta)$. After the consolidation, we can remove
+from the buffer the consolidated part of the time series. Therefore,
+we discard historical data.
 
 We apply the consolidation of a buffer to the first non-consolidated
 time instant. We obtain the total consolidation by successive
 applications of the operator. Consolidation requires the measures to
 be added by time order and to consolidate the buffer when the time of
 some measure is bigger than the buffer's next consolidation time.  Let
-$B=(S,\tau,\delta,f)$ be a buffer and $m=\sup S$ the maximum measure
-of $B$. We say that $B$ is consolidable if and only if $T(m) \geq
-\tau+\delta$.
+$B=(S,\tau,\delta,f)$ be a buffer, and let $m=\sup S$ be the maximum
+measure of $B$. We say that $B$ is consolidable if and only if $T(m)
+\geq \tau+\delta$.
 
 A \emph{disc} is a finite capacity container of measures. A time
 series stored in a disc has its cardinal bounded. When the cardinal of
@@ -703,13 +715,13 @@ contains the regularised time series.
 \end{definition}
  
 The operators of a resolution subseries extend the buffer and disc
-ones. Let $R=(B,D)$ be a resolution subseries and let $m$ be new a
+ones. Let $R=(B,D)$ be a resolution subseries, and let $m$ be new a
 measure.  The addition of $m$ to $R$, noted as $\addR(R,m)$, is a new
 resolution subseries $\addR(R,m)=(B',D)$ where $B'= \addB(B,m)$ is the
 addition of the measure to the buffer.  The consolidation of $R$,
 noted as $\consR(R)$, is a new resolution subseries
-$\consR(R)=(B',D')$ where $(B',m') = \consB(B)$ is the consolidation
-of the buffer and $D'= \addD(D,m')$ is the addition of the
+$\consR(R)=(B',D')$, where $(B',m') = \consB(B)$ is the consolidation
+of the buffer, and $D'= \addD(D,m')$ is the addition of the
 consolidated measure to the disc. A resolution subseries is
 consolidable only when its buffer is consolidable.
 
@@ -748,30 +760,36 @@ $\consM(M)=\{R'_0,\allowbreak\dots,\allowbreak R'_k\}$ where
 
 \subsection{Queries}
 
-There are two basic time series queries for a \acro{MTSMS}: (i) a
-query to extract a time subseries from a resolution subseries and (ii)
-a query to obtain a total time series from all consolidated data.
+There are two basic time series queries for a \acro{MTSMS}: a query to
+extract a time subseries from a resolution subseries, and a query to
+obtain a total time series from all consolidated data.
 
 Let $M$ be a multiresolution time series and let $(\delta,f)$ be a
 pair of key attributes.  The query operator denoted as
 $\seriedisc(M,\delta,f)$ computes a time series such that $\exists
 (B,D) \in M: B=(S,\tau,\delta,f) \wedge D=(\seriedisc(M,\delta,f), k)
-$ where $S,\tau,k$ are bound variables.  Note that we assume that
-there are no repeated $(\delta,f)$ pairs in $M$.
+$ where $S,\tau,k$ are bound variables.  We assume that there are no
+repeated $(\delta,f)$ pairs in $M$.
+
+Recall that $R||S$ is the concatenation of two time series
+$R$ and $S$, which we defined in Section~\ref{sec:sequence}.
 
 Let $M=\{R_0,\dots,R_k\}$ be a multiresolution time series and let
-$S_0, \dots, S_k$ the time series corresponding to the resolution
+$S_0, \dots, S_k$ be the time series corresponding to the resolution
 subseries $R_0,\dots,R_k$. Assume that the attribute aggregation
 functions of all $R_i$ are the same and the resolution steps of all
-$R_i$ are distinct. We define the query operator $\totalseries(M)$,
-the time ordered concatenation of all time subseries, as
-follows. Recall that $R||S$ is the concatenation of two time series
-$R$ and $S$, which we defined in Section~\ref{sec:sequence}. Assume
-that $i_0,\dots,i_k$ is a permutation of $[0,k]$ such that
-$\delta_{i_0} < \delta_{i_1} < \cdots < \delta_{i_k}$ being $\delta_i$
-the resolution step of the resolution subseries $R_i$. Then,
-$\totalseries(M) = S_{i_0} || S_{i_1} || \cdots ||
-S_{i_k}$. TotalSeries obtains the best possible resolution.
+$R_i$ are distinct. 
+%
+We define the query operator $\totalseries(M)$, the time ordered
+concatenation of all time subseries, as follows.
+%
+$\totalseries(M) = S_{i_0} || S_{i_1} || \cdots || S_{i_k}$
+%
+where $i_0,\dots,i_k$ is a permutation of $[0,k]$ such that
+$\delta_{i_0} < \delta_{i_1} < \cdots < \delta_{i_k}$, being $\delta_i$
+the resolution step of the resolution subseries $R_i$.
+
+The operator $\totalseries$ obtains the better possible resolution.
 
 Using these basic time series queries, we can define more elaborated
 queries for an \acro{MTSMS} by using \acro{TSMS} operations. For
@@ -835,7 +853,7 @@ $\tau$ and $\delta$, we obtain the time interval $[\tau:\tau+\delta]$.
 Then, the resulting measure $m$ is interpreted to summarise the
 measures of $S$ for the time interval $[\tau:\tau+\delta]$.
 
-An attribute aggregation function follows this general schema. First,
+An attribute aggregation function follows this general scheme. First,
 it obtains a time subseries $S'$ according to the consolidating
 interval using a slice operator. For example, $S' =
 S[\tau:\tau+\delta]$. Second, it applies a \acro{TSMS} aggregation
@@ -854,7 +872,7 @@ pathologies.
 Given the diversity of attribute aggregate functions, no global
 assumptions can be made about them. Each user should decide which
 combination of aggregation and representation fits better to the
-measured phenomena.  Therefore, the \acro{MTSMS} model must have a
+measured phenomenon.  Therefore, the \acro{MTSMS} model must have a
 generic design that allows the users to define their aggregate
 functions.
 
@@ -875,13 +893,13 @@ $S'=S(\tau:\tau+\delta)$, a closed interval $S'=S[\tau:\tau+\delta]$,
 or other combinations as it is $S'=S(\tau-d:\tau+\delta-d]$, where $d$
 is a time duration that delays the consolidation to
 $T(m)=\tau+\delta-d$.  This time offset can also be variable. For
-example, an aggregate function that returns the first measure of the
-interval $m=\min(S[\tau:\tau+\delta))$, then the resulting time
+example, consider an aggregate function that returns the first measure
+of the interval $m=\min(S[\tau:\tau+\delta))$, then the resulting time
 fulfils that $\tau\leq T(m) < \tau+\delta$.
 
 Assume that $f$ is an attribute aggregation function and let
 $m=f(S,\tau,\delta)$.  An attribute aggregation function $f$ should
-compute the value of $m$. Next there are some examples that illustrate
+compute the value of $m$. Next, there are some examples that illustrate
 how to compute $V(m)$ based on the temporal function time series
 operators.  That is, the time series aggregated is interpreted by the
 temporal representation function $S(t)^r$ as has been described in
