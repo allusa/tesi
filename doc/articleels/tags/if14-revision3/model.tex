@@ -985,8 +985,8 @@ To summarise the model we have formalised in this section, we show a
 basic multiresolution example.
 \begin{example}\label{ex:model:smultiresolution}
   We define a multiresolution schema for a time series, we consolidate
-  the database and we query its data.  Let $S = \{
-  (1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
+  the database and we query its data.  Let $S =
+  \{(1,6),(5,2),\allowbreak (8,5),\allowbreak (10,0),\allowbreak
   (14,1),\allowbreak (19,6),\allowbreak (22,11),\allowbreak
   (26,6),(29,0) \}$ be a time series and let $M=\{R_0,R_1\}$ be a
   multiresolution time series where each resolution parameters are
@@ -1001,16 +1001,14 @@ basic multiresolution example.
   be the multiresolution time series at this state.
 
   Then, the two time subseries consolidated are obtained by querying
-  $\seriedisc(M_{29},5,\allowbreak \meanz)=\{\allowbreak
-  (10,3),\allowbreak (15,\allowbreak 2),\allowbreak (20,7),\allowbreak
-  (25,8)\}$ and $\seriedisc(M_{29},\allowbreak 10,\allowbreak \maxz)
-  =\allowbreak \{ \allowbreak (10,6),\allowbreak (20,11)\}$. Regarding
-  buffers, let $S_0$ and $S_1$ be the $M_{29}$ buffer's time series,
-  note that $S_0= \{\allowbreak (26,6),\allowbreak (29,0)\allowbreak
-  \}$ and $S_1=\{\allowbreak (22,11),\allowbreak (26,6),(29,0)\}$.
+  $\seriedisc(M_{29},5,\meanz) = \{(10,3), (15,2), (20,7), (25,8)\}$
+  and $\seriedisc(M_{29}, 10,\allowbreak \maxz) = \{(10,6),
+  (20,11)\}$. Regarding buffers, let $S_0$ and $S_1$ be the $M_{29}$
+  buffer's time series, note that $S_0= \{(26,6), (29,0)\}$ and
+  $S_1=\{(22,11), (26,6), (29,0)\}$.
 
   In this particular example, $ \totalseries(M_{29}) =
-  \seriedisc(M_{29},\allowbreak 5,\meanz)$ as $R_0$ has twice the
+  \seriedisc(M_{29}, 5, \meanz)$ as $R_0$ has twice the
   resolution of $R_1$ and $k_0$ is bigger than $k_1$.
 \end{example}
 
