@@ -1015,23 +1015,24 @@ basic multiresolution example.
 \end{example}
 
 We extend the previous example to show some of the \acro{MTSMS}
-enhancements.  We exemplify what happens when a new measure is
-added to the previous consolidated multiresolution time series.
+enhancements.  We exemplify what happens when a we add a new measure
+to a previously consolidated multiresolution time series.
 \begin{example}
-  Let $S$, $M$ and $M_{29}$ be the same values from the previous
-  Example~\ref{ex:model:smultiresolution}.  Now we acquire a new
-  measure, let $m=(31,4)$ be this new measure and let $S' = S \cup
-  \{m\}$ be the updated time series.
+  Let $S$, $M$ and $M_{29}$ be the same entities defined in the
+  previous example.  Now, consider that we acquire a new measure. Let
+  $m=(31,4)$ be this new measure, and let $S' = S \cup \{m\}$ be the
+  updated time series.
 
-  We add this measure to the previous consolidated multiresolution
-  time series and, as it is now again consolidable, we consolidate
-  it. So let $M_{31} = \consM(\addM(M_{29},m))$ be the multiresolution
-  time series at this new state.
+  We add this measure to the previously consolidated multiresolution
+  time series and, as now it is again consolidable, we consolidate
+  it. Then, let $M_{31} = \consM(\addM(M_{29},m))$ be the
+  multiresolution time series at this new state.
 
-  Otherwise, similarly to Example~\ref{ex:model:smultiresolution}, we
-  can add all measures of $S'$ to $M$ and then consolidate it until it
-  is no more consolidable. This also results in the multiresolution
-  time series $M_{31}$. However, this approach does not notice that
+  Alternatively, following the same procedure as in
+  Example~\ref{ex:model:smultiresolution}, we can add all measures of
+  $S'$ to $M$, and then consolidate it as many times as
+  possible.  This procedure also results in the multiresolution time
+  series $M_{31}$. However, this approach does not notice that
   $M_{29}$ has already been defined.
 
   Whichever approach is taken, we can query the two new consolidated
@@ -1041,15 +1042,15 @@ added to the previous consolidated multiresolution time series.
   $\seriedisc(M_{31},\allowbreak 10,\allowbreak \maxz) =\allowbreak \{
   \allowbreak (20,11),\allowbreak (30,11)\}$.
 
-  The purpose of this example is to show that the new state of the
-  multiresolution time series can be computed online. Following the
-  acquisition stream of the time series, we can add the measure $m$ to
-  the previously computed $M_{29}$ and then consolidate it to obtain
-  $M_{31}$. There is no need to store either the original $S$ or
-  $S'$. Furthermore, the successive states of $M$ store compacted
-  summaries of the original data. At any time during the acquisition
-  of the original time series, we can query the consolidated time
-  subseries and visualise them immediately.
+  This example shows that the new state of the multiresolution time
+  series can be computed online. Following the acquisition stream of
+  the time series, we can add the measure $m$ to the previously
+  computed multiresolution time series $M_{29}$ and then consolidate
+  it to obtain $M_{31}$. There is no need to store either the original
+  time series $S$ or $S'$. Furthermore, the successive states of $M$
+  store compacted summaries of the original data. At any time during
+  the acquisition of the original time series, we can query the
+  consolidated time subseries and visualise them immediately.
 \end{example}
 
 
