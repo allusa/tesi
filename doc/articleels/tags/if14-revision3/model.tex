@@ -438,33 +438,24 @@ We can think a time series as a discrete representation of an original
 temporal function. In this section, we devise some operations that
 manage time series according to this point of view.
 
-Let $S$ be a time series. A \emph{temporal representation function} is
-a function $S$ defined as $S:\Rb\rightarrow\cal{V}$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% REPASSAR ALEIXXXX IMPORTANT!!!!!
-such that for every measure $m\in S$, $V(m)=S(T(m))$.
+Let $S$ be a time series. A \emph{temporal representation function} is
+a function $f$ defined as $f:\mathcal{P}(\mathcal{T}\times\mathcal{V})
+\times \cal{T}\rightarrow\cal{V}$ such that for every time instant
+$t\in \cal{T}$, $\exists v \in \cal{V}: v=f(S,t)$.
+There is not an unique way to obtain $f$ for a given time series
+$S$. Because of this, we will use another notation for temporal
+representation functions $S(t)^r = f(S,t)$ where $r$ is a superscript
+that shows the name $r$ of the representation method used.  In some
+sense, we can think of $S(t)^r$ as the original temporal function from
+which $S$ was obtained.  Then, $S(t)^r$ means the representation
+function of $S$ using method $r$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In some sense, we can think of $S(t)$ as the original temporal
-function from which $S$ was obtained.
 
-The graph of a function allows to obtain and interpret the continuous
-nature of a time series. When we can plot the domain of time and value
-attributes, then the graph is equivalent to a graphical
-representation.
-%
-Let $S$ be a time series and let $\cal{T}$ be the time domain. The
-\emph{graph} of the time series $S$ is a set of ordered pairs $\graph
-S =\{(t,S(t))|t\in \cal{T}\}$ where $S(t)$ is a temporal
-representation function for the time series.
-
-There is not an unique way to obtain $S(t)$ for a given time series
-$S$. Because of this, in temporal representation functions we will
-introduce a superscript that shows the name $r$ of the representation
-method used. Then, $S(t)^r$ means the representation function of $S$
-using method $r$. Below, we exemplify the representation functions
+Below, we exemplify the representation functions
 using two different methods based on impulse and constant piecewise
 functions.
-
 \begin{definition}[Dirac representation] 
   Dirac delta (\dd) is a method of representation based on the Dirac
   delta function. Let $S$ be a time series. We define $S(t)^\dd$ as
@@ -492,6 +483,18 @@ functions.
   \end{cases}
   \]
 \end{definition}
+
+The graph of a function allows to obtain and interpret the continuous
+nature of a time series. When we can plot the domain of time and value
+attributes, then the graph is equivalent to a graphical
+representation.
+%
+Let $S$ be a time series, let $r$ be a representation method and let
+$\cal{T}$ be the time domain. The \emph{graph} of the time series $S$
+is a set of ordered pairs $\graph S =\{(t,S(t)^r)|t\in \cal{T}\}$
+where $S(t)^r$ is a temporal representation function for the time
+series.
+
 
 We use the concept of representation to formalise some set and
 sequence operators as temporal operators.
