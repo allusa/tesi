@@ -168,7 +168,7 @@ simplicity.
 Then, we define an infinite measure $m$ as $m=(-\infty,\infty)$.
 
 Henceforth, we say that the \emph{supremum} of a time series $S$,
-noted as $\sup S$, is
+noted as $\sup S$, is the measure defined as follows:
 \[
 \sup S =\begin{cases}
   \max S              & \text{when $S$ nonempty}\\
@@ -440,22 +440,24 @@ manage time series according to this point of view.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% REPASSAR ALEIXXXX IMPORTANT!!!!!
-Let $S$ be a time series. A \emph{temporal representation function} is
-a function $f$ defined as $f:\mathcal{P}(\mathcal{T}\times\mathcal{V})
-\times \cal{T}\rightarrow\cal{V}$ such that for every time instant
-$t\in \cal{T}$, $\exists v \in \cal{V}: v=f(S,t)$.
-There is not an unique way to obtain $f$ for a given time series
-$S$. Because of this, we will use another notation for temporal
-representation functions $S(t)^r = f(S,t)$ where $r$ is a superscript
-that shows the name $r$ of the representation method used.  In some
-sense, we can think of $S(t)^r$ as the original temporal function from
-which $S$ was obtained.  Then, $S(t)^r$ means the representation
-function of $S$ using method $r$.
+
+A \emph{temporal representation function} is a function $f$ defined as
+$f:\mathcal{T}\rightarrow\cal{V}$.  In some sense, we can think that a
+time series is the discretization of some temporal representation
+funcion.
+
+Given a time series $S$, assume that we want to obtain $f$, a temporal
+representation function for $S$. It is easy to see that there is not
+an unique temporal representation function for $S$.
+
+We denote as $S(t)^r$ the temporal representation function of $S$
+obtained by applying the method $r$.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Below, we exemplify the representation functions
-using two different methods based on impulse and constant piecewise
-functions.
+Below, we exemplify the concept of representation function using two
+different methods based on impulse and constant piecewise functions.
+
 \begin{definition}[Dirac representation] 
   Dirac delta (\dd) is a method of representation based on the Dirac
   delta function. Let $S$ be a time series. We define $S(t)^\dd$ as
