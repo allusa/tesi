@@ -4,8 +4,8 @@
 In this paper, we formalised a \acro{MTSMS} model. The foundation of
 \acro{MTSMS} is the \acro{TSMS} model, which we also formalised.  We
 structured our models based on set theory, and heavily inspired on
-relational algebra. We have gone a bit further and proposed a
-\acro{TSMS} model that includes set, sequence and temporal function
+relational algebra. We have gone a bit further, and we proposed a
+\acro{TSMS} model that includes set, sequence, and temporal function
 behaviour. We also motivated the interest of multiresolution and its
 advantages.  As a reference implementation, we developed a
 \emph{Python} package focused on the basic algebra, i.e., without the
@@ -14,17 +14,17 @@ extended \acro{DBMS} capabilities.
 
 The main purpose of a \acro{MTSMS} is to store compactly a \emph{time
   series} and to operate its temporal dimension consistently.  It
-stores time series using \emph{multiresolution time series}, i.e. it
-stores a time series at multiple resolutions called \emph{resolution
-  subseries}. Any resolution subseries has two key features: its
-resolution step and its \emph{attribute aggregate function}, that is
-used to compact the data. According to this structure, a
-multiresolution time series is configured with a few parameters. These
-parameters are the number of resolution subseries and, for every
-subseries: the resolution step, the initial consolidation time, the
-attribute aggregate function, and the capacity.  If we properly tune
-these parameters, a multiresolution database can keep the desired
-data from a time series.
+stores time series using \emph{multiresolution time series}, that is,
+it stores a time series at multiple resolutions called
+\emph{resolution subseries}. Any resolution subseries has two key
+features: its resolution step and its \emph{attribute aggregate
+  function}, that is used to compact the data. According to this
+structure, a multiresolution time series is configured with a few
+parameters. These parameters are the number of resolution subseries,
+and for every subseries: the resolution step, the initial
+consolidation time, the attribute aggregate function, and the
+capacity.  If we tune these parameters properly, a multiresolution
+database can keep the desired data from a time series.
 
 
 We have shown some aggregation functions examples with simple
@@ -33,9 +33,8 @@ aggregation statistics, mean and maximum, and simple
 aggregation functions could be designed based on methods from other
 fields, such as data streaming or time series data mining. Especially,
 it would be interesting to design aggregations that coped with
-uncertain data.  The model allows the user to customise a
-multiresolution database according to the actual requirements of a
-given context.
+uncertain data.  The model allows users to customise a multiresolution
+database according to the actual requirements of a given context.
 
 
 The queries over \acro{MTSMS} obtain time series from stored
@@ -63,15 +62,16 @@ Compared to other \acro{TSMS}, we formalised our model using set
 algebra without specifying any particular query language.  This allows
 us to achieve an independent model from an actual implementation or an
 actual query language.  In future work, a particular query language
-might be defined to be able to compare our multiresolution solution
-with other approaches. As our model is heavily inspired on relational
-algebra, we plan to implement it using academically relational query
-languages, such as Tutorial~D \cite{date:introduction}.  We think
-that, then, it will be clearer whether the multiresolution time series
-use cases are cumbersome when using other languages.
+might be defined that facilitates to compare our multiresolution
+solution with other approaches. As our model is heavily inspired on
+relational algebra, we plan to implement this query language using
+academically relational query languages, such as Tutorial~D
+\cite{date:introduction}.  We think that this procedure will allow us
+to illustrate how cumbersome the multiresolution time series use cases
+are when we use relational languages.
 
 
-Using a \acro{MTSMS} to store time series data results in discarding
+When we apply a \acro{MTSMS} to store time series data, we discard
 some data given its lossy nature.  In future work, it would be
 interesting to apply information theory to measure the information
 lost depending on the configuration of the multiresolution schema. We
@@ -83,11 +83,6 @@ series and based on some multiresolution time series. Alternatively,
 given a query, we could compare the difference between the results
 obtained by applying the query to a multiresolution time series or
 applying the query to the original time series.
-
-
-
-
-
 
 %%% Local Variables:
 %%% TeX-master: "main"
