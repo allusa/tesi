@@ -3,39 +3,71 @@ Formalism for a Multiresolution Time Series Database Model
 ==========================================================
 
 :Authors: Llusà Serra, Aleix; Vila-Marta, Sebastià; Escobet Canal, Teresa
-:Date: 2015-08-17
+:Date: 2015-08-18
 :subject: Review on IS-D-14-266R2
-
 
 
 
 Revision notes
 ==============
 
+Reviewer notes:
 
-Revisor:
+* General comments:
+  We have applied the comments found in the attached PDF.
 
-* Minor coments
-
-* We have rewritten the supremum definition, as it induced confusion  when we were applying sup(empty)= -infty  to a real and when we were applying sup(empty) = (-infty,infty) to a time series.
-
+* We have rewritten the supremum definition, as it induced confusion
+  whether we were applying sup(empty)= -infty to a real or we were
+  applying sup(empty) = (-infty,infty) to a time series.  We have also
+  clarified that the supremum of a time series returns a measure.
 
 * We have exemplified the sum of two time series to be able to cite it later. 
 
+* Technical problems:
+  We have rewritten the definition for temporal
+  representation functions.  We have added another use case for
+  temporal selection operation and we have also added the Example 4.
+  Now Section 4.2.3 clearly states that temporal function operations
+  compute new time instants, even if they are not contained in the
+  original time series.  Then considering the proposed e = 0 and d =
+  5, we obtain the measures at time instants 5, 10, 15, 20,
+  25... independently whether they are contained in the original time
+  series. Note that In Example 4 we consider a simpler case to
+  exemplify together temporal selection, temporal join, and binary sum
+  with dissimilar time sets.
 
-Editor:
 
-* English
+
+Editor notes:
+
+* English: The paper has had a careful review to improve the language.
+  We have sought advice which has lead to many changes in grammatical
+  and expression issues.
  
-* Map operation
+* Soundness of operators:
+  We have stated better when we prefer to give
+  genericity to operators. On the one hand, it allows the users to
+  extend easily the functionality of operators. On the other hand, the
+  users are responsible for the definitions of these extensions. For
+  instance, this happens for the map operator, where we prefer not to
+  restrict the f function that the users might define. However we note
+  some safe cases, e.g. operating only with values.
 
-* Afegits problemes amb sèries temporals que no comparteixen temps i
-  com la multiresolució pot ajudar ja que les sèries temporals consolidades
-  són regulars. (Exemple 4)
+* Manipulation of time series: We have clarified the purpose of the
+  new operations we are formalising. We have added the Example 4,
+  which shows how to regularise time series with a TSMS. Then we show
+  how multiresolution in a MTSMS can lighten the cumbersome of
+  temporal selection or temporal join, owing to the fact that time
+  series are stored regularised.
 
-* Afegit exemple d'afegir una nova mesura a una sèrie temporal multiresolució en comparació a afegir tota la sèrie temporal. (Exemple 6)
+* We have added Example 6 to show that the formalised model is capable
+  of updating online the processed data when adding a new measure.
+
+* We have noted as a future work the need for a direct comparison with
+  other relational query languages and temporal query languages.
+  Indeed, we are working with this kind of implementations. However
+  they lead to diverse use cases and implementation requirements of
+  each language to compare in detail every operation that we
+  formalise.
 
 
-* Afegit treball futur sobre la proposta de l'editor de comparar amb altres llenguatges. 
-
-* We have clarified the purpose of some operations.
