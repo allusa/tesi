@@ -397,9 +397,9 @@ interval, open interval, right open and left open interval.
 Following~\cite{last:hetland}, to slice a time series $S$ means to
 extract a new time series $R\subseteq S$ constrained to a given time
 interval. We denote this operation as the original time series followed
-by the interval. Therefore, $S[s:t]=\{m|m\in S \wedge
+by the interval, therefore, $S[s:t]=\{m|m\in S \wedge
 T(m)\in[s:t]\}$. We can use other intervals to slice a time series in
-the same fashion. For instance, $S(s:t]=\{m|m\in S \wedge
+the same fashion, for instance $S(s:t]=\{m|m\in S \wedge
 T(m)\in(s:t]\}$.
 
 The ordinary time order allows to define the concepts of successor and
@@ -500,8 +500,8 @@ instants and let $r$ be a representation method. The \emph{temporal
   interval}, denoted as $S[s:t]^r$, returns a new time series with
 measures in the interval temporal range. That is, $S[s:t]^r = S(u)^r$
 for all $u \in [s:t]$. This is a general definition difficult to
-implement, so for every representation a particular temporal interval
-must be interpreted:
+implement, therefore for every representation a particular temporal
+interval must be interpreted:
 
 \begin{itemize}
 \item Let $S(t)^\dd$ be the \dd{} representation for $S$. The
@@ -645,10 +645,6 @@ $t_0\in\cal{T}$, a resolution step $\delta$, and a function $f$.
 Given a buffer, all the consolidation time instants can be determined
 as $\tau_n=t_0+n\delta$ for all $n\in\N$.
 
-Let $B=(S, \tau, \delta, f)$ be a buffer. The \emph{consolidation} of
-$B$ is an operation that computes a new measure $m=f(S, \tau, \delta)$
-summarising the data of $S$ comprised in the given interval.
-
 A buffer has two main structural operations. The first one adds a
 measure to the buffer, and the second one consolidates the buffer.
 
@@ -659,9 +655,10 @@ $\addB(B,m)=(S',\tau,\delta,f)$ where $S' = S \cup \{m\}$.
 Let $B=(S,\tau,\delta,f)$ be a buffer. The consolidation of $B$, noted
 as $\consB(B)$, returns a new buffer and a new measure $\consB(B)=
 (B',m')$ where $B'= (S[\tau+\delta:+\infty], \tau+\delta,\delta,f)$
-and $m' = f(S,\tau,\delta)$. After the consolidation, we can remove
-from the buffer the consolidated part of the time series. Therefore,
-we discard historical data.
+and $m' = f(S,\tau,\delta)$. This resulting measure summarises the
+data of $S$ comprised in the given interval.  After the consolidation,
+we can remove from the buffer the consolidated part of the time
+series. Therefore, we discard historical data.
 
 We apply the consolidation of a buffer to the first non-consolidated
 time instant. We obtain the total consolidation by successive
@@ -730,7 +727,7 @@ previously shown in Figure~\ref{fig:model:mtsdb}.
 Therefore, to define a multiresolution time series we must define the
 number of resolution subseries and its corresponding parameters
 $(\delta,\tau,f,k)$.  Usually, there are no repeated pairs of
-$(\delta,f)$ parameters among a multiresolution series, so they act as
+$(\delta,f)$ parameters among a multiresolution series, thus they act as
 key attributes.
 
 The operators of a multiresolution time series apply to every
@@ -763,9 +760,6 @@ $\seriedisc(M,\delta,f)$ computes a time series such that $\exists
 $ where $S,\tau,k$ are bound variables.  We assume that there are no
 repeated $(\delta,f)$ pairs in $M$.
 
-Recall that $R||S$ is the concatenation of two time series
-$R$ and $S$, which we defined in Section~\ref{sec:sequence}.
-
 Let $M=\{R_0,\dots,R_k\}$ be a multiresolution time series and let
 $S_0, \dots, S_k$ be the time series corresponding to the resolution
 subseries $R_0,\dots,R_k$. Assume that the attribute aggregation
@@ -778,13 +772,15 @@ concatenation of all time subseries, as follows.
 $\totalseries(M) = S_{i_0} || S_{i_1} || \cdots || S_{i_k}$
 %
 where $i_0,\dots,i_k$ is a permutation of $[0,k]$ such that
-$\delta_{i_0} < \delta_{i_1} < \cdots < \delta_{i_k}$, being $\delta_i$
-the resolution step of the resolution subseries $R_i$.
+$\delta_{i_0} < \delta_{i_1} < \cdots < \delta_{i_k}$, being
+$\delta_i$ the resolution step of the resolution subseries $R_i$.
+Recall that $R||S$ is the concatenation of two time series $R$ and
+$S$, which we defined in Section~\ref{sec:sequence}.
 
 The operator $\totalseries$ obtains the better possible resolution.
 
 Using these basic time series queries, we can define more elaborated
-queries for an \acro{MTSMS} by using \acro{TSMS} operations. For
+queries for a \acro{MTSMS} by using \acro{TSMS} operations. For
 example, let $L$ and $M$ be two multiresolution time series with the
 same multiresolution parameters. We can compute the sum of both as
 $\totalseries(L) + \totalseries(M)$. Recall that $R+S$ is the sum of
@@ -797,7 +793,7 @@ multiresolution parameters, then $\totalseries(L) + \totalseries(M)$
 must be solved using temporal join, as we showed in
 Example~\ref{ex:m:sumtemporal}. Nevertheless, dealing with
 temporal join operations can be cumbersome as they depend on a
-representation method parameter. In this regard, we can consider some
+representation method. In this regard, we can consider some
 multiresolution enhancements:
 
 \begin{itemize}
@@ -928,14 +924,12 @@ delta temporal interval. Then,
   \max\big(0,\max\limits_{\forall n \in S'} V(n)\big)$.
 \item The $last^\dd$ is such that $V(m) = V(\max S')$.
 \item The $mean^\dd$ is such that $V(m) = \frac{1}{\delta}
-  \sum\limits_{\forall n \in S'} V(n)$. Note that for the Dirac
-  delta function $\int\dd(t)dt=1$.
+  \sum\limits_{\forall n \in S'} V(n)$. Note that for the Dirac delta
+  function $\int\dd(t)dt=1$. Note that $\sum\limits_{\forall n \in S'}
+  V(n)$ is a sum of values that could be implemented as
+  $\agg(S',(0,0),f)$ where $f(m,n)=(0,V(m)+V(n))$, as shown in
+  Example~\ref{ex:computational-operators}.
 \end{itemize}
-
-Note that $\sum\limits_{\forall n \in S'} V(n)$ is a sum of values
-that could be implemented as $\agg(S',(0,0),f)$ where
-$f(m,n)=(0,V(m)+V(n))$, as shown in
-Example~\ref{ex:computational-operators}.
 
 \zohe{} attribute aggregation functions interpret the resulting time
 as the right limit of the interval $T(m)=\tau+\delta$. The resulting
@@ -951,14 +945,10 @@ $S'=S[\tau:\tau+\delta]^\zohe{}$ be the selection of measures by
 \item The $last^\zohe{}$ is such that $V(m) = V(\max S')$.
 
 \item The $\meanz$ is such that $V(m) = \frac{1}{\delta}
-  \big[(T(o)-\tau)V(o) + \sum\limits_{\forall n\in R}( T(n)-
-  T(\prev_S n) )V(n)\big]$ where $o=\min S'$ and $R= S' - \{o\}$.
-
-\end{itemize}
-
-Note that $\meanz$ is a sum of values that could be implemented as
-$\meanz = \frac{1}{\delta}\agg(S',(0,0),f)$ where $f(m,n)=(0,V(m)+v)$
-and
+  \big[(T(o)-\tau)V(o) + \sum\limits_{\forall n\in R}( T(n)- T(\prev_S
+  n) )V(n)\big]$ where $o=\min S'$ and $R= S' - \{o\}$. Note that
+  $\meanz$ is a sum of values that could be implemented as $\meanz =
+  \frac{1}{\delta}\agg(S',(0,0),f)$ where $f(m,n)=(0,V(m)+v)$ and
 \[
  v=
  \begin{cases}
@@ -966,6 +956,9 @@ and
    (T(n)-T(\prev_{S'} n))V(n) & \text{else }
  \end{cases}
 \]
+\end{itemize}
+
+
 
 \emph{RRDtool}, \cite{rrdtool}, uses an aggregation function similar
 to $\meanz$ to summarise velocity counter data by keeping the area
