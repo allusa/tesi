@@ -56,41 +56,37 @@ tres s'implementen respectivament com a classes @Measure@,
 \begin{figure}[tp]
   \centering
   \begin{tikzpicture}
+    % Timeseries
+    \begin{class}[text width=2.5cm]{TimeSeries}{0,0}\end{class}
 
-  %Timeseries
-  \umlsimpleclass[x=0,y=0] {TimeSeries}{}{}  
+    % Measure
+    \begin{class}[text width=2cm]{Measure}{-4,0}\end{class}
+    \aggregation{TimeSeries}{}{0..*}{Measure}
+    \begin{class}[text width=2cm]{MFloat}{-5.2,-2}\inherit{Measure}\end{class}
+    \begin{class}[text width=2cm]{MChar}{-2.8,-2}\inherit{Measure}\end{class}
 
-  % Measure
-  \umlclass[x=-4] {Measure}{}{}
-  \umluniaggreg[mult=0..*]  {TimeSeries}{Measure}
-  \umlclass[x=-5.2,y=-2] {MFloat}{}{}
-  \umlclass[x=-2.8,y=-2] {MChar}{}{}
-  \umlinherit {MFloat}{Measure}
-  \umlinherit {MChar}{Measure}
+    % Repr
+    \begin{class}[text width=3.5cm]{Representation}{4,0}\end{class}
+    \association{TimeSeries}{1}{}{Representation}{}{1}
+    \begin{class}[text width=1.2cm]{Zohe}{2.8,-2}\inherit{Representation}\end{class}
+    \begin{class}[text width=0.8cm]{Dd}{5.2,-2}\inherit{Representation}\end{class}
 
-  %Repr
-  \umlclass[x=4] {Representation}{}{} %,type=abstract
-  \umlassoc[mult1=1,mult2=1]  {TimeSeries}{Representation}
-  \umlclass[x=3,y=-2] {Zohe}{}{}
-  \umlclass[x=5,y=-2] {Dd}{}{}
-  \umlinherit {Zohe}{Representation}
-  \umlinherit {Dd}{Representation}
+    % Associacions visitor
+    \begin{class}[text width=2.7cm]{RegularProp}{-1.5,-4}\end{class}
+    \unidirectionalAssociation{TimeSeries}{}{}{RegularProp}
+    \begin{class}[text width=2cm]{Storage}{1.5,-4}\end{class}
+    \unidirectionalAssociation{TimeSeries}{}{}{Storage}
 
-  %Associacions visitor
-  \umlclass[x=-1.5,y=-4] {RegularProp}{}{}
-  \umluniassoc  {TimeSeries}{RegularProp}
-  \umlclass[x=1.5,y=-4] {Storage}{}{}
-  \umluniassoc {TimeSeries}{Storage}
-
-  %Dependencies
-  \umlemptypackage[x=5,y=-5]{Matplotlib}
-  \umldep{Zohe}{Matplotlib}
-  \umldep{Dd}{Matplotlib}
-
+    % Dependencies
+    \begin{package}{Matplotlib}
+      \begin{class}[text width=2cm]{Plot}{5,-5}\end{class}
+    \end{package}
+    \draw[umlcd  style  dashed  line ,->] (Zohe) --node[above ,
+sloped , black]{} (Matplotlib); 
+    \draw[umlcd  style  dashed  line ,->] (Dd) --node[above ,
+sloped , black]{} (Matplotlib); 
 
   \end{tikzpicture}
-
-
 
   \caption{Diagrama \gls{UML} de Pytsms}
   \label{fig:implementacio:pytsms-uml}
@@ -102,33 +98,33 @@ tres s'implementen respectivament com a classes @Measure@,
 
 \begin{figure}
   \centering
-
-\begin{tikzpicture}
-
-  %Timeseries
-  \umlsimpleclass[x=0,y=0] {TimeSeries}{}{}  
-  %Realisations 
-  \umlclass[x=-3.5,y=-3] {Structure}{}{}
-  \umlclass[x=-1.2,y=-3] {OpSet}{}{}
-  \umlclass[x=1.2,y=-3] {OpSeq}{}{}
-  \umlclass[x=3.5,y=-3] {OpFunc}{}{}
-  %\umlreal[geometry=|-|]{Structure}{TimeSeries}
-  \umlinherit[geometry=|-|]{TimeSeries}{Structure}
-  \umlinherit[geometry=|-|]{TimeSeries}{OpSet}
-  \umlinherit[geometry=|-|]{TimeSeries}{OpSeq}
-  \umlinherit[geometry=|-|]{TimeSeries}{OpFunc}
-  %Subrealisations
-  \umlclass[x=-3,y=-6] {SetNoTemporal}{}{}
-  \umlclass[x=0.7,y=-6] {SetTemporal}{}{}
-  \umlclass[x=4,y=-6] {SetRelacional}{}{}
-  \umlinherit[geometry=|-|]{OpSet}{SetNoTemporal}
-  \umlinherit[geometry=|-|]{OpSet}{SetTemporal}
-  \umlinherit[geometry=|-|]{OpSet}{SetRelacional}
-  \umlclass[x=-6,y=-6,type=python] {set}{}{}
-  \umlinherit{Structure}{set}
-
-\end{tikzpicture}
-
+  \begin{tikzpicture}
+    % Timeseries
+    \begin{class}[text width=2.5cm]{TimeSeries}{0,0}\end{class}
+    % Realisations 
+    \begin{class}[text width=2.5cm]{Structure}{-4,-3}\end{class}
+    \begin{class}[text width=2cm]{OpSet}{-1.2,-3}\end{class}
+    \begin{class}[text width=2cm]{OpSeq}{1.2,-3}\end{class}
+    \begin{class}[text width=2cm]{OpFunc}{3.5,-3}\end{class}
+    \node (TimeSeriesC) [below=of TimeSeries] {};
+    \draw[color=\umldrawcolor, -] (TimeSeries) -- node[above ,sloped , black]{} (TimeSeriesC.center); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (Structure); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (OpSet); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (OpSeq); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (OpFunc); 
+    % Subrealisations
+    \begin{class}[text width=3.2cm]{SetNoTemporal}{-3,-6}\end{class}
+    \begin{class}[text width=2.8cm]{SetTemporal}{0.7,-6}\end{class}
+    \begin{class}[text width=3cm]{SetRelational}{4,-6}\end{class}
+    \node (OpSetC) [below=of OpSet] {};
+    \draw[color=\umldrawcolor, -] (OpSet) -- node[above ,sloped , black]{} (OpSetC.center); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (OpSetC.center) -| node[above ,sloped , black]{} (SetNoTemporal); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (OpSetC.center) -| node[above ,sloped , black]{} (SetTemporal); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (OpSetC.center) -| node[above ,sloped , black]{} (SetRelational); 
+    \begin{class}[text width=1cm]{set}{-6,-6}\end{class}
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (Structure) -- node[above ,sloped , black]{} (set); 
+  \end{tikzpicture}
+  
   \caption{Diagrama \gls{UML} de la realització de sèries temporals a Pytsms}
   \label{fig:implementacio:pytsms-uml-ts}
 \end{figure}
@@ -168,7 +164,7 @@ objectes, cosa que s'implementa a Python com a
 manera, hereta la funcionalitat de tres objectes: el
 @SetNoTemporal@ per a les operacions basades en l'orde parcial de
 les sèries temporals, el @SetTemporal@ basat en l'ordre temporal
-i el @SetRelacional@ per a les operacions específiques de
+i el @SetRelational@ per a les operacions específiques de
 l'àlgebra relacional. Pel que fa a l'@Structure@ hereta
 funcionalitats dels objectes @set@, que són un tipus predefinit a
 Python \parencite[\S 5.7]{python:doc2}.
@@ -227,19 +223,6 @@ representacions definides s'usa la biblioteca
 
 
 
-% \subsubsection{Encaix a Python}
-
-% \todo{}
-
-% Explicar més detalladament quins mètodes tenen les sèries temporals: unió, selecció, etc.
-
-% Heretem de sets, implementem els mètodes especials de sets
-
-% implementem els mètodes especials de seqüències
-
-
-
-
 
 
 
@@ -257,48 +240,46 @@ de Python.
 
 \begin{figure}[tp]
   \centering
+  \begin{tikzpicture}
+    % MultiTimeseries
+    \begin{class}[text width=1cm]{set}{-4,0}\end{class}
+    \begin{class}[text width=4.5cm]{MultiresolutionSeries}{0,0}\inherit{set}\end{class}
+    % Components 
+    \begin{class}[text width=2.5cm]{Resolution}{0,-3}\end{class}
+    \aggregation{MultiresolutionSeries}{}{}{Resolution}
+    % SubComponents
+    \begin{class}[text width=2cm]{Buffer}{-1.2,-6}\end{class}
+    \begin{class}[text width=2cm]{Disc}{1.2,-6}\end{class}
+    \begin{package}{aggregators}
+      \begin{interface}[text width=2.5cm]{Function}{-3,-9}
+        \attribute{s, i}
+      \end{interface}
+    \end{package}
+    \composition{Resolution}{}{1}{Buffer}
+    \composition{Resolution}{}{1}{Disc}
+    \unidirectionalAssociation{Buffer}{}{1}{Function}
 
-\begin{tikzpicture}
+    % Agregadors
+    \begin{class}[text width=2.5cm]{maxzohe}{-4,-12}
+      \inherit{Function}
+    \end{class}
+    \begin{class}[text width=2.5cm]{meanzohe}{-1,-12}
+      \inherit{Function}
+    \end{class}
 
-  %MultiTimeseries
-  \umlsimpleclass[x=0,y=0] {MultiresolutionSeries}{}{}  
-  \umlclass[x=-4,y=0,type=python] {set}{}{}
-  \umlinherit{MultiresolutionSeries}{set}
-  %Components 
-  \umlclass[x=0,y=-3] {Resolution}{}{}
-  \umluniaggreg  {MultiresolutionSeries}{Resolution}
-  %SubComponents 
-  \umlclass[x=-1.2,y=-6] {Buffer}{}{}
-  \umlclass[x=1.2,y=-6] {Disc}{}{}
-  \begin{umlpackage}[x=-3,y=-9]{aggregators}
-    \umlclass[template={s,i},type=interface] {Function}{}{}
-  \end{umlpackage}
-  \umlunicompo[mult=1]  {Resolution}{Buffer}
-  \umlunicompo[mult=1]  {Resolution}{Disc}
-  \umluniassoc[mult=1]  {Buffer}{Function}
+    % TimeSeries
+    \begin{package}{Pytsms}
+      \begin{class}[text width=2.5cm]{TimeSeries}{1.2,-9}\end{class}
+    \end{package}
+    \unidirectionalAssociation{Buffer}{}{1}{TimeSeries}
+    \unidirectionalAssociation{Disc}{}{1}{TimeSeries}
 
-  %Agregadors
-  \umlclass[x=-4,y=-12] {max\_zohe}{}{}  
-  \umlclass[x=-1,y=-12] {mean\_zohe}{}{}  
-  \umlinherit{max\_zohe}{Function}
-  \umlinherit{mean\_zohe}{Function}
-
-  %TimeSeries
-  \begin{umlpackage}[x=1.2,y=-9]{Pytsms}
-    \umlclass{TimeSeries}{}{}  
-  \end{umlpackage}
-  \umluniassoc[mult=1]  {Buffer}{TimeSeries}
-  \umluniassoc[mult=1]  {Disc}{TimeSeries}
-
-  %Associacions visitor
-  \umlclass[x=4,y=-3] {Storage}{}{}
-  \umluniassoc {MultiresolutionSeries}{Storage}
-  \umlclass[x=4,y=-1] {Plot}{}{}
-  \umluniassoc {MultiresolutionSeries}{Plot}
-
-  
-
-\end{tikzpicture}
+    % Associacions visitor
+    \begin{class}[text width=2cm]{Storage}{4,-3}\end{class}
+    \unidirectionalAssociation{MultiresolutionSeries}{}{}{Storage}
+    \begin{class}[text width=2cm]{Plot}{4,-1}\end{class}
+    \unidirectionalAssociation{MultiresolutionSeries}{}{}{Plot}
+  \end{tikzpicture}
 
   \caption{Diagrama \gls{UML} de RoundRobinson}
   \label{fig:implementacio:roundrobinson-uml}
