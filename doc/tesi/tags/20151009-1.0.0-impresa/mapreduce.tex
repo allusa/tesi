@@ -1,0 +1,1024 @@
+\chapter{Implementació amb para\l.lelisme}
+\label{sec:implementacio:mapreduce}
+
+
+
+En el \autoref{cap:funciomultiresolucio} hem definit la funció de
+multiresolució com una funció sobre una sèrie temporal. Aquesta funció
+té bàsicament dues parts: un mapa sobre uns paràmetres de
+multiresolució i un plec sobre un esquema de multiresolució. Ara
+implementem aquestes funcions mitjançant computació para\l.lela.
+
+
+Una tècnica de computació para\l.lela és
+MapReduce \parencite{deanghemawat04:mapreduce}, la qual s'adequa bé al
+problema ja que es basa en aplicar operacions de mapa (\emph{map}) i
+posteriorment plegar-les (\emph{reduce}). Un sistema que es basa
+exclusivament en aquesta tècnica és
+Hadoop \parencite{hadoop}.
+
+A continuació, en primer lloc, estudiem Hadoop i la tècnica MapReduce.
+En segon lloc, implementem usant Hadoop un \gls{SGSTM} anomenat
+\emph{RoundRobindoop}. Aquest és un \gls{SGSTM} específic amb
+l'objectiu de mostrar una implementació que resolgui la multiresolució
+d'una sèrie temporal en temps diferit (\emph{offline}) i computant
+para\l.lelament.
+
+
+
+
+\section{Hadoop i MapReduce}
+
+
+Apache Hadoop, o simplement Hadoop, \parencite{hadoop} és un sistema
+de computació distribuïda que permet processar grans volums de dades
+amb diferents computadors en para\l.lel. El sistema inclou la gestió
+de l'emmagatzematge per a distribuir les dades als diferents
+computadors, la qual cosa s'anomena \gls{HDFS}; la gestió dels
+diferents processos en els diversos computadors; i el model de
+programació para\l.lela, el qual és MapReduce.
+
+
+MapReduce \parencite{deanghemawat04:mapreduce,lammel08:mapreduce} és
+un model de programació per processar algoritmes en para\l.lel. Es
+basa en resoldre els algoritmes en dues etapes: primer en una etapa de
+\emph{maps} i segon en una etapa de \emph{reduces}.  Aquestes dues
+etapes són l'algoritme bàsic i per això s'anomena MapReduce, tot i que
+hi ha variacions que afegeixen més etapes.  Els noms de \emph{map} i
+\emph{reduce} també s'usen per a les operacions d'alt ordre, com les
+mapa (\emph{map}) i plec (\emph{fold} o també \emph{reduce}), que hem
+definit en el model dels \gls{SGST}, però
+\textcite{lammel08:mapreduce} compara les de MapReduce amb les d'alt
+ordre i conclou que no són exactament el mateix; aquí distingirem els
+conceptes usant els noms en anglès map i reduce per a MapReduce.
+
+
+A la~\autoref{fig:mapreduce:esquema}
+es mostra l'esquema de funcionament de MapReduce, que és el següent:
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/implementacio/mapreduce.tex}
+  \caption{Esquema de funcionament de MapReduce}
+  \label{fig:mapreduce:esquema}
+\end{figure}
+
+
+
+\begin{enumerate}
+
+\item Hi ha unes dades originals que es poden partir en
+  trossos. Hadoop està orientat a fitxers, mitjançant \gls{HDFS}, i
+  per tant cada tros de dades és cadascun dels fitxers que es volen
+  processar o bé conjunts de línies d'un fitxer.
+
+\item Cada tros de les dades es processa mitjançant una operació
+  map. Cada map es pot computar en para\l.lel i distribuït.
+
+\item Cada operació map ha de retornar un nou conjunt de dades
+  formats per parelles d'identificador i valor. Aquests conjunts de
+  dades s'ordenen per identificador. 
+
+\item Cada conjunt de dades amb el mateix identificador es processa
+  mitjançant una operació reduce. Cada reduce es pot computar en
+  para\l.lel i distribuït.
+
+\item Cada reduce ha de retornar un tros del resultat final. És a dir,
+  que unint les dades que retornen els reduce s'obtenen les dades
+  finals. En l'orientació a fitxers de Hadoop, el resultat final és un
+  fitxer, o bé un tros d'un fitxer, per a cada reduce.
+
+\end{enumerate}
+
+
+
+Per a resoldre un algoritme amb MapReduce, cal definir l'operació de
+map i l'operació de reduce. El map ha de calcular un filtre sobre les
+dades, sobretot establir grups de dades, i el reduce ha de calcular
+agregacions o resums per a cada grup. MapReduce té una gran similitud
+amb l'operació \emph{summarize} dels
+\gls{SGBDR} \parencite[cap.~7]{date04:introduction8}, però separada
+convenientment en les dues etapes.  A més, MapReduce imposa les
+següents restriccions: les dades s'han de poder partir i l'algoritme
+s'ha de poder expressar separat en les dues operacions de map i de
+reduce.  \textcite{deanghemawat04:mapreduce} mostren exemples
+d'algoritmes que es poden expressar amb MapReduce.
+
+
+
+Un cop s'ha modelat un algoritme amb MapReduce, aleshores Hadoop ja és
+capaç d'executar els maps i els reduces en para\l.lel i distribuïts. A
+més, Hadoop també gestiona el compromís dels recursos entre el temps
+de distribuir les dades, la quantitat de processos en para\l.lel que
+s'han de crear i el temps afegit que suposa cada procés nou.
+
+
+
+
+
+
+
+
+\section{RoundRobindoop}
+
+
+RoundRobindoop implementa un \gls{SGSTM} específic que resol la funció
+de multiresolució amb el model de programació MapReduce.  Per a
+construir RoundRobindoop, primer dissenyem l'algoritme de MapReduce
+que s'adequa a la multiresolució. Segon, proposem dues maneres per a
+executar RoundRobindoop: amb Hadoop i la shell del sistema.
+
+
+
+\subsection{Multiresolució amb MapReduce}
+
+L'algoritme que implementem amb MapReduce és el de la funció de
+multiresolució. Aquesta funció principalment té dues parts segons les
+definicions realitzades: el mapa de multiresolució
+($\glssymbol{not:sgstm:dmap}$, \seeref{def:multiresolucio:mapmu}) i el
+plec de multiresolució ($\glssymbol{not:sgstm:multiresolucio}$,
+\seeref{def:multiresolucio:plecmu}). Com ja s'ha dit, aquestes
+definicions no es poden correspondre exactament amb les operacions de
+map i de reduce.  Així doncs, dissenyem les operacions de map i de
+reduce que tenen el mateix efecte que calcular les funcions de
+multiresolució, en què el resultat final no és la sèrie temporal total
+sinó el resultat de totes les funcions $\glssymbol{not:sgstm:dmap}$,
+és a dir el resultat final són les sèries temporals dels discs del
+model de \gls{SGSTM} la concatenació dels quals resulta en el
+$\glssymbol{not:sgstm:multiresolucio}$.
+
+
+
+Sigui $S$ una sèrie temporal, i $\glssymbol{not:esquemaM} = \{
+(\delta_1,f_1,\tau_1,\glssymbol{not:sgstm:k}_1),\ldots,
+(\delta_l,f_l,\tau_l,\glssymbol{not:sgstm:k}_l)\}$ un esquema de
+multiresolució, definim l'algoritme MapReduce que calcula
+$\operatorname{mapreduce}(S,\glssymbol{not:esquemaM}) = \{
+(\delta_1,f_1,
+\glssymbol{not:sgstm:dmap}(S,\delta_1,f_1,\tau_1,\glssymbol{not:sgstm:k}_1)),\dotsc,(\delta_l,f_l,\glssymbol{not:sgstm:dmap}(S,\delta_l,f_l,\tau_l,\glssymbol{not:sgstm:k}_l))
+\}$. És a dir, calcula tots els $\glssymbol{not:sgstm:dmap}$ possibles
+i els identifica amb el pas de consolidació $\delta$ i la funció
+d'agregació d'atributs $f$, els quals identifiquen les subsèries
+resolució assumint que no n'hi ha de repetits.
+%i que per tant tenenassociats el cardinal màxim $k$ i un instant de consolidació $\tau$.
+
+
+
+
+
+L'esquema de funcionament de RoundRobindoop és el de
+la~\autoref{fig:roundrobindoop:esquema}, el qual és la implementació
+particular de l'esquema de la~\autoref{fig:mapreduce:esquema} per a la
+multiresolució.  De forma resumida, RoundRobindoop en l'etapa de map
+classifica les mesures en funció de a quin disc i temps resultant es
+consolidaran i en l'etapa de reduce calcula la funció d'agregació per
+a les mesures que s'hagin de consolidar al mateix disc.  A continuació
+expliquem detalladament com són les dades originals ($S$), les
+d'entremig ($X$) i les finals ($Y$), i finalment definim l'operació de
+map i la de reduce. Per a les dades d'entremig, distingim com resulten
+de l'operació map i com s'agrupen per a l'operació reduce. A la
+\autoref{tab:mapreduce:notacio} resumim la notació dels conjunts i els
+seus cardinals utilitzats en aquesta secció.
+
+\begin{table}
+  \centering
+  \begin{tabular}[bp]{l|l}
+    Cardinal & Conjunt \\\hline
+    $i$ & nombre de maps  \\
+    $j$ & nombre de reduces \\
+    $k$ & sèrie temporal ($S$)  \\
+    $l$ & esquema multiresolució ($\glssymbol{not:esquemaM}$) \\
+    $n$ & dades d'entremig ($X$) \\
+    $o$ & dades finals ($Y$)
+  \end{tabular}
+  \caption{Notació dels conjunts i els cardinals per a definir RoundRobindoop}
+  \label{tab:mapreduce:notacio}
+\end{table}
+
+
+\begin{figure}[tp]
+  \centering
+  \input{imatges/implementacio/roundrobindoop.tex}
+  \caption{Esquema de funcionament de RoundRobindoop}
+  \label{fig:roundrobindoop:esquema}
+\end{figure}
+
+
+
+
+
+\paragraph{Dades originals}
+Sigui $i$ el nombre de processos map i sigui la sèrie temporal
+$S=\{m_0,\dotsc,m_a,\dotsc,,m_k\}$ les dades originals. La sèrie
+temporal es pot partir en subconjunts $S=S_1 \cup S_2 \cup \dotsb \cup
+S_i$ on cada subconjunt és una subsèrie temporal $S_1 =
+\{m_0,\dotsc,m_{a}\}, S_2 = \{m_{a+1},\dotsc\}, \dotsc, S_i =
+\{\dotsc,m_{k}\}$ i $a\in \glssymbol{not:N}$, $a < k$.  Cada
+operació map rep una subsèrie temporal de l'original.
+
+
+
+\paragraph{Dades d'entremig (map)}
+Les dades d'entremig equivalen a les sèries temporals dels buffers, és
+a dir les mesures pendents de consolidar per a cada subsèrie
+resolució.  Així doncs, les dades d'entremig són un conjunt de dades
+pendents de consolidar $X=\{ \chi_{1}, \dotsc, \chi_n\}$ on cada dada
+és un tuple $\chi=(\text{id},m)$ en què
+$\text{id}=(\delta,f,\tau+\delta)$ funciona com a identificador i la
+mesura $m$ funciona com a valor. L'identificador classifica per a cada
+mesura original $m$ les resolucions on s'hauran de consolidar,
+identificades pel pas de consolidació $\delta$, per la funció
+d'agregació d'atributs $f$ i pel temps resultant de consolidació
+$\tau+\delta$.
+
+
+Cada operació map calcula un subconjunt de les dades d'entremig, és a
+dir en total $X=X_1\cup X_2 \cup \dotsb \cup X_i$, on per exemple el
+primer subconjunt té la forma $X_1= \{
+(\text{id}_1,m_0),(\text{id}_2,m_0),\dotsc,(\text{id}_j,m_0),(\text{id}_1,m_a),\dotsc,(\text{id}_j,m_a)\}$
+i per exemple el primer identificador té la forma
+$\text{id}_1=(\delta_1,f_1,\tau^*+\delta_1)$ i $\tau^*+\delta_1$ seria
+l'instant en què s'hauria de consolidar $m_0$. %
+%\delta_0,f_0, t_{b0}^0, t_0,v_0), (\delta_1,f_1, t_{b1}^0, t_0,v_0),
+%\dotsc , (\delta_d,f_d, t_{bd}^0, t_0,v_0), (\delta_0,f_0, t_{b0}^1,
+%t_1,v_1), \dotsc, (\delta_d,f_d, t_{bd}^{o1}, t_{o1},v_{o1}) \}$
+Així doncs, les dades d'entremig tenen un cardinal
+$|X|=|\glssymbol{not:esquemaM}||S|$ és a dir la quantitat de
+resolucions de l'esquema multiplicat per la quantitat de mesures de la
+sèrie temporal original.
+%aquí no tenim en compte kappa
+
+
+
+\paragraph{Dades d'entremig (reduce)}
+Un cop calculades, les dades d'entremig $X$ s'ordenen i s'agrupen per
+identificadors $(\delta,f, \tau+\delta)$ idèntics.  Sigui $j$ el
+nombre de processos reduce i siguin $X=X^1\cup X^2 \cup \dotsb \cup
+X^j$ les agrupacions d'identificadors.  
+ Cada agrupació de dades està
+formada per subconjunts que provenen de qualsevol map, $X^1 = X_1^1
+\cup X_2^1 \cup \dotsb X_i^1$ on per exemple $X_1^1 = \{
+(\delta_1,f_1,\tau^*+\delta_1,m_0), \dotsc
+,(\delta_1,f_1,\tau^*+\delta_1,m_*) \} $ conté les mesures que s'han
+processat en el primer map i han estat classificades per a
+processar-se en el reduce identificat per
+$(\delta_1,f_1,\tau^*+\delta_1)$.  
+%
+De forma més general, un reduce pot rebre diverses agrupacions
+d'identificadors idèntics, per exemple tots els que comparteixin
+$\delta$ i $f$ que és el cas que hem dibuixat a la
+\autoref{fig:roundrobindoop:esquema}.
+
+
+
+
+
+\paragraph{Dades finals}
+Les dades finals equivalen a les sèries temporals dels discs, és a dir
+les mesures consolidades per a cada subsèrie resolució. Així doncs,
+les dades finals són un conjunt de dades consolidades $Y=\{
+\upsilon_{1}, \dotsc, \upsilon_o\}$ on cada dada consolidada és un
+tuple $\upsilon=(\delta,f,t,v)$ identificat per la resolució $\delta$
+i $f$ a què pertany i amb el valor $v$ consolidat en l'instant temps de la
+forma $t=\tau+\delta$.  Sigui $j$ el nombre de reduce.  En la forma més
+general, cada reduce calcula un subconjunt de les dades finals
+$Y=Y_1\cup Y_2 \cup \dotsb Y_j$.  Per exemple en la
+\autoref{fig:roundrobindoop:esquema}, que s'agrupen els identificadors
+per $\delta$ i $f$, el primer subconjunt té la forma $Y_1 = \{
+(\delta_1,f_1,\tau^*+\delta_1,v^*), \dotsc
+,(\delta_1,f_1,\tau^{**}+\delta_1,v^{**}) \}$ on $\tau^*$, $v^*$, $\tau^{**}$ i
+$v^{**}$ són els instants i valors que corresponguin.
+ 
+Atès que en la multiresolució cada disc està afitat per un cardinal
+màxim, es poden afitar el nombre total de processos reduce.  Així
+siguin $\glssymbol{not:sgstm:k}$ els cardinals de l'esquema de
+multiresolució, el cardinal de les dades finals és $|Y|\leq
+\glssymbol{not:sgstm:k}_1 + \glssymbol{not:sgstm:k}_2 + \dotsb +
+\glssymbol{not:sgstm:k}_l$. En el cas de la
+\autoref{fig:roundrobindoop:esquema}, $|Y|\leq l$ perquè hi ha els
+reduce agrupats per cada resolució $\delta$ i $f$.
+
+
+
+
+\paragraph{Operació map}
+L'operació map calcula les dades d'entremig a partir de les dades
+originals i un esquema multiresolució. Treballa en subconjunts de les
+dades per a així poder-se computar para\l.lelament.
+\begin{definition}[Operació map]
+  Sigui $S$ una subsèrie temporal de les dades originals,
+  $\glssymbol{not:esquemaM}$ un esquema de multiresolució i $X$ un
+  subconjunt de les dades d'entremig abans de ser
+  ordenades. L'operació \emph{map} l'algoritme MapReduce,
+  notada com a $X=\operatorname{map}(S_1,\glssymbol{not:esquemaM})$,
+  resulta en el subconbjunt $X=
+  \bigcup\limits_{ \forall m \in S}
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM})$.
+
+
+  La funció $\operatorname{classifica}$ indica per a cada mesura a
+  quins discs s'ha de consolidar:
+  \begin{align*}\operatorname{classifica}(m,\glssymbol{not:esquemaM})= &\{
+    (\delta,f,\tau+n\delta,T(m),V(m)) |
+    (\delta,f,\tau,\glssymbol{not:sgstm:k}) \in \glssymbol{not:esquemaM} \\
+    &\wedge\; \tau+(n-1)\delta < T(m) \leq \tau+n\delta \\
+    &\wedge\; n\in\glssymbol{not:Z} \wedge T(m) > \tau \}
+  \end{align*} 
+\end{definition}
+
+Cal tenir en compte que $T(m) > \tau$ indica que $\tau$ és el temps
+d'inici de la resolució i per tant no té sentit incloure mesures
+anteriors.
+
+
+
+
+
+Hi ha dues restriccions a la funció $\operatorname{classifica}$ que
+hem definit: 
+\begin{itemize}
+
+\item S'assumeix que la $f$ treballa sobre l'interval de la sèrie
+  original $S(\tau+(n-1)\delta ,\tau+n\delta]$. En cas que no sigui
+  així per a la $f$ escollida, caldria modificar aquests intervals de
+  classificació. A continuació d'aquest apartat contextualitzem aquest
+  problema de les $f$.
+
+\item No es tenen en compte els cardinals màxims. Si es volen tenir en
+  compte, cal ajustar els $\tau$ inicials. A continuació d'aquest
+  apartat descrivim com es poden ajustar els temps d'inici de la
+  consolidació.
+
+\end{itemize}
+
+
+
+\begin{example}[Classificació d'una mesura en les resolucions]
+  \label{ex:mapreduce:classifica}
+  Sigui l'esquema de multiresolució
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,
+  \glssymbol{not:sgstm:k}_1=4),
+  (\delta_2=5,f_2,\tau_2=10,\glssymbol{not:sgstm:k}_2=3)\}$ i la
+  mesura $m=(25,1)$, aquesta és classificada per a consolidar-se en
+  les dues resolucions següents:
+  $\operatorname{classifica}(m,\glssymbol{not:esquemaM})=\{
+  (2,f_1,t^*,25,1), (5,f_2,t^{**},25,1) \}$ on $\tau_1+(n-1)\delta_1 <
+  25 \leq \tau_1+n\delta_1, n\in\glssymbol{not:Z}$ i per tant
+  $t^*=\tau_1+n\delta_1 = 26$, i de manera semblant es pot calcular
+  $t^{**}= 25$.
+\end{example}
+
+
+
+\paragraph{Operació reduce}
+Un cop s'han obtingut les dades d'entremig el sistema, com per exemple
+Hadoop, agrupa els tuples amb el mateix identificador i els processa
+en un mateix reduce.  L'operació reduce calcula les dades finals a
+partir de les dades d'entremig ordenades, tot i que treballa en
+subconjunts de les dades per a així poder-se computar para\l.lelament.
+\begin{definition}[Operació reduce]
+  Sigui $X = \{ (\delta,f,\tau,m_0) ,\dotsc, (\delta,f,\tau,m_k) \}$
+  un subconjunt de les dades d'entremig ordenades i $Y$ un subconjunt
+  de les dades finals. L'operació \emph{reduce} de l'algoritme
+  MapReduce, notada com a $Y=\operatorname{reduce}(X)$, resulta en el
+  subconjunt $Y= \{(\delta,f,\tau,v)\}$ on $v= V(
+  f(\{m_0,\dotsc,m_k\},\tau-\delta,\delta))$. 
+
+  De manera senzilla, es pot estendre la definició per a treballar amb
+  diverses agrupacions d'identificadors a les dades d'entremig $X = \{
+  (\text{id}_0,m_a) ,\dotsc, (\text{id}_0,m_b),
+  (\text{id}_1,m_c),\dotsc, (\text{id}_1,m_d), \dots\}$ i retornar el
+  corresponent subconjunt final $Y=
+  \{(\text{id}_0,v_0),(\text{id}_1,v_1),\dots\}$.
+\end{definition}
+
+L'expressió de l'interval $[\tau-\delta, \tau]$ es pot ometre ja que
+l'operació map ja ha classificat les mesures d'aquest interval. Tot i
+així l'indiquem per a seguir la forma genèrica $f(S,\tau,\delta)$ de
+les funcions d'agregació d'atributs. A continuació d'aquest apartat
+contextualitzem aquest problema de les $f$.
+
+
+En conclusió, el map i el reduce no es corresponen exactament
+amb les definicions de les funcions de $\glssymbol{not:sgstm:dmap}$ i
+$\glssymbol{not:sgstm:multiresolucio}$, sinó
+que el map classifica les mesures de la sèrie temporal segons el
+buffer que hi correspon i el reduce calcula les mesures consolidades
+per un disc. És a dir que un map i un reduce equivalen a la
+funcionalitat de la funció $\glssymbol{not:sgstm:dmap}$ però el
+conjunt de tots els maps i reduces equivalen a la funció de
+$\glssymbol{not:sgstm:multiresolucio}$, sense expressar-ho en forma de
+sèrie temporal total.
+
+
+
+\subsubsection{Quant a les $f$ a RoundRobindoop}
+\label{sec:mapreduce:f}
+
+Al model de \gls{SGSTM} hem definit de forma genèrica les funcions
+d'agregació d'atributs com a $m=f(S,\tau,\delta)$
+(\seeref{sec:model:agregador}). Aquestes funcions principalment
+realitzen dues operacions: una selecció sobre la sèrie temporal en
+l'interval de temps en què $[\tau,\tau+\delta]$ i una agregació de les
+mesures seleccionades.
+
+A RoundRobindoop, l'operació de selecció es duu a terme a l'etapa de
+map i en canvi l'agregació, a l'etapa de reduce.  Així en l'algoritme
+de MapReduce definit per a RoundRobindoop usem el model de $f$ descrit
+anteriorment, però per a implementar correctament aquestes funcions
+cal interpretar-ne el significat per a l'etapa de map i per a la de
+reduce. És a dir, cada $f$ hauria de tenir dos components: un amb les
+operacions de selecció per a ser usades en els map i l'altre amb les
+operacions d'agregació per als reduce.
+
+
+Així doncs, caldria afegir en els paràmetres de RoundRobindoop
+l'operació de selecció d'interval per a cada $f$ que s'utilitzi. Però
+això complica la resolució de l'algoritme de MapReduce. Per exemple,
+resoldre l'interval temporal \gls{zohe},
+$S[\tau,\tau+\delta]^{\glssymbol{not:zohe}} = S(\tau,\tau+\delta] \cup
+\{ (\tau+\delta,V(\inf(S[\tau+\delta,+\infty))) \}$
+(\seeref{def:model:zohe}), implica conèixer la mesura següent a un
+$\tau+\delta$ i per tant treballar sobre tota la sèrie temporal
+original, cosa que no és possible perquè en les etapes map només es
+treballa sobre un subconjunt de la sèrie temporal original. Això no
+obstant, per al RoundRobindoop definit, si considerem que la sèrie
+temporal no té inframostreig aleshores en l'etapa map podem fer la
+selecció prèvia per l'interval $S(\tau,\tau+2\delta]$, és a dir
+assumim que hi ha mesura a l'interval $[\tau+\delta,\tau+2\delta]$, i
+a l'etapa reduce ja es calcularà correctament $f(S,\tau,\delta)$ per a
+l'interval $[\tau,\tau+\delta]$.
+
+
+Noteu que en l'algoritme de RoundRobindoop definit hem assumit que
+l'interval de selecció en l'etapa map sempre és $(\tau,\tau+\delta]$ i
+en l'etapa reduce usem el model genèric d'agregació $f(S,\tau,\delta)$
+tot i que les mesures ja han estat seleccionades. Per tant, la
+interpretació en l'etapa map no és vàlida per a totes les $f$.
+
+Per tal d'ampliar l'etapa map, proposem una nova funció de
+classificació que admeti ampliar l'interval de selecció. Si en la
+classificació definida cada mesura es classificava en un i només un
+$\tau+\delta$ per a cada resolució, en la nova funció de classificació
+es pot escollir a quants $\tau^*+\delta$ es classifica cada mesura.
+Sigui $\operatorname{classifica}(m,\glssymbol{not:esquemaM})$ la
+funció de classificació original i siguin $l,g\in\glssymbol{not:N}$ les
+quantitats desitjades. La nova funció de classificació és
+\begin{align*}
+  &\operatorname{classifica}'(m,\glssymbol{not:esquemaM},l,g)= 
+  % & \{ (\delta,f,\tau+(n-G_g)\delta,t,v), \dotsc,
+  % (\delta,f,\tau+(n-G_0)\delta,t,v), \\
+  % & (\delta,f,\tau+n\delta,t,v), \\
+  % &(\delta,f,\tau+(n+L_0)\delta,t,v), \dotsc,
+  % (\delta,f,\tau+(n+L_l)\delta,t,v) \\
+  % &| (\delta,f,\tau,k) \in \glssymbol{not:esquemaM} \wedge
+  % \tau+(n-1)\delta < t \leq \tau+n\delta \wedge n\in\glssymbol{not:Z}
+  % \wedge t > \tau \} \\
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM}) \cup \\
+  &\cup \{ (\delta,f,\tau+(n-\gamma)\delta,t,v)  
+  |(\delta,f,\tau+n\delta,t,v) \in
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM}) \wedge \gamma \in
+  \{1,\dotsc,g\} \} \\
+  &\cup \{ (\delta,f,\tau+(n+\lambda)\delta,t,v)  
+  |(\delta,f,\tau+n\delta,t,v) \in
+  \operatorname{classifica}(m,\glssymbol{not:esquemaM}) \wedge \lambda \in
+  \{1,\dotsc,l\} \}
+\end{align*}
+% \forall
+%   (\delta,f,\tau,k) \in e: (\delta,f,\tau+(n-G_g)\delta,t,v), \dotsc,
+%   (\delta,f,\tau+(n-G_0)\delta,t,v), 
+% (\delta,f,\tau+n\delta,t,v),
+%   (\delta,f,\tau+(n+L_0)\delta,t,v), \dotsc,
+%   (\delta,f,\tau+(n+L_l)\delta,t,v)
+%  | \tau+(n-1)\delta < t \leq
+%   \tau+n\delta, n\in\glssymbol{not:Z}, t > \tau \}
+
+
+El paràmetre $l$ permet classificar una mesura en temps posteriors i
+el paràmetre $g$ en temps anteriors; si ho observem des del punt de
+vista de la selecció d'interval
+$S(\tau-l\delta,\tau+(1+g)\delta]$, el paràmetre $l$
+permet estendre l'interval cap a l'esquerra i $g$ cap a la dreta.
+
+\begin{example}[Classificació d'una mesura per \gls{zohe}]
+  \label{ex:mapreduce:fzohe} 
+  Com ja hem comentat, per a les funcions d'agregació d'atributs de la
+  família \gls{zohe} s'ha d'aproximar l'interval temporal \gls{zohe} a
+  una selecció en l'interval $S(\tau,\tau+2\delta]$. És a dir, que
+  la funció de classifica ha de retornar dues classificacions per a
+  cada mesura, una amb $\tau+\delta$ i l'altra amb $\tau$. Per tant, per
+  aquesta família $g=1$ i $l=0$.
+
+  Sigui l'esquema de multiresolució
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,
+  \glssymbol{not:sgstm:k}_1=4), (\delta_2=5,f_2,
+  \tau_2=10,\glssymbol{not:sgstm:k}_2=3)\}$ i la mesura $m=(25,1)$,
+  aquesta és classificada per a consolidar-se en les dues resolucions
+  i en els dos instants següents:
+  $\operatorname{classifica}'(m,\glssymbol{not:esquemaM},l,g)=\{
+  (2,f_1,\tau^*-g\delta_1,25,1), (2,f_1,\tau^*,25,1),
+  (5,f_2,\tau^{**}-g\delta_2,25,1), (5,f_2,\tau^{**},25,1) \}$ on
+  $\tau^*= 26$, $\tau^*-g\delta_0= 24$, $\tau^{**}= 25$ i
+  $\tau^{**}-g\delta_1= 20$.  
+
+  Mentre que a \textref{ex:mapreduce:classifica} es classifica la
+  mesura $(25,1)$ als instants $26$ per a $\delta_1$ i $25$ per a
+  $\delta_2$, ara s'afegeixen respectivament els instants $24$ i $20$.
+  Així, mentre que a \textref{ex:mapreduce:classifica} s'interpretaven
+  respectivament els intervals de selecció com a $S(24,26]$ i
+  $S(20,25]$, ara s'han ampliat a $S(24,28]$ i $S(22,26]$ per a
+  $\delta_1$ i  $S(20,30]$ i $S(15,25]$ per a $\delta_2$.
+\end{example}
+
+
+
+En resum, el model de programació MapReduce limita les capacitats dels
+\gls{SGSTM}, sobretot pel que fa a les funcions d'agregació
+d'atributs.  A continuació, en l'apartat d'execució de l'algoritme,
+utilitzarem un exemple amb aquests processos de classificació.
+
+
+\subsubsection{Quant a l'ajustament de l'inici de la consolidació}
+
+L'algoritme de MapReduce definit no té en compte els cardinals màxims.
+És a dir, en l'etapa map es classifiquen les mesures en l'interval de
+consolidació que correspon segons $\tau+n\delta$, per
+$n\in\glssymbol{not:Z}$.  Aleshores, un cop computat el resultat, el
+cardinal màxim $\glssymbol{not:sgstm:k}$ decidiria quins intervals de
+consolidació s'han d'eliminar.  Però com que és una computació en
+diferit, ja es poden conèixer els intervals que hauran de ser
+eliminats posteriorment i no caldria tenir-los en compte.  Aquest
+problema es pot solucionar fàcilment ajustant els $\tau$ inicials de
+l'esquema multiresolució.
+
+
+Així, en la computació en diferit, sigui $S$ una sèrie temporal i
+sigui $\glssymbol{not:esquemaM}$ un esquema de multiresolució, el
+temps de la darrera mesura $T(\max S)$ indueix els intervals de
+consolidació quan es tenen en compte els cardinals màxims. Per a tenir
+en compte els cardinals màxims s'haurà d'usar un nou esquema
+$\glssymbol{not:esquemaM}'$ en què cada $\tau$ original sigui canviat
+a un altre temps de consolidació múltiple $\tau'= \tau+n\delta$, per
+$n\in\glssymbol{not:Z}$, que tingui en compte $T(\max S)$.
+
+
+
+\begin{definition}[Ajustament del temps d'inici segons el darrer temps
+  de la sèrie temporal]
+  \label{def:mapreduce:ajustamentdetaus}
+
+  Sigui $(\delta,f,\tau,\glssymbol{not:sgstm:k})$ un dels paràmetres
+  de l'esquema de multiresolució i sigui $S$ una sèrie temporal de la
+  qual es coneix $T(\max S)$.  Es calcula un nou temps d'inici $\tau'=
+  \tau+n\delta$ (1), on $n\in\glssymbol{not:Z}$, que tingui en compte
+  el cardinal màxim per a $T(\max S)$. És a dir que compleixi
+  $\tau'+\glssymbol{not:sgstm:k}\delta \leq T(\max S)$ (2) i alhora
+  $\tau'+(\glssymbol{not:sgstm:k}+1)\delta \leq T(\max S)$ (3).  Això
+  significa que les mesures entre
+  $[\tau',\tau'+\glssymbol{not:sgstm:k}\delta]$ són les pendents de
+  consolidar, les mesures entre
+  $[\tau'+\glssymbol{not:sgstm:k}\delta,T(\max S)]$ encara no es poden
+  consolidar i les anteriors a $\tau'$ ja es poden
+  eliminar. \emph{Nota:} sense tenir en compte retards de buffer.
+
+
+  \emph{Càlcul de $n$:} Substituint la (1) a la (2) s'obté
+  $\tau+n\delta+\glssymbol{not:sgstm:k}\delta \leq T(\max S)$, operant
+  s'obté $\tau+(n+\glssymbol{not:sgstm:k})\delta \leq T(\max S)$ i $n
+  \leq \frac{T(\max S)-\tau}{\delta}-\glssymbol{not:sgstm:k}$ d'on amb
+  (3) es conclou que $n = \left\lfloor \frac{T(\max
+      S)-\tau}{\delta}-\glssymbol{not:sgstm:k} \right\rfloor$ .  A més
+  a més, si no es considera vàlid $\tau'<\tau$, és a dir que no es
+  volen mesures abans del temps d'inici original, aleshores $n$ com a
+  mínim pot valdre zero.
+
+\end{definition}
+
+
+
+\begin{example}[Classificació d'una mesura en les resolucions amb
+  ajustament dels temps d'inici]
+  \label{ex:mapreduce:classifica-ajustament}
+  Reprenent \textref{ex:mapreduce:classifica-ajustament} per a
+  classificar la mesura $m=(25,1)$ segons l'esquema de multiresolució
+  $\glssymbol{not:esquemaM}=\{(\delta_1=2,f_1,\tau_1=0,
+  \glssymbol{not:sgstm:k}_1=4), (\delta_2=5,f_2,\tau_2=10,
+  \glssymbol{not:sgstm:k}_2=3)\}$, ara es volen tenir en compte els
+  cardinals màxims.
+    
+  Sigui $T(\max S)=35$ el temps de la mesura màxima de la sèrie
+  temporal original. Aleshores cal canviar l'esquema de multiresolució
+  a $\glssymbol{not:esquemaM}'=\{(\delta_1=2,f_1,\tau'_1,
+  \glssymbol{not:sgstm:k}_1=4),
+  (\delta_2=5,f_2,\tau'_2,\glssymbol{not:sgstm:k}_2=3)\}$ on
+  $\tau'_1=26$ i $\tau'_2=20$ aplicant la
+  \autoref{def:mapreduce:ajustamentdetaus}. La classificació esdevé
+  $\operatorname{classifica}(m,\glssymbol{not:esquemaM}')=\{
+  (5,f_2,25,25,1) \}$ on no hi ha la resolució $\delta_1$ perquè $25<
+  \tau'_1$.
+\end{example}
+
+
+
+
+Com que l'ajustament dels temps d'inici es pot aplicar per a qualsevol
+computació en diferit de la multiresolució, implementem un nou mètode
+a RoundRobinson que aplica aquest càlcul. L'anomenem
+\lstinline[style=py]+set_tau_tnow+. És a dir, a partir d'un temps
+\emph{tnow}, que indica el temps actual en què es troba la sèrie
+temporal, \lstinline[style=py]+M.set_tau_tnow(tnow)+ ajusta tots els
+temps d'inici de $M$ per tal que quan s'executi la consolidació
+s'ignorin els intervals que serien immediatament eliminats a causa del
+cardinal màxim del disc.  Al
+\autoref{lst:roundrobinson:ajustamenttaus} reprenem l'exemple del
+\autoref{lst:roundrobinson:ex1} per a i\l.lustrar-ho.
+
+\begin{lstlisting}[style=py,caption=Exemple d'ajustament dels temps
+    d'inici amb RoundRobinson,label=lst:roundrobinson:ajustamenttaus]
+#Importació dels objectes necessaris
+>>> from pytsms import TimeSeries, Measure as m
+>>> from roundrobinson import MultiresolutionSeries
+>>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+
+#Definició de la sèrie temporal d'exemple
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),m(14,1),m(19,6),m(22,11),m(26,6),m(29,0)])
+
+#Definició de la sèrie temporal multiresolució
+>>> M = MultiresolutionSeries()
+#Definició de l'esquema multiresolució
+>>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
+>>> M.addResolution(delta=10,k=3,f=maximum_zohe,tau=0)
+
+#Ajustament dels temps d'inici segons tnow=29
+>>> M.set_tau_tnow(29)
+#Consulta dels nous temps d'inici
+>>> M.str_taus()
+'5/mean_zohe:5 | 10/maximum_zohe:-10'
+\end{lstlisting}
+
+
+Ara es podria aplicar la consolidació com al
+\autoref{lst:roundrobinson:ex1}. A diferència, però, aquesta es duria a terme
+directament en els instants $10, 15, 20, 25$ per a la resolució
+$\delta=5$, és a dir sense calcular l'instant $5$ i posteriorment
+eliminar-lo com havíem fet al \autoref{lst:roundrobinson:ex1}. I es
+duria a terme en $0, 10, 20$ per a $\delta=10$, en aquest cas no es té
+en compte cap limitació i per tant es permet un $\tau'=-10$ inferior a
+$\tau=0$.
+
+
+
+
+
+\subsection{Execució de l'algoritme}
+
+\lstMakeShortInline[style=sh]{@}
+
+Hadoop s'encarrega de l'execució de l'algoritme de MapReduce i de la
+gestió de les dades d'entrada i de sortida.  Per a implementar-lo cal
+dissenyar un programa per al map i un programa per al reduce, els
+quals reben de Hadoop els subconjunts de dades escaients i han de
+retornar els subconjunts també escaients.  
+
+Es pot utilitzar diferents llenguatges de programació a l'hora
+d'implementar l'algoritme de MapReduce, hem escollit el llenguatge
+Python \parencite{python:doc2}.  Implementem les dues etapes de
+l'algoritme de MapReduce que hem definit, RoundRobindoop, en un mateix
+programa que anomenem @rrdoop.py@. El programa té un paràmetre que
+permet escollir l'etapa: @rrdoop.py -map@ o @rrdoop.py -reduce@. A més
+també hi ha un paràmetre per a definir l'esquema de multiresolució
+utilitzat, %
+@rrdoop.py -map -schema e@.
+
+El programa es comunica amb Hadoop mitjançant l'entrada estàndard (que
+abreviem amb \emph{stdin}) per a rebre dades i mitjançant la sortida
+estàndard (que abreviem amb \emph{stdout}) per a retornar els
+resultats.  Gràcies a la generalització del programa amb comunicació
+per stdin i stdout, també es pot executar l'algoritme de MapReduce al
+shell del sistema operatiu, cosa que facilita l'experimentació amb
+l'algoritme.  Així, a continuació, primer mostrem l'execució pas a pas
+de @rrdoop.py@ al shell i després mostrem l'execució a Hadoop.
+
+
+
+\subsubsection{Execució a la shell}
+
+El~\autoref{lst:rrdoop:shell} és l'execució de
+@rrdoop.py@ al shell del sistema operatiu. Només hi ha un procés map i
+un procés reduce. Es comuniquen les dades a través de pipes (@|@) de la
+shell i d'un procés d'ordenació (@sort@) que emula el procés
+d'ordenació per identificador que faria Hadoop. A més, també s'emula
+el procés de lectura (@cat@) de les dades originals.
+
+\begin{lstlisting}[style=sh,caption=Execució a la shell de
+  rrdoop.py,label=lst:rrdoop:shell]
+cat original.csv | rrdoop.py -map -schema e.pickle -mapg 1 | sort -k1,1 | rrdoop.py -reduce -schema e.pickle  > final.csv
+\end{lstlisting}
+
+
+Les dades d'entrada són un fitxer, que també podrien ser fitxers de
+dades, de les quals Hadoop en processa conjunts de línies a cada
+procés map. Aquestes dades no cal que siguin ordenades i cal tenir en
+compte que es poden trencar per qualsevol línia, tot i que Hadoop
+permet configurar etapes que defineixin com s'han de partir els
+fitxers.  Al~\autoref{lst:rrdoop:stdin} mostrem les dades d'entrada
+emmagatzemades en el fitxer @original.csv@, que es corresponen
+amb la sèrie temporal ja utilitzada
+al~\autoref{lst:roundrobinson:ex1}.  Aquest fitxer de dades té format
+de \gls{CSV}, com ja s'ha vist al~\autoref{lst:pytsms:storage} en les
+funcionalitats complementàries per a l'emmagatzematge de Pytsms.
+\begin{lstlisting}[style=file,caption=Dades d'entrada original.csv,label=lst:rrdoop:stdin]
+1,6
+8,5
+5,2
+10,0
+14,1
+19,6
+26,6
+29,0
+22,11
+\end{lstlisting}
+
+
+El fitxer @original.csv@ es transmet a través de @cat@ i pipe a
+l'stdin del procés de map %
+@rrdoop.py -map -schema e.pickle -mapg 1@.  El procés de map té un
+esquema de multiresolució com a paràmetre, @rrdoop.py@ a través del
+paràmetre @-schema@ admet una sèrie temporal multiresolució en format
+Pickle, com s'ha vist al~\autoref{lst:roundrobinson:storage},
+l'esquema de la qual serà el que s'utilitzi. En aquest cas, @e.pickle@
+es correspon amb el fitxer @mrd.pickle@
+del~\autoref{lst:roundrobinson:storage} i per tant amb l'esquema de
+multiresolució del~\autoref{lst:roundrobinson:ex1}:
+$\glssymbol{not:esquemaM}=\{(\delta_0=5,\glssymbol{not:sgstm:k}_0=4,
+f_0=\glssymbol{not:sgstm:meanzohe},\tau_0=0), (\delta_1=10,
+\glssymbol{not:sgstm:k}_1=3, f_1=\glssymbol{not:sgstm:maxzohe},
+\tau_1=0)\}$.
+
+
+En aquest exemple d'esquema de multiresolució s'usen funcions
+d'agregació d'atributs de la família \gls{zohe}. Com ja hem comentat a
+l'\autoref{ex:mapreduce:fzohe}, s'ha de canviar la selecció que
+l'etapa map duu a terme. A tal efecte RoundRobindoop admet un
+paràmetre @-mapg@ per a indicar l'expansió de la classificació cap a
+la dreta. Aproximem l'interval temporal \gls{zohe} a una selecció en
+l'interval $(\tau,\tau+2\delta]$, és a dir que hem d'expandir un
+interval @-mapg 1@.  RoundRobindoop també admet un paràmetre @-mapl@
+per a l'expansió cap a l'esquerra, que en aquest cas no cal utilitzar.
+
+
+El procés de map retorna el resulta a través de l'stdout, el qual es
+mostra al~\autoref{lst:rrdoop:sortidamap} i es correspon amb les dades
+d'entremig de MapReduce. El format és el requerit per Hadoop, és a dir
+cada línia és una parella d'identificador i valor separats per un
+tabulador. L'identificador és $(\delta,f,\tau+\delta)$ però escrit en el
+format $\delta$/$f$--$\tau+\delta$ i el valor és $(t,v)$ escrit separat per
+un espai. Es pot observar com es comença classificant la primera
+mesura $(1,6)$ en l'instant de consolidació $10$ per $\delta_1$ i
+$5$ per $\delta_0$.  A continuació la mesura $(8,5)$ es classifica
+a l'instant de consolidació $10$ per $\delta_1$ i en els $10$
+i $5$ per $\delta_0$, en aquest darrer cas s'aplica l'aproximació
+de la selecció \gls{zohe} per l'interval $(\tau,\tau+2\delta]$;
+cal destacar que en els casos anteriors no s'aplica perquè resultaria en
+un $\tau'<= \tau$.  I així per a totes fins a la darrera mesura
+$(22,11)$.
+\begin{lstlisting}[style=stdout,caption=Sortida del procés map,label=lst:rrdoop:sortidamap]
+10/maximum_zohe-10	1 6.0
+5/mean_zohe-5	1 6.0
+10/maximum_zohe-10	8 5.0
+5/mean_zohe-10	8 5.0
+5/mean_zohe-5	8 5.0
+10/maximum_zohe-10	5 2.0
+5/mean_zohe-5	5 2.0
+10/maximum_zohe-10	10 0.0
+5/mean_zohe-10	10 0.0
+5/mean_zohe-5	10 0.0
+10/maximum_zohe-20	14 1.0
+10/maximum_zohe-10	14 1.0
+5/mean_zohe-15	14 1.0
+5/mean_zohe-10	14 1.0
+10/maximum_zohe-20	19 6.0
+10/maximum_zohe-10	19 6.0
+5/mean_zohe-20	19 6.0
+5/mean_zohe-15	19 6.0
+10/maximum_zohe-30	26 6.0
+10/maximum_zohe-20	26 6.0
+5/mean_zohe-30	26 6.0
+5/mean_zohe-25	26 6.0
+10/maximum_zohe-30	29 0.0
+10/maximum_zohe-20	29 0.0
+5/mean_zohe-30	29 0.0
+5/mean_zohe-25	29 0.0
+10/maximum_zohe-30	22 11.0
+10/maximum_zohe-20	22 11.0
+5/mean_zohe-25	22 11.0
+5/mean_zohe-20	22 11.0
+\end{lstlisting}
+
+
+A continuació el procés d'ordenació @sort -k1,1@ ordena per
+identificadors, el qual es mostra
+al~\autoref{lst:rrdoop:sortidasort}. Hadoop agruparia els mateixos
+identificadors i els transmetria a l'stdin d'un procés de reduce.
+Observem per exemple la primera resolució @10/maximum_zohe-10@ que
+conté les mesures en els instants de temps 10, 14, 1 ,19, 5 i 8;
+l'agregació posterior haurà de treballar en l'interval \gls{zohe}
+[0,10] i per tant ara queda clar que les mesures de 14 i 19 no són
+necessàries, però això no ho podíem resoldre en l'etapa de map.
+\begin{lstlisting}[style=stdout,caption=Sortida del procés d'ordenació,label=lst:rrdoop:sortidasort]
+10/maximum_zohe-10	10 0.0
+10/maximum_zohe-10	14 1.0
+10/maximum_zohe-10	1 6.0
+10/maximum_zohe-10	19 6.0
+10/maximum_zohe-10	5 2.0
+10/maximum_zohe-10	8 5.0
+10/maximum_zohe-20	14 1.0
+10/maximum_zohe-20	19 6.0
+10/maximum_zohe-20	22 11.0
+10/maximum_zohe-20	26 6.0
+10/maximum_zohe-20	29 0.0
+10/maximum_zohe-30	22 11.0
+10/maximum_zohe-30	26 6.0
+10/maximum_zohe-30	29 0.0
+5/mean_zohe-10	10 0.0
+5/mean_zohe-10	14 1.0
+5/mean_zohe-10	8 5.0
+5/mean_zohe-15	14 1.0
+5/mean_zohe-15	19 6.0
+5/mean_zohe-20	19 6.0
+5/mean_zohe-20	22 11.0
+5/mean_zohe-25	22 11.0
+5/mean_zohe-25	26 6.0
+5/mean_zohe-25	29 0.0
+5/mean_zohe-30	26 6.0
+5/mean_zohe-30	29 0.0
+5/mean_zohe-5	10 0.0
+5/mean_zohe-5	1 6.0
+5/mean_zohe-5	5 2.0
+5/mean_zohe-5	8 5.0
+\end{lstlisting}
+
+
+Finalment, el procés de reduce %
+@rrdoop.py -reduce -schema e.pickle > final.csv@ obté de l'stdin les
+dades del~\autoref{lst:rrdoop:sortidasort} i retorna les dades finals
+per l'stdout que està redirigit al fitxer @final.csv@, el contingut
+del qual es mostra al~\autoref{lst:rrdoop:sortidashell}.  Hadoop
+emmagatzemaria aquestes dades en un fitxer o fitxers de dades.
+Aquestes dades tenen el format $\delta$ $f$ $\tau+\delta$ $v$ on
+$(\tau+\delta,v)$ és la mesura consolidada per a la resolució
+identificada per $(\delta,f)$.
+
+\begin{lstlisting}[style=file,caption=Dades de sortida final.csv,label=lst:rrdoop:sortidashell]
+10 maximum_zohe	10 6.0
+10 maximum_zohe	20 11.0
+10 maximum_zohe	30 None
+5 mean_zohe	10 3.0
+5 mean_zohe	15 2.0
+5 mean_zohe	20 7.0
+5 mean_zohe	25 8.0
+5 mean_zohe	30 None
+5 mean_zohe	5 2.8
+\end{lstlisting}
+
+Així aquest resultat és el mateix que el de les consultes
+$\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$
+i
+$\glssymbol{not:sgstm:seriedisc}(M,10,\glssymbol{not:sgstm:maxzohe})$
+del~\autoref{lst:roundrobinson:ex1} però amb les particularitats
+següents:
+
+\begin{itemize}
+\item RoundRobindoop no té en compte els cardinals màxims
+  $\glssymbol{not:sgstm:k}$ de les resolucions. Hi ha la mesura
+  consolidada a l'instant $5$ per a la resolució $\delta_0=5$ que ja
+  hauria d'haver estat eliminada per complir amb
+  $\glssymbol{not:sgstm:k}_0=4$.
+
+\item RoundRobindoop no té en compte el temps màxim de la sèrie
+  temporal original per a conèixer les mesures que encara no són
+  consolidables. Hi ha la mesures en l'instant $30$ per a
+  $\delta_0=5$ i $\delta_1=10$ que encara no podien ser calculades
+  perquè $T(\max S)=29$. De fet tenen valor nul (\emph{None}) a causa
+  que l'interval \gls{zohe} no es pot calcular.
+
+\item Així doncs, hi ha 9 mesures consolidades finals però 3 s'han de
+  descartar. Un cop s'hagin descartat, per a la resolució $\delta_0=5$
+  hi haurà 4 mesures i es complirà $4 \leq \glssymbol{not:sgstm:k}_0=4$,
+  i per a la resolució $\delta_1=10$ hi haurà 2 mesures i es complirà $2
+  \leq \glssymbol{not:sgstm:k}_1=3$.
+\end{itemize}
+
+
+El fitxer del \autoref{lst:rrdoop:sortidashell} té el format \gls{CSV}
+de RoundRobinson. Per tant, es poden recuperar aquestes dades amb les
+operacions de \verb+LoadCsv+, com s'ha descrit al
+\autoref{lst:roundrobinson:storage}, i aplicar-hi les operacions de
+consulta convenients: obtenir la sèrie temporal total, obtenir les
+subsèries, fer-ne gràfics, etc.
+
+
+
+\subsubsection{Execució a Hadoop}
+
+
+El~\autoref{lst:rrdoop:hadoop} mostra els passos d'execució de
+@rrdoop.py@ a Hadoop. Primer cal copiar la sèrie temporal original a
+\gls{HDFS}, després s'executa l'algoritme MapReduce i finalment es
+recupera el resultat de \gls{HDFS}.  Hadoop \emph{streaming} és l'eina
+que permet l'execució a Hadoop de qualsevol programa, en qualsevol
+llenguatge, que tingui el model de MapReduce.  Per a més detall sobre
+les ordres i els processos vegeu la documentació de
+Hadoop~\parencite{hadoop}, en aquest exemple hem simplificat amb [...]
+algunes adreces.
+%http://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/HadoopStreaming.html
+
+
+\begin{lstlisting}[style=sh,caption=Execució a Hadoop de
+  rrdoop.py,label=lst:rrdoop:hadoop]
+hadoop dfs -copyFromLocal original.csv [...]original.csv
+
+hadoop jar [...]hadoop-streaming*.jar -file rrdoop.py -file e.pickle  -mapper 'rrdoop.py -map -schema e.pickle -mapg 1' -reducer 'rrdoop.py -reduce -schema e.pickle' -input [...]original.csv -output [...]final
+
+hadoop dfs -copyToLocal [...]final/part-00000 final.csv
+\end{lstlisting}
+%per esborrar: hadoop dfs -rmr /user/aleix/final
+%requisit, tenir disponible roundrobinson, p.ex. cp -r ~/pfc_svn/src/roundrobinson/trunk/ /usr/local/lib/python2.7/dist-packages/roundrobinson
+
+Per tal d'observar de manera senzilla l'execució de l'algoritme a
+Hadoop hem realitzat una configuració anomenada \emph{Single Node
+  Setup}, és a dir on només hi ha un computador que processa.  Un cop
+verificat es podria estendre a una configuració de \emph{Cluster
+  Setup}, en què hi hagués més computadors on distribuir les dades i
+els processos.
+
+
+El resultat és el mateix fitxer @final.csv@ que per a l'execució a la
+shell, és a dir el~\autoref{lst:rrdoop:sortidashell}.  Hadoop gestiona
+automàticament la distribució i la quantitat dels processos map i
+reduce. Així, alguns dels map o reduces es poden ajuntar en el mateix
+procés, per exemple els reduce poden rebre tant un subconjunt de les
+dades d'entremig amb el mateix identificador com un conjunt d'aquests
+subconjunts, però mai se separa el mateix identificador en diferents
+reduces. De fet, en el cas anterior que hem executat a la shell
+s'utilitza un conjunt amb tots els subconjunts possibles, ja que només
+hi ha un procés map i un de reduce.
+
+
+
+
+
+
+
+% \subsubsection{Anàlisi de temps}
+
+
+%Estaria bé comparar també amb pytsms, encara que s'ha de dir que no tenen res a veure perquè a pytsms no hem tingut gens en compte l'eficiència en el temps
+
+% Per al temps s'hauria d'executar com a mínim 10 vegades cada experiment
+
+
+% Analitzem el temps que triga en executar-se l'algoritme de MapReduce,
+% tant en la shell com a Hadoop. En aquest darrer cas no incloem el
+% temps de treballar amb el \gls{HDFS}.
+
+
+% \begin{verbatim}
+% * shell
+
+% time cat matriu0.csv | ./rrdoop.py -map | sort -k1,1 | ./rrdoop.py -reduce > provant.csv::
+
+%  real   0m21.639s
+%  user   0m21.513s
+%  sys    0m0.864s
+
+
+% * hadoop
+
+% time hadoop jar /usr/lib/hadoop/contrib/streaming/hadoop-streaming*.jar -file rrdoop.py -mapper 'rrdoop.py -map' -reducer 'rrdoop.py -reduce' -input /user/aleix/matriu0.csv -output /user/aleix/matriu::
+
+%  real   0m28.314s
+%  user   0m1.640s
+%  sys    0m0.152s
+% \end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+\lstDeleteShortInline{@}
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+
+%  LocalWords:  multiresolució

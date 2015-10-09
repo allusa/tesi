@@ -1,0 +1,439 @@
+%--------------------
+% capçalera del document 
+%--------------------
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+\usepackage{lmodern}
+%\usepackage[T1]{fontenc} 
+%\usepackage{parskip}
+%---------- Gràfics ------------------------
+%\usepackage[final]{graphicx}
+%\usepackage{epstopdf}
+%\usepackage{tikz}
+%\usepackage{epic,xcolor,multicol}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\usetikzlibrary{dateplot}
+\def\pgfcalendarmonthshortname#1{%
+%\translate{
+\ifcase#1\or gen.\or febr.\or març\or abr.\or maig\or juny\or jul.\or ag.\or set.\or oct.\or nov.\or des.\fi}%}
+% \def\pgfcalendarmonthname#1{%
+% \translate{\ifcase#1\or JJJ\or FFF\or MMM\or AAA\or
+% MAY\or JJU\or JJY\or AAU\or SSS\or OOO\or
+% NNN\or DDD\fi}}
+\usetikzlibrary{shapes,arrows,positioning}
+\usetikzlibrary{patterns}
+%%%\usepackage{arydshln} %hdashline a les taules --> conflicte amb supertabular 
+%----------- Format -------------------------
+\usepackage{cclicenses} %\usepackage{ccicons}
+%---------- Símbols ------------------------
+\usepackage{url} %\url i \path
+\usepackage{eurosym}
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\usepackage{ifsym}
+%%ús coma decimal sense espais:  2{,}5
+%per tal que trenqui la coma en math inline mode 
+%http://tex.stackexchange.com/questions/19094/allowing-line-break-at-in-inline-math-mode-breaks-citations/
+\AtBeginDocument{%
+  \mathchardef\mathcomma\mathcode`\,
+  \mathcode`\,="8000 
+}
+{\catcode`,=\active
+  \gdef,{\mathcomma\discretionary{}{}{}}
+}
+%---------- Teoremes ------------------------
+\usepackage{amsthm}
+\usepackage{thmtools} %listoftheorems??
+%teoremes
+\theoremstyle{plain}
+\newtheorem{definition}{Definició}
+%\declaretheorem{definition}
+\theoremstyle{definition}
+\newtheorem{example}{Exemple}
+%\declaretheorem{example}
+%numeracions d'equacions, definicions, etc.
+\numberwithin{equation}{chapter}
+\numberwithin{definition}{chapter}
+\numberwithin{example}{chapter}
+%%format del listoftherorems
+\makeatletter
+\def\ll@example{%
+  \protect\numberline{\csname the\thmt@envname\endcsname}%
+  \ifx\@empty\thmt@shortoptarg
+    \thmt@thmname
+  \else
+    \thmt@shortoptarg
+  \fi}
+\def\ll@definition{%
+  \protect\numberline{\csname the\thmt@envname\endcsname}%
+  \ifx\@empty\thmt@shortoptarg
+    \thmt@thmname
+  \else
+    \thmt@shortoptarg
+  \fi}
+\makeatother
+%---------- Bibliografia -------------------
+%ús: \cite{} \textcite{} \parencite{} \citeauthor{}
+\usepackage[
+style=numeric-comp,%style=authoryear
+sortcites=true,
+%backref=true,
+ ]{biblatex}
+%\ExecuteBibliographyOptions{annotation=true,backref=true,}
+%backref=true, urldate=long, abbreviate=false,%%format web 
+% isbn=false,url=false,doi=false,alldates=terse,firstinits=true,abbreviate=true %%format en paper
+
+\DefineBibliographyStrings{catalan}{%
+%    andothers = {i altres},
+    backrefpage  = {citat a la p\adddot}, % for single page number
+    backrefpages = {citat a les pp\adddot} % for multiple page numbers
+}
+
+\newcommand{\bibendash}{--}
+%\bibparsep 0.2cm
+%\bibhang 0.25cm
+
+%afegeix camp eprinttype=hdl
+\DeclareFieldFormat{eprint:hdl}{%
+  \mkbibacro{HDL}\addcolon\space
+  \ifhyperref
+    {\href{http://hdl.handle.net/#1}{\nolinkurl{#1}}}
+    {\nolinkurl{#1}}}
+
+%anotacions a la bibliografia
+\newboolean{bbx@annotation}% (same as biblatex-dw)
+\DeclareBibliographyOption{annotation}[true]{%
+\setboolean{bbx@annotation}{#1}}
+%
+\renewbibmacro{finentry}{%
+\finentry%
+\iffieldundef{annotation}%
+{}%
+{\ifbool{bbx@annotation}%
+{\color{blue}
+\begin{quotation}\noindent%
+\printfield{annotation}%
+\end{quotation}}%
+{}}%
+}
+
+%cites bibliogràfiques: números de citacions entre comes
+%cal escapar els accents: \parencite{tal} {é}s
+%http://tex.stackexchange.com/questions/28461/biblatex-tighter-integration-of-textcite-in-the-flow-of-text
+%http://tex.stackexchange.com/questions/19627/biblatex-idiom-for-testing-contents-of-list-field
+%http://tex.stackexchange.com/questions/26401/help-to-develop-a-textcite-command-to-be-used-with-verbose-citation-styles-in-b
+%http://tex.stackexchange.com/questions/28461/biblatex-tighter-integration-of-textcite-in-the-flow-of-text
+%
+% \makeatletter
+% %\DeclareAutoPunctuation{.,;:!?}
+% %per defecte \DeclareRangeChars{~,;-+/}
+% \DeclareRangeChars*{:}
+% %
+% \newcommand{\citacomes}[4]{
+% \blx@addpunct{comma}\space\cite[#1][#2]{#3}%
+% %\blx@imc@ifpunctmark{#4}{\blx@addpunct{comma}\space#4}{#4}%
+% \blx@imc@ifnumerals{#4}{%per separar accents
+% \blx@imc@ifpunctmark{#4}{\blx@addpunct{comma}\space#4}{#4}}%
+% {\blx@addpunct{comma}\space#4}%
+% }
+% %
+% \renewrobustcmd*{\textcite}{\blx@citeargs\cbx@textcite}
+% \newcommand{\cbx@textcite}[4]{%
+% \citeauthor{#3}%
+% \citacomes{#1}{#2}{#3}{#4}%
+% }
+
+% \renewrobustcmd*{\parencite}{\blx@citeargs\cbx@parencite}
+% \newcommand{\cbx@parencite}[4]{%
+% \citacomes{#1}{#2}{#3}{#4}%
+% }
+% %
+% \DeclareCiteCommand{\citeauthor}
+%   {\usebibmacro{cite:init}%
+%     \boolfalse{citetracker}%
+%     \boolfalse{pagetracker}%
+%     \usebibmacro{prenote}}%pre
+%   {\ifciteindex
+%      {\indexnames{labelname}}
+%      {}%
+%      \iffieldequals{namehash}{\cbx@lasthash}%
+%      {}%repetit 
+%      {\ifnumequal{\value{citecount}}{1}{}{\multicitedelim}%
+%        \printnames{labelname}}%
+%      \savefield{namehash}{\cbx@lasthash}%
+% }%post
+%   {}%\multicitedelim}%sep
+%   {\usebibmacro{postnote}}
+% %
+% \makeatother
+%---------- Codi ---------------------------
+%% ús del lstlisting
+%%\begin{lstlisting}[language=C,caption=Titol del llistat,label=lst:etiqueta,numbers=left]
+%%\lstinline[style=sh]!for i:integer;!
+
+\usepackage{upquote} %perquè en verbatim surtin les cometes `
+\usepackage{listings}
+\lstloadlanguages{bash,C,HTML,Python,XML}
+\lstset{numberstyle=\tiny,frame=single,frameround=tttt,
+        breaklines=true,breakindent=0pt,
+%        prebreak=\mbox{{\color{blue}\tiny$\searrow$}},
+%        postbreak=\mbox{{\color{blue}\tiny$\hookrightarrow$}},
+        columns=[l]fullflexible,
+        xleftmargin=1em,
+        extendedchars=true,
+        literate={à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1
+                 {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1
+                 {ç}{{\c{c}}}1 {l·l}{{\l.l}}1
+                 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ï}{{\"I}}1
+                 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1
+                 {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+        escapechar=æ,
+        }
+
+\lstdefinestyle{py}{
+  style=pycolor
+}
+
+\lstdefinestyle{pynocolor}{
+  language=python,
+  frame=none,
+  inputencoding=utf8,
+  backgroundcolor=\color[gray]{0.95},
+}
+
+
+\lstdefinestyle{pycolor}{
+        style=pynocolor,
+        basicstyle=\sffamily\footnotesize,
+        stringstyle=\color{brown},
+        showstringspaces=false,
+        alsoletter={1234567890},
+        otherkeywords={\ , \}, \{},
+        keywordstyle=\color{blue},
+        emph={access,and,as,break,class,continue,def,del,elif,else,%
+          except,exec,finally,for,from,global,if,import,in,is,%
+          lambda,not,or,pass,print,raise,return,try,while,assert},
+        emphstyle=\color{orange}\bfseries,
+        emph={[2]self},
+        emphstyle=[2]\color{gray},
+        emph={[4]ArithmeticError,AssertionError,AttributeError,BaseException,%
+          DeprecationWarning,EOFError,Ellipsis,EnvironmentError,Exception,%
+          False,FloatingPointError,FutureWarning,GeneratorExit,IOError,%
+          ImportError,ImportWarning,IndentationError,IndexError,KeyError,%
+          KeyboardInterrupt,LookupError,MemoryError,NameError,None,%
+          NotImplemented,NotImplementedError,OSError,OverflowError,%
+          PendingDeprecationWarning,ReferenceError,RuntimeError,RuntimeWarning,%
+          StandardError,StopIteration,SyntaxError,SyntaxWarning,SystemError,%
+          SystemExit,TabError,True,TypeError,UnboundLocalError,UnicodeDecodeError,%
+          UnicodeEncodeError,UnicodeError,UnicodeTranslateError,UnicodeWarning,%
+          UserWarning,ValueError,Warning,ZeroDivisionError,abs,all,any,apply,%
+          basestring,bool,buffer,callable,chr,classmethod,cmp,coerce,compile,%
+          complex,copyright,credits,delattr,dict,dir,divmod,enumerate,eval,%
+          execfile,exit,file,filter,float,frozenset,getattr,globals,hasattr,%
+          hash,help,hex,id,input,int,intern,isinstance,issubclass,iter,len,%
+          license,list,locals,long,map,max,min,object,oct,open,ord,pow,property,%
+          quit,range,raw_input,reduce,reload,repr,reversed,round,set,setattr,%
+          slice,sorted,staticmethod,str,sum,super,tuple,type,unichr,unicode,%
+          vars,xrange,zip},
+        emphstyle=[4]\color{purple}\bfseries,
+        morecomment=[s][\color{lightgreen}]{"""}{"""},
+        commentstyle=\color{gray}\slshape,
+        literate=
+          {>>>}{\textbf{\textcolor{blue}{$>$\kern-.5ex$>$\kern-.5ex$>$}~}}3%
+          {...}{{\textcolor{gray}{...}}}3%
+          {à}{{\`a}}1 {è}{{\`e}}1 {é}{{\'e}}1 {í}{{\'\i}}1 {ï}{{\"\i}}1%
+          {ò}{{\`o}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c{c}}}1%
+          {l·l}{{\l.l}}1 {À}{{\`A}}1 {È}{{\`E}}1 {É}{{\'E}}1 {Í}{{\'\I}}1%
+          {Ï}{{\"\I}}1 {Ò}{{\`O}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1%
+          {Ç}{{\c{C}}}1 {L·L}{{\L.L}}1, 
+        rulesepcolor=\color{blue},
+} 
+
+
+
+
+\lstdefinelanguage{tutorialD}{
+  morekeywords={\ , \}, \{, var, operator,with,as,end,begin,type,possrep},
+  sensitive=false,
+  morecomment=[l]{//},
+%  morecomment=[s]{/*}{*/},
+%  morestring=[b]",
+}
+
+\makeatletter
+\newcommand{\lstuppercase}{\uppercase\expandafter{\expandafter\lst@token
+                           \expandafter{\the\lst@token}}}
+\newcommand{\lstlowercase}{\lowercase\expandafter{\expandafter\lst@token
+                           \expandafter{\the\lst@token}}}
+\makeatother
+
+
+\lstdefinestyle{tutorialD}{
+        language=tutorialD,
+        frame=none,
+        inputencoding=utf8,
+        backgroundcolor=\color[gray]{0.95},
+        basicstyle=\sffamily\footnotesize,
+        stringstyle=\color{green},
+        keywordstyle={\color{blue}\lstlowercase},
+        emph={tuple,relation,base,key,same_type_as,same_heading_as,return,returns,from,execute,init,private,all,but,%
+%          where,rename,union,join,minus,extend,add,summarize,group,ungroup
+        },
+        emphstyle={\color{orange}\bfseries\lstlowercase},
+        emphstyle=[2]\color{gray},
+        emph={[4]rational,char},
+        emphstyle=[4]\color{purple}\bfseries,
+        morecomment=[s][\color{lightgreen}]{"""}{"""},
+        commentstyle=\color{red}\slshape,
+        rulesepcolor=\color{blue},
+} 
+
+
+
+
+
+
+
+\lstdefinestyle{sh}{
+  language=bash,
+  frame=none,
+  prebreak =\textbackslash,
+  postbreak ={},
+  basicstyle=\ttfamily,
+  showspaces=false,
+  keepspaces=true,
+  backgroundcolor=\color[gray]{0.95},
+}
+\lstdefinestyle{file}{
+  frame=none,
+  showspaces=false,
+  keepspaces=true,
+  backgroundcolor=\color{yellow!20!white}
+}
+
+\lstdefinestyle{stdout}{
+  frame=none,
+  keepspaces=true,
+  columns=fixed,
+  backgroundcolor=\color{yellow!20!white}
+}
+%--------------------------------------------
+
+
+%---------- hyperref ------------------------
+\usepackage[bookmarks,pdfborder={0 0 0},pdfusetitle]{hyperref}
+\usepackage{bookmark}%per netejar l'ordre de \part{}
+
+%modificar autoref per babel catala
+\let\orgautoref\autoref
+%per: (v. fig. 3)
+\providecommand{\seeref}
+{%
+\def\figureautorefname{fig.}%
+\def\definitionautorefname{def.}%
+\def\exampleautorefname{ex.}%
+\def\chapterautorefname{\gls{capitol}}%
+\def\sectionautorefname{\gls{seccio}\ignorespaces}%
+\def\subsectionautorefname{\gls{seccio}\ignorespaces}% 
+\gls{vegeu}~\orgautoref%
+}
+%per: a la figura 3 !Problemes en les contraccions amb noms masculins! evitar a i de davant de capítol!
+\providecommand{\textref}
+{%
+\def\figureautorefname{la figura}%
+\def\definitionautorefname{la definició}%
+\def\exampleautorefname{l'exemple}%
+\def\chapterautorefname{el capítol}% al/del capítol???
+\def\sectionautorefname{la secció}%
+\def\subsectionautorefname{l'apartat}% 
+\orgautoref%
+}
+%per defecte
+\renewcommand{\autoref}
+{%
+\def\figureautorefname{figura}%ús: \autoref{}
+\def\tableautorefname{taula}%ús: \autoref{}
+\def\definitionautorefname{definició}%ús: \autoref{}
+\def\exampleautorefname{exemple}%ús: \autoref{}
+\def\chapterautorefname{capítol}%ús: \autoref{}
+\def\sectionautorefname{secció}%ús: \autoref{}
+\def\subsectionautorefname{apartat}%ús: \autoref{}
+\orgautoref%
+}
+
+
+\renewcommand\lstlistingname{Llistat} %%%PENSAR bé el nom
+\renewcommand\lstlistlistingname{Índex de llistats}
+\def\lstlistingautorefname{llistat} %ús: \autoref{}
+%---------- Glossaris -------------------
+\usepackage{tabu}
+%\usepackage{longtable}
+%\usepackage{supertabular}
+\usepackage[
+          nomain,% Remember if you don't want to use the main glossary.
+          acronym,
+          %%nonumberlist,
+          toc,
+          section,
+          numberedsection=false,%numberedsection=autolabel,
+          sanitize=none, %pels accents en el vegeu
+          ]{glossaries}
+%\renewcommand{\glossarypreamble}{Text com a préambul}
+%\renewcommand*{\glspostdescription}{}%anul·la el punt final
+\renewcommand*{\acronymname}{Sigles}%{Índex de sigles}??si té refs pàgines 
+%Índex d'abreviacions?? si conté abreviatures o símbols
+\renewcommand{\seename}{vegeu}
+\renewcommand{\entryname}{Notació}
+\renewcommand{\descriptionname}{Descripció}
+% \short<type>name,
+%Nous usos de símbols
+\newcommand{\glssymboldef}{\glssymbol[format=hyperbf,counter=definition]}
+\newcommand{\glsdispdef}{\glsdisp[format=hyperbf,counter=definition]}
+\newcommand{\hyperbfsec}[1]{\textbf{\S\hypersf{#1}}}
+\newcommand{\hyperbfex}[1]{\textbf{ex.\hypersf{#1}}}
+\newcommand{\glsaddsec}{\glsadd[format=hyperbfsec,counter=subsection]}
+\newcommand{\glsaddchap}{\glsadd[format=hyperbfsec,counter=chapter]}
+\newcommand{\glsaddsection}{\glsadd[format=hyperbfsec,counter=section]}
+\newcommand{\glsdispsec}{\glsdisp[format=hyperbfsec,counter=subsection]}
+\newcommand{\glssymbolsec}{\glssymbol[format=hyperbfsec,counter=subsection]}
+\newcommand{\glssymbolex}{\glssymbol[format=hyperbfex,counter=example]}
+%Nous glossaris
+\newglossary{abreviatura}{abr}{brv}{Abreviatures}
+\newglossary{notation}{not}{ntn}{Símbols i notació}
+\newglossarystyle{estil-notation}{%
+%  \renewcommand{\glsgroupskip}{}% make nothing happen between groups
+%  \renewcommand*{\glossaryheader}{}
+% {\begin{longtable*}{llp{10em}}}{\end{longtable*}}
+  \renewenvironment{theglossary}
+  {\begin{center}\begin{supertabular*}{\textwidth}{llp{10em}}}{\end{supertabular*}\end{center}} %
+  \renewcommand*{\glossarysubentryfield}[6]{%
+    \ifglshaschildren{##2} %
+    {\glstarget{##2}{\textbf{\Glsentryname{##2}}}} %hi ha subentrades
+    {\space \glstarget{##2}{\Glsentryname{##2}}} % the entry name
+    %& (##5) % the symbol in brackets
+    & ##4 % the description
+    & ##6 % the number list 
+%    & \parbox[t]{\hsize}{hola\\ ei} 
+    % ##1 entry level
+    \\
+  }%
+  \renewcommand*{\glossaryentryfield}[5]{%   
+    %\glossarysubentryfield{##2}{##1}{##2}{##3}{##4}{##5}
+    \\    
+    \glstarget{##1}{\textbf{\Glsentryname{##1}}}  & ##3 & ##5 \\\hline
+  }
+}
+
+%Executa els glossaris
+\makeglossaries
+%--------------------------------------------
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 
