@@ -1,0 +1,450 @@
+\chapter{Conclusions}
+\label{sec:conclusions}
+
+
+En aquest capítol es resumeix l'exposat en el cos principal del
+document i s'extreuen conclusions del model dissenyat i de les
+implementacions.
+
+
+Hem formalitzat la multiresolució per a les sèries temporals com un
+model de \gls{SGBD}. La multiresolució permet seleccionar una
+determinada informació d'una sèrie temporal i només emmagatzemar-ne
+una quantitat de dades afitada. Això no obstant és una solució de
+compressió amb pèrdua i cal avaluar i adequar els paràmetres de la
+multiresolució a cada context.
+
+
+El model defineix els sistemes de multiresolució de forma senzilla i
+compacta, la formalització permet definir un model totalment genèric i
+molt potent. Les implementacions de sistemes multiresolució exploren
+diverses maneres de computar la multiresolució, el model de
+multiresolució està pensat per a tenir en compte el context dels
+recursos: capacitat d'emmagatzematge limitada, processament en temps
+diferit o en línia amb el flux de dades, distribució de les dades,
+transmissió de resums de la informació, etc.
+
+
+
+En comparació a altres sistemes que gestionen sèries temporals, la
+multiresolució és una solució de compressió que només emmagatzema les
+dades que es requeriran en consultes posteriors o per a
+visualitzacions gràfiques. El procés de descompressió és mínim ja que
+les dades s'emmagatzemen directament com a subsèries temporals. A més,
+la multiresolució co\l.labora a solucionar les propietats
+problemàtiques de les sèries temporals: la regularitat, les dades
+desconegudes o un volum massiu de dades.  Les sèries temporals es
+defineixen genèriques més enllà de considerar-les simples seqüències:
+els instants de temps poden marcar alhora ordre i posició absoluta
+temporal, la distància entre les mesures pot ser irregular i
+consideren el seu àmbit d'adquisició en sistemes de monitoratge.
+
+
+
+A continuació, més particularment:
+
+\begin{itemize}
+\item Es resumeixen els models formalitzats i la tècnica de
+  multiresolució
+
+\item Es reflexiona sobre algunes consideracions i variacions dels models
+
+\item Es resumeix l'experimentació en el disseny d'implementacions per
+  als models
+
+\end{itemize}
+
+
+
+
+
+
+
+
+\section{Resum dels models}
+%Resum del model de multiresolució
+
+
+El principal objectiu de la multiresolució és l'emmagatzematge
+comprimit de sèries temporals. Així, la multiresolució es
+contextualitza en l'àmbit dels \gls{SGBD}, per la qual cosa hem
+formalitzat el model de dades dels \gls{SGSTM}, els sistemes que
+gestionen sèries temporals amb la tècnica de multiresolució. Els
+\gls{SGSTM} basen el tractament de les sèries temporals en els
+\gls{SGST}, per la qual cosa també hem descrit el model d'aquests
+sistemes. El principal objectiu dels \gls{SGST} és gestionar les
+sèries temporals de manera coherent a la dimensió temporal.
+
+
+
+La multiresolució emmagatzema una sèrie temporal mitjançant diversos
+resums d'atributs i resolucions.  Breument, el model de \gls{SGSTM}
+s'estructura a partir de \emph{sèries temporals multiresolució} com a
+conjunt de \emph{subsèries resolució}, les quals acumulen temporalment
+les mesures en un \emph{buffer} per tal de tractar-les abans
+d'emmagatzemar-les a un \emph{disc}. El tractament principal
+consisteix a canviar els intervals de temps entre mesures i a
+agregar-ne atributs, amb l'objectiu de compactar la informació de la
+sèrie temporal.  Així, cada sèrie temporal multiresolució té diferents
+paràmetres per a configurar de quina manera s'ha de resumir la
+informació i calcular les resolucions. És el que anomenem
+\emph{esquema de multiresolució} i consisteix en definir la quantitat
+de subsèries resolució i quatre paràmetres per a cadascuna: el
+\emph{pas de consolidació}, l'\emph{instant de temps d'inici de la
+  consolidació}, la \emph{funció d'agregació d'atributs} i la
+\emph{capacitat d'emmagatzematge}.
+
+
+
+El model de \gls{SGSTM} també inclou les operacions que formalitzen el
+comportament d'aquests sistemes. En primer lloc, per a emmagatzemar
+una sèrie temporals multiresolució és indispensable que hi hagi
+operacions per a afegir mesures i per a consolidar-les. En segon lloc,
+hi ha operacions per a manipular l'esquema de multiresolució i per a
+observar-ne propietats. En tercer lloc, per a consultar les dades
+emmagatzemades hi ha dues operacions bàsiques: obtenir les subsèries
+temporals consolidades i obtenir una sèrie temporal total resultant de
+concatenar les subsèries. Aquestes consultes resulten en sèries
+temporals, així per a elaborar consultes més complexes es poden
+utilitzar les operacions dels \gls{SGST}.
+
+
+
+Els \gls{SGSTM} necessiten les \emph{funcions d'agregació d'atributs}
+per a consolidar les sèries temporals originals.  Aquestes funcions,
+però, es formulen com a objectes independents del model per tal que
+l'usuari en pugui definir de pròpies.  Així, hem contextualitzat les
+agregacions en les interpretacions de mètodes de representació de
+sèries temporals i hem introduït el problema de cooperar amb la
+validació de dades durant l'agregació.  Hem exemplificat les funcions
+d'agregació d'atributs amb estadístics d'agregació simples --mitjana,
+màxim i darrer-- interpretats amb tres mètodes de representació
+--\gls{pd}, \gls{dd} i \gls{zohe}.
+
+
+
+
+Pel que fa al model de \gls{SGST}, s'estructura en \emph{mesures} i
+\emph{sèries temporals}, les quals tenen atributs de \emph{temps} i
+\emph{valor}. En les operacions es distingeix el comportament de les
+sèries temporals en conjunt, en seqüència i en funció temporal.  També
+s'observen les propietats de les sèries temporals en contextos
+determinats: els trets semàntics, els mètodes de representació i les
+patologies.  Particularment, la multiresolució ha de cooperar per a
+solucionar algunes de les propietats problemàtiques de les sèries
+temporals, com per exemple la regularitat, un gran volum de dades o
+els diversos mètodes de representació.
+
+
+En resum, proposem una solució de compressió que només emmagatzemi la
+informació prevista que es requerirà en futures consultes o bé en
+visualitzacions gràfiques.  En comparació, generalment, altres
+sistemes per sèries temporals comprimeixen i reconstrueixen el senyal
+original o bé emmagatzemen massivament les dades.  Com a tècnica de
+compressió, en els \gls{SGSTM} el procés de descompressió és nul quan
+es consulta exactament una resolució de les emmagatzemades.  A més, la
+multiresolució coopera amb propietats problemàtiques típiques de les
+sèries temporals i s'adequa a l'àmbit de monitoratge.
+
+
+\section{Consideracions}
+
+La multiresolució és una selecció d'una part de la informació d'una
+sèrie temporal. Per tant, és una solució d'emmagatzematge amb
+pèrdua. Com a conseqüència, l'usuari ha d'escollir un esquema de
+multiresolució adequat al context en què vulgui treballar.
+
+
+
+El model presentat permet aplicar els \gls{SGSTM} en dispositius que
+requerixen un emmagatzematge reduït i afitat. De fet, en els
+\gls{SGSTM} es pot preveure a priori la quantitat total de mesures
+emmagatzemades per una durada de temps suficientment llarga, tot i que
+evidentment finita. Així, es pot evitar la pèrdua de la informació per
+manca de capacitat d'emmagatzematge o per manca de temps d'enviar les
+dades a un node central, cosa que per exemple pot ocorre en sistemes
+integrats petits. 
+
+
+El model és abstracte i genèric, sobretot pel que fa als buffers, per
+tal d'abastar el màxim de contexts. Així, principalment es defineix
+una consolidació independent de cada resolució en què és possible
+utilitzar qualsevol esquema de multiresolució.
+
+
+
+Ara bé, considerant diversos contextos en què s'utilitzarà la
+multiresolució, es poden fer petits variacions en el comportament dels
+buffers. Aquestes variacions, però, impliquen restriccions en els
+paràmetres, per exemple limitem les funcions d'agregació d'atributs o
+els passos de consolidació que es poden utilitzar.  Les variacions
+explorades són: diverses resolucions que comparteixen el mateix
+buffer; resolucions encadenades, en què unes depenen de les sèries
+temporals consolidades en altres; funcions d'agregació d'atributs
+orientades a flux, és a dir que acumulen incrementalment la computació
+de les agregacions; i rellotges de consolidació de diferent
+naturalesa --externs al sistema, interns o bé relatius a altres
+resolucions.
+
+
+
+
+Pel que fa a la inserció de mesures i el procés posterior de
+consolidació, el model de \gls{SGSTM} permet tant una computació en
+temps diferit com en línia. És a dir, tant permet tenir una sèrie
+temporal ja capturada i processar-la en un \gls{SGSTM} com
+processar-la al mateix temps que es va adquirint i per tant seguint el
+flux d'entrada de dades.  Aquesta possibilitat de processar en línia
+permet fer menys crítica la computació ja que la reparteix durant
+l'adquisició de la sèrie temporal. A més permet disposar en línia de
+la multiresolució computada i per tant visualitzar-la al mateix temps
+en què es va adquirint.
+
+
+
+
+
+
+\subsection{Funcions de multiresolució i sistemes duals}
+
+
+Expressant el model de multiresolució en computació diferida, es pot
+observar el problema com una funció sobre una sèrie temporal que
+retorna una nova sèrie temporal. Així, es poden dissenyar dues
+funcions de multiresolució que tenen una funcionalitat equivalent a
+les dues consultes bàsiques dels \gls{SGSTM}. Una, fa un mapa sobre la
+sèrie temporal original i un paràmetre de multiresolució per a obtenir
+la subsèrie consolidada. L'altra, fa un plec sobre la sèrie temporal
+original i un esquema de multiresolució per a obtenir la sèrie
+temporal total.
+
+Aquestes funcions de multiresolució són operacions que es poden
+resoldre en els \gls{SGST}. De fet, és interessant la possibilitat de
+computar-les amb tècniques distribuïdes i para\l.leles com comentem
+després.
+
+
+
+
+A partir de les funcions de multiresolució es poden dissenyar
+estructures més complexes en què intervingui la multiresolució. Aquest
+és el cas de sistemes duals de multiresolució en què una mateixa sèrie
+temporal s'emmagatzema alhora en un \gls{SGST} i en un
+\gls{SGSTM}. Aleshores, segons les necessitats, es poden consultar les
+sèries temporals consolidades emmagatzemades al \gls{SGSTM} o bé, de
+forma equivalent, consultar les funcions de multiresolució al
+\gls{SGST}.  
+Els sistemes duals ofereixen altres aplicacions de la
+multiresolució.
+
+En primer lloc, la multiresolució implica pèrdua de dades i
+l'\gls{SGST} dels sistemes duals pot servir com a dipòsit a llarg
+termini de les dades originals, el qual no es consulta
+freqüentment. Habitualment es consultarien els resums d'informació
+emmagatzemats a l'\gls{SGSTM} i en cas que aquests no fossin
+suficients es podrien usar les dades de l'\gls{SGST}. Per exemple per
+a resoldre consultes detallades sobre les dades semblants a `a quina
+hora exacta ha ocorregut un esdeveniment'.
+
+En segon lloc, la multiresolució requereix definir un esquema de
+multiresolució abans de començar a recollir les dades.  Però cal
+conèixer l'entorn monitorat per a establir-ne un esquema de
+multiresolució, per exemple per a determinar quines funcions
+d'agregació són les més escaients.  En aquest període de transició,
+fins que es conegui l'esquema de multiresolució més escaient, es pot
+utilitzar un sistema dual per a experimentar amb diferents esquemes. I
+un cop determinats, ja es pot utilitzar només l'emmagatzematge en
+l'\gls{SGSTM}.
+
+En tercer lloc, la computació en flux dels \gls{SGSTM} és una
+estratègia que convé tenir present ja que permet repartir el temps de
+computació en línia amb l'adquisició de les dades.  Així, prenent com
+a referència altres conceptes similars en les vistes dels \gls{SGBD} i
+en l'arquitectura Lambda, els sistemes duals es poden aplicar seguint
+l'estratègia següent. L'\gls{SGSTM} processa el flux de dades al
+mateix temps en què s'adquireixen i sempre ofereix la resposta de
+multiresolució forma immediata, és a dir té els resultats
+precomputats. L'\gls{SGST} actua per acabar de completar les consultes
+o bé si s'ha de canviar l'esquema de multiresolució i tornar a
+començar de nou.
+
+
+
+Això no obstant, cal tenir present que els \gls{SGST} són un
+emmagatzematge massiu de les dades. A més, els sistemes duals
+impliquen en certa manera un emmagatzematge redundant de la informació
+en els dos sistemes.  En els sistemes duals, assumim que l'usuari vol
+obtenir la multiresolució de la sèrie temporal original: ja sigui per
+a visualitzar-la directament o per a utilitzar-la com a base per a
+altre consultes.  Així, hi ha contextos en què els resum de la
+multiresolució són suficients i es pot prescindir de conservar totes
+les dades històriques, per exemple en el monitoratge de l'evolució de
+la bateria disponible en un portàtil és suficient visualitzar-ne un
+resum. També en altres contextos la multiresolució és suficient per a
+respondre determinades consultes sobre les dades, per exemple una
+consulta similar a `en aquestes dades la mitjana dels darrers dies és
+similar a l'habitual o bé creix'. En aquests contextos, el model de
+multiresolució és molt adequat; la reflexió sobre la qualitat de la
+multiresolució aclareix quan les dades emmagatzemades són
+suficients i quan la informació emmagatzemada és redundant.
+
+
+
+
+
+
+\subsection{Reflexió sobre la qualitat}
+
+
+La multiresolució és una tècnica de compressió amb pèrdua de dades i
+els paràmetres de l'esquema de multiresolució són graus de llibertat
+per a cada context d'aplicació. Així, depenent d'aquests paràmetres,
+se selecciona una informació o una altra de la sèrie temporal
+original.  La compressió amb pèrdua implica que algunes operacions de
+\gls{SGST} són consultes aproximades quan es resolen a partir de les
+sèries temporals emmagatzemades en els \gls{SGSTM}. Com a
+conseqüència, cal determinar la qualitat que té la compressió de la
+multiresolució per tal de poder dissenyar correctament els esquemes de
+multiresolució i poder quantificar l'aproximació de les consultes que
+s'hi basin.
+
+
+En altres àmbits, per al cas de pèrdua principalment la compressió de
+multimèdia, la teoria de la informació avalua formalment l'efecte que
+té la compressió en la informació que hi ha originalment a les dades.
+L'anàlisi que formulem, però, és una introducció a la reflexió sobre
+l'error en la informació de la multiresolució. Així, de forma simple,
+analitzem si hi ha error o si no n'hi ha, sense pretendre
+quantificar-lo més detalladament. 
+
+
+
+Si bé definim el problema genèric d'error en la multiresolució, és un
+problema massa abstracte per a treballar-lo directament. Així doncs,
+analitzem alguns casos particulars per tal que serveixin com a exemple
+per a reflexionar sobre l'efecte que té una configuració determinada
+de paràmetres multiresolució. Concretament, es pot avaluar l'error de
+multiresolució per a algunes funcions d'agregació d'atributs
+particulars i de com siguin les consultes posteriors. Cal destacar el
+cas específic dels comptadors, en què es pot conservar la informació
+de comptatge que contenen coherentment amb la seva naturalesa.
+
+
+
+\section{Experimentació}
+
+
+Un cop s'han definit els models dels \gls{SGST} i dels \gls{SGSTM}, es
+poden implementar. D'aquesta manera, els models descriuen exactament el
+comportament de les implementacions i es pot assegurar que aquestes
+tenen el funcionament desitjat.  De fet, els models definits descriuen
+essencialment les operacions, entrades, sortides i tipus de dades
+bàsics amb els quals han de treballar les implementacions. Això és
+conegut com a interfície de programació d'aplicacions, tot i que
+habitualment s'especifiquen i es representen amb llenguatges
+informàtics, en comptes de models formals matemàtics, i incorporen
+detalls de la implementació en qüestió.
+
+
+L'objectiu de les implementacions és principalment acadèmic per a
+mostrar el funcionament dels models, tot i que també són útils per
+poder experimentar amb dades reals. Així, dissenyem tres
+implementacions de naturalesa diferent. 
+
+
+
+En primer lloc, Pytsms i RoundRobinson que són la implementació de
+referència, és a dir la que considerem que mostra com es pot
+implementar el model de multiresolució definit.  Tant admet la
+computació en línia com en diferit.  S'ha implementat amb llenguatge
+Python, tot aprofitant el paradigma d'orientació a objectes per a
+obtenir una bona correspondència entre implementació i model. A més
+Python té unes biblioteques extenses que permet afegir complements com
+per exemple gràfics o gestionar l'emmagatzematge en fitxers.
+
+
+En segon lloc, RoundRobindoop implementat amb MapReduce i
+Hadoop. Utilitza MapReduce com a tècnica de programació para\l.lela i
+distribuïda i usa Hadoop com a sistema de computació d'aquesta
+tècnica. Està basat en les funcions de multiresolució i per tant és
+una computació en diferit. Hi ha, però, algunes simplificacions del
+model de multiresolució per a poder-se ajustar a MapReduce.
+
+En tercer lloc, Reltsms implementat amb Tutorial~D, el llenguatge
+acadèmic dels \gls{SGBDR}, i Rel com a intèrpret.  Aquesta és la
+implementació més experimental, de fet Rel està en desenvolupament.
+Permet situar els \gls{SGST} en els \gls{SGBDR} i alhora avaluar
+l'adequació del model relacional per a tipus complexos com són les
+sèries temporals i la multiresolució.  Pel que fa a la multiresolució,
+s'han implementat les funcions de multiresolució. Aquesta
+implementació, però, és la més acadèmica i és limitada a l'hora de
+provar amb dades reals.
+
+
+
+Finalment, posem a prova les implementacions amb dades reals massives.
+Aquestes proves demostren el bon funcionament de la multiresolució en
+un context determinat. A més, permeten exemplificar la cobertura del
+cronograma de multiresolució sobre unes dades originals i mostrar les
+característiques dels diferents mètodes de representació i funcions
+d'agregació d'atributs, particularment del màxim i la mitjana de la
+família \gls{zohe}.
+
+
+
+
+En una comparació entre les diverses implementacions de la
+multiresolució, s'ha observat que computen els mateixos resultats per
+a un mateix cas. Tot i així, Reltsms no admet casos reals massius, ja que
+es basa en un \gls{SGBDR} totalment acadèmic i encara en
+desenvolupament.  Cal notar, però, que en la programació de les
+implementacions no hem tingut en compte l'eficiència, de fet hem
+preferit conservar una bona similitud amb les operacions algebraiques
+definides en els models.
+%
+Així doncs, basar-se en la teoria dels \gls{SGBD} a l'hora de definir
+els models ha resultat adequat per a obtenir unes implementacions
+abstractes, sense gaires detalls físics.  A més, ha permès
+implementacions de diversa natura, com són Pytsms i Reltsms.
+RoundRobindoop és la implementació més específica de totes, la podem
+qualificar com a sistema de càlcul en para\l.lel de la
+multiresolució. En canvi, RoundRobinson i Pytsms són les més
+genèriques, car les hem dissenyat com a referència dels models. Però
+també gràcies que Python disposa de biblioteques extenses, les quals
+són útils a l'hora d'implementar funcionalitats complementàries.
+
+
+
+Pel que fa a la computació de la multiresolució, s'ha vist que pot ser
+costosa a causa dels múltiples càlculs que s'han de computar. Hem
+estudiat dues estratègies remarcables.  D'una banda, la computació
+para\l.lela i distribuïda, que distribueix el còmput en els recursos
+físics disponibles i per tant permet processar ràpidament.  D'altra
+banda, la computació en línia amb el flux de dades, que distribueix el
+còmput al llarg del temps d'adquisició i per tant el fa menys crític.
+En aquest cas, la multiresolució és precomputada i sempre està
+disponible per a consultar-la o visualitzar-la immediatament. Ara bé,
+requereix planificar prèviament l'esquema de multiresolució.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
+% LocalWords:  SGSTM multiresolució subsèries

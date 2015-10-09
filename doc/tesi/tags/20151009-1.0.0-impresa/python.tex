@@ -1,0 +1,682 @@
+\lstMakeShortInline[style=pynocolor,basicstyle=\sffamily]{@}
+
+
+\chapter{Implementació de referència}
+\label{sec:implementacio:python}
+
+
+La implementació de referència dels models de \gls{SGST} i de \gls{SGSTM}
+es realitza amb Python \parencite{python:doc2}. L'objectiu d'aquesta
+implementació de referència és mantenir la fidelitat al model per tal
+de poder experimentar-hi amb tota la potència matemàtica.
+Implementem els dos models de \gls{SGST} i \gls{SGSTM} com a dues biblioteques
+diferents: \emph{Pytsms} i \emph{RoundRobinson} respectivament. La
+RoundRobinson, però, està fortament relacionada amb la
+Pytsms de la mateixa manera que hem definit els \gls{SGSTM} en base
+als \gls{SGST}.
+
+
+En la implementació amb Python utilitzem el paradigma de programació
+d'orientació a objectes. Aquest paradigma permet definir objectes que
+tenen atributs per a estructurar les dades i mètodes associats per a
+manipular-les, cosa que ens permet relacionar de manera senzilla la
+implementació amb els conceptes d'estructura i d'operacions del model.
+Per a mostrar les relacions entre els diversos objectes utilitzem
+diagrames de classe de \gls{UML}. Aquests diagrames mostren els
+objectes en caixes però, per tal que no esdevinguin massa grans, només
+hi assenyalem el nom de l'objecte, és a dir sense els atributs ni els
+mètodes.
+
+
+
+
+Implementem la part essencial dels models, és a dir l'àlgebra definida
+en els models lògics. No implementem complements habituals dels
+\gls{SGBD} que podrien ser necessaris en entorns d'explotació, com per
+exemple gestió d'usuaris i permisos, còpies de seguretat, llenguatges
+estàndards de consulta, etc.  Tampoc es tenen en compte paràmetres de
+rendiment; per exemple en el cas de dues subsèries resolució que tenen
+el mateix pas de consolidació i les funcions d'agregació d'atributs
+tenen la mateixa funció de representació --per exemple
+\glssymbol{not:sgstm:meanzohe} i \glssymbol{not:sgstm:maxzohe}--,
+aquestes podrien compartir la mateixa operació de
+selecció temporal d'interval \gls{zohe}.
+
+
+
+\section{Pytsms}
+
+La biblioteca Pytsms implementa un \gls{SGST} de referència. Així
+doncs, seguint el model, els objectes principals són les mesures, les
+sèries temporals i les representacions de les sèries temporals. Tots
+tres s'implementen respectivament com a classes @Measure@,
+@TimeSeries@ i @Representation@.
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    % Timeseries
+    \begin{class}[text width=2.5cm]{TimeSeries}{0,0}\end{class}
+
+    % Measure
+    \begin{class}[text width=2cm]{Measure}{-4,0}\end{class}
+    \aggregation{TimeSeries}{}{0..*}{Measure}
+    \begin{class}[text width=2cm]{MFloat}{-5.2,-2}\inherit{Measure}\end{class}
+    \begin{class}[text width=2cm]{MChar}{-2.8,-2}\inherit{Measure}\end{class}
+
+    % Repr
+    \begin{class}[text width=3.5cm]{Representation}{4,0}\end{class}
+    \association{TimeSeries}{1}{}{Representation}{}{1}
+    \begin{class}[text width=1.2cm]{Zohe}{2.8,-2}\inherit{Representation}\end{class}
+    \begin{class}[text width=0.8cm]{Dd}{5.2,-2}\inherit{Representation}\end{class}
+
+    % Associacions visitor
+    \begin{class}[text width=2.7cm]{RegularProp}{-1.5,-4}\end{class}
+    \unidirectionalAssociation{TimeSeries}{}{}{RegularProp}
+    \begin{class}[text width=2cm]{Storage}{1.5,-4}\end{class}
+    \unidirectionalAssociation{TimeSeries}{}{}{Storage}
+
+    % Dependencies
+    \begin{package}{Matplotlib}
+      \begin{class}[text width=2cm]{Plot}{5,-5}\end{class}
+    \end{package}
+    \draw[umlcd  style  dashed  line ,->] (Zohe) --node[above ,
+sloped , black]{} (Matplotlib); 
+    \draw[umlcd  style  dashed  line ,->] (Dd) --node[above ,
+sloped , black]{} (Matplotlib); 
+
+  \end{tikzpicture}
+
+  \caption{Diagrama \gls{UML} de Pytsms}
+  \label{fig:implementacio:pytsms-uml}
+\end{figure}
+
+
+
+
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    % Timeseries
+    \begin{class}[text width=2.5cm]{TimeSeries}{0,0}\end{class}
+    % Realisations 
+    \begin{class}[text width=2.5cm]{Structure}{-4,-3}\end{class}
+    \begin{class}[text width=2cm]{OpSet}{-1.2,-3}\end{class}
+    \begin{class}[text width=2cm]{OpSeq}{1.2,-3}\end{class}
+    \begin{class}[text width=2cm]{OpFunc}{3.5,-3}\end{class}
+    \node (TimeSeriesC) [below=of TimeSeries] {};
+    \draw[color=\umldrawcolor, -] (TimeSeries) -- node[above ,sloped , black]{} (TimeSeriesC.center); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (Structure); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (OpSet); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (OpSeq); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (TimeSeriesC.center) -| node[above ,sloped , black]{} (OpFunc); 
+    % Subrealisations
+    \begin{class}[text width=3.2cm]{SetNoTemporal}{-3,-6}\end{class}
+    \begin{class}[text width=2.8cm]{SetTemporal}{0.7,-6}\end{class}
+    \begin{class}[text width=3cm]{SetRelational}{4,-6}\end{class}
+    \node (OpSetC) [below=of OpSet] {};
+    \draw[color=\umldrawcolor, -] (OpSet) -- node[above ,sloped , black]{} (OpSetC.center); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (OpSetC.center) -| node[above ,sloped , black]{} (SetNoTemporal); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (OpSetC.center) -| node[above ,sloped , black]{} (SetTemporal); 
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (OpSetC.center) -| node[above ,sloped , black]{} (SetRelational); 
+    \begin{class}[text width=1cm]{set}{-6,-6}\end{class}
+    \draw[color=\umldrawcolor, ->, >=open triangle 45] (Structure) -- node[above ,sloped , black]{} (set); 
+  \end{tikzpicture}
+  
+  \caption{Diagrama \gls{UML} de la realització de sèries temporals a Pytsms}
+  \label{fig:implementacio:pytsms-uml-ts}
+\end{figure}
+
+
+
+
+
+La \autoref{fig:implementacio:pytsms-uml} mostra amb un diagrama
+\gls{UML} la relació entre aquests tres objectes principals. Així, per una
+banda, una @TimeSeries@ té una relació d'agregació amb les
+@Measure@, és a dir que una sèrie temporal conté cap, una o més
+d'una mesura.  Per altra banda, les sèries temporals i les
+representacions són ortogonals i això s'implementa mitjançant una
+relació d'associació bidireccional entre una @TimeSeries@ i una
+@Representation@, és a dir que una instància de sèrie temporal té
+associada una representació i una instància de representació coneix la
+sèrie temporal que representa.
+
+
+
+
+Una @TimeSeries@ és un objecte amb una gran quantitat de
+mètodes. Com a conseqüència, la implementació de funcionalitats
+essencials s'ha dividit en diversos objectes, els quals es mostren a
+la \autoref{fig:implementacio:pytsms-uml-ts}. Els mètodes que
+implementen el model estructural i el model d'operacions bàsiques
+s'han agrupat en objectes segons la seva funcionalitat. Així hi ha
+l'objecte @Structure@ que implementa el model estructural de les
+sèries temporals, l'@OpSet@ pel model d'operacions de conjunts,
+l'@OpSeq@ pel model d'operacions de seqüències i l'@OpFunc@
+pel model d'operacions de funció temporal.  Aleshores l'objecte
+@TimeSeries@ multihereta les funcionalitats d'aquests quatre
+objectes, cosa que s'implementa a Python com a
+\emph{Mixin} \parencite[\S 8.3.6, \S 20.17]{python:doc2}.  L'objecte
+@OpSet@ també té una gran quantitat de mètodes i, de la mateixa
+manera, hereta la funcionalitat de tres objectes: el
+@SetNoTemporal@ per a les operacions basades en l'orde parcial de
+les sèries temporals, el @SetTemporal@ basat en l'ordre temporal
+i el @SetRelational@ per a les operacions específiques de
+l'àlgebra relacional. Pel que fa a l'@Structure@ hereta
+funcionalitats dels objectes @set@, que són un tipus predefinit a
+Python \parencite[\S 5.7]{python:doc2}.
+
+
+Les funcionalitats complementàries de les @TimeSeries@ s'han
+implementat amb relacions d'associació unidireccionals, les quals es
+mostren a la \autoref{fig:implementacio:pytsms-uml}. Així, hi ha dues
+funcionalitats complementàries: @RegularProp@ és un objecte que agrupa
+les operacions relacionades amb la regularitat de les sèries temporals
+i @Storage@ agrupa les operacions d'emmagatzematge i de recuperació en
+fitxers. En aquests casos, l'associació unidireccional indica que les
+@TimeSeries@ són objectes que admeten les operacions complementàries i
+s'implementa a Python seguint el patró de disseny
+\emph{Visitor} \parencite{ziade08:expert_python_programming:visitor,martin02:visitor}. Amb
+aquest patró les @TimeSeries@ esdevenen \emph{Visitable}, és a dir
+accepten objectes \emph{Visitor} que aporten funcionalitats
+extres. Així doncs, els objectes @RegularProperties@ i @Storage@ són
+\emph{Visitor} i les @TimeSeries@ tenen un mètode @accept@ que permet
+acceptar-los.
+
+
+La \autoref{fig:implementacio:pytsms-uml} mostra exemples
+d'especialitzacions de les mesures i de les representacions.
+%
+Pel que fa a les @Measure@, poden tenir especialitzacions segons
+els tipus dels atributs de temps i de valor. Amb aquesta relació
+implementem la propietat homogènia de les sèries temporals i la
+definició de mesura indefinida i de valor indefinit, és a dir que
+totes les mesures que conté una sèrie temporal són del mateix tipus i
+cada tipus de mesura té uns valors de l'atribut temps que la
+defineixen indefinida i uns valors de l'atribut valor que la
+defineixen de valor indefinit.  Així, per defecte, una @Measure@
+defineix els reals $-\infty$ i $+\infty$ per a les mesures indefinida
+negativa i positiva respectivament, i defineix el valor @None@ de
+Python per a la mesura de valor indefinit. Aleshores, mitjançant
+especialitzacions es poden definir altres tipus de mesures; per
+exemple la @MFloat@ que defineix el real $\infty$ com a valor
+indefinit o bé la @MChar@ que defineix mesures de tipus caràcter.
+
+
+
+
+Pel que fa a les representacions, cada representació en concret és una
+especialització de @Representation@. Per exemple @Zohe@ i
+@Dd@ implementen la funció de representació \gls{zohe} i la \gls{dd}
+respectivament.
+%\emph{Representation} és una classe abstracta?
+Bàsicament, cada representació particular ha de definir l'operació que
+calcula l'interval temporal i l'operació que permet trobar-ne el graf.
+També cadascuna implementa una operació que dibuixi correctament el
+gràfic de la sèrie temporal segons la representació; en les
+representacions definides s'usa la biblioteca
+\emph{Matplotlib} \parencite{python:matplotlib}  per a fer els gràfics.
+
+
+
+
+
+
+
+\section{RoundRobinson}
+
+La biblioteca RoundRobinson implementa un \gls{SGSTM} de
+referència. Així doncs, seguint el model, els objectes principals són
+les sèries temporals multiresolució, les subsèries resolució, els
+discs, els buffers i les funcions d'agregació
+d'atributs. Respectivament s'implementen com a classes
+@MultiresolutionSeries@, @Resolution@, @Disc@, @Buffer@ i @Function@
+--les funcions d'agregació d'atributs són realitzades per @Function@
+de Python.
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    % MultiTimeseries
+    \begin{class}[text width=1cm]{set}{-4,0}\end{class}
+    \begin{class}[text width=4.5cm]{MultiresolutionSeries}{0,0}\inherit{set}\end{class}
+    % Components 
+    \begin{class}[text width=2.5cm]{Resolution}{0,-3}\end{class}
+    \aggregation{MultiresolutionSeries}{}{}{Resolution}
+    % SubComponents
+    \begin{class}[text width=2cm]{Buffer}{-1.2,-6}\end{class}
+    \begin{class}[text width=2cm]{Disc}{1.2,-6}\end{class}
+    \begin{package}{aggregators}
+      \begin{interface}[text width=2.5cm]{Function}{-3,-9}
+        \attribute{s, i}
+      \end{interface}
+    \end{package}
+    \composition{Resolution}{}{1}{Buffer}
+    \composition{Resolution}{}{1}{Disc}
+    \unidirectionalAssociation{Buffer}{}{1}{Function}
+
+    % Agregadors
+    \begin{class}[text width=2.5cm]{maxzohe}{-4,-12}
+      \inherit{Function}
+    \end{class}
+    \begin{class}[text width=2.5cm]{meanzohe}{-1,-12}
+      \inherit{Function}
+    \end{class}
+
+    % TimeSeries
+    \begin{package}{Pytsms}
+      \begin{class}[text width=2.5cm]{TimeSeries}{1.2,-9}\end{class}
+    \end{package}
+    \unidirectionalAssociation{Buffer}{}{1}{TimeSeries}
+    \unidirectionalAssociation{Disc}{}{1}{TimeSeries}
+
+    % Associacions visitor
+    \begin{class}[text width=2cm]{Storage}{4,-3}\end{class}
+    \unidirectionalAssociation{MultiresolutionSeries}{}{}{Storage}
+    \begin{class}[text width=2cm]{Plot}{4,-1}\end{class}
+    \unidirectionalAssociation{MultiresolutionSeries}{}{}{Plot}
+  \end{tikzpicture}
+
+  \caption{Diagrama \gls{UML} de RoundRobinson}
+  \label{fig:implementacio:roundrobinson-uml}
+\end{figure}
+
+
+
+La \autoref{fig:implementacio:roundrobinson-uml} mostra amb un
+diagrama \gls{UML} la relació entre aquests cinc objectes
+principals. Així, una @MultiresolutionSeries@ té una relació
+d'agregació amb les @Resolution@, és a dir que una sèrie temporal
+multiresolució conté subsèries resolucions.  Una @Resolution@ té una
+relació de composició amb un @Buffer@ i una altra amb un @Disc@, és a
+dir que cada subsèrie resolució està formada exactament per un buffer
+i un disc. Cada @Buffer@ té una relació d'associació amb una
+@TimeSeries@, és a dir amb la sèrie temporal del buffer; de manera
+similar per la sèrie temporal del disc cada @Disc@ s'associa a una
+@TimeSeries@. A més, cada @Buffer@ també té una relació d'associació
+amb una @Function@ que ha de tenir dos paràmetres: la sèrie temporal
+(@s@) i l'interval de consolidació (@i@). Noteu que en el model hem
+definit una funció d'agregació d'atributs sobre una sèrie temporal, un
+instant de consolidació $\tau$ i un pas de consolidació $\delta$,
+mentre que les implementem sobre una sèrie temporal i directament
+sobre l'interval de consolidació $i=[\tau,\tau+\delta]$.
+
+
+
+
+
+Les @MultiresolutionSeries@ tenen funcionalitats complementàries
+que s'han implementat amb relacions d'associació
+unidireccionals. Així, hi ha dues funcionalitats complementàries:
+@Plot@ per a les operacions relacionades amb la visualització
+gràfica i @Storage@ per a operacions d'emmagatzematge i de
+recuperació en fitxers. Aquests dos objectes també s'han implementat
+amb patró de disseny \emph{Visitor} i les @MultiresolutionSeries@
+són \emph{Visitable} de la mateixa manera que en el cas de les
+funcionalitats complementàries de Pytsms.
+
+
+Les @MultiresolutionSeries@ com a conjunts formats per
+@Resolution@ s'han implementat heretant funcionalitats dels
+@set@ de Python. Així, per a definir l'esquema multiresolució hi
+ha un mètode @addResolution@ que permet afegir subsèries
+resolució. Cadascuna es configura amb quatre paràmetres: @delta@,
+@k@, @f@ i @tau@, els quals creen una @Resolution@
+amb el @Buffer@ i el @Disc@ corresponent.
+
+Les @MultiresolutionSeries@ tenen mètodes que operen amb totes les
+@Resolution@ contingudes. Els més importants són el mètode @add@ per a
+afegir noves mesures, el @consolidable@ per a determinar si alguna
+subsèrie és @consolidable@ i el @consolidate@ que consolida totes les
+consolidables.
+
+Per a les consultes, hi ha dos mètodes: @discSeries@ i @total@. El
+@discSeries@ té com a paràmetres @delta@ i @f@ i retorna la
+@TimeSeries@ del @Disc@ corresponent. El @total@ retorna la
+concatenació de tots els @discSeries@ possibles ordenats per @delta@;
+com que no hi pot haver @delta@ repetits, el mètode @total@ té un
+paràmetre @f@ que permet seleccionar només aquells @discSeries@ que
+tenen unes determinades funcions d'agregació d'atributs.
+
+
+
+En un mòdul @aggregators@ hi ha predefinides algunes funcions
+d'agregació d'atributs com per exemple la @max_zohe@ o la
+@mean_zohe@ que respectivament agreguen el màxim i la mitjana seguint
+la representació \gls{zohe}.  Això no obstant, els usuaris en poden
+definir de pròpies ja que són @Function@ de Python amb els paràmetres
+@s@ una @TimeSeries@ i @i@ una parella d'instants de temps com ara
+@[ta,tb]@ i que retornen una @Measure@. Per exemple la funció
+@mean_zohe@ retorna una mesura amb @tb@ com a temps i com a valor
+l'àrea mitjana a partir la selecció temporal \gls{zohe} de la sèrie
+temporal en l'interval de temps donat.
+
+
+
+
+
+
+\section{Exemples d'ús}
+
+
+Amb les biblioteques Pytsms i RoundRobinson podem treballar amb les
+sèries temporals i les sèries temporals multiresolució de manera molt
+semblant als models algebraics de \gls{SGST} i de \gls{SGSTM}.
+
+
+
+
+El \autoref{lst:pytsms:ex1} és un exemple d'ús de Pytsms on definim
+dues sèries temporals @s1@ i @s2@ i hi apliquem diverses operacions:
+unió, unió temporal, concatenació, interval tancat, interval temporal
+\gls{zohe}, selecció temporal \gls{zohe}, comprovació de propietats de
+regularitat i consultes de gràfics. Noteu que @Measure@ s'abrevia amb
+@m@.
+
+\begin{lstlisting}[style=py,caption=Exemple d'operacions amb Pytsms,label=lst:pytsms:ex1]
+#Importació dels objectes necessaris
+>>> from pytsms import TimeSeries, Measure as m
+>>> from pytsms.representation import Zohe
+>>> from pytsms.properties import isRegular
+
+#Definició de les dues sèries temporals d'exemple
+>>> s1 = TimeSeries([ m(1,1), m(3,1), m(4,0), m(5,1) ])
+>>> s2 = TimeSeries([ m(2,2), m(3,2), m(4,0), m(6,2) ])
+
+#Manipulacions de les dues sèries temporals
+# æ$s_1 \glssymbol{not:sgst:cup} s_2$æ
+>>> s1.union(s2)
+TimeSeries([m(1,1), m(2,2), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s_1 \glssymbol{not:sgst:cupt} s_2$æ
+>>> s1.union_temporal(s2)
+TimeSeries([m(1,1), m(2,2), m(4,0), m(5,1), m(6,2)])
+# æ$s_1 \glssymbol{not:sgst:concatenate} s_2$æ
+s1.concatenate(s2) 
+TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
+# æ$s_2[2,5]$æ
+>>> s2.interval_closed(2,5)
+TimeSeries([m(2,2), m(3,2), m(4,0)])
+# æ$s_2[2,5]^{\glssymbol{not:zohe}}$æ
+>>> s2.interval_temporal(2,5,Zohe)
+TimeSeries([m(3,2), m(4,0), m(5,2)])
+
+#Comprovació de la regularitat
+# æ$s_2$æ no és regular
+>>> s2.accept(isRegular())
+False
+# regularitzem æ$s_2$æ amb la selecció temporal æ$s_2[{0,2,4}]^{\glssymbol{not:zohe}}$æ
+>>> r2 = s2.selection_temporal([0,2,4],Zohe)
+>>> r2
+TimeSeries([m(0,2), m(2,2), m(4,0)])
+>>> r2.accept(isRegular())
+True
+
+Gràfic de la sèrie temporal æ$s_2$æ amb representació æ\gls{zohe}æ
+>>> s2.plot(rpr=Zohe)
+[æv.~\autoref{fig:python:plotzohe}æ]
+\end{lstlisting}
+
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseries,
+        ylabel={},
+        xlabel={},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (2,2)
+         (3,2)
+         (4,0)
+         (6,2)
+       };
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Gràfic de la sèrie temporal d'exemple $s_2$ amb
+     representació \gls{zohe}}
+   \label{fig:python:plotzohe}
+\end{figure}
+
+
+
+
+Al~\autoref{lst:pytsms:ex1} es mostra l'ús de funcionalitats
+complementàries de Pytsms, el qual s'ha dissenyat extensible per a
+poder incorporar noves operacions, per a la regularitat.  En
+el~\autoref{lst:pytsms:storage} cas es mostra l'ús d'operacions
+d'emmagatzematge en fitxers, del mòdul @storage@. Primer s'emmagatzema
+la @s2@ del~\autoref{lst:pytsms:ex1} en un fitxer amb format de
+\gls{CSV}, en què cada línia és una parella de temps i valor separats
+per una coma, i després es recupera del fitxer la sèrie temporal
+emmagatzemada. Les dades emmagatzemades al fitxer es mostren
+al~\autoref{lst:pytsms:csv}.
+\begin{lstlisting}[style=py,caption=Operacions complementàries de Pytsms per a l'emmagatzematge,label=lst:pytsms:storage]
+#Importació dels objectes necessaris
+>>> from pytsms.storage import SaveCsv, LoadCsv
+
+#Emmagatzematge en format æ\gls{CSV}æ de nom st2.csv
+>>> s2.accept(SaveCsv('st2.csv'))
+#Recuperació a partir de format æ\gls{CSV}æ
+>>> sr = TimeSeries([])
+>>> sr.accept(LoadCsv('st2.csv'))
+TimeSeries([m(2,2), m(3,2), m(4,0), m(6,2)])
+\end{lstlisting}
+
+\begin{lstlisting}[style=file,caption=Dades del fitxer st2.csv,label=lst:pytsms:csv]
+2,2
+3,2
+4,0
+6,2
+\end{lstlisting}
+
+
+
+
+
+
+El \autoref{lst:roundrobinson:ex1} és un exemple d'ús de RoundRobinson
+on definim una sèrie temporal multiresolució @M@, hi afegim una sèrie
+temporal @s@, i hi apliquem la consolidació fins que no sigui
+consolidable. Finalment, consultem el resultat amb les dues consultes
+bàsiques --$\glssymbol{not:sgstm:seriedisc}$ i
+$\glssymbol{not:sgstm:serietotal}$-- i ho dibuixem gràficament.  Les
+dades són les mateixes que a \textref{ex:model:bdm1} i també la
+consolidació resultant, tot i que ara les sèries temporals tenen
+valors diferents de zero per a poder observar els resultats de les
+funcions d'agregació d'atributs.
+
+
+
+\begin{lstlisting}[style=py,caption=Exemple d'operacions amb RoundRobinson,label=lst:roundrobinson:ex1]
+#Importació dels objectes necessaris
+>>> from pytsms import TimeSeries, Measure as m
+>>> from roundrobinson import MultiresolutionSeries
+>>> from roundrobinson.aggregators import mean_zohe,maximum_zohe
+>>> from roundrobinson.plot import Plot
+>>> from pytsms.representation import Zohe
+
+#Definició de la sèrie temporal d'exemple
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),m(14,1),m(19,6),m(22,11),m(26,6),m(29,0)])
+
+#Definició de la sèrie temporal multiresolució
+>>> M = MultiresolutionSeries()
+#Definició de l'esquema multiresolució
+>>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
+>>> M.addResolution(delta=10,k=3,f=maximum_zohe,tau=0)
+
+#Addició de totes les mesures de la sèrie temporal
+>>> for m in s: M.add(m)
+#M ja és consolidable
+>>> M.consolidable()
+True
+#Consolidació fins que no sigui consolidable
+>>> while M.consolidable(): M.consolidate()
+
+#Consulta æ$\glssymbol{not:sgstm:seriedisc}(M,5,\glssymbol{not:sgstm:meanzohe})$æ
+>>> M.discSeries(5,mean_zohe)
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+#Consulta æ$\glssymbol{not:sgstm:seriedisc}(M,10,\glssymbol{not:sgstm:maxzohe})$æ
+>>> M.discSeries(10,maximum_zohe)
+TimeSeries([m(10,6), m(20,11)])
+#Consulta æ$\glssymbol{not:sgstm:serietotal}(M)$æ
+>>> M.total()
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+#Gràfic multiresolució
+>>> M.accept(Plot())
+[æv.~\autoref{fig:python:BDMm}æ]
+#Gràfic Pytsms de la sèrie temporal total amb representació æ\gls{zohe}æ
+>>> M.total().plot(rpr=Zohe)
+[æv.~\autoref{fig:python:BDMmtotal}æ]
+\end{lstlisting}
+%from pytsms import TimeSeries, Measure; from roundrobinson import MultiresolutionSeries; from aggregators import mean_zohe,maximum_zohe; from plot import Plot
+%s = TimeSeries([Measure(1,6),Measure(5,2),Measure(8,5),Measure(10,0),Measure(14,1),Measure(19,6),Measure(22,11),Measure(26,6),Measure(29,0)]); M = MultiresolutionSeries(); M.addResolution(delta=5,k=4,f=mean_zohe,tau=0); M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
+
+
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        multiresolucio,
+        title={R: 5/mean\_zohe $|4|$},
+        ylabel={},
+        xlabel={},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (10,3)
+         (15,2)
+         (20,7)
+         (25,8)
+       };
+    \end{axis}
+   \end{tikzpicture}
+  \begin{tikzpicture}
+    \begin{axis}[
+        multiresolucio,
+        title={R: 10/maximum\_zohe $|3|$},
+        ylabel={},
+        xlabel={},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (10,6)
+         (20,11)
+       };
+    \end{axis}
+   \end{tikzpicture}
+   \caption{Base de dades multiresolució $M$}
+   \label{fig:python:BDMm}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        timeseries,
+        ylabel={},
+        xlabel={},
+        ]
+       \addplot[const plot mark right, blue,mark=*] coordinates {
+         (10,3)
+         (15,2)
+         (20,7)
+         (25,8)
+       };
+    \end{axis}
+   \end{tikzpicture}
+   \caption{$\glssymbol{not:sgstm:serietotal}(M)$ amb representació \gls{zohe}}
+   \label{fig:python:BDMmtotal}
+\end{figure}
+
+
+
+Al~\autoref{lst:roundrobinson:storage} es mostra l'ús de
+funcionalitats complementàries de RoundRobinson, el qual s'ha
+dissenyat extensible per a poder incorporar noves operacions, per als
+gràfics.  En el~\autoref{lst:roundrobinson:storage} es mostra l'ús
+d'operacions d'emmagatzematge en fitxers, del mòdul @storage@. Primer
+s'emmagatzema la @M@ del~\autoref{lst:roundrobinson:storage} en un
+fitxer amb format Pickle, que és un format d'emmagatzematge de
+Python \parencite{python:doc2}, i després es recupera del fitxer la
+sèrie temporal multiresolució emmagatzemada.  Segon s'emmagatzema la
+@M@ del~\autoref{lst:roundrobinson:storage} en un fitxer amb format
+\gls{CSV} i després es recupera del fitxer la sèrie temporal
+multiresolució emmagatzemada.  Les dades emmagatzemades al fitxer \gls{CSV} es
+mostren al~\autoref{lst:roundrobinson:csv}.
+
+\begin{lstlisting}[style=py,caption=Operacions complementàries de RoundRobinson per a l'emmagatzematge,label=lst:roundrobinson:storage]
+#Importació dels objectes necessaris
+>>> from roundrobinson.storage import SavePickle, LoadPickle, SaveCsv, LoadCsv
+
+#Emmagatzematge en format Pickle de nom mrd.pickle
+>>> M.accept(SavePickle('mrd.pickle'))
+#Recuperació a partir de format Pickle
+>>> Mr = MultiresolutionSeries([])
+>>> Mr = Mr.accept(LoadPickle('mrd.pickle'))
+>>> Mr == M
+True
+
+#Emmagatzematge en format æ\gls{CSV}æ de nom mrd.csv
+>>> M.accept(SaveCsv('mrd.csv'))
+#Recuperació a partir de format æ\gls{CSV}æ
+>>> Mr = M.accept(LoadCsv('mrd.csv'))
+\end{lstlisting}
+
+
+\begin{lstlisting}[style=file,caption=Dades del fitxer mrd.csv,label=lst:roundrobinson:csv]
+5 mean_zohe 25 8
+5 mean_zohe 10 3
+5 mean_zohe 20 7
+5 mean_zohe 15 2
+10 maximum_zohe 10 6
+10 maximum_zohe 20 11
+\end{lstlisting}
+
+
+Cal notar que en el cas de l'emmagatzematge en \gls{CSV} no es tenen
+en compte els buffers, per tant la recuperació no és estrictament el
+mateix que la sèrie temporal multiresolució original.
+
+
+
+
+% \todo{}
+% Un cas d'exemple és demostrar l'equivalència entre l'operació multiresolució dels SGST sobre una sèrie temporal i la sèrie temporal resultant d'una consolidació dels SGSTM. 
+
+
+
+% def MTSMSequivalenceTSMS(s,schema):
+%     """
+%     >>> from pytsms.consult import multiresolution
+%     >>> s = TimeSeries([Measure(5,5),Measure(11,1),Measure(12,2),Measure(16,1),Measure(21,1),Measure(26,1)])
+%     >>> def _max(s,i): sp=s[i[0]:i[1]]; return Measure(i[1], None if len(sp)==0 else max(sp.projection('v')))
+%     >>> schema = [(5,4,_max,10),(10,3,_max,0)]
+%     >>> MTSMSequivalenceTSMS(s,schema)
+%     True
+%     """
+%     from pytsms.consult import multiresolution
+    
+%     schemats = TimeSeries()
+%     m = MultiresolutionSeries()
+%     for delta,k,f,tau in schema:
+%         m.addResolution(delta,k,f,tau)
+%         schemats.add(Measure(delta,(tau,f,k)))
+    
+%     m.update(s)
+%     m.consolidateTotal()
+    
+%     return multiresolution(s,schemats) == m.total()
+
+
+
+
+\lstDeleteShortInline{@}
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% End:
