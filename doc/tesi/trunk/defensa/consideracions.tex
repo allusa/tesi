@@ -1,0 +1,236 @@
+\subsection{Consideracions}
+
+
+
+
+\begin{frame}{SGSTM vs.\ funció de multiresolució}
+
+
+Model sistema de gestió de bases de dades (conserva estat):
+
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+
+
+ \node[mynode] (S) {Sèrie temporal};
+ \node[mynode, verd, right=2cm of S] (sgstm) {SGSTM};
+ \node[mynode, above right=-0.5cm and 2cm of sgstm] (Sp) {Nova sèrie temporal};
+ \node[mynode, below=1.5cm of Sp.west, anchor=west] (S1) {subsèries};
+
+ \draw[->] (S) -- (sgstm) node[above,midway,sloped] {afegeix} node[below,midway,sloped] {mesura}; 
+ \draw[->] (sgstm) -- (Sp) node[above,midway,sloped] {total}; 
+ \draw[->] (sgstm) -- (S1) node[above,midway,sloped] {disc}; 
+ \node[left=2.1cm of Sp.north] (consultes) {consultes};
+
+\end{tikzpicture}
+\end{center}
+
+
+
+
+Model d'operació de multiresolució (sobre un SGST):
+
+
+\begin{center}
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+
+
+ \node[mynode] (S) {Sèrie temporal};
+ \node[mynode, right=4cm of S] (Sp) {Nova sèrie temporal};
+ \draw[->] (S) -- (Sp) node[above,midway] {multiresolució}; 
+
+ \node[mynode, below right=0.5cm and 1cm of S] (S1) {subsèries};
+ \draw[->] (S) -- (S1) node[above,midway,sloped] {mapa}; 
+ \draw[->] (S1) -- (Sp) node[above,midway,sloped] {plec}; 
+
+
+\end{tikzpicture}
+\end{center}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}{Usos de la multiresolució}
+
+Possibilitats de computació:
+
+  \begin{itemize}
+  \item Computació offline
+  \item Computació incremental
+  \item Computació para\l.lela (offline)
+  \end{itemize}
+
+
+Arquitectures dels sistemes:
+  \begin{itemize}
+
+  \item Únicament SGSTM: emmagatzematge amb pèrdua, aproximació a l'històric, dades originals no són necessàries.
+  \item SGST+SGSTM: dipòsit a llarg termini poc consultat i sistema per a resoldre consultes habituals o visualitzacions immediates
+  \item Funció de multiresolució (para\l.lela): experimentació 
+  \end{itemize}
+
+
+\end{frame}
+
+
+
+\begin{frame}{Sistemes duals}
+
+
+
+
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+
+
+
+
+ \node[mynode] (m) {$S$};
+
+ \node[right=2cm of m] (mdins) {};
+
+ \node[mynode, verd, above right=0.6cm and 1cm of mdins] (tsms) {SGST};
+
+ \node[mynode, verd, below right=0.6cm and 1cm of mdins] (mtsms) {SGSTM};
+
+ \node[rectangle,draw,minimum height=6cm,minimum width=9.5cm,right=-0.25cm of mdins] (dual) {};
+
+\draw[shift=( dual.south west)]   
+  node[above right] {sistema dual de multiresolució};
+
+
+
+
+
+
+ \node[mynode,right=3cm of mtsms] (ts) {$S'$};
+
+
+
+ \draw (m.east) -- (mdins.east) node[above right,at start]
+ {afegeix$(m)$};
+
+ \draw[myarrow] (mdins.east) -- (tsms.west);
+ \draw[myarrow] (mdins.east) -- (mtsms.west);
+
+
+ \draw[myarrow] (tsms) -- (ts) node[above,midway,sloped]
+ {$multiresolucio(S,\text{esquema})$}; 
+ 
+ \draw[myarrow] (mtsms) -- (ts) node[above,midway,sloped]
+ {$SerieTotal(M)$};
+
+
+
+
+ \node[right=6cm of tsms] (consdins) {};
+
+ \draw (tsms) -- (consdins.center);
+ \draw (ts) -- (consdins.center);
+
+ \node[right=2.5cm of consdins] (consultes) {};
+ \draw[myarrow] (consdins.center) -- (consultes) node[above,midway,sloped]
+ {consultes};
+
+
+
+\end{tikzpicture}
+
+Conceptes relacionats: arquitectura Lambda \parencite{marz14:bigdata} i precomputació de vistes \parencite{date04:introduction8}.
+
+
+
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Quantificació de l'error - Teoria de la informació}
+
+Selecció de la informació en la compressió amb pèrdua de la muliresolució. 
+Quantificació de l'error: 
+
+\begin{center}
+consulta(sèrie temporal original) vs.\ consulta(multiresolució)
+\end{center}
+
+
+Escenaris particulars analitzats:
+\begin{itemize}
+\item Consulta a tota la sèrie temporal i mateixa consulta i atribut:
+  \begin{itemize}
+  \item Màxim i total no tenen error
+  \item Mitjana té error
+  \item Mitjana en el cas d'una sèrie temporal regular no té error 
+  \end{itemize}
+
+\item Consultes d'un interval determinat:
+  \begin{itemize}
+  \item Interval múltiple de les resolucions consolidades: similar al punt anterior
+  \item No múltiple: hi ha error. Fitat per a variables monòtones creixents.
+  \end{itemize}
+
+\item Conservació dels totals en comptadors
+
+\item Equivalència de l'atribut mitjana en sèries temporals regulars per a diversos mètodes de representació.
+
+\end{itemize}
+
+\end{frame}
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "defensa"
+%%% End: 
+%  LocalWords:  multiresolució
