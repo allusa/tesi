@@ -116,7 +116,22 @@
 
 \begin{frame}{SGSTM - Operacions}
 
+  \begin{itemize}
+  \item Estructurals: 
+    \begin{itemize}
+    \item afegir mesura als buffers 
+    \item consolidar les resolucions
+    \end{itemize}
 
+  \item Manipulació de l'esquema
+
+  \item Consultes
+    \begin{itemize}
+    \item extracció de subsèries
+    \item sèrie temporal total
+    \end{itemize}
+
+  \end{itemize}
 
 
 \end{frame}
@@ -124,7 +139,55 @@
 
 \begin{frame}{SGSTM - Funcions d'agregació d'atributs}
 
+\begin{centering}
 
+ mesura = funció(sèrie temporal, interval de consolidació)
+
+
+   \begin{tikzpicture}[scale=0.7, every node/.style={transform shape}]
+    \begin{axis}[
+        ymin = 0,
+        yticklabels= {,,,,valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,,$\underbrace{t_0 \vphantom{\delta}}_{\tau^0}$,,$\underbrace{\tau_0+\delta}_{\tau_1}$,,$\underbrace{\tau_1+\delta}_{\tau_2}$,,$\underbrace{\tau_2+\delta}_{\tau_3 \ldots}$},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (19,4)
+        (22,6)
+        (25,7)
+        (29,8)
+        (30,4)
+        (35,2)
+        (41,5)
+        (45,8)
+    };
+
+          \addplot[only marks,mark=*,green] coordinates {
+            (30,7)
+            (40,3)
+            (50,6)
+          };
+
+          \node[right] at (axis cs:30,7) {$m_1$};
+          \node[right] at (axis cs:40,3) {$m_2$};
+          \node[above] at (axis cs:50,6) {$m_3$};
+    \end{axis}
+  \end{tikzpicture}
+
+\end{centering}
+
+\begin{itemize}
+  \item agregació amb representació
+  \item tractament i validació de dades
+  \end{itemize}
 
 
 \end{frame}
