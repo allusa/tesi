@@ -3,7 +3,7 @@
 
 
 
-\begin{frame}{Multiresolució: exemple}
+\begin{frame}{Exemple multiresolució: sèrie temporal original}
 
 \begin{center}
 \input{imatges/exemple/isense_original.tex}
@@ -11,9 +11,8 @@
 
 \end{frame}
 
-\begin{frame}{Multiresolució: exemple}
+\begin{frame}{Exemple multiresolució: esquema de multiresolució}
 
-Esquema de multiresolució
 
 \begin{center}
 \input{imatges/exemple/mtsdb-time_window.tex}
@@ -21,7 +20,7 @@ Esquema de multiresolució
 
 \end{frame}
 
-\begin{frame}{Multiresolució: exemple}
+\begin{frame}{Exemple multiresolució: subsèries emmagatzemades}
 
 
 \begin{center}
@@ -30,9 +29,7 @@ Esquema de multiresolució
 
 \end{frame}
 
-\begin{frame}{Multiresolució: exemple}
-
-Consulta de les sèries temporals emmagatzemades
+\begin{frame}{Exemple multiresolució: comparació}
 
 \begin{center}
 \input{imatges/exemple/isense_mrdb-all.tex}
@@ -125,21 +122,51 @@ Consulta de les sèries temporals emmagatzemades
   \item Estructurals: 
     \begin{itemize}
     \item afegir mesura als buffers 
-    \item consolidar les resolucions
+    \item consolidar les resolucions: agregar buffer i afegir al disc
     \end{itemize}
 
   \item Manipulació de l'esquema
+    \begin{itemize}
+    \item cronogrames, canvis, junció\dots
+    \end{itemize}
 
   \item Consultes
     \begin{itemize}
-    \item extracció de subsèries
-    \item sèrie temporal total
+    \item extracció de subsèries temporals dels discs
+    \item sèrie temporal total: màxima resolució
     \end{itemize}
 
   \end{itemize}
 
 
+\begin{block}{Sèrie temporal total}
+Concatenació de les subsèries temporals ordenades per pas de consolidació de les resolucions
+\end{block}
+
 \end{frame}
+
+
+
+\begin{frame}{Exemples de consultes}
+
+Les consultes de multiresolució obtenen sèries temporals:
+
+\begin{itemize}
+\item Obtenció de la resolució més propera a la demandada
+\item Operacions de SGST per a una sèrie temporal: $\max(S)$
+\item Operacions de SGST per a dues sèries temporals: $S_1 + S_2$
+\end{itemize}
+
+Les operacions amb dues sèries temporals impliquen junció:
+
+\begin{itemize}
+\item Si són regulars amb els mateixos temps: junció conjunts
+\item Si no són regulars: junció temporal
+\end{itemize}
+
+
+\end{frame}
+
 
 
 \begin{frame}{SGSTM - Funcions d'agregació d'atributs}

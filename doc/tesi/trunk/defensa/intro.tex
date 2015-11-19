@@ -1,20 +1,24 @@
 \subsection{Objectius i característiques}
-\begin{frame}{Introducció: objectius principals}
+\begin{frame}{Objectius principals}
 
   \begin{itemize}
-  \item Sèries temporals
-  \item Sistemes de gestió de bases de dades (SGBD)
-  \item Multiresolució
+  \item Sèries temporals: multitud d'algoritmes d'anàlisi
+  \item Sistemes de gestió de bases de dades (SGBD): gestió i tractament de dades
+  \end{itemize} 
+
+\begin{block}{Multiresolució}
+  Compressió de certa informació de la sèrie temporal
     \begin{itemize}
     \item diverses resolucions (períodes regulars)
     \item diverses agregacions d'atributs 
     \end{itemize}
-  \end{itemize} 
+\end{block}
+
 
 \end{frame}
 
 
-\begin{frame}{Introducció: característiques}
+\begin{frame}{Característiques de la multiresolució}
 
   \begin{itemize}
   \item Formalització: àlgebra de conjunts, àlgebra relacional
@@ -23,55 +27,128 @@
   \item Regularització de les sèries temporals
   \item Computació incremental
   \item Precomputació de consultes i visualitzacions immediates
+  \item Aplicacions: sistemes encastats, xarxes de sensors, big data\dots
   \end{itemize}
 
 \end{frame}
 
-\subsection{Estat de la qüestió}
-\begin{frame}{Introducció: estat SGBD}
+
+\begin{frame}{Assoliments de la tesi}
 
   \begin{itemize}
+  \item Formalització del model dels sistemes multiresolució sòlidament en l’àlgebra de conjunts i particularment en l’àlgebra relacional.
+  \item Funcions d’agregació d’atributs genèriques i independents i funcions de representació per considerar el comportament en diversos contexts.
+  \item Solució de compressió amb pèrdua i mida fitada. Apta per a sitemes petits
+  \end{itemize}
+
+\end{frame}
+
+
+
+\subsection{Estat de la qüestió}
+% \begin{frame}{Introducció: estat SGBD}
+
+%   \begin{itemize}
+%   \item Model relacional: teoria de conjunts (àlgebra relacional) i lògica de predicats (càlcul relacional)
+%   \item Sistemes SQL
+%   \item Sistemes NoSQL
+%   \item Sistemes NewSQL
+%   \item The Third Manifesto 
+%   \item \emph{One size does not fit all} \parencite{stonebraker09}
+%   \end{itemize}
+
+% \end{frame}
+
+
+% \begin{frame}{Introducció: estat sistemes sèries temporals}
+%   \begin{itemize}
+
+%   \item Emmagatzematge massiu:
+%     \begin{itemize}
+%      \item Sistemes per matrius: SciDB i SciQL
+%      \item Sistemes d'emmagatzematge distribuït: OpenTSDB
+%     \end{itemize}
+%   \item Compressió de dades:
+%     \begin{itemize}
+%     \item amb pèrdua: RRDtool
+%     \item sense pèrdua: Tsdb
+%     \item representació aproximada òptima: iSAX
+%     \item  emmagatzematges en memòries flash  %Dou   
+%     \end{itemize}
+
+%   \item Flux de dades (\emph{data stream}): 
+%     \begin{itemize}
+%     \item Xarxes de sensors: Cougar, TinyDB
+%     \item Algoritmes de més pes a les dades recents \parencite{cormode08:pods}
+%     \end{itemize}
+
+
+% \end{itemize}
+
+
+% \emph{Nota:} SGBD per dades bitemporals diferents als de sèries temporals \parencite{schmidt95}
+
+
+% \end{frame}
+
+\begin{frame}{Estat actual i motivació}
+  \begin{itemize}
+  \item  SGBD per a dades bitemporals (històrics) i per a sèries temporals no són el mateix
+  \item Multitud de tècniques d’anlàsis de sèries temporals, representacions aproximades òptimes: cal poder-les integrar en els SGBD %(candidats a funcions d’agregació)
+  \item Dades voluminoses: per què no una tècnica de compressió amb pèrdua?
+  \item Més pes a les dades més recents:  RRDtool%, cormode, flash storages (en àmbits particulars, oferim més genericitat i ho integrem en un SGBD)
+  \item Emmagatzematge massiu:  però després com analitzem les dades?
+  \item Computació paral·lela però també cal pensar en sistemes amb recursos restringits (temps, processament, capacitat, energia)
+  \item Computació incremental per a fluxos de dades (\emph{data stream})
+  \item Irregularitat de sèries temporal
+  \end{itemize}
+
+\end{frame}
+
+
+\subsection{Preliminars}
+\begin{frame}{Preliminars als models}
+\begin{columns}
+
+  \column{9cm}
+
+  \begin{itemize}
+  \item Arquitectura 3 nivells: independència entre nivells
+  \item Model abstracte sense semàntica
+  \item Nucli de la formalització: estructura, operacions i integritat
   \item Model relacional: teoria de conjunts (àlgebra relacional) i lògica de predicats (càlcul relacional)
-  \item Sistemes SQL
-  \item Sistemes NoSQL
-  \item Sistemes NewSQL
-  \item The Third Manifesto 
+  \item The Third Manifesto \parencite{date:thethirdmanifesto} 
   \item \emph{One size does not fit all} \parencite{stonebraker09}
   \end{itemize}
 
+    \column{2cm}
+\begin{center}
+Nivells:\\[2ex]
+
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
+
+
+ \node[mynode] (u) {\parbox{2.2cm}{Usuari \\ (Llenguatge)}};
+ \node[mynode, below=0.5cm of u] (l) {\parbox{2.2cm}{Lògic (Model abstracte)}};
+ \node[mynode, below=0.5cm of l] (i) {\parbox{2.2cm}{Físic (Implementacions)}};
+
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
 \end{frame}
 
-
-\begin{frame}{Introducció: estat sistemes sèries temporals}
-  \begin{itemize}
-
-  \item Emmagatzematge massiu:
-    \begin{itemize}
-     \item Sistemes per matrius: SciDB i SciQL
-     \item Sistemes d'emmagatzematge distribuït: OpenTSDB
-    \end{itemize}
-  \item Compressió de dades:
-    \begin{itemize}
-    \item amb pèrdua: RRDtool
-    \item sense pèrdua: Tsdb
-    \item representació aproximada òptima: iSAX
-    \item  emmagatzematges en memòries flash  %Dou   
-    \end{itemize}
-
-  \item Flux de dades (\emph{data stream}): 
-    \begin{itemize}
-    \item Xarxes de sensors: Cougar, TinyDB
-    \item Algoritmes de més pes a les dades recents \parencite{cormode08:pods}
-    \end{itemize}
-
-
-\end{itemize}
-
-
-\emph{Nota:} SGBD per dades bitemporals diferents als de sèries temporals \parencite{schmidt95}
-
-
-\end{frame}
 
 
 %%% Local Variables: 

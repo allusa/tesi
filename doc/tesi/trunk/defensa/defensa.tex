@@ -17,6 +17,7 @@
 \mode<beamer>
 {
   \usetheme{Madrid}
+  \useoutertheme[subsection=false]{smoothbars}
   \setbeamercovered{transparent}
   \beamertemplatenavigationsymbolsempty
 }
@@ -26,10 +27,25 @@
   \usepackage{pgfpages}
   \pgfpagesuselayout{8 on 1}[a4paper,border shrink=5mm]
   \setbeamercolor{background canvas}{bg=black!5}
-  \usetheme{Boadilla}
+  \usetheme{Madrid}
   \useinnertheme{default}
   \usecolortheme{dove}
 }
+
+
+% \makeatletter
+% \patchcmd{\slideentry}
+% {}%{\advance\beamer@tempdim by -.05cm}
+% {}%{\advance\beamer@tempdim by\beamer@vboxoffset\advance\beamer@tempdim by\beamer@boxsize\advance\beamer@tempdim by 1.2\pgflinewidth}
+% {}
+% {}
+% \patchcmd{\slideentry}
+% {}%{\kern\beamer@tempdim}
+% {}%{\advance\beamer@tempdim by 2pt\advance\beamer@tempdim by\wd\beamer@sectionbox\kern\beamer@tempdim}
+% {}
+% {}
+% \makeatother
+
 
 \bibliography{../bibliografia}
 \renewcommand*{\bibfont}{\footnotesize}
@@ -95,21 +111,23 @@
 \section{Formalització dels models}
 \begin{frame}{Formalització dels models}
 
-  \begin{itemize}
+  \begin{enumerate}
   \item Sistemes de gestió de sèries temporals (SGST)
+  \item Exemple de multiresolució
   \item Sistemes de gestió de sèries temporals multiresolució (SGSTM)
-  \end{itemize}
+  \end{enumerate}
 
 \end{frame}
 \input{sgst}
 \input{sgstm}
 
 
-\section{Consideracions i variacions}
-\input{consideracions}
-
 \section{Implementacions}
 \input{implementacions}
+
+
+\section{Casos d'ús}
+\input{consideracions}
 
 
 \section{Conclusions}
