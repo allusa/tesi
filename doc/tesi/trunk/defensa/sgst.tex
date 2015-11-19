@@ -67,6 +67,113 @@
 \end{frame}
 
 
+\begin{frame}{SGST: unió i concatenació}
+
+\begin{center}
+
+Unió, dues possiblilitats:
+
+\def\escala{0.9}
+
+\def\nodeA{node [above left=0.5cm and 0.1cm] {$S_1$}}
+\def\nodeB{node [above right=0.5cm and 0.1cm] {$S_2$}}
+\def\nodeT{}
+% Definition of circles
+\def\firstcircle{(0,0) circle (1.5cm)}
+\def\secondcircle{(0:2cm) circle (1.5cm)}
+\def\thirdcircle{(0:1cm) circle (1.11cm)}
+
+\colorlet{circle edge}{blue!50}
+\colorlet{circle area}{blue!20}
+
+\tikzset{
+  filled/.style={fill=circle area, draw=circle edge, thick},
+  outline/.style={draw=circle edge, thick},
+  every node/.style={transform shape}
+}
+
+%\setlength{\parskip}{5mm}
+
+
+
+%Set A or B
+\begin{tikzpicture}[scale=\escala]
+  \draw[filled] \firstcircle \nodeA;
+    \begin{scope}
+        \clip \secondcircle;
+        \draw[filled, even odd rule] \firstcircle \nodeA
+                                 \secondcircle 
+                                 \thirdcircle;
+   \end{scope}
+    \draw[outline] \firstcircle
+                   \secondcircle \nodeB
+                   \thirdcircle \nodeT;
+
+   %\node[anchor=south] at (current bounding box.north) {$S_1 \cup S_2$};
+\end{tikzpicture}
+%Set temporal A or B
+\begin{tikzpicture}[scale=\escala]
+    \draw[filled, even odd rule] \firstcircle \nodeA
+                                 \secondcircle \nodeB
+                                 \thirdcircle \nodeT;
+    %\node[anchor=south] at (current bounding box.north) {$S_1 \cup^t S_2$};
+\end{tikzpicture}
+
+
+
+Concatenació: unió per seqüències que exclou l'interval de la segona
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        width=0.5\textwidth,
+        title=,
+        xmin=0,
+        xmax=11,
+        ymin=0,
+        xtickmin=0,
+        xtickmax=0,
+        ytickmin=0,
+        ytickmax=0,
+        try min ticks=6,
+        ]
+    \addplot[mark=*,blue] coordinates { 
+        (3,2) 
+        (4,3)
+        (6,2)
+        (9,1.5)
+    };
+    \addlegendentry{$S_1$};
+
+    \addplot[mark=*,orange] coordinates { 
+        (-1,1) 
+        (2,0.5)
+        (3,1)
+    };
+    \addlegendentry{$S_2$};
+
+    \addplot[mark=*,orange] coordinates { 
+        (9,0.75) 
+        (11,1)
+        (13,0.5)
+    };
+
+    \addplot[mark=*,lightgray] coordinates { 
+        (3,1) 
+        (6,0.5)
+        (9,0.75)
+    };
+
+
+    \end{axis}
+   \end{tikzpicture}
+
+
+\end{center}
+
+
+\end{frame}
+
+
 
 \begin{frame}{SGST - Graf i funció temporal de representació}
 
@@ -236,7 +343,61 @@
 
 
 
-\begin{frame}{SGST - Patologies}
+
+\begin{frame}{SGST: Junció i junció temporal }
+
+\begin{center}
+
+    \begin{tabular}[h]{|c|c|}
+    \multicolumn{2}{c}{$S_1$} \\ \hline
+      $t$ & $v$ \\\hline
+      1 & 1 \\
+      2 & 1 \\\hline
+    \end{tabular}
+    \begin{tabular}[h]{|c|c|}
+    \multicolumn{2}{c}{$S_2$} \\ \hline
+      $t$ & $v$ \\\hline
+      1 & 2 \\
+      2 & 2 \\\hline
+    \end{tabular}$\quad\longrightarrow\quad$
+    \begin{tabular}[h]{|c|c|c|}
+    \multicolumn{3}{c}{Junció} \\ \hline
+      $t$ & $v_1$ & $v_2$ \\\hline
+      1 & 1 & 2  \\
+      2 & 1 & 2\\\hline
+    \end{tabular}
+
+\bigskip
+
+    \begin{tabular}[h]{|c|c|}
+    \multicolumn{2}{c}{$S_1$} \\ \hline
+      $t$ & $v$ \\\hline
+      1 & 1 \\
+      2 & 1 \\\hline
+    \end{tabular}
+    \begin{tabular}[h]{|c|c|}
+    \multicolumn{2}{c}{$S_2$} \\ \hline
+      $t$ & $v$ \\\hline
+      1 & 2 \\
+      3 & 2 \\\hline
+    \end{tabular}$\quad\longrightarrow\quad$
+    \begin{tabular}[h]{|c|c|c|}
+    \multicolumn{3}{c}{Junció temporal} \\ \hline
+      $t$ & $v_1$ & $v_2$ \\\hline
+      1 & 1 & 2  \\
+      2 & 1 & ?  \\
+      3 & ? & 2\\\hline
+    \end{tabular}
+
+
+  \end{center}
+  
+Cal utilitzar mètode de representació per a calcular ?, o bé deixar-lo indefinit.
+
+\end{frame}
+
+
+\begin{frame}{SGST: Patologies}
 
 
   \begin{itemize}
