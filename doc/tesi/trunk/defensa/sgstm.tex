@@ -1,11 +1,10 @@
-\subsection[SGSTM]{Sistemes de gestió de sèries temporals multiresolució (SGSTM)}
-
-
+\subsection*{Exemple multiresolució}
 
 
 \begin{frame}{Exemple multiresolució: sèrie temporal original}
 
 \begin{center}
+\scriptsize
 \input{imatges/exemple/isense_original.tex}
 \end{center}
 
@@ -24,6 +23,7 @@
 
 
 \begin{center}
+\scriptsize
 \input{imatges/exemple/isense_4mrdb.tex}
 \end{center}
 
@@ -32,13 +32,14 @@
 \begin{frame}{Exemple multiresolució: comparació}
 
 \begin{center}
+\scriptsize
 \input{imatges/exemple/isense_mrdb-all.tex}
 \end{center}
 
 \end{frame}
 
 
-
+\subsection[SGSTM]{Sistemes de gestió de sèries temporals multiresolució (SGSTM)}
 
 \begin{frame}{SGSTM - Estructura}
 \begin{columns}
@@ -140,7 +141,7 @@
 
 
 \begin{block}{Sèrie temporal total}
-Concatenació de les subsèries temporals ordenades per pas de consolidació de les resolucions
+Concatenació de les subsèries temporals ordenades per pas de consolidació de les resolucions $\delta_0 < \dotsb < \delta_k$:  $\text{SerieTotal}(M)= S_{0} || \dotsb || S_{k}$
 \end{block}
 
 \end{frame}
@@ -154,10 +155,10 @@ Les consultes de multiresolució obtenen sèries temporals:
 \begin{itemize}
 \item Obtenció de la resolució més propera a la demandada
 \item Operacions de SGST per a una sèrie temporal: $\max(S)$
-\item Operacions de SGST per a dues sèries temporals: $S_1 + S_2$
+\item Operacions de SGST per a dues sèries temporals:  $S_1 \cup S_2$, $S_1 + S_2$\dots
 \end{itemize}
 
-Les operacions amb dues sèries temporals impliquen junció:
+Les operacions computacionals de dues sèries temporals impliquen junció:
 
 \begin{itemize}
 \item Si són regulars amb els mateixos temps: junció conjunts
@@ -173,7 +174,7 @@ Les operacions amb dues sèries temporals impliquen junció:
 
 \begin{centering}
 
- mesura = funció(sèrie temporal, interval de consolidació)
+ mesura = funció(sèrie temporal $S$, instant d'inici $\tau$, pas $\delta$)
 
 
    \begin{tikzpicture}[scale=0.7, every node/.style={transform shape}]
@@ -216,17 +217,53 @@ Les operacions amb dues sèries temporals impliquen junció:
 
 \end{centering}
 
+
+Consolidació de la sèrie temporal en els buffers incrementalment. Per a cada interval $[\tau,\tau+\delta]$:
+
 \begin{itemize}
-  \item agregació amb representació
-  \item tractament i validació de dades
+\item Calcula la mesura resultant $m=f(S,\tau,\delta)$
+\item Canvia l'instant de consolidació $\tau'=\tau+\delta$ 
+\end{itemize}
+
+
+
+\end{frame}
+
+\begin{frame}{SGSTM - Funcions d'agregació d'atributs}
+
+
+
+\begin{itemize}
+  \item Diferents atributs d'agregació: 
+    \begin{itemize}
+    \item màxim: $\max(S(t))$ per $t\in[\tau,\tau+\delta]$
+    \item mitjana: mitjana$(S(t))$ per $t\in[\tau,\tau+\delta]$
+    \item darrer: $S(\tau+\delta)$
+    \item \dots
+    \end{itemize}
+  \item Agregació amb representació: 
+    \begin{itemize}
+     \item màximDD$(S[\tau,\tau+\delta]^{\text{DD}})$
+     \item mitjanaZOHE$(S[\tau,\tau+\delta]^{\text{ZOHE}})$
+     \item \dots
+    \end{itemize}
+
+  \item Tractament i validació de dades:
+    \begin{itemize}
+    \item Tractament de dades desconegudes: $f(S,\tau,\delta)$ amb $S$ que conté valors invàlids
+    \item Marcatge de dades desconegudes: $f(S,\tau,\delta)$ retorna
+      una mesura desconeguda
+    \end{itemize}
   \end{itemize}
 
 
 \end{frame}
 
 
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "defensa"
 %%% End: 
-%  LocalWords:  multiresolució
+%  LocalWords:  multiresolució SGSTM Buffer buffer buffers subsèries
+%  LocalWords:  SGST
