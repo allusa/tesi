@@ -3,7 +3,7 @@
 
   \begin{itemize}
   \item Sèries temporals: multitud d'algoritmes d'anàlisi
-  \item Sistemes de gestió de bases de dades (SGBD): gestió i tractament de dades
+  \item Sistemes de gestió de bases de dades (SGBD): gestió informàtica de dades
   \end{itemize} 
 
 \begin{block}{Multiresolució}
@@ -27,22 +27,10 @@
   \item Regularització de les sèries temporals
   \item Computació incremental
   \item Precomputació de consultes i visualitzacions immediates
-  \item Aplicacions: sistemes encastats, xarxes de sensors, big data\dots
+  \item Aplicacions: sistemes encastats, xarxes de sensors, \emph{big data}\dots
   \end{itemize}
 
 \end{frame}
-
-
-\begin{frame}{Assoliments de la tesi}
-
-  \begin{itemize}
-  \item Formalització del model dels sistemes multiresolució sòlidament en l’àlgebra de conjunts i particularment en l’àlgebra relacional.
-  \item Funcions d’agregació d’atributs genèriques i independents i funcions de representació per considerar el comportament en diversos contexts.
-  \item Solució de compressió amb pèrdua i mida fitada. Apta per a sitemes petits
-  \end{itemize}
-
-\end{frame}
-
 
 
 \subsection{Estat de la qüestió}
@@ -94,16 +82,31 @@
 \begin{frame}{Estat actual i motivació}
   \begin{itemize}
   \item  SGBD per a dades bitemporals (històrics) i per a sèries temporals no són el mateix
-  \item Multitud de tècniques d’anlàsis de sèries temporals, representacions aproximades òptimes: cal poder-les integrar en els SGBD %(candidats a funcions d’agregació)
+  \item Multitud de tècniques d’anàlisi de sèries temporals, representacions aproximades òptimes: cal poder-les integrar en els SGBD %(candidats a funcions d’agregació)
   \item Dades voluminoses: per què no una tècnica de compressió amb pèrdua?
   \item Més pes a les dades més recents:  RRDtool%, cormode, flash storages (en àmbits particulars, oferim més genericitat i ho integrem en un SGBD)
   \item Emmagatzematge massiu:  però després com analitzem les dades?
-  \item Computació paral·lela però també cal pensar en sistemes amb recursos restringits (temps, processament, capacitat, energia)
+  \item Computació ràpida en temps però també cal pensar en sistemes petits (processament, capacitat, energia\dots)
   \item Computació incremental per a fluxos de dades (\emph{data stream})
   \item Irregularitat de sèries temporal
   \end{itemize}
 
 \end{frame}
+
+
+\subsection{Assoliments}
+\begin{frame}{Assoliments de la tesi}
+
+  \begin{itemize}
+  \item Formalització del model dels sistemes multiresolució sòlidament en l’àlgebra de conjunts i particularment en l’àlgebra relacional.
+  \item Funcions d’agregació d’atributs genèriques i independents i funcions de representació per considerar el comportament en diversos contexts.
+  \item Solució de compressió amb pèrdua i mida fitada. Apta per a sistemes petits
+  \end{itemize}
+
+\end{frame}
+
+
+
 
 
 \subsection{Preliminars}
@@ -116,9 +119,8 @@
   \item Arquitectura 3 nivells: independència entre nivells
   \item Model abstracte sense semàntica
   \item Nucli de la formalització: estructura, operacions i integritat
-  \item Model relacional: teoria de conjunts (àlgebra relacional) i lògica de predicats (càlcul relacional)
-  \item The Third Manifesto \parencite{date:thethirdmanifesto} 
-  \item \emph{One size does not fit all} \parencite{stonebraker09}
+  \item Model relacional: teoria de conjunts (àlgebra relacional) o lògica de predicats (càlcul relacional)
+  \item Tradició en els SGBD: SQL. Evolució recent: NoSQL, NewSQL, The Third Manifesto, \parencite{date:thethirdmanifesto}, \emph{One size does not fit all} \parencite{stonebraker09}
   \end{itemize}
 
     \column{2cm}
@@ -155,3 +157,4 @@ Nivells:\\[2ex]
 %%% mode: latex
 %%% TeX-master: "defensa"
 %%% End: 
+%  LocalWords:  multiresolució SGBD Precomputació bitemporals

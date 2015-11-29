@@ -1,34 +1,93 @@
 
-  \begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+ %R0
+  \node[circle,draw,minimum width=2 cm] (R0d) {};
+  \draw [->] (R0d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R0d.center,anchor=north] {5 hores};
+  \node[below=0mm of R0d.east,anchor=south west] {24)};
+
+  \node[circle,draw] [left=0mm of R0d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R0d.west,anchor=center] {};
+ 
+  \draw [dotted] (R0d.center)++(1.1:1.1cm) arc(0:360:1.1cm);
+
+  \node (R0a) [below=1.2cm of R0d.center] {\color{blue}mitjana};
+\end{tikzpicture}
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
     \begin{axis}[
         multiresoluciodate,
-        title={$R_1$: 5h $|24|$},
+%        title={$R_1$: 5h $|24|$},
         xticklabel={\day--\hour:\minute},
         clip=false,
         ]
        \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R18000mean_zohe.csv};
-     \node[left] at (axis cs:2011-10-19,274) {\footnotesize oct.~2011};
+%     \node[left] at (axis cs:2011-10-19,274) {\footnotesize oct.~2011};
   \end{axis}
 \end{tikzpicture}
-%
+
+
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+  %R1
+  \node[circle,draw,minimum width=2 cm] (R1d) {};
+  \draw [->] (R1d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R1d.center,anchor=north] {2 dies};
+  \node[below=0mm of R1d.east,anchor=south west] {20)};
+
+  \node[circle,draw] [left=0mm of R1d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R1d.west,anchor=center] {};
+ 
+  \draw [dotted] (R1d.center)++(1.1:1.1cm) arc(0:360:1.1cm);
+
+  \node (R1a) [below=1.2cm of R1d.center] {\color{blue}mitjana};
+\end{tikzpicture}
   \begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
     \begin{axis}[
         multiresoluciodate,
-        title={$R_2$: 2d $|20|$},
+%        title={$R_2$: 2d $|20|$},
         xticklabel={\day~\pgfcalendarmonthshortname{\month}},
         clip=false,
         ]
        \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R172800mean_zohe.csv};
-     \node[left] at (axis cs:2011-10-21,279) {\footnotesize 2011};
+%     \node[left] at (axis cs:2011-10-21,279) {\footnotesize 2011};
   \end{axis}
 \end{tikzpicture}
-%
+
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+  \node[circle,draw,minimum width=2 cm] (R2d) {};
+  \draw [->] (R2d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R2d.center,anchor=north] {15 dies};
+  \node[below=0mm of R2d.east,anchor=south west] {12)};
+
+  \node[circle,draw] [left=0mm of R2d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.west,anchor=center] {};
+
+  \node[circle,draw] [left=0mm of R2d.30,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.60,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.120,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.150,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.210,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.240,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.300,anchor=center] {};
+  \node[circle,draw] [left=0mm of R2d.330,anchor=center] {};
+
+  \node (R2a) [below=1.2cm of R2d.center] {\color{blue}mitjana};
+  \node (R2b) [below=0cm of R2a] {\color{orange}màxim};
+\end{tikzpicture}
   \begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
     \begin{axis}[
         multiresoluciodate,
-        title={$R_3$: 15d $|12|$},
+ %       title={$R_3$: 15d $|12|$},
         xticklabel={\day~\pgfcalendarmonthshortname{\month}},
-        y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
+        y filter/.code = { \pgfmathparse{(#1>320)*322+(#1<320)*#1}},
         ymax = 320,
         clip=false,
         ]
@@ -37,36 +96,60 @@
 
       \addplot[const plot mark right, orange] table[col sep=comma] {imatges/exemple/dades-matriu0/R1296000maximum_zohe.csv};
 
-      \node[right] at (axis cs:2011-10-07,330) {\footnotesize(2938)};
-       \node (break) at (axis cs:2011-09-23,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
+   %   \node[right] at (axis cs:2011-10-07,330) {\footnotesize(2938)};
+       \node (break) at (axis cs:2011-09-23,317)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
-     \node[left] at (axis cs:2011-10-27,273) {\footnotesize 2011};
+%     \node[left] at (axis cs:2011-10-27,273) {\footnotesize 2011};
 
   \end{axis}
 \end{tikzpicture}
-%
+
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+  \node[circle,draw,minimum width=2 cm] (R3d)  {};
+  \draw [->] (R3d.center)++(.4:.4cm) arc(0:180:.4cm);
+
+  \node [below=0mm of R3d.center,anchor=north] {50 dies};
+  \node[below=0mm of R3d.east,anchor=south west] {12)};
+
+  \node[circle,draw] [left=0mm of R3d.north,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.east,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.south,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.west,anchor=center] {};
+
+  \node[circle,draw] [left=0mm of R3d.30,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.60,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.120,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.150,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.210,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.240,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.300,anchor=center] {};
+  \node[circle,draw] [left=0mm of R3d.330,anchor=center] {};
+
+  \node (R3a) [below=1.2cm of R3d.center] {\color{blue}mitjana};
+  \node (R3b) [below=0cm of R3a] {\color{orange}màxim};
+\end{tikzpicture}
 \begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
     \begin{axis}[
         multiresoluciodate,
         xticklabel={\pgfcalendarmonthshortname{\month}~\year},
-        title={$R_4$: 50d $|12|$},
-        xlabel={Temps (UTC)},
+%        title={$R_4$: 50d $|12|$},
+%        xlabel={Temps (UTC)},
 %        ylabel={Temperatura (K)},
         ymax = 320,
         clip=false,
 %v1.6     restrict y to domain=0:320,
-        y filter/.code = { \pgfmathparse{(#1>320)*330+(#1<320)*#1}},
+        y filter/.code = { \pgfmathparse{(#1>320)*322+(#1<320)*#1}},
         ]
 
        \addplot[const plot mark right, blue] table[col sep=comma] {imatges/exemple/dades-matriu0/R4320000mean_zohe.csv};
-       \addlegendentry{mitjana};
+%       \addlegendentry{mitjana};
 
        \addplot[const plot mark right, orange] table[col sep=comma] {imatges/exemple/dades-matriu0/R4320000maximum_zohe.csv};
-       \addlegendentry{màxim};
+%       \addlegendentry{màxim};
 
-       \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
-       \node (break) at (axis cs:2011-08-24,325)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
+%       \node[right] at (axis cs:2011-10-12,330) {\footnotesize(2938)};
+       \node (break) at (axis cs:2011-08-24,317)[inner sep=0pt,minimum width=0.75em, minimum height=0.5ex,fill=white] {};
     \draw [fill=red,color=orange] (break.north east) -- (break.north west) (break.south west) -- (break.south east);
 
   \end{axis}

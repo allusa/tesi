@@ -22,13 +22,13 @@
   \begin{itemize}
 
   \item Sense temps repetits
-  \item Ordre de les mesures: el temps indueix l'ordre, però pot ser
-    semitemporal o temporal.
+  \item El temps marca l'ordre de les mesures
+  \item Dues igualtats possibles: semitemporal o temporal
 
   \end{itemize} 
 
   
-  \column{5cm}
+  \column{5.1cm}
   Exemple:
   \begin{center}
     $S=\{(3,1), (4,3), (6,2), (9,1)\}$\\[1em]
@@ -51,27 +51,31 @@
 
 \begin{frame}{SGST - Operacions}
 
+\begin{block}{Atribut de temps}
+El comportament d’una sèrie temporal pot tenir naturaleses diferents
+\end{block}
+
+
+
   Tres grups:
   \begin{itemize}
-    
-  \item Conjunt: pertinença, inclusió, màxim, suprem, unió,
+  \item Conjunt: pertinença, inclusió, màxim, suprem, \textbf{unió},
     diferència, intersecció, diferència simètrica, selecció,
-    projecció, reanomena, producte, junció i computacionals.
-  \item Seqüència: interval, successió i concatenació.
+    projecció, reanomena, producte, \textbf{junció} i computacionals.
+  \item Seqüència: interval, successió i \textbf{concatenació}.
   \item Funció temporal: interval temporal, selecció temporal,
-    concatenació temporal i junció temporal.
-
+    concatenació temporal i \textbf{junció temporal}.
   \end{itemize}
 
 
 \end{frame}
 
 
-\begin{frame}{SGST: unió i concatenació}
+\begin{frame}{SGST: unió}
 
 \begin{center}
 
-Unió, dues possiblilitats:
+Unió, dues possibilitats:
 
 \def\escala{0.9}
 
@@ -109,19 +113,48 @@ Unió, dues possiblilitats:
                    \secondcircle \nodeB
                    \thirdcircle \nodeT;
 
-   %\node[anchor=south] at (current bounding box.north) {$S_1 \cup S_2$};
+   \node[anchor=south] at (current bounding box.north) {$S_1 \cup S_2$};
 \end{tikzpicture}
 %Set temporal A or B
 \begin{tikzpicture}[scale=\escala]
     \draw[filled, even odd rule] \firstcircle \nodeA
                                  \secondcircle \nodeB
                                  \thirdcircle \nodeT;
-    %\node[anchor=south] at (current bounding box.north) {$S_1 \cup^t S_2$};
+    \node[anchor=south] at (current bounding box.north) {$S_1 \cup^t S_2$};
 \end{tikzpicture}
 
 
 
+\begin{definition}[Unió]
+  $S_1 \cup S_2 = \{m | m \in S_1
+  \vee (m \in S_2 \wedge m \not\in^t
+  S_1 )\}$
+\end{definition}
+
+
+\begin{definition}[Unió temporal]
+  $S_1 \cup^t S_2 = \{ m | (m \in S_1
+  \wedge m \in S_2 ) \vee ( m \in S_1 \wedge m
+  \not\in^t S_2) \vee (m \in S_2 \wedge m
+  \not\in^t S_1 )\}$
+\end{definition}
+
+
+
+
+\end{center}
+
+
+\end{frame}
+
+
+\begin{frame}{SGST: concatenació}
+
+\begin{center}
+
+
 Concatenació: unió per seqüències que exclou l'interval de la segona
+
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
@@ -157,7 +190,7 @@ Concatenació: unió per seqüències que exclou l'interval de la segona
         (13,0.5)
     };
 
-    \addplot[mark=*,lightgray] coordinates { 
+    \addplot[mark=*,orange] coordinates { 
         (3,1) 
         (6,0.5)
         (9,0.75)
@@ -166,23 +199,110 @@ Concatenació: unió per seqüències que exclou l'interval de la segona
 
     \end{axis}
    \end{tikzpicture}
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        width=0.5\textwidth,
+        title=$S_1||S_2$,
+        xmin=0,
+        xmax=11,
+        ymin=0,
+        xtickmin=0,
+        xtickmax=0,
+        ytickmin=0,
+        ytickmax=0,
+        try min ticks=6,
+        ]
+    \addplot[mark=*,blue] coordinates { 
+        (3,2) 
+        (4,3)
+        (6,2)
+        (9,1.5)
+    };
+    \addlegendentry{$S_1$};
+
+    \addplot[mark=*,orange] coordinates { 
+        (-1,1) 
+        (2,0.5)
+        (3,1)
+    };
+    \addlegendentry{$S_2$};
+
+    \addplot[mark=*,orange] coordinates { 
+        (9,0.75) 
+        (11,1)
+        (13,0.5)
+    };
+
+    \addplot[mark=*,lightgray] coordinates { 
+        (3,1) 
+    };
+    \addplot[mark=*,lightgray] coordinates { 
+        (9,0.75) 
+    };
+
+    \end{axis}
+   \end{tikzpicture}
+
+
+
+\begin{definition}[Concatenació]
+   $S_1 ||  S_2 = S_1 \cup ( S_2 - S_2[T(\inf
+S_1),T(\sup S_1)] )$
+\end{definition}
+
 
 
 \end{center}
-
-
 \end{frame}
 
 
 
-\begin{frame}{SGST - Graf i funció temporal de representació}
+\begin{frame}{SGST - Funció temporal de representació}
+
 
   Funció temporal de representació $S(t): \text{Temps} \longrightarrow \text{Valors}$
 
-  Graf: $\{\dotsc,(3,1),(4,3),(5,2),\dotsc\}$\\\medskip
+\begin{center}
+
+\begin{tikzpicture}[scale=0.6, every node/.style={transform shape}]
+
+      \tikzset{
+        mynode/.style={rectangle,rounded corners,draw=black, 
+          very thick, inner sep=1em, minimum size=3em, text centered,
+          groc},
+        myarrow/.style={->, shorten >=1pt, thick},
+        mylabel/.style={text width=7em, text centered},
+        groc/.style={top color=white, bottom color=yellow!50},
+        verd/.style={top color=white, bottom color=green!50},
+        roig/.style={top color=white, bottom color=red!50},
+      }  
 
 
-  Diversos mètodes:
+ \node[mynode, roig] (s) {\parbox{1.5cm}{Sèrie temporal}};
+
+ \node[mynode, left= 1.75cm of s] (d) {\parbox{1.5cm}{Funció discreta}};
+ \node[mynode, left= 1.75cm of d] (c) {\parbox{1.5cm}{Funció contínua}};
+ \draw[->] (c) -- (d) node[above,midway] {mostreig}; 
+ \draw[->] (d) -- (s) node[above,midway] {modelada} node[below,midway] {per}; 
+
+ \node[mynode, right= 2.2cm of s] (r) {\parbox{2.9cm}{Funció temporal de representació S(t)}};
+ \draw[->] (s) -- (r) node[above,midway] {mètode de} node[below,midway] {representació}; 
+
+
+\node[below= of c.west] (a) {};
+\node[below= of d.east] (b) {};
+\draw[|-|] (a) -- (b) node[below,midway] {Naturalesa de funció temporal};
+\end{tikzpicture}
+\end{center}
+
+
+
+
+
+
+
+  Diversos mètodes de representació:
 
   \begin{columns}
 
@@ -351,20 +471,20 @@ Concatenació: unió per seqüències que exclou l'interval de la segona
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_1$} \\ \hline
       $t$ & $v$ \\\hline
-      1 & 1 \\
-      2 & 1 \\\hline
+      1 & 5 \\
+      2 & 5 \\\hline
     \end{tabular}
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_2$} \\ \hline
       $t$ & $v$ \\\hline
-      1 & 2 \\
-      2 & 2 \\\hline
+      1 & 6 \\
+      2 & 6 \\\hline
     \end{tabular}$\quad\longrightarrow\quad$
     \begin{tabular}[h]{|c|c|c|}
     \multicolumn{3}{c}{Junció} \\ \hline
       $t$ & $v_1$ & $v_2$ \\\hline
-      1 & 1 & 2  \\
-      2 & 1 & 2\\\hline
+      1 & 5 & 6  \\
+      2 & 5 & 6\\\hline
     \end{tabular}
 
 \bigskip
@@ -372,27 +492,33 @@ Concatenació: unió per seqüències que exclou l'interval de la segona
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_1$} \\ \hline
       $t$ & $v$ \\\hline
-      1 & 1 \\
-      2 & 1 \\\hline
+      1 & 5 \\
+      2 & 5 \\\hline
     \end{tabular}
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_2$} \\ \hline
       $t$ & $v$ \\\hline
-      1 & 2 \\
-      3 & 2 \\\hline
-    \end{tabular}$\quad\longrightarrow\quad$
+      1 & 6 \\
+      3 & 6 \\\hline
+    \end{tabular}$\;\longrightarrow\;$
     \begin{tabular}[h]{|c|c|c|}
     \multicolumn{3}{c}{Junció temporal} \\ \hline
       $t$ & $v_1$ & $v_2$ \\\hline
-      1 & 1 & 2  \\
-      2 & 1 & ?  \\
-      3 & ? & 2\\\hline
+      1 & 5 & 6  \\
+      2 & 5 & ?  \\
+      3 & ? & 6\\\hline
+    \end{tabular}$\quad$
+    \begin{tabular}[h]{|c|c|c|}
+    \multicolumn{3}{c}{Junc.~temp.~ZOHE} \\ \hline
+      $t$ & $v_1$ & $v_2$ \\\hline
+      1 & 5 & 6  \\
+      2 & 5 & 6  \\
+      3 & $\infty$ & 6\\\hline
     \end{tabular}
-
 
   \end{center}
   
-Cal utilitzar mètode de representació per a calcular ?, o bé deixar-lo indefinit.
+Cal utilitzar mètode de representació per a calcular `?', o bé deixar-los indefinits.
 
 \end{frame}
 
@@ -417,3 +543,5 @@ Cal utilitzar mètode de representació per a calcular ?, o bé deixar-lo indefi
 %%% mode: latex
 %%% TeX-master: "defensa"
 %%% End: 
+
+%  LocalWords:  SGST
