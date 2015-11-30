@@ -1,11 +1,12 @@
 \subsection*{Conclusions}
-\begin{frame}{Conclusions dels models}
+\begin{frame}{Conclusions}
 
   \begin{itemize}
   \item Hem formalitzat el model dels SGST i el dels SGSTM
   \item La formalització és sòlida en l’àlgebra de conjunts i l’àlgebra relacional
 
-\item Els SGST inclouen comportament de conjunt, seqüència i funció temporal
+  \item Les operacions dels SGST inclouen comportament de conjunt,
+    seqüència i funció temporal
 \item Els SGST són extensibles mitjançant els mètodes de representació
 \item Els SGSTM compacten les sèries temporals en diverses resolucions, amb més pes a les més recents
 \item Cal configurar la quantitat de resolucions i quatre paràmetres per a cada una: pas de consolidació, instant inicial, capacitat i funció d’agregació d’atributs
@@ -17,28 +18,16 @@
 
 \end{frame}
 
-\begin{frame}{Conclusions de les implementacions}
+\begin{frame}{Conclusions}
   \begin{itemize}
-\item La multiresolució és una eina per al problema de \emph{big data}
 \item Les dades es comprimeixen directament com a subsèries temporals: visualitzacions immediates i consultes precomputades
 \item En les implementacions incrementals el còmput es reparteix durant l’adquisició contínua
-\item Es tenen en compte altres recursos: capacitat fitada, emmagatzematge distribuït en els nodes de captura, distribució de les dades agregades en xarxa
+\item La multiresolució és una tècnica usable per al \emph{big data} i és útil per a les xarxes de sensors intel\.ligents on els recursos són restringits
 \item Les implementacions paral·leles possibiliten l’experimentació ràpida
 \item Els sistemes duals permeten mantenir les dades originals quan són crítiques
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Conclusions de la qualitat de la multiresolució}
-
-  \begin{itemize}
-  \item Els SGSTM comprimeixen les dades amb pèrdua
-  \item Els SGSTM resolen consultes aproximades
-  \item Hem definit una manera d’avaluar l’error que comet la multiresolució
-  \item Hem analitzat alguns escenaris particulars
-  \item L’avaluació de la qualitat de forma genèrica és difícil
-  \item Cal obrir noves línies de recerca i contextualitzar-ho en la teoria de la informació
-  \end{itemize}
-\end{frame}
 
 \subsection*{Treball futur}
 \begin{frame}{Treball futur}
@@ -47,11 +36,11 @@
 
    \item Estudiar les propietats de les operacions en els models
    \item Adaptar altres algoritmes d'anàlisi com a funcions d'agregació d'atributs
-   \item Estudiar la redundància de la informació entre diverses resolucions
-   \item Determinar quin és el millor esquema de multiresolució que es pot escollir
+   \item Escollir l'esquema de multiresolució que més quantitat d'informació conserva
    \item Avaluar quines consultes es poden resoldre a partir de la multiresolució
    \item Estudiar formalment l'equivalència  entre els SGSTM i la funció de multiresolució
-   \item Fer implementacions productives, definir nivell d’usuari (llenguatges de bases de dades)
+   \item Fer implementacions eficients i definir el nivell d’usuari (llenguatges de bases de dades)
+   \item Aprofitar l'estructura esquemàtica de la multiresolució per a implementar-la com a perifèrics en sistemes encastats
   \end{itemize}
 
 \end{frame}

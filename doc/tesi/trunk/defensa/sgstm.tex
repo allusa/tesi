@@ -99,7 +99,7 @@
 
 
   %mesura 
-  \node[above=1cm of m.north] (m0) {};
+  \node[above=1cm of m.north] (m0) {Sèrie temporal};
 
   \draw[myarrow] (m0) -- (m.north) 
   node[right,midway] {mesura};
@@ -197,7 +197,6 @@ Les operacions computacionals de dues sèries temporals impliquen junció:
         (22,6)
         (25,7)
         (29,8)
-        (30,4)
         (35,2)
         (41,5)
         (45,8)
@@ -218,43 +217,256 @@ Les operacions computacionals de dues sèries temporals impliquen junció:
 \end{centering}
 
 
-Consolidació de la sèrie temporal en els buffers incrementalment. Per a cada interval $[\tau,\tau+\delta]$:
+Diferents atributs d'agregació en diferents mètodes de representació
 
-\begin{itemize}
-\item Calcula la mesura resultant $m=f(S,\tau,\delta)$
-\item Canvia l'instant de consolidació $\tau'=\tau+\delta$ 
-\end{itemize}
+\begin{example}[Funció d'agregació màxim ZOHE] 
+ $\text{màximZOHE}(S,\tau,\delta)=(\tau+\delta,v)$ on
+    $v = \max_{\forall m' \in S[\tau,\tau+\delta]^{\text{zohe}}}(V(m'))$
+ 
+\end{example}
+
 
 
 
 \end{frame}
 
-\begin{frame}{SGSTM - Funcions d'agregació d'atributs}
+
+
+\begin{frame}{SGSTM - Consolidació}
+
+
+\begin{columns}
+\column{6cm}
+  \begin{tikzpicture}[scale=0.7, every node/.style={transform shape}]
+    \begin{axis}[
+        ymin = 0,
+        yticklabels= {,,,,valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,,$\tau$,,$\tau+\delta$,,,,},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+    };
+    \addplot[ycomb,gray] coordinates {
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (22,6)
+        (25,7)
+        (29,8)
+    };
+    \addplot[gray,only marks, mark = *] coordinates {
+        (19,4)
+        (35,2)
+        (41,5)
+        (45,8)
+    };
 
 
 
-\begin{itemize}
-  \item Diferents atributs d'agregació: 
-    \begin{itemize}
-    \item màxim: $\max(S(t))$ per $t\in[\tau,\tau+\delta]$
-    \item mitjana: mitjana$(S(t))$ per $t\in[\tau,\tau+\delta]$
-    \item darrer: $S(\tau+\delta)$
-    \item \dots
-    \end{itemize}
-  \item Agregació amb representació: 
-    \begin{itemize}
-     \item màximDD$(S[\tau,\tau+\delta]^{\text{DD}})$
-     \item mitjanaZOHE$(S[\tau,\tau+\delta]^{\text{ZOHE}})$
-     \item \dots
-    \end{itemize}
+          \addplot[only marks,mark=*,gray] coordinates {
+            (30,7)
+            (40,3)
+            (50,6)
+          };
 
-  \item Tractament i validació de dades:
-    \begin{itemize}
-    \item Tractament de dades desconegudes: $f(S,\tau,\delta)$ amb $S$ que conté valors invàlids
-    \item Marcatge de dades desconegudes: $f(S,\tau,\delta)$ retorna
-      una mesura desconeguda
-    \end{itemize}
-  \end{itemize}
+
+          \node[right, gray] at (axis cs:30,7) {$m_1$};
+           \node[right, gray] at (axis cs:40,3) {$m_2$};
+           \node[above, gray] at (axis cs:50,6) {$m_3$};
+
+          \node[above] at (axis cs:22,6) {$a$};
+          \node[above] at (axis cs:25,7) {$b$};
+          \node[above] at (axis cs:29,8) {$c$};
+
+    \end{axis}
+  \end{tikzpicture}
+
+
+\column{5cm}
+
+$\text{Buffer}=(\{a,b,c\},\tau,\delta,f)$
+
+$\text{Disc}=(\{\},\kappa)$
+
+
+\end{columns}
+
+
+  Consolidació de la sèrie temporal en els buffers
+  incrementalment:
+
+  \begin{enumerate}
+  
+    \item Afegeix mesures del primer interval $[\tau,\tau+\delta]$:
+
+    \item Calcula la mesura resultant $m_1=f(\{a,b,c\},\tau,\delta)$
+
+
+  \end{enumerate}
+
+
+\end{frame}
+
+
+
+\begin{frame}{SGSTM - Consolidació}
+
+
+
+\begin{columns}
+\column{6cm}
+  \begin{tikzpicture}[scale=0.7, every node/.style={transform shape}]
+    \begin{axis}[
+        ymin = 0,
+        yticklabels= {,,,,valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,,$\tau$,,$\tau+\delta$,,,,},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+    };
+    \addplot[ycomb,gray] coordinates {
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[black,only marks, mark = *] coordinates {
+        (22,6)
+        (25,7)
+        (29,8)
+    };
+    \addplot[gray,only marks, mark = *] coordinates {
+        (19,4)
+        (35,2)
+        (41,5)
+        (45,8)
+    };
+
+
+          \addplot[only marks,mark=*,green] coordinates {
+            (30,7)
+          };
+          \addplot[only marks,mark=*,gray] coordinates {
+            (40,3)
+            (50,6)
+          };
+
+
+          \node[right] at (axis cs:30,7) {$m_1$};
+           \node[right, gray] at (axis cs:40,3) {$m_2$};
+           \node[above, gray] at (axis cs:50,6) {$m_3$};
+
+          \node[above] at (axis cs:22,6) {$a$};
+          \node[above] at (axis cs:25,7) {$b$};
+          \node[above] at (axis cs:29,8) {$c$};
+
+    \end{axis}
+  \end{tikzpicture}
+
+
+\column{5cm}
+
+$\text{Buffer}=(\{\},\tau+\delta,\delta,f)$
+
+$\text{Disc}=(\{m_1\},\kappa)$
+\end{columns}
+
+\vphantom{Consolidació:}
+  \begin{enumerate}
+      \setcounter{enumi}{2}
+
+\item Canvia l'instant de consolidació i descarta les mesures consolidades
+
+\item Afegeix la mesura consolidada al disc
+
+\end{enumerate}
+
+
+\end{frame}
+
+
+
+\begin{frame}{SGSTM - Consolidació}
+
+
+
+\begin{columns}
+\column{6cm}
+  \begin{tikzpicture}[scale=0.7, every node/.style={transform shape}]
+    \begin{axis}[
+        ymin = 0,
+        yticklabels= {,,,,valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,,,,$\tau$,,$\tau+\delta$,,},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (30,10)
+        (40,10)
+    };
+    \addplot[ycomb,gray] coordinates {
+        (20,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (35,2)
+    };
+    \addplot[gray,only marks, mark = *] coordinates {
+        (19,4)
+        (22,6)
+        (25,7)
+        (29,8)
+        (41,5)
+        (45,8)
+    };
+
+          \addplot[only marks,mark=*,green] coordinates {
+            (30,7)
+          };
+          \addplot[only marks,mark=*,gray] coordinates {
+            (40,3)
+            (50,6)
+          };
+
+
+          \node[right] at (axis cs:30,7) {$m_1$};
+           \node[right, gray] at (axis cs:40,3) {$m_2$};
+           \node[above, gray] at (axis cs:50,6) {$m_3$};
+
+          \node[above] at (axis cs:35,2) {$d$};
+
+    \end{axis}
+  \end{tikzpicture}
+
+
+\column{5cm}
+
+$\text{Buffer}=(\{d\},\tau,\delta,f)$
+
+$\text{Disc}=(\{m_1\},\kappa)$
+
+
+\end{columns}
+
+
+\vphantom{Consolidació:}
+
+  \begin{enumerate}
+      \setcounter{enumi}{4}
+\item Afegeix les noves mesures al buffer
+
+\item Torna a començar la consolidació (controlant el cardinal del disc)
+
+\end{enumerate}
+
 
 
 \end{frame}
