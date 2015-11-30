@@ -4,6 +4,8 @@
 
 
 \begin{frame}{SGST - Estructura}
+
+
 \begin{columns}
 
   \column{5cm}
@@ -18,16 +20,8 @@
 
   \end{itemize}
 
-  Propietats:
-  \begin{itemize}
 
-  \item Sense temps repetits
-  \item El temps marca l'ordre de les mesures
-  \item Dues igualtats possibles: semitemporal o temporal
 
-  \end{itemize} 
-
-  
   \column{5.1cm}
   Exemple:
   \begin{center}
@@ -44,6 +38,14 @@
   \end{center}
 
 \end{columns}
+
+\begin{block}{Una sèrie temporal és un conjunt de mesures sense temps repetits}
+  \begin{itemize}
+  \item El temps marca l'ordre de les mesures
+  \item Dues igualtats possibles: semitemporal o temporal
+  \end{itemize} 
+\end{block}
+
 \end{frame}
 
 
@@ -51,19 +53,19 @@
 
 \begin{frame}{SGST - Operacions}
 
-\begin{block}{Atribut de temps}
-El comportament d’una sèrie temporal pot tenir naturaleses diferents
-\end{block}
+% \begin{block}{Atribut de temps}
+% El comportament d’una sèrie temporal pot tenir naturaleses diferents
+% \end{block}
 
 
 
-  Tres grups:
+  Es distingeixen tres grups d'operacions segons la interpretació de l'atribut de temps: 
   \begin{itemize}
   \item Conjunt: pertinença, inclusió, màxim, suprem, \textbf{unió},
     diferència, intersecció, diferència simètrica, selecció,
     projecció, reanomena, producte, \textbf{junció} i computacionals.
   \item Seqüència: interval, successió i \textbf{concatenació}.
-  \item Funció temporal: interval temporal, selecció temporal,
+  \item Funció temporal: \textbf{interval temporal}, selecció temporal,
     concatenació temporal i \textbf{junció temporal}.
   \end{itemize}
 
@@ -463,11 +465,92 @@ S_1),T(\sup S_1)] )$
 
 
 
+\begin{frame}{SGST - F.~representació i interval temporal ZOHE}
+
+\begin{columns}
+
+  \column{3cm}
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \begin{axis}[
+        timeseriesrel,
+        title=$S^{\text{zohe}}$,
+        xmin=0,
+        xmax=11,
+        xtickmin=0,
+        xtickmax=10,
+        try min ticks=6,
+        ]
+    \addplot[mark=*,blue,const plot mark right] coordinates { 
+        (3,1) 
+        (4,3)
+        (6,2)
+        (9,1)
+    };
+
+    \addplot[mark=o,blue,only marks] coordinates { 
+        (3,3)
+        (4,2)
+        (6,1)
+        (9,0)
+    };
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{9}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{9}{0}}%
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{9}{0}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{12}{0}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \pgfplotsextra{%
+      \pgfpathmoveto{\pgfplotspointaxisxy{3}{1}}%
+      \pgfpathlineto{\pgfplotspointaxisxy{0.5}{1}}%
+      \pgfsetarrowsend{latex}
+      \pgfsetcolor{blue}
+      \pgfusepath{stroke}%
+    }
+
+    \end{axis}
+   \end{tikzpicture}
+
+\column{6cm}
+\begin{definition}[F.~representació ZOHE]
+    $S^{\text{zohe}}(t) = $ \hfill $\forall m \in S$  \\
+    % = & \sum_{t\in \mathbf{T}} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
+    $ \begin{cases}
+      0 & \text{si }  t > T(\max(S)) \\
+      V(m) & \text{si } t\in \big(T(\text{ant}(m)),T(m)\big]
+    \end{cases}$
+\end{definition}
+
+
+\end{columns}
+
+
+\begin{definition}[Interval temporal ZOHE]
+    $S[s,t]^{\text{zohe}} = S(s,t] \cup \{m\}$ on $m=(t,v)$
+    i $v= V(\inf( S[t,+\infty] ))$
+\end{definition}
+
+
+\end{frame}
+
+
 
 \begin{frame}{SGST: Junció i junció temporal }
-
 \begin{center}
-
+\begin{definition}[Junció]
+ $S_1 \Join S_2 = \{ (t,v_1,v_2) |
+  (t,v_1) \in S_1 \wedge (t,v_2) \in S_2  \}$
+\end{definition}
+{\small
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_1$} \\ \hline
       $t$ & $v$ \\\hline
@@ -486,10 +569,19 @@ S_1),T(\sup S_1)] )$
       1 & 5 & 6  \\
       2 & 5 & 6\\\hline
     \end{tabular}
+}
 
-\bigskip
 
-    \begin{tabular}[h]{|c|c|}
+  \begin{definition}[Junció temporal]
+  $S_1 \Join^r S_2 = \{ (x,v,w) |$\\
+{\hfill
+  $x \in
+  (\Pi_{t}(S_1) \cup
+  \Pi_{t}(S_2))\wedge (x,v) \in S_1[x,x]^r
+  \wedge (x,w) \in S_2[x,x]^r \}$}
+\end{definition}
+{\small
+\begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_1$} \\ \hline
       $t$ & $v$ \\\hline
       1 & 5 \\
@@ -515,10 +607,13 @@ S_1),T(\sup S_1)] )$
       2 & 5 & 6  \\
       3 & $\infty$ & 6\\\hline
     \end{tabular}
+}
+ 
 
-  \end{center}
-  
-Cal utilitzar mètode de representació per a calcular `?', o bé deixar-los indefinits.
+
+ \end{center}
+%Cal utilitzar mètode de representació per a calcular `?', o bé deixar-los indefinits.
+
 
 \end{frame}
 

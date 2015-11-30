@@ -1,9 +1,9 @@
 
-\begin{frame}{Casos d'ús}
+\begin{frame}{Coda: tres consideracions interessants}
 
   \begin{enumerate}
   \item Funció de multiresolució
-  \item Sistemes duals
+  \item Arquitectura dual
   \item Avaluació de la qualitat de la multiresolució
   \end{enumerate}
 
@@ -12,7 +12,7 @@
 
 \subsection*{Variacions}
 
-\begin{frame}{SGSTM vs.\ funció de multiresolució}
+\begin{frame}{Funció de multiresolució}
 
 
 Model sistema de gestió de bases de dades (conserva estat):
@@ -77,11 +77,11 @@ Model d'operació de multiresolució (sobre un SGST):
 
  \node[mynode] (S) {Sèrie temporal};
  \node[mynode, right=4cm of S] (Sp) {Nova sèrie temporal};
- \draw[->] (S) -- (Sp) node[above,midway] {multiresolució}; 
+ \draw[->] (S) -- (Sp) node[above,midway] {funció multiresolució}; 
 
  \node[mynode, below right=0.5cm and 1cm of S] (S1) {subsèries};
  \draw[->] (S) -- (S1) node[above,midway,sloped] {mapa}; 
- \draw[->] (S1) -- (Sp) node[above,midway,sloped] {plec}; 
+ \draw[->] (S1) -- (Sp) node[above,midway,sloped] {plec\hphantom{mm}}; 
 
 
 \end{tikzpicture}
@@ -118,7 +118,7 @@ Model d'operació de multiresolució (sobre un SGST):
 
 
 
-\begin{frame}{Sistemes duals}
+\begin{frame}{Arquitectura dual}
 
 
 
@@ -152,7 +152,7 @@ Model d'operació de multiresolució (sobre un SGST):
  \node[rectangle,draw,minimum height=6cm,minimum width=9.5cm,right=-0.25cm of mdins] (dual) {};
 
 \draw[shift=( dual.south west)]   
-  node[above right] {sistema dual de multiresolució};
+  node[above right] {Arquitectura dual de multiresolució};
 
 
 
@@ -170,11 +170,11 @@ Model d'operació de multiresolució (sobre un SGST):
  \draw[myarrow] (mdins.east) -- (mtsms.west);
 
 
- \draw[myarrow] (tsms) -- (ts) node[above,midway,sloped]
- {$multiresolucio(S,\text{esquema})$}; 
+ \draw[myarrow, dotted] (tsms) -- (ts) node[above,midway,sloped]
+ {f.~multiresolució$(S)$}; 
  
  \draw[myarrow] (mtsms) -- (ts) node[above,midway,sloped]
- {$SerieTotal(M)$};
+ {SèrieTotal$(M)$};
 
 
 
@@ -208,15 +208,14 @@ Conceptes relacionats:
 
 
 \subsection*{Teoria de la informació}
-\begin{frame}{Avançaments en determinar la qualitat de la multiresolució}
+\begin{frame}{Sobre la qualitat de la multiresolució}
 
   Quantificació de l'error que es comet en la selecció de la informació
-  per a la muliresolució. 
+  per a la multiresolució:
 
-\begin{block}{Definició del problema}
-\centering
+\begin{center}
 consulta(sèrie temporal original) vs.\ consulta(multiresolució)
-\end{block}
+\end{center}
 
 
 Alguns dels escenaris particulars analitzats:
@@ -243,6 +242,17 @@ Alguns dels escenaris particulars analitzats:
 \end{frame}
 
 
+\begin{frame}{Conclusions de la qualitat de la multiresolució}
+
+  \begin{itemize}
+  \item Els SGSTM comprimeixen les dades amb pèrdua
+  \item Els SGSTM resolen consultes aproximades
+  \item Hem definit una manera d’avaluar l’error que comet la multiresolució
+  \item Hem analitzat alguns escenaris particulars
+  \item L’avaluació de la qualitat de forma genèrica és difícil
+  \item Cal obrir noves línies de recerca i contextualitzar-ho en la teoria de la informació
+  \end{itemize}
+\end{frame}
 
 
 %%% Local Variables: 
