@@ -203,14 +203,14 @@ Les operacions computacionals de dues sèries temporals impliquen junció:
     };
 
           \addplot[only marks,mark=*,green] coordinates {
-            (30,7)
-            (40,3)
-            (50,6)
+            (30,8)
+            (40,5)
+            (50,8)
           };
 
-          \node[right] at (axis cs:30,7) {$m_1$};
-          \node[right] at (axis cs:40,3) {$m_2$};
-          \node[above] at (axis cs:50,6) {$m_3$};
+          \node[right] at (axis cs:30,8) {$m_1$};
+          \node[left] at (axis cs:40,5) {$m_2$};
+          \node[left] at (axis cs:50,8) {$m_3$};
     \end{axis}
   \end{tikzpicture}
 
@@ -249,7 +249,7 @@ Diferents atributs d'agregació en diferents mètodes de representació
         (20,10)
         (30,10)
     };
-    \addplot[ycomb,gray] coordinates {
+    \addplot[ycomb,lightgray] coordinates {
         (40,10)
         (50,10)
     }; 
@@ -258,30 +258,31 @@ Diferents atributs d'agregació en diferents mètodes de representació
         (22,6)
         (25,7)
         (29,8)
-    };
-    \addplot[gray,only marks, mark = *] coordinates {
-        (19,4)
         (35,2)
+    };
+    \addplot[lightgray,only marks, mark = *] coordinates {
+        (19,4)
         (41,5)
         (45,8)
     };
 
 
 
-          \addplot[only marks,mark=*,gray] coordinates {
-            (30,7)
-            (40,3)
-            (50,6)
+          \addplot[only marks,mark=*,lightgray] coordinates {
+            (30,8)
+            (40,5)
+            (50,8)
           };
 
 
-          \node[right, gray] at (axis cs:30,7) {$m_1$};
-           \node[right, gray] at (axis cs:40,3) {$m_2$};
-           \node[above, gray] at (axis cs:50,6) {$m_3$};
+          \node[right, lightgray] at (axis cs:30,8) {$m_1$};
+           \node[left, lightgray] at (axis cs:40,5) {$m_2$};
+           \node[left, lightgray] at (axis cs:50,8) {$m_3$};
 
           \node[above] at (axis cs:22,6) {$a$};
           \node[above] at (axis cs:25,7) {$b$};
           \node[above] at (axis cs:29,8) {$c$};
+          \node[above] at (axis cs:35,2) {$d$};
 
     \end{axis}
   \end{tikzpicture}
@@ -289,7 +290,7 @@ Diferents atributs d'agregació en diferents mètodes de representació
 
 \column{5cm}
 
-$\text{Buffer}=(\{a,b,c\},\tau,\delta,f)$
+$\text{Buffer}=(\{a,b,c,d\},\tau,\delta,f)$
 
 $\text{Disc}=(\{\},\kappa)$
 
@@ -304,7 +305,7 @@ $\text{Disc}=(\{\},\kappa)$
   
     \item Afegeix mesures del primer interval $[\tau,\tau+\delta]$:
 
-    \item Calcula la mesura resultant $m_1=f(\{a,b,c\},\tau,\delta)$
+    \item Calcula la mesura resultant $m_1=f(\{a,b,c,d\},\tau,\delta)$
 
 
   \end{enumerate}
