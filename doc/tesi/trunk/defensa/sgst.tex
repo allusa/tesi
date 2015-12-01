@@ -465,11 +465,11 @@ S_1),T(\sup S_1)] )$
 
 
 
-\begin{frame}{SGST - F.~representació i interval temporal ZOHE}
+\begin{frame}{SGST - Funció temporal de representació ZOHE}
 
-\begin{columns}
+\begin{center}
 
-  \column{3cm}
+
   \begin{tikzpicture}[baseline=(current bounding box.center)]
     \begin{axis}[
         timeseriesrel,
@@ -520,25 +520,25 @@ S_1),T(\sup S_1)] )$
     \end{axis}
    \end{tikzpicture}
 
-\column{6cm}
+
 \begin{definition}[F.~representació ZOHE]
-    $S^{\text{zohe}}(t) = $ \hfill $\forall m \in S$  \\
+    $S^{\text{zohe}}(t) = $ \\
     % = & \sum_{t\in \mathbf{T}} V(m) \glssymbol{not:Ia}_{\big(T(\glssymbol{not:sgst:prev}(m)),T(m)\big]}(t) \\
-    $ \begin{cases}
+    $\mbox{}\quad \begin{cases}
       0 & \text{si }  t > T(\max(S)) \\
-      V(m) & \text{si } t\in \big(T(\text{ant}(m)),T(m)\big]
+      V(m) & \text{si } t\in \big(T(\text{ant}(m)),T(m)\big],\; m \in S
     \end{cases}$
 \end{definition}
 
 
-\end{columns}
 
 
-\begin{definition}[Interval temporal ZOHE]
-    $S[s,t]^{\text{zohe}} = S(s,t] \cup \{m\}$ on $m=(t,v)$
-    i $v= V(\inf( S[t,+\infty] ))$
-\end{definition}
 
+% \begin{definition}[Interval temporal ZOHE]
+%     $S[s,t]^{\text{zohe}} = S(s,t] \cup \{m\}$ on $m=(t,v)$
+%     i $v= V(\inf( S[t,+\infty] ))$
+% \end{definition}
+\end{center}
 
 \end{frame}
 
@@ -553,13 +553,13 @@ S_1),T(\sup S_1)] )$
 {\small
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_1$} \\ \hline
-      $t$ & $v$ \\\hline
+      $t$ & $v_1$ \\\hline
       1 & 5 \\
       2 & 5 \\\hline
     \end{tabular}
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_2$} \\ \hline
-      $t$ & $v$ \\\hline
+      $t$ & $v_2$ \\\hline
       1 & 6 \\
       2 & 6 \\\hline
     \end{tabular}$\quad\longrightarrow\quad$
@@ -573,23 +573,23 @@ S_1),T(\sup S_1)] )$
 
 
   \begin{definition}[Junció temporal]
-  $S_1 \Join^r S_2 = \{ (x,v,w) |$\\
+  $S_1 \Join^r S_2 = \{ (t,v_1,v_2) |$\\
 {\hfill
-  $x \in
-  (\Pi_{t}(S_1) \cup
-  \Pi_{t}(S_2))\wedge (x,v) \in S_1[x,x]^r
-  \wedge (x,w) \in S_2[x,x]^r \}$}
+  $t \in
+  (\Pi_{\text{t}}(S_1) \cup
+  \Pi_{\text{t}}(S_2))\wedge (t,v_1) \in S_1[t,t]^r
+  \wedge (t,v_2) \in S_2[t,t]^r \}$}
 \end{definition}
 {\small
 \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_1$} \\ \hline
-      $t$ & $v$ \\\hline
+      $t$ & $v_1$ \\\hline
       1 & 5 \\
       2 & 5 \\\hline
     \end{tabular}
     \begin{tabular}[h]{|c|c|}
     \multicolumn{2}{c}{$S_2$} \\ \hline
-      $t$ & $v$ \\\hline
+      $t$ & $v_2$ \\\hline
       1 & 6 \\
       3 & 6 \\\hline
     \end{tabular}$\;\longrightarrow\;$
