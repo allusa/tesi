@@ -196,9 +196,9 @@ Les operacions computacionals de dues sèries temporals impliquen junció:
         (19,4)
         (22,6)
         (25,7)
-        (29,8)
+        (28,8)
         (35,2)
-        (41,5)
+        (43,5)
         (45,8)
     };
 
@@ -257,12 +257,12 @@ Diferents atributs d'agregació en diferents mètodes de representació
     \addplot[red,only marks, mark = *] coordinates {
         (22,6)
         (25,7)
-        (29,8)
-        (35,2)
+        (28,8)
     };
     \addplot[lightgray,only marks, mark = *] coordinates {
         (19,4)
-        (41,5)
+        (35,2)
+        (43,5)
         (45,8)
     };
 
@@ -281,7 +281,88 @@ Diferents atributs d'agregació en diferents mètodes de representació
 
           \node[above] at (axis cs:22,6) {$a$};
           \node[above] at (axis cs:25,7) {$b$};
-          \node[above] at (axis cs:29,8) {$c$};
+          \node[above] at (axis cs:28,8) {$c$};
+
+    \end{axis}
+  \end{tikzpicture}
+
+
+\column{5cm}
+
+$\text{Buffer}=(\{a,b,c\},\tau,\delta,f)$
+
+$\text{Disc}=(\{\},\kappa)$
+
+
+\end{columns}
+
+
+  Consolidació de la sèrie temporal en els buffers
+  incrementalment:
+
+  \begin{enumerate}
+  
+    \item Afegeix mesures del primer interval $[\tau,\tau+\delta]$
+
+    \item Encara no es pot consolidar
+  \end{enumerate}
+
+
+\end{frame}
+
+
+
+
+\begin{frame}{SGSTM - Consolidació}
+
+
+\begin{columns}
+\column{6cm}
+  \begin{tikzpicture}[scale=0.7, every node/.style={transform shape}]
+    \begin{axis}[
+        ymin = 0,
+        yticklabels= {,,,,valors},
+        y tick label style = {rotate=90,anchor=south},
+        xticklabels={,,$\tau$,,$\tau+\delta$,,,,},
+        ]
+ 
+    \addplot[ycomb,blue] coordinates {
+        (20,10)
+        (30,10)
+    };
+    \addplot[ycomb,lightgray] coordinates {
+        (40,10)
+        (50,10)
+    }; 
+
+    \addplot[red,only marks, mark = *] coordinates {
+        (22,6)
+        (25,7)
+        (28,8)
+        (35,2)
+    };
+    \addplot[lightgray,only marks, mark = *] coordinates {
+        (19,4)
+        (43,5)
+        (45,8)
+    };
+
+
+
+          \addplot[only marks,mark=*,lightgray] coordinates {
+            (30,8)
+            (40,5)
+            (50,8)
+          };
+
+
+          \node[right, lightgray] at (axis cs:30,8) {$m_1$};
+           \node[left, lightgray] at (axis cs:40,5) {$m_2$};
+           \node[left, lightgray] at (axis cs:50,8) {$m_3$};
+
+          \node[above] at (axis cs:22,6) {$a$};
+          \node[above] at (axis cs:25,7) {$b$};
+          \node[above] at (axis cs:28,8) {$c$};
           \node[above] at (axis cs:35,2) {$d$};
 
     \end{axis}
@@ -298,20 +379,20 @@ $\text{Disc}=(\{\},\kappa)$
 \end{columns}
 
 
-  Consolidació de la sèrie temporal en els buffers
-  incrementalment:
+  \vphantom{Consolidació:}
 
   \begin{enumerate}
-  
-    \item Afegeix mesures del primer interval $[\tau,\tau+\delta]$:
+    \setcounter{enumi}{2}
+    \item Afegeix una mesura següent a $\tau+\delta$
 
     \item Calcula la mesura resultant $m_1=f(\{a,b,c,d\},\tau,\delta)$
-
 
   \end{enumerate}
 
 
 \end{frame}
+
+
 
 
 
@@ -333,7 +414,7 @@ $\text{Disc}=(\{\},\kappa)$
         (20,10)
         (30,10)
     };
-    \addplot[ycomb,gray] coordinates {
+    \addplot[ycomb,lightgray] coordinates {
         (40,10)
         (50,10)
     }; 
@@ -341,32 +422,35 @@ $\text{Disc}=(\{\},\kappa)$
     \addplot[black,only marks, mark = *] coordinates {
         (22,6)
         (25,7)
-        (29,8)
+        (28,8)
     };
-    \addplot[gray,only marks, mark = *] coordinates {
-        (19,4)
+    \addplot[red,only marks, mark = *] coordinates {
         (35,2)
-        (41,5)
+    };
+    \addplot[lightgray,only marks, mark = *] coordinates {
+        (19,4)
+        (43,5)
         (45,8)
     };
 
 
           \addplot[only marks,mark=*,green] coordinates {
-            (30,7)
+            (30,8)
           };
-          \addplot[only marks,mark=*,gray] coordinates {
-            (40,3)
-            (50,6)
+          \addplot[only marks,mark=*,lightgray] coordinates {
+            (40,5)
+            (50,8)
           };
 
 
-          \node[right] at (axis cs:30,7) {$m_1$};
-           \node[right, gray] at (axis cs:40,3) {$m_2$};
-           \node[above, gray] at (axis cs:50,6) {$m_3$};
+          \node[right] at (axis cs:30,8) {$m_1$};
+           \node[left, lightgray] at (axis cs:40,5) {$m_2$};
+           \node[left, lightgray] at (axis cs:50,8) {$m_3$};
 
           \node[above] at (axis cs:22,6) {$a$};
           \node[above] at (axis cs:25,7) {$b$};
-          \node[above] at (axis cs:29,8) {$c$};
+          \node[above] at (axis cs:28,8) {$c$};
+          \node[above] at (axis cs:35,2) {$d$};
 
     \end{axis}
   \end{tikzpicture}
@@ -374,14 +458,14 @@ $\text{Disc}=(\{\},\kappa)$
 
 \column{5cm}
 
-$\text{Buffer}=(\{\},\tau+\delta,\delta,f)$
+$\text{Buffer}=(\{d\},\tau+\delta,\delta,f)$
 
 $\text{Disc}=(\{m_1\},\kappa)$
 \end{columns}
 
 \vphantom{Consolidació:}
   \begin{enumerate}
-      \setcounter{enumi}{2}
+      \setcounter{enumi}{4}
 
 \item Canvia l'instant de consolidació i descarta les mesures consolidades
 
@@ -412,7 +496,7 @@ $\text{Disc}=(\{m_1\},\kappa)$
         (30,10)
         (40,10)
     };
-    \addplot[ycomb,gray] coordinates {
+    \addplot[ycomb,lightgray] coordinates {
         (20,10)
         (50,10)
     }; 
@@ -420,27 +504,27 @@ $\text{Disc}=(\{m_1\},\kappa)$
     \addplot[red,only marks, mark = *] coordinates {
         (35,2)
     };
-    \addplot[gray,only marks, mark = *] coordinates {
+    \addplot[lightgray,only marks, mark = *] coordinates {
         (19,4)
         (22,6)
         (25,7)
-        (29,8)
-        (41,5)
+        (28,8)
+        (43,5)
         (45,8)
     };
 
           \addplot[only marks,mark=*,green] coordinates {
-            (30,7)
+            (30,8)
           };
-          \addplot[only marks,mark=*,gray] coordinates {
-            (40,3)
-            (50,6)
+          \addplot[only marks,mark=*,lightgray] coordinates {
+            (40,5)
+            (50,8)
           };
 
 
-          \node[right] at (axis cs:30,7) {$m_1$};
-           \node[right, gray] at (axis cs:40,3) {$m_2$};
-           \node[above, gray] at (axis cs:50,6) {$m_3$};
+          \node[right] at (axis cs:30,8) {$m_1$};
+           \node[left, lightgray] at (axis cs:40,5) {$m_2$};
+           \node[left, lightgray] at (axis cs:50,8) {$m_3$};
 
           \node[above] at (axis cs:35,2) {$d$};
 
@@ -461,10 +545,10 @@ $\text{Disc}=(\{m_1\},\kappa)$
 \vphantom{Consolidació:}
 
   \begin{enumerate}
-      \setcounter{enumi}{4}
-\item Afegeix les noves mesures al buffer
+      \setcounter{enumi}{6}
+\item Repeteix la consolidació pel nou interval
 
-\item Torna a començar la consolidació (controlant el cardinal del disc)
+\item (Controla el cardinal del disc)
 
 \end{enumerate}
 
