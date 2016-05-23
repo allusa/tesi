@@ -1,0 +1,250 @@
+\section{Reference implementation}
+\label{sec:implementation}
+
+In this section, we briefly describe a reference implementation of the
+models offered in Sections~\ref{sec:model:TSMS}
+and~\ref{sec:MTSMS}. We give this implementation as a proof of
+concept. It does not attempt to be either an efficient or a complete
+database system. We implement the \acro{TSMS} and \acro{MTSMS} models
+using the Python~\cite{python:doc2} programming language.
+
+The implementations of the two models, \acro{TSMS} and
+\acro{MTSMS}, are organised respectively in two separated Python
+libraries: \texttt{Pytsms} and \texttt{RoundRobinson}.
+\texttt{RoundRobinson} strongly depends on \texttt{Pytsms} following
+the dependency of \acro{MTSMS} on \acro{TSMS}.  The code of this
+implementation can be found in~\cite{llusa:roundrobinson}.
+
+The reference implementation follows the object orientated paradigm,
+and it observes a clear mapping between the model and the object
+classes. We use \emph{Unified Modeling Language}~(\acro{UML}) diagrams
+to define the class structures. We realized the model operations as
+object methods that we do not present in \acro{UML} diagrams, due to
+space limitations.
+
+
+\subsection{Pytsms}
+
+\texttt{Pytsms} is the reference implementation of the model concepts
+of measure, time series, and temporal representation function.
+Figure~\ref{fig:implementacio:pytsms-uml} shows the relationships
+among these objects in a \acro{UML} diagram. A \texttt{TimeSeries}
+object is an aggregation of \texttt{Measure}
+objects. \texttt{TimeSeries} and \texttt{Representation} objects are
+associated, i.e., each \texttt{TimeSeries} has a default
+representation, and a \texttt{Representation} operates over a
+\texttt{TimeSeries}.
+
+%\tikzsetnextfilename{fig_pytsms_uml}
+\begin{figure}[tp]
+  \centering
+  %\input{imatges/pytsms-uml.tex}
+  \includegraphics{fig_pytsms_uml.pdf}
+  \caption{Pytsms \acro{UML} class diagram}
+  \label{fig:implementacio:pytsms-uml}
+\end{figure}
+
+A \texttt{TimeSeries} object has many methods. We classify them based
+on their functionality. First, a \texttt{TimeSeries} object includes
+methods to manipulate the structural model. We implemented
+\texttt{TimeSeries} as a subclass of the predefined \texttt{set}
+Python type. Second, a \texttt{TimeSeries} object has methods that
+implement set, sequence, and temporal function operators, as described
+in Section~\ref{sec:model:operations}.  Third, accessory operations of
+\texttt{TimeSeries} are grouped into two \emph{visitor}
+objects: \texttt{RegularProp}, that includes the operations to
+regularize, and \texttt{Storage}, that has the methods for storing and
+retrieving time series from the file system. Recall that
+\emph{visitor} is a design pattern that allows to add new
+functionality to objects without modifying them
+\cite{ziade08:expert_python_programming:visitor,martin02:visitor}.
+
+Figure~\ref{fig:implementacio:pytsms-uml} displays two specialisations
+for the \texttt{Representation} abstract class that refer to the
+representation functions given in Section~\ref{sec:model:tfunc}. Each
+specialisation defines the graph and the temporal interval
+operations. Besides, a \texttt{Representation} has also a method to
+plot a coherent graphical representation of a time series. For this
+purpose, we use the Python \emph{Matplotlib} library.
+
+\begin{example}
+  \label{ex:pytsms:example}
+  In this example we reproduce an interpreter session working with
+  \texttt{Pytsms}. First, we define the two time series \texttt{r} and
+  \texttt{s} from Example~\ref{ex:model:s1s2}, and after that we apply
+  to the series some operations: union, temporal union, concatenation,
+  closed interval, \zohe{} temporal interval, \zohe{} temporal
+  selection, and the test of regular property. Note that we
+  abbreviated \texttt{Measure} to \texttt{m}. The log of the session
+  is as follows:
+
+  {\small
+\begin{verbatim}
+# Import the required objects
+>>> from pytsms import TimeSeries, Measure as m
+>>> from pytsms.representation import Zohe
+>>> from pytsms.properties import isRegular
+
+# Define the two time series
+>>> r = TimeSeries([m(1,1),m(3,1),m(4,0),m(5,1)])
+>>> s = TimeSeries([m(2,2),m(3,2),m(4,0),m(6,2)])
+
+# Manipulate the two time series
+>>> r.union(s)
+TimeSeries([m(1,1), m(2,2), m(3,1), 
+            m(4,0), m(5,1), m(6,2)])
+>>> r.union_temporal(s)
+TimeSeries([m(1,1), m(2,2), m(4,0), m(5,1), m(6,2)])
+>>> r.concatenate(s) 
+TimeSeries([m(1,1), m(3,1), m(4,0), m(5,1), m(6,2)])
+>>> s.interval_closed(2,5)
+TimeSeries([m(2,2), m(3,2), m(4,0)])
+>>> s.interval_temporal(2,5,Zohe)
+TimeSeries([m(3,2), m(4,0), m(5,2)])
+
+# Check for regularity
+>>> s.accept(isRegular())
+False
+# regularise to {0,2,4} by ZOHE method
+>>> sr = s.selection_temporal(range(0,6,2),Zohe)
+>>> sr
+TimeSeries([m(0,2), m(2,2), m(4,0)])
+>>> sr.accept(isRegular())
+True
+\end{verbatim}
+}
+\end{example}
+
+
+
+
+
+\subsection{RoundRobinson}
+
+\texttt{RoundRobinson} is the reference implementation of the
+multiresolution time series model. It includes objects like resolution
+subseries, buffers, discs, and attribute aggregate
+functions. Figure~\ref{fig:implementacio:roundrobinson-uml} exhibits
+the relationships among these objects in a \acro{UML} diagram.  A
+\texttt{MultiresolutionSeries} object is an aggregation of
+\texttt{Resolution} objects. 
+%
+A \texttt{Resolution} object is composed by one \texttt{Buffer} object
+and one \texttt{Disc} object. 
+%
+We associate each \texttt{Buffer} object to one \texttt{TimeSeries}
+object, from the \texttt{Pytsms} library.
+%
+We also associate each \texttt{Disc} object to one \texttt{TimeSeries}.
+%
+Both \texttt{TimeSeries} objects correspond respectively to the buffer's and
+the disc's time series in the \acro{MTSMS} model.
+%
+Furthermore, we associate each \texttt{Buffer} to one attribute
+aggregate function.  We define an aggregate function as a
+\texttt{Python} function with two parameters: a \texttt{TimeSeries}
+\texttt{s} and a consolidation time interval \texttt{i}.
+
+%\tikzsetnextfilename{fig_roundrobinson_uml}
+\begin{figure}[tp]
+  \centering
+  %\input{imatges/roundrobinson-uml.tex}
+  \includegraphics{fig_roundrobinson_uml.pdf}
+  \caption{RoundRobinson \acro{UML} class diagram}
+  \label{fig:implementacio:roundrobinson-uml}
+\end{figure}
+
+\texttt{MultiresolutionSeries} is a subclass of the predefined
+\emph{set} Python class. It adds some operations grouped into two
+objects: \texttt{Storage} and \texttt{Plot}. The methods of a
+\texttt{Storage} object are devoted to store and retrieve
+multiresolution time series from the file system. The methods of a
+\texttt{Plot} object are employed to plot the time subseries of the
+multiresolution schema.
+
+We apply the method \texttt{addResolution} of a
+\texttt{MultiresolutionSeries} object to define the multiresolution
+schema structure by adding resolution subseries. We configure a new
+resolution using four parameters: \texttt{delta}, \texttt{k},
+\texttt{f}, and \texttt{tau}. These parameters allow to create the
+corresponding buffer and disc. A \texttt{MultiresolutionSeries} object
+relies on the methods \texttt{add}, \texttt{consolidable}, and
+\texttt{consolidate}, to operate on the corresponding methods of the
+contained resolution subseries.
+
+We can query a \texttt{MultiresolutionSeries} object using one of two
+methods: \texttt{seriedisc} and \texttt{totalseries}. The method
+\texttt{seriedisc} returns the \texttt{TimeSeries} object that
+corresponds to the disc identified by the parameters \texttt{delta}
+and \texttt{f}. The method \texttt{totalseries} returns the
+\texttt{TimeSeries} object that results from the concatenation of all
+\texttt{seriedisc} objects sorted by \texttt{delta}.
+
+In the module \texttt{aggregators}, we implemented some default
+attribute aggregate functions. However, users can define new
+aggregators as well. For instance, we defined the \zohe{} aggregate
+functions explained in Section~\ref{sec:model:interpolador}, which
+basically aggregate data over the temporal interval
+\verb|s.interval_temporal(s,t,Zohe)|.  The
+Example~\ref{ex:pytsms:example} shows this aggregate function.
+
+\begin{example}
+  In this example, we use \texttt{Pytsms} to set the time series
+  \texttt{S}. Also, we employ \texttt{RoundRobinson} to define the
+  multiresolution time series $M$ obtained from
+  Example~\ref{ex:model:smultiresolution}. Then, we apply
+  consolidation, and we query the result.
+
+{\small
+\begin{verbatim}
+# Import the required objects
+>>> from pytsms import TimeSeries, Measure as m
+>>> from roundrobinson import MultiresolutionSeries
+>>> from roundrobinson.aggregators import mean_zohe,
+...                                       maximum_zohe
+
+# Define the original time series
+>>> s = TimeSeries([m(1,6),m(5,2),m(8,5),m(10,0),
+...                 m(14,1),m(19,6),m(22,11),
+...                 m(26,6),m(29,0)])
+
+# Define the multiresolution time series
+>>> M = MultiresolutionSeries()
+# Define the multiresolution schema
+>>> M.addResolution(delta=5,k=4,f=mean_zohe,tau=0)
+>>> M.addResolution(delta=10,k=2,f=maximum_zohe,tau=0)
+
+# Add the measures
+>>> for m in s: M.add(m)
+# M is consolidable
+>>> M.consolidable()
+True
+# Consolide until no more consolidable
+>>> while M.consolidable():
+...    M.consolidate()
+
+# Query the consolidated discs 
+>>> M.seriedisc(5,mean_zohe)
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+>>> M.seriedisc(10,maximum_zohe)
+TimeSeries([m(10,6), m(20,11)])
+# Query the total time series
+>>> M.totalseries()
+TimeSeries([m(10,3), m(15,2), m(20,7), m(25,8)])
+\end{verbatim}
+}
+\end{example}
+
+
+
+
+
+%%% Local Variables:
+%%% TeX-master: "main"
+%%% ispell-local-dictionary: "british"
+%%% End:
+
+%  LocalWords:  TSMS MTSMS Pytsms RoundRobinson UML TimeSeries Zohe
+%  LocalWords:  RegularProp Matplotlib multiresolution subseries
+%  LocalWords:  MultiresolutionSeries addResolution consolidable
+%  LocalWords:  seriedisc totalseries aggregators
