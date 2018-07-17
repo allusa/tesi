@@ -1,0 +1,246 @@
+============================================================================================
+Modelització d'un sistemes de gestió de bases de dades per a sèries temporals multiresolució
+============================================================================================
+
+PhD dissertation, Aleix Llusà Serra, December 2015. *Multiresolution Time Series Database Model*. 
+
+Language: Catalan
+
+
+PDF Document (CC-BY-SA):
+
+* http://hdl.handle.net/2117/96038
+* http://hdl.handle.net/10803/334990
+
+
+@phdthesis{llusa2015,
+  author = {Llusà Serra, Aleix},
+  supervisor = {Dr. Teresa Escobet Canal and Dr. Sebastià
+Vila Marta},
+  title  = {Disseny i modelització d'un sistema de gestió multiresolució de sèries temporals},
+  institution = {Universitat Politècnica de Catalunya},
+  location={Manresa, Catalunya},
+  year = {2015},
+  month = {12},
+  day = {4},
+  eprint = {2117/96038},
+  eprinttype =   {hdl},
+  url = {http://hdl.handle.net/2117/96038},
+  keywords = {Time series; Database systems; Multiresolution; Lossy compression; Approximate queries},
+  note = {\url{https://github.com/allusa/tesi}},
+}
+
+
+Contents
+========
+
+* doc: The document LaTeX sources (GPLv3)
+
+* src: The program sources (GPLv3)
+
+
+Originally hosted at http://escriny.epsem.upc.edu/projects/rrb/
+
+
+Abstract
+--------
+
+Nowadays, it is possible to acquire a huge amount of data, mainly due
+to the fact that it is easy to build monitoring systems together with
+big sensor networks. However, data has to be managed accordingly,
+which is not so trivial. Furthermore. the storage for all this data
+also has to be considered.
+
+
+On the one hand, time series is the formalisation for the process of
+acquiring values from a variable along time. There is a great deal of
+algorithms and methodologies for analysing time series which describe
+how information can be extracted from data. On the other hand,
+DBMS are the formalisation for the systems that store and
+manage data. That is, these computer systems are devoted to infer the
+information that a given user may query.  These systems are formally
+defined by logic models from which the relational model is the main
+reference.
+
+This thesis is a dissertation on the hypothesis to store only parts of
+original data which contain selected information.  This information
+selection involves summarising data with different resolutions, mainly
+by aggregating data at periodic time intervals.
+We name *multiresolution* to this technique.
+
+
+Multiresolution is operated on time series. The results are time
+subseries that have bounded size and summaries of information.
+Particular DBMS are used for managing time series, then they are
+called TSMS. In this context, we define TSMS with
+multiresolution capabilities, which we call MTSMS.  Similarly
+to how it is done for DBMS, we formalise a model for
+TSMS and for MTSMS.
+
+
+
+The acquisition of time series presents troublesome properties owing
+to the fact of variable acquired along time.
+In MTSMS we consider some of this properties such as:
+
+* The clock synchronisation for different acquisition systems. 
+* Unknown data when data has not been acquired or when it is
+  erroneous.
+* A huge amount of data to be manage. Moreover it increases as
+  more data gets acquired.
+* Queries with data that has not been acquired regularly along
+  time.
+
+
+MTSMS are defined as systems to store data by selecting
+information and so by discarding data that is not considered
+important. Therefore, the parameters for selecting information must be
+decided previously to storing data. The information theory is the base
+for measuring the quality of theses systems, which depends on the
+parameters chosen. Regarding this, multiresolution can be considered
+as a lossy compression technique. We introduce some hypothesis on
+measuring the error caused by multiresolution in comparison with the
+case of having all the original data.
+
+
+Paraphrasing a current opinion in DBMS, the same system can not
+be adequate for all the different contexts. In addition, systems must
+consider performance in a variety of resources apart from computing
+time, such as energy consumption, storage capacity or network
+transmission. Concerning this, we design different implementations for
+the model of MTSMS. These implementations experiment with
+various computing methodologies: incremental computing along the data
+stream, parallel computing and relational databases computing.
+
+
+Summarising, in this thesis we formalise a model for MTSMS.
+MTSMS are useful for storing time series in bounded capacity
+systems and in order to precompute the multiresolution. In this way
+they can achieve immediate queries and graphical visualisations for
+summarised time series.  However, they imply an information selection
+that has to be considered previously to the storage. In this thesis we
+consider the limits for the multiresolution technique.
+
+
+
+Resum
+-----
+
+Actualment és possible d'adquirir una gran quantitat de dades,
+principalment gràcies a la facilitat de disposar de sistemes de
+monitoratge amb grans xarxes de sensors. Això no obstant, no és tan
+senzill de gestionar posteriorment totes aquestes dades.  A més, també
+cal tenir en compte com s'emmagatzemen aquestes dades.
+
+
+D'una banda, l'adquisició de valors d'una variable al llarg del temps
+es formalitza com a sèrie temporal. Així, hi ha multitud d'algoritmes
+i metodologies d'anàlisi de sèries temporals que descriuen com
+extreure informació de les dades. D'altra banda, l'emmagatzematge i la
+gestió de les dades es formalitza com a SGBD. Així, hi ha
+sistemes informàtics dedicats a inferir la informació que un usuari
+vol consultar. Aquests sistemes són descrits per models lògics
+formals, entre els quals el model relacional n'és la referència
+principal.
+
+
+En aquesta tesi dissertem sobre el fet d'emmagatzemar només aquella
+part de les dades originals que conté una certa informació
+seleccionada. Aquesta selecció de la informació es duu a terme
+mitjançant el resum de diferents resolucions de les dades, cadascuna
+de les quals bàsicament són agregacions de les dades a intervals de
+temps periòdics. A aquesta tècnica l'anomenem *multiresolució*.
+
+
+
+La multiresolució s'aplica a les sèries temporals. Com a resultat,
+s'obtenen subsèries temporals de mida finita i amb la informació
+resumida. Per tal de gestionar les sèries temporals, s'utilitzen
+SGBD específics anomenats SGST. Així doncs, proposem
+SGST amb capacitats de multiresolució i els anomenem
+SGSTM. De la mateixa manera que en els SGBD, formalitzem
+un model pels SGST i pels SGSTM.
+
+
+
+A causa de la naturalesa de variable capturada al llarg del temps, en
+l'adquisició de les sèries temporals apareixen propietats
+problemàtiques. Els SGSTM tenen en compte algunes d'aquestes
+propietats com:
+
+* La sincronització dels rellotges en els diferents sistemes
+  d'adquisició.
+* L'aparició de dades desconegudes perquè no s'han pogut adquirir
+  o perquè són errònies.
+* La gestió d'una quantitat enorme de dades, i que a més segueix
+  creixent al llarg del temps.
+* Les consultes amb dades que no s'han recollit de manera uniforme
+  en el temps.
+
+
+Ara bé, els SGSTM són uns sistemes que emmagatzemen unes dades
+segons una selecció d'informació i descarten les que no es consideren
+importants. Per tant, prèviament a l'emmagatzematge, cal decidir els
+paràmetres de selecció de la informació. Per tal d'avaluar la qualitat
+d'aquests sistemes, depenent dels paràmetres que s'escullin, es pot
+utilitzar la teoria de la informació. En aquest sentit, la
+multiresolució es pot considerar com una tècnica de compressió amb
+pèrdua. Així doncs, introduïm una reflexió sobre com avaluar l'error
+que es comet amb la multiresolució en comparació amb disposar de totes
+les dades originals.
+
+
+
+
+Com es diu actualment en l'àmbit dels SGBD, un mateix sistema no
+pot ser adequat per a tots els contextos. A més, els sistemes han de
+tenir en compte un bon rendiment en altres recursos a part del temps
+de computació, com per exemple la capacitat finita, el consum
+d'energia o la transmissió per la xarxa. Així doncs, dissenyem
+diverses implementacions del model dels SGSTM. Aquestes
+implementacions exploren diverses tècniques de computació: computació
+incremental seguint el flux de dades, computació paral·lela i
+computació de bases de dades relacional.
+
+
+En resum, en aquesta tesi dissenyem els SGSTM i en formalitzem
+un model.  Els SGSTM són útils per a emmagatzemar sèries
+temporals en sistemes amb capacitat finita i per a precomputar la
+multiresolució. D'aquesta manera, permeten disposar de consultes i
+visualitzacions immediates de les sèries temporals de forma
+resumida. Això no obstant, impliquen una selecció de la informació que
+cal decidir prèviament. En aquesta tesi proposem consideracions i
+reflexions sobre els límits de la multiresolució.
+
+
+Acknowledgements
+================
+
+Supported by Universitat Politècnica de Catalunya (UPC).
+
+With thanks to thesis advisors: Dr. Teresa Escobet Canal and Dr. Sebastià
+Vila Marta.
+
+
+
+License
+=======
+
+Copyright (C) 2011-2016 Aleix Llusà Serra.
+ 
+These LaTeX documents and these programs are free software: you can
+redistribute them and/or modify them under the terms of the GNU General
+Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this document. If not, see <http://www.gnu.org/licenses/>.
+
+
+
+  You can copy but then you must free your work ;)
